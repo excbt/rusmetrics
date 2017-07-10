@@ -45,15 +45,17 @@ public class SubscriberAccessService implements SecuredRoles {
     private final ContZPointRepository contZPointRepository;
 
     private final static int ACCESS_TTL_WEEKS = 1;
-    //private final static TemporalAmount ACCESS_TTL = Period.ofWeeks(ACCESS_TTL_WEEKS);
-    private final static TemporalAmount ACCESS_TTL = Duration.ofMinutes(5);
+    private final static TemporalAmount ACCESS_TTL = Period.ofWeeks(ACCESS_TTL_WEEKS);
+    //private final static TemporalAmount ACCESS_TTL = Duration.ofMinutes(5);
 
-//    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
-    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> LocalDateTime.now().plus(ACCESS_TTL);
-//    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
-    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> ZonedDateTime.now().plus(ACCESS_TTL);
+    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
+//    private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> LocalDateTime.now().plus(ACCESS_TTL);
+    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
+//    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> ZonedDateTime.now().plus(ACCESS_TTL);
 
     private final static Function<LocalDateTime, ZonedDateTime> MAKE_REVOKE_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).atZone(ZoneId.systemDefault());
+
+    public static final String TRIAL_ACCESS = "TRIAL";
 
     @Autowired
     public SubscriberAccessService(ContZPointAccessRepository contZPointAccessRepository,
@@ -153,7 +155,7 @@ public class SubscriberAccessService implements SecuredRoles {
 
         if (checkExisting.isPresent()) {
             ContZPointAccess access = checkExisting.get();
-            access.setRevokeTZ(MAKE_REVOKE_TZ.apply(revokeDT));
+            access.setRevokeTz(MAKE_REVOKE_TZ.apply(revokeDT));
             if (revokeDT.toLocalDate().isAfter(LocalDate.now()) || revokeDT.toLocalDate().isEqual(LocalDate.now())){
                 access.setAccessTtl(MAKE_ACCESS_TTL.apply(revokeDT));
                 access.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(currentDateTime));
@@ -249,7 +251,7 @@ public class SubscriberAccessService implements SecuredRoles {
         if (checkExisting.isPresent()) {
             ContObjectAccess access = checkExisting.get();
 
-            access.setRevokeTZ(MAKE_REVOKE_TZ.apply(revokeDT));
+            access.setRevokeTz(MAKE_REVOKE_TZ.apply(revokeDT));
             if (revokeDT.toLocalDate().isAfter(LocalDate.now()) || revokeDT.toLocalDate().isEqual(LocalDate.now())){
                 access.setAccessTtl(MAKE_ACCESS_TTL.apply(revokeDT));
                 access.setAccessTtlTz(ZonedDateTime.now().plus(ACCESS_TTL));
@@ -360,6 +362,8 @@ public class SubscriberAccessService implements SecuredRoles {
     @Scheduled(cron = "0 */2 * * * ?")
     @Transactional
     public void cleanupAccessByTtl() {
+        processContObjectRevoke();
+        processContZPointRevoke();
         cleanupContObjectAccess();
         cleanupContZPointAccess();
     }
@@ -368,7 +372,7 @@ public class SubscriberAccessService implements SecuredRoles {
     @Transactional
     public void cleanupContObjectAccess() {
         log.info("\nCONT_OBJECT END OF ACCESS");
-        contObjectAccessRepository.findAllAccessTtl(LocalDateTime.now()).forEach( a -> {
+        contObjectAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
                 log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getAccessTtl());
                 contObjectAccessRepository.delete(a);
             }
@@ -378,11 +382,44 @@ public class SubscriberAccessService implements SecuredRoles {
     @Transactional
     public void cleanupContZPointAccess() {
         log.info("\nCONT_ZPOINT END OF ACCESS");
-        contZPointAccessRepository.findAllAccessTtl(LocalDateTime.now()).forEach( a -> {
+        contZPointAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
                 log.info("Subscriber {}, ContZPoint {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getAccessTtl());
                 contZPointAccessRepository.delete(a);
             }
         );
     }
+
+
+    private void processContObjectRevoke() {
+        log.info("\nCONT_OBJECT PROCESS REVOKE");
+        contObjectAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).forEach( a -> {
+                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getRevokeTz());
+                if (TRIAL_ACCESS.equals(a.getAccessType())) {
+                    contObjectAccessRepository.delete(a);
+                } else {
+                    a.setAccessTtl(MAKE_ACCESS_TTL.apply(a.getRevokeTz().toLocalDateTime()));
+                    a.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(a.getRevokeTz()));
+                    contObjectAccessRepository.save(a);
+                }
+            }
+        );
+    }
+
+    private void processContZPointRevoke() {
+        log.info("\nCONT_ZPOINT PROCESS REVOKE");
+        contZPointAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).forEach( a -> {
+                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getRevokeTz());
+                if (TRIAL_ACCESS.equals(a.getAccessType())) {
+                    contZPointAccessRepository.delete(a);
+                } else {
+                    a.setAccessTtl(MAKE_ACCESS_TTL.apply(a.getRevokeTz().toLocalDateTime()));
+                    a.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(a.getRevokeTz()));
+                    contZPointAccessRepository.save(a);
+                }
+            }
+        );
+    }
+
+
 
 }

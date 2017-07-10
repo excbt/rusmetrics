@@ -73,7 +73,7 @@ public class ContObjectAccess {
     private ZonedDateTime grantTZ = ZonedDateTime.now();
 
     @Column(name = "revoke_tz")
-    private ZonedDateTime revokeTZ;
+    private ZonedDateTime revokeTz;
 
     @Column(name = "access_type")
     private String accessType;
@@ -119,7 +119,7 @@ public class ContObjectAccess {
     }
 
     public void clearRevokeTZ(){
-        this.revokeTZ = null;
+        this.revokeTz = null;
     }
 
 }

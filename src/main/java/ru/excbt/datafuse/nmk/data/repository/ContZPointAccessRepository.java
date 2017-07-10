@@ -8,18 +8,20 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointAccess;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.repository.support.ContZPointRI;
+import ru.excbt.datafuse.nmk.data.repository.support.ObjectAccessRI;
 import ru.excbt.datafuse.nmk.data.repository.support.SubscriberRI;
 
 import javax.persistence.Tuple;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
  * Created by kovtonyk on 27.06.2017.
  */
 public interface ContZPointAccessRepository extends JpaRepository<ContZPointAccess, ContZPointAccess.PK>,
-    SubscriberRI<ContZPointAccess>, ContZPointRI<ContZPointAccess> {
+    SubscriberRI<ContZPointAccess>, ContZPointRI<ContZPointAccess>, ObjectAccessRI<ContZPointAccess> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContZPointAccess a")
     List<Long> findAllSubscriberIds();
@@ -79,7 +81,7 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
 
 
     @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtl <= :ttl")
-    List<ContZPointAccess> findAllAccessTtl(@Param("ttl") LocalDateTime ttl);
+    List<ContZPointAccess> findAllAccessTtlTZ(@Param("ttl") ZonedDateTime ttl);
 
 
 }

@@ -6,8 +6,10 @@ import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.repository.support.ObjectAccessRI;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +17,7 @@ import java.util.Optional;
 /**
  * Created by kovtonyk on 28.06.2017.
  */
-public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK> {
+public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK>, ObjectAccessRI<ContObjectAccess> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a WHERE a.accessTtl IS NULL")
     List<Long> findAllSubscriberIdsNoTtl();
@@ -115,8 +117,11 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
     List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtl <= :ttl")
-    List<ContObjectAccess> findAllAccessTtl(@Param("ttl") LocalDateTime ttl);
-
+//    @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtlTz <= :ttl")
+//    List<ContObjectAccess> findAllAccessTtlTZ(@Param("ttl") ZonedDateTime ttl);
+//
+//    @Query("SELECT a FROM #{#entityName} a WHERE a.revokeTz <= :ttl")
+//    List<ContObjectAccess> findAllRevokeTZ(@Param("ttl") ZonedDateTime ttl);
+//
 
 }
