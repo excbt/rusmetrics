@@ -82,7 +82,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
                         LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 
-				return contObjectService.wrapContObjectMonitorDTO(result,false);
+				return contObjectService.wrapContObjectMonitorDTO(getSubscriberParam(),result,false);
 			}
 
 			@Override
@@ -154,7 +154,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
                 List<ContObject> resultList = findContObjectsByAccess(contGroupId, true, false,meterPeriodSettingIds);
                     //selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
 
-                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
             }
         };
 
@@ -175,7 +175,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
             public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findContObjects(subscriberId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
             }
         };
 
@@ -196,7 +196,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
             public List<? extends ContObjectDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(subscriberId, getCurrentSubscriberId());
 
-                return contObjectService.wrapContObjectsMonitorDTO(resultList,false);
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
             }
         };
 

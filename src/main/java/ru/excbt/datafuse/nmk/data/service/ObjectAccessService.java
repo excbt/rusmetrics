@@ -247,17 +247,22 @@ public class ObjectAccessService {
 
     /// ContZPoints
 
-    /**
-     *
-     * @param subscriberId
-     * @return
-     */
     public List<ContZPoint> findAllContZPoints(Long subscriberId) {
         List<ContZPoint> result;
         if (NEW_ACCESS) {
             result = contZPointAccessRepository.findAllContZPointsBySubscriberId(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContZPoints(subscriberId);
+        }
+        return ObjectFilters.deletedFilter(result);
+    }
+
+    public List<ContZPoint> findAllContZPoints(SubscriberParam subscriberParam, Long contObjectId) {
+        List<ContZPoint> result;
+        if (NEW_ACCESS) {
+            result = contZPointAccessRepository.findAllContZPointsBySubscriberId(subscriberParam.getSubscriberId(), contObjectId);
+        } else {
+            result = subscrContObjectRepository.selectContZPoints(subscriberParam.getSubscriberId());
         }
         return ObjectFilters.deletedFilter(result);
     }

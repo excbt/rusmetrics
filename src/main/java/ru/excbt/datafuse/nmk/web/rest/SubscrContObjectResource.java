@@ -114,7 +114,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
                 boolean isRma = currentSubscriberService.isRma();
                 List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
 
-                List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(resultList);
+                List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
                 objectAccessService.readContObjectAccess(getSubscriberId(), result);
                 return result;
             }
@@ -136,7 +136,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObjectMonitorDTO result = contObjectService.findContObjectMonitorDTO(contObjectId);
+		ContObjectMonitorDTO result = contObjectService.findContObjectMonitorDTO(getSubscriberParam(), contObjectId);
 
 		return ApiResponse.responseOK(result);
 	}
@@ -196,7 +196,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 
 				objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
-				return contObjectService.wrapContObjectMonitorDTO(result,false);
+				return contObjectService.wrapContObjectMonitorDTO(getSubscriberParam(), result,false);
 			}
 
 		};

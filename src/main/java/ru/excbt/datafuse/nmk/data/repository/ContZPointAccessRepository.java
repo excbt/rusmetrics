@@ -33,6 +33,13 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
     List<ContZPoint> findAllContZPointsBySubscriberId(@Param("subscriberId") Long subscriberId);
 
 
+    @Query("SELECT a.contZPoint FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL"
+        + " AND a.accessTtl IS NULL AND a.contZPoint.contObjectId = :contObjectId"
+        + " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPointId")
+    List<ContZPoint> findAllContZPointsBySubscriberId(@Param("subscriberId") Long subscriberId, @Param("contObjectId") Long contObjectId);
+
+
+
     @Query("SELECT a.contZPointId FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL"
         + " AND a.accessTtl IS NULL AND a.contZPoint.deleted = 0 "
         + " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPoint.id")
@@ -58,5 +65,16 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
         +"  AND a.accessTtl IS NULL AND zp.deleted = 0")
     List<Tuple> findAllDeviceObjectsEx(@Param("subscriberId") Long subscriberId,
                                         @Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
+
+
+
+    @Query("SELECT a.contZPoint.contObjectId as contObjectId, count(a.contZPointId) FROM ContZPointAccess a "
+        + " WHERE a.subscriberId = :subscriberId AND a.contZPoint.contObjectId IN (:contObjectIds) AND a.accessTtl IS NULL"
+        + " AND a.accessTtl IS NULL AND a.contZPoint.deleted = 0 "
+        + " GROUP BY a.contZPoint.contObjectId"
+        + " ORDER BY a.contZPoint.contObjectId")
+    List<Object[]> findContObjectZPointStats(@Param("subscriberId") Long subscriberId,
+                                             @Param("contObjectIds") List<Long> contObjectIds);
+
 
 }

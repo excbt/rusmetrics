@@ -1,16 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.LocalDate;
@@ -20,18 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Lists;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
-import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
-import ru.excbt.datafuse.nmk.data.model.support.*;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
+import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
@@ -39,8 +24,20 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с точками учета
@@ -90,6 +87,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private TemperatureChartService temperatureChartService;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private SubscriberAccessService subscriberAccessService;
 
 	/**
 	 * Краткая информация по точке учета
@@ -161,8 +164,10 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPoint> findContObjectZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
+	public List<ContZPoint> findContObjectZPoints(SubscriberParam subscriberParam, Long contObjectId) {
+		List<ContZPoint> result = objectAccessService.findAllContZPoints(subscriberParam, contObjectId);
+
+//            contZPointRepository.findByContObjectId(contObjectId);
 
 		result.forEach(i -> {
 			i.getDeviceObjects().forEach(j -> {
@@ -211,8 +216,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointVO> selectContObjectZPointsVO(long contObjectId) {
-		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
+	public List<ContZPointVO> selectContObjectZPointsVO(SubscriberParam subscriberParam, long contObjectId) {
+		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(subscriberParam, contObjectId);
+            contZPointRepository.findByContObjectId(contObjectId);
 		List<ContZPointVO> result = new ArrayList<>();
 
 		List<ContZPointVO> resultHWater = makeContZPointVO_Hwater(zPoints);
@@ -502,7 +508,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPoint createOne(Long contObjectId, ContZPoint contZPoint) {
+	public ContZPoint createOne(SubscrUserInfo subscrUserInfo, Long contObjectId, ContZPoint contZPoint) {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 		checkNotNull(contZPoint.getStartDate());
@@ -519,6 +525,9 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 
 		ContZPoint result = contZPointRepository.save(contZPoint);
 		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+
+        subscriberAccessService.grantContZPointAccess(new Subscriber().id(subscrUserInfo.getSubscriberId()), result);
+
 		return result;
 	}
 
@@ -528,10 +537,13 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public void deleteOne(Long contZpointId) {
+	public void deleteOne(SubscrUserInfo userInfo, Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
 		contZPointRepository.save(softDelete(contZPoint));
+
+        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userInfo.getSubscriberId()), contZPoint);
+
 	}
 
 	/**

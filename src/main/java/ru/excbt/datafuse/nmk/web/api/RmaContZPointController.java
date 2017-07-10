@@ -89,9 +89,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 
-		ApiActionProcess<ContZPoint> actionProcess = () -> {
-			return contZPointService.createOne(contObjectId, contZPoint);
-		};
+		ApiActionProcess<ContZPoint> actionProcess = () -> contZPointService.createOne(getSubscriberParam(), contObjectId, contZPoint);
 
 		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
@@ -131,7 +129,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 		}
 
 		ApiActionVoidProcess actionProcess = () -> {
-			contZPointService.deleteOne(contZPointId);
+			contZPointService.deleteOne(getSubscriberParam(), contZPointId);
 		};
 		return ApiResponse.responseDelete(actionProcess);
 

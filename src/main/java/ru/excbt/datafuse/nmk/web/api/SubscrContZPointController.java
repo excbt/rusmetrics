@@ -75,7 +75,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
+		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(getSubscriberParam(), contObjectId);
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
@@ -99,7 +99,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(contObjectId);
+		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(getSubscriberParam(),contObjectId);
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 

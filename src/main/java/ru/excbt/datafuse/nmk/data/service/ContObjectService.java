@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRe
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -84,6 +85,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 	private final ObjectAccessService objectAccessService;
 
+	private final ContZPointAccessRepository contZPointAccessRepository;
+
     public ContObjectService(ContObjectRepository contObjectRepository,
                              ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository,
                              SubscriberService subscriberService,
@@ -97,7 +100,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
                              ContEventMonitorV2Service contEventMonitorV2Service,
                              WeatherForecastService weatherForecastService,
                              MeterPeriodSettingRepository meterPeriodSettingRepository,
-                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
+                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, ContZPointAccessRepository contZPointAccessRepository) {
         this.contObjectRepository = contObjectRepository;
         this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
         this.subscriberService = subscriberService;
@@ -115,6 +118,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         this.contObjectFiasService = contObjectFiasService;
         this.subscriberAccessService = subscriberAccessService;
         this.objectAccessService = objectAccessService;
+        this.contZPointAccessRepository = contZPointAccessRepository;
     }
 
 
@@ -152,10 +156,10 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObjectMonitorDTO findContObjectMonitorDTO(Long contObjectId) {
+	public ContObjectMonitorDTO findContObjectMonitorDTO(SubscriberParam subscriberParam,  Long contObjectId) {
 		ContObject contObject = findContObjectChecked(contObjectId);
         contObjectDaDataService.findOneByContObjectId(contObjectId).ifPresent((i) -> contObject.set_daDataSraw(i.getSraw()));
-		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(Arrays.asList(contObject));
+		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
         return monitorDTOList.get(0);
 	}
 
@@ -642,8 +646,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects) {
-        return wrapContObjectsMonitorDTO (contObjects, true);
+	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects) {
+        return wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
 	}
 
 
@@ -653,7 +657,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
      * @param contEventStats
      * @return
      */
-    public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(List<ContObject> contObjects, final boolean contEventStats) {
+    public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects, final boolean contEventStats) {
         checkNotNull(contObjects);
 
         List<ContObjectMonitorDTO> contObjectMonitorDTOList= contObjects.stream()
@@ -663,7 +667,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         List<Long> contObjectIds = contObjectMonitorDTOList.stream().map(i -> i.getId()).distinct()
             .collect(Collectors.toList());
 
-        Map<Long, Integer> contObjectStats = selectContObjectZpointCounter(contObjectIds);
+        Map<Long, Integer> contObjectStats = selectContObjectZPointCounter(subscriberParam, contObjectIds);
 
         // Cont Event Block
         List<ContEventMonitorV2> contEventMonitors = contEventStats ?
@@ -709,8 +713,8 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
      * @param contEventStats
      * @return
      */
-    public ContObjectMonitorDTO wrapContObjectMonitorDTO(ContObject contObject, final boolean contEventStats) {
-        List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(Arrays.asList(contObject));
+    public ContObjectMonitorDTO wrapContObjectMonitorDTO(SubscriberParam subscriberParam, ContObject contObject, final boolean contEventStats) {
+        List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
         return list.isEmpty() ? null : list.get(0);
     }
 
@@ -719,26 +723,28 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObjectIds
 	 * @return
 	 */
-	private Map<Long, Integer> selectContObjectZpointCounter(Collection<Long> contObjectIds) {
+	private Map<Long, Integer> selectContObjectZPointCounter(SubscriberParam subscriberParam, Collection<Long> contObjectIds) {
 
 		if (contObjectIds.isEmpty()) {
 			return new HashMap<>();
 		}
 
-		StringBuilder sqlString = new StringBuilder();
-		sqlString.append(" SELECT cont_object_id, count(*) ");
-		sqlString.append(" FROM cont_zpoint ");
-		sqlString.append(" WHERE cont_object_id IN ( :contObjectIds ) AND deleted = 0 ");
-		sqlString.append(" GROUP BY cont_object_id");
+        List<Object[]> resultList = contZPointAccessRepository.findContObjectZPointStats(subscriberParam.getSubscriberId(), new ArrayList<>(contObjectIds));
 
-		logger.debug("SQL: {}", sqlString.toString());
-
-		Query q1 = em.createNativeQuery(sqlString.toString());
-
-		q1.setParameter("contObjectIds", contObjectIds);
-
-		@SuppressWarnings("unchecked")
-		List<Object[]> resultList = q1.getResultList();
+//		StringBuilder sqlString = new StringBuilder();
+//		sqlString.append(" SELECT cont_object_id, count(*) ");
+//		sqlString.append(" FROM cont_zpoint ");
+//		sqlString.append(" WHERE cont_object_id IN ( :contObjectIds ) AND deleted = 0 ");
+//		sqlString.append(" GROUP BY cont_object_id");
+//
+//		logger.debug("SQL: {}", sqlString.toString());
+//
+//		Query q1 = em.createNativeQuery(sqlString.toString());
+//
+//		q1.setParameter("contObjectIds", contObjectIds);
+//
+//		@SuppressWarnings("unchecked")
+//		List<Object[]> resultList = q1.getResultList();
 
 		return resultList.stream()
 				.collect(Collectors.toMap(i -> DBRowUtils.asLong(i[0]), i -> DBRowUtils.asInteger(i[1])));

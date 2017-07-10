@@ -165,7 +165,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
                 List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
                     childSubscrObjectTreeId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(resultList);
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
             }
         };
 
@@ -200,7 +200,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
             @Override
             public Object processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findContObjectsExcludingIds(getSubscriberId(), contObjectIds);
-                return contObjectService.wrapContObjectsMonitorDTO(ObjectFilters.deletedFilter(resultList));
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), ObjectFilters.deletedFilter(resultList));
             }
         };
 
@@ -404,7 +404,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 				List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
                     childSubscrObjectTreeId);
 
-				return contObjectService.wrapContObjectsMonitorDTO(resultList);
+				return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
 			}
 		};
 
@@ -459,7 +459,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
                 List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
                     childSubscrObjectTreeId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(resultList);
+                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
 			}
 		};
 
