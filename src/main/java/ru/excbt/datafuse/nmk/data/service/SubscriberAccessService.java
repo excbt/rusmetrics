@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
  * Created by kovtonyk on 27.06.2017.
  */
@@ -50,6 +52,8 @@ public class SubscriberAccessService implements SecuredRoles {
     private final static Function<LocalDateTime, LocalDateTime> MAKE_ACCESS_TTL = (d) -> LocalDateTime.now().plus(ACCESS_TTL);
 //    private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).plus(ACCESS_TTL);
     private final static Function<ZonedDateTime, ZonedDateTime> MAKE_ACCESS_TTL_TZ = (d) -> ZonedDateTime.now().plus(ACCESS_TTL);
+
+    private final static Function<LocalDateTime, ZonedDateTime> MAKE_REVOKE_TZ = (d) -> d.truncatedTo(ChronoUnit.DAYS).plusDays(1).atZone(ZoneId.systemDefault());
 
     @Autowired
     public SubscriberAccessService(ContZPointAccessRepository contZPointAccessRepository,
@@ -115,13 +119,13 @@ public class SubscriberAccessService implements SecuredRoles {
     @Transactional
     @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void revokeContZPointAccess(Subscriber subscriber, ContZPoint contZPoint) {
-        finishContZPointAccess(subscriber, contZPoint, LocalDateTime.now());
+        finishContZPointAccess(subscriber, contZPoint, LocalDateTime.now(), ZonedDateTime.now());
     }
 
     @Transactional
     @Secured({ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN})
     public void revokeContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime revokeDateTime) {
-        finishContZPointAccess(subscriber, contZPoint, revokeDateTime);
+        finishContZPointAccess(subscriber, contZPoint, revokeDateTime, ZonedDateTime.now());
     }
 
     private void startContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime accessDateTime) {
@@ -129,7 +133,7 @@ public class SubscriberAccessService implements SecuredRoles {
         ContZPointAccess.PK accessPK = new ContZPointAccess.PK().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
         Optional<ContZPointAccess> checkExisting = Optional.ofNullable(contZPointAccessRepository.findOne(accessPK));
         ContZPointAccess access = checkExisting.orElse(new ContZPointAccess().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId()));
-        access.clearAccessTTL();
+        access.startNewAccess();
         contZPointAccessRepository.saveAndFlush(access);
         saveStartContZPointAccessHistory(subscriber, contZPoint, accessDateTime);
         if (checkExisting.isPresent()) {
@@ -137,7 +141,10 @@ public class SubscriberAccessService implements SecuredRoles {
         }
     }
 
-    private void finishContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime revokeDateTime) {
+    private void finishContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime revokeDateTime,
+                                        ZonedDateTime currentDateTime) {
+
+        checkNotNull(currentDateTime);
 
         ContZPointAccess.PK accessPK = new ContZPointAccess.PK().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
         Optional<ContZPointAccess> checkExisting = Optional.ofNullable(contZPointAccessRepository.findOne(accessPK));
@@ -146,6 +153,12 @@ public class SubscriberAccessService implements SecuredRoles {
 
         if (checkExisting.isPresent()) {
             ContZPointAccess access = checkExisting.get();
+            access.setRevokeTZ(MAKE_REVOKE_TZ.apply(revokeDT));
+            if (revokeDT.toLocalDate().isAfter(LocalDate.now()) || revokeDT.toLocalDate().isEqual(LocalDate.now())){
+                access.setAccessTtl(MAKE_ACCESS_TTL.apply(revokeDT));
+                access.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(currentDateTime));
+            }
+
             access.setAccessTtl(MAKE_ACCESS_TTL.apply(revokeDT));
             access.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(revokeDT.atZone(ZoneId.systemDefault())));
             contZPointAccessRepository.save(access);
@@ -183,9 +196,6 @@ public class SubscriberAccessService implements SecuredRoles {
         contObjectAccessRepository.findSubscriberByContObjectNoTtl(contObject.getId()).forEach((i) ->
             finishContObjectAccess(new Subscriber().id(i), contObject, currDateTime.toLocalDateTime(), currDateTime)
         );
-//        contObjectAccessRepository.findByContObjectId(contObject.getId()).forEach((i)->
-//                updateContObjectIdsAccess(new Subscriber().id(i), Arrays.asList(contObject.getId()), null, AccessAction.MERGE)
-//            );
     }
 
     private void startContObjectAccess(Subscriber subscriber,
@@ -196,7 +206,7 @@ public class SubscriberAccessService implements SecuredRoles {
         ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
         Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
         ContObjectAccess access = checkExisting.orElse(new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId()));
-        access.clearAccessTTL();
+        access.startNewAccess();
         contObjectAccessRepository.saveAndFlush(access);
         saveStartContObjectAccessHistory(subscriber, contObject, subscriberDateTime, currDateTime);
 
@@ -229,34 +239,38 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
 
-    private void finishContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime subscriberDateTime, ZonedDateTime currDateTime) {
+    private void finishContObjectAccess(Subscriber subscriber, ContObject contObject, LocalDateTime revokeDateTime, ZonedDateTime currDateTime) {
         ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
         Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
 
-        final LocalDateTime subscriberDT = subscriberDateTime != null ? subscriberDateTime : LocalDateTime.now();
+        final LocalDateTime revokeDT = revokeDateTime != null ? revokeDateTime : LocalDateTime.now();
+
 
         if (checkExisting.isPresent()) {
             ContObjectAccess access = checkExisting.get();
 
-            access.setAccessTtl(MAKE_ACCESS_TTL.apply(subscriberDT));
-            access.setAccessTtlTz(MAKE_ACCESS_TTL_TZ.apply(currDateTime));
+            access.setRevokeTZ(MAKE_REVOKE_TZ.apply(revokeDT));
+            if (revokeDT.toLocalDate().isAfter(LocalDate.now()) || revokeDT.toLocalDate().isEqual(LocalDate.now())){
+                access.setAccessTtl(MAKE_ACCESS_TTL.apply(revokeDT));
+                access.setAccessTtlTz(ZonedDateTime.now().plus(ACCESS_TTL));
+            }
 
             contObjectAccessRepository.save(access);
-            saveFinishContObjectAccessHistory(subscriber, contObject, subscriberDT, currDateTime);
+            saveFinishContObjectAccessHistory(subscriber, contObject, revokeDT, currDateTime);
         } else {
             log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
 
         subscrContObjectService.access().unlinkSubscrContObject(subscriber, contObject,
-            subscriberDT.toLocalDate());
+            revokeDT.toLocalDate());
 
-        contZPointRepository.findContZPointIds(contObject.getId()).forEach(i -> finishContZPointAccess(subscriber, new ContZPoint().id(i), subscriberDateTime));
+        contZPointRepository.findContZPointIds(contObject.getId()).forEach(i -> finishContZPointAccess(subscriber, new ContZPoint().id(i), revokeDateTime, currDateTime));
 
     }
 
     private void saveStartContObjectAccessHistory(Subscriber subscriber, ContObject contObject, LocalDateTime grantDateTime, ZonedDateTime currDateTime) {
 
-        Preconditions.checkNotNull(currDateTime);
+        checkNotNull(currDateTime);
 
         ContObjectAccessHistory history = new ContObjectAccessHistory();
         history.setContObject(contObject);
@@ -269,8 +283,8 @@ public class SubscriberAccessService implements SecuredRoles {
 
     private void saveFinishContObjectAccessHistory(Subscriber subscriber, ContObject contObject, LocalDateTime subscriberDateTime,
                                                    ZonedDateTime currentDateTime) {
-        Preconditions.checkNotNull(subscriberDateTime);
-        Preconditions.checkNotNull(currentDateTime);
+        checkNotNull(subscriberDateTime);
+        checkNotNull(currentDateTime);
 
 
         contObjectAccessHistoryRepository.findBySubscriberIdAndContObjectId(subscriber.getId(), contObject.getId())
@@ -285,7 +299,7 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     private void saveStartContZPointAccessHistory(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime accessDateTime) {
-        Preconditions.checkNotNull(accessDateTime);
+        checkNotNull(accessDateTime);
 
         ContZPointAccessHistory history = new ContZPointAccessHistory();
         history.setContZPoint(contZPoint);
@@ -297,7 +311,7 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     private void saveFinishContZPointAccessHistory(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime revokeDateTime) {
-        Preconditions.checkNotNull(revokeDateTime);
+        checkNotNull(revokeDateTime);
 
         contZPointAccessHistoryRepository.findBySubscriberIdAndContZPointId(subscriber.getId(), contZPoint.getId())
             .stream().filter((i) -> i.getRevokeDate() == null).forEach((i) -> {

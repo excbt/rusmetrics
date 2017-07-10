@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.pentaho.reporting.libraries.repository.zipwriter.ZipEntryOutputStream;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -68,6 +69,16 @@ public class ContZPointAccess {
     @JoinColumn(name = "cont_zpoint_id")
     private Long contZPointId;
 
+    @NotNull
+    @Column(name = "grant_tz", updatable = false)
+    private ZonedDateTime grantTZ = ZonedDateTime.now();
+
+    @Column(name = "revoke_tz")
+    private ZonedDateTime revokeTZ;
+
+    @Column(name = "access_type")
+    private String accessType;
+
     @Column(name = "access_ttl")
     private LocalDateTime accessTtl;
 
@@ -95,9 +106,20 @@ public class ContZPointAccess {
         return this;
     }
 
+    public void startNewAccess() {
+        this.clearRevokeTZ();
+        this.clearAccessTTL();
+        this.accessType = null;
+        this.grantTZ = ZonedDateTime.now();
+    }
+
     public void clearAccessTTL(){
         this.accessTtl = null;
         this.accessTtlTz = null;
+    }
+
+    public void clearRevokeTZ(){
+        this.revokeTZ = null;
     }
 
 }
