@@ -190,6 +190,7 @@ console.log($routeParams);
         if ($routeParams.object !== "new") {
             loadContObjectPassports(Number($routeParams.object));
         } else {
+            $scope.passportsLoading = false;
             $scope.isActivePassport = true;
         }
 //console.log($routeParams.buildingType);
