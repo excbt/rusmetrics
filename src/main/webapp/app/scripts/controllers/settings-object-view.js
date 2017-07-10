@@ -3382,6 +3382,7 @@ angular.module('portalNMC')
                 $scope.objectCtrlSettings.energyDocumentPropsSaving = true;
         //console.log(doc);
                 if (checkDoc(doc) === false) {
+                    $scope.objectCtrlSettings.energyDocumentPropsSaving = false;
                     return false;
                 }
                 //prepare doc date 
@@ -3410,6 +3411,7 @@ angular.module('portalNMC')
 //        console.log(doc);
                 $scope.objectCtrlSettings.isDocumentSaving = true;
                 if (checkDoc(doc) === false) {
+                    $scope.objectCtrlSettings.isDocumentSaving = false;
                     return false;
                 }
                 //prepare doc date 
