@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
 				"CABINET_USER" })
-@ActiveProfiles(value = { Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_TEST })
+@ActiveProfiles(value = {Constants.SPRING_PROFILE_TEST })
 public class AnyControllerTest extends AbstractControllerTest implements SubscriberUserInfo {
 
 	private final static long TEST_AUDIT_USER = 1;
