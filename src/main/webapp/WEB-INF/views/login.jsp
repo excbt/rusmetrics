@@ -122,6 +122,7 @@
 					// var url = "" + $location.$$absUrl;
 					// $scope.displayLoginError = (url.indexOf("error") >= 0);
 
+					var url = window.location.pathname.replace("localLogin", "j_spring_security_check");
 					$scope.cred = {};
 					$scope.cred.rememberMe =  true;
 
@@ -130,7 +131,7 @@
 						delete body.rememberMe;
 						$http({
 								method: "POST",
-								url: "/j_spring_security_check", 
+								url: url, 
 								data: body,
 								headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 								transformRequest: function(obj) {
@@ -141,9 +142,9 @@
 							    }
 							})
 							.then(function () {
-								window.location.replace("/app");
+								window.location.replace(window.location.pathname.replace("localLogin", "app"));
 							}, function (error) {
-								window.location.replace("/login?error");
+								window.location.replace(window.location.pathname);
 							});
 					};
 
