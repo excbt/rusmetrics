@@ -560,11 +560,14 @@ app.directive('focusMe', ['$timeout', '$parse', function ($timeout, $parse) {
 app.run(["$rootScope", "$location", "$q", "securityCheck", function ($rootScope, $location, $q, securityCheck) {
 
     $rootScope.$on("$routeChangeStart", function (evt, to, from) {
-
+//console.log(evt);
+//console.log(to);        
+//console.log(from);        
 //        console.log("$routeChangeStart");
         var checkPromise = securityCheck.isAuthenficated();
-        $q.all([checkPromise]).then(function (result) {
-            //console.log("isAuthenficated result: " + JSON.stringify(result) + "   " + result);
+//        $q.all([checkPromise]).then(function (result) {
+        securityCheck.isAuthenficated().then(function (result) {
+//            console.log("isAuthenficated result: " + JSON.stringify(result) + "   " + result);
             if (result == false) {
                 var url = "../login";
                 window.location.replace(url);
