@@ -439,6 +439,12 @@ app.directive('crudGridObjects', function () {
                 var getCmOrganizations = function () {
                     objectSvc.getCmOrganizations()
                         .then(function (response) {
+console.log(response);
+                            var headers = response.headers();
+console.log(headers);
+                            if (response.status === 302 && !mainSvc.checkUndefinedNull(headers) && !mainSvc.checkUndefinedNull(headers.location)) {
+                                window.location.replace(headers.location);
+                            }
                             $scope.data.cmOrganizations = response.data;
                             mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                         });

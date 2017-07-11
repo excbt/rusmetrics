@@ -104,7 +104,7 @@
                     </ul>
                     <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
 <!--                          <li class="divider" role="presentation"></li>-->
-                          <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
+                          <li class="menu-item" role="presentation" ng-repeat="tree in data.trees track by $index">
                               <a href="" class=""
                                  ng-click="loadTree(tree); objectCtrlSettings.isFullObjectView = false">
                                   {{tree.objectName}}

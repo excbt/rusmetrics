@@ -1396,6 +1396,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     };
     //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
     var successGetContextReports = function (resp) {
+        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
+            console.warn("Context reports is empty or null: ", resp);
+            return false;
+        }
         var reports = angular.copy(resp.data);
         //connect reportType info
         reports.forEach(function (rep) {
