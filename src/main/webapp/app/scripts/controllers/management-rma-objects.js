@@ -124,7 +124,14 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
                 
     var performObjectsData = function (response) {
-        $scope.messages.noObjects = "Объектов нет.";
+        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data) || !angular.isArray(response.data) || response.data.length === 0) {
+            $scope.messages.noObjects = "Объектов нет.";
+            $scope.objects = [];
+            $scope.objectsOnPage = [];
+            $scope.loading = false;
+            $rootScope.$broadcast('objectSvc:loaded');
+            return false;
+        }
         var tempArr = response.data;
 //console.log(tempArr);                    
         $scope.objects = response.data;
