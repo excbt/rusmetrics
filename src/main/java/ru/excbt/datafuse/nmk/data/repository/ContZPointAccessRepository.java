@@ -80,8 +80,8 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
                                              @Param("contObjectIds") List<Long> contObjectIds);
 
 
-    @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtl <= :ttl")
-    List<ContZPointAccess> findAllAccessTtlTZ(@Param("ttl") ZonedDateTime ttl);
+//    @Query("SELECT a FROM #{#entityName} a WHERE a.accessTtlTz <= :ttl")
+//    List<ContZPointAccess> findAllAccessTtlTZ(@Param("ttl") ZonedDateTime ttl);
 
 
 }

@@ -135,12 +135,22 @@ public class SubscriberAccessService implements SecuredRoles {
         ContZPointAccess.PK accessPK = new ContZPointAccess.PK().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
         Optional<ContZPointAccess> checkExisting = Optional.ofNullable(contZPointAccessRepository.findOne(accessPK));
         ContZPointAccess access = checkExisting.orElse(new ContZPointAccess().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId()));
-        access.startNewAccess();
-        contZPointAccessRepository.saveAndFlush(access);
-        saveStartContZPointAccessHistory(subscriber, contZPoint, accessDateTime);
-        if (checkExisting.isPresent()) {
-            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContZPoint.class.getSimpleName(), contZPoint.getId(), subscriber.getId());
+
+        if (!checkExisting.isPresent() || (checkExisting.isPresent() && checkExisting.get().getRevokeTz() != null)) {
+            access.startNewAccess();
+            contZPointAccessRepository.saveAndFlush(access);
+            saveStartContZPointAccessHistory(subscriber, contZPoint, accessDateTime);
+        } else {
+            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted. Nothing to grant",
+                ContZPoint.class.getSimpleName(), contZPoint.getId(), subscriber.getId());
         }
+
+//        access.startNewAccess();
+//        contZPointAccessRepository.saveAndFlush(access);
+//        saveStartContZPointAccessHistory(subscriber, contZPoint, accessDateTime);
+//        if (checkExisting.isPresent()) {
+//            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContZPoint.class.getSimpleName(), contZPoint.getId(), subscriber.getId());
+//        }
     }
 
     private void finishContZPointAccess(Subscriber subscriber, ContZPoint contZPoint, LocalDateTime revokeDateTime,
@@ -166,7 +176,7 @@ public class SubscriberAccessService implements SecuredRoles {
             contZPointAccessRepository.save(access);
             saveFinishContZPointAccessHistory(subscriber, contZPoint, revokeDateTime);
         } else {
-            log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked", ContZPoint.class.getSimpleName(), contZPoint.getId(), subscriber.getId());
+            log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked. Nothing to revoke", ContZPoint.class.getSimpleName(), contZPoint.getId(), subscriber.getId());
         }
     }
 
@@ -207,14 +217,21 @@ public class SubscriberAccessService implements SecuredRoles {
 
         ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
         Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
-        ContObjectAccess access = checkExisting.orElse(new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId()));
-        access.startNewAccess();
-        contObjectAccessRepository.saveAndFlush(access);
-        saveStartContObjectAccessHistory(subscriber, contObject, subscriberDateTime, currDateTime);
 
-        if (checkExisting.isPresent()) {
-            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
+        ContObjectAccess access = checkExisting.orElse(new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId()));
+
+        if (!checkExisting.isPresent() || (checkExisting.isPresent() && checkExisting.get().getRevokeTz() != null)) {
+            access.startNewAccess();
+            contObjectAccessRepository.saveAndFlush(access);
+            saveStartContObjectAccessHistory(subscriber, contObject, subscriberDateTime, currDateTime);
+        } else {
+            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted. Nothing to grant",
+                ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
+
+//        if (checkExisting.isPresent()) {
+//            log.warn("Access for {} (id={}) for Subscriber(id={}) already granted", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
+//        }
 
 /*
         Optional<Long> checkExisting = findContObjectIds(subscriber.getId()).stream().filter((i) -> i.equals(contObject.getId())).findFirst();
@@ -259,14 +276,16 @@ public class SubscriberAccessService implements SecuredRoles {
 
             contObjectAccessRepository.save(access);
             saveFinishContObjectAccessHistory(subscriber, contObject, revokeDT, currDateTime);
+
+            { /// Access for ContZPoint
+                subscrContObjectService.access().unlinkSubscrContObject(subscriber, contObject,
+                    revokeDT.toLocalDate());
+                contZPointRepository.findContZPointIds(contObject.getId()).forEach(i -> finishContZPointAccess(subscriber, new ContZPoint().id(i), revokeDateTime, currDateTime));
+            }
+
         } else {
-            log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
+            log.warn("Access for {} (id={}) for Subscriber(id={}) already revoked. Nothing to revoke", ContObject.class.getSimpleName(), contObject.getId(), subscriber.getId());
         }
-
-        subscrContObjectService.access().unlinkSubscrContObject(subscriber, contObject,
-            revokeDT.toLocalDate());
-
-        contZPointRepository.findContZPointIds(contObject.getId()).forEach(i -> finishContZPointAccess(subscriber, new ContZPoint().id(i), revokeDateTime, currDateTime));
 
     }
 
@@ -391,9 +410,10 @@ public class SubscriberAccessService implements SecuredRoles {
 
 
     private void processContObjectRevoke() {
-        log.info("\nCONT_OBJECT PROCESS REVOKE");
-        contObjectAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).forEach( a -> {
-                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getRevokeTz());
+        log.debug("\nCONT_OBJECT PROCESS REVOKE");
+        contObjectAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).stream().filter(a -> a.getAccessTtl() == null)
+            .forEach( a -> {
+                log.debug("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getRevokeTz());
                 if (TRIAL_ACCESS.equals(a.getAccessType())) {
                     contObjectAccessRepository.delete(a);
                 } else {
@@ -406,9 +426,10 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     private void processContZPointRevoke() {
-        log.info("\nCONT_ZPOINT PROCESS REVOKE");
-        contZPointAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).forEach( a -> {
-                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getRevokeTz());
+        log.debug("\nCONT_ZPOINT PROCESS REVOKE");
+        contZPointAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).stream().filter(a -> a.getAccessTtl() == null)
+            .forEach( a -> {
+                log.debug("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getRevokeTz());
                 if (TRIAL_ACCESS.equals(a.getAccessType())) {
                     contZPointAccessRepository.delete(a);
                 } else {
