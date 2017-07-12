@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.web.api.widgets;
 
@@ -24,14 +24,16 @@ import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.12.2016
- * 
+ *
  */
 @Controller
 @RequestMapping(value = "/api/subscr/widgets/hw/{contZpointId}")
@@ -47,21 +49,21 @@ public class HwWidgetController extends WidgetController {
 	private HwWidgetService hwWidgetService;
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
-	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		Long contObjectId = contZPointService.selectContObjectId(contZpointId);
 
 		if (contObjectId == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		//		contServiceDataHWaterService.selectLast
@@ -84,24 +86,24 @@ public class HwWidgetController extends WidgetController {
 			result.put("lastHwData", resultData.get(0));
 		}
 
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param mode
 	 * @return
 	 */
-	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
 		if (!canAccessContZPoint(contZpointId)) {
-			responseForbidden();
+			ApiResponse.responseForbidden();
 		}
 
 		if (mode == null || !hwWidgetService.isModeSupported(mode)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
@@ -109,7 +111,7 @@ public class HwWidgetController extends WidgetController {
 		ApiActionProcess<List<ContServiceDataHWater>> action = () -> hwWidgetService.selectChartData(contZpointId,
 				subscriberDateTime, mode.toUpperCase());
 
-		return responseOK(action);
+		return ApiResponse.responseOK(action);
 
 	}
 

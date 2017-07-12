@@ -1,0 +1,146 @@
+# ===================================================================
+# Spring Boot configuration for the "dev" profile.
+#
+# This configuration overrides the application.yml file.
+# ===================================================================
+
+# ===================================================================
+# Standard Spring Boot properties.
+# Full reference is available at:
+# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+# ===================================================================
+
+
+spring:
+    application:
+        name: portal-DEV
+    profiles:
+        active: dev
+#        include: swagger
+#    devtools:
+#        restart:
+#            enabled: true
+#        livereload:
+#            enabled: false # we use gulp + BrowserSync for livereload
+#    jackson:
+#        serialization.indent_output: true
+#    datasource:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        #driver-class-name: org.postgresql.Driver
+#        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
+#        name:
+#        jndi-name:
+#        username: postgres
+#        password: 12345
+#        hikari:
+#            #connection-test-query: SELECT 1 FROM DUAL
+#            minimum-idle: 3
+#            maximum-pool-size: 5
+#            pool-name: master
+
+    jackson:
+        serialization.write_dates_as_timestamps: false
+
+    jpa:
+        database-platform: ru.excbt.datafuse.hibernate.dialect.ExPostgreSQLDialect
+        database: POSTGRESQL
+        properties:
+            hibernate.hbm2ddl.auto: validate
+            hibernate.format_sql: true
+            hibernate.show_sql: false
+            hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+            hibernate.generate_statistics: false
+            #hibernate.cache.use_structured_entries: true
+
+#            naming:
+#                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+#                implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+#        properties:
+#            hibernate.cache.use_second_level_cache: true
+#            hibernate.cache.use_query_cache: false
+#            hibernate.generate_statistics: true
+#            hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
+#            hibernate.javax.cache.uri: ${spring.cache.jcache.config}
+#            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
+portal:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        #url: ${portal.datasource.jdbcUrl}
+        name:
+        jndi-name:
+        username: dbuser1
+        password: exbt_123456
+        platform: POSTGRESQL
+        connectionTestQuery: SELECT 1
+        minimumIdle: 3
+        maximumPoolSize: 5
+        poolName: MasterPool
+        #---tomcat:
+        maxActive: 5
+        initialSize: 2
+        minIdle: 2
+        maxIdle: 3
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 3
+#            maximum-pool-size: 5
+#            pool-name: MasterPool
+
+    security:
+        rememberMe:
+            # security key (this key should be unique for your application, and kept secret)
+            key: 7e622ab5b0586c431f5180bf656a1d972f167ba5
+
+    cache: # Cache configuration
+        ehcache: # Ehcache configuration
+            time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
+            max-entries: 100 # Number of objects in each cache entry
+
+raw:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: org.postgresql.Driver
+        url: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        #url: ${raw.datasource.jdbcUrl}
+        name:
+        jndi-name:
+        username: dbuser1
+        password: exbt_123456
+        platform: POSTGRESQL
+        connectionTestQuery: SELECT 1
+        minimumIdle: 1
+        maximumPoolSize: 2
+        poolName: RawPool
+        #---tomcat:
+        maxActive: 5
+        initialSize: 1
+        minIdle: 1
+        maxIdle: 3
+#        hikari:
+#            connection-test-query: SELECT 1
+#            minimum-idle: 1
+#            maximum-pool-size: 2
+#            pool-name: RawPool
+
+
+slog:
+    datasource:
+        type: org.postgresql.Driver
+        driverClassName: org.postgresql.Driver
+        username: dbuser1
+        password: exbt_123456
+        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
+        #url: ${slog.datasource.jdbcUrl}
+        #dataSource.pool.size=2
+        schema: slog
+
+ldap:
+    url: ldap://otrs.local.excbt.ru:389
+    base: dc=nmk,dc=ru
+    user: cn=Directory Manager
+    password: exbt_123456
+
+server:
+    port: 8080

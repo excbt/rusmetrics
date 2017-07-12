@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -18,6 +20,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = StringJsonUserType.class) })
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 //@JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted", "id" }, ignoreUnknown = true)
+@Getter
+@Setter
 public class SubscrVCookie extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
@@ -53,71 +57,5 @@ public class SubscrVCookie extends JsonAbstractAuditableModel implements Deletab
 
 	@Column(name = "dev_comment")
 	private String devComment;
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public String getVcMode() {
-		return vcMode;
-	}
-
-	public void setVcMode(String vcMode) {
-		this.vcMode = vcMode;
-	}
-
-	public String getVcKey() {
-		return vcKey;
-	}
-
-	public void setVcKey(String vcKey) {
-		this.vcKey = vcKey;
-	}
-
-	public String getVcValue() {
-		return vcValue;
-	}
-
-	public void setVcValue(String vcValue) {
-		this.vcValue = vcValue;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Long getSubscrUserId() {
-		return subscrUserId;
-	}
-
-	public void setSubscrUserId(Long subscrUserId) {
-		this.subscrUserId = subscrUserId;
-	}
-
-	public String getDevComment() {
-		return devComment;
-	}
-
-	public void setDevComment(String devComment) {
-		this.devComment = devComment;
-	}
 
 }

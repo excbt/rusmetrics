@@ -124,7 +124,14 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
                 
     var performObjectsData = function (response) {
-        $scope.messages.noObjects = "Объектов нет.";
+        if (mainSvc.checkUndefinedNull(response) || mainSvc.checkUndefinedNull(response.data) || !angular.isArray(response.data) || response.data.length === 0) {
+            $scope.messages.noObjects = "Объектов нет.";
+            $scope.objects = [];
+            $scope.objectsOnPage = [];
+            $scope.loading = false;
+            $rootScope.$broadcast('objectSvc:loaded');
+            return false;
+        }
         var tempArr = response.data;
 //console.log(tempArr);                    
         $scope.objects = response.data;
@@ -799,7 +806,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
                 
     $scope.sendObjectToServer = function (obj) {
-//console.log(obj);                    
         obj.isSaving = true;
         if (!checkObjectSettings(obj)) {
             obj.isSaving = false;
@@ -857,7 +863,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         objectSvc.getRmaObject(objId)
             .then(function (resp) {
                 $scope.currentObject = resp.data;
-    //console.log($scope.currentObject);                        
+//    console.log($scope.currentObject);                        
                 if (angular.isDefined($scope.currentObject._activeContManagement) && ($scope.currentObject._activeContManagement != null)) {
                     $scope.currentObject.contManagementId = $scope.currentObject._activeContManagement.organization.id;
                 }
@@ -867,7 +873,8 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 }
                 if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
     //                            $scope.changeBuildingType($scope.currentObject.buildingType);
-                    performBuildingCategoryList($scope.currentObject.buildingType);
+//                    performBuildingCategoryList($scope.currentObject.buildingType);
+                    $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect($scope.currentObject.buildingType, $scope.data.buildingCategories);
                     setBuildingCategory();
                 }
                 checkGeo();
@@ -1897,36 +1904,38 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         return result;
     };
 
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
+//    function isNumeric(n) {
+//        return !isNaN(parseFloat(n)) && isFinite(n);
+//    }
 
     $scope.checkNumericValue = function (numvalue) {
-        var result = true;
-        if ($scope.checkEmptyNullValue(numvalue)) {
-            return result;
-        }
-        if (!isNumeric(numvalue)) {
-            result = false;
-            return result;
-        }
-        return result;
+        return mainSvc.checkNumericValue(numvalue);
+//        var result = true;
+//        if ($scope.checkEmptyNullValue(numvalue)) {
+//            return result;
+//        }
+//        if (!isNumeric(numvalue)) {
+//            result = false;
+//            return result;
+//        }
+//        return result;
     };
                 
     $scope.checkPositiveNumberValue = function (numvalue) {
-        var result = true;
-        result = $scope.checkNumericValue(numvalue);
-        if (!result) {
-            //if numvalue is not number -> return false
-            return result;
-        }
-        result = parseInt(numvalue, RADIX) >= 0 ? true : false;
-        return result;
+        return mainSvc.checkPositiveNumberValue(numvalue);
+//        var result = true;
+//        result = $scope.checkNumericValue(numvalue);
+//        if (!result) {
+//            //if numvalue is not number -> return false
+//            return result;
+//        }
+//        result = parseInt(numvalue, RADIX) >= 0 ? true : false;
+//        return result;
     };
 
-    $scope.isPositiveNumberValue = function (val) {
-        return mainSvc.isPositiveNumberValue(val);
-    };
+//    $scope.isPositiveNumberValue = function (val) {
+//        return mainSvc.isPositiveNumberValue(val);
+//    };
                 
     $scope.checkNumericInterval = function (leftBorder, rightBorder) {
         if ($scope.checkEmptyNullValue(leftBorder) || $scope.checkEmptyNullValue(rightBorder)) {
@@ -1942,11 +1951,12 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     };
 
     $scope.checkHHmm = function (hhmmValue) {
+        return mainSvc.checkHHmm(hhmmValue);
 //console.log(hhmmValue);                    
-        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
-            return true;
-        }
-        return false;
+//        if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
+//            return true;
+//        }
+//        return false;
     };
                 
     $scope.checkZpointSettingsFrom = function (zpointSettings) {
@@ -1986,6 +1996,20 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         }
         return $scope.checkNumericValue(object.cwTemp) && ($scope.checkNumericValue(object.heatArea));
     };
+    
+    function objectAddressChange(ev) {
+//console.log($scope.currentObject);
+//console.log(ev);            
+//return;            
+//        if (!mainSvc.checkUndefinedNull($scope.currentObject) && $scope.currentObject.isSaving === true) {
+//            return;
+//        }
+        $scope.currentSug = null;
+        $scope.currentObject.isAddressAuto = false;
+        $scope.currentObject.isValidGeoPos = false;
+        checkGeo();
+        $scope.$apply();
+    }
                 
     $(document).ready(function () {
         $('#inputTSNumber').inputmask();
@@ -2011,15 +2035,13 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 //     $scope.currentSug = suggestions[0];
                 // };
                 // $scope.$apply();
+            },
+            /*Если пользователь ничего не выбрал*/
+            onSelectNothing: function (query) {
+                objectAddressChange(query);
             }
         });
-        $("#inputObjAddress").change(function () {
-            $scope.currentSug = null;
-            $scope.currentObject.isAddressAuto = false;
-            $scope.currentObject.isValidGeoPos = false;
-            checkGeo();
-            $scope.$apply();
-        });
+//        $("#inputObjAddress").change(objectAddressChange);
     });
                 
     $('#showZpointOptionModal').on('hidden.bs.modal', function () {
@@ -2030,7 +2052,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     });
 
     $('#showObjOptionModal').on('hidden.bs.modal', function () {
-        $scope.currentObject.isSaving = false;
+        if (!mainSvc.checkUndefinedNull($scope.currentObject)) {
+            $scope.currentObject.isSaving = false;
+        }
         $scope.currentSug = null;
         setActiveObjectPropertiesTab("main_object_properties_tab");
     });
@@ -2305,18 +2329,24 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //                    console.log("changeBuildingType");
         $scope.currentObject.buildingTypeCategory = null;
         $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
-        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-        $('#inputBuildingCategory').addClass('nmc-select-form');
+//        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//        $('#inputBuildingCategory').addClass('nmc-select-form');
+        
+        $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+        $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
+        
         if (mainSvc.checkUndefinedNull(buildingType)) {
             return false;
         }
         $cookies.recentBuildingType = buildingType;
-        performBuildingCategoryList(buildingType);
+//        performBuildingCategoryList(buildingType);
+        $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
     };
 
     function setBuildingCategory() {
         var bCat = null;
-        $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+//        $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+        $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
             if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
                 bCat = bcat;
                 return true;
@@ -2328,11 +2358,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         //50 symbols
 //                    console.log(bCat);
         if (bCat !== null && bCat.caption.length >= 50) {
-            $('#inputBuildingCategory').removeClass('nmc-select-form');
-            $('#inputBuildingCategory').addClass('nmc-select-form-high');
+//            $('#inputBuildingCategory').removeClass('nmc-select-form');
+//            $('#inputBuildingCategory').addClass('nmc-select-form-high');
+            $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form');
+            $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form-high');
         } else {
-            $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-            $('#inputBuildingCategory').addClass('nmc-select-form');
+//            $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//            $('#inputBuildingCategory').addClass('nmc-select-form');
+            $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+            $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
         }
         if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
             return false;

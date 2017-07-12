@@ -1,12 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +9,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с универсальным справочником
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.03.2015
@@ -38,7 +34,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryController extends SubscrApiController {
+public class UDirectoryController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryController.class);
 
@@ -49,11 +45,11 @@ public class UDirectoryController extends SubscrApiController {
 	private UDirectoryNodeService directoryNodeService;
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDirectoryNodes(@PathVariable("id") long directoryId) {
 		UDirectory dir = directoryService.findOne(getCurrentSubscriberId(), directoryId);
 		checkNotNull(dir);
@@ -63,11 +59,11 @@ public class UDirectoryController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @return
 	 */
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
 		if (directoryService.checkAvailableDirectory(getCurrentSubscriberId(), directoryId)) {
@@ -82,23 +78,23 @@ public class UDirectoryController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
 		List<UDirectory> result = directoryService.findAll(getCurrentSubscriberId());
 		checkNotNull(result);
 		return ResponseEntity.ok(result);
 	}
 
-	/**
-	 * 
-	 * @param directoryId
-	 * @param uDirectory
-	 * @return
-	 */
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param id
+     * @param uDirectory
+     * @return
+     */
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOne(@PathVariable("directoryId") long id, @RequestBody UDirectory uDirectory) {
 
 		checkNotNull(uDirectory);
@@ -113,17 +109,17 @@ public class UDirectoryController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param uDirectory
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOne(@RequestBody UDirectory uDirectory, HttpServletRequest request) {
 
 		checkNotNull(uDirectory);
@@ -142,16 +138,16 @@ public class UDirectoryController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 
 	}
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
-	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param directoryId
+     * @return
+     */
+	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") final long directoryId) {
 
 		ApiAction action = new ApiActionAdapter() {
@@ -163,7 +159,7 @@ public class UDirectoryController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 }

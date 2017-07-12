@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
@@ -23,14 +18,19 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractContServiceDataResource;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestListDataSelector;
 import ru.excbt.datafuse.nmk.web.api.support.RequestPageDataSelector;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiController;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с данными по электричеству для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
@@ -38,13 +38,13 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrContServiceDataWebApiControll
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataElController extends SubscrContServiceDataWebApiController {
+public class SubscrContServiceDataElController extends AbstractContServiceDataResource {
 
 	@Autowired
 	private ContServiceDataElService contServiceDataElService;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -55,12 +55,12 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElCons/{timeDetailType}/{contZPointId}/paged",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElConsPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		RequestPageDataSelector<ContServiceDataElCons> dataSelector = new RequestPageDataSelector<ContServiceDataElCons>() {
 
@@ -81,7 +81,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -90,7 +90,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElCons/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElCons(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -114,7 +114,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -123,7 +123,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElCons/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElConsSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -146,7 +146,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -157,12 +157,12 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElProfile/{timeDetailType}/{contZPointId}/paged",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElProfilePaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		RequestPageDataSelector<ContServiceDataElProfile> dataSelector = new RequestPageDataSelector<ContServiceDataElProfile>() {
 
@@ -183,7 +183,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -192,7 +192,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElProfile/{timeDetailType}/{contZPointId}",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElProfile(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -215,7 +215,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -224,7 +224,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElProfile/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElProfileSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -247,7 +247,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -258,12 +258,12 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElTech/{timeDetailType}/{contZPointId}/paged",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElTechPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
-			@PageableDefault(size = DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
+			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		RequestPageDataSelector<ContServiceDataElTech> pageSelector = new RequestPageDataSelector<ContServiceDataElTech>() {
 
@@ -285,7 +285,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param timeDetailType
@@ -294,7 +294,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	 * @return
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceElTech/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElTech(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -317,7 +317,7 @@ public class SubscrContServiceDataElController extends SubscrContServiceDataWebA
 	}
 
 	@RequestMapping(value = "/{contObjectId}/serviceElTech/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getDataElTechSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {

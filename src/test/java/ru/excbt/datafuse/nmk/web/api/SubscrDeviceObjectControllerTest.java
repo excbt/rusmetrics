@@ -1,30 +1,21 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetaVzlet;
-import ru.excbt.datafuse.nmk.data.model.dmo.DeviceObjectDMO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
+import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
@@ -55,8 +46,6 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
         final long id = 128729223L;
         DeviceObjectDTO deviceObjectDTO = deviceObjectService.findDeviceObjectDTO(id);
         TestUtils.objectToJson(deviceObjectDTO);
-        DeviceObjectDMO dmo = deviceObjectService.convert(deviceObjectDTO);
-        TestUtils.objectToJson(dmo);
         deviceObjectDTO.createDeviceLoginIngo();
         deviceObjectDTO.getDeviceLoginInfo().setDeviceLogin("user");
         deviceObjectDTO.getDeviceLoginInfo().setDevicePassword("pass");
@@ -158,6 +147,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 			_testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/deviceModels/" + deviceModels.get(0).getId()));
 		}
 
+
+        _testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/deviceModels/" + 129265814));
+
 	}
 
 	/**
@@ -201,4 +193,9 @@ public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
 		_testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/impulseCounterTypes"));
 	}
 
+
+    @Test
+    public void testHeatRadiatorTypes() throws Exception {
+	    _testGetJson(UrlUtils.apiSubscrUrl("/deviceObjects/heatRadiatorTypes"));
+    }
 }

@@ -18,7 +18,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     var SESSION_TASK_URL = "../api/rma/subscrSessionTask",
         SESSION_DETAIL_TYPE_URL = SESSION_TASK_URL + "/contZPointSessionDetailType/byDeviceObject",
         SESSION_DETAIL_TYPE_FOR_DEVICE_URL = SESSION_TASK_URL + "/sessionDetailTypes/byDeviceObject",
-        REFRESH_PERIOD = 10000;//10 sec
+        REFRESH_PERIOD = 10000;//10 sec        
     
     var interval = null;//interval for load session data
     
@@ -88,7 +88,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         {
             name: "deviceContObjectCaption",
             caption: "Объект",
-            headerClass: "col-xs-4 col-md-4"
+            headerClass: "col-xs-3 col-md-3"
+        }, {
+            name: "deviceObjectName",
+            caption: "Наименование",
+            headerClass: "col-xs-2 col-md-2"
         }, {
             name: "deviceModelCaption",
             caption: "Модель",
@@ -100,7 +104,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }, {
             name: "deviceDatasourceCaption",
             caption: "Источник данных",
-            headerClass: "col-xs-3 col-md-3"
+            headerClass: "col-xs-2 col-md-2"
             
         }, {
             name: "deviceTimeOffsetString",
@@ -126,6 +130,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     $scope.data.deviceModels = [];
     $scope.data.deviceModelTypes = [];
     $scope.data.impulseCounterTypes = [];
+    $scope.data.heaterTypes = [];
     $scope.data.currentObject = {};
     $scope.data.currentScheduler = {};
     $scope.data.currentSession = {};
@@ -165,15 +170,16 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }
     ];
     
-    $scope.data.deviceInstTypes = [
-        {
-            keyname: "P",
-            caption: "Индивидуальный"
-        }, {
-            keyname: "S",
-            caption: "Общедомовой"
-        }
-    ];
+    $scope.data.deviceInstTypes = objectSvc.getDeviceInstTypes();
+//    [
+//        {
+//            keyname: "P",
+//            caption: "Индивидуальный"
+//        }, {
+//            keyname: "S",
+//            caption: "Общедомовой"
+//        }
+//    ];
     
     function setActivePropertiesTab(tabName) {
         $scope.data.deviceModalWindowTabs.forEach(function (tabElem) {
@@ -354,7 +360,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
 //            $scope.data.deviceModelTypes = response.data;
 //            $scope.getDevices();
 //        }, errorProtoCallback);
-//    }
+//    }    
     
     function getImpulseCounterTypes() {
         objectSvc.getImpulseCounterTypes().then(function (response) {
@@ -363,9 +369,27 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         }, errorProtoCallback);
     }
     
+//    var testHeaterTypes = [
+//        {
+//            "id": 229187470, "typeName": "Радиатор чугунный1", "typeDescription": null, "modelName": "РЧ-1"
+//        },
+//        {"id": 229187471, "typeName": "Конвектор панельный1", "typeDescription": null, "modelName": "КП-1"},
+//        {"id": 229187473, "typeName": "Конвектор алюминиевый1", "typeDescription": null, "modelName": "КА-1"},
+//        {"id": 229258741, "typeName": "Радиаторы 1231", "typeDescription": null, "modelName": null}
+//    ];
+    
+    function getHeaterTypes() {
+        objectSvc.getHeaterTypes().then(function (response) {
+            $scope.data.heaterTypes = response.data;
+//            $scope.data.heaterTypes = $scope.data.heaterTypes.concat(testHeaterTypes);
+            getImpulseCounterTypes();
+        }, errorProtoCallback);
+    }
+    
 //    $scope.getDevices();
 //    getDeviceModelTypes();
-    getImpulseCounterTypes();
+    
+    getHeaterTypes();
     
     //get device scheduler
     $scope.getDeviceSchedulerSettings = function (objId, device) {
@@ -407,9 +431,28 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         return resultModel;
     }
     
+/** Speaders and Heaters
+*/
+    $scope.deviceIsSpreader = function () {
+        return (!mainSvc.checkUndefinedNull($scope.data.currentModel) && !mainSvc.checkUndefinedNull($scope.data.currentModel.deviceType) && $scope.data.currentModel.deviceType === objectSvc.HEAT_DISTRIBUTOR);
+    };
+    
+    $scope.checkHeaterDevice = function () {
+        var result = true;
+        if ($scope.data.currentObject.id === null &&  mainSvc.checkUndefinedNull($scope.data.currentObject.heatRadiatorTypeId) && $scope.data.currentObject.isManual) {
+            result = false;
+        }
+        return result;
+    };
+    
     //checkers for model and datasource
     $scope.checkDatasource = function () {
         var result = true;
+        
+        if ($scope.deviceIsSpreader() === true) {
+            return true;
+        }
+        
         if ($scope.data.currentObject.id === null &&  mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId) && $scope.data.currentObject.isManual) {
             result = false;
         }
@@ -439,7 +482,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     };
     
     function checkImpulseCompatibility(model, datasource) {
-        if (!mainSvc.checkUndefinedNull(model) && model.isImpulse === true && datasource.dataSourceType.isRaw !== true) {
+        if (!mainSvc.checkUndefinedNull(model) && !mainSvc.checkUndefinedNull(datasource) && model.isImpulse === true && datasource.dataSourceType.isRaw !== true) {
             notificationFactory.errorInfo("Ошибка", "Выбранный источник данных не поддерживает работу с импульсными приборами");
             return false;
         }
@@ -453,7 +496,13 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         targetDevice.impulseCounterType = impulseCounterTypeKeyname || null;
     }
     
-    $scope.deviceModelChange = function () {
+    function setInputmask() {
+        $timeout(function () {
+            $('#inputHeaterPower').inputmask();
+        });
+    }
+    
+    $scope.deviceModelChange = function () {        
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.deviceModelId)) {
             var tmpDevModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             if (!mainSvc.checkUndefinedNull($scope.data.currentObject) && !mainSvc.checkUndefinedNull($scope.data.currentObject.curDatasource)) {
@@ -464,12 +513,28 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             $scope.data.currentModel = tmpDevModel;
             $scope.data.currentObject.curModel = tmpDevModel;
             
+            if ($scope.deviceIsSpreader() === true) {
+//                $scope.data.currentObject.curDatasource = null;
+                $scope.data.currentObject.subscrDataSourceId = null;
+                
+                $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+                
+                $scope.deviceDatasourceChange();
+    //console.log($scope.data.currentObject);            
+            }
+            
             //change impulseK and impulseMu
             if ($scope.data.currentModel.isImpulse === true) {
                 setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
             } else {
                 setImpulseSettings($scope.data.currentObject, false, null, null, null);
             }
+            
+            if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
+                $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
+            }
+            
+            setInputmask();
             
         }
     };
@@ -556,6 +621,10 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
             $scope.deviceDatasourceChange();
         }
+        
+        if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
+            $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
+        }
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
     };
@@ -565,7 +634,14 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         if (!mainSvc.checkUndefinedNull(device.deviceModelId)) {
             $scope.data.currentModel = findDeviceModelById(device.deviceModelId);
             $scope.data.currentObject.curModel = findDeviceModelById(device.deviceModelId);
+            setInputmask();
         }
+                
+//        if (!mainSvc.checkUndefinedNull(device.heatRadiatorTypeId)) {
+//            var heatRadiatorTypeObject = mainSvc.findItemBy($scope.data.heaterTypes, "id", device.heatRadiatorTypeId);
+//            console.log(heatRadiatorTypeObject);
+//            $scope.data.currentObject.heatRadiatorTypeObject = heatRadiatorTypeObject;
+//        }
         
         objectSvc.getDeviceDatasources(device.contObjectId, device.id).then(
             function (resp) {
@@ -605,6 +681,11 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         
     };
     
+    $scope.selectHeaterType = function () {
+        $cookies.recentHeaterTypeId = $scope.data.currentObject.heatRadiatorTypeId;
+        objectSvc.addRecentHeaterType($scope.data.currentObject.heatRadiatorTypeId);
+    };
+    
     function checkDeviceImpulseProperties(device) {
         var result = true;
         if (mainSvc.checkUndefinedNull(device.impulseK) || device.impulseK == 0) { /* == - only, === - don't catch '0', "Number(device.impulseK) === 0" - do not test*/
@@ -635,8 +716,12 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             notificationFactory.errorInfo("Ошибка", "Не задан объект учета");
             checkDsourceFlag = false;
         }
-        if (device.id === null && mainSvc.checkUndefinedNull(device.subscrDataSourceId) && device.isManual) {
+        if (device.id === null && !$scope.deviceIsSpreader() && mainSvc.checkUndefinedNull(device.subscrDataSourceId) && device.isManual) {
             notificationFactory.errorInfo("Ошибка", "Не задан источник данных");
+            checkDsourceFlag = false;
+        }
+        if (device.id === null && $scope.deviceIsSpreader() && mainSvc.checkUndefinedNull(device.heatRadiatorTypeId) && device.isManual) {
+            notificationFactory.errorInfo("Ошибка", "Не задан прибор отопления");
             checkDsourceFlag = false;
         }
         if (device.id === null && mainSvc.checkUndefinedNull(device.deviceModelId) && device.isManual) {
@@ -648,7 +733,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         if (checkImpulseCompatibility(device.curModel, device.curDatasource) === false) {
             checkDsourceFlag = false;
         }
-        if (!mainSvc.checkUndefinedNull(device.curModel) && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
+        if (!mainSvc.checkUndefinedNull(device.curModel) && !$scope.deviceIsSpreader() && device.curModel.isImpulse === true && device.curDatasource.dataSourceType.isRaw === true) {
             var inputCDFlag = checkDsourceFlag;
             if (checkDeviceImpulseProperties(device) === false) {
                 checkDsourceFlag = false;
@@ -1100,6 +1185,17 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         return $scope.data.currentObject.activeDataSource.subscrDataSource.rawConnectionType === 'CLIENT' && $scope.data.currentObject.activeDataSource.subscrDataSource.rawModemDialEnable === true;
     };
     
+    $scope.recentHeaterGrouping = function (item) {
+        var rhTypes = objectSvc.getRecentHeaterTypes();
+        return rhTypes.indexOf(item.id) > -1 ? "Недавно использованные" : undefined;
+    };
+    
+    $scope.recentHeaterGroupFilter = function (groups) {
+        mainSvc.sortItemsBy(groups, "name");
+        return groups.reverse();
+    };
+    
+    
     $(document).ready(function () {
         $('#inputVerificationInterval').inputmask();
         $('#inputVerificationDate').datepicker({
@@ -1131,6 +1227,9 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     
     $("#showDeviceModal").on("hidden.bs.modal", function () {
         setMainPropertiesActiveTab();
+        $scope.data.currentModel = {};
+        $scope.data.currentObject = {};
+        $scope.$apply();
     });
     
 //    $scope.$watch("data.currentModel", function(newModel) {

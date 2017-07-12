@@ -102,9 +102,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     
     function initialInstallCategory() {
         var filtredCategories = $filter('notEmptyCategories')($scope.categories);
-        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
-            filtredCategories[0].class = "active";
-        }
+        reportSvc.setActiveReportCategory(filtredCategories);
+//        if (angular.isArray(filtredCategories) && filtredCategories.length > 0) {
+//            filtredCategories[0].class = "active";
+//        }
 //console.log($scope.categories);
 //console.log(filtredCategories);        
 //console.log("SetCurrentCategory after reportSvc:reportTypesIsLoaded");        
@@ -1395,6 +1396,10 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
     };
     //Если вариантов отчетов больше $scope.ctrlSettings.reportCountList, то распределить варианты отчетов по категориям
     var successGetContextReports = function (resp) {
+        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
+            console.warn("Context reports is empty or null: ", resp);
+            return false;
+        }
         var reports = angular.copy(resp.data);
         //connect reportType info
         reports.forEach(function (rep) {

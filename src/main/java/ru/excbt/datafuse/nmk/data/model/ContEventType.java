@@ -10,6 +10,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
@@ -29,6 +31,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Getter
+@Setter
 public class ContEventType extends AbstractPersistableEntity<Long> implements DevModeObject, DisabledObject {
 
 	/**
@@ -91,151 +95,5 @@ public class ContEventType extends AbstractPersistableEntity<Long> implements De
 
 	@Column(name = "sms_message_template")
 	private String smsMessageTemplate;
-
-	public String getKeyname() {
-		return keyname;
-	}
-
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
-	}
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
-
-	public Integer getContEventLevel() {
-		return contEventLevel;
-	}
-
-	public void setContEventLevel(Integer contEventLevel) {
-		this.contEventLevel = contEventLevel;
-	}
-
-	public String getContEventCategory() {
-		return contEventCategory;
-	}
-
-	public void setContEventCategory(String contEventCategory) {
-		this.contEventCategory = contEventCategory;
-	}
-
-	public Long getReverseId() {
-		return reverseId;
-	}
-
-	public void setReverseId(Long reverseId) {
-		this.reverseId = reverseId;
-	}
-
-	public Boolean getIsBaseEvent() {
-		return isBaseEvent;
-	}
-
-	public void setIsBaseEvent(Boolean isBaseEvent) {
-		this.isBaseEvent = isBaseEvent;
-	}
-
-	public Boolean getIsCriticalEvent() {
-		return isCriticalEvent;
-	}
-
-	public void setIsCriticalEvent(Boolean isCriticalEvent) {
-		this.isCriticalEvent = isCriticalEvent;
-	}
-
-	public Boolean getIsScalarEvent() {
-		return isScalarEvent;
-	}
-
-	public void setIsScalarEvent(Boolean isScalarEvent) {
-		this.isScalarEvent = isScalarEvent;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	@Override
-	public Boolean getIsDevMode() {
-		return isDevMode;
-	}
-
-	public void setIsDevMode(Boolean isDevMode) {
-		this.isDevMode = isDevMode;
-	}
-
-	@Override
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public void setIsDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
-
-	public Boolean getIsSmsNotification() {
-		return isSmsNotification;
-	}
-
-	public void setIsSmsNotification(Boolean isSmsNotification) {
-		this.isSmsNotification = isSmsNotification;
-	}
-
-	public String getSmsMessageTemplate() {
-		return smsMessageTemplate;
-	}
-
-	public void setSmsMessageTemplate(String smsMessageTemplate) {
-		this.smsMessageTemplate = smsMessageTemplate;
-	}
-
-	public String getContEventCategoryKeyname() {
-		return contEventCategoryKeyname;
-	}
-
-	public void setContEventCategoryKeyname(String contEventCategoryKeyname) {
-		this.contEventCategoryKeyname = contEventCategoryKeyname;
-	}
 
 }

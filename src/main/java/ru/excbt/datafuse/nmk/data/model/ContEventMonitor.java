@@ -15,12 +15,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 
 /**
  * Монитор событий
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.06.2015
@@ -30,10 +32,12 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 @Entity
 @Table(name = "cont_event_monitor")
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4325254578193002326L;
 
@@ -81,109 +85,5 @@ public class ContEventMonitor extends AbstractPersistableEntity<Long> {
 
 	@Column(name = "is_scalar")
 	private Boolean isScalar;
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
-
-	public Long getContEventId() {
-		return contEventId;
-	}
-
-	public void setContEventId(Long contEventId) {
-		this.contEventId = contEventId;
-	}
-
-	public Long getContEventTypeId() {
-		return contEventTypeId;
-	}
-
-	public void setContEventTypeId(Long contEventTypeId) {
-		this.contEventTypeId = contEventTypeId;
-	}
-
-	public Date getContEventTime() {
-		return contEventTime;
-	}
-
-	public void setContEventTime(Date contEventTime) {
-		this.contEventTime = contEventTime;
-	}
-
-	public Integer getContEventLevel() {
-		return ContEventLevel;
-	}
-
-	public void setContEventLevel(Integer contEventLevel) {
-		ContEventLevel = contEventLevel;
-	}
-
-	public ContEventLevelColor getContEventLevelColor() {
-		return contEventLevelColor;
-	}
-
-	public void setContEventLevelColor(ContEventLevelColor contEventLevelColor) {
-		this.contEventLevelColor = contEventLevelColor;
-	}
-
-	public Long getLastContEventId() {
-		return lastContEventId;
-	}
-
-	public void setLastContEventId(Long lastContEventId) {
-		this.lastContEventId = lastContEventId;
-	}
-
-	public Date getLastContEventTime() {
-		return lastContEventTime;
-	}
-
-	public void setLastContEventTime(Date lastContEventTime) {
-		this.lastContEventTime = lastContEventTime;
-	}
-
-	public String getContEventLevelColorKeyname() {
-		return contEventLevelColorKeyname;
-	}
-
-	public void setContEventLevelColorKeyname(String contEventLevelColorKeyname) {
-		this.contEventLevelColorKeyname = contEventLevelColorKeyname;
-	}
-
-	public ContEventType getContEventType() {
-		return contEventType;
-	}
-
-	public void setContEventType(ContEventType contEventType) {
-		this.contEventType = contEventType;
-	}
-
-	public Long getWorseContEventId() {
-		return worseContEventId;
-	}
-
-	public void setWorseContEventId(Long worseContEventId) {
-		this.worseContEventId = worseContEventId;
-	}
-
-	public Date getWorseContEventTime() {
-		return worseContEventTime;
-	}
-
-	public void setWorseContEventTime(Date worseContEventTime) {
-		this.worseContEventTime = worseContEventTime;
-	}
-
-	public Boolean getIsScalar() {
-		return isScalar;
-	}
-
-	public void setIsScalar(Boolean isScalar) {
-		this.isScalar = isScalar;
-	}
 
 }

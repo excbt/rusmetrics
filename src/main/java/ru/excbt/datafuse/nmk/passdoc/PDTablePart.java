@@ -74,6 +74,10 @@ public class PDTablePart implements PDReferable {
     @Setter
     private boolean indentAfter = true;
 
+    @Getter
+    @Setter
+    @JsonInclude(value = Include.NON_NULL)
+    private PDAnchor anchor;
 
     private int keyValueIdxCounter = 0;
 
@@ -172,6 +176,14 @@ public class PDTablePart implements PDReferable {
         this.dynamicSuffix = PDConstants.COMPLEX_IDX_DYNAMIC_SUFFIX;
         return this;
     }
+
+    public PDTablePart anchor(PDAnchor anchor) {
+        if (pdTable != null && !pdTable.anchorExists(anchor.getKey())) {
+            this.anchor = anchor;
+        }
+        return this;
+    }
+
 
     public PDTablePart and() {
         return this;
@@ -383,6 +395,8 @@ public class PDTablePart implements PDReferable {
        Preconditions.checkArgument(value >= 1);
         this.keyValueIdxCounter = value - 1;
     }
+
+
 
 //    public static <T extends PDTableCell<T>> T createValueElement(final Class<T> valueType) {
 //        T result = null;

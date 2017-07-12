@@ -13,6 +13,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -23,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 
 /**
  * Уведомления абонента по событиям
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.06.2015
@@ -33,10 +35,12 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 @Table(name = "subscr_cont_event_notification")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @DynamicUpdate
+@Getter
+@Setter
 public class SubscrContEventNotification extends AbstractAuditableModel implements ContEventTypeModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 691445476392471888L;
 
@@ -104,160 +108,5 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 	@Column(name = "mon_version")
 	@NotNull
 	private Short monVersion = 1;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public ContEvent getContEvent() {
-		return contEvent;
-	}
-
-	public void setContEvent(ContEvent contEvent) {
-		this.contEvent = contEvent;
-	}
-
-	public Integer getContEventLevel() {
-		return contEventLevel;
-	}
-
-	public void setContEventLevel(Integer contEventLevel) {
-		this.contEventLevel = contEventLevel;
-	}
-
-	public String getContEventLevelColor() {
-		return contEventLevelColor;
-	}
-
-	public void setContEventLevelColor(String contEventLevelColor) {
-		this.contEventLevelColor = contEventLevelColor;
-	}
-
-	public Boolean getIsNew() {
-		return isNew;
-	}
-
-	public void setIsNew(Boolean isNew) {
-		this.isNew = isNew;
-	}
-
-	public Date getNotificationTime() {
-		return notificationTime;
-	}
-
-	public void setNotificationTime(Date notificationTime) {
-		this.notificationTime = notificationTime;
-	}
-
-	public Date getRevisionTime() {
-		return revisionTime;
-	}
-
-	public void setRevisionTime(Date revisionTime) {
-		this.revisionTime = revisionTime;
-	}
-
-	public Date getContEventTime() {
-		return contEventTime;
-	}
-
-	public void setContEventTime(Date contEventTime) {
-		this.contEventTime = contEventTime;
-	}
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public Long getRevisionSubscrUserId() {
-		return revisionSubscrUserId;
-	}
-
-	public void setRevisionSubscrUserId(Long revisionSubscrUserId) {
-		this.revisionSubscrUserId = revisionSubscrUserId;
-	}
-
-	@Override
-	public Long getContEventTypeId() {
-		return contEventTypeId;
-	}
-
-	public void setContEventTypeId(Long contEventTypeId) {
-		this.contEventTypeId = contEventTypeId;
-	}
-
-	public Date getNotificationTimeTZ() {
-		return notificationTimeTZ;
-	}
-
-	public void setNotificationTimeTZ(Date notificationTimeTZ) {
-		this.notificationTimeTZ = notificationTimeTZ;
-	}
-
-	public Date getRevisionTimeTZ() {
-		return revisionTimeTZ;
-	}
-
-	public void setRevisionTimeTZ(Date revisionTimeTZ) {
-		this.revisionTimeTZ = revisionTimeTZ;
-	}
-
-	public String getContEventCategoryKeyname() {
-		return contEventCategoryKeyname;
-	}
-
-	public void setContEventCategoryKeyname(String contEventCategoryKeyname) {
-		this.contEventCategoryKeyname = contEventCategoryKeyname;
-	}
-
-	public String getContEventDeviationKeyname() {
-		return contEventDeviationKeyname;
-	}
-
-	public void setContEventDeviationKeyname(String contEventDeviationKeyname) {
-		this.contEventDeviationKeyname = contEventDeviationKeyname;
-	}
-
-	public Long getContEventId() {
-		return contEventId;
-	}
-
-	public void setContEventId(Long contEventId) {
-		this.contEventId = contEventId;
-	}
-
-	public Short getMonVersion() {
-		return monVersion;
-	}
-
-	public void setMonVersion(Short monVersion) {
-		this.monVersion = monVersion;
-	}
-
-	@Override
-	public ContEventType getContEventType() {
-		return contEventType;
-	}
-
-	@Override
-	public void setContEventType(ContEventType contEventType) {
-		this.contEventType = contEventType;
-	}
 
 }

@@ -17,6 +17,8 @@ import javax.persistence.TemporalType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -35,6 +37,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Table(name = "subscr_service_pack")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SubscrServicePack extends JsonAbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
@@ -87,67 +91,5 @@ public class SubscrServicePack extends JsonAbstractAuditableModel implements Key
 
 	@Column(name = "is_special")
 	private Boolean isSpecial;
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
-	public String getPackName() {
-		return packName;
-	}
-
-	public String getPackCaption() {
-		return packCaption;
-	}
-
-	public String getPackDescription() {
-		return packDescription;
-	}
-
-	public String getPackComment() {
-		return packComment;
-	}
-
-	@Override
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public Date getActiveStartDate() {
-		return activeStartDate;
-	}
-
-	public Date getActiveEndDate() {
-		return activeEndDate;
-	}
-
-	public String getHelpContext() {
-		return helpContext;
-	}
-
-	public String getPackNr() {
-		return packNr;
-	}
-
-	public Integer getPackOrder() {
-		return packOrder;
-	}
-
-	public List<SubscrServiceItem> getServiceItems() {
-		return serviceItems;
-	}
-
-	@Override
-	public String getKeyname() {
-		return keyname;
-	}
-
-	public Boolean getIsPersistentService() {
-		return isPersistentService;
-	}
-
-	public Boolean getIsSpecial() {
-		return isSpecial;
-	}
 
 }

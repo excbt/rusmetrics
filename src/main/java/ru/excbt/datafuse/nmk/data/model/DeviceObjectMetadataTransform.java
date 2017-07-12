@@ -7,14 +7,18 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "device_object_metadata_transform")
+@Getter
+@Setter
 public class DeviceObjectMetadataTransform extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2174143740110324563L;
 
@@ -36,11 +40,11 @@ public class DeviceObjectMetadataTransform extends AbstractAuditableModel {
 	@Column(name = "is_integrator")
 	private Boolean isIntegrator;
 
-	@Column(name = "src_prop_division")
-	private BigDecimal srcPropDivision;
+	@Column(name = "src_prop_division", columnDefinition = "numeric")
+	private Double srcPropDivision;
 
-	@Column(name = "dest_prop_capacity")
-	private BigDecimal destPropCapacity;
+	@Column(name = "dest_prop_capacity", columnDefinition = "numeric")
+	private Double destPropCapacity;
 
 	@Column(name = "src_measure_unit")
 	private String srcMeasureUnit;
@@ -80,173 +84,5 @@ public class DeviceObjectMetadataTransform extends AbstractAuditableModel {
 
 	@Column(name = "device_object_metadata_id")
 	private Long deviceObjectMetadataId;
-
-	public String getDeviceMetadataType() {
-		return deviceMetadataType;
-	}
-
-	public void setDeviceMetadataType(String deviceMetadataType) {
-		this.deviceMetadataType = deviceMetadataType;
-	}
-
-	public Long getDeviceObjectId() {
-		return deviceObjectId;
-	}
-
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
-	}
-
-	public String getContServiceType() {
-		return contServiceType;
-	}
-
-	public void setContServiceType(String contServiceType) {
-		this.contServiceType = contServiceType;
-	}
-
-	public String getSrcProp() {
-		return srcProp;
-	}
-
-	public void setSrcProp(String srcProp) {
-		this.srcProp = srcProp;
-	}
-
-	public String getDestProp() {
-		return destProp;
-	}
-
-	public void setDestProp(String destProp) {
-		this.destProp = destProp;
-	}
-
-	public Boolean getIsIntegrator() {
-		return isIntegrator;
-	}
-
-	public void setIsIntegrator(Boolean isIntegrator) {
-		this.isIntegrator = isIntegrator;
-	}
-
-	public BigDecimal getSrcPropDivision() {
-		return srcPropDivision;
-	}
-
-	public void setSrcPropDivision(BigDecimal srcPropDivision) {
-		this.srcPropDivision = srcPropDivision;
-	}
-
-	public BigDecimal getDestPropCapacity() {
-		return destPropCapacity;
-	}
-
-	public void setDestPropCapacity(BigDecimal destPropCapacity) {
-		this.destPropCapacity = destPropCapacity;
-	}
-
-	public String getSrcMeasureUnit() {
-		return srcMeasureUnit;
-	}
-
-	public void setSrcMeasureUnit(String srcMeasureUnit) {
-		this.srcMeasureUnit = srcMeasureUnit;
-	}
-
-	public String getDestMeasureUnit() {
-		return destMeasureUnit;
-	}
-
-	public void setDestMeasureUnit(String destMeasureUnit) {
-		this.destMeasureUnit = destMeasureUnit;
-	}
-
-	public Integer getMetaNumber() {
-		return metaNumber;
-	}
-
-	public void setMetaNumber(Integer metaNumber) {
-		this.metaNumber = metaNumber;
-	}
-
-	public Integer getMetaOrder() {
-		return metaOrder;
-	}
-
-	public void setMetaOrder(Integer metaOrder) {
-		this.metaOrder = metaOrder;
-	}
-
-	public String getMetaDescription() {
-		return metaDescription;
-	}
-
-	public void setMetaDescription(String metaDescription) {
-		this.metaDescription = metaDescription;
-	}
-
-	public String getMetaComment() {
-		return metaComment;
-	}
-
-	public void setMetaComment(String metaComment) {
-		this.metaComment = metaComment;
-	}
-
-	public String getPropVars() {
-		return propVars;
-	}
-
-	public void setPropVars(String propVars) {
-		this.propVars = propVars;
-	}
-
-	public String getPropFunc() {
-		return propFunc;
-	}
-
-	public void setPropFunc(String propFunc) {
-		this.propFunc = propFunc;
-	}
-
-	public String getDestDbType() {
-		return destDbType;
-	}
-
-	public void setDestDbType(String destDbType) {
-		this.destDbType = destDbType;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Integer getMetaVersion() {
-		return metaVersion;
-	}
-
-	public void setMetaVersion(Integer metaVersion) {
-		this.metaVersion = metaVersion;
-	}
-
-	public Long getDeviceObjectMetadataId() {
-		return deviceObjectMetadataId;
-	}
-
-	public void setDeviceObjectMetadataId(Long deviceObjectMetadataId) {
-		this.deviceObjectMetadataId = deviceObjectMetadataId;
-	}
 
 }

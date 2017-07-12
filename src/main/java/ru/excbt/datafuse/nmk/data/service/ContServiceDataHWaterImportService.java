@@ -1,21 +1,9 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
 import org.postgresql.util.PSQLException;
@@ -25,174 +13,177 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWaterImport;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
+import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.12.2016
- * 
+ *
  */
 @Service
 public class ContServiceDataHWaterImportService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterImportService.class);
+	private static final Logger log = LoggerFactory.getLogger(ContServiceDataHWaterImportService.class);
 
-	private final static String IMPORT_ERROR_TEMPLATE = "Ошибка импорта данных. Файл %s";
-	private final static String IMPORT_COMPLETE_TEMPLATE = "Данные из файла %s успешно загружены";
-	private final static String IMPORT_EXCEPTION_TEMPLATE = "Data Import Error. %s. File: %s";
+//	private final static String IMPORT_ERROR_TEMPLATE = "Ошибка импорта данных. Файл %s";
+//	private final static String IMPORT_COMPLETE_TEMPLATE = "Данные из файла %s успешно загружены";
+//	private final static String IMPORT_EXCEPTION_TEMPLATE = "Data Import Error. %s. File: %s";
 
-	@Autowired
-	private ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository;
+	private final ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
 
-	@Autowired
-	private HWatersCsvService hWatersCsvService;
+	private final HWatersCsvService hWatersCsvService;
 
-	@Autowired
-	private SLogWriterService sLogWriterService;
 
-	public class Task implements Callable<Boolean> {
+	private final SLogWriterService sLogWriterService;
 
-		private final List<ServiceDataImportInfo> serviceDataImportInfos;
+    private final SubscriberExecutorService subscriberExecutorService;
 
-		/**
-		 * 
-		 */
-		public Task(List<ServiceDataImportInfo> serviceDataImportInfos) {
-			checkNotNull(serviceDataImportInfos);
+    public ContServiceDataHWaterImportService(ContServiceDataHWaterImportRepository contServiceDataHWaterImportRepository,
+                                              ContZPointService contZPointService,
+                                              HWatersCsvService hWatersCsvService,
+                                              SLogWriterService sLogWriterService,
+                                              SubscriberExecutorService subscriberExecutorService) {
+        this.contServiceDataHWaterImportRepository = contServiceDataHWaterImportRepository;
+        this.contZPointService = contZPointService;
+        this.hWatersCsvService = hWatersCsvService;
+        this.sLogWriterService = sLogWriterService;
+        this.subscriberExecutorService = subscriberExecutorService;
+    }
 
-			this.serviceDataImportInfos = new ArrayList<>(serviceDataImportInfos);
-		}
-
-		/* (non-Javadoc)
-		 * @see java.util.concurrent.Callable#call()
-		 */
-		@Override
-		public Boolean call() throws Exception {
-			logger.debug("Start Task");
-			if (serviceDataImportInfos.isEmpty()) {
-				return Boolean.FALSE;
-			}
-			logger.debug("Import Data");
-			try {
-				importData(serviceDataImportInfos);
-			} catch (Exception e) {
-				return Boolean.FALSE;
-			}
-			return Boolean.TRUE;
-		}
-
-	}
-
-	/**
-	 * 
+    /**
+	 *
 	 * @param serviceDataImportInfos
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	public void importData(final List<ServiceDataImportInfo> serviceDataImportInfos) {
+	public void importData(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
 
 		Date createdDate = new Date();
 
 		for (ServiceDataImportInfo importInfo : serviceDataImportInfos) {
 
+		    String msg = String.format("Пользователь ID %d Загрузка файла %s ",
+                subscriberId, FilenameUtils.getName(importInfo.getInternalFileName()));
+
+
+		    String errorMessage = String.format(FileImportInfo.IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName());
+		    String completeMessage = String.format(FileImportInfo.IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName());
+
 			SLogSessionT1 session = sLogWriterService.newSessionWebT1(importInfo.getDataSourceId(),
-					importInfo.getDeviceObjectId(), String.format("Пользователь ID %d Загрузка файла %s ",
-							importInfo.getAuthorId(), FilenameUtils.getName(importInfo.getInternalFileName())),
-					importInfo.getAuthorId());
+					importInfo.getDeviceObjectId(), msg,
+                subscriberId);
 
 			session.status(SLogSessionStatuses.GENERATING.getKeyname(),
 					"Загрузка файла: " + importInfo.getUserFileName());
 
-			session.web().trace("Проверка файла на валидность");
+			session.web().trace("Проверка целостности CSV файла");
+			SLogSessionUtils.checkCsvSeparators(session, importInfo);
+			session.web().trace("Проверка целостности CSV пройдена");
+            session.web().trace("Преобразование данных файла");
 
-			boolean checkCsvSeparators = false;
-			try {
-				checkCsvSeparators = hWatersCsvService.checkCsvSeparators(importInfo.getInternalFileName());
-			} catch (FileNotFoundException e1) {
-				failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			} catch (IOException e1) {
-				failSession(session, importInfo, "Ошибка. Файл не может быть проверен");
-				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			}
-
-			if (!checkCsvSeparators) {
-				failSession(session, importInfo, "Ошибка. Файл не содержит полных данных");
-				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE,
-						"Check CSV separators error", importInfo.getUserFileName()));
-			}
-
-			session.web().trace("Проверка файла на валидность пройдена");
-
-			session.web().trace("Обработка данных файла");
-
+			// Reading CSV from FILE
 			List<ContServiceDataHWaterImport> inDataHWaterImport;
 			try (FileInputStream fio = new FileInputStream(importInfo.getInternalFileName())) {
 				inDataHWaterImport = hWatersCsvService.parseDataHWaterImportCsv(fio);
-			} catch (IOException e) {
-				failSession(session, importInfo, "Ошибка. Данные из файла не могут быть обработаны");
-				logger.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
+			} catch (Exception e) {
+			    if (e instanceof RuntimeJsonMappingException) {
+                    session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
+                }
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Данные из файла не могут быть обработаны", errorMessage);
+
+				log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
 						session.getSessionUUID(), e.getMessage());
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "Parsing error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Parsing error", importInfo.getUserFileName()));
 			}
 
-			session.web().trace("Данные считаны. Проверка данных на валидность");
+            session.web().trace("Преобразование данных файла завершено");
+
+			session.web().trace("Данные преобразованы. Проверка данных на валидность");
 
 			if (inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null)
 					.count() > 0) {
-				failSession(session, importInfo, "Ошибка. Не задано значение detail_type");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Не задано значение detail_type", errorMessage);
+
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
 
 			List<String> timeDetailTypes = inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct()
 					.collect(Collectors.toList());
 			if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
-				failSession(session, importInfo, "Ошибка. В файле задано более 2-х типов detail_type");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. В файле задано более 2-х типов detail_type", errorMessage);
+
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
 
 			if (inDataHWaterImport.stream().map(i -> i.getDataDate()).distinct().filter(s -> s == null).count() > 0) {
-				failSession(session, importInfo, "Ошибка. Найдено пустое значение date");
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Найдено пустое значение date", errorMessage);
+
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
 
 			TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(timeDetailTypes.get(0));
 
 			if (timeDetailKey == null) {
-				failSession(session, importInfo, "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0));
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0), errorMessage);
+
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
 			}
 
 			session.web().trace("Поиск точки учета");
 			ContZPoint zpoint = contZPointService.findOne(importInfo.getContZPointId());
 
 			if (zpoint == null) {
-				failSession(session, importInfo, "Ошибка. Точка учета не найдена");
-				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Точка учета не найдена", errorMessage);
+
+				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
 						importInfo.getUserFileName()));
 			}
 
@@ -200,15 +191,18 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					zpoint.getTsNumber()));
 
 			if (!BooleanUtils.isTrue(zpoint.getIsManualLoading())) {
-				failSession(session, importInfo, "Ошибка. Точка учета не поддерживает импорт данных");
-				throw new IllegalArgumentException(String.format(IMPORT_EXCEPTION_TEMPLATE,
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Точка учета не поддерживает импорт данных", errorMessage);
+
+                throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
 						"ContZPoint is support import", importInfo.getUserFileName()));
 			}
 
 			inDataHWaterImport.forEach(i -> {
 				i.setContZPointId(importInfo.getContZPointId());
 				i.setDeviceObjectId(importInfo.getDeviceObjectId());
-				i.setCreatedBy(importInfo.getAuthorId());
+				i.setCreatedBy(subscriberId);
 				i.setCreatedDate(createdDate);
 				i.setTrxId(session.getSessionUUID());
 			});
@@ -232,11 +226,14 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			try {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
-				failSession(session, importInfo, "Ошибка. Загрузка в БД временно не возможна");
-				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+
+                SLogSessionUtils.failSession(session,
+                    "Ошибка. Загрузка в БД временно не возможна", errorMessage);
+
+                log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), e);
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
 			}
 			session.web().trace("Загрузка данных в БД успешно завершена");
 
@@ -244,57 +241,55 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			// Call Stored proc
 			try {
-				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import");
+				log.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import");
 				contServiceDataHWaterImportRepository.processImport(session.getSessionUUID().toString());
-				logger.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
+				log.debug("processImport.Calling Stored proc portal.process_service_data_hwater_import SUCCESS");
 			} catch (Exception e) {
 
-				PSQLException pe = DBExceptionUtils.getPSQLException(e);
-				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
-				logger.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
+//				PSQLException pe = DBExceptionUtils.getPSQLException(e);
+//				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
+                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+
+              log.error("Hwater Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 
 				session.web().trace("Ошибка при обновлении данных");
-				failSession(session, importInfo, sqlExceptiomMessage);
+
+                SLogSessionUtils.failSession(session,
+                    sqlExceptiomMessage, errorMessage);
 
 				throw new IllegalArgumentException(
-						String.format(IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
+						String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "DB save error", importInfo.getUserFileName()));
 			}
 
 			session.web().trace("Обновление данных успешно завершено");
-			completeSession(session, importInfo);
+            SLogSessionUtils.completeSession(session, completeMessage);
 		}
 	}
 
 	/**
-	 * 
-	 * @param session
-	 * @param message
-	 * @param importInfo
-	 */
-	private void failSession(SLogSessionT1 session, ServiceDataImportInfo importInfo, String message) {
-		session.web().trace(message);
-		session.status(SLogSessionStatuses.FAILURE.getKeyname(),
-				String.format(IMPORT_ERROR_TEMPLATE, importInfo.getUserFileName()));
-	}
-
-	/**
-	 * 
-	 * @param session
-	 * @param importInfo
-	 */
-	private void completeSession(SLogSessionT1 session, ServiceDataImportInfo importInfo) {
-		session.status(SLogSessionStatuses.COMPLETE.getKeyname(),
-				String.format(IMPORT_COMPLETE_TEMPLATE, importInfo.getUserFileName()));
-	}
-
-	/**
-	 * 
+	 *
 	 * @param serviceDataImportInfos
 	 * @return
 	 */
-	public Callable<Boolean> newTask(final List<ServiceDataImportInfo> serviceDataImportInfos) {
-		return new Task(serviceDataImportInfos);
-	}
+	public Future<Boolean> submitImportTask(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
+        return subscriberExecutorService.submit(subscriberId, () -> {
+            try {
+                log.debug("Start HWaterImportTask");
+                if (serviceDataImportInfos.isEmpty()) {
+                    return Boolean.FALSE;
+                }
+                log.debug("Import Data");
+                try {
+                    importData(subscriberId, serviceDataImportInfos);
+                } catch (Exception e) {
+                    return Boolean.FALSE;
+                }
+                return Boolean.TRUE;
+            } finally {
+                log.debug("Finish HWaterImportTask");
+            }
+        });
+    }
 
 }

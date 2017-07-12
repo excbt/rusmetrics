@@ -60,7 +60,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис по работе с данными по горячей воде
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.03.2015
@@ -92,7 +92,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	private HWatersCsvService hWatersCsvService;
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -109,7 +109,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -129,7 +129,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -150,7 +150,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -170,7 +170,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
@@ -189,7 +189,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param beginDate
 	 * @param endDate
@@ -210,7 +210,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param datePeriod
@@ -231,7 +231,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -244,7 +244,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -271,7 +271,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
@@ -291,7 +291,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param fromDateTime
 	 * @return
@@ -302,7 +302,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -316,7 +316,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @return
 	 */
@@ -329,7 +329,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -365,17 +365,18 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 
 		ContServiceDataHWaterTotals result = new ContServiceDataHWaterTotals();
 
-		result.setM_in((BigDecimal) results[0]);
-		result.setM_out((BigDecimal) results[1]);
-		result.setM_delta((BigDecimal) results[2]);
+		// TODO
+		result.setM_in((Double) results[0]);
+		result.setM_out((Double) results[1]);
+		result.setM_delta((Double) results[2]);
 
-		result.setH_in((BigDecimal) results[3]);
-		result.setH_out((BigDecimal) results[4]);
-		result.setH_delta((BigDecimal) results[5]);
+		result.setH_in((Double) results[3]);
+		result.setH_out((Double) results[4]);
+		result.setH_delta((Double) results[5]);
 
-		result.setV_in((BigDecimal) results[6]);
-		result.setV_out((BigDecimal) results[7]);
-		result.setV_delta((BigDecimal) results[8]);
+		result.setV_in((Double) results[6]);
+		result.setV_out((Double) results[7]);
+		result.setV_delta((Double) results[8]);
 
 		result.setContZPointId(contZpointId);
 		result.setBeginDate(beginDate.toDate());
@@ -423,31 +424,31 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkNotNull(results);
 
 		ContServiceDataHWater result = new ContServiceDataHWater();
-		result.setT_in(columnHelper.getResult(results, "t_in"));
-		result.setT_out(columnHelper.getResult(results, "t_out"));
-		result.setT_cold(columnHelper.getResult(results, "t_cold"));
-		result.setT_outdoor(columnHelper.getResult(results, "t_outdoor"));
-		result.setM_in(columnHelper.getResult(results, "m_in"));
-		result.setM_out(columnHelper.getResult(results, "m_out"));
-		result.setM_delta(columnHelper.getResult(results, "m_delta"));
-		result.setV_in(columnHelper.getResult(results, "v_in"));
-		result.setV_out(columnHelper.getResult(results, "v_out"));
-		result.setV_delta(columnHelper.getResult(results, "v_delta"));
-		result.setH_in(columnHelper.getResult(results, "h_in"));
-		result.setH_out(columnHelper.getResult(results, "h_out"));
-		result.setH_delta(columnHelper.getResult(results, "h_delta"));
-		result.setP_in(columnHelper.getResult(results, "p_in"));
-		result.setP_out(columnHelper.getResult(results, "p_out"));
-		result.setP_delta(columnHelper.getResult(results, "p_delta"));
-		result.setWorkTime(columnHelper.getResult(results, "workTime"));
-		result.setFailTime(columnHelper.getResult(results, "failTime"));
+		result.setT_in(columnHelper.getResultDouble(results, "t_in"));
+		result.setT_out(columnHelper.getResultDouble(results, "t_out"));
+		result.setT_cold(columnHelper.getResultDouble(results, "t_cold"));
+		result.setT_outdoor(columnHelper.getResultDouble(results, "t_outdoor"));
+		result.setM_in(columnHelper.getResultDouble(results, "m_in"));
+		result.setM_out(columnHelper.getResultDouble(results, "m_out"));
+		result.setM_delta(columnHelper.getResultDouble(results, "m_delta"));
+		result.setV_in(columnHelper.getResultDouble(results, "v_in"));
+		result.setV_out(columnHelper.getResultDouble(results, "v_out"));
+		result.setV_delta(columnHelper.getResultDouble(results, "v_delta"));
+		result.setH_in(columnHelper.getResultDouble(results, "h_in"));
+		result.setH_out(columnHelper.getResultDouble(results, "h_out"));
+		result.setH_delta(columnHelper.getResultDouble(results, "h_delta"));
+		result.setP_in(columnHelper.getResultDouble(results, "p_in"));
+		result.setP_out(columnHelper.getResultDouble(results, "p_out"));
+		result.setP_delta(columnHelper.getResultDouble(results, "p_delta"));
+		result.setWorkTime(columnHelper.getResultDouble(results, "workTime"));
+		result.setFailTime(columnHelper.getResultDouble(results, "failTime"));
 
 		return result;
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
@@ -467,7 +468,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDateTime
 	 * @return
@@ -514,7 +515,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param timeDetail
 	 * @param beginDate
@@ -548,7 +549,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param inData
 	 */
@@ -601,7 +602,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param localDatePeriod
 	 * @param outFile
@@ -642,12 +643,11 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		return deleteCandidate;
 	}
 
-	/**
-	 * 
-	 * @param contZpointId
-	 * @param fromDateTime
-	 * @return
-	 */
+    /**
+     *
+     * @param contZpointId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZpointId) {
 		checkArgument(contZpointId > 0);
@@ -672,7 +672,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointIds
 	 * @return
 	 */
@@ -690,7 +690,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	}
 
 	/**
-	 * 
+	 *
 	 * @param idServiceTypePairs
 	 * @return
 	 */

@@ -2,8 +2,8 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
-             function ($http, $cookies, $interval, $rootScope, $q) {
+app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', '$timeout',
+             function ($http, $cookies, $interval, $rootScope, $q, $timeout) {
 //console.log("Object Service. Run."); 
                  
         var svcObjects = [
@@ -12,7 +12,11 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             }
         ];
         var SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",
-            OBJECT_PER_SCROLL = 42;
+            OBJECT_PER_SCROLL = 42,
+            RECENT_HEATER_TYPE_ARR_LENGTH = 5; //length of recentHeaterTypes
+                 //Device types
+        var HEAT_DISTRIBUTOR = "HEAT_DISTRIBUTOR";//
+                 
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
         BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
@@ -28,6 +32,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             urlDeviceModels = urlRma + urlDeviceObjects + '/deviceModels',
             urlDeviceModelTypes = urlRma + urlDeviceObjects + '/deviceModelTypes',
             urlImpulseCounterTypes = urlRma + urlDeviceObjects + '/impulseCounterTypes',
+            urlHeaterTypes = urlRma + urlDeviceObjects + '/heatRadiatorTypes',
             urlDeviceMetaDataVzlet = '/metaVzlet',
             urlDeviceMetaDataSuffix = '/metadata',
             urlZpointMetaDataSuffix = '/metadata',
@@ -59,7 +64,18 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
 
         var objectSvcSettings = {};
         var buildingTypes = [],
-            buildingCategories = [];
+            buildingCategories = [],
+            recentHeaterTypes = [];
+                 
+        var deviceInstTypes = [
+            {
+                keyname: "P",
+                caption: "Индивидуальный"
+            }, {
+                keyname: "S",
+                caption: "Общедомовой"
+            }
+        ];
         
         //request canceling params
         var requestCanceler = null;
@@ -85,7 +101,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         var isSystemuser = function () {
             var result = false;
             var userInfo = $rootScope.userInfo;
-            if (angular.isDefined(userInfo)) {
+            if (angular.isDefined(userInfo) && userInfo.hasOwnProperty("_system")) {
                 result = userInfo._system;
             }
             return result;
@@ -117,7 +133,9 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         var setObjectSettings = function (objectSettings) {
             var key;
             for (key in objectSettings) {
-                objectSvcSettings[key] = objectSettings[key];
+                if (objectSettings.hasOwnProperty(key)) {
+                    objectSvcSettings[key] = objectSettings[key];
+                }
             }
         };
         
@@ -146,10 +164,15 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         function getBuildingCategories() {
             return buildingCategories;
         }
+                 
         function getBuildingTypes() {
             return buildingTypes;
         }
         
+        function getDeviceInstTypes() {
+            return deviceInstTypes;
+        }
+                 
         var getRsoOrganizations = function () {
             var url = urlRsoOrganizations;
             if (isCancelParamsIncorrect() === true) {
@@ -245,7 +268,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             return $http.get(url, httpOptions);
         };
                  
-        var getDeviceModels = function () {            
+        var getDeviceModels = function () {
             var url = urlDeviceModels;
             if (isCancelParamsIncorrect() === true) {
                 return null;
@@ -263,6 +286,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
                  
         function getImpulseCounterTypes() {
             var url = urlImpulseCounterTypes;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
+                 
+        function getHeaterTypes() {
+            var url = urlHeaterTypes;
             if (isCancelParamsIncorrect() === true) {
                 return null;
             }
@@ -344,6 +375,11 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             }
             $http.get(url, httpOptions)
                 .then(function (resp) {
+                    $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
+                    if (angular.isUndefined(resp) || resp === null || angular.isUndefined(resp.data) || resp.data === null) {
+                        console.warn("Device metadata measures response is empty!", resp);
+                        return false;
+                    }
                     deviceMetadataMeasures.all = resp.data;
 //                for (var measU in deviceMetadataMeasures.all){
 //                    getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, measU, deviceMetadataMeasures);
@@ -352,7 +388,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
                         getRmaMetadataMeasureUnit(urlDeviceMetadataMeasures, ind, deviceMetadataMeasures);
                     });
 //console.log(deviceMetadataMeasures);                
-                    $rootScope.$broadcast('objectSvc:deviceMetadataMeasuresLoaded');
+                    
                 },
                     function (err) {
                         console.log(err);
@@ -838,7 +874,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             $http.get(url).then(function (resp) {
                 $rootScope.$broadcast(BROADCASTS.BUILDING_TYPES_LOADED);
                 if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
-                    console.log("Building type list is empty!");
+                    console.warn("Building type list is empty!", resp);
                     return false;
                 }
                 buildingTypes = angular.copy(resp.data);
@@ -852,13 +888,38 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             $http.get(url).then(function (resp) {
                 $rootScope.$broadcast(BROADCASTS.BUILDING_CATEGORIES_LOADED);
                 if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data) || !angular.isArray(resp.data)) {
-                    console.log("Building category list is empty!");
+                    console.warn("Building category list is empty!", resp);
                     return false;
                 }
                 buildingCategories = angular.copy(resp.data);
             }, function (e) {
                 console.log(e);
             });
+        }
+                 
+        function performBuildingCategoryListForUiSelect(buildingType, buildingCategories) {
+            //find b cat when buildingType === input buildingType
+            //find b cat when parentCat === keyname from up ^
+            var categoryListByBuildingType = [],
+                filtredCategoryList = [],
+                preparedCategory = null,
+                parentCategories = [];
+            buildingCategories.forEach(function (bcat) {
+                if (bcat.buildingType === buildingType && bcat.parentCategory === null) {
+                    var parentCat = angular.copy(bcat);
+                    parentCat.depth = 1;
+                    categoryListByBuildingType.push(parentCat);
+                    buildingCategories.forEach(function (cat) {
+                        if (cat.parentCategory === bcat.keyname) {
+                            var childCat = angular.copy(cat);
+                            childCat.depth = 2;
+                            categoryListByBuildingType.push(childCat);
+                        }
+                    });
+                }
+            });
+            return categoryListByBuildingType;
+//                    console.log($scope.data.preparedBuildingCategoryListForUiSelect);
         }
 // **************************************************************
 //      Bulding types
@@ -887,7 +948,20 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
             var url = urlSubscrContObjects + '/' + meterPeriodData.contObjectId + meterPeriodSuffix;
             return $http.put(url, meterPeriodData);
         }
+/**                 
+    Heater types.
+    
+*/
+        function getRecentHeaterTypes() {
+            return recentHeaterTypes;
+        }
                  
+        function addRecentHeaterType(heaterType) {
+            if (recentHeaterTypes.length >= RECENT_HEATER_TYPE_ARR_LENGTH) {
+                recentHeaterTypes.shift();
+            }
+            recentHeaterTypes.push(heaterType);
+        }
         
         //service initialization
         var initSvc = function () {
@@ -908,92 +982,99 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q',
         initSvc();
                     
         return {
-            BROADCASTS,
-            OBJECT_PER_SCROLL,
-            createTree,
-            deleteTree,
-            deleteTreeNode,
-            getAllDevices,
-            getBuildingCategories,
-            getBuildingTypes,
-            getCityConsumingData,
-            getCitiesConsumingData,
-            getCmOrganizations,
-            getCmOrganizationsWithId,
-            getCurrentObject,
-            getDatasourcesUrl,
-            getDeviceModels,
+            BROADCASTS: BROADCASTS,
+            HEAT_DISTRIBUTOR: HEAT_DISTRIBUTOR,
+            OBJECT_PER_SCROLL: OBJECT_PER_SCROLL,
+            addRecentHeaterType: addRecentHeaterType,
+            createTree: createTree,
+            deleteTree: deleteTree,
+            deleteTreeNode: deleteTreeNode,
+            getAllDevices: getAllDevices,
+            getBuildingCategories: getBuildingCategories,
+            getBuildingTypes: getBuildingTypes,
+            getCityConsumingData: getCityConsumingData,
+            getCitiesConsumingData: getCitiesConsumingData,
+            getCmOrganizations: getCmOrganizations,
+            getCmOrganizationsWithId: getCmOrganizationsWithId,
+            getCurrentObject: getCurrentObject,
+            getDatasourcesUrl: getDatasourcesUrl,
+            getDeviceInstTypes: getDeviceInstTypes,
+            getDeviceModels: getDeviceModels,
             /*getDeviceModelTypes,*/
-            getDeviceSchedulerSettings,
-            getImpulseCounterTypes,
-            getMeterPeriodByObject,
-            getObject,
-            getObjectConsumingData,
-            getObjectSettings,
-            getDevicesByObject,
-            getRequestCanceler,
-            getRmaDeviceMetadata,
-            getDeviceDatasources,
-            getDeviceMetadataMeasures,
-            getDeviceMetaDataVzlet,
-            getDeviceMetaDataVzletSystemList,
-            getLoadingStatus,
-            getObjectsUrl,
-            getPromise,
-            getRmaDeviceMetaDataVzlet,
-            getRmaMetadataMeasureUnit,
-            getRmaObject,
-            getRmaObjectsData,
-            getRmaObjectSubscribers,
-            getRmaObjectsUrl,
-            getRmaPromise,
-            getRefRangeByObjectAndZpoint,
-            getRsoOrganizations,
-            getRsoOrganizationsWithId,
-            getServiceTypes,
-            getSubscrUrl,
-            getTimezones,
-            getRmaTreeTemplates,
-            getVzletSystemList,
-            getZpointMetaDestProp,
-            getZpointMetadataMeasures,
-            getZpointMetaMeasureUnits,
-            getZpointMetaSrcProp,
-            getZpointMetadata,
-            getZpointsDataByObject,
-            findObjectById,
-            isDirectDevice,            
-            loadDefaultTreeSetting,
-            loadDeviceById,
-            loadFreeObjectsByTree,
-            loadObjectsByTreeNode,
-            loading,
-            loadObjectMeterPeriods,
-            loadTree,            
-            loadTrees,
-            loadTreeTemplateItems,
-            loadTreeTemplates,
-            loadSubscrFreeObjectsByTree,
-            loadSubscrObjectsByTreeNode,
-            loadSubscrTree,
-            loadSubscrTrees,
-            promise,
-            putDeviceMetaDataVzlet,
-            putDeviceSchedulerSettings,
-            putObjectsToTreeNode,
-            releaseObjectsFromTreeNode,
-            rmaPromise,
-            saveZpointMetadata,
-            sendDeviceToServer,
-            setCurrentObject,
-            setMeterPeriodForObject,
-            setMeterPeriods,
-            setObjectSettings,            
-            sortObjectsByFullName,
-            sortObjectsByFullNameEx,            
-            sortObjectsByConObjectFullName,
-            subscrSendDeviceToServer,
-            updateTree
+            getDeviceSchedulerSettings: getDeviceSchedulerSettings,
+            getImpulseCounterTypes: getImpulseCounterTypes,
+            getHeaterTypes: getHeaterTypes,
+            getMeterPeriodByObject: getMeterPeriodByObject,
+            getObject: getObject,
+            getObjectConsumingData: getObjectConsumingData,
+            getObjectSettings: getObjectSettings,
+            getDevicesByObject: getDevicesByObject,
+            getRecentHeaterTypes: getRecentHeaterTypes,
+            getRequestCanceler: getRequestCanceler,
+            getRmaDeviceMetadata: getRmaDeviceMetadata,
+            getDeviceDatasources: getDeviceDatasources,
+            getDeviceMetadataMeasures: getDeviceMetadataMeasures,
+            getDeviceMetaDataVzlet: getDeviceMetaDataVzlet,
+            getDeviceMetaDataVzletSystemList: getDeviceMetaDataVzletSystemList,
+            getLoadingStatus: getLoadingStatus,
+            getObjectsUrl: getObjectsUrl,
+            getPromise: getPromise,
+            getRmaDeviceMetaDataVzlet: getRmaDeviceMetaDataVzlet,
+            getRmaMetadataMeasureUnit: getRmaMetadataMeasureUnit,
+            getRmaObject: getRmaObject,
+            getRmaObjectsData: getRmaObjectsData,
+            getRmaObjectSubscribers: getRmaObjectSubscribers,
+            getRmaObjectsUrl: getRmaObjectsUrl,
+            getRmaPromise: getRmaPromise,
+            getRefRangeByObjectAndZpoint: getRefRangeByObjectAndZpoint,
+            getRsoOrganizations: getRsoOrganizations,
+            getRsoOrganizationsWithId: getRsoOrganizationsWithId,
+            getServiceTypes: getServiceTypes,
+            getSubscrUrl: getSubscrUrl,
+            getTimezones: getTimezones,
+            getRmaTreeTemplates: getRmaTreeTemplates,
+            getVzletSystemList: getVzletSystemList,
+            getZpointMetaDestProp: getZpointMetaDestProp,
+            getZpointMetadataMeasures: getZpointMetadataMeasures,
+            getZpointMetaMeasureUnits: getZpointMetaMeasureUnits,
+            getZpointMetaSrcProp: getZpointMetaSrcProp,
+            getZpointMetadata: getZpointMetadata,
+            getZpointsDataByObject: getZpointsDataByObject,
+            findObjectById: findObjectById,
+            isDirectDevice: isDirectDevice,
+            loadDefaultTreeSetting: loadDefaultTreeSetting,
+            loadDeviceById: loadDeviceById,
+            loadFreeObjectsByTree: loadFreeObjectsByTree,
+            loadObjectsByTreeNode: loadObjectsByTreeNode,
+            loading: loading,
+            loadObjectMeterPeriods: loadObjectMeterPeriods,
+            loadTree: loadTree,
+            loadTrees: loadTrees,
+            loadTreeTemplateItems: loadTreeTemplateItems,
+            loadTreeTemplates: loadTreeTemplates,
+            loadSubscrFreeObjectsByTree: loadSubscrFreeObjectsByTree,
+            loadSubscrObjectsByTreeNode: loadSubscrObjectsByTreeNode,
+            loadSubscrTree: loadSubscrTree,
+            
+            loadSubscrTrees: loadSubscrTrees,
+            performBuildingCategoryListForUiSelect: performBuildingCategoryListForUiSelect,
+            promise: promise,
+            putDeviceMetaDataVzlet: putDeviceMetaDataVzlet,
+            putDeviceSchedulerSettings: putDeviceSchedulerSettings,
+            putObjectsToTreeNode: putObjectsToTreeNode,
+            releaseObjectsFromTreeNode: releaseObjectsFromTreeNode,
+            rmaPromise: rmaPromise,
+            saveZpointMetadata: saveZpointMetadata,
+            sendDeviceToServer: sendDeviceToServer,
+            setCurrentObject: setCurrentObject,
+            setMeterPeriodForObject: setMeterPeriodForObject,
+            setMeterPeriods: setMeterPeriods,
+            setObjectSettings: setObjectSettings,
+            sortObjectsByFullName: sortObjectsByFullName,
+            sortObjectsByFullNameEx: sortObjectsByFullNameEx,
+            sortObjectsByConObjectFullName: sortObjectsByConObjectFullName,
+            subscrSendDeviceToServer: subscrSendDeviceToServer,
+            updateTree: updateTree
         };
     
-}]);
+    }]);

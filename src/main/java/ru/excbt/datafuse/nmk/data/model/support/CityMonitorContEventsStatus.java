@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -17,14 +18,14 @@ public class CityMonitorContEventsStatus extends
 		Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1510890454161328379L;
 
 	public static final CityContObjectsFactory<CityMonitorContEventsStatus> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
 	/**
-	 * 
+	 *
 	 * @author kovtonyk
 	 *
 	 */
@@ -41,7 +42,7 @@ public class CityMonitorContEventsStatus extends
 	private Long monitorEventCount = 0L;
 
 	/**
-	 * 
+	 *
 	 * @param cityFiasUUID
 	 */
 	public CityMonitorContEventsStatus(UUID cityFiasUUID) {
@@ -61,7 +62,7 @@ public class CityMonitorContEventsStatus extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContEventLevelColorKey getCityContEventLevelColor() {
@@ -69,9 +70,8 @@ public class CityMonitorContEventsStatus extends
 		Optional<MonitorContEventNotificationStatus> item = cityObjects
 				.stream()
 				.filter((i) -> i.getContEventLevelColorKey() != null)
-				.sorted((x, y) -> Integer.compare(x.getContEventLevelColorKey()
-						.getColorRank(), y.getContEventLevelColorKey()
-								.getColorRank()))
+				.sorted(Comparator.comparingInt(x -> x.getContEventLevelColorKey()
+                    .getColorRank()))
 				.findFirst();
 
 		return item.isPresent() ? item.get().getContEventLevelColorKey() : null;

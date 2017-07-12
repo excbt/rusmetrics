@@ -7,15 +7,20 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 @Entity
 @Table(name = "measure_unit")
-public class MeasureUnit extends AbstractKeynameEntity implements DeletableObject {
+@Getter
+@Setter
+public class MeasureUnit extends AbstractKeynameEntity implements DeletedMarker {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2220706708330783417L;
 
@@ -41,55 +46,5 @@ public class MeasureUnit extends AbstractKeynameEntity implements DeletableObjec
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getUnitName() {
-		return unitName;
-	}
-
-	public void setUnitName(String unitName) {
-		this.unitName = unitName;
-	}
-
-	public String getUnitComment() {
-		return unitComment;
-	}
-
-	public void setUnitComment(String unitComment) {
-		this.unitComment = unitComment;
-	}
-
-	public String getUnitDescription() {
-		return unitDescription;
-	}
-
-	public void setUnitDescription(String unitDescription) {
-		this.unitDescription = unitDescription;
-	}
-
-	public String getMeasureCategory() {
-		return measureCategory;
-	}
-
-	public void setMeasureCategory(String measureCategory) {
-		this.measureCategory = measureCategory;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

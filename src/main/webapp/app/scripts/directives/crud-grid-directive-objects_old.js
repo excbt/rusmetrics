@@ -452,11 +452,12 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                 };
                 
                 $scope.checkHHmm = function(hhmmValue){
+                    return mainSvc.checkHHmm(hhmmValue);
 //console.log(hhmmValue);                    
-                    if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
-                        return true;
-                    };
-                    return false;
+//                    if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)){
+//                        return true;
+//                    };
+//                    return false;
                 };
                 
                 $scope.checkZpointSettingsFrom = function(zpointSettings){              

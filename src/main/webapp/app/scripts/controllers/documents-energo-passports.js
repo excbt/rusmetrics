@@ -75,20 +75,21 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
 //end dev    
     
     $scope.data.currentDocument = {};
-    $scope.data.documentTypes = [
-        {
-            name: "energydeclair",
-            caption: "Энергетическая декларация"
-        },
-        {
-            name: "energypassport",
-            caption: "Энергопаспорт"
-        },
-        {
-            name: "project",
-            caption: "Проект"
-        }
-    ];
+    $scope.data.documentTypes = energoPassportSvc.getDocumentTypes();
+//        [
+//        {
+//            name: "energydeclair",
+//            caption: "Энергетическая декларация"
+//        },
+//        {
+//            name: "energypassport",
+//            caption: "Энергопаспорт"
+//        },
+//        {
+//            name: "project",
+//            caption: "Проект"
+//        }
+//    ];
     
     $scope.data.energyDocumentsForms = [
         {
@@ -114,22 +115,23 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         }
     ];
     
-    $scope.data.energyDeclarationForms = [
-        {
-            name: "energydeclair1",
-            caption: "Энергетическая декларация. Форма 1",
-            shortCaption: "Форма 1",
-            templateKeyname: "ENERGY_DECLARATION_1",
-            symbol: "Д1"
-        },
-        {
-            name: "energydeclair2",
-            caption: "Энергетическая декларация. Форма 2",
-            shortCaption: "Форма 2",
-            templateKeyname: "ENERGY_DECLARATION_2",
-            symbol: "Д2"
-        }
-    ];
+    $scope.data.energyDeclarationForms = energoPassportSvc.getEnergyDeclarationForms();
+//        [
+//        {
+//            name: "energydeclair1",
+//            caption: "Энергетическая декларация. Форма 1",
+//            shortCaption: "Форма 1",
+//            templateKeyname: "ENERGY_DECLARATION_1",
+//            symbol: "Д1"
+//        },
+//        {
+//            name: "energydeclair2",
+//            caption: "Энергетическая декларация. Форма 2",
+//            shortCaption: "Форма 2",
+//            templateKeyname: "ENERGY_DECLARATION_2",
+//            symbol: "Д2"
+//        }
+//    ];
     
     $scope.data.currentOrganization = {};
         
@@ -145,15 +147,18 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     $scope.createEnergyDocumentInit = function () {
 //        $scope.ctrlSettings.passportLoading = true;
         $scope.data.currentDocument = {};
-        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
-        $scope.data.currentDocument.templateKeyname = $scope.data.energyDeclarationForms[0].templateKeyname;
+//        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
+        $scope.data.currentDocument.type = $scope.data.documentTypes.ENERGY_DECLARATION.keyname;
+//        $scope.data.currentDocument.templateKeyname = $scope.data.energyDeclarationForms[0].templateKeyname;
+        $scope.data.currentDocument.templateKeyname = $scope.data.energyDeclarationForms.ENERGY_DECLARATION_1.templateKeyname;
         $('#showDocumentPropertiesModal').modal();
         //$('#editEnergoPassportModal').modal();
     };
     
     $scope.editEnergyDocument = function (doc) {
         $scope.data.currentDocument = angular.copy(doc);
-        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
+//        $scope.data.currentDocument.type = $scope.data.documentTypes[0].name;
+        $scope.data.currentDocument.type = $scope.data.documentTypes.ENERGY_DECLARATION.keyname;
         $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.ctrlSettings.dateFormat);
         $('#showDocumentPropertiesModal').modal();
     };
@@ -207,6 +212,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     
     function errorCallback(e) {
         $scope.ctrlSettings.loading = false;
+        $scope.ctrlSettings.energyDocumentSaving = false;
         var errorObj = mainSvc.errorCallbackHandler(e);
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     }
@@ -229,6 +235,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successCreatePassportCallback(resp) {
+        $scope.ctrlSettings.energyDocumentSaving = false;
         if (successSavePassportCallback(resp) === false) {
             return false;
         }
@@ -236,6 +243,7 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     }
     
     function successUpdatePassportCallback(resp) {
+        $scope.ctrlSettings.energyDocumentSaving = false;
         if (successSavePassportCallback(resp) === false) {
             return false;
         }
@@ -284,7 +292,12 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
         return checkFlag;
     }
     
+    $scope.saveBtnDisabled = function () {
+        return $scope.ctrlSettings.energyDocumentSaving;
+    };
+    
     $scope.saveEnergyDocument = function (doc) {
+        $scope.ctrlSettings.energyDocumentSaving = true;
 //console.log(doc);
         if (checkDoc(doc) === false) {
             return false;

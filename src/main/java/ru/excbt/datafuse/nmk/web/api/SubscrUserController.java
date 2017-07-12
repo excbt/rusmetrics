@@ -1,25 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
@@ -28,18 +14,22 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с пользователями абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.10.2015
@@ -47,7 +37,7 @@ import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
  */
 @Controller
 @RequestMapping("/api/subscr")
-public class SubscrUserController extends SubscrApiController {
+public class SubscrUserController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
 
@@ -60,18 +50,18 @@ public class SubscrUserController extends SubscrApiController {
 	protected SubscrRoleService subscrRoleService;
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
 		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
-		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -82,15 +72,15 @@ public class SubscrUserController extends SubscrApiController {
 		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
 		if (subscrUser == null || subscrUser.getSubscriberId() == null
 				|| !subscrUser.getSubscriberId().equals(subscrUserId)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
-		return responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUser
 	 * @param request
 	 * @return
@@ -106,7 +96,7 @@ public class SubscrUserController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @param subscrUser
 	 * @return
@@ -129,7 +119,7 @@ public class SubscrUserController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @param isPermanent
 	 * @return
@@ -145,7 +135,7 @@ public class SubscrUserController extends SubscrApiController {
 	/**
 	 * TODO Method has been moved to SubscrUserService
 	 * Should be deleted
-	 * 
+	 *
 	 * @param rmaSubscriber
 	 * @param subscrUser
 	 * @param isAdmin
@@ -180,7 +170,7 @@ public class SubscrUserController extends SubscrApiController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @param isAdmin
 	 * @param subscrUser
@@ -198,14 +188,14 @@ public class SubscrUserController extends SubscrApiController {
 		}
 
 		if (!usernameValidator.validate(subscrUser.getUserName())) {
-			return responseBadRequest(ApiResult.validationError(
+			return ApiResponse.responseBadRequest(ApiResult.validationError(
 					"Username %s is not valid. " + "Min length is 3, max length is 20. Allowed characters: {a-z0-9_-]}",
 					subscrUser.getUserName()));
 		}
 
 		List<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
 		if (!checkUser.isEmpty()) {
-			return responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
+			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
 		subscrUser.setSubscriberId(rmaSubscriber.getId());
@@ -234,11 +224,11 @@ public class SubscrUserController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @param subscrUserId
 	 * @param isAdmin
@@ -255,11 +245,11 @@ public class SubscrUserController extends SubscrApiController {
 		checkNotNull(subscrUser.getSubscriberId());
 
 		if (!subscrUser.getSubscriberId().equals(rmaSubscriber.getId())) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (checkSubscrUserOwnerFail(rmaSubscriber.getId(), subscrUser)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		subscrUser.setIsAdmin(isAdmin);
@@ -282,11 +272,11 @@ public class SubscrUserController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @param subscrUserId
 	 * @param isPermanent
@@ -298,7 +288,7 @@ public class SubscrUserController extends SubscrApiController {
 
 		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
 		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		ApiAction action = new ApiActionAdapter() {
@@ -314,11 +304,11 @@ public class SubscrUserController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rSubscriberId
 	 * @param subscrUser
 	 * @return

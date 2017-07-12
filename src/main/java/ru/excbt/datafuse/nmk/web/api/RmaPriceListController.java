@@ -30,12 +30,15 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 /**
  * Контроллер для работы с прайс листами для РМА
@@ -105,7 +108,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/priceList/subscribers", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/priceList/subscribers", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListSubscribers() {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
@@ -125,27 +128,27 @@ public class RmaPriceListController extends SubscrPriceListController {
 		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/priceList/rma", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListRma() {
 		List<PriceListSubscriber> resultList = new ArrayList<>();
 
 		if (!isSystemUser()) {
             log.warn("BL. User is not system user. ACCESS DENIED");
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		List<Subscriber> subscribers = rmaSubscriberService.selectRmaList();
 		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -153,13 +156,13 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @param subscriberId
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceList(@PathVariable("subscriberId") Long subscriberId) {
 
 		List<SubscrPriceList> subscrPriceLists = new ArrayList<>();
 
 		if (subscriberId == null || subscriberId.intValue() == -1) {
-			return responseOK(subscrPriceLists);
+			return ApiResponse.responseOK(subscrPriceLists);
 		}
 
 		// For System user
@@ -169,7 +172,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			} else {
 				Subscriber checkSubscriber = subscriberService.selectSubscriber(subscriberId);
 				if (checkSubscriber == null) {
-					return responseBadRequest();
+					return ApiResponse.responseBadRequest();
 				}
 				if (Boolean.TRUE.equals(checkSubscriber.getIsRma())) {
 					subscrPriceLists = subscrPriceListService.selectRmaPriceLists(subscriberId, null);
@@ -188,7 +191,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		}
 
-		return responseOK(subscrPriceLists);
+		return ApiResponse.responseOK(subscrPriceLists);
 	}
 
 	/**
@@ -199,7 +202,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestBody SubscrPriceList priceList) {
 
@@ -212,15 +215,15 @@ public class RmaPriceListController extends SubscrPriceListController {
 		checkNotNull(priceList.getIsDraft());
 
 		if (priceList.getPriceListLevel() == 0 && !isSystemUser()) {
-			return responseBadRequest(ApiResult.validationError("Invalid Price List Level"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid Price List Level"));
 		}
 
 		if (BooleanUtils.isTrue(priceList.getIsMaster()) && !isSystemUser()) {
-			return responseBadRequest(ApiResult.validationError("Can't process master price list"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Can't process master price list"));
 		}
 
 		if (priceList.getIsDraft() == false) {
-			return responseBadRequest(ApiResult.validationError("Only draft price list accepted"));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("Only draft price list accepted"));
 		}
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrPriceList>(priceList) {
@@ -231,7 +234,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -241,7 +244,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deletePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId) {
 		checkNotNull(subscriberId);
@@ -250,7 +253,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(priceListId);
 
 		if (subscrPriceList == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		log.info("version:{}", subscrPriceList.getVersion());
@@ -277,7 +280,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionDelete(action);
+		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -286,7 +289,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @param srcPriceListId
 	 * @return
 	 */
-	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{subscriberId}/priceList", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDraftPriceList(@PathVariable("subscriberId") Long subscriberId,
 			@RequestParam(value = "srcPriceListId", required = true) Long srcPriceListId, HttpServletRequest reques) {
 
@@ -306,18 +309,19 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param priceListId
-	 * @param priceList
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param priceListId
+     * @param subscriberIds
+     * @param activeIds
+     * @return
+     */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/subscr", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrPriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId, @RequestParam("subscriberIds") Long[] subscriberIds,
 			@RequestParam(value = "activeIds", required = false) Long[] activeIds) {
@@ -328,11 +332,11 @@ public class RmaPriceListController extends SubscrPriceListController {
 		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(priceListId);
 
 		if (subscrPriceList == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		if (subscriberIds.length == 0) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<Long> subscriberIdList = Arrays.asList(subscriberIds);
@@ -353,7 +357,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -363,7 +367,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{priceListId}/activate", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> activatePriceList(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("priceListId") Long priceListId) {
 
@@ -372,7 +376,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		SubscrPriceList priceList = subscrPriceListService.findOne(priceListId);
 		if (priceList == null) {
-			return responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
+			return ApiResponse.responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
 		}
 
 		LocalDate startDate = currentSubscriberService.getSubscriberCurrentTime_Joda().toLocalDate();
@@ -390,7 +394,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -400,14 +404,14 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getPriceListItems(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("subscrPriceListId") Long subscrPriceListId) {
 
 		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(subscrPriceListId);
 
 		if (subscrPriceList == null) {
-			return responseBadRequest();
+			return ApiResponse.responseBadRequest();
 		}
 
 		List<SubscrPriceItem> priceItems = subscrPriceItemService.findPriceItems(subscrPriceListId);
@@ -419,7 +423,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			i.setCurrency(subscrPriceList.getPriceListCurrency());
 		});
 
-		return responseOK(resultList);
+		return ApiResponse.responseOK(resultList);
 	}
 
 	/**
@@ -430,7 +434,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{subscriberId}/priceList/{subscrPriceListId}/items", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updatePriceItems(@PathVariable("subscriberId") Long subscriberId,
 			@PathVariable("subscrPriceListId") Long subscrPriceListId,
 			@RequestBody List<SubscrPriceItemVO> subscrPriceItemVOs) {
@@ -440,7 +444,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 		SubscrPriceList subscrPriceList = subscrPriceListService.findOne(subscrPriceListId);
 		if (subscrPriceList == null) {
-			return responseBadRequest(
+			return ApiResponse.responseBadRequest(
 					ApiResult.validationError("SubscrPriceList (id=%d) is not found", subscrPriceListId));
 		}
 
@@ -467,7 +471,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 }

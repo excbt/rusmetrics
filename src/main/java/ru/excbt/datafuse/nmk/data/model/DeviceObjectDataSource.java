@@ -10,6 +10,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -26,6 +28,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
 @Entity
 @Table(name = "device_object_data_source")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class DeviceObjectDataSource extends AbstractAuditableModel implements ActiveObject {
 
 	/**
@@ -67,55 +71,6 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	@Column(name = "data_source_table_24h")
 	private String dataSourceTable24h;
 
-	public DeviceObject getDeviceObject() {
-		return deviceObject;
-	}
-
-	public void setDeviceObject(DeviceObject deviceObject) {
-		this.deviceObject = deviceObject;
-	}
-
-	@Override
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public SubscrDataSource getSubscrDataSource() {
-		return subscrDataSource;
-	}
-
-	public void setSubscrDataSource(SubscrDataSource subscrDataSource) {
-		this.subscrDataSource = subscrDataSource;
-	}
-
-	public String getSubscrDataSourceAddr() {
-		return subscrDataSourceAddr;
-	}
-
-	public void setSubscrDataSourceAddr(String subscrDataSourceAddr) {
-		this.subscrDataSourceAddr = subscrDataSourceAddr;
-	}
-
-	public Long getDeviceObjectId() {
-		return deviceObjectId;
-	}
-
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
-	}
-
-	public Long getSubscrDataSourceId() {
-		return subscrDataSourceId;
-	}
-
-	public void setSubscrDataSourceId(Long subscrDataSourceId) {
-		this.subscrDataSourceId = subscrDataSourceId;
-	}
-
 	/**
 	 *
 	 * @param other
@@ -130,38 +85,6 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 		}
 		return this.subscrDataSourceId.equals(other.subscrDataSourceId)
 				&& this.subscrDataSourceId.equals(other.subscrDataSourceId);
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getDataSourceTable() {
-		return dataSourceTable;
-	}
-
-	public void setDataSourceTable(String dataSourceTable) {
-		this.dataSourceTable = dataSourceTable;
-	}
-
-	public String getDataSourceTable1h() {
-		return dataSourceTable1h;
-	}
-
-	public void setDataSourceTable1h(String dataSourceTable1h) {
-		this.dataSourceTable1h = dataSourceTable1h;
-	}
-
-	public String getDataSourceTable24h() {
-		return dataSourceTable24h;
-	}
-
-	public void setDataSourceTable24h(String dataSourceTable24h) {
-		this.dataSourceTable24h = dataSourceTable24h;
 	}
 
 }

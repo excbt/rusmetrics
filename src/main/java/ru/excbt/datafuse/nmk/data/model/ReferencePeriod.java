@@ -15,11 +15,13 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Эталонный интервал
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 02.06.2015
@@ -28,10 +30,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(name = "reference_period")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class ReferencePeriod extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8039676534536052073L;
 
@@ -81,109 +85,5 @@ public class ReferencePeriod extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public ContZPoint getContZPoint() {
-		return contZPoint;
-	}
-
-	public void setContZPoint(ContZPoint contZPoint) {
-		this.contZPoint = contZPoint;
-	}
-
-	public Date getBeginDate() {
-		return beginDate;
-	}
-
-	public void setBeginDate(Date beginDate) {
-		this.beginDate = beginDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public Date getPeriodBeginDate() {
-		return periodBeginDate;
-	}
-
-	public void setPeriodBeginDate(Date periodBeginDate) {
-		this.periodBeginDate = periodBeginDate;
-	}
-
-	public Date getPeriodEndDate() {
-		return periodEndDate;
-	}
-
-	public void setPeriodEndDate(Date periodEndDate) {
-		this.periodEndDate = periodEndDate;
-	}
-
-	public String getPeriodDescription() {
-		return periodDescription;
-	}
-
-	public void setPeriodDescription(String periodDescription) {
-		this.periodDescription = periodDescription;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	public void setContZPointId(Long contZPointId) {
-		this.contZPointId = contZPointId;
-	}
-
-	public String getTimeDetailType() {
-		return timeDetailType;
-	}
-
-	public void setTimeDetailType(String timeDetailType) {
-		this.timeDetailType = timeDetailType;
-	}
-
-	public String getPeriodComment() {
-		return periodComment;
-	}
-
-	public void setPeriodComment(String periodComment) {
-		this.periodComment = periodComment;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public Boolean getIsAuto() {
-		return isAuto;
-	}
-
-	public void setIsAuto(Boolean isAuto) {
-		this.isAuto = isAuto;
-	}
 
 }

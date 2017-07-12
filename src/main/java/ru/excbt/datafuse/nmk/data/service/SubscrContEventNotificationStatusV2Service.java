@@ -44,8 +44,11 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	@Autowired
 	private ContObjectService contObjectService;
 
+	@Autowired
+	private ContObjectFiasService contObjectFiasService;
+
 	/**
-	 * 
+	 *
 	 * @param contObjects
 	 * @param subscriberParam
 	 * @param datePeriod
@@ -56,6 +59,10 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
 			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
+
+	    if (contObjects.isEmpty()) {
+	        return new ArrayList<>();
+        }
 
 		List<MonitorContEventNotificationStatusV2> resultObjects = selectMonitorContEventNotificationStatusCollapseV2(
 				subscriberParam, contObjects, datePeriod, noGreenColor);
@@ -76,7 +83,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param contObjects
 	 * @param datePeriod
@@ -118,7 +125,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 		Map<Long, List<ContEventMonitorV2>> monitorContObjectsMap = contEventMonitorV2Service
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
-		Map<Long, ContObjectFias> contObjectFiasMap = contObjectService.selectContObjectsFiasMap(contObjectIds);
+		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();

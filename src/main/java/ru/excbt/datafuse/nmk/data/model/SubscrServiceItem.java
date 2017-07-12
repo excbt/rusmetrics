@@ -18,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.ActiveObject;
@@ -34,7 +36,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 @Entity
 @Table(name = "subscr_service_item")
 @JsonInclude(Include.NON_NULL)
-
+@Getter
+@Setter
 public class SubscrServiceItem extends AbstractAuditableModel implements KeynameObject, ActiveObject {
 
 	/**
@@ -87,111 +90,5 @@ public class SubscrServiceItem extends AbstractAuditableModel implements Keyname
 	@JoinTable(name = "subscr_service_item_permission", joinColumns = @JoinColumn(name = "subscr_service_item_id") ,
 			inverseJoinColumns = @JoinColumn(name = "subscr_service_permission") )
 	private List<SubscrServicePermission> servicePermissions = new ArrayList<>();
-
-	public String getItemName() {
-		return itemName;
-	}
-
-	public void setItemName(String itemName) {
-		this.itemName = itemName;
-	}
-
-	public String getItemCaption() {
-		return itemCaption;
-	}
-
-	public void setItemCaption(String itemCaption) {
-		this.itemCaption = itemCaption;
-	}
-
-	public String getItemDescription() {
-		return itemDescription;
-	}
-
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
-	}
-
-	public String getItemComment() {
-		return itemComment;
-	}
-
-	public void setItemComment(String itemComment) {
-		this.itemComment = itemComment;
-	}
-
-	public String getItemCategory() {
-		return itemCategory;
-	}
-
-	public void setItemCategory(String itemCategory) {
-		this.itemCategory = itemCategory;
-	}
-
-	@Override
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public Date getActiveStartDate() {
-		return activeStartDate;
-	}
-
-	public void setActiveStartDate(Date activeStartDate) {
-		this.activeStartDate = activeStartDate;
-	}
-
-	public Date getActiveEndDate() {
-		return activeEndDate;
-	}
-
-	public void setActiveEndDate(Date activeEndDate) {
-		this.activeEndDate = activeEndDate;
-	}
-
-	public String getHelpContext() {
-		return helpContext;
-	}
-
-	public void setHelpContext(String helpContext) {
-		this.helpContext = helpContext;
-	}
-
-	public String getItemNr() {
-		return itemNr;
-	}
-
-	public void setItemNr(String itemNr) {
-		this.itemNr = itemNr;
-	}
-
-	public Integer getItemOrder() {
-		return itemOrder;
-	}
-
-	public void setItemOrder(Integer itemOrder) {
-		this.itemOrder = itemOrder;
-	}
-
-	@Override
-	public String getKeyname() {
-		return keyname;
-	}
-
-	public void setKeyname(String keyname) {
-		this.keyname = keyname;
-	}
-
-	public List<SubscrServicePermission> getServicePermissions() {
-		return servicePermissions;
-	}
-
-	public void setServicePermissions(List<SubscrServicePermission> servicePermissions) {
-		this.servicePermissions = servicePermissions;
-	}
 
 }

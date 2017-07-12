@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = {JpaConfigTest.class})
-@ActiveProfiles(value = { Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_TEST })
+@ActiveProfiles(value = {Constants.SPRING_PROFILE_TEST })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class  })

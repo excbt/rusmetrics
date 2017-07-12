@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 /**
  * Расширенный интерфейс для работы с записью метаданных
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.05.2015
@@ -12,24 +12,24 @@ import java.math.BigDecimal;
  */
 public interface MetadataInfo extends MetadataProps {
 
-	public String getPropVars();
+	String getPropVars();
 
-	public String getPropFunc();
+	String getPropFunc();
 
-	public Boolean getIsIntegrator();
+	Boolean getIsIntegrator();
 
-	public BigDecimal getSrcPropDivision();
+	Double getSrcPropDivision();
 
-	public BigDecimal getDestPropCapacity();
+	Double getDestPropCapacity();
 
-	public String getDestDbType();
+	String getDestDbType();
 
-	public String getSrcMeasureUnit();
+	String getSrcMeasureUnit();
 
-	public String getDestMeasureUnit();
+	String getDestMeasureUnit();
 
-	public Integer getMetaNumber();
+	Integer getMetaNumber();
 
-	public Integer getMetaOrder();
+	Integer getMetaOrder();
 
 }

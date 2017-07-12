@@ -16,16 +16,20 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place_temperature_sst")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class LocalPlaceTemperatureSst extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1767119876044318836L;
 
@@ -46,11 +50,11 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel implements 
 	@Column(name = "sst_date_time")
 	private Date sstDateTime;
 
-	@Column(name = "sst_value")
-	private BigDecimal sstValue;
+	@Column(name = "sst_value", columnDefinition = "numeric")
+	private Double sstValue;
 
-	@Column(name = "sst_calc_value")
-	private BigDecimal sstCalcValue;
+	@Column(name = "sst_calc_value", columnDefinition = "numeric")
+	private Double sstCalcValue;
 
 	@JsonIgnore
 	@Temporal(TemporalType.TIMESTAMP)
@@ -67,87 +71,5 @@ public class LocalPlaceTemperatureSst extends AbstractAuditableModel implements 
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
-
-	public Long getLocalPlaceId() {
-		return localPlaceId;
-	}
-
-	public void setLocalPlaceId(Long localPlaceId) {
-		this.localPlaceId = localPlaceId;
-	}
-
-	public LocalPlace getLocalPlace() {
-		return localPlace;
-	}
-
-	public void setLocalPlace(LocalPlace localPlace) {
-		this.localPlace = localPlace;
-	}
-
-	public Date getSstDate() {
-		return sstDate;
-	}
-
-	public void setSstDate(Date sstDate) {
-		this.sstDate = sstDate;
-	}
-
-	public BigDecimal getSstValue() {
-		return sstValue;
-	}
-
-	public void setSstValue(BigDecimal sstValue) {
-		this.sstValue = sstValue;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getSstComment() {
-		return sstComment;
-	}
-
-	public void setSstComment(String sstComment) {
-		this.sstComment = sstComment;
-	}
-
-	public Date getSstDateTime() {
-		return sstDateTime;
-	}
-
-	public void setSstDateTime(Date sstDateTime) {
-		this.sstDateTime = sstDateTime;
-	}
-
-	public BigDecimal getSstCalcValue() {
-		return sstCalcValue;
-	}
-
-	public void setSstCalcValue(BigDecimal sstCalcValue) {
-		this.sstCalcValue = sstCalcValue;
-	}
-
-	public Date getSstCalcDateTime() {
-		return sstCalcDateTime;
-	}
-
-	public void setSstCalcDateTime(Date sstCalcDateTime) {
-		this.sstCalcDateTime = sstCalcDateTime;
-	}
 
 }

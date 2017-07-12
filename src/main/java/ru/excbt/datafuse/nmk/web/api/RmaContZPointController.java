@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
  * Контроллер для работы с точками учета для РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
@@ -36,11 +38,11 @@ public class RmaContZPointController extends SubscrContZPointController {
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointController.class);
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPoint contZPoint) {
 
@@ -49,13 +51,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPoint);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return contZPointService.updateOne(contZPoint);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
 		//			@Override
@@ -68,13 +70,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param contZPoint
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody ContZPoint contZPoint, HttpServletRequest request) {
 
@@ -85,7 +87,7 @@ public class RmaContZPointController extends SubscrContZPointController {
 			return contZPointService.createOne(contObjectId, contZPoint);
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
 		//
@@ -104,15 +106,14 @@ public class RmaContZPointController extends SubscrContZPointController {
 		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 * 
-	 * @param contObjectId
-	 * @param contZPointId
-	 * @param contZPoint
-	 * @return
-	 */
+    /**
+     *
+     * @param contObjectId
+     * @param contZPointId
+     * @return
+     */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
@@ -120,13 +121,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionVoidProcess actionProcess = () -> {
 			contZPointService.deleteOne(contZPointId);
 		};
-		return responseDelete(actionProcess);
+		return ApiResponse.responseDelete(actionProcess);
 
 		//		ApiAction action = new ApiActionAdapter() {
 		//
@@ -140,15 +141,15 @@ public class RmaContZPointController extends SubscrContZPointController {
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param contObjectId
 	 * @param contZPointId
 	 * @param requestEntity
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody List<ContZPointMetadata> requestEntity) {
 
@@ -156,17 +157,17 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPointId);
 
 		if (!canAccessContObject(contObjectId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		if (!canAccessContZPoint(contZPointId)) {
-			return responseForbidden();
+			return ApiResponse.responseForbidden();
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		ApiAction action = new ApiActionEntityAdapter<List<ContZPointMetadata>>(requestEntity) {
 		//

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -16,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 @Table(name = "data_source_type")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class DataSourceType extends AbstractKeynameEntity {
 
 	/**
@@ -53,45 +55,5 @@ public class DataSourceType extends AbstractKeynameEntity {
 	@JsonIgnore
 	@Column(name = "device_metadata_type")
 	private String deviceMetadataType;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public Boolean getIsRaw() {
-		return isRaw;
-	}
-
-	public Boolean getIsDB() {
-		return isDB;
-	}
-
-	public String getTypeName() {
-		return typeName;
-	}
-
-	public String getTypeDescription() {
-		return typeDescription;
-	}
-
-	public String getTypeComment() {
-		return typeComment;
-	}
-
-	public Integer getTypeOrder() {
-		return typeOrder;
-	}
-
-	public Boolean getIsDbTableEnable() {
-		return isDbTableEnable;
-	}
-
-	public Boolean getIsDbTablePair() {
-		return isDbTablePair;
-	}
-
-	public String getDeviceMetadataType() {
-		return deviceMetadataType;
-	}
 
 }

@@ -11,8 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * Created by kovtonyk on 24.03.2017.
@@ -151,6 +153,15 @@ public class PDTable implements PDReferable {
         return createPart(PDPartType.SIMPLE_LINE).key(key).createStaticElement(nr).and();
     }
 
+    public PDTablePart createPartLine(String nr, Consumer<PDTablePart> partConsumer) {
+        String key = PREFIX + (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
+
+
+        PDTablePart part = createPart(PDPartType.SIMPLE_LINE).key(key);
+        if (partConsumer != null) partConsumer.accept(part);
+        return part.createStaticElement(nr).and();
+    }
+
     public PDTablePart createPartLine(String nr, boolean createStaticNr) {
         String key = PREFIX + (nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1) : nr);
 
@@ -191,6 +202,14 @@ public class PDTable implements PDReferable {
         String nr2 = nr.length() > 0 && nr.charAt(nr.length() - 1) == '.' ? nr.substring(0, nr.length() - 1)  : nr;
         String key = PREFIX + nr2;
         return createPart(PDPartType.ROW).key(key).createStaticElement(staticCaption).and();
+    }
+
+    boolean anchorExists (String key) {
+        if (key == null) {
+            return false;
+        }
+        return parts.stream().map((i) -> i.getAnchor())
+            .filter(Objects::nonNull).filter((i) -> key.equals(i.getKey())).findFirst().isPresent();
     }
 
 }

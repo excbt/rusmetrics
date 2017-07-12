@@ -13,12 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 /**
  * Действия для типа уведомлений
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.12.2015
@@ -28,10 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @JsonInclude(Include.NON_NULL)
 @Entity
 @Table(name = "subscr_cont_event_type_action")
+@Getter
+@Setter
 public class SubscrContEventTypeAction extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2322682172623184659L;
 
@@ -67,79 +71,5 @@ public class SubscrContEventTypeAction extends AbstractAuditableModel implements
 	@Column(name = "deleted")
 	@JsonIgnore
 	private int deleted;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public ContEventType getContEventType() {
-		return contEventType;
-	}
-
-	public void setContEventType(ContEventType contEventType) {
-		this.contEventType = contEventType;
-	}
-
-	public Long getSubscrActionUserId() {
-		return subscrActionUserId;
-	}
-
-	public void setSubscrActionUserId(Long subscrActionUserId) {
-		this.subscrActionUserId = subscrActionUserId;
-	}
-
-	public Boolean getIsEmail() {
-		return isEmail;
-	}
-
-	public void setIsEmail(Boolean isEmail) {
-		this.isEmail = isEmail;
-	}
-
-	public Boolean getIsSms() {
-		return isSms;
-	}
-
-	public void setIsSms(Boolean isSms) {
-		this.isSms = isSms;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public Long getContEventTypeId() {
-		return contEventTypeId;
-	}
-
-	public void setContEventTypeId(Long contEventTypeId) {
-		this.contEventTypeId = contEventTypeId;
-	}
 
 }

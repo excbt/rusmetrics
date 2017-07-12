@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 @WithMockUser(username = "manual-ex1", password = "12345",
     roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
         "RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
-@ActiveProfiles(value = { Constants.SPRING_PROFILE_DEVELOPMENT, Constants.SPRING_PROFILE_TEST })
+@ActiveProfiles(value = { Constants.SPRING_PROFILE_TEST })
 public class ManualControllerTest extends AbstractControllerTest {
 
 	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1

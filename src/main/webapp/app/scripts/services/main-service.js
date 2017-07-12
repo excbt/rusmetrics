@@ -266,53 +266,58 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         }
     };
     
-    var datePickerSettingsMMyyView = {
-        dateFormat: "MM, yy",
-        firstDay: dateRangeOptsRu.locale.firstDay,
-        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
-        monthNames: dateRangeOptsRu.locale.monthNames,
-        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
-        changeMonth: true,
-        changeYear: true,
-        showButtonPanel: true,
-        closeText: "Ок",
-        currentText: "",
-        onClose: function (dateText, inst) {
-            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
-            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
-            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
-            setTimeout(function () {
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-            }, 1);
-        },
-        beforeShow: function () {
-            setTimeout(function () {
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-                $('.ui-datepicker-current').addClass("nmc-hide");
-            }, 1);
-        },
-        onChangeMonthYear: function () {
-            setTimeout(function () {
-                $('.ui-datepicker-current').addClass("nmc-hide");
-                $('.ui-datepicker-calendar').addClass("nmc-hide");
-            }, 1);
-        }
-    };
+//    var datePickerSettingsMMyyView = {
+//        dateFormat: "MM, yy",
+//        firstDay: dateRangeOptsRu.locale.firstDay,
+//        dayNamesMin: dateRangeOptsRu.locale.daysOfWeek,
+//        monthNames: dateRangeOptsRu.locale.monthNames,
+//        monthNamesShort: ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'],
+//        changeMonth: true,
+//        changeYear: true,
+//        showButtonPanel: true,
+//        closeText: "Ок",
+//        currentText: "",
+//        onClose: function (dateText, inst) {
+//            $(this).datepicker('setDate', new Date(inst.selectedYear, inst.selectedMonth, 1));
+//            $scope.data.currentSSTDate = moment(new Date(inst.selectedYear, inst.selectedMonth, 1)).format($scope.ctrlSettings.systemDateFormat);
+//            $scope.getSST($scope.data.currentLocalPlace.id, $scope.data.currentSSTDate);
+//            setTimeout(function () {
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//            }, 1);
+//        },
+//        beforeShow: function () {
+//            setTimeout(function () {
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//                $('.ui-datepicker-current').addClass("nmc-hide");
+//            }, 1);
+//        },
+//        onChangeMonthYear: function () {
+//            setTimeout(function () {
+//                $('.ui-datepicker-current').addClass("nmc-hide");
+//                $('.ui-datepicker-calendar').addClass("nmc-hide");
+//            }, 1);
+//        }
+//    };
     
     function getDetepickerSettingsFullView() {
         return angular.copy(datePickerSettingsFullView);
     }
     
-    var hasMapSettings = function (userInfo) {
-        var result = false;
-        result = !checkUndefinedNull(userInfo.subscriber);
-        result = result && !checkUndefinedNull(userInfo.subscriber.mapCenterLat);
-    };
+//    var hasMapSettings = function (userInfo) {
+//        var result = false;
+//        result = !checkUndefinedNull(userInfo.subscriber);
+//        result = result && !checkUndefinedNull(userInfo.subscriber.mapCenterLat);
+//    };
     
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl, httpOptions)
         .success(function (data, satus, headers, config) {
+            if (checkUndefinedNull(data) || !data.hasOwnProperty("userName") || checkUndefinedNull(data.subscriber)) {
+                console.warn("FullUserInfo is incorrect!", data);
+                $rootScope.userInfo = null;
+                return false;
+            }
             var tmp = angular.copy(data);
 //                tmp.userName = "Администратор Всея Руси";
 //                tmp.subscriber.subscriberName = "Большая и Малая, Белая и остальная Русь"
@@ -380,6 +385,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     function loadMapSettings() {
         var url = prefUrl + "?subscrPrefKeyname=" + MAP_PREF;
         $http.get(url, httpOptions).then(function (resp) {
+            if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data)) {
+                console.warn("Subscriber map preference is empty!", resp);
+                return false;
+            }
             var mapPref = resp.data;
             if (mapPref.isActive === true) {
                 $rootScope.$broadcast('mainSvc:loadMapCenterLat');
@@ -402,39 +411,24 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     
     var getProp = function (obj, propName) {
         var result = false;
-        if (angular.isDefined(obj)) {
+        if (angular.isDefined(obj) && obj !== null && obj.hasOwnProperty(propName)) {
             result = obj[propName];
         }
         return result;
     };
         //check user: system? - true/false
     var isSystemuser = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo._system;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "_system");
     };
     
             //check user: rma? - true/false
     var isRma = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isRma;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isRma");
     };
     
                 //check user: admin? - true/false
     var isAdmin = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isAdmin;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isAdmin");
     };
     
     var isCabinet = function () {
@@ -443,21 +437,12 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     
                     //check user rights: read only?:  - true/false
     var isReadonly = function () {
-        var result = false;
-        var userInfo = $rootScope.userInfo;
-        if (angular.isDefined(userInfo)) {
-            result = userInfo.isReadonly;
-        }
-        return result;
+        return getProp($rootScope.userInfo, "isReadonly");
     };
     
             //check test user
     function isTestUser() {
-        var result = true;
-        if (!checkUndefinedNull($rootScope.userInfo)) {
-            result = (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
-        }
-        return result;
+        return (getProp($rootScope.userInfo, "subscrType") === "TEST_CERTIFICATE");
     }
     
     var externalAllow = [
@@ -479,6 +464,10 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         var targetUrl = mainSvcSettings.servicePermissionUrl;
         mainSvcSettings.loadedServicePermission = $http.get(targetUrl, httpOptions)
             .then(function (response) {
+                if (checkUndefinedNull(response) || checkUndefinedNull(response.data)) {
+                    console.warn("Loaded service permissions is empty or null!", response);
+                    return false;
+                }
                 var tmp = response.data;
                 contextIds = tmp;
                 if (!isCabinet()) {
@@ -552,16 +541,17 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
         return result;
     };
     
-    function isPositiveNumberValue(val) {
-        if (checkUndefinedNull(val)) {
-            return false;
-        } else {
-            return checkPositiveNumberValue(val);
-        }
-    }
+//    function isPositiveNumberValue(val) {
+//        if (checkUndefinedNull(val)) {
+//            return false;
+//        } else {
+//            return checkPositiveNumberValue(val);
+//        }
+//    }
     
     var checkHHmm = function (hhmmValue) {
         if (/(0[0-9]|1[0-9]|2[0-3]){1,2}:([0-5][0-9]){1}/.test(hhmmValue)) {
+//        if (/(0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]){1}/.test(hhmmValue)) {
             return true;
         }
         return false;
@@ -996,51 +986,51 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     initSvc();
     
     return {
-        addParamToURL,
-        checkContext,
-        checkEmptyObject,
-        checkHHmm,
-        checkNumericValue,
-        checkPositiveNumberValue,
-        checkStrForDate,
-        checkUndefinedEmptyNullValue,
-        checkUndefinedNull,        
-        dateFormating,
-        errorCallbackHandler,
-        findItemBy,
-        findNodeInTree,
-        getConfirmCode,
-        getContextIds,
-        getDetepickerSettingsFullView,
-        getHtmlLoading,
-        getLoadingServicePermissionFlag,
-        getLoadedServicePermission,
-        getMonitorMapSettings,
-        getObjectMapSettings,
-        getDateRangeOptions,
-        getRequestCanceler,
-        getServerTimeZone,
-        getServerErrorByResultCode,        
-        getUseColorHighlightIndicatorData,
-        getUserServicesPermissions,
-        getUseTest,
-        getViewSystemInfo,
-        isAdmin,
-        isCabinet,
-        isNumeric,
-        isPositiveNumberValue,
-        isRma,
-        isReadonly,
-        isSystemuser,
-        isTestMode,
-        prepareTimeOffset,
-        setMonitorMapSettings,
-        setObjectMapSettings,
-        setToolTip,
-        sortItemsBy,
-        sortNumericItemsBy,
-        sortOrganizationsByName,
-        sortTreeNodesBy,
-        strDateToUTC
+        addParamToURL: addParamToURL,
+        checkContext: checkContext,
+        checkEmptyObject: checkEmptyObject,
+        checkHHmm: checkHHmm,
+        checkNumericValue: checkNumericValue,
+        checkPositiveNumberValue: checkPositiveNumberValue,
+        checkStrForDate: checkStrForDate,
+        checkUndefinedEmptyNullValue: checkUndefinedEmptyNullValue,
+        checkUndefinedNull: checkUndefinedNull,
+        dateFormating: dateFormating,
+        errorCallbackHandler: errorCallbackHandler,
+        findItemBy: findItemBy,
+        findNodeInTree: findNodeInTree,
+        getConfirmCode: getConfirmCode,
+        getContextIds: getContextIds,
+        getDetepickerSettingsFullView: getDetepickerSettingsFullView,
+        getHtmlLoading: getHtmlLoading,
+        getLoadingServicePermissionFlag: getLoadingServicePermissionFlag,
+        getLoadedServicePermission: getLoadedServicePermission,
+        getMonitorMapSettings: getMonitorMapSettings,
+        getObjectMapSettings: getObjectMapSettings,
+        getDateRangeOptions: getDateRangeOptions,
+        getRequestCanceler: getRequestCanceler,
+        getServerTimeZone: getServerTimeZone,
+        getServerErrorByResultCode: getServerErrorByResultCode,
+        getUseColorHighlightIndicatorData: getUseColorHighlightIndicatorData,
+        getUserServicesPermissions: getUserServicesPermissions,
+        getUseTest: getUseTest,
+        getViewSystemInfo: getViewSystemInfo,
+        isAdmin: isAdmin,
+        isCabinet: isCabinet,
+        isNumeric: isNumeric,
+        /*isPositiveNumberValue: isPositiveNumberValue,*/
+        isRma: isRma,
+        isReadonly: isReadonly,
+        isSystemuser: isSystemuser,
+        isTestMode: isTestMode,
+        prepareTimeOffset: prepareTimeOffset,
+        setMonitorMapSettings: setMonitorMapSettings,
+        setObjectMapSettings: setObjectMapSettings,
+        setToolTip: setToolTip,
+        sortItemsBy: sortItemsBy,
+        sortNumericItemsBy: sortNumericItemsBy,
+        sortOrganizationsByName: sortOrganizationsByName,
+        sortTreeNodesBy: sortTreeNodesBy,
+        strDateToUTC: strDateToUTC
     };
 }]);

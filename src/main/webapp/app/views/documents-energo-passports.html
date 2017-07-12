@@ -150,7 +150,7 @@
                                                 <td class = "col-xs-1 nmc-td-for-buttons">
                                                     <div class = "btn-toolbar">
                                                         <div class = "btn-group">
-                                                            <i title = "Открыть свойства документа" 
+                                                            <i title = "Просмотр / редактирование реквизитов документа" 
                                                                class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
                                                                ng-click = "editEnergyDocument(elm)">
                                                             </i>
@@ -218,166 +218,12 @@
     </div>
 </div>
 
-<!--Show document preperties-->
-<div id = "showDocumentPropertiesModal" 
-     class = "modal fade nmc-modal-window" 
-     role = "dialog"
-     aria-labelledby = "showDocumentPropertiesLabel" 
-     tabindex = "-1" 
-     data-backdrop = "static">
-	<div class = "modal-dialog  modal-content nmc-modal-dialog">
-		<div class = "modal-header nmc-modal-header">
-            <button type = "button" 
-                    class = "close nmc-close-button" 
-                    data-dismiss = "modal" 
-                    aria-label = "Close">
-                <span aria-hidden = "true">&times;</span>
-            </button>
-			<h3 id = "showDocumentPropertiesLabel" 
-                class = "nmc-h3">
-				Документ
-			</h3>
-		</div>
-		<div class = "modal-body nmc-modal-body paddingLeftRight15">
-            <div class = "container-fluid">
-                <div class = "row">
-                    <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                        <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                            <tr>
-                                <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocType">Тип</label>
-                                    <span class = "nmc-required-star">*</span>
-                                </td>
-                                <td class = "col-xs-9 nmc-text-align-left">
-                                    <div class = "form-group noMarginBottom" 
-                                         ng-class = "{'has-error': emptyString(data.currentDocument.type)}">
-<!--
-                                        <input  
-                                               class = "form-control nmc-text-input-form" 
-                                               type = "text" 
-                                               id = "inputEnergyDocType" 
-                                               ng-model = "data.currentDocument.type"                                                
-                                               disabled/>
--->
-                                        <select  
-                                               class = "form-control nmc-select-form"                                                 
-                                               id = "inputEnergyDocType" 
-                                               ng-model = "data.currentDocument.type"
-                                                ng-options = "dt.name as dt.caption for dt in data.documentTypes"
-                                               disabled>
-                                            
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr ng-if = "data.currentDocument.type === 'energydeclair'">
-                                <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocType">Форма</label>
-                                    <span class = "nmc-required-star">*</span>
-                                </td>
-                                <td class = "col-xs-9 nmc-text-align-left">
-                                    <div class = "form-group noMarginBottom" 
-                                         ng-class = "{'has-error': emptyString(data.currentDocument.templateKeyname)}">
-<!--
-                                        <input  
-                                               class = "form-control nmc-text-input-form" 
-                                               type = "text" 
-                                               id = "inputEnergyDocType" 
-                                               ng-model = "data.currentDocument.type"                                                
-                                               disabled/>
--->
-                                        <select  
-                                               class = "form-control nmc-select-form"                                                 
-                                               id = "inputEnergyDocType" 
-                                               ng-model = "data.currentDocument.templateKeyname"
-                                                ng-options = "dt.templateKeyname as dt.shortCaption for dt in data.energyDeclarationForms"
-                                                ng-disabled = "data.currentDocument.id || isReadOnly()">
-                                            
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocName">Название</label>
-                                    <span class = "nmc-required-star">*</span>
-                                </td>
-                                <td class = "col-xs-9 nmc-text-align-left">
-                                    <div class = "form-group noMarginBottom" 
-                                         ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
-                                        <input  
-                                               class = "form-control nmc-text-input-form" 
-                                               type = "text" 
-                                               id = "inputEnergyDocName" 
-                                               ng-model = "data.currentDocument.passportName" 
-                                               ng-disabled = "isReadOnly()"/>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <label for = "inputEnergyDocDescription" >Описание</label>
-                                </td>
-                                <td class = "nmc-text-align-left">
-                                    <textarea class = "form-control nmc-textarea-form" 
-                                              id = "inputEnergyDocDescription" 
-                                              placeholder = "Описание" 
-                                              ng-model = "data.currentDocument.description"
-                                              ng-disabled = "isReadOnly()">
-                                    </textarea>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocDate" 
-                                           class = "nmc-form-label">Дата документа</label>
-                                    <span class = "nmc-required-star">*</span>
-                                </td>
-                                <td class = "col-xs-9 nmc-text-align-left">
-                                    <span class = "form-group" 
-                                          ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
-                                        <input id = "inputEnergyDocDate" 
-                                               class = "form-control nmc-date-input-form nmc-spec-date" 
-                                               type = "text"                                                                                               
-                                               ng-model = "data.currentDocument.docDateFormatted"
-                                               ng-disabled = "isReadOnly()"
-                                               readonly
-                                               />
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan = "2">
-                                    Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </div>
-		</div>
-		<div class = "modal-footer nmc-modal-footer">
-				<div class = "container-fluid  ">
-
-					<div class = "row">
-                        <div class = "col-xs-offset-6 col-xs-3">
-							<input ng-if = "!isReadOnly()" 
-                                   type = "submit" 
-                                   class = "btn btn-primary btn-block btn-xs nmc-save-button"
-                                   ng-click = "saveEnergyDocument(data.currentDocument)"                                   
-                                   value = "Сохранить" />
-						</div>
-						<div class = "pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
-							<button class = "btn btn-default btn-block btn-xs nmc-cancel-button" 
-                                    data-dismiss = "modal"
-                                    ng-click = "exit('#data.currentDocument')">
-								Отменить
-							</button>
-						</div>
-					</div>
-				</div>
-		</div>
-	</div>
+<div nmc-document-prop-viewer
+     current-document = "data.currentDocument"
+     btn-click = "saveEnergyDocument(data.currentDocument)"
+     is-read-only = "isReadOnly()"
+     save-btn-disabled = "saveBtnDisabled()"
+     >
 </div>
 
 <!--   delete -->

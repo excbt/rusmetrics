@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Type;
@@ -33,6 +35,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Table(name = "cont_object_dadata")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ContObjectDaData extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
@@ -110,11 +114,11 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
 	private UUID dataFiasId;
 
-	@Column(name = "data_geo_lat")
-	private BigDecimal dataGeoLat;
+	@Column(name = "data_geo_lat", columnDefinition = "numeric")
+	private Double dataGeoLat;
 
-	@Column(name = "data_geo_lon")
-	private BigDecimal dataGeoLon;
+	@Column(name = "data_geo_lon", columnDefinition = "numeric")
+	private Double dataGeoLon;
 
 	@Column(name = "is_valid")
 	private Boolean isValid;
@@ -125,222 +129,28 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	@Column(name = "deleted")
 	private int deleted;
 
-	public ContObject getContObject() {
-		return contObject;
-	}
 
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
+	public void clearInValid() {
+        sraw = null;
+        dataGeoLat = null;
+        dataGeoLon = null;
+        dataFiasId = null;
+        isValid = false;
+    }
 
-	public Long getContObjectId() {
-		return contObjectId;
-	}
+    private static final String GEO_POS_JSON_TEMPLATE = "{\"pos\": \"%s %s\"}";
 
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
+    public String makeJsonGeoString() {
+        if (dataGeoLat == null || dataGeoLon == null) {
+            return null;
+        }
+        return String.format(GEO_POS_JSON_TEMPLATE, dataGeoLon.toString(),
+            dataGeoLat.toString());
+    }
 
-	public String getSraw() {
-		return sraw;
-	}
-
-	public void setSraw(String sraw) {
-		this.sraw = sraw;
-	}
-
-	public String getSvalue() {
-		return svalue;
-	}
-
-	public void setSvalue(String svalue) {
-		this.svalue = svalue;
-	}
-
-	public String getDataRegion() {
-		return dataRegion;
-	}
-
-	public void setDataRegion(String dataRegion) {
-		this.dataRegion = dataRegion;
-	}
-
-	public String getDataAreaTypeFull() {
-		return dataAreaTypeFull;
-	}
-
-	public void setDataAreaTypeFull(String dataAreaTypeFull) {
-		this.dataAreaTypeFull = dataAreaTypeFull;
-	}
-
-	public String getDataArea() {
-		return dataArea;
-	}
-
-	public void setDataArea(String dataArea) {
-		this.dataArea = dataArea;
-	}
-
-	public String getDataCityTypeFull() {
-		return dataCityTypeFull;
-	}
-
-	public void setDataCityTypeFull(String dataCityTypeFull) {
-		this.dataCityTypeFull = dataCityTypeFull;
-	}
-
-	public String getDataCity() {
-		return dataCity;
-	}
-
-	public void setDataCity(String dataCity) {
-		this.dataCity = dataCity;
-	}
-
-	public String getDataSettlementTypeFull() {
-		return dataSettlementTypeFull;
-	}
-
-	public void setDataSettlementTypeFull(String dataSettlementTypeFull) {
-		this.dataSettlementTypeFull = dataSettlementTypeFull;
-	}
-
-	public String getDataSettlement() {
-		return dataSettlement;
-	}
-
-	public void setDataSettlement(String dataSettlement) {
-		this.dataSettlement = dataSettlement;
-	}
-
-	public String getDataCityDistrict() {
-		return dataCityDistrict;
-	}
-
-	public void setDataCityDistrict(String dataCityDistrict) {
-		this.dataCityDistrict = dataCityDistrict;
-	}
-
-	public String getDataStreetTypeFull() {
-		return dataStreetTypeFull;
-	}
-
-	public void setDataStreetTypeFull(String dataStreetTypeFull) {
-		this.dataStreetTypeFull = dataStreetTypeFull;
-	}
-
-	public String getDataStreet() {
-		return dataStreet;
-	}
-
-	public void setDataStreet(String dataStreet) {
-		this.dataStreet = dataStreet;
-	}
-
-	public String getDataHouseTypeFull() {
-		return dataHouseTypeFull;
-	}
-
-	public void setDataHouseTypeFull(String dataHouseTypeFull) {
-		this.dataHouseTypeFull = dataHouseTypeFull;
-	}
-
-	public String getDataHouse() {
-		return dataHouse;
-	}
-
-	public void setDataHouse(String dataHouse) {
-		this.dataHouse = dataHouse;
-	}
-
-	public String getDataBlockTypeFull() {
-		return dataBlockTypeFull;
-	}
-
-	public void setDataBlockTypeFull(String dataBlockTypeFull) {
-		this.dataBlockTypeFull = dataBlockTypeFull;
-	}
-
-	public String getDataBlock() {
-		return dataBlock;
-	}
-
-	public void setDataBlock(String dataBlock) {
-		this.dataBlock = dataBlock;
-	}
-
-	public String getDataFlatTypeFull() {
-		return dataFlatTypeFull;
-	}
-
-	public void setDataFlatTypeFull(String dataFlatTypeFull) {
-		this.dataFlatTypeFull = dataFlatTypeFull;
-	}
-
-	public String getDataFlat() {
-		return dataFlat;
-	}
-
-	public void setDataFlat(String dataFlat) {
-		this.dataFlat = dataFlat;
-	}
-
-	public UUID getDataFiasId() {
-		return dataFiasId;
-	}
-
-	public void setDataFiasId(UUID dataFiasId) {
-		this.dataFiasId = dataFiasId;
-	}
-
-	public BigDecimal getDataGeoLat() {
-		return dataGeoLat;
-	}
-
-	public void setDataGeoLat(BigDecimal dataGeoLat) {
-		this.dataGeoLat = dataGeoLat;
-	}
-
-	public BigDecimal getDataGeoLon() {
-		return dataGeoLon;
-	}
-
-	public void setDataGeoLon(BigDecimal dataGeoLon) {
-		this.dataGeoLon = dataGeoLon;
-	}
-
-	public Boolean getIsValid() {
-		return isValid;
-	}
-
-	public void setIsValid(Boolean isValid) {
-		this.isValid = isValid;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getDataRegionTypeFull() {
-		return dataRegionTypeFull;
-	}
-
-	public void setDataRegionTypeFull(String dataRegionTypeFull) {
-		this.dataRegionTypeFull = dataRegionTypeFull;
-	}
+    @JsonIgnore
+    public boolean isAddressAuto() {
+        return Boolean.TRUE.equals(isValid);
+    }
 
 }

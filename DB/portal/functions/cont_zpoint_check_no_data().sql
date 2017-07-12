@@ -65,9 +65,16 @@ from cont_event_type
 where keyname = v_DEV_NO_DATA;
 
 for r_last_data in (	
-                        SELECT cont_zpoint_id, last_data_date, last_data_date_time
-                        FROM mv_last_data_date_aggr
+                        SELECT a.cont_zpoint_id, a.last_data_date, a.last_data_date_time
+                        FROM portal.mv_last_data_date_aggr a INNER JOIN cont_zpoint zp on a.cont_zpoint_id = zp.id
                         where last_data_date < (current_date - v_INTERVAL)::date
+                        and zp.deleted = 0 
+                        and (zp.cont_service_type != 'heat' or
+					not exists (select 1 from cont_zpoint_setting_mode sm
+						    where sm.cont_zpoint_id = zp.id
+						    and sm.setting_mode = 'summer'	
+						    )
+						)	
 
                         UNION ALL
 
@@ -132,7 +139,7 @@ loop
 
         RAISE NOTICE 'Check NO_DEV_DATA event. cnt:% cont_zpoint_id:%', v_no_dev_data_cnt, r_last_data.cont_zpoint_id;
 
-        if (r_last_data.last_data_date <> null) then
+        if (r_last_data.last_data_date IS NOT null) then
                 v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, to_char(r_last_data.last_data_date, 'DD-MM-YYYY'));
         else
                 v_cont_event_message := format(r_cont_event_type_NO_DEV_DATA.drools_message_template, 'момента регистрации в системе');

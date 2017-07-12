@@ -66,7 +66,7 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.201:6432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -102,7 +102,7 @@ raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.201:6432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -131,7 +131,7 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: exbt_123456
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
+        url: jdbc:postgresql://192.168.84.201:6432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
         #url: ${slog.datasource.jdbcUrl}
         #dataSource.pool.size=2
         schema: slog

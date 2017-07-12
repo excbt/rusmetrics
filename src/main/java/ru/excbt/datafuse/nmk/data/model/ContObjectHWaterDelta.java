@@ -9,23 +9,27 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Subselect;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 /**
  * Расширенные данные HWater
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.08.2015
  *
  */
 @Entity
-@Table(name = "v_cont_object_hwater_delta")
+@Subselect("select * from v_cont_object_hwater_delta")
+@Getter
 public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> implements DataDateFormatter {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4406985098209145741L;
 
@@ -45,75 +49,25 @@ public class ContObjectHWaterDelta extends AbstractPersistableEntity<Long> imple
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
-	@Column(name = "t_in")
-	private BigDecimal t_in;
+	@Column(name = "t_in", columnDefinition = "numeric")
+	private Double t_in;
 
-	@Column(name = "t_out")
-	private BigDecimal t_out;
+	@Column(name = "t_out", columnDefinition = "numeric")
+	private Double t_out;
 
-	@Column(name = "m_delta")
-	private BigDecimal m_delta;
+	@Column(name = "m_delta", columnDefinition = "numeric")
+	private Double m_delta;
 
-	@Column(name = "v_delta")
-	private BigDecimal v_delta;
+	@Column(name = "v_delta", columnDefinition = "numeric")
+	private Double v_delta;
 
-	@Column(name = "h_delta")
-	private BigDecimal h_delta;
+	@Column(name = "h_delta", columnDefinition = "numeric")
+	private Double h_delta;
 
-	@Column(name = "work_time")
-	private BigDecimal workTime;
+	@Column(name = "work_time", columnDefinition = "numeric")
+	private Double workTime;
 
-	@Column(name = "fail_time")
-	private BigDecimal failTime;
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public String getContServiceType() {
-		return contServiceType;
-	}
-
-	public Long getContZPointId() {
-		return contZPointId;
-	}
-
-	@Override
-	public Date getDataDate() {
-		return dataDate;
-	}
-
-	@Override
-	public String getTimeDetailType() {
-		return timeDetailType;
-	}
-
-	public BigDecimal getT_in() {
-		return t_in;
-	}
-
-	public BigDecimal getT_out() {
-		return t_out;
-	}
-
-	public BigDecimal getM_delta() {
-		return m_delta;
-	}
-
-	public BigDecimal getV_delta() {
-		return v_delta;
-	}
-
-	public BigDecimal getH_delta() {
-		return h_delta;
-	}
-
-	public BigDecimal getWorkTime() {
-		return workTime;
-	}
-
-	public BigDecimal getFailTime() {
-		return failTime;
-	}
+	@Column(name = "fail_time", columnDefinition = "numeric")
+	private Double failTime;
 
 }

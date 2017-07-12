@@ -12,18 +12,31 @@ import ru.excbt.datafuse.nmk.data.model.LogSession;
 public interface LogSessionRepository extends JpaRepository<LogSession, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param startDate
 	 * @param endDate
 	 * @return
 	 */
 	@Query("SELECT s FROM LogSession s WHERE (s.sessionDate BETWEEN :startDate AND :endDate) AND s.deleted = 0 "
 			+ " AND (s.dataSourceId IN (:dataSourceIds) ) ORDER BY s.sessionDate DESC ")
-	public List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
+	List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
+			@Param("startDate") Date startDate, @Param("endDate") Date endDate);
+
+    /**
+     *
+     * @param dataSourceIds
+     * @param authorIds
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+	@Query("SELECT s FROM LogSession s WHERE (s.sessionDate BETWEEN :startDate AND :endDate) AND s.deleted = 0 "
+			+ " AND (s.dataSourceId IN (:dataSourceIds) OR s.authorId IN (:authorIds) ) ORDER BY s.sessionDate DESC ")
+	List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds, @Param("authorIds") List<Long> authorIds,
 			@Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
 	/**
-	 * 
+	 *
 	 * @param startDate
 	 * @param endDate
 	 * @param contObjectIds
@@ -34,8 +47,18 @@ public interface LogSessionRepository extends JpaRepository<LogSession, Long> {
 			+ " AND (s.deviceObjectId IN "
 			+ "  (SELECT d.id FROM DeviceObject d WHERE d.contObject.id IN (:contObjectIds)) "
 			+ " ) AND s.dataSourceId IN (:dataSourceIds) ORDER BY s.sessionDate DESC ")
-	public List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
+	List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
 			@Param("startDate") Date startDate, @Param("endDate") Date endDate,
 			@Param("contObjectIds") List<Long> contObjectIds);
+
+	@Query("SELECT s FROM LogSession s WHERE (s.sessionDate BETWEEN :startDate AND :endDate) "
+			+ " AND s.deleted = 0 "
+			+ " AND (s.deviceObjectId IN "
+			+ "  (SELECT d.id FROM DeviceObject d WHERE d.contObject.id IN (:contObjectIds)) "
+			+ " ) AND (s.dataSourceId IN (:dataSourceIds)  OR s.authorId IN (:authorIds) )ORDER BY s.sessionDate DESC ")
+    List<LogSession> selectLogSessions(@Param("dataSourceIds") List<Long> dataSourceIds,
+                                       @Param("authorIds") List<Long> authorIds,
+                                       @Param("startDate") Date startDate, @Param("endDate") Date endDate,
+                                       @Param("contObjectIds") List<Long> contObjectIds);
 
 }

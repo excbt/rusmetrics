@@ -18,7 +18,7 @@ import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 
 /**
  * Шаблон класса доступа к данным
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.12.2015
@@ -32,7 +32,7 @@ public abstract class AbstractContServiceDataService {
 	protected EntityManager em;
 
 	/**
-	 * 
+	 *
 	 * @param columns
 	 * @param operator
 	 * @param contZPointId
@@ -69,7 +69,7 @@ public abstract class AbstractContServiceDataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param list
 	 * @return
 	 */
@@ -79,13 +79,17 @@ public abstract class AbstractContServiceDataService {
 	};
 
 	/**
-	 * 
+	 *
 	 * @param a
 	 * @param b
 	 * @return
 	 */
 	protected BigDecimal processDelta(BigDecimal a, BigDecimal b) {
 		return a == null || b == null ? null : b.subtract(a);
+	}
+
+	protected Double processDelta(Double a, Double b) {
+		return a == null || b == null ? null : (b - a);
 	}
 
 }

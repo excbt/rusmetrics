@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -23,6 +25,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_group_item")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SubscrContGroupItem extends AbstractAuditableModel {
 
 	/**
@@ -43,37 +47,5 @@ public class SubscrContGroupItem extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public SubscrContGroup getContGroup() {
-		return contGroup;
-	}
-
-	public void setContGroup(SubscrContGroup contGroup) {
-		this.contGroup = contGroup;
-	}
-
-	public ContObject getContObject() {
-		return contObject;
-	}
-
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
 
 }

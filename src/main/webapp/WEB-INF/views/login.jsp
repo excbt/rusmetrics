@@ -31,21 +31,24 @@
 				>
 					<h1 style="color: #5a646d"><b>Вход в Rusmetrics</b></h1>
 
-					<form role="form" method="post" action="j_spring_security_check" class="form-horizontal">
+					<!-- <form role="form" method="post" action="j_spring_security_check" class="form-horizontal"> -->
+					<form role="form" class="form-horizontal">
 						<div class="form-group">
 
 							<label for="j_username" class="col-xs-3 control-label">Пользователь: </label>
 
 							<div class="col-xs-9">
 								<input name="j_username" id="j_username" type="text"
-									class="form-control" placeholder="имя пользователя"/>
+									class="form-control" placeholder="имя пользователя"
+									ng-model = "cred.j_username"/>
 							</div>
 						</div>
 						<div class="form-group">
 							<label for="j_password" class="col-xs-3 control-label">Пароль: </label>
 							<div class="col-xs-9">
 								<input name="j_password" id="j_password" type="password"
-									class="form-control" placeholder="пароль"><br /> <input
+									class="form-control" placeholder="пароль"
+									ng-model = "cred.j_password"><br /> <input
 									type="hidden" name="${_csrf.parameterName}"
 									value="${_csrf.token}" />
 							</div>
@@ -53,18 +56,19 @@
                         <div class="form-group">
                             <label for="remember-me" class="col-xs-3 control-label">Запомнить: </label>
                             <div class="col-xs-9">
-                                <input name="remember-me" id="remember-me" type="checkbox" checked><br />
+                                <input name="remember-me" id="remember-me" type="checkbox" checked
+                                ng-model = "cred.rememberMe"><br />
                                 <input type="hidden" name="${_csrf.parameterName}"
                                 value="${_csrf.token}" />
                             </div>
                         </div>
 
-                        <div class="form-group">
+                        <!-- <div class="form-group">
 							<div class="col-xs-12 alert alert-error bg-danger nmc-hide"
 								ng-class="{'nmc-hide':!displayLoginError, 'nmc-show':displayLoginError}">
 								<p>Неправильное имя пользователя или пароль</p>
 							</div>
-						</div>
+						</div> -->
 						<div class="form-group">
 							<div class="col-xs-9" style="color: green">
 								Вход для демонстрационного доступа:<br/>
@@ -73,7 +77,8 @@
 							</div>
 							<div class="col-xs-3">
 								<button type="submit" name="submit"
-									class="btn btn-primary pull-right">Войти</button>
+									class="btn btn-primary pull-right"
+									ng-click = "loginFn(cred)">Войти</button>
 							</div>
 
 						</div>
@@ -112,10 +117,36 @@
 
 		var app = angular.module('nmk-p', []);
 
-		app.controller("LoginController", [ "$scope", "$location",
-				function($scope, $location) {
-					var url = "" + $location.$$absUrl;
-					$scope.displayLoginError = (url.indexOf("error") >= 0);
+		app.controller("LoginController", [ "$scope", "$http",
+				function($scope, $http) {
+					// var url = "" + $location.$$absUrl;
+					// $scope.displayLoginError = (url.indexOf("error") >= 0);
+
+					var url = window.location.pathname.replace("localLogin", "j_spring_security_check");
+					$scope.cred = {};
+					$scope.cred.rememberMe =  true;
+
+					$scope.loginFn = function (body) {
+						body["remember-me"] = body.rememberMe;
+						delete body.rememberMe;
+						$http({
+								method: "POST",
+								url: url, 
+								data: body,
+								headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+								transformRequest: function(obj) {
+							        var str = [];
+							        for(var p in obj)
+							        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+							        return str.join("&");
+							    }
+							})
+							.then(function () {
+								window.location.replace(window.location.pathname.replace("localLogin", "app"));
+							}, function (error) {
+								window.location.replace(window.location.pathname);
+							});
+					};
 
 				} ]);
 

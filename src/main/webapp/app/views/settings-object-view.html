@@ -337,6 +337,63 @@
                                                 Свойства объекта                                        
                                             </a>
                                         </li>
+                                          
+<!--
+                                        <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                            <a href="" 
+                                               class="" 
+                                               data-toggle="dropdown" 
+                                               aria-haspopup="true" 
+                                               aria-expanded="false"  
+                                               >
+                                                Паспорт объекта
+                                            </a>
+                                            <ul class="dropdown-menu nmc-dropdown-menu">
+                                                <li ng-if = "!isReadonly()"
+                                                    class="menu-item dropdown">
+                                                    <a ng-click = "createContObjectPassportInit(object)">
+                                                        Создать паспорт
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "!isReadonly()" role = "separator" class = "divider"></li>
+                                                <li ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                                    class = "menu-item dropdown nmc-loading">
+                                                    <a>
+                                                        <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
+                                                    class = "menu-item dropdown">
+                                                    <a>
+                                                        У объекта нет паспортов
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "data.currentContObjectPassports.length > 0 && !objectCtrlSettings.isPassportsLoading"
+                                                    class = "menu-item dropdown" 
+                                                    ng-repeat = "passport in data.currentContObjectPassports track by $index">
+                                                    
+                                                    <a >
+                                                        <i title = "Редактировать реквизиты паспорта"
+                                                           class = "btn btn-xs glyphicon glyphicon-edit"
+                                                           ng-click = "editContObjectPassportInit(passport, object)">
+
+                                                        </i>
+                                                        <i title = "Открыть паспорт"
+                                                           class = "btn btn-xs glyphicon glyphicon-list-alt"
+                                                           ng-click = "openContObjectPassport(passport, object)">
+
+                                                        </i>
+                                                        <span title="Паспорт объекта"
+                                                              ng-click = "openContObjectPassport(passport, object)"
+                                                              ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                            <span ng-bind="passport.passportName"></span>
+                                                        </span>
+                                                    </a>
+                                                </li>                                        
+                                            </ul>
+                                        </li> 
+-->
+                                          
                                         <li ng-if="data.indicatorModes && data.indicatorModes.length > 0" 
                                             class="menu-item dropdown dropdown-submenu" role="presentation">
                                             <a href="" 
@@ -364,7 +421,8 @@
                                                     </a>
                                                 </li>                                        
                                             </ul>                                    
-                                        </li>  
+                                        </li>                                                                          
+                                          
                                         <li class="menu-item" role="presentation">
                                             <a href=""
                                                class=""
@@ -1127,12 +1185,23 @@
                        data-toggle="tab" 
                        >Тип здания
                     </a>
-                  </li>                  
+                  </li>
+                <li role="presentation" 
+                    id="object_passports_tab"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="object_passports" 
+                       data-target="#object_passports" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Паспорта
+                    </a>
+                </li>  
               </ul>
 
               <!-- реализация вкладок -->
               <div class="tab-content">
-            <!--      Варианты отчетов-->
+            
                 <div role="tabpanel" 
                      class="tab-pane fade in active" 
                      id="main_object_properties">
@@ -1228,7 +1297,7 @@
                                             </td>
                                             <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom">
-                                                    <select class="form-control nmc-input-data nmc-select-form" 
+                                                    <select class="form-control nmc-select-form" 
                                                             id="inputMode" 
                                                             ng-model="currentObject.buildingType" 
                                                             ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
@@ -1238,12 +1307,13 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        
+<!--
                                         <tr>
                                             <td class="col-xs-3"><label for="inputBuildingCategory">Категория здания</label>
                                             </td>
                                             <td class="nmc-text-align-left col-xs-9">
                                                 <div class="form-group noMarginBottom">
-<!--                                                    ng-class="{'has-error': emptyString(currentObject.buildingTypeCategory) && currentObject.buildingType}"-->
                                                     <select class="form-control nmc-select-form" 
                                                             id="inputBuildingCategory"                                                            
                                                             ng-disabled="!currentObject.buildingType || !isAdmin()"
@@ -1253,7 +1323,35 @@
                                                     </select>
                                                 </div>
                                             </td>
+                                        </tr>                                        
+-->
+                                        
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom"
+                                                     >
+                                                        <ui-select id = "inputBuildingCategoryUI"
+                                                                   
+                                                                   class = "nmc-ui-select-form" 
+                                                                   ng-model = "currentObject.buildingTypeCategory" 
+                                                                   theme = "bootstrap" 
+                                                                   search-enabled = "false"
+                                                                   on-select = "changeBuildingCategory()"
+                                                                   ng-disabled="!currentObject.buildingType || !isAdmin()"
+                                                                   >
+                                                        <ui-select-match>{{$select.selected.caption}}</ui-select-match>
+                                                        <ui-select-choices 
+                                                                           repeat = "bcategory.keyname as bcategory in data.preparedBuildingCategoryListForUiSelect">
+                                                          <div class = "nmc-bcategory-depth-{{bcategory.depth}}"
+                                                               ng-bind-html = "bcategory.caption"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
                                         </tr>
+                                        
                                         <tr>
                                             <td class="col-xs-3"><label for="inputNumOfStories">Количество этажей</label>
                                             </td>
@@ -1275,6 +1373,298 @@
                           </div>
                       </div>
                   </div>
+                  
+                  <div role = "tabpanel" 
+                       class = "tab-pane fade" 
+                       id = "object_passports">
+                      <div class="container-fluid">
+                          <div class = "row nmc-modal-panel-with-objects-tp">
+                              <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                  <div ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                        class = "menu-item dropdown nmc-loading">
+                                        
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                        
+                                    </div>                                                
+                                  
+                                    <table ng-show = "!objectCtrlSettings.isPassportsLoading"
+                                           class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
+                                        <tr ng-show = "!objectCtrlSettings.isPassportCreating">
+                                            <td colspan = "2">
+                                                <button class="btn nmc-main-add-button" 
+                                                        ng-click = "createContObjectPassportFromTabInit(currentObject)"
+                                                        ng-disabled = "isReadonly()">
+                                                    Создать паспорт
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show = "objectCtrlSettings.isPassportCreating">
+                                            <td colspan = "2"
+                                                class = "paddingLeft20I">
+                                                <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            <label>Создание паспорта:</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class = "col-xs-3">
+                                                            <label for = "inputEnergyDocName">Название</label>
+                                                            <span class = "nmc-required-star">*</span>
+                                                        </td>
+                                                        <td class = "col-xs-9 nmc-text-align-left">
+                                                            <div class = "form-group noMarginBottom" 
+                                                                 ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
+                                                                <input  
+                                                                       class = "form-control nmc-text-input-form" 
+                                                                       type = "text" 
+                                                                       id = "inputEnergyDocName" 
+                                                                       ng-model = "data.currentDocument.passportName" 
+                                                                       ng-disabled = "isReadonly()"/>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class = "col-xs-3">
+                                                            <label for = "inputEnergyDocDate" 
+                                                                   class = "nmc-form-label">Дата документа</label>
+                                                            <span class = "nmc-required-star">*</span>
+                                                        </td>
+                                                        <td class = "col-xs-9 nmc-text-align-left">
+                                                            <span class = "form-group" 
+                                                                  ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
+                                                                <input id = "inputEnergyDocDate" 
+                                                                       class = "form-control nmc-date-input-form nmc-spec-date" 
+                                                                       type = "text"                                                                                               
+                                                                       ng-model = "data.currentDocument.docDateFormatted"
+                                                                       ng-disabled = "isReadonly()"
+                                                                       readonly
+                                                                       />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <label for = "inputEnergyDocDescription" >Комментарий</label>
+                                                        </td>
+                                                        <td class = "nmc-text-align-left">
+                                                            <textarea class = "form-control nmc-textarea-form" 
+                                                                      id = "inputEnergyDocDescription" 
+                                                                      placeholder = "Описание" 
+                                                                      ng-model = "data.currentDocument.description"
+                                                                      ng-disabled = "isReadonly()">
+                                                            </textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            <div class = "container-fluid  ">
+                                                                <div class = "row">
+                                                                    <div class = "col-xs-offset-2 col-xs-3">
+                                                                        <button ng-if = "!isReadonly()" 
+                                                                                class = "btn btn-block btn-xs nmc-add-button-in-modal"
+                                                                                ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                                ng-disabled = "objectCtrlSettings.isDocumentSaving"
+                                                                                >
+                                                                            Далее...
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class = "col-xs-3">
+                                                                        <input ng-if = "!isReadonly()" 
+                                                                               type = "submit" 
+                                                                               class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                                                               ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                               value = "Сохранить" 
+                                                                               ng-disabled = "objectCtrlSettings.isDocumentSaving"/>
+                                                                    </div>
+                                                                    <div class = "pull-right col-xs-3 noMargin noPadding">
+                                                                        <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
+                                                                                ng-click = "cancelCreateContObjectPassportFromTab()">
+                                                                            Отменить
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2">
+                                                <label>Список паспортов:</label>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
+                                            class = "menu-item dropdown">
+                                            <td colspan = "2">
+                                                У объекта нет паспортов
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat = "passport in data.currentContObjectPassports">
+                                            <td colspan = "2">
+                                                <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                    <tr>
+                                                        <td colspan = "2">                                                
+                                                            <i title = "Редактировать реквизиты паспорта"
+                                                               class = "btn btn-xs glyphicon glyphicon-edit"
+                                                               ng-click = "editContObjectPassportFromTabInit(passport, currentObject)">
+
+                                                            </i>
+                                                            <i title = "Открыть паспорт"
+                                                               class = "btn btn-xs glyphicon glyphicon-list-alt"
+                                                               ng-click = "openContObjectPassport(passport, currentObject)">
+
+                                                            </i>
+                                                            <span title="Паспорт объекта"
+                                                                  ng-click = "openContObjectPassport(passport, currentObject)"
+                                                                  ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                                <span ng-bind="passport.passportName"></span>
+                                                            </span>
+                                                            <i ng-if = "isSystemuser()"
+                                                               title = "Удалить паспорт"
+                                                               ng-click = "deletePassport(passport.id)"
+                                                               class = "btn btn-xs glyphicon glyphicon-trash pull-right">
+                                                            </i>
+                                                        </td>        
+<!--
+                                                        <td>
+                                                            <span title="Паспорт объекта"
+                                                                  ng-click = "openContObjectPassport(passport, object)"
+                                                                  ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                                <span ng-bind="passport.passportName"></span>
+                                                            </span>
+                                                        </td>
+-->
+                                                    </tr>
+                                                    <tr ng-show = "passport.isPassportEditing">
+                                                        <td colspan = "2"
+                                                            class = "paddingLeft20I">
+                                                            <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                                <tr>
+                                                                    <td class = "col-xs-3">
+                                                                        <label for = "inputEnergyDocName">Название</label>
+                                                                        <span class = "nmc-required-star">*</span>
+                                                                    </td>
+                                                                    <td class = "col-xs-9 nmc-text-align-left">
+                                                                        <div class = "form-group noMarginBottom" 
+                                                                             ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
+                                                                            <input  
+                                                                                   class = "form-control nmc-text-input-form" 
+                                                                                   type = "text" 
+                                                                                   id = "inputEnergyDocName" 
+                                                                                   ng-model = "data.currentDocument.passportName" 
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"/>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td class = "col-xs-3">
+                                                                        <label for = "inputEnergyDocDateEdit" 
+                                                                               class = "nmc-form-label">Дата документа</label>
+                                                                        <span class = "nmc-required-star">*</span>
+                                                                    </td>
+                                                                    <td class = "col-xs-9 nmc-text-align-left">
+                                                                        <span class = "form-group" 
+                                                                              ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
+                                                                            <input id = "inputEnergyDocDateEdit" 
+                                                                                   class = "form-control nmc-date-input-form nmc-spec-date" 
+                                                                                   type = "text"                                                                                               
+                                                                                   ng-model = "data.currentDocument.docDateFormatted"
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"
+                                                                                   readonly
+                                                                                   />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <label for = "inputEnergyDocDescription" >Комментарий</label>
+                                                                    </td>
+                                                                    <td class = "nmc-text-align-left">
+                                                                        <textarea class = "form-control nmc-textarea-form" 
+                                                                                  id = "inputEnergyDocDescription" 
+                                                                                  placeholder = "Описание" 
+                                                                                  ng-model = "data.currentDocument.description"
+                                                                                  ng-disabled = "isReadonly() || !passport.isActive">
+                                                                        </textarea>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan = "2">
+                                                                        Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan = "2">
+                                                                        <div class = "container-fluid">
+                                                                            <div class = "row">
+                                                                                <div class = "col-xs-offset-2 col-xs-3">
+                                                                                    <button ng-if = "!isReadonly()" 
+                                                                                            class = "btn btn-block btn-xs nmc-add-button-in-modal"
+                                                                                            ng-click = "openContObjectPassport(passport, currentObject)"
+                                                                                            ng-disabled = "objectCtrlSettings.isDocumentSaving">
+                                                                                        Далее...
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class = "col-xs-3">
+                                                                                    <input ng-if = "!isReadonly()" 
+                                                                                           type = "submit" 
+                                                                                           class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                                                                           ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                                           value = "Сохранить" 
+                                                                                           ng-disabled = "objectCtrlSettings.isDocumentSaving || !passport.isActive"/>
+                                                                                </div>
+                                                                                <div class = "pull-right col-xs-3 noMargin noPadding">
+                                                                                    <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
+                                                                                            ng-click = "cancelEditContObjectPassportFromTab(passport)">
+                                                                                        Отменить
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            
+                                        </tr>
+<!--
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputBuildingType">Тип здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.buildingType" 
+                                                            ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
+                                                            ng-change="changeBuildingType(currentObject.buildingType)"
+                                                            ng-disabled="!isAdmin()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+-->
+                                  </table>
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+                  
                 </div>
             </div>
 		</div>
@@ -1845,6 +2235,7 @@
      device-sources="data.dataSourcesForCurDevice"
      cont-objects="objects"
      device-models="data.deviceModelsForCurDevice"
+     heater-types = "data.heaterTypesForCurDevice"
      read-only="true"
      show-ok-button="false"
      btn-click = "saveDevice(data.currentDevice)"
@@ -1961,4 +2352,12 @@ data: "@",
             </div>		
 		</div>
 	</div>
+</div>
+
+<div nmc-document-prop-viewer
+     current-document = "data.currentDocument"
+     btn-click = "saveDocument(data.currentDocument)"
+     is-read-only = "isReadOnlyPassport(data.currentDocument)"
+     save-btn-disabled = "saveBtnDisabled()"
+     >
 </div>

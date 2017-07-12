@@ -29,7 +29,7 @@
                data-toggle="tab">Модели приборов
             </a>
         </li>
-        <li id="organizations_edit_2nd_menu_item" role="presentation" class="" >
+        <li id="organizations_edit_2nd_menu_item" role="presentation">
             <a class="nmc-main-tab-button" 
                href="#/management/organizations/" 
                aria-controls="organizations" 
@@ -78,32 +78,6 @@
                 >
                 <span ng-bind="column.caption"></span>
             </th>
-<!--
-            <th class="col-md-4" ng-click="setOrderBy(column.name)">
-                <div>
-                    Объект
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Модель
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    s/n
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Источник данных
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
--->
             <th class="col-xs-1 col-md-1">
             </th>
         </tr>
@@ -121,33 +95,6 @@
                 >
                 <span ng-bind="column.caption"></span>
             </th>
-            
-<!--
-            <th class="col-md-4" ng-click="setOrderBy(column.name)">
-                <div>
-                    Объект
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Модель
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    s/n
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
-            <th class="col-md-2" ng-click="setOrderBy(column.name)">
-                <div>
-                    Источник данных
-                    <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
-                </div>
-            </th>
--->
 
             <th class="col-xs-1 col-md-1">
             </th>
@@ -155,15 +102,8 @@
 
         <tr ng-repeat="device in data.devices | filter: filter" ng-dblclick="editDevice(device)">
             <td class="nmc-td-for-button">
-<!--
-                <div class="btn-toolbar">
-                    <div class="btn-group">
-                        <i title="Редактировать свойства прибора" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="editDevice(device)"></i>
-                    </div>
-                </div>
--->
                 <div class="btn-group">
-                  <i title="Действия над прибором" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ng-click="" style="font-size: .9em;">
+                  <i title="Действия над прибором" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: .9em;">
                     </i>
                   <ul class="dropdown-menu">
                     <li>
@@ -193,36 +133,6 @@
                 >
                 <span ng-bind="device[column.name]"></span>
             </td>
-
-<!--
-            <td class="col-md-4">
-                    <span>{{device.contObjectInfo.fullName}}<span ng-show="isSystemuser()"> (id = {{device['id']}})</span></span>
-            </td>
-            <td class="col-md-2">
-                <div><span ng-class="">{{device.deviceModel.caption || device.deviceModel.modelName}}</span>
-                </div>
-            </td>
-            <td class="col-md-2">
-                <div><span ng-class="">{{device.number}}</span>
-                </div>
-            </td>
-            <td class="col-md-2">
-                <div>
-                    <span ng-if = "!isDeviceDisabled(device)" ng-class="">{{device.activeDataSource.subscrDataSource['dataSourceName' || 'id'] }}</span>
-                    <span ng-if = "isDeviceDisabled(device)">
-                        Первичная загрузка - 
-                        <span ng-switch on="device.exSystemKeyname">
-                            <span ng-switch-when = 'LERS'>
-                                ЛЭРС
-                            </span>
-                            <span ng-switch-when = 'VZLET'>
-                                ВЗЛЕТ
-                            </span>
-                        </span>
-                    </span>
-                </div>
-            </td>
--->
             <td class="col-xs-1 col-md-1">
                 <div class="btn-toolbar">
                     <div class="btn-group pull-right">                   
@@ -247,40 +157,40 @@
 </div>
 
 <!--Show device options-->
-<div id="showDeviceModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="showDeviceLabel" tabindex="-1" data-backdrop="static">
-	<div class="modal-dialog  modal-content nmc-modal-dialog">
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="showDeviceLabel" class="nmc-h3">
+<div id = "showDeviceModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "showDeviceLabel" tabindex = "-1" data-backdrop = "static">
+	<div class = "modal-dialog  modal-content nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+			<h3 id = "showDeviceLabel" class = "nmc-h3">
 				Прибор
 			</h3>
 		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
-                 class="nmc-tab-panel">
+		<div class = "modal-body nmc-modal-body paddingLeftRight15">
+            <div role = "tabpanel" 
+                 class = "nmc-tab-panel">
               <!-- Навигационная полоса для варианта отчета-->
-              <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" 
-                    class="active" 
-                    id="main_properties_tab">
-                    <a class="nmc-tab-button" 
-                       href="" 
-                       aria-controls="main_properties" 
-                       data-target="#main_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+              <ul class = "nav nav-tabs" role = "tablist">
+                <li role = "presentation" 
+                    class = "active" 
+                    id = "main_properties_tab">
+                    <a class = "nmc-tab-button" 
+                       href = "" 
+                       aria-controls = "main_properties" 
+                       data-target = "#main_properties" 
+                       role = "tab" 
+                       data-toggle = "tab" 
                        >Основные свойства
                     </a>
                   </li>
-                <li role="presentation" 
-                    id="con_properties_tab"                     
-                    class="nmc-hide" 
-                    ng-class="{'nmc-hide' : !isAvailableConPropertiesTab(), 'nmc-show' : isAvailableConPropertiesTab()}"
+                <li role = "presentation" 
+                    id = "con_properties_tab"                     
+                    class = "nmc-hide" 
+                    ng-class = "{'nmc-hide' : !isAvailableConPropertiesTab(), 'nmc-show' : isAvailableConPropertiesTab()}"
                     > 
-                    <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="con_properties" 
+                    <a class = "nmc-tab-button"
+                       href = "" 
+                       aria-controls = "con_properties" 
                        data-target="#con_properties" 
                        role="tab" 
                        data-toggle="tab" 
@@ -320,6 +230,7 @@
 <!--                                                <div class="form-group noMarginBottom" 
                                                      ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
 -->                                                    
+<!--
                                                 <div class = "form-group noMarginBottom" 
                                                      ng-class = "{'has-error':!checkModel()}">    
                                                     <select class = "form-control nmc-select-form" 
@@ -331,6 +242,23 @@
                                                             >
                                                     </select>
                                                 </div>
+-->
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error': !checkModel()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.deviceModelId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                               on-select = "deviceModelChange()">
+                                                        <ui-select-match>{{$select.selected.caption || $select.selected.modelName}}</ui-select-match>
+                                                        <ui-select-choices repeat = "model.id as model in data.deviceModels | propsFilter: {modelName: $select.search}">
+                                                          <div ng-bind-html = "model.caption || model.modelName"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                
                                             </td>
                                         </tr>
                                         <tr>
@@ -343,6 +271,18 @@
                                                        id="inputSn" 
                                                        placeholder="Серийный номер"  
                                                        ng-model="data.currentObject.number" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputDeviceCaption">Наименование</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputDeviceCaption"                                                         
+                                                       ng-model="data.currentObject.deviceObjectName" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);">
                                             </td>
                                         </tr>
@@ -361,7 +301,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <tr ng-if = "!deviceIsSpreader()">
                                             <td><label for = "inputDescription">Источник данных</label>
                                             </td>
                                             <td colspan = "2" class = "nmc-text-align-left">
@@ -390,6 +330,49 @@
                                                         </span>
                                                     </span>
                                                 </div>                                    
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td><label for = "inputDescription">Прибор отопления</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.heatRadiatorTypeId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "disabled"
+                                                               on-select = "selectHeaterType()">
+                                                        <ui-select-match>{{$select.selected.typeName}}</ui-select-match>
+                                                        <ui-select-choices group-by = "recentHeaterGrouping"
+                                                                           group-filter = "recentHeaterGroupFilter"
+                                                                           repeat = "heater.id as heater in data.heaterTypes | propsFilter: {typeName: $select.search}">
+                                                          <div ng-bind-html = "heater.typeName"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td class = "col-sm-3"><label for="inputHeaterPower">Мощность</label>
+                                            </td>
+                                            <td colspan = "2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                
+                                                <div class = "input-group nmc-input-data pull-right">
+                                                    <input class = "form-control nmc-input-data nmc-text-input-form" 
+                                                           type = "text" 
+                                                           id = "inputHeaterPower"                                                         
+                                                           ng-model="data.currentObject.heatRadiatorPower"
+                                                           data-inputmask = "'alias': 'numeric', 'greedy': false"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);">
+                                                    <span class = "input-group-addon nmc-addon-label">Вт</span>
+                                                    
+                                                </div>
+                                                
                                             </td>
                                         </tr>
                                         <tr>
@@ -484,8 +467,7 @@
                                                      ng-class = "{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
                                                     <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type = "text" 
-                                                           id = "inputNetDevAddr"                                            
-                                                           placeholder = "" 
+                                                           id = "inputNetDevAddr"
                                                            ng-model = "data.currentObject.impulseCounterSlotAddr"
                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                            />
@@ -502,8 +484,7 @@
                                                      ng-class = "{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
                                                     <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
                                                            type = "text" 
-                                                           id = "inputNetAddrImpDev"                                            
-                                                           placeholder = "" 
+                                                           id = "inputNetAddrImpDev" 
                                                            ng-model = "data.currentObject.impulseCounterAddr"
                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
                                                            />
@@ -544,15 +525,6 @@
                                                 <label for = "inputDevMeasure" >Единицы измерения</label>
                                             </td>
                                             <td class = "col-sm-6" class = "nmc-text-align-left">
-<!--
-                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
-                                                       type="text" 
-                                                       id="inputDevMeasure"                                            
-                                                       placeholder="" 
-                                                        
-                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
-                                                       />
--->
                                                 <div id = "divInputDevMeasure"
                                                      class = "form-group noMarginBottom" 
                                                      ng-class = "{'has-error':data.currentObject.impulseMu == null}">
@@ -576,8 +548,7 @@
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputNetAddr"                                            
-                                                       placeholder="" 
+                                                       id="inputNetAddr" 
                                                        ng-model="data.currentObject.subscrDataSourceAddr" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
@@ -590,8 +561,7 @@
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDeviceLogin"                                            
-                                                       placeholder="" 
+                                                       id="inputDeviceLogin" 
                                                        ng-model="data.currentObject.deviceLoginInfo.deviceLogin" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
@@ -604,8 +574,7 @@
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword" 
                                                        ng-model="data.currentObject.deviceLoginInfo.devicePassword" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"
                                                        />
@@ -631,7 +600,6 @@
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
                                                        id="inputTable1h" 
-                                                       placeholder="" 
                                                        ng-model="data.currentObject.dataSourceTable1h" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
@@ -644,7 +612,6 @@
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
                                                        id="inputTable24h" 
-                                                       placeholder="" 
                                                        ng-model="data.currentObject.dataSourceTable24h" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
@@ -657,7 +624,6 @@
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
                                                        id="inputTable1h" 
-                                                       placeholder="" 
                                                        ng-model="data.currentObject.metaData.vzletTableHour" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
@@ -670,7 +636,6 @@
                                                 <input class="form-control nmc-text-input-form" 
                                                        type="text" 
                                                        id="inputTable1h" 
-                                                       placeholder="" 
                                                        ng-model="data.currentObject.metaData.vzletTableDay" 
                                                        ng-disabled="isDeviceDisabled(data.currentObject);"/>
                                             </td>
@@ -685,7 +650,7 @@
                      id="time_properties">
                       <div class="container-fluid">
                             <div class="row">
-                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                                     <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
                                             <td colspan="2" class="col-sm-6">
@@ -694,8 +659,7 @@
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword" 
                                                        ng-model="data.currentObject.deviceObjectLastInfo.deviceLastTimeStr" 
                                                        disabled
                                                        />
@@ -708,8 +672,7 @@
                                             <td class="col-sm-6" class="nmc-text-align-left">
                                                 <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
                                                        type="text" 
-                                                       id="inputDevicePassword"                                            
-                                                       placeholder="" 
+                                                       id="inputDevicePassword" 
                                                        ng-model="data.currentObject.deviceObjectLastInfo.driverLastTimeStr" 
                                                        disabled
                                                        />
@@ -794,12 +757,7 @@
 						</div>
 					</div>
 				</div>		
-		</div>
-		<span class="alert alert-error dialogErrorMessage"
-			ng-show="errorOnSubmit"> Request error
-		</span> <span class="alert alert-error dialogErrorMessage"
-			ng-show="errorIllegalAccess"> Request illegal access
-		</span>
+		</div>		
 	</div>
 </div>
 
@@ -817,7 +775,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-devices nmc-modal-panel-with-table" style=""> 
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-devices nmc-modal-panel-with-table"> 
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr class="nmc-child-table-header">
                                 <th ng-repeat="column in data.metadataSchema" 
@@ -883,53 +841,6 @@
 	</div>
 </div>
 
-<!--
-<div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
-	aria-labelledby="messageForUserLabel" tabindex="-1" data-backdrop="static">
-
-	<div class="modal-dialog modal-content nmc-modal-dialog-low">
-
-		<div class="modal-header nmc-modal-header">
-            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			<h3 id="messageForUserLabel" class="nmc-h3">
-				Внимание! 
-			</h3>
-		</div>
-		<div class="modal-body nmc-modal-body paddingLeftRight15">
-			<form name="moveForm" novalidate>
-                <pre class="nmc-textfield">
-                    {{messageForUser}}  
-                </pre>
-			</form>
-		</div>
-		<div class="modal-footer nmc-modal-footer">
-				<div class="container-fluid">
-
-					<div class="row">
-						<div class="col-xs-offset-4 col-md-5">
-							<button ng-show="showMessageForUserModalExFlag" 
-                                    class="btn btn-xs btn-default btn-block nmc-ok-button" 
-                                    data-dismiss="modal" 
-                                    data-target="#main_properties" 
-                                    data-toggle="tab"
-								ng-click="saveDevice(data.currentObject)">
-								Продолжить
-							</button>
-						</div>
-
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
-							<button class="btn btn-xs btn-default btn-primary btn-block nmc-ok-button" data-dismiss="modal"
-								ng-click="exit('#data.currentObject');">
-								Отмена
-							</button>                            
-						</div>
-					</div>
-				</div>		
-		</div>
-	</div>
-</div>
--->
-
 <!--schedule editor-->
 <div id="scheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="scheduleEditorLabel" tabindex="-1" data-backdrop="static">
@@ -943,7 +854,7 @@
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td colspan="2">
@@ -1064,7 +975,7 @@
             <div class="container-fluid noPadding">
                 <div class="row">
                     <div id="manualSessionOptions" class="col-xs-2 col-md-2 marginBottom5 noPadding paddingLeft10 paddingRight5">
-                        <div class="">
+                        <div>
                             <label>Задайте период
                             </label>
                             <div class="input-group">
@@ -1124,37 +1035,6 @@
                             </span>
                         </div>
                         <div id="divManualSessions" style="max-height: 300px; overflow: auto">
-<!--
-                            <table ng-show="ctrlSettings.sessionsLoading"
-                           id="tableSessionsHeader" 
-                           class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
-                                <caption class="noPadding">
-                                    <h4>Сессии загрузки</h4>
-                                </caption>
-                                <thead>
-                                    <tr class="">
-                                        <th style="padding: 0; border-bottom-width: 0px;">
-                                            <table class="crud-grid table table-lighter table-condensed noMargin">
-                                                <thead>
-                                                    <tr class="nmc-child-table-header">
-                                                        <th class="col-md-1 nmc-td-for-button">
-                                                        </th>
-                                                        <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
-                                                            ng-class="::scolumn.headerClass">
-                                                            {{::scolumn.caption}}
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                            </table>
-                                        </th>
-                                    </tr>
-                                </thead>
-                            </table>
-                            <div ng-if="!(data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true)"
-                                 ng-show="ctrlSettings.sessionsLoading" class="marginBottom5 nmc-loading">
-                                <i class="fa fa-spinner fa-spin"></i> Загрузка сессий... 
-                            </div>
--->
                             <table 
                                    id="tableSessionsData" 
                                    class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
@@ -1162,7 +1042,7 @@
                                 <h4>Сессии загрузки</h4>
                             </caption>
                             <thead>
-                                <tr class="">
+                                <tr>
                                     <th style="padding: 0; border-bottom-width: 0px;">
                                         <table class="crud-grid table table-lighter table-condensed noMargin">
                                             <thead>
@@ -1291,7 +1171,7 @@
 				<div class="container-fluid">
 
 					<div class="row">
-						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
 							<button class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal"
 								ng-click="exit('#data.currentObject');">
 								Закрыть

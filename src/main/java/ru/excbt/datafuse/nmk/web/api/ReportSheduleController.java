@@ -1,36 +1,33 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с расписанием отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.04.2015
@@ -38,7 +35,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
  */
 @Controller
 @RequestMapping(value = "/api/reportShedule")
-public class ReportSheduleController extends WebApiController {
+public class ReportSheduleController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleController.class);
 
@@ -52,10 +49,10 @@ public class ReportSheduleController extends WebApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/active", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -65,15 +62,15 @@ public class ReportSheduleController extends WebApiController {
 			return result;
 		};
 
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportShedule() {
 
 		ApiActionObjectProcess actionProcess = () -> {
@@ -81,43 +78,45 @@ public class ReportSheduleController extends WebApiController {
 					.selectReportShedule(currentSubscriberService.getSubscriberId());
 			return result;
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleOne(@PathVariable(value = "reportSheduleId") Long reportSheduleId) {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			return reportSheduleService.findOne(reportSheduleId);
 		};
-		return responseOK(actionProcess);
+		return ApiResponse.responseOK(actionProcess);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteReportShedule(@PathVariable(value = "reportSheduleId") final Long reportSheduleId) {
 
 		ApiActionVoidProcess actionProcess = () -> reportSheduleService.deleteOne(reportSheduleId);
 
-		return WebApiHelper.processResponceApiActionDelete(actionProcess);
+		return ApiActionTool.processResponceApiActionDelete(actionProcess);
 	}
 
-	/**
-	 * 
-	 * @param reportTemplareId
-	 * @param reportTemplate
-	 * @return
-	 */
-	@RequestMapping(method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param reportTemplateId
+     * @param reportParamsetId
+     * @param reportShedule
+     * @param request
+     * @return
+     */
+	@RequestMapping(method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createOneShedule(
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
@@ -148,7 +147,7 @@ public class ReportSheduleController extends WebApiController {
 
 		};
 
-		return responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
 		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
 		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
@@ -172,13 +171,15 @@ public class ReportSheduleController extends WebApiController {
 		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 * 
-	 * @param reportSheduleId
-	 * @param reportParamset
-	 * @return
-	 */
-	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param reportSheduleId
+     * @param reportTemplateId
+     * @param reportParamsetId
+     * @param reportShedule
+     * @return
+     */
+	@RequestMapping(value = "/{reportSheduleId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateOneShedule(@PathVariable(value = "reportSheduleId") Long reportSheduleId,
 			@RequestParam(value = "reportTemplateId", required = true) Long reportTemplateId,
 			@RequestParam(value = "reportParamsetId", required = true) Long reportParamsetId,
@@ -209,7 +210,7 @@ public class ReportSheduleController extends WebApiController {
 
 			return reportSheduleService.updateOne(reportShedule);
 		};
-		return responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(actionProcess);
 
 		//		reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
 		//		reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());

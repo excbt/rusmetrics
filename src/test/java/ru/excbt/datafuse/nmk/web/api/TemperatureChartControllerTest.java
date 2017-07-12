@@ -64,13 +64,13 @@ public class TemperatureChartControllerTest extends AnyControllerTest {
 		_testGetJson(itemsUrl);
 		TemperatureChartItem newItem = new TemperatureChartItem();
 		newItem.setTemperatureChartId(temperatureChartId);
-		newItem.setT_Ambience(new BigDecimal(10));
-		newItem.setT_In(new BigDecimal(11));
-		newItem.setT_Out(new BigDecimal(12));
+		newItem.setT_Ambience(10D);
+		newItem.setT_In(11D);
+		newItem.setT_Out(12D);
 		Long id = _testCreateJson(itemsUrl, newItem);
 
 		newItem = temperatureChartService.selectTemperatureChartItem(id);
-		newItem.setT_Ambience(new BigDecimal(12));
+		newItem.setT_Ambience(12D);
 		newItem.setItemComment("Edited By REST");
 		_testUpdateJson(itemsUrl + "/" + id, newItem);
 		_testDeleteJson(itemsUrl + "/" + id);

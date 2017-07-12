@@ -9,6 +9,7 @@ import javax.inject.Inject;
 
 import org.junit.Test;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
@@ -24,13 +25,8 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
  * @since 19.01.2017
  *
  */
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class HWatersCsvServiceTest extends JpaConfigTest {
+public class HWatersCsvServiceTest {
 
-	@Inject
-	private HWatersCsvService service;
 
 	/**
 	 *
@@ -42,7 +38,7 @@ public class HWatersCsvServiceTest extends JpaConfigTest {
 		sb.append("0,1,2,3,4,5,6,7");
 		sb.append(System.lineSeparator());
 		sb.append("0,1,2,3,4,5,6,7");
-		boolean result = service.checkByteCsvSeparators(sb.toString().getBytes());
+		boolean result = CsvUtils.checkByteCsvSeparators(sb.toString().getBytes());
 		assertTrue(result);
 	}
 
@@ -56,7 +52,7 @@ public class HWatersCsvServiceTest extends JpaConfigTest {
 		sb.append("0,1,2,3,4,5,6,7");
 		sb.append(System.lineSeparator());
 		sb.append(",,,,,,,");
-		boolean result = service.checkByteCsvSeparators(sb.toString().getBytes());
+		boolean result = CsvUtils.checkByteCsvSeparators(sb.toString().getBytes());
 		assertTrue(result);
 	}
 }

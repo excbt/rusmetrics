@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +8,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportWizardParam;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с конструктором отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.04.2015
@@ -29,7 +30,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
  */
 @Controller
 @RequestMapping(value = "/api/reportWizard")
-public class ReportWizardController extends WebApiController {
+public class ReportWizardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportWizardController.class);
 
@@ -40,20 +41,20 @@ public class ReportWizardController extends WebApiController {
 	private CurrentSubscriberService currentSubscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/columnSettings/commerce", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleActive() {
 		ReportColumnSettings result = reportWizardService.getReportColumnSettings();
 		return ResponseEntity.ok(result);
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/commerce", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createWizardCommerceReport(@RequestBody final ReportWizardParam reportWizardParam) {
 
 		checkNotNull(reportWizardParam);
@@ -72,7 +73,7 @@ public class ReportWizardController extends WebApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 
 	}
 

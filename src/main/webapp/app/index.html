@@ -13,7 +13,8 @@
     <!-- bower:css -->
 
     <!-- dadata service: address help for user -->
-    <link href="https://dadata.ru/static/css/lib/suggestions-15.12.css" type="text/css" rel="stylesheet" />
+<!--    <link href="https://dadata.ru/static/css/lib/suggestions-15.12.css" type="text/css" rel="stylesheet" />-->
+    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />  
 
 
     <link rel="icon" type="image/png" href="fv_1.png" />
@@ -202,14 +203,6 @@
                                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span>
                                 </a>
 -->
-
-<!--                                Настройки-->
-                                <a
-                                   id="setting_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
-
-                                   href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
                                 <a ng-show="!isCabinet()"
                                    ng-hide="isTestMode()"
                                    id="log_main_menu_item"
@@ -240,6 +233,14 @@
                                         Энерго - эффективность
                                     </span>
                                 </a>
+                                
+                                <!--                                Настройки-->
+                                <a
+                                   id="setting_main_menu_item"
+                                   class="list-group-item nmc-main-menu-item nmc-hide"
+                                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
+
+                                   href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
 
                                 <!--                                Администрирование-->
 <!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
@@ -692,7 +693,8 @@
       <!--[if lt IE 10]>
         <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js"></script>
       <![endif]-->
-      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>
+<!--      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>-->
+      <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/js/jquery.suggestions.min.js"></script>
 
         <script src="scripts/app.js"></script>
 <!--      <script src="scripts.min/app.min.js"></script>-->
@@ -755,6 +757,7 @@
       <script src="scripts/controllers/widget-container.js"></script>
       <script src="scripts/controllers/documents-energo-passports.js"></script>
       <script src="scripts/controllers/documents-energo-passport.js"></script>
+      <script src="scripts/controllers/documents-object-passport.js"></script>
 <!--
       <script src="scripts/controllers/documents-energo-passports1.js"></script>
       <script src="scripts/controllers/documents-energo-passports2.js"></script>
@@ -787,6 +790,8 @@
       <script src="scripts/directives/nmc-upload-files.js"></script>
       <script src="scripts/directives/nmc-view-meter-periods-modal.js"></script>
       <script src="scripts/directives/contenteditable.js"></script>
+      <script src="scripts/directives/nmc-document-viewer.js"></script>
+      <script src="scripts/directives/nmc-document-prop-viewer.js"></script>
 <!---->
 
 <!--       Services -->

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model;
 
@@ -13,22 +13,29 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
+import org.joda.time.DateTime;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+import ru.excbt.datafuse.nmk.utils.DateFormatUtils;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.10.2016
- * 
+ *
  */
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_service_data_impulse")
+@Getter
+@Setter
 public class ContServiceDataImpulse extends AbstractAuditableModel implements DataDateFormatter {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -147661728148659523L;
 
@@ -44,8 +51,8 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	@Column(name = "time_detail_type")
 	private String timeDetailType;
 
-	@Column(name = "data_value")
-	private BigDecimal dataValue;
+	@Column(name = "data_value", columnDefinition = "numeric")
+	private Double dataValue;
 
 	@JsonIgnore
 	@Version
@@ -55,52 +62,18 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	@Column(name = "deleted")
 	private int deleted;
 
-	public Date getDataDate() {
-		return dataDate;
-	}
+    @JsonProperty
+    public Date getInsertDate() {
+        DateTime dateTime = super.getCreatedDate();
+        return dateTime != null ? dateTime.toDate() : null;
+    }
 
-	public void setDataDate(Date dataDate) {
-		this.dataDate = dataDate;
-	}
+    @JsonProperty
+    public String getInsertDateStr() {
+        DateTime dateTime = super.getCreatedDate();
+        return dateTime != null ? DateFormatUtils.formatDateTime(dateTime.toDate(), DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
+    }
 
-	public Long getContZpointId() {
-		return contZpointId;
-	}
 
-	public void setContZpointId(Long contZpointId) {
-		this.contZpointId = contZpointId;
-	}
-
-	public Long getDeviceObjectId() {
-		return deviceObjectId;
-	}
-
-	public void setDeviceObjectId(Long deviceObjectId) {
-		this.deviceObjectId = deviceObjectId;
-	}
-
-	public String getTimeDetailType() {
-		return timeDetailType;
-	}
-
-	public void setTimeDetailType(String timeDetailType) {
-		this.timeDetailType = timeDetailType;
-	}
-
-	public BigDecimal getDataValue() {
-		return dataValue;
-	}
-
-	public void setDataValue(BigDecimal dataValue) {
-		this.dataValue = dataValue;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
 
 }

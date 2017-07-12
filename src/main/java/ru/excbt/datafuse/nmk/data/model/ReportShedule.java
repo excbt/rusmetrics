@@ -14,6 +14,8 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -28,7 +30,7 @@ import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 
 /**
  * Расписание создания и рассылки отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 10.04.2015
@@ -39,10 +41,12 @@ import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 @SQLDelete(sql = "UPDATE report_shedule SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class ReportShedule extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2213169218870112017L;
 
@@ -147,229 +151,5 @@ public class ReportShedule extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public ReportTemplate getReportTemplate() {
-		return reportTemplate;
-	}
-
-	public void setReportTemplate(ReportTemplate reportTemplate) {
-		this.reportTemplate = reportTemplate;
-	}
-
-	public ReportParamset getReportParamset() {
-		return reportParamset;
-	}
-
-	public void setReportParamset(ReportParamset reportParamset) {
-		this.reportParamset = reportParamset;
-	}
-
-	public String getSheduleTimeTemplate() {
-		return sheduleTimeTemplate;
-	}
-
-	public void setSheduleTimeTemplate(String sheduleTimeTemplate) {
-		this.sheduleTimeTemplate = sheduleTimeTemplate;
-	}
-
-	public Date getSheduleStartDate() {
-		return sheduleStartDate;
-	}
-
-	public void setSheduleStartDate(Date sheduleStartDate) {
-		this.sheduleStartDate = sheduleStartDate;
-	}
-
-	public Date getSheduleEndDate() {
-		return sheduleEndDate;
-	}
-
-	public void setSheduleEndDate(Date sheduleEndDate) {
-		this.sheduleEndDate = sheduleEndDate;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public ReportSheduleTypeKey getReportSheduleTypeKey() {
-		return reportSheduleTypeKey;
-	}
-
-	public void setReportSheduleTypeKey(ReportSheduleTypeKey reportSheduleTypeKey) {
-		this.reportSheduleTypeKey = reportSheduleTypeKey;
-	}
-
-	public ReportSheduleType getReportSheduleType() {
-		return reportSheduleType;
-	}
-
-	public void setReportSheduleType(ReportSheduleType reportSheduleType) {
-		this.reportSheduleType = reportSheduleType;
-	}
-
-	public ReportActionKey getSheduleAction1Key() {
-		return sheduleAction1Key;
-	}
-
-	public void setSheduleAction1Key(ReportActionKey sheduleAction1Key) {
-		this.sheduleAction1Key = sheduleAction1Key;
-	}
-
-	public ReportActionKey getSheduleAction2Key() {
-		return sheduleAction2Key;
-	}
-
-	public void setSheduleAction2Key(ReportActionKey sheduleAction2Key) {
-		this.sheduleAction2Key = sheduleAction2Key;
-	}
-
-	public ReportActionKey getSheduleAction3Key() {
-		return sheduleAction3Key;
-	}
-
-	public void setSheduleAction3Key(ReportActionKey sheduleAction3Key) {
-		this.sheduleAction3Key = sheduleAction3Key;
-	}
-
-	public ReportActionKey getSheduleAction4Key() {
-		return sheduleAction4Key;
-	}
-
-	public void setSheduleAction4Key(ReportActionKey sheduleAction4Key) {
-		this.sheduleAction4Key = sheduleAction4Key;
-	}
-
-	public ReportActionKey getSheduleAction5Key() {
-		return sheduleAction5Key;
-	}
-
-	public void setSheduleAction5Key(ReportActionKey sheduleAction5Key) {
-		this.sheduleAction5Key = sheduleAction5Key;
-	}
-
-	public ReportActionType getSheduleAction1() {
-		return sheduleAction1;
-	}
-
-	public void setSheduleAction1(ReportActionType sheduleAction1) {
-		this.sheduleAction1 = sheduleAction1;
-	}
-
-	public ReportActionType getSheduleAction2() {
-		return sheduleAction2;
-	}
-
-	public void setSheduleAction2(ReportActionType sheduleAction2) {
-		this.sheduleAction2 = sheduleAction2;
-	}
-
-	public ReportActionType getSheduleAction3() {
-		return sheduleAction3;
-	}
-
-	public void setSheduleAction3(ReportActionType sheduleAction3) {
-		this.sheduleAction3 = sheduleAction3;
-	}
-
-	public ReportActionType getSheduleAction4() {
-		return sheduleAction4;
-	}
-
-	public void setSheduleAction4(ReportActionType sheduleAction4) {
-		this.sheduleAction4 = sheduleAction4;
-	}
-
-	public ReportActionType getSheduleAction5() {
-		return sheduleAction5;
-	}
-
-	public void setSheduleAction5(ReportActionType sheduleAction5) {
-		this.sheduleAction5 = sheduleAction5;
-	}
-
-	public String getSheduleAction1Param() {
-		return sheduleAction1Param;
-	}
-
-	public void setSheduleAction1Param(String sheduleAction1Param) {
-		this.sheduleAction1Param = sheduleAction1Param;
-	}
-
-	public String getSheduleAction2Param() {
-		return sheduleAction2Param;
-	}
-
-	public void setSheduleAction2Param(String sheduleAction2Param) {
-		this.sheduleAction2Param = sheduleAction2Param;
-	}
-
-	public String getSheduleAction3Param() {
-		return sheduleAction3Param;
-	}
-
-	public void setSheduleAction3Param(String sheduleAction3Param) {
-		this.sheduleAction3Param = sheduleAction3Param;
-	}
-
-	public String getSheduleAction4Param() {
-		return sheduleAction4Param;
-	}
-
-	public void setSheduleAction4Param(String sheduleAction4Param) {
-		this.sheduleAction4Param = sheduleAction4Param;
-	}
-
-	public String getSheduleAction5Param() {
-		return sheduleAction5Param;
-	}
-
-	public void setSheduleAction5Param(String sheduleAction5Param) {
-		this.sheduleAction5Param = sheduleAction5Param;
-	}
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public String getComment() {
-		return comment;
-	}
-
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 }

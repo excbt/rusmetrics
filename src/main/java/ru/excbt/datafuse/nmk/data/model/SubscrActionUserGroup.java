@@ -9,11 +9,13 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Кросс пользователи - группы рассылок для абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.05.2015
@@ -21,10 +23,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_action_user_group")
+@Getter
+@Setter
 public class SubscrActionUserGroup extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3198493937130028852L;
 
@@ -43,37 +47,5 @@ public class SubscrActionUserGroup extends AbstractAuditableModel {
 
 	@Column(name = "subscr_action_user_id")
 	private Long subscrActionUserId;
-
-	public SubscrActionGroup getSubscrActionGroup() {
-		return subscrActionGroup;
-	}
-
-	public void setSubscrActionGroup(SubscrActionGroup subscrActionGroup) {
-		this.subscrActionGroup = subscrActionGroup;
-	}
-
-	public Long getSubscrActionGroupId() {
-		return subscrActionGroupId;
-	}
-
-	public void setSubscrActionGroupId(Long subscrActionGroupId) {
-		this.subscrActionGroupId = subscrActionGroupId;
-	}
-
-	public SubscrActionUser getSubscrActionUser() {
-		return subscrActionUser;
-	}
-
-	public void setSubscrActionUser(SubscrActionUser subscrActionUser) {
-		this.subscrActionUser = subscrActionUser;
-	}
-
-	public Long getSubscrActionUserId() {
-		return subscrActionUserId;
-	}
-
-	public void setSubscrActionUserId(Long subscrActionUserId) {
-		this.subscrActionUserId = subscrActionUserId;
-	}
 
 }

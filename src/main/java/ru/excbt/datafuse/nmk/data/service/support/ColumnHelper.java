@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Класс для работы с запросами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.12.2015
@@ -35,7 +35,7 @@ public class ColumnHelper {
 	private final List<SingularAttribute<?, ?>> singularAttributes;
 
 	/**
-	 * 
+	 *
 	 * @param columns
 	 * @param operator
 	 */
@@ -48,7 +48,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param columns
 	 */
 	public ColumnHelper(String... columns) {
@@ -60,7 +60,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param attributes
 	 */
 	public ColumnHelper(SingularAttribute<?, ?>... attributes) {
@@ -82,7 +82,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param columns
 	 * @return
 	 */
@@ -91,7 +91,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String build() {
@@ -107,7 +107,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param column
 	 * @return
 	 */
@@ -116,7 +116,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param column
 	 * @return
 	 */
@@ -125,7 +125,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param results
 	 * @param column
 	 * @return
@@ -137,8 +137,15 @@ public class ColumnHelper {
 		return DBRowUtils.asBigDecimal(value);
 	}
 
+	public Double getResultDouble(Object[] results, String column) {
+		int idx = indexOf(column);
+		checkState(idx >= 0, "Invalid column index");
+		Object value = results[idx];
+		return DBRowUtils.asDouble(value);
+	}
+
 	/**
-	 * 
+	 *
 	 * @param results
 	 * @param column
 	 * @param valueClass
@@ -156,7 +163,7 @@ public class ColumnHelper {
 		}
 
 		//		if (!(valueClass.isAssignableFrom(value.getClass()))) {
-		//		}		
+		//		}
 
 		if (!(valueClass.isInstance(value))) {
 			throw new IllegalArgumentException(String.format("Column %s is not type of class: %s. Actual class: %s",
@@ -168,7 +175,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tuple
 	 * @param column
 	 * @return
@@ -198,7 +205,7 @@ public class ColumnHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public <T> Selection<?>[] getSelection(Root<T> root) {

@@ -1,0 +1,666 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.0.final using JasperReports Library version 6.3.0  -->
+<!-- 2016-07-20T16:30:45 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_hw_calc_consumption_by_avg_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c4fccc50-59cf-421c-8a94-c353c3a0dd7a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="portal.xml"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF" fontName="Arial cyrillic">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF" fontName="Arial cyrillic">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" fontName="Arial cyrillic">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="table" uuid="be26fe1d-6f14-4f54-9300-467cb8e3f0ff">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+		<parameter name="begin_date" class="java.sql.Timestamp">
+			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+			<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2016, 02, 01)))]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.sql.Timestamp">
+			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+			<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2016, 02, 28)))]]></defaultValueExpression>
+		</parameter>
+		<parameter name="mass_or_volume" class="java.lang.String">
+			<defaultValueExpression><![CDATA[new String("volume")]]></defaultValueExpression>
+		</parameter>
+		<parameter name="gcal" class="java.lang.Boolean">
+			<parameterDescription><![CDATA[Гкал выводить?]]></parameterDescription>
+			<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zpoint_id" class="java.lang.Long"/>
+		<parameter name="is_double_pipe" class="java.lang.Boolean"/>
+		<queryString>
+			<![CDATA[with t as (
+	select $P{begin_date}::timestamp without time zone - interval '13 months' as b_date, $P{begin_date}::timestamp without time zone - interval '12 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '12 months' as b_date, $P{begin_date} ::timestamp without time zone- interval '11 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '11 months' as b_date, $P{begin_date}::timestamp without time zone - interval '10 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '10 months' as b_date, $P{begin_date}::timestamp without time zone - interval '9 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '9 months' as b_date, $P{begin_date}::timestamp without time zone - interval '8 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '8 months' as b_date, $P{begin_date}::timestamp without time zone - interval '7 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '7 months' as b_date, $P{begin_date}::timestamp without time zone - interval '6 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '6 months' as b_date, $P{begin_date}::timestamp without time zone - interval '5 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '5 months' as b_date, $P{begin_date}::timestamp without time zone - interval '4 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '4 months' as b_date, $P{begin_date}::timestamp without time zone - interval '3 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '3 months' as b_date, $P{begin_date}::timestamp without time zone - interval '2 months' as e_date
+	union all
+	select $P{begin_date}::timestamp without time zone - interval '2 months' as b_date, $P{begin_date}::timestamp without time zone - interval '1 months' as e_date)
+--select t.*, sum(h.work_time) as sum_wt, sum(h.h_delta) sum_h, sum(h.v_in - coalesce(h.v_out, 0)) as sum_v, sum(h.m_in - coalesce(h.m_out, 0)) as sum_m
+select t.*, sum(h.work_time) as sum_wt, sum(h.h_delta) sum_h, 
+		sum(h.v_in - case when $P{is_double_pipe} then coalesce(h.v_out, 0) else 0 end) as sum_v, 
+		sum(h.m_in - case when $P{is_double_pipe} then coalesce(h.m_out, 0) else 0 end) as sum_m
+from cont_service_data_hwater h, t
+where cont_zpoint_id = $P{zpoint_id}
+	and time_detail_type = '24h'
+	and data_date >= t.b_date
+	and data_date <= t.e_date
+group by t.b_date, t.e_date
+order by t.b_date]]>
+		</queryString>
+		<field name="b_date" class="java.sql.Timestamp"/>
+		<field name="e_date" class="java.sql.Timestamp"/>
+		<field name="sum_wt" class="java.lang.Double"/>
+		<field name="sum_h" class="java.lang.Double"/>
+		<field name="sum_v" class="java.lang.Double"/>
+		<field name="sum_m" class="java.lang.Double"/>
+		<variable name="s_wt" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{sum_wt}]]></variableExpression>
+			<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+		</variable>
+		<variable name="s_h" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{sum_h}]]></variableExpression>
+			<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+		</variable>
+		<variable name="s_v" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{sum_v}]]></variableExpression>
+			<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+		</variable>
+		<variable name="s_m" class="java.lang.Double" calculation="Sum">
+			<variableExpression><![CDATA[$F{sum_m}]]></variableExpression>
+			<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<parameter name="org_id" class="java.lang.Long" isForPrompting="false">
+		<parameterDescription><![CDATA[organization id]]></parameterDescription>
+	</parameter>
+	<parameter name="cont_id" class="java.lang.Long">
+		<parameterDescription><![CDATA[container id]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(29863566)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="begin_date" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2016, 02, 01)))]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2016, 02, 28)))]]></defaultValueExpression>
+	</parameter>
+	<parameter name="mass_or_volume" class="java.lang.String">
+		<defaultValueExpression><![CDATA[new String("volume")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="signature" class="java.lang.String">
+		<parameterDescription><![CDATA[ФИО ответственного лица]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new String("ФИО")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="gcal" class="java.lang.Boolean">
+		<parameterDescription><![CDATA[Гкал выводить?]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select get_management_company.org_name, 
+o.id as cont_id, coalesce(cont_object_full_name, cont_object_full_address) as cont_address,
+	z.id as zpoint_id, z.cont_service_type, z.custom_service_name, z.is_double_pipe
+from cont_object o, cont_zpoint z, reports.get_management_company($P{cont_id})
+where o.id = $P{cont_id}
+	and z.cont_object_id = o.id
+	and z.deleted = 0
+	and z.cont_service_type = 'hw']]>
+	</queryString>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="cont_id" class="java.lang.Long"/>
+	<field name="cont_address" class="java.lang.String"/>
+	<field name="zpoint_id" class="java.lang.Long"/>
+	<field name="cont_service_type" class="java.lang.String"/>
+	<field name="custom_service_name" class="java.lang.String"/>
+	<field name="is_double_pipe" class="java.lang.Boolean"/>
+	<variable name="sum_wt" class="java.lang.Double">
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="sum_hours" class="java.lang.Double">
+		<variableExpression><![CDATA[(DATEVALUE($P{end_date}) - DATEVALUE($P{begin_date}) + 1000) * 1.00 / (1000 * 60 * 60)]]></variableExpression>
+	</variable>
+	<variable name="sum_h" class="java.lang.Double">
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="sum_v" class="java.lang.Double">
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<variable name="sum_m" class="java.lang.Double">
+		<initialValueExpression><![CDATA[new Double(0.0)]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="84" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="60" width="440" height="20" uuid="99f52ea1-431d-4b96-9532-830a56a016a2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Адрес " + $F{cont_address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="27" y="0" width="490" height="20" uuid="31dcdd24-c09b-49ef-bfe5-9a491298f727">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<text><![CDATA[Расчет среднемесячного потребления ГВС на основании прибора учета за год]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="20" width="550" height="20" uuid="1aaac99b-f835-43d0-a4ee-68b6d9ea86ed">
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Период: с " + new SimpleDateFormat("dd.MM.yyyy").format($P{begin_date}) + " по " + new SimpleDateFormat("dd.MM.yyyy").format($P{end_date})]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report" isBlankWhenNull="true">
+				<reportElement mode="Transparent" x="0" y="40" width="550" height="20" forecolor="#000000" backcolor="#FFFFFF" uuid="8a916051-013b-49fa-81f9-875c8fb706ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box padding="0" topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" rotation="None" markup="none">
+					<font fontName="Arial cyrillic" size="10"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" firstLineIndent="0" leftIndent="0" rightIndent="0" spacingBefore="0" spacingAfter="0" tabStopWidth="40"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{org_name} == null ? "Данные за указанный период отсутствуют" : "Организация: " + $F{org_name})]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="352" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="0" width="340" height="20" uuid="0773d46b-b47d-44f2-9279-8f86ada38a2c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{custom_service_name}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="0" y="20" width="550" height="80" uuid="8e7a32dc-1420-4f1b-a0b9-0e4863ffd317">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="table" uuid="631cc5cd-ba05-4624-92dc-aebba48f43a7">
+						<datasetParameter name="zpoint_id">
+							<datasetParameterExpression><![CDATA[$F{zpoint_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="is_double_pipe">
+							<datasetParameterExpression><![CDATA[$F{is_double_pipe}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="begin_date">
+							<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="gcal">
+							<datasetParameterExpression><![CDATA[$P{gcal}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="mass_or_volume">
+							<datasetParameterExpression><![CDATA[$P{mass_or_volume}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						<returnValue fromVariable="s_wt" toVariable="sum_wt"/>
+						<returnValue fromVariable="s_h" toVariable="sum_h"/>
+						<returnValue fromVariable="s_v" toVariable="sum_v"/>
+						<returnValue fromVariable="s_m" toVariable="sum_m"/>
+					</datasetRun>
+					<jr:columnGroup width="120" uuid="3ce6a7d9-f7b8-4577-85c3-d3e2e7457d66">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="40">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="120" height="40" uuid="4b156b92-2356-4677-99aa-9f5cd77dda36"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<text><![CDATA[Период]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="120" uuid="63bc8215-d43e-4bc7-bf16-32303914159a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<jr:columnHeader height="12">
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+							</jr:columnHeader>
+							<jr:columnFooter height="20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="120" height="20" uuid="519badab-4ca1-486b-ab46-d6968fcd05b2"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[Итого:]]></text>
+								</staticText>
+							</jr:columnFooter>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField>
+									<reportElement x="0" y="0" width="120" height="15" uuid="479fccc7-b0c8-4419-a029-4e31560d977f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<textFieldExpression><![CDATA[new SimpleDateFormat("dd.MM.yyyy").format($F{b_date}) + " - " + new SimpleDateFormat("dd.MM.yyyy").format($F{e_date})]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="80" uuid="4e3689d3-e980-4d3f-8d62-157ea10c7d76">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [1]"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="40">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement mode="Opaque" x="0" y="0" width="80" height="40" uuid="c18cd8ca-e22d-4d56-a143-370fb12e659b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<text><![CDATA[Кол. часов отработанного времени]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="80" uuid="ad090bd2-45ad-43dc-8526-a342840f179f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<jr:columnHeader height="12">
+								<box>
+									<topPen lineWidth="0.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement x="0" y="0" width="80" height="12" uuid="93671ce9-ff2f-459b-9203-fd1f590ce80b"/>
+									<box>
+										<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+										<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									</box>
+									<textElement textAlignment="Center" verticalAlignment="Top">
+										<font size="9"/>
+									</textElement>
+									<text><![CDATA[час]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="80" height="20" uuid="096e14ce-f298-4040-b227-f70ef4f65774"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{s_wt}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="80" height="15" uuid="3b4ab40b-64d9-434b-b35c-d6042bc29937"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_wt}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="180" uuid="2b7390c7-6ee2-4221-bb29-368cb9aeb4c1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [3]"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<jr:columnHeader height="40">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<property name="com.jaspersoft.studio.unit.width" value="px"/>
+							<box>
+								<topPen lineWidth="1.0"/>
+								<leftPen lineWidth="1.0"/>
+								<bottomPen lineWidth="1.0"/>
+								<rightPen lineWidth="1.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="180" height="40" uuid="c9aa4ffe-e246-439f-a9c3-063b46f42ab9"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<text><![CDATA[Потребление ГВС]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:column width="60" uuid="dcad691a-eb9f-4a5a-9ee1-8f0601ba083c">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<printWhenExpression><![CDATA[$P{gcal}]]></printWhenExpression>
+							<jr:columnHeader height="12">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement mode="Transparent" x="0" y="0" width="60" height="12" uuid="e9e64bae-406b-42d8-b59c-035632f12411"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+									</textElement>
+									<text><![CDATA[Гкал]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="20" uuid="9132f7d0-9eea-42fc-8e4b-18ce3f8e303a"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{s_h}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="6e86ced6-cd95-4546-91ca-6198bfc51e2a"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_h}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="122c2041-995e-4b2a-802a-ac747a902368">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+							<printWhenExpression><![CDATA[($P{mass_or_volume}.equals("volume") ? true : false)]]></printWhenExpression>
+							<jr:columnHeader height="12">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement mode="Transparent" x="0" y="0" width="60" height="12" uuid="531309a9-6930-40b5-9526-956fbe219219"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+									</textElement>
+									<text><![CDATA[м3]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="20" uuid="97eb3d11-b468-45fc-9c91-b2cb9e78acd1"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{s_v}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="496936e4-11be-4c7e-aa63-45c6226daf13"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_v}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="a375fa4a-1f0e-42a3-8e16-b1f8bdb0d0d6">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+							<printWhenExpression><![CDATA[($P{mass_or_volume}.equals("mass") ? true : false)]]></printWhenExpression>
+							<jr:columnHeader height="12">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<box>
+									<topPen lineWidth="1.0"/>
+									<leftPen lineWidth="1.0"/>
+									<bottomPen lineWidth="1.0"/>
+									<rightPen lineWidth="1.0"/>
+								</box>
+								<staticText>
+									<reportElement mode="Transparent" x="0" y="0" width="60" height="12" uuid="e42b2122-dcdf-4429-bb68-6e8fc9cb6485"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" size="9"/>
+									</textElement>
+									<text><![CDATA[т.]]></text>
+								</staticText>
+							</jr:columnHeader>
+							<jr:columnFooter height="20">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="20" uuid="5ae4b1fa-1867-4711-b69e-01625dbc749f"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{s_m}]]></textFieldExpression>
+								</textField>
+							</jr:columnFooter>
+							<jr:detailCell height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<box>
+									<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+									<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+								</box>
+								<textField pattern="#0.00" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="99b391e8-d647-42b5-b2dd-18d87ffc9c50"/>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{sum_m}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<textField evaluationTime="Band">
+				<reportElement positionType="Float" x="0" y="110" width="380" height="20" uuid="f27e92dc-ed35-4c33-819e-e49c98f35181">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Количество часов в текущем месяце: " + TEXT($V{sum_hours}, "#0.00")]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="150" width="544" height="15" uuid="b8c99d06-be4c-4bf6-8ba3-a6d84486201d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA[TEXT($V{sum_h},"#0.00") + " : " + TEXT($V{sum_wt}, "#0.00") + " x " + TEXT($V{sum_hours}, "#0.00") + " = " + TEXT($V{sum_h}/($V{sum_wt})*($V{sum_hours}), "#0.00") + " (Гкал)"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="130" width="390" height="20" uuid="bb54d8b5-7da2-4e66-98d5-56867eb130b9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<text><![CDATA[Расчет среднего потребления ГВС за текущий месяц:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="270" y="220" width="210" height="12" uuid="dc76dedf-ca38-47c3-bd97-cb01b9bfbd41">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<text><![CDATA["_______"  ______________________    20         г. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="200" width="200" height="12" uuid="570cf503-fe50-45a5-918a-73319e2a6207">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<text><![CDATA[Ответственный за учет тепловой энергии:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="200" y="200" width="260" height="12" uuid="d8a879d7-66c9-4948-81fb-b43a1f72dff8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{signature}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Band" isBlankWhenNull="false">
+				<reportElement positionType="Float" x="0" y="165" width="550" height="15" uuid="81a85f57-ad1f-4f1c-a6bd-ca66188d9bde">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[($P{mass_or_volume}.equals("mass") ? TEXT($V{sum_m},"#0.00") + " : " + TEXT($V{sum_wt}, "#0.00") + " x " + TEXT($V{sum_hours}, "#0.00") + " = " + TEXT($V{sum_m}/($V{sum_wt})*($V{sum_hours}), "#0.00") + " (т.)": TEXT($V{sum_v},"#0.00") + " : " + TEXT($V{sum_wt}, "#0.00") + " x " + TEXT($V{sum_hours}, "#0.00") + " = " + TEXT($V{sum_v}/($V{sum_wt})*($V{sum_hours}), "#0.00") + " (м3)")
+]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="114" splitType="Stretch"/>
+	</summary>
+</jasperReport>

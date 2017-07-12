@@ -53,8 +53,11 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	@Autowired
 	private FiasService fiasService;
 
+	@Autowired
+	private ContObjectFiasService contObjectFiasService;
+
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -63,7 +66,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -77,7 +80,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -93,7 +96,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -104,7 +107,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 
 		List<TemperatureChart> result = new ArrayList<>();
 
-		ContObjectFias fias = contObjectService.findContObjectFias(contObjectId);
+		ContObjectFias fias =  contObjectFiasService.findContObjectFias(contObjectId);
 
 		if (fias == null || fias.getFiasUUID() == null) {
 			return result;
@@ -126,7 +129,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -136,7 +139,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -166,7 +169,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
@@ -180,7 +183,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
@@ -191,7 +194,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
@@ -201,7 +204,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -229,7 +232,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })

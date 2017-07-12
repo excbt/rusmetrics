@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -33,7 +34,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWater_CsvFormat;
 
 /**
  * Класс для работы с экспортом данных данных по воде
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.07.2015
@@ -44,18 +45,20 @@ public class HWatersCsvService {
 
 	public static final MediaType MEDIA_TYPE_CSV = MediaType.valueOf("text/csv");
 
+	public static final String CSV_HEADER = "date,detail_type,work_time,failTime,h_delta,h_in,h_out,m_delta,m_in,m_out,p_delta,p_in,p_out,t_cold,t_in,t_out,t_outdoor,v_delta,v_in,v_out";
+
 	private final TimeZoneService timeZoneService;
 
 	/**
-	 * 
+	 *
 	 */
-	@Inject
+	@Autowired
 	public HWatersCsvService(TimeZoneService timeZoneService) {
 		this.timeZoneService = timeZoneService;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contServiceDataHWaterList
 	 * @return
 	 * @throws JsonProcessingException
@@ -78,7 +81,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contServiceDataHWaterList
 	 * @return
 	 * @throws JsonProcessingException
@@ -101,7 +104,7 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
@@ -128,14 +131,14 @@ public class HWatersCsvService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws IOException
 	 * @throws JsonProcessingException
 	 */
 	public List<ContServiceDataHWaterImport> parseDataHWaterImportCsv(InputStream inputStream)
-			throws JsonProcessingException, IOException {
+			throws IOException {
 
 		CsvMapper mapper = new CsvMapper();
 		mapper.addMixIn(ContServiceDataHWaterImport.class, ContServiceDataHWaterImport_CsvFormat.class);
@@ -154,54 +157,5 @@ public class HWatersCsvService {
 		return parsedData;
 	}
 
-	/**
-	 * 
-	 * @param file
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public boolean checkCsvSeparators(String file) throws FileNotFoundException, IOException {
-		boolean result = true;
-		try (Reader reader = new FileReader(file)) {
-			result = checkCsvSeparatorReader(reader);
-		}
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param byteArray
-	 * @return
-	 * @throws FileNotFoundException
-	 * @throws IOException
-	 */
-	public boolean checkByteCsvSeparators(byte[] byteArray) throws FileNotFoundException, IOException {
-		boolean result = true;
-		try (InputStream is = new ByteArrayInputStream(byteArray)) {
-			result = checkCsvSeparatorReader(new InputStreamReader(is));
-		}
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param reader
-	 * @return
-	 * @throws IOException
-	 */
-	private boolean checkCsvSeparatorReader(Reader reader) throws IOException {
-		boolean result = true;
-		try (BufferedReader br = new BufferedReader(reader)) {
-			String header = br.readLine();
-			int checkCnt = StringUtils.countOccurrencesOf(header, ",");
-			String line;
-			while (result && (line = br.readLine()) != null) {
-				int lineCnt = StringUtils.countOccurrencesOf(line, ",");
-				result = result & (lineCnt == checkCnt);
-			}
-		}
-		return result;
-	}
 
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2015-11-03T14:05:39 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-03T17:12:40 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_report_v1.1" pageWidth="2500" pageHeight="595" orientation="Landscape" columnWidth="2460" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f65c6fc8-bea8-4bad-9585-b49fa5d3ba3a">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="portal.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
@@ -46,6 +46,7 @@
 		<parameter name="cont_ids" class="java.lang.String">
 			<defaultValueExpression><![CDATA[new String("{29863870}")]]></defaultValueExpression>
 		</parameter>
+		<parameter name="dfs" class="java.text.DateFormatSymbols"/>
 		<queryString>
 			<![CDATA[select * from reports.get_data_consumption_report($P{cont_ids}, $P{begin_date}, $P{end_date})
 order by cont_address]]>
@@ -141,6 +142,9 @@ order by cont_address]]>
 	<parameter name="show_chart" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="dfs" class="java.text.DateFormatSymbols">
+		<defaultValueExpression><![CDATA[new DateFormatSymbols()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select 	coalesce(o.organization_full_name, o.organization_name) as org_name
 from subscriber s, organization o
@@ -156,10 +160,10 @@ where s.id	= $P{org_id}
 		<band height="47" splitType="Stretch">
 			<textField isStretchWithOverflow="true">
 				<reportElement x="20" y="10" width="1420" height="30" uuid="1a95e246-700f-46af-bb8c-49c0cc19ff5a"/>
-				<textElement>
+				<textElement verticalAlignment="Middle">
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по удельному потреблению тепла по организациям присодиненным к " + $F{org_name} + " в период с " + new SimpleDateFormat("dd MMMM yyyy").format($P{begin_date}) + " по " + new SimpleDateFormat("dd MMMM yyyy").format($P{end_date}) + " года."]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по удельному потреблению тепла по организациям присодиненным к " + $F{org_name} + " в период с " + new SimpleDateFormat("dd MMMM yyyy", $P{dfs}).format($P{begin_date}) + " по " + new SimpleDateFormat("dd MMMM yyyy", $P{dfs}).format($P{end_date}) + " года."]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
@@ -168,7 +172,7 @@ where s.id	= $P{org_id}
 			<componentElement>
 				<reportElement x="0" y="0" width="2180" height="90" uuid="9da5e62e-3d54-4c02-af98-3b806e309d60"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dt1" uuid="0a815ede-68c2-4cd9-8bcb-ac93be80b31a">
+					<datasetRun subDataset="dt1" uuid="5dbc2015-3bbb-48bd-937d-d1d16eea7d4b">
 						<datasetParameter name="begin_date">
 							<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -177,6 +181,9 @@ where s.id	= $P{org_id}
 						</datasetParameter>
 						<datasetParameter name="cont_ids">
 							<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="dfs">
+							<datasetParameterExpression><![CDATA[$P{dfs}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -326,12 +333,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="15ed66b2-eba1-4505-94a9-94539abbff8f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})-1, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy", $P{dfs}).format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date}) - 1, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="0240ae98-0bc2-4ec0-8627-3dd6e672c5e7">
@@ -416,12 +423,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="6e46f6d5-e567-459a-8b27-199fa7d1a1ef"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date}), DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date}), DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="9c01a73b-0677-4590-8550-a610c12261fc">
@@ -507,12 +514,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="985c1a56-53b1-49cb-924e-636e1a1c1d86"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+1, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+1, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="8d729123-f842-4583-9ade-9994cc4bccd7">
@@ -596,12 +603,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="76ca7f3e-7b91-463c-825f-3458fa5c06c4"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+2, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+2, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="3db3eff0-0b25-40e7-99af-c90c4dc88a21">
@@ -685,12 +692,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="9a4bca8a-3d55-4d82-aff9-5c13f35297c6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+3, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+3, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="23e4207b-7a59-443c-a988-b5f0a542338a">
@@ -775,12 +782,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="8e4449af-a797-4709-8e16-acf2ecbf9188"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+4, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+4, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="a4eee0b6-091f-4cf4-a54b-de25dc787c0a">
@@ -864,12 +871,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="8a067fc2-1f33-4663-97e0-eca4b4f02721"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+5, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+5, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="f415661f-d818-4821-ae69-2654a0a27d8a">
@@ -953,12 +960,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="da70262d-e4fd-4aed-9e2f-8f7b6d63cf71"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+6, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+6, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="5d9c5aab-c76a-4932-b05b-7378625f2a6d">
@@ -1042,12 +1049,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="5046042b-cace-4293-9a79-5196d7522ae7"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+7, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+7, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="f3fc13c9-9239-4ae4-8c3e-87dfdc18b7a9">
@@ -1131,12 +1138,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="a2580293-06a0-4d6d-8dba-6df3794b6977"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+8, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+8, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="4bba076d-8cfb-4454-98e4-de09e813dd79">
@@ -1220,12 +1227,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="28caf9b9-ae86-4e69-b6b3-3d208dd6fdfb"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+9, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+9, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="22c6bd1d-c967-4a8c-a961-d33c84aa68e0">
@@ -1309,12 +1316,12 @@ where s.id	= $P{org_id}
 								<bottomPen lineWidth="1.0"/>
 								<rightPen lineWidth="1.0"/>
 							</box>
-							<textField pattern="MMMM yyyy" isBlankWhenNull="true">
+							<textField pattern="" isBlankWhenNull="true">
 								<reportElement x="0" y="0" width="120" height="30" uuid="04530914-1449-47ce-8e3e-a19aed61e896"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle">
 									<font fontName="Arial cyrillic"/>
 								</textElement>
-								<textFieldExpression><![CDATA[new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+10, DAY($P{begin_date}))]]></textFieldExpression>
+								<textFieldExpression><![CDATA[new SimpleDateFormat("LLLL yyyy").format(new Date(YEAR($P{begin_date})-1900, MONTH($P{begin_date})+10, DAY($P{begin_date})))]]></textFieldExpression>
 							</textField>
 						</jr:columnHeader>
 						<jr:column width="60" uuid="65081412-0b4e-4235-a24a-f822dcd14542">

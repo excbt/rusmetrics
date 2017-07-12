@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
@@ -52,6 +53,9 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	@Autowired
 	private SubscrUserRepository subscrUserRepository;
+
+    @Autowired
+	private SystemUserRepository systemUserRepository;
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -92,12 +96,25 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 
 	/**
 	 *
+	 * @param subscriberId
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<Long> findUserIdsBySubscriberOrRmaId(Long subscriberId) {
+        List<Long> result = subscrUserRepository.findUserIdsBySubscriberOrRmaId(subscriberId);
+        result.addAll(systemUserRepository.findUserIdsBySubscriberOrRmaId(subscriberId));
+		return result;
+	}
+
+	/**
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUser findOne(Long subscrUserId) {
-		return subscrUserRepository.findOne(subscrUserId);
+        SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
+        return subscrUser;
 	}
 
 	/**

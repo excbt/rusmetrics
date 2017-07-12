@@ -493,8 +493,18 @@ angular.module('portalNMC')
                 if (mainSvc.getUseColorHighlightIndicatorData() === true) {
                     indicatorSvc.setColorHighlightsForManualAndCrc(data.objects);
                 }
+                
                 var tmp = data.objects.map(function(el, ind){                                        
 //                    var result  = {};
+                    //check insert date visible
+                    if (el.hasOwnProperty("insertDateStr")) {
+                        $scope.columns.some(function (col) {
+                            if (col.fieldName === "insertDateStr") {
+                                col.isvisible = 'isvisible';
+                                return true;
+                            }
+                        });
+                    }
                     var i;
                     for(i in $scope.columns) {
 //console.log(el[$scope.columns[i].fieldName]);                        
@@ -504,7 +514,8 @@ angular.module('portalNMC')
                             continue;
                         }
                         if ((el[$scope.columns[i].fieldName] != null) /*only != */ && 
-                            ($scope.columns[i].fieldName !== "dataDateString")) {                            
+                            ($scope.columns[i].fieldName !== "dataDateString") &&
+                            ($scope.columns[i].fieldName !== "insertDateStr")) {
                             el[$scope.columns[i].fieldName] = el[$scope.columns[i].fieldName].toFixed(3);
                         }
                         

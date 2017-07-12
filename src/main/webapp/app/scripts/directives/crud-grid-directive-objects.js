@@ -19,8 +19,8 @@ app.directive('crudGridObjects', function () {
 //scope.crudTableName = scope.$eval($attrs.table);  
 //console.log(scope.crudTableName);
 //        },
-        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location', '$interval',
-            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location, $interval) {
+        controller: ['$scope', '$rootScope', '$element', '$attrs', '$routeParams', '$resource', '$cookies', '$compile', '$parse', '$timeout', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', 'reportSvc', 'indicatorSvc', 'monitorSvc', '$location', '$interval', 'energoPassportSvc', '$q',
+            function ($scope, $rootScope, $element, $attrs, $routeParams, $resource, $cookies, $compile, $parse, $timeout, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, reportSvc, indicatorSvc, monitorSvc, $location, $interval, energoPassportSvc, $q) {
                 
                 console.time("crudGridObjects loading");
                 
@@ -120,8 +120,10 @@ app.directive('crudGridObjects', function () {
                 $scope.object = {};
                 $scope.objects = [];
                 $scope.objectsOnPage = [];
+                $scope.currentSug = null;
                 $scope.data = {};
                 $scope.data.currentGroupId = null; //current group id: use for group object filter
+                $scope.data.currentContObjectPassports = [];
                 
                 function findObjectById(objId) {
                     var obj = null;
@@ -136,6 +138,7 @@ app.directive('crudGridObjects', function () {
                 
                 var errorCallback = function (e) {
                     $scope.treeLoading = false;
+                    $scope.objectCtrlSettings.isPassportsLoading = false;
                     var errorObj = mainSvc.errorCallbackHandler(e);
                     notificationFactory.errorInfo(errorObj.caption, errorObj.description);
                 };
@@ -228,22 +231,54 @@ app.directive('crudGridObjects', function () {
 //                    console.log($scope.data.preparedBuildingCategoryList);
                 }
                 
+                function performBuildingCategoryListForUiSelect(buildingType) {
+                    //find b cat when buildingType === input buildingType
+                    //find b cat when parentCat === keyname from up ^
+                    var categoryListByBuildingType = [],
+                        filtredCategoryList = [],
+                        preparedCategory = null,
+                        parentCategories = [];
+                    $scope.data.buildingCategories.forEach(function (bcat) {
+                        if (bcat.buildingType === buildingType && bcat.parentCategory === null) {
+                            var parentCat = angular.copy(bcat);
+                            parentCat.depth = 1;
+                            categoryListByBuildingType.push(parentCat);
+                            $scope.data.buildingCategories.forEach(function (cat) {
+                                if (cat.parentCategory === bcat.keyname) {
+                                    var childCat = angular.copy(cat);
+                                    childCat.depth = 2;
+                                    categoryListByBuildingType.push(childCat);
+                                }
+                            });
+                        }
+                    });
+                    $scope.data.preparedBuildingCategoryListForUiSelect = categoryListByBuildingType;
+//                    console.log($scope.data.preparedBuildingCategoryListForUiSelect);
+                }
+                
                 $scope.changeBuildingType = function (buildingType) {
 //                    console.log("changeBuildingType");
                     $scope.currentObject.buildingTypeCategory = null;
                     $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
-                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-                    $('#inputBuildingCategory').addClass('nmc-select-form');
+//                    $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//                    $('#inputBuildingCategory').addClass('nmc-select-form');
+                    
+                    $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+                    $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
+                    
                     if (mainSvc.checkUndefinedNull(buildingType)) {
                         return false;
                     }
                     $cookies.recentBuildingType = buildingType;
-                    performBuildingCategoryList(buildingType);
+//                    performBuildingCategoryList(buildingType);
+//                    performBuildingCategoryListForUiSelect(buildingType);
+                    $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
                 };
                 
                 function setBuildingCategory() {
                     var bCat = null;
-                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+//                    $scope.data.preparedBuildingCategoryList.some(function (bcat) {
+                    $scope.data.preparedBuildingCategoryListForUiSelect.some(function (bcat) {
                         if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
                             bCat = bcat;
                             return true;
@@ -255,11 +290,17 @@ app.directive('crudGridObjects', function () {
                     //50 symbols
 //                    console.log(bCat);
                     if (bCat !== null && bCat.caption.length >= 50) {
-                        $('#inputBuildingCategory').removeClass('nmc-select-form');
-                        $('#inputBuildingCategory').addClass('nmc-select-form-high');
+//                        $('#inputBuildingCategory').removeClass('nmc-select-form');
+//                        $('#inputBuildingCategory').addClass('nmc-select-form-high');
+                        
+                        $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form');
+                        $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form-high');
                     } else {
-                        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
-                        $('#inputBuildingCategory').addClass('nmc-select-form');
+//                        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
+//                        $('#inputBuildingCategory').addClass('nmc-select-form');
+                        
+                        $('#inputBuildingCategoryUI').removeClass('nmc-ui-select-form-high');
+                        $('#inputBuildingCategoryUI').addClass('nmc-ui-select-form');
                     }
                     if (mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
                         return false;
@@ -398,6 +439,12 @@ app.directive('crudGridObjects', function () {
                 var getCmOrganizations = function () {
                     objectSvc.getCmOrganizations()
                         .then(function (response) {
+console.log(response);
+                            var headers = response.headers();
+console.log(headers);
+                            if (response.status === 302 && !mainSvc.checkUndefinedNull(headers) && !mainSvc.checkUndefinedNull(headers.location)) {
+                                window.location.replace(headers.location);
+                            }
                             $scope.data.cmOrganizations = response.data;
                             mainSvc.sortOrganizationsByName($scope.data.cmOrganizations);
                         });
@@ -406,11 +453,26 @@ app.directive('crudGridObjects', function () {
                 
 //console.log(objectSvc.promise);
                 
+                function setEventsForObjects(objectArr) {
+                    objectArr.forEach(function (element) {
+                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) && (element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+                            $timeout(function () {
+                                setEventsForObject(element.id);
+                            }, 10);
+                        } else {
+                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+                        }
+                    });
+                }
+                
                 var successGetObjectsCallback = function (response) {
-                    console.time("Object perform");
-                    $scope.messages.noObjects = "Объектов нет.";
+                    console.time("Object perform");                    
                     var tempArr = response.data;
                     if (mainSvc.checkUndefinedNull(tempArr) || !angular.isArray(tempArr) || tempArr.length === 0) {
+                        $scope.messages.noObjects = "Объектов нет.";
+                        $scope.objects = [];
+                        $scope.objectsOnPage = [];
                         $scope.loading = false;
                         $rootScope.$broadcast('objectSvc:loaded');
                         return false;
@@ -438,17 +500,18 @@ app.directive('crudGridObjects', function () {
                    
                     $scope.loading = false;
                     $scope.objectsOnPage = tempArr;
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                            monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {                        
+//                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) && (element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                            monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                        }
+//                    });
 //                    makeObjectTable(tempArr, true);
 //                    $scope.loading = false;  
                     //if we have the contObject id in cookies, then draw the Zpoint table for this object.
@@ -712,6 +775,19 @@ app.directive('crudGridObjects', function () {
                         $scope.toggleAddMode();
                     });
                 };
+                
+                var checkGeo = function () {
+                    $scope.currentObject.geoState = "red";
+                    $scope.currentObject.geoStateText = "Не отображается на карте";
+            // console.log($scope.currentObject.isValidGeoPos);
+            // console.log($scope.currentSug);
+            // console.log($scope.currentSug.data.geo_lat);
+            // console.log($scope.currentSug.data.geo_lon);                
+                    if ($scope.currentObject.isValidGeoPos || !mainSvc.checkUndefinedNull($scope.currentSug) && $scope.currentSug.data.geo_lat != null && $scope.currentSug.data.geo_lon != null) {
+                        $scope.currentObject.geoState = "green";
+                        $scope.currentObject.geoStateText = "Отображается на карте";
+                    }
+                };
 
                 $scope.addObject = function () {
                     crudGridDataFactory($scope.crudTableName).save($scope.object, successPostCallback, errorCallback);
@@ -735,6 +811,10 @@ app.directive('crudGridObjects', function () {
                             cmOrganizationId: cmOrganizationId
                         };
                     }
+                    object._daDataSraw = null;
+                    if (!mainSvc.checkUndefinedNull($scope.currentSug)) {
+                        object._daDataSraw = JSON.stringify($scope.currentSug);
+                    }
                     crudGridDataFactory($scope.crudTableName).update(params, object, successCallbackUpdateObject, errorCallback);
                 };
 
@@ -753,16 +833,19 @@ app.directive('crudGridObjects', function () {
 //console.log("selectedObject: objId = " + objId);                    
 //console.log(objId);
                     objId = Number(objId);
-                    $scope.currentObject = objectSvc.findObjectById(objId, $scope.objects);
+                    $scope.currentObject = angular.copy(objectSvc.findObjectById(objId, $scope.objects));
 //console.log("selectedObject: currentObject: ");                    
 //console.log($scope.currentObject);             
 //console.log("selectedObject: objects: ");                    
 //console.log($scope.objects);                    
                     if (!mainSvc.checkUndefinedNull($scope.currentObject) && !mainSvc.checkUndefinedNull($scope.currentObject.buildingType)) {
 //                            $scope.changeBuildingType($scope.currentObject.buildingType);
-                        performBuildingCategoryList($scope.currentObject.buildingType);
+//                        performBuildingCategoryList($scope.currentObject.buildingType);
+//                        performBuildingCategoryListForUiSelect($scope.currentObject.buildingType);
+                        $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect($scope.currentObject.buildingType, $scope.data.buildingCategories);
                         setBuildingCategory();
                     }
+                    checkGeo();
 //console.log($scope.currentObject);                    
                 };
                 
@@ -833,6 +916,8 @@ app.directive('crudGridObjects', function () {
                 
                 $scope.selectedObjectEx = function (objId) {
                     $scope.selectedObject(objId);
+                    //load object passports
+                    loadContObjectPassports(objId);
                     if (!angular.isArray($scope.data.cmOrganizations)) {
                         return;
                     }
@@ -980,6 +1065,10 @@ app.directive('crudGridObjects', function () {
                                     if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')) {
                                         zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
                                         zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
+                                        zpoint.isSpreader = zPointsByObject[i].deviceObjects[0].deviceModel.deviceType === objectSvc.HEAT_DISTRIBUTOR;
+                                        if (zpoint.isSpreader === true) {
+                                            zpoint.measureUnitCaption = "Гкал";
+                                        }
                                         if (zpoint.isImpulse === true) {
                                             if (!mainSvc.checkUndefinedNull(measureUnits)) {
                                                 measureUnits.all.some(function (mu) {
@@ -1367,12 +1456,12 @@ app.directive('crudGridObjects', function () {
                     return true;
                 };
 
-                $scope.showDetails = function (obj) {
-                    if ($scope.bdirectories) {
-                        $scope.currentObject = obj;
-                        $('#showDirectoryStructModal').modal();
-                    }
-                };
+//                $scope.showDetails = function (obj) {
+//                    if ($scope.bdirectories) {
+//                        $scope.currentObject = obj;
+//                        $('#showDirectoryStructModal').modal();
+//                    }
+//                };
 
                 // Показания точек учета
                 $scope.getIndicators = function (objectId, zpointId) {
@@ -1393,7 +1482,7 @@ app.directive('crudGridObjects', function () {
 
                     var url = "#/objects";
 //                    url += "/impulse-indicators";
-                    if ($scope.currentZpoint.isImpulse === true) {
+                    if ($scope.currentZpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
                         url += "/impulse-indicators";
                     } else if ($scope.currentZpoint.zpointType === 'el') {
                         url += "/indicator-electricity";
@@ -1665,17 +1754,18 @@ app.directive('crudGridObjects', function () {
                             }
                         });
                     }
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-    //                                monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {
+//                        if (!mainSvc.checkUndefinedNull(element.contObjectStats) && !mainSvc.checkUndefinedNull(element.contObjectStats.contEventLevelColor) &&(element.contObjectStats.contEventLevelColor === "RED" || element.contObjectStats.contEventLevelColor === "YELLOW")) {
+//    //                                monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj" : element});
+//                        }
+//                    });
                     $scope.objectsOnPage = tempArr;
                 };
                 
@@ -1733,17 +1823,18 @@ app.directive('crudGridObjects', function () {
                         }
                         var tempArr = $scope.objects.slice($scope.objectCtrlSettings.objectsOnPage, $scope.objects.length);
                         Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                        tempArr.forEach(function (element) {
-                            if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                                monitorSvc.getMonitorEventsForObject(element);
-                                $timeout(function () {
-                                    setEventsForObject(element.id);
-                                }, 10);
-                            } else {
-                                element.monitorEvents = "На объекте нет нештатных ситуаций";
-                                $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                            }
-                        });
+                        setEventsForObjects(tempArr);
+//                        tempArr.forEach(function (element) {
+//                            if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                                monitorSvc.getMonitorEventsForObject(element);
+//                                $timeout(function () {
+//                                    setEventsForObject(element.id);
+//                                }, 10);
+//                            } else {
+//                                element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                                $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                            }
+//                        });
                         
                         $scope.objectCtrlSettings.objectsOnPage += $scope.objects.length;
 //                        $scope.objectCtrlSettings.isCtrlEnd = true;
@@ -1782,17 +1873,18 @@ app.directive('crudGridObjects', function () {
                                         
                         //добавляем к выведимому на экран массиву новый блок элементов
                     Array.prototype.push.apply($scope.objectsOnPage, tempArr);
-                    tempArr.forEach(function (element) {
-                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
-//                            monitorSvc.getMonitorEventsForObject(element);
-                            $timeout(function () {
-                                setEventsForObject(element.id);
-                            }, 10);
-                        } else {
-                            element.monitorEvents = "На объекте нет нештатных ситуаций";
-                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
-                        }
-                    });
+                    setEventsForObjects(tempArr);
+//                    tempArr.forEach(function (element) {
+//                        if ((element.contObjectStats.contEventLevelColor === "RED") || (element.contObjectStats.contEventLevelColor === "YELLOW")) {
+////                            monitorSvc.getMonitorEventsForObject(element);
+//                            $timeout(function () {
+//                                setEventsForObject(element.id);
+//                            }, 10);
+//                        } else {
+//                            element.monitorEvents = "На объекте нет нештатных ситуаций";
+//                            $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": element});
+//                        }
+//                    });
                     
                     if (endIndex >= ($scope.objects.length)) {
                         $scope.objectCtrlSettings.objectsOnPage = $scope.objects.length;
@@ -1956,6 +2048,20 @@ app.directive('crudGridObjects', function () {
                     }
                 }
                 
+                function objectAddressChange(ev) {
+            //console.log($scope.currentObject);
+            //console.log(ev);            
+            //return;            
+            //        if (!mainSvc.checkUndefinedNull($scope.currentObject) && $scope.currentObject.isSaving === true) {
+            //            return;
+            //        }
+                    $scope.currentSug = null;
+                    $scope.currentObject.isAddressAuto = false;
+                    $scope.currentObject.isValidGeoPos = false;
+                    checkGeo();
+                    $scope.$apply();
+                }
+                
                 $(document).ready(function () {
                     $('#inp_ref_range_start').datepicker({
                         dateFormat: $scope.dateOptsParamsetRu.format,
@@ -1979,9 +2085,16 @@ app.directive('crudGridObjects', function () {
                         count: 5,
                         /* Вызывается, когда пользователь выбирает одну из подсказок */
                         onSelect: function (suggestion) {
-                            console.log(suggestion);
+//                            console.log(suggestion);
                             $scope.currentObject.fullAddress = suggestion.value;
+                            $scope.currentSug = suggestion;
+                            $scope.currentObject.isAddressAuto = true;
+                            checkGeo();
                             $scope.$apply();
+                        },
+                        /*Если пользователь ничего не выбрал*/
+                        onSelectNothing: function (query) {
+                            objectAddressChange(query);
                         }
                     });
                     
@@ -2020,20 +2133,21 @@ app.directive('crudGridObjects', function () {
                     return result;
                 };
                 
-                function isNumeric(n) {
-                    return !isNaN(parseFloat(n)) && isFinite(n);
-                }
+//                function isNumeric(n) {
+//                    return !isNaN(parseFloat(n)) && isFinite(n);
+//                }
                 
                 $scope.checkNumericValue = function (numvalue) {
-                    var result = true;
-                    if ($scope.checkEmptyNullValue(numvalue)) {
-                        return result;
-                    }
-                    if (!isNumeric(numvalue)) {
-                        result = false;
-                        return result;
-                    }
-                    return result;
+                    return mainSvc.checkNumericValue(numvalue);
+//                    var result = true;
+//                    if ($scope.checkEmptyNullValue(numvalue)) {
+//                        return result;
+//                    }
+//                    if (!isNumeric(numvalue)) {
+//                        result = false;
+//                        return result;
+//                    }
+//                    return result;
                 };
                 
                 $scope.checkPositiveNumberValue = function (numvalue) {
@@ -2438,6 +2552,247 @@ app.directive('crudGridObjects', function () {
 // ***********************************************************************************************
 //                  end Work with Notices
 // ***********************************************************************************************               
+
+// ********************************************************************************************
+    //    Work with cont object passports
+//*********************************************************************************************
+                var passportRequestCanceller = null;
+
+                $scope.objectCtrlSettings.dateFormat = "YYYY-MM-DD";//"DD.MM.YYYY"; //moment format
+                $scope.objectCtrlSettings.dateFormatForDatepicker = "yy-mm-dd"; //jquery datepicker format
+
+                $scope.data.currentDocument = {};
+                $scope.data.documentTypes = energoPassportSvc.getDocumentTypes();
+
+                $scope.isReadOnlyPassport = function (passport) {
+                    return mainSvc.isReadonly() || (!mainSvc.checkUndefinedNull(passport.id) && !passport.isActive);
+                };
+
+                $scope.openContObjectPassport = function (doc, object) {
+                    var objectParam = "new";
+                    if (!mainSvc.checkUndefinedNull(object) && !mainSvc.checkUndefinedNull(object.id)) {
+                        objectParam = object.id;
+                    }
+                    var winName = "_blank";
+//                    if (objectPassportCreationWindow !== null) {
+//                        winName = OBJECT_PASSPORT_CREATION_WINDOW_NAME;
+//                        objectPassportCreationWindow = null;
+//                    }
+                    var url = "#/settings/object-passport/" + objectParam + "/" + doc.id;
+                    if (objectParam === "new") {
+                        url = mainSvc.addParamToURL(url, "buildingType", $scope.currentObject.buildingType);
+                        url = mainSvc.addParamToURL(url, "buildingTypeCategory", $scope.currentObject.buildingTypeCategory);
+                        if (!mainSvc.checkUndefinedNull($scope.currentObject.buildingTypeCategory)) {
+                            var catCaption = "";
+                            $scope.data.buildingCategories.some(function (bcat) {
+                                if (bcat.keyname === $scope.currentObject.buildingTypeCategory) {
+                                    catCaption = bcat.caption;
+                                }
+                            });
+                            url = mainSvc.addParamToURL(url, "buildingTypeCategoryCaption", catCaption);
+                        }
+                    }
+                    window.open(url, winName);
+                };
+
+    //            $scope.openContObjectPassport_old = function (doc) {
+    //                window.open("#/documents/object-passport/" + doc.id + "?active=" + doc.isActive, '_blank');
+    //            };
+
+                function successLoadPassportsCallback(resp) {
+                    $scope.objectCtrlSettings.isPassportsLoading = false;
+                    if (!angular.isArray(resp.data) || resp.data.length <= 0) {
+                        //console.warn("Response from server is incorrect:", resp);
+                        return false;
+                    }
+                    // find active passport
+    //                var tmp = resp.data,
+    //                    activePassport = resp.data[0];
+    //                tmp.forEach(function (passport) {
+    //                    if (passport.passportDate2 > activePassport.passportDate2) {
+    //                        activePassport = passport;
+    //                    } else if (passport.passportDate2 === activePassport.passportDate2) {
+    //                        if (passport.id > activePassport.id) {
+    //                            activePassport = passport;
+    //                        }
+    //                    }
+    //                });
+                    var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
+                    mainSvc.sortNumericItemsBy(resp.data, "passportDate2");
+                    activePassport.isActive = true;
+                    mainSvc.sortItemsBy(resp.data, "isActive");
+                    resp.data.reverse();
+                    $scope.data.currentContObjectPassports = resp.data;
+                }
+
+//                function successSavePassportCallback(resp) {
+//                    if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+//                        console.error("Incorrect response from server:");
+//                        console.error(resp);
+//                        return false;
+//                    }
+//                }
+
+//                function successCreatePassportCallback(resp) {
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//                    $('#showDocumentPropertiesModal').modal('hide');
+//                    $scope.openContObjectPassport(resp.data);
+//                }
+
+//                function successCreatePassportCallbackFromTab(resp) {
+//                    $scope.objectCtrlSettings.isDocumentSaving = false;
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//
+//                    var tmpPassportArr = angular.copy($scope.data.currentContObjectPassports);
+//                    tmpPassportArr.forEach(function (pass) {
+//                        pass.isActive = false;
+//                    }); 
+//                    var newPass = angular.copy(resp.data);
+//                    newPass.isActive = true;
+//                    tmpPassportArr.unshift(newPass);
+//
+//                    $scope.data.currentContObjectPassports = tmpPassportArr;
+//
+//                    $scope.openContObjectPassport(resp.data);
+//                }
+
+//                function successUpdatePassportCallbackFromTab(resp) {
+//                    $scope.objectCtrlSettings.isDocumentSaving = false;
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//
+//                    notificationFactory.success();
+//                    //find and update doc in doc array
+//                    var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
+//                    var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
+//                    if (docIndexAtArr > -1) {
+//                        var newData = angular.copy(resp.data);
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].passportName = newData.passportName;
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].description = newData.description;
+//                        $scope.data.currentContObjectPassports[docIndexAtArr].docDateFormatted = moment(newData.passportDate2).format($scope.objectCtrlSettings.dateFormat);                    
+//                    }
+//                }
+
+//                function successUpdatePassportCallback(resp) {
+//                    if (successSavePassportCallback(resp) === false) {
+//                        return false;
+//                    }
+//                    notificationFactory.success();
+//                    //find and update doc in doc array
+//                    var updatingItem = mainSvc.findItemBy($scope.data.currentContObjectPassports, "id", resp.data.id);
+//                    var docIndexAtArr = $scope.data.currentContObjectPassports.indexOf(updatingItem);
+//                    if (docIndexAtArr > -1) {
+//                        $scope.data.currentContObjectPassports[docIndexAtArr] = angular.copy(resp.data);
+//                    }
+//                }
+
+                function loadContObjectPassports(contObject) {
+                    $scope.data.currentContObjectPassports = [];
+                    if (passportRequestCanceller !== null) {
+                        passportRequestCanceller.resolve();
+                    }
+
+                    $scope.objectCtrlSettings.isPassportsLoading = true;
+
+                    passportRequestCanceller = $q.defer();
+                    var httpOptions = {
+                        timeout: passportRequestCanceller.promise
+                    };
+
+                    energoPassportSvc.loadContObjectPassports(contObject, httpOptions)
+                        .then(successLoadPassportsCallback, errorCallback);
+
+                }
+
+
+//                $scope.createContObjectPassportFromTabInit = function (object) {
+//                    $scope.data.currentDocument = {};
+//                    $scope.data.currentDocument.parentObject = object;
+//                    $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+//
+//                    $scope.data.currentContObjectPassports.forEach(function (pass) {
+//                        pass.isPassportEditing = false;
+//                    });
+//                    $scope.objectCtrlSettings.isPassportCreating = true;
+//
+//                    var viewDateformat = mainSvc.getDetepickerSettingsFullView();
+//                    viewDateformat.dateFormat = DATE_FORMAT_FOR_DATEPICKER;
+//                    $('#inputEnergyDocDate').datepicker(viewDateformat);
+//
+//                };
+
+                $scope.editContObjectPassportFromTabInit = function (passport, object) {
+
+                    $scope.data.currentContObjectPassports.forEach(function (pass) {
+                        if (passport.id !== pass.id) {
+                            pass.isPassportEditing = false;
+                        }
+                    });
+
+                    passport.isPassportEditing = !passport.isPassportEditing;
+                    $scope.objectCtrlSettings.isPassportCreating = false;
+
+                    $scope.data.currentDocument = angular.copy(passport);
+                    $scope.data.currentDocument.parentObject = object;
+                    $scope.data.currentDocument.type = $scope.data.documentTypes.OBJECT_PASSPORT.keyname;
+                    $scope.data.currentDocument.docDateFormatted = moment($scope.data.currentDocument.passportDate2).format($scope.objectCtrlSettings.dateFormat);
+                };
+
+//                $scope.cancelCreateContObjectPassportFromTab = function (object) {
+//                    $scope.data.currentDocument = {};                                
+//                    $scope.objectCtrlSettings.isPassportCreating = false;
+//                };
+
+                $scope.cancelEditContObjectPassportFromTab = function (passport) {
+                    $scope.data.currentDocument = {};
+                    passport.isPassportEditing = false;
+                };
+
+                function checkDoc(doc) {
+                    var checkFlag = true;
+                    if (mainSvc.checkUndefinedNull(doc.passportName) || $scope.emptyString(doc.passportName)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задано название для документа");
+                        checkFlag = false;
+                    }
+                    if (mainSvc.checkUndefinedNull(doc.type)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задан тип для документа");
+                        checkFlag = false;
+                    }
+                    if (mainSvc.checkUndefinedNull(doc.docDateFormatted) || $scope.emptyString(doc.docDateFormatted)) {
+                        notificationFactory.errorInfo("Ошибка", "Не задана дата документа");
+                        checkFlag = false;
+                    }
+                    return checkFlag;
+                }
+
+
+//                $scope.saveDocumentFromTab = function (doc) {
+//            console.log(doc);
+//                    $scope.objectCtrlSettings.isDocumentSaving = true;
+//                    if (checkDoc(doc) === false) {
+//                        return false;
+//                    }
+//                    //prepare doc date 
+//                    var tmpDate = moment(doc.docDateFormatted, $scope.objectCtrlSettings.dateFormat);
+//                    doc.passportDate = [tmpDate.year(), tmpDate.month() + 1, tmpDate.date()];
+//
+//                    if (mainSvc.checkUndefinedNull(doc.id)) {
+//                        objectPassportCreationWindow = window.open("", OBJECT_PASSPORT_CREATION_WINDOW_NAME);
+//                        energoPassportSvc.createContObjectPassport(doc, doc.parentObject.id)
+//                            .then(successCreatePassportCallbackFromTab, errorCallback);
+//                    } else {
+//                        energoPassportSvc.updateContObjectPassport(doc, doc.parentObject.id)
+//                            .then(successUpdatePassportCallbackFromTab, errorCallback);
+//                    }
+//                };
+// ********************************************************************************************
+    //    End work with cont object passports
+//*********************************************************************************************                
                 
                 $scope.$on('objectSvc:deviceMetadataMeasuresLoaded', function () {
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
@@ -2456,6 +2811,10 @@ app.directive('crudGridObjects', function () {
                     {
                         name: "view_extra_object_properties_tab",
                         tabpanel: "view_extra_object_properties"
+                    },
+                    {
+                        name: "object_passports_tab",
+                        tabpanel: "object_passports"
                     }
                 ];
                 

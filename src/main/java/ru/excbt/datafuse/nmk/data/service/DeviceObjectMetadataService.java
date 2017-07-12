@@ -27,15 +27,13 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransform;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransformHistory;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataRepository;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformHistoryRepository;
-import ru.excbt.datafuse.nmk.data.repository.DeviceObjectMetadataTransformRepository;
+import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с метаданными прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.01.2016
@@ -50,7 +48,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 	public final static String PROP_VARS_SPLITTER = ",";
 
-	//public final static DEVICE_METADATA_MAPPER	
+	//public final static DEVICE_METADATA_MAPPER
 
 	@Autowired
 	private MeasureUnitService measureUnitService;
@@ -68,16 +66,18 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	private DeviceMetadataService deviceMetadataService;
 
 	@Autowired
-	private DeviceObjectService deviceObjectService;
+	private DeviceObjectRepository deviceObjectMetadata;
 
-	@Autowired
-	private ContZPointService contZPointService;
+
+    @Autowired
+    private ContZPointRepository contZPointRepository;
+
 
 	@Autowired
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -90,7 +90,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectMetadataId
 	 * @return
 	 */
@@ -100,7 +100,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectMetadataList
 	 * @return
 	 */
@@ -129,7 +129,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcDeviceObjectId
 	 * @param destDeviceObjectId
 	 * @return
@@ -165,7 +165,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -177,7 +177,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcDeviceModelId
 	 * @param destDeviceObjectId
 	 * @return
@@ -188,7 +188,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 
 		checkNotNull(deviceModelId, "deviceModelId is null");
 
-		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(destDeviceObjectId);
+		DeviceObject deviceObject = deviceObjectMetadata.findOne(destDeviceObjectId);// .selectDeviceObject(destDeviceObjectId);
 		if (deviceObject == null) {
 			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", destDeviceObjectId));
 		}
@@ -237,7 +237,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param deviceMetadataType
 	 * @return
@@ -245,14 +245,14 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
-		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		List<DeviceObject> deviceObjects =  contZPointRepository.selectDeviceObjects(contZPointId);
 		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
 			return result;
 		}
 
 		DeviceObject deviceObject = deviceObjects.get(0);
 
-		// select deviceMetadataType from DeviceObjectDataSource 
+		// select deviceMetadataType from DeviceObjectDataSource
 		List<DeviceObjectDataSource> deviceDataSourceList = deviceObjectDataSourceService
 				.selectActiveDeviceObjectDataSource(deviceObject.getId());
 
@@ -272,7 +272,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param deviceMetadataType
 	 * @return
@@ -280,7 +280,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId, String deviceMetadataType) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
-		List<DeviceObject> deviceObjects = contZPointService.selectDeviceObjects(contZPointId);
+		List<DeviceObject> deviceObjects = contZPointRepository.selectDeviceObjects(contZPointId);
 		if (deviceObjects.isEmpty() || deviceObjects.size() > 1) {
 			return result;
 		}
@@ -293,7 +293,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectMetadataList
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
@@ -370,7 +370,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
@@ -381,7 +381,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -413,7 +413,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */

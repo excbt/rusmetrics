@@ -3,8 +3,10 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
+import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.SystemUser;
 
 /**
@@ -17,6 +19,9 @@ import ru.excbt.datafuse.nmk.data.model.SystemUser;
  */
 public interface SystemUserRepository extends CrudRepository<SystemUser, Long> {
 
-	public List<SystemUser> findByUserName(String userName);
+	List<SystemUser> findByUserName(String userName);
+
+    @Query("SELECT u.id FROM SystemUser u INNER JOIN u.subscriber s WHERE u.subscriber.id = :subscriberId OR (s.rmaSubscriberId = :subscriberId)")
+    List<Long> findUserIdsBySubscriberOrRmaId(@Param("subscriberId") Long subscriberId);
 
 }

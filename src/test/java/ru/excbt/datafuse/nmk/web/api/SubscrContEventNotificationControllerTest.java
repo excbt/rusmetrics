@@ -37,7 +37,6 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
@@ -48,6 +47,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 
@@ -158,7 +158,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(ApiConst.APPLICATION_JSON_UTF8));
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		resultActionsAll.andDo(MockMvcResultHandlers.print());
 
 		resultActionsAll.andExpect(status().isOk())
-				.andExpect(content().contentType(WebApiController.APPLICATION_JSON_UTF8));
+				.andExpect(content().contentType(ApiConst.APPLICATION_JSON_UTF8));
 	}
 
 	/**

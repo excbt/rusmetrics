@@ -18,6 +18,8 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Fetch;
@@ -47,6 +49,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
 
 	/**
@@ -54,7 +58,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@OneToOne()
+	@ManyToOne
 	@JoinColumn(name = "cont_object_id")
 	@JsonIgnore
 	private ContObject contObject;
@@ -62,7 +66,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
 
@@ -140,181 +144,10 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Transient
 	private Long _activeDeviceObjectId;
 
-	public ContObject getContObject() {
-		return contObject;
-	}
-
-	public void setContObject(ContObject contObject) {
-		this.contObject = contObject;
-	}
-
-	public String getCustomServiceName() {
-		return customServiceName;
-	}
-
-	public void setCustomServiceName(String customServiceName) {
-		this.customServiceName = customServiceName;
-	}
-
-	public Date getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
-
-	public Date getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-
-	public List<DeviceObject> getDeviceObjects() {
-		return deviceObjects;
-	}
-
-	public void setDeviceObjects(List<DeviceObject> deviceObjects) {
-		this.deviceObjects = deviceObjects;
-	}
-
-	public ContServiceType getContServiceType() {
-		return contServiceType;
-	}
-
-	public void setContServiceType(ContServiceType contServiceType) {
-		this.contServiceType = contServiceType;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getCheckoutTime() {
-		return checkoutTime;
-	}
-
-	public void setCheckoutTime(String checkoutTime) {
-		this.checkoutTime = checkoutTime;
-	}
-
-	public Integer getCheckoutDay() {
-		return checkoutDay;
-	}
-
-	public void setCheckoutDay(Integer checkoutDay) {
-		this.checkoutDay = checkoutDay;
-	}
-
-	public Boolean getDoublePipe() {
-		return doublePipe;
-	}
-
-	public void setDoublePipe(Boolean doublePipe) {
-		this.doublePipe = doublePipe;
-	}
-
-	public Organization getRso() {
-		return rso;
-	}
-
-	public void setRso(Organization rso) {
-		this.rso = rso;
-	}
-
-	public Boolean getIsManualLoading() {
-		return isManualLoading;
-	}
-
-	public void setIsManualLoading(Boolean isManualLoading) {
-		this.isManualLoading = isManualLoading;
-	}
-
-	public Long getContObjectId() {
-		return contObjectId;
-	}
-
-	public void setContObjectId(Long contObjectId) {
-		this.contObjectId = contObjectId;
-	}
-
-	public String getContServiceTypeKeyname() {
-		return contServiceTypeKeyname;
-	}
-
-	public void setContServiceTypeKeyname(String contServiceTypeKeyname) {
-		this.contServiceTypeKeyname = contServiceTypeKeyname;
-	}
-
-	@Override
-	public String getExSystemKeyname() {
-		return exSystemKeyname;
-	}
-
-	public void setExSystemKeyname(String exSystemKeyname) {
-		this.exSystemKeyname = exSystemKeyname;
-	}
-
-	@Override
-	public String getExCode() {
-		return exCode;
-	}
-
-	public Integer getTsNumber() {
-		return tsNumber;
-	}
-
-	public void setTsNumber(Integer tsNumber) {
-		this.tsNumber = tsNumber;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public Boolean getIsManual() {
-		return isManual;
-	}
-
-	public void setIsManual(Boolean isManual) {
-		this.isManual = isManual;
-	}
-
-	public void setExCode(String exCode) {
-		this.exCode = exCode;
-	}
 
 	@JsonIgnore
 	public DeviceObject get_activeDeviceObject() {
 		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
-	}
-
-	public Long getRsoId() {
-		return rsoId;
-	}
-
-	public void setRsoId(Long rsoId) {
-		this.rsoId = rsoId;
-	}
-
-	public String getContZPointComment() {
-		return contZPointComment;
-	}
-
-	public void setContZPointComment(String contZPointComment) {
-		this.contZPointComment = contZPointComment;
 	}
 
 	public Long get_activeDeviceObjectId() {
@@ -323,34 +156,6 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 			_activeDeviceObjectId = d != null ? d.getId() : null;
 		}
 		return _activeDeviceObjectId;
-	}
-
-	public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
-		this._activeDeviceObjectId = _activeDeviceObjectId;
-	}
-
-	public Boolean getIsDroolsDisable() {
-		return isDroolsDisable;
-	}
-
-	public void setIsDroolsDisable(Boolean isDroolsDisable) {
-		this.isDroolsDisable = isDroolsDisable;
-	}
-
-	public TemperatureChart getTemperatureChart() {
-		return temperatureChart;
-	}
-
-	public void setTemperatureChart(TemperatureChart temperatureChart) {
-		this.temperatureChart = temperatureChart;
-	}
-
-	public Long getTemperatureChartId() {
-		return temperatureChartId;
-	}
-
-	public void setTemperatureChartId(Long temperatureChartId) {
-		this.temperatureChartId = temperatureChartId;
 	}
 
 }

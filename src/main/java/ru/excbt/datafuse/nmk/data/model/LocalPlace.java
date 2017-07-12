@@ -14,13 +14,18 @@ import javax.persistence.Version;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class LocalPlace extends AbstractAuditableModel {
 
+    @Getter
 	public static class LocalPlaceInfo {
 		private final Long id;
 		private final String localPlaceName;
@@ -35,22 +40,6 @@ public class LocalPlace extends AbstractAuditableModel {
 					: null;
 		}
 
-		public String getLocalPlaceName() {
-			return localPlaceName;
-		}
-
-		public Long getId() {
-			return id;
-		}
-
-		public Long getWeatherPlaceId() {
-			return weatherPlaceId;
-		}
-
-		public String getWeatherPlaceName() {
-			return weatherPlaceName;
-		}
-
 		public boolean haveWeatherPlace() {
 			return this.weatherPlaceId != null;
 		}
@@ -58,7 +47,7 @@ public class LocalPlace extends AbstractAuditableModel {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -2419941585129491457L;
 
@@ -91,11 +80,11 @@ public class LocalPlace extends AbstractAuditableModel {
 	@JoinColumn(name = "weather_place_id")
 	private WeatherPlace weatherPlace;
 
-	@Column(name = "geo_lat")
-	private BigDecimal geoLat;
+	@Column(name = "geo_lat", columnDefinition = "numeric")
+	private Double geoLat;
 
-	@Column(name = "geo_lon")
-	private BigDecimal geoLon;
+	@Column(name = "geo_lon", columnDefinition = "numeric")
+	private Double geoLon;
 
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
@@ -110,124 +99,5 @@ public class LocalPlace extends AbstractAuditableModel {
 	@Column(name = "deleted")
 	private int deleted;
 
-	public String getLocalPlaceName() {
-		return localPlaceName;
-	}
-
-	public void setLocalPlaceName(String localPlaceName) {
-		this.localPlaceName = localPlaceName;
-	}
-
-	public String getLocalPlaceShortName() {
-		return localPlaceShortName;
-	}
-
-	public void setLocalPlaceShortName(String localPlaceShortName) {
-		this.localPlaceShortName = localPlaceShortName;
-	}
-
-	public String getLocalPlaceShortName2() {
-		return localPlaceShortName2;
-	}
-
-	public void setLocalPlaceShortName2(String localPlaceShortName2) {
-		this.localPlaceShortName2 = localPlaceShortName2;
-	}
-
-	public String getLocalPlaceShortName3() {
-		return localPlaceShortName3;
-	}
-
-	public void setLocalPlaceShortName3(String localPlaceShortName3) {
-		this.localPlaceShortName3 = localPlaceShortName3;
-	}
-
-	public String getLocalPlaceFullName() {
-		return localPlaceFullName;
-	}
-
-	public void setLocalPlaceFullName(String localPlaceFullName) {
-		this.localPlaceFullName = localPlaceFullName;
-	}
-
-	public String getLocalPlaceDescription() {
-		return localPlaceDescription;
-	}
-
-	public void setLocalPlaceDescription(String localPlaceDescription) {
-		this.localPlaceDescription = localPlaceDescription;
-	}
-
-	public String getLocalPlaceComment() {
-		return localPlaceComment;
-	}
-
-	public void setLocalPlaceComment(String localPlaceComment) {
-		this.localPlaceComment = localPlaceComment;
-	}
-
-	public Long getWeatherPlaceId() {
-		return weatherPlaceId;
-	}
-
-	public void setWeatherPlaceId(Long weatherPlaceId) {
-		this.weatherPlaceId = weatherPlaceId;
-	}
-
-	public BigDecimal getGeoLat() {
-		return geoLat;
-	}
-
-	public void setGeoLat(BigDecimal geoLat) {
-		this.geoLat = geoLat;
-	}
-
-	public BigDecimal getGeoLon() {
-		return geoLon;
-	}
-
-	public void setGeoLon(BigDecimal geoLon) {
-		this.geoLon = geoLon;
-	}
-
-	public Boolean getIsDisabled() {
-		return isDisabled;
-	}
-
-	public void setIsDisabled(Boolean isDisabled) {
-		this.isDisabled = isDisabled;
-	}
-
-	public UUID getFiasUuid() {
-		return fiasUuid;
-	}
-
-	public void setFiasUuid(UUID fiasUuid) {
-		this.fiasUuid = fiasUuid;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public WeatherPlace getWeatherPlace() {
-		return weatherPlace;
-	}
-
-	public void setWeatherPlace(WeatherPlace weatherPlace) {
-		this.weatherPlace = weatherPlace;
-	}
 
 }

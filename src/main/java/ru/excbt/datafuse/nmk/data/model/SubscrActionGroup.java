@@ -10,11 +10,13 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Группы рассылок абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.04.2015
@@ -22,10 +24,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_action_group")
+@Getter
+@Setter
 public class SubscrActionGroup extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -3946293470577245148L;
 
@@ -45,45 +49,5 @@ public class SubscrActionGroup extends AbstractAuditableModel {
 
 	@Version
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public String getGroupName() {
-		return groupName;
-	}
-
-	public void setGroupName(String groupName) {
-		this.groupName = groupName;
-	}
-
-	public String getGroupDescription() {
-		return groupDescription;
-	}
-
-	public void setGroupDescription(String groupDescription) {
-		this.groupDescription = groupDescription;
-	}
-
-	public String getGroupComment() {
-		return groupComment;
-	}
-
-	public void setGroupComment(String groupComment) {
-		this.groupComment = groupComment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 }

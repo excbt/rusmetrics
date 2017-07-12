@@ -5,15 +5,18 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
+import lombok.Getter;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 
+@Getter
 public class ContZPointSessionDetailType implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6596750848336568041L;
 
+	@Getter
 	public class ContZPointInfo {
 
 		private final Long contZPointId;
@@ -30,25 +33,6 @@ public class ContZPointSessionDetailType implements Serializable {
 			this.contServiceType = contZPoint.getContServiceTypeKeyname();
 		}
 
-		public Long getContZPointId() {
-			return contZPointId;
-		}
-
-		public String getCustomServiceName() {
-			return customServiceName;
-		}
-
-		public String getContServiceName() {
-			return contServiceName;
-		}
-
-		public String getContServiceCaption() {
-			return contServiceCaption;
-		}
-
-		public String getContServiceType() {
-			return contServiceType;
-		}
 	}
 
 	@JsonUnwrapped
@@ -59,14 +43,6 @@ public class ContZPointSessionDetailType implements Serializable {
 	public ContZPointSessionDetailType(ContZPoint contZPoint, List<SessionDetailTypeInfo> sessionDetailTypes) {
 		this.contZPointInfo = new ContZPointInfo(contZPoint);
 		this.sessionDetailTypes = sessionDetailTypes;
-	}
-
-	public List<SessionDetailTypeInfo> getSessionDetailTypes() {
-		return sessionDetailTypes;
-	}
-
-	public ContZPointInfo getContZPointInfo() {
-		return contZPointInfo;
 	}
 
 }

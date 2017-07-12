@@ -64,7 +64,7 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private BigDecimal verificationInterval;
+    private Double verificationInterval;
 
     @Getter
     @Setter
@@ -88,7 +88,7 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private BigDecimal impulseK;
+    private Double impulseK;
 
     @Getter
     @Setter
@@ -113,6 +113,14 @@ public class DeviceObjectDTO {
     @Getter
     @Setter
     private ActiveDataSourceInfoDTO editDataSourceInfo;
+
+    @Getter
+    @Setter
+    private String instType;
+
+    @Getter
+    @Setter
+    private String deviceObjectName;
 
     @JsonIgnore
     public boolean isNew() {

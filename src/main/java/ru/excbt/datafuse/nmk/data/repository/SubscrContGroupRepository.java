@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
+import ru.excbt.datafuse.nmk.data.repository.support.SubscriberRI;
 
 /**
  * Repository для ContGroup
@@ -14,8 +15,6 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
  * @since 27.05.2015
  *
  */
-public interface SubscrContGroupRepository extends CrudRepository<SubscrContGroup, Long> {
-
-	public List<SubscrContGroup> findBySubscriberId(long subscriberId);
+public interface SubscrContGroupRepository extends CrudRepository<SubscrContGroup, Long>, SubscriberRI<SubscrContGroup> {
 
 }

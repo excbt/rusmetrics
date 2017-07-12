@@ -21,7 +21,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -7274020492051549617L;
 
@@ -30,7 +30,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	protected final List<T> cityObjects = new ArrayList<>();
 
 	/**
-	 * 
+	 *
 	 * @param cityFiasUUID
 	 */
 	protected CityContObjects(UUID cityFiasUUID) {
@@ -38,7 +38,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 
@@ -47,7 +47,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public UUID getCityFiasUUID() {
@@ -55,7 +55,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getCityName() {
@@ -66,10 +66,10 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public BigDecimal getCityGeoPosX() {
+	public Double getCityGeoPosX() {
 		Optional<T> item = cityObjects.stream()
 				.filter((i) -> i.getContObjectGeo() != null && i.getContObjectGeo().getCityGeoPosX() != null)
 				.findFirst();
@@ -77,10 +77,10 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	public BigDecimal getCityGeoPosY() {
+	public Double getCityGeoPosY() {
 		Optional<T> item = cityObjects.stream()
 				.filter((i) -> i.getContObjectGeo() != null && i.getContObjectGeo().getCityGeoPosY() != null)
 				.findFirst();
@@ -88,7 +88,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static <T extends ContObjectHolder & ContObjectFiasHolder & ContObjectGeoPosHolder, U extends CityContObjects<T>> List<U> makeCityContObjects(
@@ -96,7 +96,7 @@ public abstract class CityContObjects<T extends ContObjectHolder & ContObjectFia
 
 		final Map<UUID, U> cityObjectsMap = new HashMap<>();
 
-		contObjects.stream().filter((i) -> i.getContObjectFias() != null).forEach((i) -> {			
+		contObjects.stream().filter((i) -> i.getContObjectFias() != null).forEach((i) -> {
 			UUID cityUUID = i.getContObjectFias().getCityFiasUUID();
 			U cityObject = cityObjectsMap.get(cityUUID);
 			if (cityObject == null) {

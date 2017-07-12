@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -16,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 @Table(name = "subscr_service_permission")
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class SubscrServicePermission extends AbstractKeynameEntity {
 
 	/**
@@ -73,65 +75,5 @@ public class SubscrServicePermission extends AbstractKeynameEntity {
 
 	@Column(name = "is_rma_filter")
 	private Boolean isRmaFilter;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public String getPermissionName() {
-		return permissionName;
-	}
-
-	public String getPermissionDescription() {
-		return permissionDescription;
-	}
-
-	public String getPermissionComment() {
-		return permissionComment;
-	}
-
-	public String getHelpContext() {
-		return helpContext;
-	}
-
-	public String getPermissionObjectClass() {
-		return permissionObjectClass;
-	}
-
-	public String getPermissionObjectKeyname() {
-		return permissionObjectKeyname;
-	}
-
-	public Long getPermissionObjectId() {
-		return permissionObjectId;
-	}
-
-	public String getPermissoinHelpContext() {
-		return permissoinHelpContext;
-	}
-
-	public Boolean getIsFront() {
-		return isFront;
-	}
-
-	public Boolean getIsDeny() {
-		return isDeny;
-	}
-
-	public Boolean getIsCommon() {
-		return isCommon;
-	}
-
-	public Integer getPriority() {
-		return priority;
-	}
-
-	public String getPermissionTagId() {
-		return permissionTagId;
-	}
-
-	public Boolean getIsRmaFilter() {
-		return isRmaFilter;
-	}
 
 }

@@ -31,7 +31,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с элементами прайс листов абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 17.11.2015
@@ -49,7 +49,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	private SubscrPriceItemValueRepository servicePriceItemValueRepository;
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceListId
 	 * @return
 	 */
@@ -59,7 +59,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceListId
 	 * @return
 	 */
@@ -72,7 +72,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceListId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -83,7 +83,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcSubscrPriceListId
 	 * @param dstSubscrPriceList
 	 * @return
@@ -113,7 +113,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcSubscrPriceItem
 	 * @return
 	 */
@@ -125,12 +125,12 @@ public class SubscrPriceItemService implements SecuredRoles {
 		result.setPriceOption(srcSubscrPriceItem.getPriceOption());
 		result.setIsSinglePrice(srcSubscrPriceItem.getIsSinglePrice());
 		result.setPriceValue(srcSubscrPriceItem.getPriceValue() == null ? null
-				: srcSubscrPriceItem.getPriceValue().multiply(BigDecimal.ONE));
+				: srcSubscrPriceItem.getPriceValue() * 1);
 		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceList
 	 * @param subscrPriceItemVOs
 	 * @return
@@ -179,7 +179,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceList
 	 * @param subscrPriceItemVOs
 	 * @param localDate
@@ -247,7 +247,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPriceItems
 	 * @return
 	 */
@@ -263,7 +263,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param modifiedPriceItemIds
 	 * @param endDate
 	 */

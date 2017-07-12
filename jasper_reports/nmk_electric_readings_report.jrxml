@@ -1,0 +1,1459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2016-10-18T15:21:43 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_electric_readings_report" pageWidth="1000" pageHeight="595" orientation="Landscape" columnWidth="980" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" isSummaryWithPageHeaderAndFooter="true" uuid="66c8766e-f520-4b61-9845-677bc274c52c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="test.xml"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="table_ds" uuid="b4825549-a406-4ee8-a140-ea5bca93891a">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="test.xml"/>
+		<parameter name="begin_date" class="java.sql.Timestamp">
+			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+			<defaultValueExpression><![CDATA[DATE(2016,05,01)]]></defaultValueExpression>
+		</parameter>
+		<parameter name="end_date" class="java.sql.Timestamp">
+			<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+			<defaultValueExpression><![CDATA[DATE(2016,05,31)]]></defaultValueExpression>
+		</parameter>
+		<parameter name="zpoint_id" class="java.lang.Long" nestedType="Long">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="a+" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="a-" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="r+" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="r-" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="t1" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="t2" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="t3" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="t4" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="t5" class="java.lang.Boolean">
+			<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+		</parameter>
+		<parameter name="detail_type" class="java.lang.String">
+			<defaultValueExpression><![CDATA["24h"]]></defaultValueExpression>
+		</parameter>
+		<parameter name="print_sum" class="java.lang.Boolean"/>
+		<queryString>
+			<![CDATA[select data_date, 
+	p_ap_1, p_an_1, q_rp_1, q_rn_1,
+	p_ap_2, p_an_2, q_rp_2, q_rn_2,
+	p_ap_3, p_an_3, q_rp_3, q_rn_3,
+	p_ap_4, p_an_4, q_rp_4, q_rn_4,
+	p_ap_5, p_an_5, q_rp_5, q_rn_5,
+	coalesce(data_changed, false) as data_changed
+from cont_service_data_el_cons
+where cont_zpoint_id = $P{zpoint_id}
+	and time_detail_type = $P{detail_type}
+	and data_date >= $P{begin_date}
+	and data_date < $P{end_date}
+	and deleted = 0
+order by data_date]]>
+		</queryString>
+		<field name="data_date" class="java.sql.Timestamp"/>
+		<field name="p_ap_1" class="java.math.BigDecimal"/>
+		<field name="p_an_1" class="java.math.BigDecimal"/>
+		<field name="q_rp_1" class="java.math.BigDecimal"/>
+		<field name="q_rn_1" class="java.math.BigDecimal"/>
+		<field name="p_ap_2" class="java.math.BigDecimal"/>
+		<field name="p_an_2" class="java.math.BigDecimal"/>
+		<field name="q_rp_2" class="java.math.BigDecimal"/>
+		<field name="q_rn_2" class="java.math.BigDecimal"/>
+		<field name="p_ap_3" class="java.math.BigDecimal"/>
+		<field name="p_an_3" class="java.math.BigDecimal"/>
+		<field name="q_rp_3" class="java.math.BigDecimal"/>
+		<field name="q_rn_3" class="java.math.BigDecimal"/>
+		<field name="p_ap_4" class="java.math.BigDecimal"/>
+		<field name="p_an_4" class="java.math.BigDecimal"/>
+		<field name="q_rp_4" class="java.math.BigDecimal"/>
+		<field name="q_rn_4" class="java.math.BigDecimal"/>
+		<field name="p_ap_5" class="java.math.BigDecimal"/>
+		<field name="p_an_5" class="java.math.BigDecimal"/>
+		<field name="q_rp_5" class="java.math.BigDecimal"/>
+		<field name="q_rn_5" class="java.math.BigDecimal"/>
+		<field name="data_changed" class="java.lang.Boolean"/>
+		<variable name="count" class="java.lang.Integer" calculation="Count">
+			<variableExpression><![CDATA[$V{count}]]></variableExpression>
+			<initialValueExpression><![CDATA[1]]></initialValueExpression>
+		</variable>
+		<variable name="p_ap_1_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_ap_1}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_an_1_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_an_1}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_ap_2_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_ap_2}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_an_2_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_an_2}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_ap_3_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_ap_3}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_an_3_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_an_3}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_ap_4_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_ap_4}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_an_4_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_an_4}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_ap_5_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_ap_5}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="p_an_5_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{p_an_5}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rp_1_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rp_1}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rn_1_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rn_1}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rp_2_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rp_2}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rn_2_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rn_2}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rp_3_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rp_3}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rn_3_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rn_3}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rp_4_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rp_4}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rn_4_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rn_4}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rp_5_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rp_5}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+		<variable name="q_rn_5_sum" class="java.math.BigDecimal" calculation="Sum">
+			<variableExpression><![CDATA[$F{q_rn_5}]]></variableExpression>
+			<initialValueExpression><![CDATA[0.00]]></initialValueExpression>
+		</variable>
+	</subDataset>
+	<parameter name="begin_date" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2016,05,01)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="end_date" class="java.sql.Timestamp">
+		<parameterDescription><![CDATA[Дата окончания]]></parameterDescription>
+		<defaultValueExpression><![CDATA[DATE(2016,05,31)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="org_id" class="java.lang.Long">
+		<parameterDescription><![CDATA[id subscriber]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(20160622)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="cont_id" class="java.lang.Long" nestedType="Long">
+		<parameterDescription><![CDATA[id cont_object]]></parameterDescription>
+		<defaultValueExpression><![CDATA[new Long(103927006)]]></defaultValueExpression>
+	</parameter>
+	<parameter name="signature" class="java.lang.String">
+		<parameterDescription><![CDATA[ФИО ответственного лица]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ФИО"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="a+" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="a-" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="r+" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="r-" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="t1" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="t2" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="t3" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="t4" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="t5" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<parameter name="detail_type" class="java.lang.String">
+		<defaultValueExpression><![CDATA["24h"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="print_sum" class="java.lang.Boolean">
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select 	coalesce(o.organization_full_name, o.organization_name) as org_name, 
+	z.id as zpoint_id, z.custom_service_name, dm.device_model_name, dob.device_object_number,
+	coalesce(co.cont_object_full_name, co.cont_object_full_address) as address,
+	reports.el_data_changed(z.id, $P{begin_date}, $P{end_date}, $P{detail_type})
+from subscriber s, organization o, 
+		cont_zpoint z, device_object dob, device_model dm, cont_zpoint_device czd, cont_object co
+where 
+	s.id	= $P{org_id} 
+	and co.id = $P{cont_id}
+	and o.id = s.organization_id
+	and z.cont_object_id = $P{cont_id}
+	and z.deleted = 0
+	and z.cont_service_type = 'el'
+	and czd.cont_zpoint_id = z.id
+	and dob.id = czd.device_object_id
+	and dm.id = dob.device_model_id]]>
+	</queryString>
+	<field name="org_name" class="java.lang.String"/>
+	<field name="zpoint_id" class="java.lang.Long"/>
+	<field name="custom_service_name" class="java.lang.String"/>
+	<field name="device_model_name" class="java.lang.String"/>
+	<field name="device_object_number" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="el_data_changed" class="java.lang.Boolean"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="71" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="30" width="660" height="20" uuid="bb06f94b-95f7-49f5-ae6e-6ef680ad2d5f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Огранизация: " + $F{org_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="800" height="20" uuid="e8739619-46e8-4ec8-9ab2-e977ab8e5758">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Технический отчет по показаниям прибора за период, с "+ new SimpleDateFormat("dd.MM.yyyy").format($P{begin_date}) + " по " + new SimpleDateFormat("dd.MM.yyyy").format($P{end_date})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="50" width="660" height="20" uuid="fc89334a-d52a-4d01-b705-246933b63975">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Адрес: " + $F{address}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="266">
+			<componentElement>
+				<reportElement positionType="Float" x="0" y="35" width="919" height="110" uuid="79d62167-2686-4650-8467-2e450ae1c782">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+					<property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+					<property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="table_ds" uuid="19cb610d-99cf-48b9-9953-c9bc6161e823">
+						<datasetParameter name="begin_date">
+							<datasetParameterExpression><![CDATA[$P{begin_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="end_date">
+							<datasetParameterExpression><![CDATA[$P{end_date}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="zpoint_id">
+							<datasetParameterExpression><![CDATA[$F{zpoint_id}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="a+">
+							<datasetParameterExpression><![CDATA[$P{a+}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="a-">
+							<datasetParameterExpression><![CDATA[$P{a-}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="r+">
+							<datasetParameterExpression><![CDATA[$P{r+}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="r-">
+							<datasetParameterExpression><![CDATA[$P{r-}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="t1">
+							<datasetParameterExpression><![CDATA[$P{t1}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="t2">
+							<datasetParameterExpression><![CDATA[$P{t2}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="t3">
+							<datasetParameterExpression><![CDATA[$P{t3}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="t4">
+							<datasetParameterExpression><![CDATA[$P{t4}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="t5">
+							<datasetParameterExpression><![CDATA[$P{t5}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="detail_type">
+							<datasetParameterExpression><![CDATA[$P{detail_type}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="print_sum">
+							<datasetParameterExpression><![CDATA[$P{print_sum}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:columnGroup width="100" uuid="e1f711d7-f1c3-4c73-8b96-f1ad3bc69f3f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [2]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1"/>
+						<jr:column width="40" uuid="3f8c4917-1d58-4120-955f-0c54f173d430">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="8177a27e-eb2c-400b-8b60-815a61464fe5"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[№п/п]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<property name="com.jaspersoft.studio.unit.height" value="px"/>
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="dd3003d4-4b37-4043-a02b-ce3cbd2e8f47">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+								</textField>
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="3e4bbdf0-f531-493c-be5f-02e1519b34ea">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="60" uuid="590e8ae3-190c-4a69-b874-2feb383cf218">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="60" height="30" uuid="40216170-7517-4a3a-aff1-53f76e39abd0"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[Дата]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="20" uuid="a1209316-848e-4566-8690-dd5a3064d9a3">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph leftIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA["Итого: "]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<property name="com.jaspersoft.studio.unit.width" value="px"/>
+								<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" uuid="141321f9-69a4-415a-a9e7-6ec850115253">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{data_date}]]></textFieldExpression>
+								</textField>
+								<textField pattern="dd.MM.yyyy" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="60" height="15" forecolor="#F20A01" uuid="14e9619b-44a4-4903-999a-a65f7618641d">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{data_date}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="400" uuid="53e5dc62-dd17-447c-a58b-e7c94243e507">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [10]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="400" height="30" uuid="2b12b8fe-2f26-4cec-8972-a6695822d70a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<text><![CDATA[Активная электроэнергия, кВт/ч]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="40" uuid="c7197a01-f366-4965-9cc3-d2a9a1cdbcc2">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+							<printWhenExpression><![CDATA[$P{t1} && $P{a+}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="7e1c6f7a-5f58-446a-98a3-fe2cd7e62069"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A+(T1)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="a9aa0746-eee6-4bfb-96f2-5b868bd702ee">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_ap_1_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="7ffb8d08-1095-403b-981e-7b2ad6da93b5">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_1}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="a08461bd-3a2a-4a86-9a03-abaeb3a59408">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_1}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="5d3a7343-f704-4b81-8677-49b11d531317">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+							<printWhenExpression><![CDATA[$P{a-} && $P{t1}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="f0fdd053-2135-4042-a6ef-1c6c81e64633"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A-(T1)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="3667446b-57ad-44ad-9cf7-36f5ad680886">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_an_1_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="909ed632-5999-4e9a-8dbc-a92e067ca10e">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_1}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="e353f7a0-ee9a-41b5-917a-e6031a6901a1">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_1}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="7c52067b-f571-4081-83ed-d2960b3878a2">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+							<printWhenExpression><![CDATA[$P{a+} && $P{t2}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="cd004063-33ff-49b3-8f50-5ba8ba0b307d"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A+(T2)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="5bda1d33-9f7c-42ec-86cd-2d85e35eebfc">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_ap_2_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="cd0ccbeb-9276-400f-8905-3895e1f46c76">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_2}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="df5a8a72-26bf-4851-a5e4-779bf66e5886">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_2}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="967bf466-7fdb-4d5a-bb00-d9b80e4a4c2b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+							<printWhenExpression><![CDATA[$P{a-} && $P{t2}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="2b0addd9-4269-412c-a25f-7f5b95c5f354"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A-(T2)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="69fbe48d-549b-4531-ba56-40c93d2466c2">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_an_2_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="ddb4a093-8471-40e7-b20e-9e0c21fd2a79">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_2}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="e2110055-5c63-4895-94d2-6777fe477165">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_2}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="83904ddf-7d0f-4885-a12c-f6367bd2ce07">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+							<printWhenExpression><![CDATA[$P{a+} && $P{t3}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="de7cc798-863d-431f-ac9b-083dd1040ec7"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A+(T3)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="76b5673e-c7b8-49bb-aced-c5344ac2bb40">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_ap_3_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="3398dc34-c8ae-4860-b4c1-3a4caa79aa3b">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_3}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="92d407f7-ceb6-4687-bfd5-f485219bcaaa">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_3}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="a306edd4-5fdf-4868-b4b7-13b311e2574a">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+							<printWhenExpression><![CDATA[$P{a-} && $P{t3}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="39529a04-53e0-4b00-83c7-574bc308296f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A-(T3)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="fbcb1555-a2f1-4a6c-b590-8a5bad9676bb">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_an_3_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="ddae743d-e667-4f5b-8c74-983b9d4962e4">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_3}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="89e54f1e-3e3d-41d0-9d09-579e6c961a24">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_3}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="6cd9732b-6d3c-4545-acba-96c9bff52230">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+							<printWhenExpression><![CDATA[$P{a+} && $P{t4}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="f5351dab-9752-4f9c-b542-d60daf9b2134"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A+(T4)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="37c08a7c-c1e3-4aff-8c8f-63a8faabf251">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_ap_4_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="a7413683-d852-4463-9f56-73fc6206c7ee">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_4}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="9ecc2259-8b1c-43bf-908e-2281feb6c854">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_4}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="9669baa7-85e3-4ce9-abcf-a12b7db36555">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+							<printWhenExpression><![CDATA[$P{a-} && $P{t4}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="ff6402ac-d9b6-4fee-96a5-aaa701ff174f"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A-(T4)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="f5d560e0-b0b8-4cdd-9526-fe6de5d90b53">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_an_4_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="8c331cfb-85db-4a73-9d8d-0b202b1829da">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_4}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="349cd28d-c742-4029-8f30-09582a36bfdc">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_4}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="8e9aaa64-204f-4cd6-b543-4d1612c54d7f">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+							<printWhenExpression><![CDATA[$P{a+} && $P{t5}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="9212ced0-3617-4677-8f05-a0c1ba3a3024"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A+(T5)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="a506a520-b6b2-4b9c-bfcf-57631c8cbe5e">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_ap_5_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="80eff425-227b-460b-ab53-67fe50ff4ae9">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_5}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="d4987c56-f1fc-4606-bfed-4d799ccccc76">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_ap_5}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="67e2a076-4530-491f-ab5e-7485d6ee838d">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+							<printWhenExpression><![CDATA[$P{a-} && $P{t5}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="d184651d-28d0-4bd9-b084-1818bdf4fe94"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[A-(T5)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="9c787ce6-1a6c-49c8-a517-702b12980ace">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{p_an_5_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="cf86e5a5-62c1-47d6-9a0e-55c594ece9c9">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_5}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="50df9ddb-a408-4b0e-b7ef-dfb69f578f84">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{p_an_5}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+					<jr:columnGroup width="400" uuid="0718cb64-95a2-434d-ac05-c8f0e68f8fe0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Columns [10]"/>
+						<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="400" height="30" uuid="95ed23d5-a4ef-4718-8099-2cd382c43119"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle">
+									<font fontName="Arial cyrillic"/>
+								</textElement>
+								<text><![CDATA[Реактивная электроэнергия, кВАр/ч]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:column width="40" uuid="d69b888e-4e25-418e-9abf-08c20107059d">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+							<printWhenExpression><![CDATA[$P{r+} && $P{t1}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="24274b82-9b94-4398-a2b4-f71cd1a2a7f3"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R+(T1)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="feae413d-0eaa-49f5-9278-5b01452800ca">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rp_1_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="bed70485-6f2f-4b99-9068-c05c45a7014b">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_1}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="8c75a3e3-166d-43c9-bb06-fcaf4a29e39e">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_1}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="ae9ce58e-357c-44d5-9378-5dc4619756a9">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+							<printWhenExpression><![CDATA[$P{r-} && $P{t1}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="6532c708-a82e-48ce-b220-8b9445fe0608"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R-(T1)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="a6cd8573-f14b-4c07-813d-df5509ac70c9">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rn_1_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="4bcea42f-a323-4ebf-ab29-dc0f93c02a9d">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_1}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="40445412-b2fc-4775-bf6d-0e6b508ef4d4">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_1}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="6903d828-b66b-42a7-baf2-109bf8c85181">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column15"/>
+							<printWhenExpression><![CDATA[$P{r+} && $P{t2}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="02196419-c866-41d3-a4f3-b36f5c73e166"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R+(T2)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="a54e003a-d2dd-4673-8777-5467ba950e2c">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rp_2_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="23fd28ad-0e51-4d4f-ac9d-9720faa3c6fc">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_2}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="a223f88f-58a6-46b7-abd7-24131ebe99a2">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_2}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="46faf80e-3e31-4d9f-8ed5-815a76cfdd0b">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column16"/>
+							<printWhenExpression><![CDATA[$P{r-} && $P{t2}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="0dfd66bf-11f2-45a8-843d-61e2e5192cab"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R-(T2)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="0cfb69aa-ded7-458d-818a-32350db47ee5">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rn_2_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="2d35424d-10e5-40bb-a449-1ce7f3eea5da">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_2}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="88ee896e-1f8b-43b8-a2fd-e8443c748e46">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_2}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="12d786bc-f42c-47c1-84cf-082cb95cbab3">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column17"/>
+							<printWhenExpression><![CDATA[$P{r+} && $P{t3}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="caa4472a-4e6a-4fe7-8b37-ba604590adf8"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R+(T3)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="bdbc46b7-d1be-415e-b99f-2529da4381bd">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rp_3_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="160926d2-4ee9-4747-bc71-cd9766610102">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_3}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="572cd976-49e0-4bb5-8299-c284158c0e27">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_3}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="045f2049-c3ca-4239-9407-820ba66ce696">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column18"/>
+							<printWhenExpression><![CDATA[$P{r-} && $P{t3}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="313489db-fbde-4263-8d1e-5ada8bd47a1d"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R-(T3)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="11b944fc-a21e-43e4-8e75-9f8f98840205">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rn_3_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="ab92e341-0255-41c3-b83b-0b75223dd9e3">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_3}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="bef04053-ec17-4e2a-af7d-d540aea0617f">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_3}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="faa8aead-1c30-4d6f-8cfc-85081f3c8fad">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column19"/>
+							<printWhenExpression><![CDATA[$P{r+} && $P{t4}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="e4951f13-019e-4b0e-b0a3-a36bdb223b0a"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R+(T4)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="2996ab8c-8394-40fe-9ba5-41a0d53acb03">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rp_4_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="c5226678-ad4e-46ab-94aa-55b43f825709">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_4}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="76f6f89e-3799-47ad-8487-e8965f4319fe">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_4}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="e47c568b-bac2-4e43-a729-1d2c89b82dc3">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column20"/>
+							<printWhenExpression><![CDATA[$P{r-} && $P{t4}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="083da48f-1adf-458f-b3eb-d30db60ba6d8"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R-(T4)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="595e2d57-c089-4cc3-975c-bbf1a427c764">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rn_4_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="a543c893-cda8-4ec4-87cf-8dfa187db041">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_4}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="1695f229-4f81-4d0d-be14-5f2ca5361b37">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_4}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="47837b6e-c0e6-4588-9966-61d3da531a4e">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column21"/>
+							<printWhenExpression><![CDATA[$P{r+} && $P{t5}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="b8729a4f-269d-4854-9e20-fc2f509b87fd"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R+(T5)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="53e87418-d0aa-4063-8203-224b48041523">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rp_5_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="b5180047-21bf-45a7-9cc3-d2b0974bb5ab">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_5}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="f276879d-b943-4322-84ee-dff9b44a59ff">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rp_5}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+						<jr:column width="40" uuid="bee107e7-efca-4c8b-93f2-79fe760eb732">
+							<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column22"/>
+							<printWhenExpression><![CDATA[$P{r-} && $P{t5}]]></printWhenExpression>
+							<jr:tableHeader style="Table_TH" height="30" rowSpan="1">
+								<staticText>
+									<reportElement x="0" y="0" width="40" height="30" uuid="12a8f1b1-5774-402a-a390-a010cb27c0aa"/>
+									<textElement textAlignment="Center" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+									</textElement>
+									<text><![CDATA[R-(T5)]]></text>
+								</staticText>
+							</jr:tableHeader>
+							<jr:tableFooter style="Table_TH" height="20" rowSpan="1">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="20" uuid="87b2f361-664b-4cab-b1e6-fc564d884bbd">
+										<printWhenExpression><![CDATA[$P{print_sum}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$V{q_rn_5_sum}]]></textFieldExpression>
+								</textField>
+							</jr:tableFooter>
+							<jr:detailCell style="Table_TD" height="15">
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" uuid="dbbb6352-0bb5-4491-b5a7-ce7571341439">
+										<printWhenExpression><![CDATA[!$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_5}]]></textFieldExpression>
+								</textField>
+								<textField pattern="#,##0.00;(#,##0.00)" isBlankWhenNull="true">
+									<reportElement x="0" y="0" width="40" height="15" forecolor="#F20A01" uuid="35fa48fb-c915-41ee-9ad8-3f5560d87f9b">
+										<printWhenExpression><![CDATA[$F{data_changed}]]></printWhenExpression>
+									</reportElement>
+									<textElement textAlignment="Right" verticalAlignment="Middle">
+										<font fontName="Arial cyrillic" isItalic="true"/>
+										<paragraph rightIndent="2"/>
+									</textElement>
+									<textFieldExpression><![CDATA[$F{q_rn_5}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:columnGroup>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="0" y="0" width="800" height="20" uuid="d2c2da0e-4a1f-4f0a-9da2-ead5bdeb1b4d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Точка учета: " + $F{custom_service_name} + ", прибор учета: " + $F{device_model_name} + ", серийный номер: " + $F{device_object_number}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="790" height="15" forecolor="#F71814" uuid="ff44937f-90b0-48f2-8cfb-6f189a89abad">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{el_data_changed}]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial cyrillic" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Отчет содержит данные, которые нуждаются в дополнительной проверке, они выделены курсивом и цветом.]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

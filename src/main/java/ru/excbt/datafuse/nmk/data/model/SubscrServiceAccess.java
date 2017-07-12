@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -34,6 +36,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class SubscrServiceAccess extends AbstractAuditableModel {
 
 	/**
@@ -86,54 +90,6 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 		return result;
 	}
 
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public Long getPackId() {
-		return packId;
-	}
-
-	public void setPackId(Long packId) {
-		this.packId = packId;
-	}
-
-	public Long getItemId() {
-		return itemId;
-	}
-
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
-
-	public Date getAccessStartDate() {
-		return accessStartDate;
-	}
-
-	public void setAccessStartDate(Date accessStartDate) {
-		this.accessStartDate = accessStartDate;
-	}
-
-	public Date getAccessEndDate() {
-		return accessEndDate;
-	}
-
-	public void setAccessEndDate(Date accessEndDate) {
-		this.accessEndDate = accessEndDate;
-	}
-
 	/**
 	 *
 	 * @param other
@@ -160,14 +116,6 @@ public class SubscrServiceAccess extends AbstractAuditableModel {
 		}
 
 		return false;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
 	}
 
 }

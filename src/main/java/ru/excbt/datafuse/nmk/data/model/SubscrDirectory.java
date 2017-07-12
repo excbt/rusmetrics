@@ -8,11 +8,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 /**
  * Связь Абонент-Универсальный справочник
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.10.2015
@@ -20,10 +22,12 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
  */
 @Entity
 @Table(name = "subscr_directory")
+@Getter
+@Setter
 public class SubscrDirectory extends AbstractAuditableModel {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4169289603719698288L;
 
@@ -44,45 +48,5 @@ public class SubscrDirectory extends AbstractAuditableModel {
 	@Version
 	@Column(name = "version")
 	private int version;
-
-	public Subscriber getSubscriber() {
-		return subscriber;
-	}
-
-	public void setSubscriber(Subscriber subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public Long getSubscriberId() {
-		return subscriberId;
-	}
-
-	public void setSubscriberId(Long subscriberId) {
-		this.subscriberId = subscriberId;
-	}
-
-	public UDirectory getUdirectory() {
-		return udirectory;
-	}
-
-	public void setUdirectory(UDirectory udirectory) {
-		this.udirectory = udirectory;
-	}
-
-	public Long getUdirectoryId() {
-		return udirectoryId;
-	}
-
-	public void setUdirectoryId(Long udirectoryId) {
-		this.udirectoryId = udirectoryId;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
 
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2016-02-09T11:43:09 -->
+<!-- Created with Jaspersoft Studio version 6.3.1.final using JasperReports Library version 6.3.1  -->
+<!-- 2017-05-03T16:17:53 -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_etalon_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="portal.xml"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
 	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
@@ -86,6 +86,9 @@
 	<parameter name="show_chart" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="dfs" class="java.text.DateFormatSymbols">
+		<defaultValueExpression><![CDATA[new DateFormatSymbols()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select coalesce(o.organization_full_name, o.organization_name) as org_name
 from subscriber s, organization o
@@ -104,7 +107,8 @@ where
 				<textElement>
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + new SimpleDateFormat("MM.yyyy").format($P{begin_date}) + " - " + new SimpleDateFormat("MM.yyyy").format($P{end_date})]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + ($P{begin_date}.getMonth() == $P{end_date}.getMonth() ? new SimpleDateFormat("LLLL yyyy", $P{dfs}).format($P{begin_date}) :
+new SimpleDateFormat("LLLL yyyy", $P{dfs}).format($P{begin_date}) + " - " + new SimpleDateFormat("LLLL yyyy", $P{dfs}).format($P{end_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="35" width="420" height="20" uuid="6ce14c80-38ad-4c45-b555-8a9a543c6a3e">

@@ -895,7 +895,7 @@ tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
 
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
-    min-width: 45px;
+    min-width: 46px;
     width: 3%;
 }
 
@@ -1011,8 +1011,12 @@ tr.nmc-main-table-header-indicator > th {
     margin-bottom: 0px !important;
 }
 
-.nmc-parent-table > tbody > tr>td {
+.nmc-parent-table > tbody > tr > td {
     border: none;
+}
+
+.nmc-list-object-table {
+    min-width: 1350px;
 }
 
 .nmc-parent-object-table > tbody > tr>td {
@@ -1279,6 +1283,23 @@ tr.nmc-inactive-price > td {
     border-radius: 4px !important;
 }
 
+.nmc-ui-select-form-high > .ui-select-match > span {
+    font-size: 12px;
+    height: 60px;
+    white-space: normal;
+    padding: 3px;
+    border-radius: 4px !important;
+}
+
+/* Иерархическая организация категорий зданий при использовании ui-select*/
+.nmc-bcategory-depth-1 {
+  padding-left: 0px;
+  font-weight: bold;
+}
+.nmc-bcategory-depth-2 {
+  padding-left: 15px;
+}
+
 /* выпадающий список на странице с прайсами*/
 .nmc-select-form-for-price {
     font-size: 12px;
@@ -1468,6 +1489,11 @@ tr.nmc-inactive-price > td {
     background-color: #fff;
     border-radius: 4px !important;
 /*    background-color: #f9dd72;*/
+}
+/* метка позади контрола input*/
+.nmc-addon-label {
+    font-size: 12px;
+    padding: 0;
 }
 
 /*  текст перед контролом input*/
@@ -1760,6 +1786,22 @@ tr.nmc-inactive-price > td {
     /* кнопка нажата*/
 .nmc-main-add-button:focus {
     padding: 3px 10px;
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
+.nmc-main-add-button-xs {    
+    background: linear-gradient(to top, #FF6802,#FF811B);
+    color: #fff;
+}
+
+    /* на кнопку наведен курсор*/
+.nmc-main-add-button-xs:hover {
+    background: linear-gradient(to top, #CD5F03,#EB5F03);
+    color: #fff;
+}
+    /* кнопка нажата*/
+.nmc-main-add-button-xs:focus {    
     background: linear-gradient(to top, #FF6802,#FF811B);
     color: #fff;
 }
@@ -3017,6 +3059,11 @@ input[type="checkbox"] {
 /*  Распахнутый режим, когда рабочая область документа максимизируется*/
 .nmc-energo-passport-maximize {
     width: 96%;
+    margin-left: 0;
+}
+/*  Распахнутый режим, когда справа есть nav bar*/
+.nmc-energo-passport-maximize-with-rnav {
+    width: 79%;
     margin-left: 0;
 }
 /*  а содержание минимизируется*/

@@ -8,6 +8,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.SQLDelete;
@@ -30,6 +32,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @SQLDelete(sql = "UPDATE report_paramset_unit SET deleted = 1 WHERE id = ? and version = ?")
 @Where(clause = "deleted <> 1")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class ReportParamsetUnit extends AbstractAuditableModel {
 
 	/**
@@ -48,27 +52,4 @@ public class ReportParamsetUnit extends AbstractAuditableModel {
 	@Version
 	private int version;
 
-	public Long getObjectId() {
-		return objectId;
-	}
-
-	public void setObjectId(Long objectId) {
-		this.objectId = objectId;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public ReportParamset getReportParamset() {
-		return reportParamset;
-	}
-
-	public void setReportParamset(ReportParamset reportParamset) {
-		this.reportParamset = reportParamset;
-	}
 }

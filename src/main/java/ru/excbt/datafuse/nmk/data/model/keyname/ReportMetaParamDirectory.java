@@ -7,6 +7,7 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
@@ -15,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "report_meta_param_directory")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@Getter
 public class ReportMetaParamDirectory extends AbstractKeynameEntity {
 
 	/**
@@ -38,45 +40,5 @@ public class ReportMetaParamDirectory extends AbstractKeynameEntity {
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getCaption() {
-		return caption;
-	}
-
-	public void setCaption(String caption) {
-		this.caption = caption;
-	}
-
-	public String getDirectoryDescription() {
-		return directoryDescription;
-	}
-
-	public void setDirectoryDescription(String directoryDescription) {
-		this.directoryDescription = directoryDescription;
-	}
-
-	public String getDirectoryComment() {
-		return directoryComment;
-	}
-
-	public void setDirectoryComment(String directoryComment) {
-		this.directoryComment = directoryComment;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

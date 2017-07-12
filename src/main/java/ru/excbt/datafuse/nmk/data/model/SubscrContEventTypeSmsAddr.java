@@ -13,12 +13,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 /**
  * Настройка адресов абонента для СМС сообщения
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.12.2015
@@ -28,10 +30,12 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Table(name = "subscr_cont_event_type_sms_addr")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
+@Getter
+@Setter
 public class SubscrContEventTypeSmsAddr extends AbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -8557265399290800488L;
 
@@ -63,79 +67,5 @@ public class SubscrContEventTypeSmsAddr extends AbstractAuditableModel implement
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public SubscrContEventTypeSms getSubscrContEventTypeSms() {
-		return subscrContEventTypeSms;
-	}
-
-	public void setSubscrContEventTypeSms(SubscrContEventTypeSms subscrContEventTypeSms) {
-		this.subscrContEventTypeSms = subscrContEventTypeSms;
-	}
-
-	public String getAddressName() {
-		return addressName;
-	}
-
-	public void setAddressName(String addressName) {
-		this.addressName = addressName;
-	}
-
-	public String getAddressType() {
-		return addressType;
-	}
-
-	public void setAddressType(String addressType) {
-		this.addressType = addressType;
-	}
-
-	public String getAddressSms() {
-		return addressSms;
-	}
-
-	public void setAddressSms(String addressSms) {
-		this.addressSms = addressSms;
-	}
-
-	public String getAddressEmail() {
-		return addressEmail;
-	}
-
-	public void setAddressEmail(String addressEmail) {
-		this.addressEmail = addressEmail;
-	}
-
-	public Boolean getIsActive() {
-		return isActive;
-	}
-
-	public void setIsActive(Boolean isActive) {
-		this.isActive = isActive;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public Long getSubscrContEventTypeSmsId() {
-		return subscrContEventTypeSmsId;
-	}
-
-	public void setSubscrContEventTypeSmsId(Long subscrContEventTypeSmsId) {
-		this.subscrContEventTypeSmsId = subscrContEventTypeSmsId;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

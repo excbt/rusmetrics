@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 public class SubscrCabinetInfo implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4054689142438057427L;
 
@@ -30,20 +30,12 @@ public class SubscrCabinetInfo implements Serializable {
 	@JsonProperty(access = Access.READ_ONLY)
 	private final List<ContObjectShortInfo> contObjectInfoList;
 
-	/**
-	 * 
-	 * @param subscriber
-	 * @param subscrUser
-	 * @param contObjects
-	 */
-	//	public SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser, List<ContObject> contObjects) {
-	//		checkNotNull(contObjects);
-	//		this.subscriber = subscriber;
-	//		this.subscrUserWrapper = new SubscrUserWrapper(subscrUser);
-	//		this.contObjectInfoList = Collections.unmodifiableList(
-	//				contObjects.stream().map(i -> i.getContObjectShortInfo()).collect(Collectors.toList()));
-	//	}
-
+    /**
+     *
+     * @param subscriber
+     * @param subscrUser
+     * @param contObjectShortInfos
+     */
 	public SubscrCabinetInfo(Subscriber subscriber, SubscrUser subscrUser,
 			List<ContObjectShortInfo> contObjectShortInfos) {
 		checkNotNull(contObjectShortInfos);
@@ -53,7 +45,7 @@ public class SubscrCabinetInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param subscrUser
 	 */
@@ -64,7 +56,7 @@ public class SubscrCabinetInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Subscriber getSubscriber() {
@@ -72,7 +64,7 @@ public class SubscrCabinetInfo implements Serializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContObjectShortInfo> getContObjectInfoList() {

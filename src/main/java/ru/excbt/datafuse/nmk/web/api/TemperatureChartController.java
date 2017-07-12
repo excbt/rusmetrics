@@ -1,9 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,21 +9,22 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.SubscrApiController;
+import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/rma")
-public class TemperatureChartController extends SubscrApiController {
+public class TemperatureChartController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartController.class);
 
@@ -35,23 +32,22 @@ public class TemperatureChartController extends SubscrApiController {
 	private TemperatureChartService temperatureChartService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.GET, produces = APPLICATION_JSON_UTF8)
+	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsAll() {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsInfo();
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
-	/**
-	 * 
-	 * @param temperatureChartId
-	 * @param requestEntity
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.POST, produces = APPLICATION_JSON_UTF8)
+    /**
+     *
+     * @param requestEntity
+     * @param request
+     * @return
+     */
+	@RequestMapping(value = "/temperatureCharts", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> postTemperatureCharts(@RequestBody TemperatureChart requestEntity,
 			HttpServletRequest request) {
 
@@ -67,17 +63,17 @@ public class TemperatureChartController extends SubscrApiController {
 				return temperatureChartService.saveTemperatureChart(entity);
 			}
 		};
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param requestEntity
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}", method = RequestMethod.PUT,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putTemperatureCharts(@PathVariable("temperatureChartId") Long temperatureChartId,
 			@RequestBody TemperatureChart requestEntity) {
 
@@ -88,16 +84,16 @@ public class TemperatureChartController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}", method = RequestMethod.DELETE,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteTemperatureChart(@PathVariable("temperatureChartId") Long temperatureChartId) {
 
 		ApiAction action = new ApiActionAdapter() {
@@ -108,42 +104,42 @@ public class TemperatureChartController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param temperatureChartId
+     * @return
+     */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChart(@PathVariable("temperatureChartId") Long temperatureChartId) {
 		TemperatureChart result = temperatureChartService.selectTemperatureChart(temperatureChartId);
-		return responseOK(result);
+		return ApiResponse.responseOK(result);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}/items", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartItem(@PathVariable("temperatureChartId") Long temperatureChartId) {
 		List<TemperatureChartItem> resultList = temperatureChartService.selectTemperatureChartItems(temperatureChartId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param requestEntity
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}/items", method = RequestMethod.POST,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> postTemperatureChartItem(@PathVariable("temperatureChartId") Long temperatureChartId,
 			@RequestBody TemperatureChartItem requestEntity, HttpServletRequest request) {
 
@@ -162,17 +158,17 @@ public class TemperatureChartController extends SubscrApiController {
 				return temperatureChartService.saveTemperatureChartItem(entity);
 			}
 		};
-		return WebApiHelper.processResponceApiActionCreate(action);
+		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartItemId
 	 * @param requestEntity
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}/items/{temperatureChartItemId}",
-			method = RequestMethod.PUT, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> putTemperatureChartItem(@PathVariable("temperatureChartId") Long temperatureChartId,
 			@PathVariable("temperatureChartItemId") Long temperatureChartItemId,
 			@RequestBody TemperatureChartItem requestEntity) {
@@ -184,17 +180,17 @@ public class TemperatureChartController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param temperatureChartId
 	 * @param temperatureChartItemId
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/{temperatureChartId}/items/{temperatureChartItemId}",
-			method = RequestMethod.DELETE, produces = APPLICATION_JSON_UTF8)
+			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteTemperatureChartItem(@PathVariable("temperatureChartId") Long temperatureChartId,
 			@PathVariable("temperatureChartItemId") Long temperatureChartItemId) {
 
@@ -206,31 +202,31 @@ public class TemperatureChartController extends SubscrApiController {
 			}
 		};
 
-		return WebApiHelper.processResponceApiActionUpdate(action);
+		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/byContZPoint/{contZPointId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsByContZPointId(@PathVariable("contZPointId") Long contZPointId) {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContZPointId(contZPointId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
 	@RequestMapping(value = "/temperatureCharts/byContObject/{contObjectId}", method = RequestMethod.GET,
-			produces = APPLICATION_JSON_UTF8)
+			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getTemperatureChartsByContObjectId(@PathVariable("contObjectId") Long contObjectId) {
 		List<TemperatureChart> resultList = temperatureChartService.selectTemperatureChartsByContObjectId(contObjectId);
-		return responseOK(ObjectFilters.deletedFilter(resultList));
+		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
 
 }

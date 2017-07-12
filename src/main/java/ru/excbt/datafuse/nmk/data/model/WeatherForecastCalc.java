@@ -15,6 +15,8 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
@@ -22,6 +24,8 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "weather_forecast_calc")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
+@Getter
+@Setter
 public class WeatherForecastCalc extends AbstractAuditableModel {
 
 	/**
@@ -51,85 +55,13 @@ public class WeatherForecastCalc extends AbstractAuditableModel {
 	@Column(name = "calc_type")
 	private String calcType;
 
-	@Column(name = "calc_value")
-	private BigDecimal calcValue;
+	@Column(name = "calc_value", columnDefinition = "numeric")
+	private Double calcValue;
 
 	@Version
 	private int version;
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public Long getWeatherPlaceId() {
-		return weatherPlaceId;
-	}
-
-	public void setWeatherPlaceId(Long weatherPlaceId) {
-		this.weatherPlaceId = weatherPlaceId;
-	}
-
-	public WeatherPlace getWeatherPlace() {
-		return weatherPlace;
-	}
-
-	public void setWeatherPlace(WeatherPlace weatherPlace) {
-		this.weatherPlace = weatherPlace;
-	}
-
-	public String getWeatherForecastType() {
-		return weatherForecastType;
-	}
-
-	public void setWeatherForecastType(String weatherForecastType) {
-		this.weatherForecastType = weatherForecastType;
-	}
-
-	public Date getForecastDate() {
-		return forecastDate;
-	}
-
-	public void setForecastDate(Date forecastDate) {
-		this.forecastDate = forecastDate;
-	}
-
-	public Date getForecastDateTime() {
-		return forecastDateTime;
-	}
-
-	public void setForecastDateTime(Date forecastDateTime) {
-		this.forecastDateTime = forecastDateTime;
-	}
-
-	public String getCalcType() {
-		return calcType;
-	}
-
-	public void setCalcType(String calcType) {
-		this.calcType = calcType;
-	}
-
-	public BigDecimal getCalcValue() {
-		return calcValue;
-	}
-
-	public void setCalcValue(BigDecimal calcValue) {
-		this.calcValue = calcValue;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public int getDeleted() {
-		return deleted;
-	}
-
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
 
 }

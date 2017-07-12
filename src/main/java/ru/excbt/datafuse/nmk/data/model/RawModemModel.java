@@ -7,15 +7,19 @@ import javax.persistence.Version;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "raw_modem_model")
+@Getter
+@Setter
 public class RawModemModel extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 721037676058278008L;
 
@@ -49,87 +53,5 @@ public class RawModemModel extends JsonAbstractAuditableModel implements Deletab
 
 	@Column(name = "deleted")
 	private int deleted;
-
-	public String getRawModemType() {
-		return rawModemType;
-	}
-
-	public void setRawModemType(String rawModemType) {
-		this.rawModemType = rawModemType;
-	}
-
-	public String getRawModemModelName() {
-		return rawModemModelName;
-	}
-
-	public void setRawModemModelName(String rawModemModelName) {
-		this.rawModemModelName = rawModemModelName;
-	}
-
-	public String getRawModemModelComment() {
-		return rawModemModelComment;
-	}
-
-	public void setRawModemModelComment(String rawModemModelComment) {
-		this.rawModemModelComment = rawModemModelComment;
-	}
-
-	public String getRawModemModelDescription() {
-		return rawModemModelDescription;
-	}
-
-	public void setRawModemModelDescription(String rawModemModelDescription) {
-		this.rawModemModelDescription = rawModemModelDescription;
-	}
-
-	public Boolean getIsDialup() {
-		return isDialup;
-	}
-
-	public void setIsDialup(Boolean isDialup) {
-		this.isDialup = isDialup;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	@Override
-	public int getDeleted() {
-		return deleted;
-	}
-
-	@Override
-	public void setDeleted(int deleted) {
-		this.deleted = deleted;
-	}
-
-	public String getDevComment() {
-		return devComment;
-	}
-
-	public void setDevComment(String devComment) {
-		this.devComment = devComment;
-	}
-
-	public Boolean getIsProtected() {
-		return isProtected;
-	}
-
-	public void setIsProtected(Boolean isProtected) {
-		this.isProtected = isProtected;
-	}
-
-	public String getRawModemModelIdentity() {
-		return rawModemModelIdentity;
-	}
-
-	public void setRawModemModelIdentity(String rawModemModelIdentity) {
-		this.rawModemModelIdentity = rawModemModelIdentity;
-	}
 
 }
