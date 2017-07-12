@@ -32,10 +32,10 @@ public class EnergyPassportData extends JsonAbstractAuditableModel implements De
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "passport_id")
+    @JoinColumn(name = "passport_id", updatable = false)
     private EnergyPassport passport;
 
-    @Column(name = "section_id")
+    @Column(name = "section_id", updatable = false)
     private Long sectionId;
 
     @Column(name = "section_key")

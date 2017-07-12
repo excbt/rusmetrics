@@ -54,8 +54,8 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	@Test
 	public void testSelectReportParamset() {
@@ -88,8 +88,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	 * @param reportParamset
 	 */
 	private void testAddUnitToParamset(ReportParamset reportParamset) {
-		List<ContObject> contObjects = subscrContObjectService
-				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
 		assertTrue(contObjects.size() > 0);
 
 		ContObject co = contObjects.get(0);

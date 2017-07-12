@@ -1,21 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
-import org.joda.time.LocalDate;
+import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,26 +8,29 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.EmailNotification;
-import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService.LdapAction;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class SubscrCabinetService extends AbstractService implements SecuredRoles {
@@ -51,39 +39,52 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	private static final String CABINET_SEQ_DEVICE_NUMBER = "{deviceObjectNumber}";
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
+
+	protected final SubscrUserService subscrUserService;
+
+	protected final SubscrRoleService subscrRoleService;
+
+	protected final SubscriberService subscriberService;
+
+	private final ContObjectService contObjectService;
+
+	private final SubscrUserRepository subscrUserRepository;
+
+	private final LdapService ldapService;
+
+	private final EmailNotificationService emailNotificationService;
+
+	private final DeviceObjectService deviceObjectService;
+
+	private final SubscriberAccessService subscriberAccessService;
+
+	private final ObjectAccessService objectAccessService;
 
 	@Autowired
-	protected SubscrUserService subscrUserService;
+    public SubscrCabinetService(SubscrUserService subscrUserService,
+                                SubscrRoleService subscrRoleService,
+                                SubscriberService subscriberService,
+                                ContObjectService contObjectService,
+                                SubscrUserRepository subscrUserRepository,
+                                LdapService ldapService,
+                                EmailNotificationService emailNotificationService,
+                                DeviceObjectService deviceObjectService,
+                                SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
+        this.subscrUserService = subscrUserService;
+        this.subscrRoleService = subscrRoleService;
+        this.subscriberService = subscriberService;
+        this.contObjectService = contObjectService;
+        this.subscrUserRepository = subscrUserRepository;
+        this.ldapService = ldapService;
+        this.emailNotificationService = emailNotificationService;
+        this.deviceObjectService = deviceObjectService;
+        this.subscriberAccessService = subscriberAccessService;
+        this.objectAccessService = objectAccessService;
+    }
 
-	@Autowired
-	protected SubscrRoleService subscrRoleService;
-
-	@Autowired
-	protected SubscriberService subscriberService;
-
-	@Autowired
-	private ContObjectService contObjectService;
-
-	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
-
-	@Autowired
-	private SubscrUserRepository subscrUserRepository;
-
-	@Autowired
-	private LdapService ldapService;
-
-	@Autowired
-	private EmailNotificationService emailNotificationService;
-
-	@Autowired
-	private DeviceObjectService deviceObjectService;
-
-	/*
-	 *
-	 */
+    /*
+         *
+         */
 	private class SubscCabinetContObjectStats {
 		private final Long contObjectId;
 		private final Long count;
@@ -102,11 +103,10 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		}
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Long getSubscrCabinetNr() {
 		Query q = em.createNativeQuery("select nextval('portal.seq_subscr_cabinet_nr') as nr");
@@ -128,11 +128,12 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		return result;
 	}
 
-	/**
-	 *
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param parentSubscriber
+     * @param contObjectIds
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public SubscrCabinetInfo createSubscrUserCabinet(Subscriber parentSubscriber, Long[] contObjectIds) {
@@ -141,7 +142,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length >= 1);
 
-		if (!subscrContObjectService.canAccessContObjects(parentSubscriber.getId(), contObjectIds)) {
+		if (!objectAccessService.checkContObjectIds(parentSubscriber.getId(), Arrays.asList(contObjectIds))) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) can't access contObjects (%s)",
 					parentSubscriber.getId(), contObjectIds.toString()));
 		}
@@ -194,8 +195,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-		List<ContObject> contObjects = subscrContObjectService.updateSubscrContObjects(newSubscriber.getId(),
-				Arrays.asList(contObjectIds), LocalDate.now());
+        subscriberAccessService.updateContObjectIdsAccess(newSubscriber , Arrays.asList(contObjectIds), null);
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
@@ -216,6 +216,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 					String.format("Can't create Child Subscriber for contObjects=%s", contObjectIds.toString()));
 
 		}
+
+        List<ContObject> contObjects = objectAccessService.findContObjects(newSubscriber.getId());
 
 		List<ContObjectShortInfo> subscrObjectSHortInfoList = contObjects.stream().map(i -> i.getContObjectShortInfo())
 				.collect(Collectors.toList());
@@ -248,10 +250,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-		List<SubscrContObject> subscrContObjects = subscrContObjectService
-				.selectSubscrContObjects(cabinetSubscriber.getId());
-
-		subscrContObjectService.deleteSubscrContObjectPermanent(subscrContObjects);
+		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), LocalDateTime.now());
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 
@@ -279,9 +278,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	public List<ContObjectCabinetInfo> selectSubscrContObjectCabinetInfoList(Long parentSubscriberId) {
 
-		List<ContObjectShortInfo> contObjectShortInfoList = subscrContObjectService
-				.selectSubscriberContObjectsShortInfo(parentSubscriberId);
-
+		List<ContObjectShortInfo> contObjectShortInfoList = objectAccessService.findContObjects(parentSubscriberId)
+            .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
 		List<Subscriber> childSubscribers = subscriberService.selectChildSubscribers(parentSubscriberId);
 
 		Map<Long, List<Long>> childContObjectIdMap = new HashMap<>();
@@ -291,10 +289,11 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		List<Long> allChildContObjectIds = new ArrayList<>();
 
 		for (Subscriber s : childSubscribers) {
-			List<Long> childContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(s.getId());
+			List<Long> childContObjectIds = objectAccessService.findContObjectIds(s.getId());
 			allChildContObjectIds.addAll(childContObjectIds);
-			List<ContObjectShortInfo> childContObjects = subscrContObjectService
-					.selectSubscriberContObjectsShortInfo(s.getId());
+
+			List<ContObjectShortInfo> childContObjects = objectAccessService.findContObjects(s.getId())
+                    .stream().map((i) -> contObjectService.mapToDTO(i).newShortInfo()).collect(Collectors.toList());
 			if (!childContObjectIds.isEmpty()) {
 				childContObjectIdMap.put(s.getId(), childContObjectIds);
 			}
@@ -351,8 +350,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
-		List<Object[]> qryResult = subscrContObjectRepository
-				.selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
+		List<Object[]> qryResult = objectAccessService.findChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		List<SubscCabinetContObjectStats> result = new ArrayList<>();
 
 		for (Object[] row : qryResult) {
@@ -371,12 +369,11 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		return result;
 	}
 
-	/**
-	 *
-	 * @param parentSubscriberId
-	 * @param contObjectIds
-	 * @return
-	 */
+    /**
+     *
+     * @param parentSubscriberId
+     * @return
+     */
 	public boolean checkIfSubscriberCabinetsOK(Long parentSubscriberId) {
 		List<SubscCabinetContObjectStats> stats = selectChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		return !stats.stream().filter(i -> (i.getCount() != null) && (i.getCount() > 1)).findAny().isPresent();
@@ -475,11 +472,13 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 		return currentSubscrUser;
 	}
 
-	/**
-	 *
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param parentSubscriberId
+     * @param subscrUserId
+     * @param password
+     * @return
+     */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public SubscrUserWrapper saveCabinelSubscrUserPassword(Long parentSubscriberId, Long subscrUserId,
@@ -506,10 +505,12 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	}
 
-	/**
-	 *
-	 * @param subscrUserId
-	 */
+    /**
+     *
+     * @param fromSubscrUserId
+     * @param toSubscrUserId
+     * @return
+     */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {

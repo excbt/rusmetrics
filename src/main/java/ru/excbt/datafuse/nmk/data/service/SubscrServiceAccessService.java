@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,10 +32,11 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrServicePermissionRepository;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с доступом к услугам абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.09.2015
@@ -61,7 +63,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param accessDate
 	 * @return
@@ -73,7 +75,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param accessDate
 	 * @return
@@ -92,7 +94,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param entity
 	 * @return
@@ -118,7 +120,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param accessDate
 	 * @param accessList
@@ -184,7 +186,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param packId
 	 * @param itemId
@@ -226,7 +228,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entityId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -235,7 +237,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -246,22 +248,32 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, LocalDate accessDate) {
+		return selectSubscriberPermissions(subscriberId, accessDate.toDate());
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, java.time.LocalDate accessDate) {
+		return selectSubscriberPermissions(subscriberId, LocalDateUtils.asDate(accessDate));
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, Date accessDate) {
 		checkNotNull(accessDate);
 		List<SubscrServicePermission> result = subscrServicePermissionRepository.selectCommonPermissions();
 		List<SubscrServicePermission> subscriberPermissions = subscrServiceAccessRepository
-				.selectSubscriberPermissions(subscriberId, accessDate.toDate());
+				.selectSubscriberPermissions(subscriberId, accessDate);
 		result.addAll(subscriberPermissions);
 		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param accessDate
 	 * @param objectList
@@ -276,7 +288,22 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
+	 * @param subscriberId
+	 * @param accessDate
+	 * @param objectList
+	 * @return
+	 */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam, java.time.LocalDate accessDate) {
+		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberParam.getSubscriberId(),
+				accessDate);
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, subscriberParam);
+		return filter.filterObjects(objectList);
+	}
+
+	/**
+	 *
 	 * @param subscrServicePackList
 	 * @return
 	 */
@@ -303,7 +330,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param packId
 	 * @return
 	 */

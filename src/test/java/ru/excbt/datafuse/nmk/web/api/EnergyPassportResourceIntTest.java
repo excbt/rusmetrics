@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.repository.EnergyPassportDataValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
@@ -51,8 +51,11 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Autowired
     private EnergyPassportDataRepository energyPassportDataRepository;
 
+//    @Autowired
+//    private SubscrContObjectService subscrContObjectService;
+
     @Autowired
-    private SubscrContObjectService subscrContObjectService;
+    private ObjectAccessService objectAccessService;
 
 
     @Test
@@ -374,7 +377,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
         energyPassportRepository.flush();
 
 
-        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> contObjectIds = objectAccessService.findContObjectIds(getSubscriberId());
         energyPassportService.linkEnergyPassportToContObjects(passportDTO.getId(), contObjectIds, new Subscriber().id(getSubscriberId()));
 
         _testGetJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/cont-object-ids");
@@ -391,7 +394,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testGetContObjectEnergyPassport() throws Exception {
 
-        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> contObjectIds = objectAccessService.findContObjectIds(getSubscriberId());
 
         EnergyPassportVM vm = new EnergyPassportVM();
         vm.setPassportName("Hallo - 1");
@@ -407,7 +410,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testCreateContObjectEnergyPassport() throws Exception {
 
-        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> contObjectIds = objectAccessService.findContObjectIds(getSubscriberId());
 
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").build();
 
@@ -422,7 +425,7 @@ public class EnergyPassportResourceIntTest extends AnyControllerTest {
     @Transactional
     public void testUpdateContObjectEnergyPassport() throws Exception {
 
-        List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> contObjectIds = objectAccessService.findContObjectIds(getSubscriberId());
 
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").passportDate(LocalDate.now()).build();
         EnergyPassportDTO dto = energyPassportService.createContObjectPassport(vm, contObjectIds.subList(0,1), new Subscriber().id(getSubscriberId()));

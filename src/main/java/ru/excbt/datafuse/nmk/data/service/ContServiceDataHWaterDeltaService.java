@@ -51,15 +51,18 @@ public class ContServiceDataHWaterDeltaService {
 	@PersistenceContext(unitName = "nmk-p")
 	private EntityManager em;
 
-	@Autowired
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
-    @Autowired
-    private ContObjectFiasService contObjectFiasService;
+    private final ContObjectFiasService contObjectFiasService;
 
+    private final ObjectAccessService objectAccessService;
+
+    public ContServiceDataHWaterDeltaService(ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService) {
+        this.contObjectService = contObjectService;
+        this.contObjectFiasService = contObjectFiasService;
+        this.objectAccessService = objectAccessService;
+    }
 
     /**
      *
@@ -170,14 +173,14 @@ public class ContServiceDataHWaterDeltaService {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param ldp
-	 * @param contServiceType
-	 * @param timeDetailType
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param ldp
+     * @param contServiceTypeKey
+     * @param timeDetailKey
+     * @return
+     */
 	protected Map<Long, ContServiceTypeInfoART> selectHWaterDeltaART(Long subscriberId, LocalDatePeriod ldp,
 			ContServiceTypeKey contServiceTypeKey, TimeDetailKey timeDetailKey) {
 
@@ -272,7 +275,7 @@ public class ContServiceDataHWaterDeltaService {
 		List<ContObject> contObjects = new ArrayList<>();
 
 		if (contObjectId == null) {
-			contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
+			contObjects.addAll(objectAccessService.findContObjects(subscriberId));
 		} else {
 			ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
 
@@ -291,13 +294,13 @@ public class ContServiceDataHWaterDeltaService {
 		return resultList;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param ldp
-	 * @param contObjectId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param ldp
+     * @param cityFiasUUID
+     * @return
+     */
 	public List<ContObjectServiceTypeInfo> getContObjectServiceTypeInfo_ByCity(Long subscriberId,
 			LocalDatePeriod ldp, UUID cityFiasUUID) {
 
@@ -307,7 +310,7 @@ public class ContServiceDataHWaterDeltaService {
 
 		List<ContObject> contObjects = new ArrayList<>();
 
-		contObjects.addAll(subscrContObjectService.selectSubscriberContObjects(subscriberId));
+		contObjects.addAll(objectAccessService.findContObjects(subscriberId));
 
 		List<Long> contObjectIds = contObjects.stream().map(i -> i.getId()).collect(Collectors.toList());
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);

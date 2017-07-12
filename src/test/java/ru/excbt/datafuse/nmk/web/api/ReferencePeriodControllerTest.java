@@ -1,22 +1,21 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Date;
-import java.util.List;
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+
+import java.util.Date;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 
 
@@ -31,12 +30,15 @@ public class ReferencePeriodControllerTest extends AnyControllerTest {
 	@Autowired
 	private ContZPointService contZPointService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+//	@Autowired
+//	private SubscrContObjectService subscrContObjectService;
+
+    @Autowired
+    private ObjectAccessService objectAccessService;
+
 
 	private Long getOId() {
-		List<Long> vList = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> vList = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
 		assertTrue(vList.size() > 0);
 		return vList.get(0);
 	}

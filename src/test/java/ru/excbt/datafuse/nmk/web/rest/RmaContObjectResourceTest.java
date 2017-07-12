@@ -1,26 +1,24 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.utils.UrlUtils;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @Transactional
 public class RmaContObjectResourceTest extends RmaControllerTest {
@@ -30,18 +28,13 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Autowired
 	private ContObjectService contObjectService;
 
-	@Autowired
-	private ContObjectRepository contObjectRepository;
-
-	@Autowired
-	private SubscriberService subscriberService;
 
 	@Autowired
 	private RmaSubscriberService rmaSubscriberService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	private Long testSubscriberId;
 
@@ -61,7 +54,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	 */
 	private List<Long> findSubscriberContObjectIds() {
 		log.debug("Finding objects for subscriberId:{}", getSubscriberId());
-		List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+		List<Long> result = objectAccessService.findContObjectIds(getSubscriberId());
 		assertFalse(result.isEmpty());
 		return result;
 	}
@@ -110,10 +103,9 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Test
 	@Transactional
 	public void testSubscrContObjectsUpdate() throws Exception {
-		List<ContObject> availableContObjects = subscrContObjectService.selectAvailableContObjects(testSubscriberId,
-				EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContObject> availableContObjects = objectAccessService.findRmaAvailableContObjects(testSubscriberId, EXCBT_RMA_SUBSCRIBER_ID);
 		List<Long> addContObjects = new ArrayList<>();
-		List<Long> currContObjects = subscrContObjectService.selectSubscriberContObjectIds(testSubscriberId);
+		List<Long> currContObjects = objectAccessService.findContObjectIds(testSubscriberId);
 		for (int i = 0; i < availableContObjects.size(); i++) {
 			if (i > 1) {
 				break;

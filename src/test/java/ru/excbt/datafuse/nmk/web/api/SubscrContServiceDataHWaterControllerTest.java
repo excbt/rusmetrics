@@ -1,14 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.io.File;
-import java.util.List;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -19,23 +10,29 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvFileUtils;
 import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
-import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
+
+import java.io.File;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.testSecurityContext;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
 public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest {
@@ -65,8 +62,11 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	@Autowired
 	private HWatersCsvService hWatersCsvService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+//	@Autowired
+//	private SubscrContObjectService subscrContObjectService;
+
+    @Autowired
+    private ObjectAccessService objectAccessService;
 
 	/**
 	 *
@@ -255,8 +255,7 @@ public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest
 	@Test
 	public void testContObjectServiceTypeInfoOne() throws Exception {
 
-		List<Long> ids = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> ids = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
 		assertTrue(ids.size() > 0);
 
 		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));

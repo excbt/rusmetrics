@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -39,10 +40,11 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с абонентами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.03.2015
@@ -81,7 +83,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	private OrganizationRepository organizationRepository;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -96,7 +98,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -110,7 +112,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -121,7 +123,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
@@ -132,7 +134,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -143,7 +145,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -155,7 +157,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -165,7 +167,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param userName
 	 * @return
 	 */
@@ -181,7 +183,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -197,8 +199,16 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		return (Date) dbResult;
 	}
 
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public LocalDateTime getSubscriberCurrentDateTime(Long subscriberId) {
+	    Date date = getSubscriberCurrentTime(subscriberId);
+        return LocalDateUtils.asLocalDateTime(date);
+    }
+
+
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -209,7 +219,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -219,7 +229,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -230,7 +240,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -257,7 +267,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -283,7 +293,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -292,7 +302,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentSubscriberId
 	 * @return
 	 */
@@ -303,7 +313,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */
@@ -334,7 +344,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -344,7 +354,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */
@@ -368,7 +378,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscribers
 	 * @return
 	 */
@@ -395,7 +405,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */

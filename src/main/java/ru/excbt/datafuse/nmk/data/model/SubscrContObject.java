@@ -42,7 +42,7 @@ public class SubscrContObject extends AbstractAuditableModel implements Deletabl
 	private static final long serialVersionUID = -2884596735162334776L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_object_id")
+	@JoinColumn(name = "cont_object_id", updatable = false)
 	@JsonIgnore
 	private ContObject contObject;
 
@@ -50,7 +50,7 @@ public class SubscrContObject extends AbstractAuditableModel implements Deletabl
 	private Long contObjectId;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	@JsonIgnore
 	private Subscriber subscriber;
 

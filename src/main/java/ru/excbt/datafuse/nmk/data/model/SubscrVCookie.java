@@ -30,11 +30,11 @@ public class SubscrVCookie extends JsonAbstractAuditableModel implements Deletab
 	private static final long serialVersionUID = -7674107555412412995L;
 
 	@JsonIgnore
-	@Column(name = "subscriber_id")
+	@Column(name = "subscriber_id", updatable = false)
 	private Long subscriberId;
 
 	@JsonIgnore
-	@Column(name = "subscr_user_id")
+	@Column(name = "subscr_user_id", updatable = false)
 	private Long subscrUserId;
 
 	@Column(name = "vc_mode")

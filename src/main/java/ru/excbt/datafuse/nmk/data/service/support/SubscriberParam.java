@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
-public final class SubscriberParam {
+public final class SubscriberParam implements SubscrUserInfo {
 
 	private final long subscriberId;
 	private final long subscrUserId;
@@ -61,7 +61,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 */
 	private SubscriberParam(Builder builder) {
@@ -74,15 +74,20 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getSubscriberId() {
 		return subscriberId;
 	}
 
-	/**
-	 * 
+    @Override
+    public long getUserId() {
+        return subscrUserId;
+    }
+
+    /**
+	 *
 	 * @return
 	 */
 	public long getSubscrUserId() {
@@ -90,7 +95,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isRma() {
@@ -98,7 +103,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscrTypeKey getSubscrTypeKey() {
@@ -106,7 +111,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getRmaSubscriberId() {
@@ -117,7 +122,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getParentSubscriberId() {
@@ -125,7 +130,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean haveParentSubacriber() {
@@ -133,7 +138,7 @@ public final class SubscriberParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean haveRmaSubacriber() {

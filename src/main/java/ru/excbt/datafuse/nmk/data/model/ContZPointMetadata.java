@@ -37,7 +37,7 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "cont_zpoint_id")
+	@JoinColumn(name = "cont_zpoint_id", updatable = false)
 	private ContZPoint contZPoint;
 
 	@Column(name = "cont_zpoint_id", insertable = false, updatable = false)
@@ -45,7 +45,7 @@ public class ContZPointMetadata extends AbstractAuditableModel {
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id")
+	@JoinColumn(name = "device_object_id", updatable = false)
 	private DeviceObject deviceObject;
 
 	@Column(name = "device_object_id", insertable = false, updatable = false)

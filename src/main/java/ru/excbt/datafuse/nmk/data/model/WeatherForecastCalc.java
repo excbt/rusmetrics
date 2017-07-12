@@ -38,7 +38,7 @@ public class WeatherForecastCalc extends AbstractAuditableModel {
 
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "weather_place_id")
+	@JoinColumn(name = "weather_place_id", updatable = false)
 	private WeatherPlace weatherPlace;
 
 	@Column(name = "weather_forecast_type")

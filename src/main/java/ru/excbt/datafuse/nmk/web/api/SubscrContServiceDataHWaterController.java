@@ -47,8 +47,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -89,12 +87,11 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
 
-	private final SubscrContObjectService subscrContObjectService;
-
 	private final ContServiceDataHWaterImportService contServiceDataHWaterImportService;
 
 	private final SubscrDataSourceService subscrDataSourceService;
 
+	private final ObjectAccessService objectAccessService;
 
 	@Autowired
     public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
@@ -103,18 +100,17 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
                                                  CurrentSubscriberService currentSubscriberService,
                                                  ContServiceDataHWaterService contServiceDataHWaterService,
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 SubscrContObjectService subscrContObjectService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService) {
+                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
         this.webAppPropsService = webAppPropsService;
         this.currentSubscriberService = currentSubscriberService;
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contObjectHWaterDeltaService = contObjectHWaterDeltaService;
-        this.subscrContObjectService = subscrContObjectService;
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
         this.subscrDataSourceService = subscrDataSourceService;
+        this.objectAccessService = objectAccessService;
     }
 
     /**
@@ -724,8 +720,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
-		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
-				getSubscriberParam(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
+		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));

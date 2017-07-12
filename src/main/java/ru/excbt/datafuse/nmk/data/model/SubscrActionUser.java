@@ -34,7 +34,7 @@ public class SubscrActionUser extends AbstractAuditableModel {
 	private static final long serialVersionUID = 4055849268733704428L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	@JsonIgnore
 	private Subscriber subscriber;
 

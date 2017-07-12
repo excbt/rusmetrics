@@ -42,7 +42,7 @@ public class SubscrContGroup extends AbstractAuditableModel {
 		 */
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	@JsonIgnore
 	private Subscriber subscriber;
 

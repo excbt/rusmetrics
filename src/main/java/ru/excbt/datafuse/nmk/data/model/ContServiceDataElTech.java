@@ -40,11 +40,11 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 
 	private static final double DIV_VALUE = 1000.00;
 
-	@Column(name = "data_date")
+	@Column(name = "data_date", updatable = false)
 	private Date dataDate;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id")
+	@JoinColumn(name = "device_object_id", updatable = false)
 	@JsonIgnore
 	private DeviceObject deviceObject;
 
@@ -53,11 +53,11 @@ public class ContServiceDataElTech extends AbstractAuditableModel implements Dat
 	@JsonIgnore
 	private ContZPoint contZPoint;
 
-	@Column(name = "cont_zpoint_id")
+	@Column(name = "cont_zpoint_id", updatable = false)
 	@JsonIgnore
 	private Long contZPointId;
 
-	@Column(name = "time_detail_type")
+	@Column(name = "time_detail_type", updatable = false)
 	private String timeDetailType;
 
 	@JsonIgnore

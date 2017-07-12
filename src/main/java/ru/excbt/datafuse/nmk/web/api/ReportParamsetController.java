@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
@@ -22,8 +22,8 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
@@ -50,14 +50,20 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	@Autowired
-	private ReportParamsetService reportParamsetService;
+	private final ReportParamsetService reportParamsetService;
 
-	@Autowired
-	private ReportTemplateService reportTemplateService;
+	private final ReportTemplateService reportTemplateService;
 
-	@Autowired
-	private ReportTypeService reportTypeService;
+	private final ReportTypeService reportTypeService;
+
+    private final ObjectAccessService objectAccessService;
+
+    public ReportParamsetController(ReportParamsetService reportParamsetService, ReportTemplateService reportTemplateService, ReportTypeService reportTypeService, ObjectAccessService objectAccessService) {
+        this.reportParamsetService = reportParamsetService;
+        this.reportTemplateService = reportTemplateService;
+        this.reportTypeService = reportTypeService;
+        this.objectAccessService = objectAccessService;
+    }
 
 	/**
 	 *
@@ -380,8 +386,8 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(reportParamsetId);
 		checkNotNull(contObjectId);
 
-		if (!subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(),
-				contObjectId)) {
+		if (!objectAccessService.checkContObjectId(getSubscriberId(),contObjectId)
+        ) {
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -458,7 +464,8 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectIds);
 
 		for (Long id : contObjectIds) {
-			if (!subscrContObjectService.checkContObjectSubscription(currentSubscriberService.getSubscriberId(), id)) {
+			if (!objectAccessService.checkContObjectId(getSubscriberId(), id)
+                ) {
 				return ResponseEntity.badRequest().build();
 			}
 		}

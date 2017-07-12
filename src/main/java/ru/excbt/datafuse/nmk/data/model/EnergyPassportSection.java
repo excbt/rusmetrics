@@ -27,7 +27,7 @@ public class EnergyPassportSection extends JsonAbstractAuditableModel {
     @NotNull
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "passport_id")
+    @JoinColumn(name = "passport_id", updatable = false)
     private EnergyPassport passport;
 
     @NotNull

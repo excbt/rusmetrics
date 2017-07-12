@@ -40,8 +40,8 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 	@PersistenceContext(unitName = "nmk-p")
 	protected EntityManager em;
 
-	@Autowired
-	protected SubscrContObjectService subscrContObjectService;
+    @Autowired
+	protected ObjectAccessService objectAccessService;
 
 	/**
 	 *
@@ -77,7 +77,7 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 		if (subscriberParam.isRma()) {
-			subscrContObjectService.rmaInitHaveSubscr(subscriberParam, result);
+            objectAccessService.setupRmaHaveSubscr(subscriberParam,result);
 		}
 
 		return result.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
