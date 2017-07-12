@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -11,16 +12,16 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 
 /**
  * Repository для Subscriber
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.03.2015
  *
  */
-public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
+public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -28,7 +29,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Subscriber> selectByOrganizationId(@Param("organizationId") Long organizationId);
 
 	/**
-	 * 
+	 *
 	 * @param subscrUserId
 	 * @return
 	 */
@@ -36,7 +37,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Subscriber> selectByUserId(@Param("subscrUserId") Long subscrUserId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -44,14 +45,14 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Organization> selectRsoOrganizations(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
 	public List<Subscriber> findByRmaSubscriberId(Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -59,7 +60,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Long> selectByRmaSubscriberIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -67,7 +68,7 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Subscriber> selectByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -75,14 +76,14 @@ public interface SubscriberRepository extends CrudRepository<Subscriber, Long> {
 	public List<Long> checkSubscriberId(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Query("SELECT s FROM Subscriber s WHERE s.isRma = true")
 	public List<Subscriber> selectRmaList();
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */

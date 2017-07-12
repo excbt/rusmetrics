@@ -3,11 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -33,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
@@ -40,6 +37,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
@@ -58,35 +56,42 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	private final static String LDAP_DESCRIPTION_SUFFIX_PARAM = "LDAP_CABINETS_DESCRIPTION_SUFFIX";
 	private final static String LDAP_DESCRIPTION_SUFFIX_DEFAULT = "Cabinets-";
 
-	@Autowired
-	protected SubscriberRepository subscriberRepository;
+    @PersistenceContext(unitName = "nmk-p")
+    protected EntityManager em;
 
-	@Autowired
-	protected SubscrUserRepository subscrUserRepository;
+	protected final SubscriberRepository subscriberRepository;
 
-	@Autowired
-	protected ContZPointRepository contZPointRepository;
+	protected final SubscrUserRepository subscrUserRepository;
 
-	@PersistenceContext(unitName = "nmk-p")
-	protected EntityManager em;
+	protected final ContZPointRepository contZPointRepository;
 
-	@Autowired
-	protected TimezoneDefService timezoneDefService;
+	protected final TimezoneDefService timezoneDefService;
 
-	@Autowired
-	protected SubscrServiceAccessService subscrServiceAccessService;
+	protected final SubscrServiceAccessService subscrServiceAccessService;
 
-	@Autowired
-	private SystemParamService systemParamService;
+	private final SystemParamService systemParamService;
 
-	@Autowired
-	private OrganizationRepository organizationRepository;
+	private final OrganizationRepository organizationRepository;
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    protected final SubscriberMapper subscriberMapper;
+
+    @Autowired
+    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper) {
+        this.subscriberRepository = subscriberRepository;
+        this.subscrUserRepository = subscrUserRepository;
+        this.contZPointRepository = contZPointRepository;
+        this.timezoneDefService = timezoneDefService;
+        this.subscrServiceAccessService = subscrServiceAccessService;
+        this.systemParamService = systemParamService;
+        this.organizationRepository = organizationRepository;
+        this.subscriberMapper = subscriberMapper;
+    }
+
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Subscriber selectSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
@@ -95,6 +100,11 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		}
 
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
+		return Optional.ofNullable(subscriberMapper.subscriberToDTO(subscriberRepository.findOne(subscriberId)));
 	}
 
 	/**
@@ -119,7 +129,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public Subscriber saveSubscriber(Subscriber entity) {
-		return subscriberRepository.save(entity);
+		return subscriberRepository.saveAndFlush(entity);
 	}
 
 	/**

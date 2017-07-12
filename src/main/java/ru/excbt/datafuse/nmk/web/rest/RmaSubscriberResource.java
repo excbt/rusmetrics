@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -31,15 +32,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscriberController extends SubscriberController {
+public class RmaSubscriberResource extends SubscriberController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberResource.class);
 
 	private final OrganizationService organizationService;
 
 	private final RmaSubscriberService rmaSubscriberService;
 
-    public RmaSubscriberController(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
+    public RmaSubscriberResource(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
         super(objectAccessService);
         this.organizationService = organizationService;
         this.rmaSubscriberService = rmaSubscriberService;
@@ -55,10 +56,7 @@ public class RmaSubscriberController extends SubscriberController {
 			return ApiResponse.responseForbidden();
 		}
 
-		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
-		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
-
-		return ApiResponse.responseOK(subscriberService.enhanceSubscriber(resultList));
+		return ApiResponse.responseOK(() -> rmaSubscriberService.selectRmaSubscribersDTO(getCurrentSubscriberId()));
 	}
 
 	/**

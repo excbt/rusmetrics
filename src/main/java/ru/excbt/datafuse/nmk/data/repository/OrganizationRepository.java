@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -10,16 +11,16 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 
 /**
  * Repository для Organization
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
  *
  */
-public interface OrganizationRepository extends CrudRepository<Organization, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -28,7 +29,7 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	public List<Organization> selectRsoOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -37,7 +38,7 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	public List<Organization> selectRmaOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -46,7 +47,7 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	public List<Organization> selectCmOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -55,7 +56,7 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 	public List<Organization> selectOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param keyname
 	 * @return
@@ -66,7 +67,7 @@ public interface OrganizationRepository extends CrudRepository<Organization, Lon
 			@Param("keyname") String keyname);
 
 	/**
-	 * 
+	 *
 	 * @param oranizationIds
 	 * @return
 	 */

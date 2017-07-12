@@ -18,7 +18,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с организациями
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
@@ -27,11 +27,15 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class OrganizationService extends AbstractService implements SecuredRoles {
 
-	@Autowired
-	private OrganizationRepository organizationRepository;
+	private final OrganizationRepository organizationRepository;
 
-	/**
-	 * 
+    @Autowired
+    public OrganizationService(OrganizationRepository organizationRepository) {
+        this.organizationRepository = organizationRepository;
+    }
+
+    /**
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -41,7 +45,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -51,7 +55,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -64,7 +68,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -77,7 +81,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -90,7 +94,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -102,18 +106,18 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization saveOrganization(Organization entity) {
-		return organizationRepository.save(entity);
+		return organizationRepository.saveAndFlush(entity);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -124,7 +128,7 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	/**
-	 * 
+	 *
 	 * @param organizations
 	 * @param checkOrganizationId
 	 */
