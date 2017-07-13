@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -12,7 +13,6 @@ import org.apache.commons.lang.BooleanUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,12 +22,18 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 
 /**
  * Сервис для работы с Абонентами РМА
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.11.2015
@@ -38,20 +44,27 @@ public class RmaSubscriberService extends SubscriberService {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberService.class);
 
-	@Autowired
-	private ReportParamsetService reportParamsetService;
+	private final ReportParamsetService reportParamsetService;
 
-	@Autowired
-	private OrganizationService organizationService;
+	private final OrganizationService organizationService;
 
-	@Autowired
-	private LdapService ldapService;
+	private final LdapService ldapService;
 
-	@Autowired
-	private SubscrUserService subscrUserService;
+	private final SubscrUserService subscrUserService;
 
-	/**
-	 * 
+
+
+
+    public RmaSubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, ReportParamsetService reportParamsetService, OrganizationService organizationService, LdapService ldapService, SubscrUserService subscrUserService, SubscriberMapper subscriberMapper) {
+        super(subscriberRepository, subscrUserRepository, contZPointRepository, timezoneDefService, subscrServiceAccessService, systemParamService, organizationRepository, subscriberMapper);
+        this.reportParamsetService = reportParamsetService;
+        this.organizationService = organizationService;
+        this.ldapService = ldapService;
+        this.subscrUserService = subscrUserService;
+    }
+
+    /**
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -59,8 +72,15 @@ public class RmaSubscriberService extends SubscriberService {
 		return subscriberRepository.selectByRmaSubscriberId(rmaSubscriberId);
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscriberDTO> selectRmaSubscribersDTO(Long rmaSubscriberId) {
+		return subscriberRepository.selectByRmaSubscriberId(rmaSubscriberId).stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(s -> subscriberMapper.subscriberToDTO(s)).collect(Collectors.toList());
+	}
+
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param rmaSubscriberId
 	 * @return
@@ -88,7 +108,52 @@ public class RmaSubscriberService extends SubscriberService {
 				subscriber.setChildLdapOu(s.getChildLdapOu());
 			}
 		}
-		// End of can Create Child LDAP		
+		// End of can Create Child LDAP
+
+		// Can Create Child LDAP action
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+			String[] ldapOu = buildSubscriberLdapOu(subscriber);
+			String childDescription = buildChildDescription(subscriber);
+			ldapService.createOuIfNotExists(ldapOu, subscriber.getChildLdapOu(), childDescription);
+		}
+		// End of can Create Child LDAP action
+
+		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+		// Make default Report Paramset
+		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+
+		return resultSubscriber;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
+	public Subscriber createRmaSubscriber(SubscriberDTO subscriberDTO, Long rmaSubscriberId) {
+		checkNotNull(subscriberDTO);
+		checkNotNull(rmaSubscriberId);
+		checkArgument(subscriberDTO.getId() == null);
+
+		Subscriber subscriber = subscriberMapper.DTOToSubscriber(subscriberDTO);
+
+		subscriber.setRmaSubscriberId(rmaSubscriberId);
+		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+		checkArgument(subscriber.getDeleted() == 0);
+
+		subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
+
+		Subscriber resultSubscriber = subscriberRepository.saveAndFlush(subscriber);
+
+		// Can Create Child LDAP ou set
+		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+			Subscriber s = selectSubscriber(subscriber.getId());
+			if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
+				subscriber.setChildLdapOu(buildCabinetsOuName(subscriber.getId()));
+			} else {
+				subscriber.setChildLdapOu(s.getChildLdapOu());
+			}
+		}
+		// End of can Create Child LDAP
 
 		// Can Create Child LDAP action
 		if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
@@ -108,7 +173,7 @@ public class RmaSubscriberService extends SubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param rmaSubscriberId
 	 * @return
@@ -137,7 +202,7 @@ public class RmaSubscriberService extends SubscriberService {
 				subscriber.setChildLdapOu(s.getChildLdapOu());
 			}
 		}
-		// End of can Create Child LDAP		
+		// End of can Create Child LDAP
 
 		Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 
@@ -149,7 +214,7 @@ public class RmaSubscriberService extends SubscriberService {
 		}
 		// End of can Create Child LDAP action
 
-		// Make default Report Paramset		
+		// Make default Report Paramset
 		reportParamsetService.createDefaultReportParamsets(resultSubscriber);
 
 		setupSubscriberAdminUserRoles(resultSubscriber);
@@ -157,12 +222,11 @@ public class RmaSubscriberService extends SubscriberService {
 		return resultSubscriber;
 	}
 
-	/**
-	 * 
-	 * @param subscriber
-	 * @param rmaSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param rmaSubscriberId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })
 	public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
@@ -177,7 +241,7 @@ public class RmaSubscriberService extends SubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param rmaSubscriberId
 	 */
@@ -196,7 +260,7 @@ public class RmaSubscriberService extends SubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -206,7 +270,7 @@ public class RmaSubscriberService extends SubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -215,7 +279,7 @@ public class RmaSubscriberService extends SubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 */
 	@Secured({ ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_ADMIN })

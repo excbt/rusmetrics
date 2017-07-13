@@ -131,11 +131,13 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
-			if (rso == null) {
-				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid rsoOrganizationId"));
-			}
-			tariffPlan.setRso(rso);
+
+            Optional<Organization> organizationOptional = organizationService.findOneOrganization(rsoOrganizationId);
+            //Organization rso = organizationService.selectOrganization(rsoOrganizationId);
+            if (!organizationOptional.isPresent()) {
+                return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
+            }
+			tariffPlan.setRso(organizationOptional.orElse(null));
 		}
 
 		if (tariffTypeId != null && tariffTypeId > 0) {
@@ -195,11 +197,12 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 		//		}
 
 		if (rsoOrganizationId != null && rsoOrganizationId > 0) {
-			Organization rso = organizationService.selectOrganization(rsoOrganizationId);
-			if (rso == null) {
+		    Optional<Organization> organizationOptional = organizationService.findOneOrganization(rsoOrganizationId);
+			//Organization rso = organizationService.selectOrganization(rsoOrganizationId);
+			if (!organizationOptional.isPresent()) {
 				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid rsoOrganizationId"));
 			}
-			tariffPlan.setRso(rso);
+			tariffPlan.setRso(organizationOptional.get());
 		}
 
 		if (tariffTypeId != null && tariffTypeId > 0) {

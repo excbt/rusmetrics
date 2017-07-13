@@ -66,6 +66,7 @@ public class DBExceptionUtils {
             + "=" + id + " is not found");
     }
 
+
     /**
      *
      * @param clazz
@@ -89,5 +90,17 @@ public class DBExceptionUtils {
     public static <T extends Persistable<?>> AccessDeniedException accessDeniedException(Class<T> clazz, Object id) {
         throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
     }
+
+
+    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
+        return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
+            (idKeyname ? "keyname" : "ID")
+            + "=" + id + " is not found");
+    }
+
+    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {
+        return newEntityNotFoundException(clazz, id, false);
+    }
+
 
 }

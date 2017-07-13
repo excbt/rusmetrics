@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResultCode;
 import java.io.File;
 import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -90,6 +91,14 @@ public class ApiResponse {
 	 */
 	public static ResponseEntity<?> responseOK(Object body) {
 		return ResponseEntity.ok(body);
+	}
+
+    /**
+	 *
+	 * @return
+	 */
+	public static ResponseEntity<?> responseContent(Optional<?> body) {
+		return body != null ? ResponseEntity.ok(body) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
     /**

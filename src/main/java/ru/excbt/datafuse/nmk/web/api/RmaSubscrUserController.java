@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -149,8 +150,8 @@ public class RmaSubscrUserController extends SubscrUserController {
 	public ResponseEntity<?> getSubscrUsersCheck(@RequestParam("username") String username) {
 		checkNotNull(username);
 
-		List<SubscrUser> subscrUsers = subscrUserService.findByUsername(username);
-		UsernameCheck validator = new UsernameCheck(username, !subscrUsers.isEmpty());
+		Optional<SubscrUser> userOptional = subscrUserService.findByUsername(username);
+		UsernameCheck validator = new UsernameCheck(username, userOptional.isPresent());
 
 		return ApiResponse.responseOK(validator);
 	}

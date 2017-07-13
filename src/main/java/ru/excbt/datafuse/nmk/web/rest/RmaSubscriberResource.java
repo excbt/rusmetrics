@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,16 +8,21 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
 import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -31,15 +36,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscriberController extends SubscriberController {
+public class RmaSubscriberResource extends SubscriberController {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberResource.class);
 
 	private final OrganizationService organizationService;
 
 	private final RmaSubscriberService rmaSubscriberService;
 
-    public RmaSubscriberController(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
+    public RmaSubscriberResource(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
         super(objectAccessService);
         this.organizationService = organizationService;
         this.rmaSubscriberService = rmaSubscriberService;
@@ -55,10 +60,7 @@ public class RmaSubscriberController extends SubscriberController {
 			return ApiResponse.responseForbidden();
 		}
 
-		List<Subscriber> subscriberList = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
-		List<Subscriber> resultList = ObjectFilters.deletedFilter(subscriberList);
-
-		return ApiResponse.responseOK(subscriberService.enhanceSubscriber(resultList));
+		return ApiResponse.responseOK(() -> rmaSubscriberService.selectRmaSubscribersDTO(getCurrentSubscriberId()));
 	}
 
 	/**
@@ -68,18 +70,24 @@ public class RmaSubscriberController extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.GET)
 	public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
-		if (!currentSubscriberService.isRma()) {
+
+        SubscrUserInfo userInfo = getSubscriberParam();
+
+		if (!userInfo.isRma()) {
 			logger.warn("Current User is not RMA");
 			return ApiResponse.responseForbidden();
 		}
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Optional<SubscriberDTO> subscriberDTOOptional = subscriberService.findSubscriberDTO(rSubscriberId);
+		if (subscriberDTOOptional.isPresent()) {
+            if (subscriberDTOOptional.get().getRmaSubscriberId() == null
+                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(userInfo.getSubscriberId())) {
+                return ApiResponse.responseForbidden();
+            }
+        }
 
-		if (subscriber.getRmaSubscriberId() == null
-				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
-			return ApiResponse.responseForbidden();
-		}
-		return ApiResponse.responseOK(subscriber);
+        return ApiResponse.responseContent(subscriberDTOOptional);
+
 	}
 
 	/**
@@ -148,19 +156,13 @@ public class RmaSubscriberController extends SubscriberController {
 
 		checkNotNull(rSubscriberId);
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				if (Boolean.TRUE.equals(isPermanent)) {
-					rmaSubscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
-				} else {
-					rmaSubscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
-				}
-
-			}
-
-		};
+		ApiAction action = (ApiActionAdapter) () -> {
+            if (Boolean.TRUE.equals(isPermanent)) {
+                rmaSubscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
+            } else {
+                rmaSubscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
+            }
+        };
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}
 
@@ -170,7 +172,7 @@ public class RmaSubscriberController extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
-		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
+		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam());
 		return ApiResponse.responseOK(organizations);
 	}
 
