@@ -109,20 +109,6 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 
 	/**
 	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private Subscriber findOne2(Long subscriberId) {
-		Subscriber result = subscriberRepository.findOne(subscriberId);
-		if (result == null) {
-			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
-		}
-		return result;
-	}
-
-	/**
-	 *
 	 * @param entity
 	 * @return
 	 */
@@ -130,6 +116,17 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public Subscriber saveSubscriber(Subscriber entity) {
 		return subscriberRepository.saveAndFlush(entity);
+	}
+
+    /**
+     *
+     * @param subscriberDTO
+     * @return
+     */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Subscriber saveSubscriberDTO(SubscriberDTO subscriberDTO) {
+		return subscriberRepository.saveAndFlush(subscriberMapper.DTOToSubscriber(subscriberDTO));
 	}
 
 	/**
@@ -149,47 +146,8 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOneSubscriber(Long subscriberId) {
-		Subscriber result = subscriberRepository.findOne(subscriberId);
-		return result;
-	}
-
-	/**
-	 *
-	 * @param contObjectId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	@Deprecated
-	public List<ContZPoint> findContZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
-		return result;
-	}
-
-	/**
-	 *
-	 * @param subscrUserId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrUser findSubscrUser(long subscrUserId) {
-		return subscrUserRepository.findOne(subscrUserId);
-	}
-
-	/**
-	 *
-	 * @param userName
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrUser> findUserByUsername(String userName) {
-		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
-		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
-		result.forEach(i -> {
-			i.getSubscriber();
-		});
-
-		return result;
+	public Optional<Subscriber> findOneSubscriber(Long subscriberId) {
+		return Optional.ofNullable(subscriberRepository.findOne(subscriberId));
 	}
 
 	/**

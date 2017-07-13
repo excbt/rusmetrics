@@ -25,10 +25,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -340,9 +337,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrUser> findByUsername(String userName) {
-		List<SubscrUser> result = subscrUserRepository.findByUserNameIgnoreCase(userName);
-		return ObjectFilters.deletedFilter(result);
+	public Optional<SubscrUser> findByUsername(String userName) {
+		return subscrUserRepository.findOneByUserNameIgnoreCase(userName);
 	}
 
 	/**

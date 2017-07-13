@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService.LdapAction;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -263,12 +264,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public void deleteSubscrUserCabinet(Long cabinetSubscriberId) {
-		Subscriber subscriber = subscriberService.selectSubscriber(cabinetSubscriberId);
-		if (subscriber == null) {
-
-			throw new PersistenceException(String.format("Subscriber (id=%d) is not found", cabinetSubscriberId));
-
-		}
+		Subscriber subscriber = subscriberService.findOneSubscriber(cabinetSubscriberId)
+            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Subscriber.class, cabinetSubscriberId));
 		deleteSubscrUserCabinet(subscriber);
 	}
 
