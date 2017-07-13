@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -28,22 +28,22 @@ app.controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http', 'objectSvc'
         {
             "name": "subscriberName",
             "caption": "Наименование",
-            "class": "col-md-3"
+            "class": "col-xs-3"
         },
         {
             "name": "info",
             "caption": "Информация",
-            "class": "col-md-3"
+            "class": "col-xs-3"
         },
         {
             "name": "comment",
             "caption": "Комментарий",
-            "class": "col-md-2"
+            "class": "col-xs-2"
         },
         {
             "name": "organizationName",
             "caption": "Организация",
-            "class": "col-md-2"
+            "class": "col-xs-2"
         }
     ];
     //data
@@ -458,6 +458,6 @@ app.controller('MngmtClientsCtrl', ['$rootScope', '$scope', '$http', 'objectSvc'
         return mainSvc.isTestMode();
     };
     
-//***************************************************    
+//***************************************************
     
 }]);
