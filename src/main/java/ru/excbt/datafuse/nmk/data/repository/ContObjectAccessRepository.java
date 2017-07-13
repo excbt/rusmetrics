@@ -53,6 +53,11 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         + " ORDER BY a.contObject.fullAddress, a.contObject.id")
     List<ContObject> findAllContObjects(@Param("subscriberId") Long subscriberId);
 
+    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL " +
+        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    List<ContObject> findAllContObjectsNoTtl(@Param("subscriberId") Long subscriberId);
+
 
     @Query("SELECT a.contObject FROM ContObjectAccess a "
         + " WHERE a.subscriberId = :subscriberId "

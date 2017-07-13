@@ -75,6 +75,16 @@ public class ObjectAccessService {
         return ObjectFilters.deletedFilter(result);
     }
 
+    public List<ContObject> findContObjectsNoTtl(Long subscriberId) {
+        List<ContObject> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findAllContObjectsNoTtl(subscriberId);
+        } else {
+            result = subscrContObjectRepository.selectContObjects(subscriberId);
+        }
+        return ObjectFilters.deletedFilter(result);
+    }
+
     /**
      *
      * @param subscriberId

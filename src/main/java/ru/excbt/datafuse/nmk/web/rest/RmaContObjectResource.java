@@ -173,7 +173,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
         ApiAction action = new ContObjectDTOResponse() {
             @Override
             public List<? extends ContObjectDTO> processAndReturnResult() {
-                List<ContObject> resultList = objectAccessService.findContObjects(subscriberId);
+                List<ContObject> resultList = objectAccessService.findContObjectsNoTtl(subscriberId);
 
                 return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
             }
