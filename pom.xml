@@ -332,78 +332,6 @@
 		</dependency>
 
 
-        <dependency>
-            <groupId>pentaho-reporting-engine</groupId>
-            <artifactId>pentaho-reporting-engine-classic-core</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libbase</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.12</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libloader</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>librepository</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libxml</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libserializer</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libformula</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libfonts</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libformat</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>pentaho-library</groupId>
-            <artifactId>libdocbundle</artifactId>
-            <version>${pentaho.version}</version>
-        </dependency>
-
 		<!-- -->
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
@@ -419,31 +347,6 @@
 					<artifactId>commons-logging</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-
-
-		<dependency>
-			<groupId>net.sf.jasperreports</groupId>
-			<artifactId>jasperreports</artifactId>
-			<version>6.3.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>ru.excbt.jasper</groupId>
-			<artifactId>fonts_rus</artifactId>
-			<version>2.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ru.excbt.jasper</groupId>
-			<artifactId>jasperreports-functions</artifactId>
-			<version>6.3.0</version>
 		</dependency>
 
 		<dependency>
@@ -501,20 +404,6 @@
 
 
 	</dependencies>
-
-
-	<repositories>
-		<repository>
-			<id>in-project</id>
-			<name>local-maven-repo</name>
-			<url>file://${project.basedir}/libs</url>
-		</repository>
-        <repository>
-            <id>pentaho-releases</id>
-            <url>http://repository.pentaho.org/artifactory/repo/</url>
-        </repository>
-	</repositories>
-
 
 	<build>
 		<finalName>${rp.build.warname}</finalName>
