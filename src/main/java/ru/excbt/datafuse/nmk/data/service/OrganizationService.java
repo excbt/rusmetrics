@@ -11,10 +11,13 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
 
 /**
  * Сервис для работы с организациями
@@ -29,9 +32,12 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 
 	private final OrganizationRepository organizationRepository;
 
+	private final OrganizationMapper organizationMapper;
+
     @Autowired
-    public OrganizationService(OrganizationRepository organizationRepository) {
+    public OrganizationService(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper) {
         this.organizationRepository = organizationRepository;
+        this.organizationMapper = organizationMapper;
     }
 
     /**
@@ -87,10 +93,20 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Organization> selectOrganizations(SubscriberParam subscriberParam) {
 		List<Organization> organizations = organizationRepository
-				.selectOrganizations(subscriberParam.getRmaSubscriberId());
+				.findOrganizationsOfRma(subscriberParam.getRmaSubscriberId());
 		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<OrganizationDTO> findOrganizationsOfRma(SubscrUserInfo userInfo) {
+		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(userInfo.getRmaSubscriberId())
+            .stream()
+                .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+                .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
+                .map(o -> organizationMapper.otganizationToDTO(o)).collect(Collectors.toList());
+		return organizations;
 	}
 
 	/**

@@ -51,9 +51,10 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 * @param rmaSubscriberId
 	 * @return
 	 */
-	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
-			+ " ORDER BY o.organizationFullName")
-	public List<Organization> selectOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) " +
+        " AND o.deleted = 0 " +
+		" ORDER BY o.organizationFullName")
+	public List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *

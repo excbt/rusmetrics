@@ -94,6 +94,14 @@ public class ApiResponse {
 
     /**
 	 *
+	 * @return
+	 */
+	public static ResponseEntity<?> responseContent(Object body) {
+		return body != null ? ResponseEntity.ok(body) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+    /**
+	 *
 	 * @param apiResult
 	 * @return
 	 */
