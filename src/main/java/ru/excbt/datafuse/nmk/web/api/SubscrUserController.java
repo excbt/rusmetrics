@@ -191,7 +191,7 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 		}
 
 		Optional<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
-		if (!checkUser.isPresent()) {
+		if (checkUser.isPresent()) {
 			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
