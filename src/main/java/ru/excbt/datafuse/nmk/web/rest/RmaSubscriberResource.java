@@ -86,7 +86,7 @@ public class RmaSubscriberResource extends SubscriberController {
             }
         }
 
-        return ApiResponse.responseContent(subscriberDTOOptional.orElse(null));
+        return ApiResponse.responseContent(subscriberDTOOptional);
 
 	}
 

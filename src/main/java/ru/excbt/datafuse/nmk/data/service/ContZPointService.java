@@ -22,10 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
-import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
@@ -636,17 +633,16 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 * @param contZPoint
 	 */
 	private void initRso(ContZPoint contZPoint) {
-		Organization organization = organizationService.selectOrganization(contZPoint.getRsoId());
-		if (organization == null) {
-			throw new PersistenceException(
-					String.format("RSO organization (id=%d) is not found", contZPoint.getRsoId()));
-		}
 
-		if (!Boolean.TRUE.equals(organization.getFlagRso())) {
+        Organization org = organizationService.findOneOrganization(contZPoint.getRsoId())
+            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, contZPoint.getRsoId()));
+
+
+		if (!Boolean.TRUE.equals(org.getFlagRso())) {
 			throw new PersistenceException(String.format("Organization (id=%d) is not RSO", contZPoint.getRsoId()));
 		}
 
-		contZPoint.setRso(organization);
+		contZPoint.setRso(org);
 	}
 
 	/**

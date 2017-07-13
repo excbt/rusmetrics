@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -21,12 +23,13 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/api/rma/organizations")
 public class RmaOrganizationController extends AbstractSubscrApiResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaOrganizationController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaOrganizationController.class);
 
 	@Autowired
 	private OrganizationService organizationService;
@@ -37,8 +40,8 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
      */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
-		List<Organization> resultList = organizationService.selectOrganizations(getSubscriberParam());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
+        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam());
+		return ApiResponse.responseOK(organizations);
 	}
 
 	/**
@@ -48,8 +51,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationGet(@PathVariable("organizationId") Long organizationId) {
-		Organization result = organizationService.selectOrganization(organizationId);
-		return ApiResponse.responseOK(result);
+		return ApiResponse.responseContent(organizationService.findOneOrganization(organizationId));
 	}
 
 	/**
@@ -62,12 +64,16 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> OrganizationPut(@PathVariable("organizationId") Long organizationId,
 			@RequestBody Organization requestEntity) {
 
-		Organization checkOrganization = organizationService.selectOrganization(organizationId);
-		if (checkOrganization == null || organizationId == null || !organizationId.equals(checkOrganization.getId())) {
+        Optional<Organization> organizationOptional = organizationService.findOneOrganization(organizationId);
+
+		//Organization checkOrganization = organizationService.selectOrganization(organizationId);
+		if (!organizationOptional.isPresent()) {
 			return ApiResponse.responseBadRequest();
 		}
 
-		if (Boolean.TRUE.equals(checkOrganization.getIsCommon())) {
+		Organization organization = organizationOptional.get();
+
+		if (Boolean.TRUE.equals(organization.getIsCommon())) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -76,8 +82,8 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 		requestEntity.setRmaSubscriberId(
 				subscriberParam.isRma() ? subscriberParam.getSubscriberId() : subscriberParam.getRmaSubscriberId());
 
-		if (checkOrganization.getRmaSubscriberId() == null
-				|| !checkOrganization.getRmaSubscriberId().equals(requestEntity.getRmaSubscriberId())) {
+		if (organization.getRmaSubscriberId() == null
+				|| !organization.getRmaSubscriberId().equals(requestEntity.getRmaSubscriberId())) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -138,28 +144,22 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/{organizationId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> OrganizationDelete(@PathVariable("organizationId") Long organizationId) {
 
-		Organization organization = organizationService.selectOrganization(organizationId);
-		if (organization == null) {
+		Optional<Organization> organizationOptional = organizationService.findOneOrganization(organizationId);
+            //selectOrganization(organizationId);
+		if (!organizationOptional.isPresent()) {
 			return ApiResponse.responseBadRequest();
 		}
 
-		if (Boolean.TRUE.equals(organization.getIsCommon())) {
+		if (Boolean.TRUE.equals(organizationOptional.get().getIsCommon())) {
 			return ApiResponse.responseForbidden();
 		}
 
-		if (organization.getRmaSubscriberId() == null
-				|| !organization.getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+		if (organizationOptional.get().getRmaSubscriberId() == null
+				|| !organizationOptional.get().getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
 			return ApiResponse.responseForbidden();
 		}
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				organizationService.deleteOrganization(organization);
-			}
-
-		};
+		ApiAction action = (ApiActionAdapter) () -> organizationService.deleteOrganization(organizationOptional.get());
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

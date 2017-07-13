@@ -26,7 +26,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 */
 	@Query("SELECT o FROM Organization o WHERE o.flagRso = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
 			+ " ORDER BY o.organizationFullName")
-	public List<Organization> selectRsoOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	List<Organization> selectRsoOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
@@ -35,7 +35,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 */
 	@Query("SELECT o FROM Organization o WHERE o.flagRma = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
 			+ " ORDER BY o.organizationFullName")
-	public List<Organization> selectRmaOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	List<Organization> selectRmaOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
@@ -44,7 +44,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 */
 	@Query("SELECT o FROM Organization o WHERE o.flagCm = true AND (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) "
 			+ " ORDER BY o.organizationFullName")
-	public List<Organization> selectCmOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	List<Organization> selectCmOrganizations(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
@@ -54,7 +54,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) " +
         " AND o.deleted = 0 " +
 		" ORDER BY o.organizationFullName")
-	public List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
@@ -64,7 +64,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 */
 	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) AND"
 			+ " o.keyname = :keyname " + " ORDER BY o.organizationFullName")
-	public List<Organization> selectByKeyname(@Param("rmaSubscriberId") Long rmaSubscriberId,
+	List<Organization> selectByKeyname(@Param("rmaSubscriberId") Long rmaSubscriberId,
 			@Param("keyname") String keyname);
 
 	/**
@@ -73,6 +73,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	 * @return
 	 */
 	@Query("SELECT o FROM Organization o WHERE (o.id in :oranizationIds)")
-	public List<Organization> selectByIds(@Param("oranizationIds") List<Long> oranizationIds);
+	List<Organization> selectByIds(@Param("oranizationIds") List<Long> oranizationIds);
+
 
 }
