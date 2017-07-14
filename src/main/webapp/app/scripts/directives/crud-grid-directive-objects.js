@@ -467,7 +467,7 @@ console.log(headers);
                 }
                 
                 var successGetObjectsCallback = function (response) {
-                    console.time("Object perform");                    
+                    console.time("Object perform");
                     var tempArr = response.data;
                     if (mainSvc.checkUndefinedNull(tempArr) || !angular.isArray(tempArr) || tempArr.length === 0) {
                         $scope.messages.noObjects = "Объектов нет.";
