@@ -17,9 +17,9 @@
 		<hikari.version>2.4.6</hikari.version>
         <pentaho.version>6.1.0.11-329</pentaho.version>
         <hibernate.version>5.2.8.Final</hibernate.version>
-        <mapstruct.version>1.2.0.Beta2</mapstruct.version>
+        <mapstruct.version>1.2.0.CR1</mapstruct.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
-        <lombok.version>1.16.14</lombok.version>
+        <lombok.version>1.16.18</lombok.version>
 	</properties>
 
 	<prerequisites>
@@ -30,7 +30,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.2.RELEASE</version>
+		<version>1.5.4.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
