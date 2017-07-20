@@ -1,12 +1,14 @@
 package ru.excbt.datafuse.nmk.report;
 
+import ru.excbt.nmk.reports.com_report.ColumnElement;
+
 import java.io.Serializable;
 
-import ru.excbt.nmk.reports.ColumnElement;
+
 
 /**
  * Колонка конструктора отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.04.2015
@@ -15,7 +17,7 @@ import ru.excbt.nmk.reports.ColumnElement;
 public class ReportColumn implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1645430436067608438L;
 

@@ -292,7 +292,10 @@ public class ReportMasterTemplateCli {
 		loadReportMasterTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT,
 				ReportConstants.Files.RMA_ZPOINT_STAT_FILE_COMPILED, isCompiled);
 
-	}
+        loadReportMasterTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT,
+            ReportConstants.Files.RMA_ZPOINT_STAT_FILE_COMPILED, isCompiled);
+
+    }
 
 	/**
 	 *
