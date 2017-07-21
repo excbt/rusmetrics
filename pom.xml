@@ -20,6 +20,11 @@
         <mapstruct.version>1.2.0.CR1</mapstruct.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
         <lombok.version>1.16.18</lombok.version>
+
+        <!-- EXCBT -->
+        <slogwriter.version>0.0.2</slogwriter.version>
+        <nmkreports.version>0.0.1-SNAPSHOT</nmkreports.version>
+
 	</properties>
 
 	<prerequisites>
@@ -318,7 +323,7 @@
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
 			<artifactId>nmkreports</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${nmkreports.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.postgresql</groupId>
@@ -408,7 +413,7 @@
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
 			<artifactId>slogwriter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>${slogwriter.version}</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.postgresql</groupId>
