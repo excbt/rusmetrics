@@ -390,7 +390,7 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Transactional
     public void cleanupContObjectAccess() {
-        log.info("\nCONT_OBJECT END OF ACCESS");
+        log.debug("\nCONT_OBJECT END OF ACCESS");
         contObjectAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
                 log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getAccessTtl());
                 contObjectAccessRepository.delete(a);
@@ -400,7 +400,7 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Transactional
     public void cleanupContZPointAccess() {
-        log.info("\nCONT_ZPOINT END OF ACCESS");
+        log.debug("\nCONT_ZPOINT END OF ACCESS");
         contZPointAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
                 log.info("Subscriber {}, ContZPoint {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getAccessTtl());
                 contZPointAccessRepository.delete(a);
