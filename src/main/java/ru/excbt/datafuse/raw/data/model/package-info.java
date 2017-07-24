@@ -1,9 +1,6 @@
-/**
- * Created by kovtonyk on 09.06.2017.
- */
 @TypeDefs({@TypeDef(name = "JsonbAsString", typeClass = StringJsonUserType.class),
     @TypeDef(name = "TextArray", typeClass = StringArrayUserType.class)})
-package ru.excbt.datafuse.nmk.data.model.keyname;
+package ru.excbt.datafuse.raw.data.model;
 
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;

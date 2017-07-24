@@ -72,12 +72,12 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 
     @JsonIgnore
     @Column(name = "geo_json")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String geoJson;
 
     @JsonIgnore
     @Column(name = "geo_json_2")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String geoJson2;
 
     @JsonIgnore

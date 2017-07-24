@@ -53,7 +53,7 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	private Long contObjectId;
 
 	@Column(name = "s_raw")
-	@Type(type = "StringJsonObject")
+	@Type(type = "JsonbAsString")
 	private String sraw;
 
 	@Column(name = "s_value")
