@@ -32,8 +32,7 @@ public class LogSessionStep extends JsonAbstractAuditableModel implements Deleta
 	@Column(name = "session_id", updatable = false)
 	private Long sessionId;
 
-	@Column(name = "step_uuid")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "step_uuid", columnDefinition = "uuid")
 	private UUID stepUuid;
 
 	@Column(name = "step_date")

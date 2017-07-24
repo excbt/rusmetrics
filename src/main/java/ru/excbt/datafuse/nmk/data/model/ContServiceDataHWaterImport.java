@@ -127,8 +127,7 @@ public class ContServiceDataHWaterImport extends AbstractPersistableEntity<Long>
 	private Boolean dataChanged;
 
 	@JsonIgnore
-	@Column(name = "trx_id")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "trx_id", columnDefinition = "uuid")
 	private UUID trxId;
 
 	@Column(name = "created_by", updatable = false)

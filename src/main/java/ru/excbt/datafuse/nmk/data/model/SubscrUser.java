@@ -90,8 +90,7 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 	private Long subscriberId;
 
 	@JsonIgnore
-	@Column(name = "user_uuid", insertable = false, updatable = false)
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "user_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
 	private UUID userUUID;
 
 	@JsonIgnore

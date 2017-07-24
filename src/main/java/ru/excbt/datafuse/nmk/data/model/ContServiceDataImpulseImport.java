@@ -64,8 +64,7 @@ public class ContServiceDataImpulseImport extends AbstractPersistableEntity<Long
     private LocalDateTime lastModifiedDate;
 
     @JsonIgnore
-    @Column(name = "trx_id")
-    @org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+    @Column(name = "trx_id", columnDefinition = "uuid")
     private UUID trxId;
 
 

@@ -110,8 +110,7 @@ public class ContObjectDaData extends AbstractAuditableModel implements Deletabl
 	@Column(name = "data_flat")
 	private String dataFlat;
 
-	@Column(name = "data_fias_id")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "data_fias_id", columnDefinition = "uuid")
 	private UUID dataFiasId;
 
 	@Column(name = "data_geo_lat", columnDefinition = "numeric")

@@ -62,8 +62,7 @@ public class V_FullUserInfo implements Serializable {
 	@JoinColumn(name = "subscriber_id", updatable = false, insertable = false)
 	private Subscriber subscriber;
 
-	@Column(name = "user_uuid")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "user_uuid", columnDefinition = "uuid")
 	private UUID userUUID;
 
 	@Column(name = "is_system")
