@@ -36,7 +36,7 @@ public class EnergyPassportSection extends JsonAbstractAuditableModel {
 
     @NotNull
     @Column(name = "section_json")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String sectionJson;
 
     @NotNull

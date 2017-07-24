@@ -55,7 +55,7 @@ public class Widget extends AbstractPersistableEntity<Long> implements JsonModel
 	private String contServiceType;
 
 	@Column(name = "widget_params")
-	@Type(type = "StringJsonObject")
+	@Type(type = "JsonbAsString")
 	private String widgetParams;
 
 	@Column(name = "caption")

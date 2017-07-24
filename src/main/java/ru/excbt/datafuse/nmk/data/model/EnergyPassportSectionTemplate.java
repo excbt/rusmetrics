@@ -42,7 +42,7 @@ public class EnergyPassportSectionTemplate extends AbstractAuditableModel implem
 
 
     @Column(name = "section_json")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String sectionJson;
 
     @Column(name = "section_order")

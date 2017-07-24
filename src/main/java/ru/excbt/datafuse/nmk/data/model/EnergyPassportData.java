@@ -42,7 +42,7 @@ public class EnergyPassportData extends JsonAbstractAuditableModel implements De
     private String sectionKey;
 
     @Column(name = "section_data_json")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String sectionDataJson;
 
     @NotNull

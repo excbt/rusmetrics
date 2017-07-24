@@ -23,7 +23,7 @@ public class KeyStore extends AbstractKeynameEntity {
 	private static final long serialVersionUID = -9140771929158523900L;
 
 	@Column(name = "key_value")
-	@Type(type = "StringJsonObject")
+	@Type(type = "JsonbAsString")
 	private String keyValue;
 
 	@Column(name = "ex_system")
