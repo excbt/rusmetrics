@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с главным шаблоном отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.04.2015
@@ -42,7 +42,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	private ReportMasterTemplateBodyRepository reportMasterTemplateBodyRepository;
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -66,7 +66,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fileResource
 	 * @return
 	 * @throws IOException
@@ -118,7 +118,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportMasterTemplateBodyId
 	 * @param fileResource
 	 * @param isCompiled
@@ -168,8 +168,59 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 		return true;
 	}
 
-	/**
-	 * 
+    /**
+     *
+     * @param reportMasterTemplateBodyId
+     * @param fileResource
+     * @param isCompiled
+     * @return
+     * @throws IOException
+     */
+    public boolean saveExcelReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
+                                                       boolean isCompiled) throws IOException {
+
+        String correctedFilename = FilenameUtils.removeExtension(fileResource) + ReportConstants.EXT_XLSX;
+
+        File file = new File(correctedFilename);
+
+        if (!file.exists()) {
+            throw new FileNotFoundException(correctedFilename);
+        }
+
+        byte[] fileBytes = null;
+        InputStream is = new FileInputStream(file);
+        try {
+            fileBytes = IOUtils.toByteArray(is);
+        } finally {
+            is.close();
+        }
+
+        checkNotNull(fileBytes);
+
+        ReportMasterTemplateBody entity = reportMasterTemplateBodyRepository.findOne(reportMasterTemplateBodyId);
+        if (entity == null) {
+            return false;
+        }
+
+        logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
+        byte[] bb = entity.getBodyCompiled();
+        logger.info("Current Report Template Body size {}", bb != null ? bb.length : 0);
+
+        if (isCompiled) {
+            entity.setBodyCompiled(fileBytes);
+            entity.setBodyCompiledFilename(file.getName());
+
+        } else {
+            entity.setBody(fileBytes);
+            entity.setBodyFilename(file.getName());
+        }
+        reportMasterTemplateBodyRepository.save(entity);
+
+        return true;
+    }
+
+    /**
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */

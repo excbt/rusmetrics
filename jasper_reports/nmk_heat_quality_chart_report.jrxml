@@ -60,7 +60,6 @@
 	<subDataset name="table_data" whenResourceMissingType="Error" uuid="40edcff9-2f10-4375-9ae7-a9f5bf805e5b">
 		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="portal.xml"/>
-		<property name="net.sf.jasperreports.data.adapter" value="portal.xml"/>
 		<parameter name="begin_date" class="java.sql.Timestamp">
 			<parameterDescription><![CDATA[Дата начала]]></parameterDescription>
 			<defaultValueExpression><![CDATA[new java.sql.Timestamp(DATEVALUE(DATE(2016, 03, 01)))]]></defaultValueExpression>

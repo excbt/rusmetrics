@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Created with Jaspersoft Studio version 6.1.0.final using JasperReports Library version 6.0.0  -->
-<!-- 2016-02-09T11:42:08 -->
+<!-- Created with Jaspersoft Studio version 6.4.0.final using JasperReports Library version 6.4.1  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="nmk_consumption_history_report" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a50302b1-6e6d-44e9-b64a-495e89d49966">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="nmk PostgreSQL"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="portal.xml"/>
 	<style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
 		<box>
 			<pen lineWidth="0.5" lineColor="#000000"/>
@@ -45,6 +44,9 @@
 		<parameter name="show_etalon" class="java.lang.Boolean"/>
 		<parameter name="cont_ids" class="java.lang.String">
 			<defaultValueExpression><![CDATA[new String("{20118663}")]]></defaultValueExpression>
+		</parameter>
+		<parameter name="dfs" class="java.text.DateFormatSymbols">
+			<defaultValueExpression><![CDATA[new DateFormatSymbols()]]></defaultValueExpression>
 		</parameter>
 		<queryString>
 			<![CDATA[select * from reports.get_data_consumption_history_report_v2($P{cont_ids}, $P{org_id}, $P{begin_date}, $P{end_date}, $P{rep_detail_type}, '1h')]]>
@@ -95,6 +97,9 @@
 	<parameter name="show_chart" class="java.lang.Boolean">
 		<defaultValueExpression><![CDATA[new Boolean(true)]]></defaultValueExpression>
 	</parameter>
+	<parameter name="dfs" class="java.text.DateFormatSymbols">
+		<defaultValueExpression><![CDATA[new DateFormatSymbols()]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[select coalesce(o.organization_full_name, o.organization_name) as org_name,
 	      coalesce(co.cont_object_full_name, co.cont_object_full_address) as cont_address
@@ -116,8 +121,8 @@ where
 				<textElement>
 					<font fontName="Arial cyrillic" size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + ($P{begin_date}.getMonth() == $P{end_date}.getMonth() ? new SimpleDateFormat("MM/yyyy").format($P{begin_date}) :
-new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateFormat("MM/yyyy").format($P{end_date}))]]></textFieldExpression>
+				<textFieldExpression><![CDATA["Отчет по истории потребления тепла в период " + ($P{begin_date}.getMonth() == $P{end_date}.getMonth() ? new SimpleDateFormat("MMMM yyyy", $P{dfs}).format($P{begin_date}) :
+new SimpleDateFormat("MMMM yyyy", $P{dfs}).format($P{begin_date}) + " - " + new SimpleDateFormat("MMMM yyyy", $P{dfs}).format($P{end_date}))]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="0" y="35" width="420" height="20" uuid="6ce14c80-38ad-4c45-b555-8a9a543c6a3e">
@@ -144,7 +149,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 			<componentElement>
 				<reportElement x="0" y="0" width="550" height="70" uuid="8fbfed6f-47cb-4a4f-a67b-afccb7e486b6"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="dt1" uuid="b888de16-43ef-43bf-9954-a4b2458158fa">
+					<datasetRun subDataset="dt1" uuid="fc7e7a2e-6925-4640-a38d-b34a2c319168">
 						<datasetParameter name="org_id">
 							<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
 						</datasetParameter>
@@ -162,6 +167,9 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 						</datasetParameter>
 						<datasetParameter name="cont_ids">
 							<datasetParameterExpression><![CDATA[$P{cont_ids}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="dfs">
+							<datasetParameterExpression><![CDATA[$P{dfs}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -206,7 +214,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 									<textElement textAlignment="Center" verticalAlignment="Middle">
 										<font fontName="Arial cyrillic"/>
 									</textElement>
-									<textFieldExpression><![CDATA[($P{rep_detail_type}.equals("month") ? new SimpleDateFormat("MM.yy").format($F{d_date}) : new SimpleDateFormat("dd.MM.yy").format($F{d_date}))]]></textFieldExpression>
+									<textFieldExpression><![CDATA[($P{rep_detail_type}.equals("month") ? new SimpleDateFormat("MMMM yy", $P{dfs}).format($F{d_date}) : new SimpleDateFormat("dd.MM.yy").format($F{d_date}))]]></textFieldExpression>
 								</textField>
 							</jr:detailCell>
 						</jr:column>
@@ -477,7 +485,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 			</componentElement>
 			<lineChart>
 				<chart isShowLegend="true" evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="0" y="90" width="260" height="200" uuid="dff0f367-af84-4980-a908-04d6e6d36283">
+					<reportElement positionType="Float" x="0" y="90" width="260" height="200" uuid="d0e85597-aaed-40ab-a2e8-d1d6bd190412">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -493,7 +501,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="9415d38f-6d9a-4f11-8cb5-7607d41bc581">
+						<datasetRun subDataset="dt1" uuid="aebeb9d4-2466-4dd2-98aa-7a08d36c506c">
 							<datasetParameter name="org_id">
 								<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -516,12 +524,12 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 					</dataset>
 					<categorySeries>
 						<seriesExpression><![CDATA["Фактическое потребление, Гкал"]]></seriesExpression>
-						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
+						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? new SimpleDateFormat("dd.MM", $P{dfs}).format($F{d_date}) : new SimpleDateFormat("MM.yy", $P{dfs}).format($F{d_date}))]]></categoryExpression>
 						<valueExpression><![CDATA[$F{heat_sum_h}]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
 						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталонное потребление, Гкал" : "")]]></seriesExpression>
-						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
+						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? new SimpleDateFormat("dd.MM", $P{dfs}).format($F{d_date}) : new SimpleDateFormat("MM.yy", $P{dfs}).format($F{d_date}))]]></categoryExpression>
 						<valueExpression><![CDATA[($P{show_etalon} ? $F{heat_etalon_h} : null)]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
@@ -544,7 +552,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 			</lineChart>
 			<lineChart>
 				<chart isShowLegend="true" evaluationTime="Report" theme="default">
-					<reportElement positionType="Float" x="283" y="90" width="260" height="200" uuid="4a696ffe-62f0-4e5f-bced-c58441de7a0b">
+					<reportElement positionType="Float" x="283" y="90" width="260" height="200" uuid="d40b5a55-59b1-4e50-aab2-5def5ffeb9ec">
 						<printWhenExpression><![CDATA[$P{show_chart}]]></printWhenExpression>
 					</reportElement>
 					<chartTitle>
@@ -560,7 +568,7 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 				</chart>
 				<categoryDataset>
 					<dataset>
-						<datasetRun subDataset="dt1" uuid="679aba9e-6834-4995-8f71-19de66b52ab4">
+						<datasetRun subDataset="dt1" uuid="e169356c-075c-40d1-bb43-a01f8a0d390f">
 							<datasetParameter name="org_id">
 								<datasetParameterExpression><![CDATA[$P{org_id}]]></datasetParameterExpression>
 							</datasetParameter>
@@ -583,12 +591,12 @@ new SimpleDateFormat("MM/yyyy").format($P{begin_date}) + " - " + new SimpleDateF
 					</dataset>
 					<categorySeries>
 						<seriesExpression><![CDATA["Фактическое потребление, м3"]]></seriesExpression>
-						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
+						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? new SimpleDateFormat("dd.MM", $P{dfs}).format($F{d_date}) : new SimpleDateFormat("MM.yy", $P{dfs}).format($F{d_date}))]]></categoryExpression>
 						<valueExpression><![CDATA[$F{hw_sum_m}]]></valueExpression>
 					</categorySeries>
 					<categorySeries>
 						<seriesExpression><![CDATA[($P{show_etalon} ? "Эталонное потребление, м3" : "")]]></seriesExpression>
-						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? DATEFORMAT($F{d_date}, "dd.MM") : DATEFORMAT($F{d_date}, "MM.yy"))]]></categoryExpression>
+						<categoryExpression><![CDATA[($P{rep_detail_type}.equals("day") ? new SimpleDateFormat("dd.MM", $P{dfs}).format($F{d_date}) : new SimpleDateFormat("MM.yy", $P{dfs}).format($F{d_date}))]]></categoryExpression>
 						<valueExpression><![CDATA[($P{show_etalon} ? $F{hw_etalon_m} : null)]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
