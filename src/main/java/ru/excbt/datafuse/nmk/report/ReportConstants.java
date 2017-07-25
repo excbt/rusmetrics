@@ -23,6 +23,7 @@ public class ReportConstants {
 	public static final String EXT_JASPER = ".jasper";
 	public static final String EXT_JRXML = ".jrxml";
 	public static final String EXT_PRPT = ".prpt";
+    public static final String EXT_XLSX = ".xlsx";
 
 	public static class Files {
 
