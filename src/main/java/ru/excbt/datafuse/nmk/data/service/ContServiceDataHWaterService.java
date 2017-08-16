@@ -115,7 +115,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
 		checkArgument(contZpointId > 0);

@@ -1,14 +1,19 @@
 package ru.excbt.datafuse.nmk.data.ptree;
 
-import lombok.Getter;
-import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 
-@Getter
-@Setter
-public class PTreeContObjectNode extends PTreeNode {
+public class PTreeContObjectNode extends PTreeNodeObject<ContObjectDTO> {
 
-    public PTreeContObjectNode() {
-        super(PTreeNodeType.CONT_OBJECT);
+    public PTreeContObjectNode(ContObjectDTO contObjectDTO) {
+        super(PTreeNodeType.CONT_OBJECT, contObjectDTO);
     }
+
+    public PTreeContZPointNode addContZPoint(ContZPointDTO contZPoint) {
+        PTreeContZPointNode contZPointNode = new PTreeContZPointNode(contZPoint);
+        this.childNodes.add(contZPointNode);
+        return contZPointNode;
+    }
+
 
 }

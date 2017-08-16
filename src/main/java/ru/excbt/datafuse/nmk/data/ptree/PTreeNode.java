@@ -1,21 +1,21 @@
 package ru.excbt.datafuse.nmk.data.ptree;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.hateoas.Links;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PTreeNode {
+@JsonPropertyOrder({"nodeType", "nodeName", "childNodes"})
+public abstract class PTreeNode {
 
     private PTreeNode parent;
 
     private final PTreeNodeType nodeType;
 
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
-    private final List<PTreeNode> children;
+    protected final List<PTreeNode> childNodes;
 
     private final Links links;
 
@@ -23,14 +23,8 @@ public class PTreeNode {
 
     public PTreeNode(PTreeNodeType nodeType) {
         this.nodeType = nodeType;
-        this.children = new ArrayList<>();
+        this.childNodes = new ArrayList<>();
         this.links = new Links();
-    }
-
-    public PTreeContObjectNode addContObject () {
-        PTreeContObjectNode contObjectNode = new PTreeContObjectNode();
-        this.children.add(contObjectNode);
-        return contObjectNode;
     }
 
     public PTreeNode getParent() {
@@ -45,10 +39,6 @@ public class PTreeNode {
         return nodeType;
     }
 
-    public List<PTreeNode> getChildren() {
-        return children;
-    }
-
     public Links getLinks() {
         return links;
     }
@@ -60,4 +50,10 @@ public class PTreeNode {
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
+
+    public List<PTreeNode> getChildNodes() {
+        return childNodes;
+    }
+
+
 }

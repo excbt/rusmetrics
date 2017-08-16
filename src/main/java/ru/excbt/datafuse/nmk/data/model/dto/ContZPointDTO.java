@@ -7,9 +7,13 @@ import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 
+import javax.persistence.Version;
+
 /**
  * Created by kovtonyk on 07.07.2017.
  */
+@Getter
+@Setter
 public class ContZPointDTO {
 
 
@@ -33,5 +37,8 @@ public class ContZPointDTO {
         }
 
     }
+
+    private Long id;
+    private int version;
 
 }
