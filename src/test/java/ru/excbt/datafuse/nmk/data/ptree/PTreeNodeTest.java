@@ -18,7 +18,10 @@ public class PTreeNodeTest {
     @Test
     public void testJson() throws Exception {
         PTreeElement node = new PTreeElement().nodeName("Тестовый объект");
-        node.addContObjectNode(new ContObjectDTO()).addContZPoint(new ContZPointDTO()).addDeviceObject(new DeviceObjectDTO());
+
+        ContZPointDTO contZPointDTO = new ContZPointDTO();
+        contZPointDTO.setId(1L);
+        node.addContObjectNode(new ContObjectDTO()).addContZPoint(contZPointDTO).addDeviceObject(new DeviceObjectDTO());
         node.setNodeName("My Root");
         node.addContObjectNode(new ContObjectDTO()).setNodeName("ContObject");
         String json = JsonMapperUtils.objectToJson(node, true);
