@@ -60,6 +60,11 @@ public class ObjectAccessService {
     }
 
 
+
+    private List<Long> makeFilterList (List<Long> idList) {
+        return idList != null && !idList.isEmpty() ? idList : Arrays.asList(0L);
+    }
+
     /**
      *
      * @param subscriberId
@@ -122,10 +127,11 @@ public class ObjectAccessService {
 
     public List<ContObject> findContObjectsExcludingIds (Long subscriberId, List<Long> idList) {
         List<ContObject> result;
+
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectsExcludingIdsNoTtl(subscriberId, idList);
+            result = contObjectAccessRepository.findContObjectsExcludingIdsNoTtl(subscriberId, makeFilterList(idList));
         } else {
-            result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId,idList);
+            result = subscrContObjectRepository.selectContObjectsExcludingIds(subscriberId, makeFilterList(idList));
         }
         return result;
     }
@@ -143,8 +149,9 @@ public class ObjectAccessService {
 
     public List<ContObject> findContObjectsByIds(Long subscriberId, List<Long> idList) {
         List<ContObject> result;
+
         if (NEW_ACCESS) {
-            result = contObjectAccessRepository.findContObjectsByIdsNoTtl(subscriberId, idList);
+            result = contObjectAccessRepository.findContObjectsByIdsNoTtl(subscriberId, makeFilterList(idList));
         } else {
             result = subscrContObjectRepository.selectContObjectsByIds(subscriberId,
                 idList);
