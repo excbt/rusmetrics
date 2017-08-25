@@ -5,17 +5,22 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.hateoas.Links;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-@JsonPropertyOrder({"nodeType", "nodeName", "childNodes"})
+@JsonPropertyOrder({"nodeType", "nodeName", "childNodes", "linkedNodeObjects"})
 public abstract class PTreeNode {
 
     private PTreeNode parent;
 
     private final PTreeNodeType nodeType;
 
+    private Long _id;
+
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     protected final List<PTreeNode> childNodes;
+
+    private final List<PTreeNodeObject<?>> linkedNodeObjects;
 
     private final Links links;
 
@@ -24,6 +29,7 @@ public abstract class PTreeNode {
     public PTreeNode(PTreeNodeType nodeType) {
         this.nodeType = nodeType;
         this.childNodes = new ArrayList<>();
+        this.linkedNodeObjects = new LinkedList<>();
         this.links = new Links();
     }
 
@@ -55,5 +61,20 @@ public abstract class PTreeNode {
         return childNodes;
     }
 
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
+    }
+
+    public List<PTreeNodeObject<?>> getLinkedNodeObjects() {
+        return linkedNodeObjects;
+    }
+
+    public <T> void addLinkedObject(PTreeNodeObject<T> nodeObject) {
+        linkedNodeObjects.add(nodeObject);
+    }
 
 }

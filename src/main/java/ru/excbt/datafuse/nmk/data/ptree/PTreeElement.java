@@ -14,6 +14,11 @@ public class PTreeElement extends PTreeNode {
         return contObjectNode;
     }
 
+    public PTreeElement addChildElement(PTreeElement child) {
+        this.childNodes.add(child);
+        return child;
+    }
+
     public PTreeElement nodeName(String val) {
         this.setNodeName(val);
         return this;

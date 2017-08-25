@@ -8,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 
 import javax.persistence.Version;
+import java.util.Date;
 
 /**
  * Created by kovtonyk on 07.07.2017.
@@ -39,6 +40,14 @@ public class ContZPointDTO {
     }
 
     private Long id;
+    private Long contObjectId;
+    private String contServiceTypeKeyname;
+    private String customServiceName;
+    private Date startDate;
+    private Date endDate;
+
+    private String contZPointComment;
+
     private int version;
 
 }
