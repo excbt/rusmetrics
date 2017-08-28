@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.ptree;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import org.springframework.hateoas.Links;
@@ -11,6 +12,7 @@ import java.util.List;
 @JsonPropertyOrder({"_id", "nodeType", "nodeName", "childNodes", "linkedNodeObjects"})
 public abstract class PTreeNode {
 
+    @JsonIgnore
     private PTreeNode parent;
 
     private final PTreeNodeType nodeType;
@@ -25,6 +27,9 @@ public abstract class PTreeNode {
     private final Links links;
 
     private String nodeName;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean lazyNode;
 
     public PTreeNode(PTreeNodeType nodeType) {
         this.nodeType = nodeType;
@@ -77,4 +82,11 @@ public abstract class PTreeNode {
         linkedNodeObjects.add(nodeObject);
     }
 
+    public Boolean getLazyNode() {
+        return lazyNode;
+    }
+
+    public void setLazyNode(Boolean lazyNode) {
+        this.lazyNode = lazyNode;
+    }
 }

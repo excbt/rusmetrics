@@ -17,9 +17,12 @@ public class SubscrObjectPTreeNodeResourceTest extends AnyControllerTest {
 
     @Test
     public void getPTreeNode() throws Exception {
-
         _testGetJson("/api/p-tree-node/" + "129634385");
+    }
 
+    @Test
+    public void getPTreeNodeChild() throws Exception {
+        _testGetJson("/api/p-tree-node/" + "129634394");
     }
 
     @Test

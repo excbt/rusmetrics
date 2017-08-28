@@ -78,13 +78,22 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
             addContZPoints(pTreeContObjectNode, contObject);
         }
 
-        if (childLevel != null && childLevel < 1) {
-            return;
+
+
+        boolean levelThreshold = childLevel != null && childLevel < 1;
+
+        if (!levelThreshold) {
+            for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
+                readChildSubscrObjectTree (pTreeElement.addChildElement(SubscrObjectTreeTools.makeFromSubscrObjectTree(child)), child, childLevel != null ? childLevel - 1 : null);
+            }
+        } else {
+            for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
+                PTreeElement pChildTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(child);
+                pChildTreeElement.setLazyNode(true);
+                pTreeElement.addChildElement(pChildTreeElement);
+            }
         }
 
-        for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
-            readChildSubscrObjectTree (pTreeElement.addChildElement(SubscrObjectTreeTools.makeFromSubscrObjectTree(child)), child, childLevel != null ? childLevel - 1 : null);
-        }
 
     }
 
