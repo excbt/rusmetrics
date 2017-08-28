@@ -9,8 +9,8 @@ public class PTreeContZPointNode extends PTreeNodeObject<ContZPointDTO>  {
             super(PTreeNodeType.CONT_ZPOINT, contZPoint);
     }
 
-    public PTreeDeviceNode addDeviceObject(DeviceObjectDTO deviceObject) {
-        PTreeDeviceNode deviceNode = new PTreeDeviceNode(deviceObject);
+    public PTreeDeviceObjectNode addDeviceObject(DeviceObjectDTO deviceObject) {
+        PTreeDeviceObjectNode deviceNode = new PTreeDeviceObjectNode(deviceObject);
         this.childNodes.add(deviceNode);
         return deviceNode;
     }

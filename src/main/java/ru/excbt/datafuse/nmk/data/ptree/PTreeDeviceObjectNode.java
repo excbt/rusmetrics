@@ -2,8 +2,8 @@ package ru.excbt.datafuse.nmk.data.ptree;
 
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 
-public class PTreeDeviceNode extends PTreeNodeObject<DeviceObjectDTO> {
-    public PTreeDeviceNode(DeviceObjectDTO deviceObjectDTO) {
+public class PTreeDeviceObjectNode extends PTreeNodeObject<DeviceObjectDTO> {
+    public PTreeDeviceObjectNode(DeviceObjectDTO deviceObjectDTO) {
         super(PTreeNodeType.DEVICE_OBJECT, deviceObjectDTO);
     }
 }

@@ -4,7 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.ptree.*;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
@@ -13,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
+import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 
 import java.util.List;
 
@@ -29,14 +32,17 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
 
     private final ContZPointRepository contZPointRepository;
 
+    private final DeviceObjectMapper deviceObjectMapper;
+
 
     @Autowired
-    public SubscrObjectPTreeNodeService(SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository, ContObjectMapper contObjectMapper, ContZPointMapper contZPointMapper, ContZPointRepository contZPointRepository) {
+    public SubscrObjectPTreeNodeService(SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository, ContObjectMapper contObjectMapper, ContZPointMapper contZPointMapper, ContZPointRepository contZPointRepository, DeviceObjectMapper deviceObjectMapper) {
         this.subscrObjectTreeRepository = subscrObjectTreeRepository;
         this.subscrObjectTreeContObjectRepository = subscrObjectTreeContObjectRepository;
         this.contObjectMapper = contObjectMapper;
         this.contZPointMapper = contZPointMapper;
         this.contZPointRepository = contZPointRepository;
+        this.deviceObjectMapper = deviceObjectMapper;
     }
 
 
@@ -69,10 +75,24 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
     private void addContZPoints(PTreeContObjectNode pTreeContObjectNode, ContObject contObject) {
         List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObject.getId());
         for (ContZPoint contZPoint : contZPoints) {
-            pTreeContObjectNode.addContZPoint(contZPointMapper.toDto(contZPoint));
+            PTreeContZPointNode contZPointNode = pTreeContObjectNode.addContZPoint(contZPointMapper.toDto(contZPoint));
+            addDeviceObject(contZPointNode, contZPoint);
         }
     }
 
+
+    private void addDeviceObject (PTreeContZPointNode pTreeContZPointNode, ContZPoint contZPoint) {
+        for (DeviceObject deviceObject : contZPoint.getDeviceObjects()) {
+            if (deviceObject.getDeleted() != 0) {
+                continue;
+            }
+            DeviceObjectDTO deviceObjectDTO = deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
+            if (contZPoint.get_activeDeviceObject() == deviceObject) {
+                deviceObjectDTO.setActiveDeviceObject(true);
+            }
+            pTreeContZPointNode.addDeviceObject(deviceObjectDTO);
+        }
+    }
 
 
 
