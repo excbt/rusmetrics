@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-@JsonPropertyOrder({"nodeType", "nodeName", "childNodes", "linkedNodeObjects"})
+@JsonPropertyOrder({"_id", "nodeType", "nodeName", "childNodes", "linkedNodeObjects"})
 public abstract class PTreeNode {
 
     private PTreeNode parent;

@@ -56,6 +56,40 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
         return pTreeElement;
     }
 
+    public PTreeNode readSubscrObjectTree (Long subscrObjectTreeId, Integer childLevel) {
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
+
+        PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
+
+        readChildSubscrObjectTree (pTreeElement, subscrObjectTree, childLevel);
+
+        return pTreeElement;
+    }
+
+
+
+    private void readChildSubscrObjectTree (PTreeElement pTreeElement, SubscrObjectTree subscrObjectTree, final Integer childLevel) {
+
+        List<ContObject> contObjects = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTree.getId());
+
+        for (ContObject contObject : contObjects) {
+            PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
+            pTreeElement.addLinkedObject(pTreeContObjectNode);
+            addContZPoints(pTreeContObjectNode, contObject);
+        }
+
+        if (childLevel != null && childLevel < 1) {
+            return;
+        }
+
+        for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
+            readChildSubscrObjectTree (pTreeElement.addChildElement(SubscrObjectTreeTools.makeFromSubscrObjectTree(child)), child, childLevel != null ? childLevel - 1 : null);
+        }
+
+    }
+
+
+
     public void readChildSubscrObjectTree (PTreeElement pTreeElement, SubscrObjectTree subscrObjectTree) {
         List<ContObject> contObjects = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTree.getId());
 

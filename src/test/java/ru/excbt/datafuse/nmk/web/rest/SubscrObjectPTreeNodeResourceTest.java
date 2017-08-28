@@ -22,4 +22,14 @@ public class SubscrObjectPTreeNodeResourceTest extends AnyControllerTest {
 
     }
 
+    @Test
+    public void getPTreeNodeLeveled() throws Exception {
+
+        RequestExtraInitializer param = (b) -> b.param("childLevel", Integer.valueOf(1).toString());
+
+        _testGetJson("/api/p-tree-node/" + "129634385", param);
+
+    }
+
+
 }

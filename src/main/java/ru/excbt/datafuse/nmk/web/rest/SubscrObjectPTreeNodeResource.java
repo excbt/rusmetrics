@@ -1,10 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectPTreeNodeService;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -22,8 +19,9 @@ public class SubscrObjectPTreeNodeResource extends AbstractSubscrApiResource {
 
 
     @GetMapping("/{subscrObjectTreeId}")
-    public ResponseEntity<?> getPTreeNode(@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId) {
-        return ApiResponse.responseOK(() -> subscrObjectPTreeNodeService.readSubscrObjectTree(subscrObjectTreeId) );
+    public ResponseEntity<?> getPTreeNode(@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
+                                          @RequestParam(name = "childLevel", required = false) Integer childLevel) {
+        return ApiResponse.responseOK(() -> subscrObjectPTreeNodeService.readSubscrObjectTree(subscrObjectTreeId, childLevel));
     }
 
 
