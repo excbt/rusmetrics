@@ -78,8 +78,6 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
             addContZPoints(pTreeContObjectNode, contObject);
         }
 
-
-
         boolean levelThreshold = childLevel != null && childLevel < 1;
 
         if (!levelThreshold) {
@@ -103,6 +101,7 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
         List<ContObject> contObjects = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTree.getId());
 
         for (ContObject contObject : contObjects) {
+            if (contObject.getDeleted() != 0) continue;
             PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
             pTreeElement.addLinkedObject(pTreeContObjectNode);
             addContZPoints(pTreeContObjectNode, contObject);
@@ -118,6 +117,7 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
     private void addContZPoints(PTreeContObjectNode pTreeContObjectNode, ContObject contObject) {
         List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObject.getId());
         for (ContZPoint contZPoint : contZPoints) {
+            if (contZPoint.getDeleted() != 0) continue;
             PTreeContZPointNode contZPointNode = pTreeContObjectNode.addContZPoint(contZPointMapper.toDto(contZPoint));
             addDeviceObject(contZPointNode, contZPoint);
         }
@@ -126,9 +126,7 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
 
     private void addDeviceObject (PTreeContZPointNode pTreeContZPointNode, ContZPoint contZPoint) {
         for (DeviceObject deviceObject : contZPoint.getDeviceObjects()) {
-            if (deviceObject.getDeleted() != 0) {
-                continue;
-            }
+            if (deviceObject.getDeleted() != 0) continue;
             DeviceObjectDTO deviceObjectDTO = deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
             if (contZPoint.get_activeDeviceObject() == deviceObject) {
                 deviceObjectDTO.setActiveDeviceObject(true);
