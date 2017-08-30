@@ -10,10 +10,10 @@ public interface PortalUserIds {
         return false;
     }
 
-    Long getRmaSubscriberId();
+    Long getRmaId();
 
     default boolean isValid() {
-        return getRmaSubscriberId() != null && getUserId() != null;
+        return getSubscriberId() != null && getUserId() != null;
     }
 
 }

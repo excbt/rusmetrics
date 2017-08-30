@@ -8,7 +8,7 @@ public interface PortalRmaIds extends PortalUserIds {
     }
 
     @Override
-    default Long getRmaSubscriberId() {
+    default Long getRmaId() {
         return getSubscriberId();
     }
 

@@ -211,7 +211,7 @@ public final class SubscriberParam {
             }
 
             @Override
-            public Long getRmaSubscriberId() {
+            public Long getRmaId() {
                 return rmaSubscriberId;
             }
         };

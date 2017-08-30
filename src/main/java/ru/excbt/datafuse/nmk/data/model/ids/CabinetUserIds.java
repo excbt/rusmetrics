@@ -5,7 +5,7 @@ public interface CabinetUserIds extends PortalUserIds {
     Long getParentSubscriberId();
 
     @Override
-    default Long getRmaSubscriberId() {
+    default Long getRmaId() {
         return null;
     }
 }

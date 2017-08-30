@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
  * Класс для работы с текущим абонентом
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.03.2015
@@ -50,7 +50,7 @@ public class CurrentSubscriberService {
 	private CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getSubscriberId() {
@@ -77,7 +77,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscriberParam getSubscriberParam() {
@@ -87,7 +87,7 @@ public class CurrentSubscriberService {
 		//			checkNotNull(subscriber.getId());
 		//
 		//			userSession.setSubscriberParam(SubscriberParam.builder().subscriberId(subscriber.getId())
-		//					.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaSubscriberId())
+		//					.subscrUserId(getCurrentUserId()).isRma(isRma()).rmaSubscriber(subscriber.getRmaId())
 		//					.parentSubscriber(subscriber.getParentSubscriberId()).subscrTypeKey(subscriber.getSubscrType())
 		//					.build());
 		//		}
@@ -104,7 +104,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Subscriber getSubscriber() {
@@ -127,7 +127,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public LocalDateTime getSubscriberCurrentTime_Joda() {
@@ -136,7 +136,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Instant getSubscriberCurrentTimeInstant_JDK() {
@@ -145,7 +145,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getCurrentUserId() {
@@ -153,7 +153,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isRma() {
@@ -165,7 +165,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getRmaSubscriberId() {
@@ -180,7 +180,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getGhostSubscriberId() {
@@ -189,7 +189,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public V_AuditUser getCurrentAuditor() {
@@ -202,7 +202,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public V_FullUserInfo getFullUserInfo() {
@@ -216,7 +216,7 @@ public class CurrentSubscriberService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isSystemUser() {
