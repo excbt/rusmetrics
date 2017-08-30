@@ -9,9 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.CabinetUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 
 import java.time.ZonedDateTime;
@@ -46,15 +46,15 @@ public class CabinetMessageService {
      * @param cabinetMessageDTO the entity to save
      * @return the persisted entity
      */
-    public CabinetMessageDTO save(CabinetMessageDTO cabinetMessageDTO, SubscriberParam subscriberParam) {
+    public CabinetMessageDTO save(CabinetMessageDTO cabinetMessageDTO, CabinetUserIds userIds) {
         log.debug("Request to save CabinetMessage : {}", cabinetMessageDTO);
         if (cabinetMessageDTO.getId() != null) {
             //throw new IllegalStateException("Can't save existing CabinetMessageDTO");
         }
 
         CabinetMessage cabinetMessage = cabinetMessageMapper.toEntity(cabinetMessageDTO);
-        setFromFields(cabinetMessageDTO, subscriberParam);
-        cabinetMessage.setToPortalSubscriberId(subscriberParam.getParentSubscriberId());
+        setFromFields(cabinetMessageDTO, userIds);
+        cabinetMessage.setToPortalSubscriberId(userIds.getParentSubscriberId());
         if (cabinetMessage.getMessageDirection() == null) {
             cabinetMessage.setMessageDirection(CabinetMessage.DEFAULT_DIRECTION.name());
         }
@@ -78,19 +78,19 @@ public class CabinetMessageService {
             responseToMessage.getId() : responseToMessage.getMasterId());
     }
 
-    private static void setFromFields(CabinetMessageDTO cabinetMessageDTO, SubscriberParam subscriberParam) {
-        cabinetMessageDTO.setFromPortalSubscriberId(subscriberParam.getSubscriberId());
-        cabinetMessageDTO.setFromPortalUserId(subscriberParam.getUserId());
+    private static void setFromFields(CabinetMessageDTO cabinetMessageDTO, CabinetUserIds cabinetUserIds) {
+        cabinetMessageDTO.setFromPortalSubscriberId(cabinetUserIds.getSubscriberId());
+        cabinetMessageDTO.setFromPortalUserId(cabinetUserIds.getUserId());
     }
 
 
     /**
      *
      * @param cabinetMessageDTO
-     * @param subscriberParam
+     * @param userIds
      * @return
      */
-    public CabinetMessageDTO saveResponse(CabinetMessageDTO cabinetMessageDTO, SubscriberParam subscriberParam) {
+    public CabinetMessageDTO saveResponse(CabinetMessageDTO cabinetMessageDTO, CabinetUserIds userIds) {
         log.debug("Request to saveResponse CabinetMessage : {}", cabinetMessageDTO);
         if (cabinetMessageDTO.getResponseToId() == null) {
             throw new IllegalStateException("responseToId cannot be null");
@@ -101,10 +101,10 @@ public class CabinetMessageService {
             throw DBExceptionUtils.entityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
         }
 
-        setFromFields (cabinetMessageDTO, subscriberParam);
+        setFromFields (cabinetMessageDTO, userIds);
         setResponseFields(cabinetMessageDTO, responseToMessage);
 
-        return save(cabinetMessageDTO, subscriberParam);
+        return save(cabinetMessageDTO, userIds);
     }
 
     /**
@@ -114,16 +114,16 @@ public class CabinetMessageService {
      *  @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<CabinetMessageDTO> findAll(SubscriberParam subscriberParam, Pageable pageable) {
+    public Page<CabinetMessageDTO> findAll(CabinetUserIds cabinetUserIds, Pageable pageable) {
         log.debug("Request to get all CabinetMessages");
-        return cabinetMessageRepository.findByFromPortalSubscriberId(subscriberParam.getSubscriberId(),
+        return cabinetMessageRepository.findByFromPortalSubscriberId(cabinetUserIds.getSubscriberId(),
             pageable).map(cabinetMessageMapper::toDto);
     }
 
     @Transactional(readOnly = true)
-    public Page<CabinetMessageDTO> findAllRequest(SubscriberParam subscriberParam, Pageable pageable) {
+    public Page<CabinetMessageDTO> findAllRequest(CabinetUserIds userIds, Pageable pageable) {
         log.debug("Request to get all CabinetMessages");
-        return cabinetMessageRepository.findByFromPortalSubscriberId(subscriberParam.getSubscriberId(),
+        return cabinetMessageRepository.findByFromPortalSubscriberId(userIds.getSubscriberId(),
             CabinetMessageType.REQUEST.name(), pageable).map(cabinetMessageMapper::toDto);
     }
 
