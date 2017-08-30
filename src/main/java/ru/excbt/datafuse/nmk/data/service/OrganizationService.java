@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
@@ -106,8 +107,8 @@ public class OrganizationService extends AbstractService implements SecuredRoles
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<OrganizationDTO> findOrganizationsOfRma(SubscrUserInfo userInfo) {
-		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(userInfo.getRmaSubscriberId())
+	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids) {
+		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(userids.getRmaSubscriberId())
             .stream()
                 .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)

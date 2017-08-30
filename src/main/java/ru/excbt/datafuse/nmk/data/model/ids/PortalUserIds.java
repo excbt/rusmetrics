@@ -6,8 +6,14 @@ public interface PortalUserIds {
 
     Long getUserId();
 
-    Boolean isRma();
+    default boolean isRma() {
+        return false;
+    }
 
     Long getRmaSubscriberId();
+
+    default boolean isValid() {
+        return getRmaSubscriberId() != null && getUserId() != null;
+    }
 
 }

@@ -40,7 +40,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
      */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
-        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam());
+        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().toPortalUserIds());
 		return ApiResponse.responseOK(organizations);
 	}
 
