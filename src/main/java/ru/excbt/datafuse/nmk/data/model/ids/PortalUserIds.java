@@ -6,6 +6,8 @@ public interface PortalUserIds {
 
     Long getUserId();
 
+    Long getParentSubscriberId();
+
     default boolean isRma() {
         return false;
     }

@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
-import com.google.common.base.Preconditions;
-import ru.excbt.datafuse.nmk.data.model.ids.CabinetUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
@@ -172,27 +170,6 @@ public final class SubscriberParam {
     }
 
 
-    public CabinetUserIds toCabinetUserIds() {
-
-	    return new CabinetUserIds() {
-            @Override
-            public Long getParentSubscriberId() {
-                return parentSubscriberId;
-            }
-
-            @Override
-            public Long getSubscriberId() {
-                return subscriberId;
-            }
-
-            @Override
-            public Long getUserId() {
-                return subscrUserId;
-            }
-        };
-    }
-
-
     public PortalUserIds toPortalUserIds() {
 	    return new PortalUserIds() {
             @Override
@@ -214,6 +191,12 @@ public final class SubscriberParam {
             public Long getRmaId() {
                 return rmaSubscriberId;
             }
+
+            @Override
+            public Long getParentSubscriberId() {
+                return parentSubscriberId;
+            }
+
         };
     }
 
