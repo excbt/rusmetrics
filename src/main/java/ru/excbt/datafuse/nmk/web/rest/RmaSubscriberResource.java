@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
@@ -14,7 +12,6 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -73,7 +70,7 @@ public class RmaSubscriberResource extends SubscriberController {
 	public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
 
 
-        PortalUserIds portalUserIds = getSubscriberParam().toPortalUserIds();
+        PortalUserIds portalUserIds = getSubscriberParam().asPortalUserIds();
 
         //SubscrUserInfo userInfo = getSubscriberParam();
 
@@ -176,7 +173,7 @@ public class RmaSubscriberResource extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
-		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().toPortalUserIds());
+		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().asPortalUserIds());
 		return ApiResponse.responseOK(organizations);
 	}
 

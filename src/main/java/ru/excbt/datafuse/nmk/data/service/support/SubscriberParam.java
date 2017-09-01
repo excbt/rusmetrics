@@ -170,7 +170,7 @@ public final class SubscriberParam {
     }
 
 
-    public PortalUserIds toPortalUserIds() {
+    public PortalUserIds asPortalUserIds() {
 	    return new PortalUserIds() {
             @Override
             public Long getSubscriberId() {

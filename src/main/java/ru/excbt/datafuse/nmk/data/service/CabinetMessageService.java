@@ -12,9 +12,11 @@ import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.data.service.support.RepositoryUtils;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 
 import java.time.ZonedDateTime;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -115,9 +117,9 @@ public class CabinetMessageService {
      *  @return the list of entities
      */
     @Transactional(readOnly = true)
-    public Page<CabinetMessageDTO> findAll(PortalUserIds cabinetUserIds, Pageable pageable) {
+    public Page<CabinetMessageDTO> findAll(PortalUserIds userIds, Pageable pageable) {
         log.debug("Request to get all CabinetMessages");
-        return cabinetMessageRepository.findByFromPortalSubscriberId(cabinetUserIds.getSubscriberId(),
+        return cabinetMessageRepository.findByFromPortalSubscriberId(userIds.getSubscriberId(),
             pageable).map(cabinetMessageMapper::toDto);
     }
 
@@ -165,5 +167,15 @@ public class CabinetMessageService {
         return cabinetMessageRepository.findMessageChain(messageId).stream()
             .map(cabinetMessageMapper::toDto).collect(Collectors.toList());
     }
+
+
+    @Transactional(readOnly = true)
+    public Page<CabinetMessageDTO> findAllToSubscriber(PortalUserIds userIds, Pageable pageable) {
+        log.debug("Request to get all CabinetMessages");
+        return cabinetMessageRepository.findByToSubscriberIds(RepositoryUtils.safeList(userIds.getSubscriberId()),
+            pageable).map(cabinetMessageMapper::toDto);
+    }
+
+
 
 }

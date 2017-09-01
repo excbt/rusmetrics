@@ -28,6 +28,11 @@ public interface CabinetMessageRepository extends JpaRepository<CabinetMessage,L
     public Page<CabinetMessage> findByFromPortalSubscriberId(@Param("fromPortalSubscriberId") Long fromSubscriberId,
                                                              Pageable pageable);
 
+    @Query("SELECT cm FROM CabinetMessage cm WHERE cm.toPortalSubscriberId IN (:toPortalSubscriberIds) ")
+    public Page<CabinetMessage> findByToSubscriberIds(@Param("toPortalSubscriberIds") List<Long> toSubscriberIds,
+                                                      //@Param("messageType") String messageType,
+                                                      Pageable pageable);
+
     @Query("SELECT cm FROM CabinetMessage cm WHERE cm.masterId = :masterId  or  cm.id = :masterId " +
         " ORDER BY cm.creationDateTime")
     public List<CabinetMessage> findMessageChain(@Param("masterId") Long masterId);
