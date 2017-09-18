@@ -12,7 +12,6 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -21,10 +20,6 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
-
-import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -53,7 +48,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
         ExcbtSubscriberMock.setupRma(portalUserIds);
 
-        Page<CabinetMessageDTO> list = cabinetMessageService.findAllToSubscriber(portalUserIds, request);
+        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, request);
 
         log.info("SibscriberId:{}. Size of cabinetMessages: {}", portalUserIds.getSubscriberId(), list.getContent().size());
 

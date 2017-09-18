@@ -170,9 +170,10 @@ public class CabinetMessageService {
 
 
     @Transactional(readOnly = true)
-    public Page<CabinetMessageDTO> findAllToSubscriber(PortalUserIds userIds, Pageable pageable) {
+    public Page<CabinetMessageDTO> findAllRequestToSubscriber(PortalUserIds userIds, Pageable pageable) {
         log.debug("Request to get all CabinetMessages");
         return cabinetMessageRepository.findByToSubscriberIds(RepositoryUtils.safeList(userIds.getSubscriberId()),
+            CabinetMessageType.REQUEST.name(),
             pageable).map(cabinetMessageMapper::toDto);
     }
 
