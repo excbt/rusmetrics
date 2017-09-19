@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Subselect;
 
 import javax.persistence.*;
@@ -15,7 +16,7 @@ import java.util.Objects;
  */
 @Entity
 @Subselect("select * from " +DBMetadata.SCHEME_CABINET2 + ".cabinet_message")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.NONE)
 public class CabinetMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,8 +25,6 @@ public class CabinetMessage implements Serializable {
     public static CabinetMessageDirection DEFAULT_DIRECTION = CabinetMessageDirection.OUT;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
     private Long id;
 
     @NotNull

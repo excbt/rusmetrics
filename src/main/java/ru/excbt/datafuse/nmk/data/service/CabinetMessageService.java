@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -8,15 +9,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.RepositoryUtils;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.sql.Types;
 import java.time.ZonedDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,8 +34,9 @@ import java.util.stream.Collectors;
  * Service Implementation for managing CabinetMessage.
  */
 @Service
-@Transactional
+//@Transactional
 public class CabinetMessageService {
+
 
     private final Logger log = LoggerFactory.getLogger(CabinetMessageService.class);
 
@@ -35,11 +44,70 @@ public class CabinetMessageService {
 
     private final CabinetMessageMapper cabinetMessageMapper;
 
-//    private final CabinetIdsService cabinetIdsService;
+    @PersistenceContext(unitName = "nmk-p")
+    private EntityManager em;
+
 
     public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
+    }
+
+    public static final String INS_SQL_QRY = "INSERT INTO cabinet2_dev.cabinet_message( " +
+        "id, " +
+        "message_type, " +
+        "message_direction, " +
+        "from_portal_subscriber_id, " +
+        "from_portal_user_id, " +
+        "to_portal_subscriber_id, " +
+        "to_portal_user_id, " +
+        "message_body, " +
+        "master_id, " +
+        "response_to_id, " +
+        "creation_date_time, " +
+        "review_date_time) " +
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+
+
+    private static void setParameterL (Query query, int position, Long value) {
+        if (value != null)
+            query.setParameter(position, value.longValue());
+        else
+            query.setParameter(position, null);
+    }
+
+
+    private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
+        Session session = em.unwrap(Session.class);
+        final Long id = getId();
+        log.info("id: {}", id);
+        session.doWork(s -> {
+            PreparedStatement preparedStatement = s.prepareStatement(INS_SQL_QRY);
+            preparedStatement.setObject(1, id);
+            preparedStatement.setObject(2, cabinetMessage.getMessageType());
+            preparedStatement.setObject(3, cabinetMessage.getMessageDirection());
+            preparedStatement.setObject(4, cabinetMessage.getFromPortalSubscriberId());
+            preparedStatement.setObject(5, cabinetMessage.getFromPortalUserId());
+            preparedStatement.setObject(6, cabinetMessage.getToPortalSubscriberId());
+            preparedStatement.setObject(7, cabinetMessage.getToPortalUserId());
+            preparedStatement.setObject(8, cabinetMessage.getToPortalSubscriberId());
+            preparedStatement.setObject(9, cabinetMessage.getToPortalSubscriberId());
+            preparedStatement.setObject(10, cabinetMessage.getToPortalSubscriberId());
+
+            if (cabinetMessage.getCreationDateTime() != null) {
+                preparedStatement.setTimestamp(11,
+                    Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
+            } else preparedStatement.setNull(11, Types.TIMESTAMP);
+
+            if (cabinetMessage.getReviewDateTime() != null) {
+                preparedStatement.setTimestamp(12,
+                    Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
+            } else preparedStatement.setNull(12, Types.TIMESTAMP);
+
+            preparedStatement.execute();
+        });
+
+        return id;
     }
 
     /**
@@ -67,10 +135,18 @@ public class CabinetMessageService {
 
         cabinetMessage.setCreationDateTime(ZonedDateTime.now());
 
-        cabinetMessage = cabinetMessageRepository.save(cabinetMessage);
+        Long id = insertCabinetMessageSQL(cabinetMessage);
+
+        cabinetMessage = cabinetMessageRepository.findOne(id);
         return cabinetMessageMapper.toDto(cabinetMessage);
     }
 
+
+    private Long getId() {
+        Query qry = em.createNativeQuery("SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table");
+        Long id = DBRowUtils.asLong(qry.getSingleResult());
+        return id;
+    }
 
     private static void setResponseFields(CabinetMessageDTO cabinetMessageDTO, CabinetMessage responseToMessage) {
         cabinetMessageDTO.setToPortalSubscriberId(responseToMessage.getFromPortalSubscriberId());
