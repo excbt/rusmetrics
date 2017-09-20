@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.assertj.core.util.Lists;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -672,7 +671,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
         // Cont Event Block
         List<ContEventMonitorV2> contEventMonitors = contEventStats ?
             contEventMonitorV2Service.selectByContObjectIds(contObjectIds) :
-            Lists.emptyList();
+            Collections.emptyList();
 
         final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
 
