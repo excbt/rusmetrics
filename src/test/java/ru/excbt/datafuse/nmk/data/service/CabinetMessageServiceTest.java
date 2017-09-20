@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageDirection;
+import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
@@ -33,6 +34,9 @@ import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
 public class CabinetMessageServiceTest extends JpaSupportTest {
 
     private static final Logger log = LoggerFactory.getLogger(CabinetMessageServiceTest.class);
+
+    private static final CabinetMessageType CABINET_REQUEST = CabinetMessageType.REQUEST;
+    private static final Pageable PAGE = new PageRequest(0,10);
 
     @Autowired
     private CabinetMessageService cabinetMessageService;
@@ -54,11 +58,9 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     @Test
     public void findAllToSubscriber() throws Exception {
 
-        Pageable request = new PageRequest(0,10);
-
         ExcbtSubscriberMock.setupRma(portalUserIds);
 
-        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, request);
+        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, CABINET_REQUEST, PAGE);
 
         log.info("SibscriberId:{}. Size of cabinetMessages: {}", portalUserIds.getSubscriberId(), list.getContent().size());
 
@@ -67,21 +69,18 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     @Test
     public void createResponseToSubscriber() throws Exception {
 
-        Pageable request = new PageRequest(0,10);
-
         ExcbtSubscriberMock.setupRma(portalUserIds);
 
         int databaseSizeBeforeCreate = cabinetMessageRepository.findAll().size();
 
         log.info("SibscriberId:{}. Size of cabinetMessages before: {}", portalUserIds.getSubscriberId(), databaseSizeBeforeCreate);
 
-        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, request);
+        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, CABINET_REQUEST, PAGE);
         list.getContent().stream().filter(i -> i.getFromPortalSubscriberId() != null).limit(1).map(i -> {
             CabinetMessageDTO cabinetMessageResponseDTO = new CabinetMessageDTO();
             cabinetMessageResponseDTO.setMessageDirection(CabinetMessageDirection.OUT.name());
             cabinetMessageResponseDTO.setResponseToId(i.getId());
-            CabinetMessageDTO result = cabinetMessageService.saveResponse(cabinetMessageResponseDTO, portalUserIds);
-            return result;
+            return cabinetMessageService.saveResponse(cabinetMessageResponseDTO, portalUserIds);
         }).findFirst().ifPresent(c -> {
             log.info("Created CabinetMessage:{}", c.toString());
         });
