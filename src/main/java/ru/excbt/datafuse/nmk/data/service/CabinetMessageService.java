@@ -21,12 +21,14 @@ import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -53,7 +55,7 @@ public class CabinetMessageService {
         this.cabinetMessageMapper = cabinetMessageMapper;
     }
 
-    public static final String INS_SQL_QRY = "INSERT INTO cabinet2_dev.cabinet_message( " +
+    public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
         "id, " +
         "message_type, " +
         "message_direction, " +
@@ -69,45 +71,63 @@ public class CabinetMessageService {
         " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
 
 
-    private static void setParameterL (Query query, int position, Long value) {
-        if (value != null)
-            query.setParameter(position, value.longValue());
-        else
-            query.setParameter(position, null);
-    }
+    public static final String UPD_SQL_QRY = "UPDATE " + DBMetadata.SCHEME_CABINET2 +".cabinet_message" +
+        "   SET review_date_time=?" +
+        " WHERE id=?;";
 
 
     private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
         Session session = em.unwrap(Session.class);
         final Long id = getId();
         log.info("id: {}", id);
-        session.doWork(s -> {
-            PreparedStatement preparedStatement = s.prepareStatement(INS_SQL_QRY);
-            preparedStatement.setObject(1, id);
-            preparedStatement.setObject(2, cabinetMessage.getMessageType());
-            preparedStatement.setObject(3, cabinetMessage.getMessageDirection());
-            preparedStatement.setObject(4, cabinetMessage.getFromPortalSubscriberId());
-            preparedStatement.setObject(5, cabinetMessage.getFromPortalUserId());
-            preparedStatement.setObject(6, cabinetMessage.getToPortalSubscriberId());
-            preparedStatement.setObject(7, cabinetMessage.getToPortalUserId());
-            preparedStatement.setObject(8, cabinetMessage.getToPortalSubscriberId());
-            preparedStatement.setObject(9, cabinetMessage.getToPortalSubscriberId());
-            preparedStatement.setObject(10, cabinetMessage.getToPortalSubscriberId());
+        session.doWork((Connection c) -> {
+            try (PreparedStatement preparedStatement = c.prepareStatement(INS_SQL_QRY)) {
+                preparedStatement.setObject(1, id);
+                preparedStatement.setObject(2, cabinetMessage.getMessageType());
+                preparedStatement.setObject(3, cabinetMessage.getMessageDirection());
+                preparedStatement.setObject(4, cabinetMessage.getFromPortalSubscriberId());
+                preparedStatement.setObject(5, cabinetMessage.getFromPortalUserId());
+                preparedStatement.setObject(6, cabinetMessage.getToPortalSubscriberId());
+                preparedStatement.setObject(7, cabinetMessage.getToPortalUserId());
+                preparedStatement.setObject(8, cabinetMessage.getToPortalSubscriberId());
+                preparedStatement.setObject(9, cabinetMessage.getToPortalSubscriberId());
+                preparedStatement.setObject(10, cabinetMessage.getToPortalSubscriberId());
 
-            if (cabinetMessage.getCreationDateTime() != null) {
-                preparedStatement.setTimestamp(11,
-                    Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
-            } else preparedStatement.setNull(11, Types.TIMESTAMP);
+                if (cabinetMessage.getCreationDateTime() != null) {
+                    preparedStatement.setTimestamp(11,
+                        Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
+                } else preparedStatement.setNull(11, Types.TIMESTAMP);
 
-            if (cabinetMessage.getReviewDateTime() != null) {
-                preparedStatement.setTimestamp(12,
-                    Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
-            } else preparedStatement.setNull(12, Types.TIMESTAMP);
+                if (cabinetMessage.getReviewDateTime() != null) {
+                    preparedStatement.setTimestamp(12,
+                        Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
+                } else preparedStatement.setNull(12, Types.TIMESTAMP);
 
-            preparedStatement.execute();
+                log.debug("Create CabinetMessage SQL: {}", preparedStatement.toString());
+                preparedStatement.execute();
+            }
         });
 
         return id;
+    }
+
+    private int updateCabinetMessageReviewDate(Long id, ZonedDateTime reviewDateTime) {
+        Session session = em.unwrap(Session.class);
+        int updatedCnt = session.doReturningWork((Connection c) -> {
+            try (PreparedStatement preparedStatement = c.prepareStatement(UPD_SQL_QRY);) {
+                if (reviewDateTime != null) {
+                    preparedStatement.setTimestamp(1,
+                        Timestamp.valueOf(reviewDateTime.toLocalDateTime()));
+                } else preparedStatement.setNull(1, Types.TIMESTAMP);
+
+                preparedStatement.setObject(2, id);
+                log.debug("Update CabinetMessage: {}", preparedStatement.toString());
+                int cnt = preparedStatement.executeUpdate();
+                return cnt;
+            }
+        });
+
+        return updatedCnt;
     }
 
     /**
@@ -240,7 +260,7 @@ public class CabinetMessageService {
             return Collections.emptyList();
         }
 
-        return cabinetMessageRepository.findMessageChain(messageId).stream()
+        return cabinetMessageRepository.findMessageChainByMasterId(messageId).stream()
             .map(cabinetMessageMapper::toDto).collect(Collectors.toList());
     }
 
@@ -252,6 +272,20 @@ public class CabinetMessageService {
             cabinetMessageType != null ? cabinetMessageType.name() : CabinetMessageType.REQUEST.name(),
             pageable).map(cabinetMessageMapper::toDto);
     }
+
+
+    @Transactional
+    public List<Long> updateMessageChainReview(Long masterMessageId, PortalUserIds userIds, boolean resetReviews) {
+        return cabinetMessageRepository.findMessageChainByMasterId(masterMessageId).stream()
+            .filter(i -> (i.getReviewDateTime() == null && !resetReviews) ||
+                (resetReviews && i.getReviewDateTime() != null))
+            .filter(i -> userIds.getSubscriberId().equals(i.getToPortalSubscriberId()))
+            .map(i -> {
+                int cnt = updateCabinetMessageReviewDate(i.getId(), ZonedDateTime.now());
+                return cnt > 0 ? i.getId() : null;
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
 
 
 

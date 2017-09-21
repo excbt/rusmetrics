@@ -36,6 +36,6 @@ public interface CabinetMessageRepository extends JpaRepository<CabinetMessage,L
 
     @Query("SELECT cm FROM CabinetMessage cm WHERE cm.masterId = :masterId  or  cm.id = :masterId " +
         " ORDER BY cm.creationDateTime")
-    public List<CabinetMessage> findMessageChain(@Param("masterId") Long masterId);
+    public List<CabinetMessage> findMessageChainByMasterId(@Param("masterId") Long masterId);
 
 }

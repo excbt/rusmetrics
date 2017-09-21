@@ -98,6 +98,22 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
 
     @Test
+    public void updateReviewDate() throws Exception {
+        ExcbtSubscriberMock.setupRma(portalUserIds);
+
+        Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, CABINET_REQUEST, PAGE);
+        list.getContent().stream().filter(i -> i.getFromPortalSubscriberId() != null)
+            .filter(i -> Long.valueOf(getSubscriberId()).equals(i.getToPortalSubscriberId())).limit(1)
+            .flatMap(i -> {
+                CabinetMessageDTO cabinetMessageResponseDTO = new CabinetMessageDTO();
+                cabinetMessageResponseDTO.setMessageDirection(CabinetMessageDirection.OUT.name());
+                cabinetMessageResponseDTO.setResponseToId(i.getId());
+                return cabinetMessageService.updateMessageChainReview(i.getMasterId() != null ? i.getMasterId() : i.getId(), portalUserIds,false).stream();
+            }).forEach(c ->log.info("Updated Review Date id:{}", c.toString()));
+
+    }
+
+    @Test
     public void findAllRequest() throws Exception {
     }
 
