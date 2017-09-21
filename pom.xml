@@ -20,6 +20,7 @@
         <mapstruct.version>1.2.0.CR1</mapstruct.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
         <lombok.version>1.16.18</lombok.version>
+        <springfox.version>2.7.0</springfox.version>
 	</properties>
 
 	<prerequisites>
@@ -291,7 +292,35 @@
 			</exclusions>
 		</dependency>
 
-		<!-- Test Artifacts -->
+        <!--Swagger-->
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mapstruct</groupId>
+                    <artifactId>mapstruct</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-bean-validators</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- Test Artifacts -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
@@ -307,6 +336,7 @@
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -485,6 +515,13 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>com.vaadin.external.google</groupId>-->
+                    <!--<artifactId>android-json</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
 		</dependency>
 
 		<dependency>

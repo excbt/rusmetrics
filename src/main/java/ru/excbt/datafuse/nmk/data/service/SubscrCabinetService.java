@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -251,7 +250,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Lists.emptyList(), LocalDateTime.now());
+		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Collections.emptyList(), LocalDateTime.now());
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 

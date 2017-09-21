@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.assertj.core.util.Preconditions;
+
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

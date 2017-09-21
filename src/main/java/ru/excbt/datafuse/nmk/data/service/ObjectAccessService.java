@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
@@ -398,7 +397,7 @@ public class ObjectAccessService {
     public List<Tuple> findAllContZPointDeviceObjectsEx (Long subscriberId, List<String> deviceObjectNumbers) {
 
         if (deviceObjectNumbers.isEmpty()) {
-            return Lists.emptyList();
+            return Collections.emptyList();
         }
 
         List<Tuple> result;
