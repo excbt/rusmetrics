@@ -14,10 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
-import ru.excbt.datafuse.nmk.data.service.support.RepositoryUtils;
-import ru.excbt.datafuse.nmk.data.service.support.SessionService;
+import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 
 import javax.persistence.Query;
@@ -49,11 +46,14 @@ public class CabinetMessageService {
 
     private final SubscriberRepository subscriberRepository;
 
+    private final FDWSequence fdwSequence;
+
     public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SessionService sessionService, SubscriberRepository subscriberRepository) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
         this.sessionService = sessionService;
         this.subscriberRepository = subscriberRepository;
+        this.fdwSequence = new FDWSequence(sessionService, "SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table", 50);
     }
 
     public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
@@ -80,7 +80,7 @@ public class CabinetMessageService {
 
     private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
         Session session = sessionService.getSession();
-        final Long id = getId();
+        final Long id = fdwSequence.next();
         log.debug("new cabinet message id: {}", id);
         session.doWork((Connection c) -> {
             try (PreparedStatement preparedStatement = c.prepareStatement(INS_SQL_QRY)) {
@@ -117,7 +117,7 @@ public class CabinetMessageService {
 
     private int updateCabinetMessageReviewDate(Long id, ZonedDateTime reviewDateTime) {
         Session session = sessionService.getSession();
-        int updatedCnt = session.doReturningWork((Connection c) -> {
+        return session.doReturningWork((Connection c) -> {
             try (PreparedStatement preparedStatement = c.prepareStatement(UPD_SQL_QRY);) {
                 if (reviewDateTime != null) {
                     preparedStatement.setTimestamp(1,
@@ -130,8 +130,6 @@ public class CabinetMessageService {
                 return cnt;
             }
         });
-
-        return updatedCnt;
     }
 
     /**
@@ -167,11 +165,6 @@ public class CabinetMessageService {
     }
 
 
-    private Long getId() {
-        Query qry = sessionService.getSession().createNativeQuery("SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table");
-        Long id = DBRowUtils.asLong(qry.getSingleResult());
-        return id;
-    }
 
     private static void setResponseFields(CabinetMessageDTO cabinetMessageDTO, CabinetMessage responseToMessage) {
         cabinetMessageDTO.setToPortalSubscriberId(responseToMessage.getFromPortalSubscriberId());
@@ -309,7 +302,9 @@ public class CabinetMessageService {
                 cabinetMessage.setMessageBody(messageBody);
                 cabinetMessage.setMasterUuid(masterUuid);
                 cabinetMessage.setCreationDateTime(ZonedDateTime.now());
-                insertCabinetMessageSQL(cabinetMessage);
+                Long messageId = insertCabinetMessageSQL(cabinetMessage);
+                log.info("Cabinet Message Id: {}", messageId);
+
             });
 
         return masterUuid;
