@@ -67,6 +67,8 @@ public class CabinetMessage implements Serializable {
     @org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
     private UUID masterUuid;
 
+    @Column(name = "message_subject")
+    private String messageSubject;
 
     public CabinetMessage messageType(String messageType) {
         this.messageType = messageType;
@@ -260,4 +262,11 @@ public class CabinetMessage implements Serializable {
         this.masterUuid = masterUuid;
     }
 
+    public String getMessageSubject() {
+        return messageSubject;
+    }
+
+    public void setMessageSubject(String messageSubject) {
+        this.messageSubject = messageSubject;
+    }
 }

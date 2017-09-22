@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageDirection;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
@@ -25,6 +26,11 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
+
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.Assert.assertFalse;
 
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -135,5 +141,12 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     }
 
 
+    @Test
+    public void testSentNotification() throws Exception {
+        UUID masterUuid = cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), "Test Notification", "Test body");
 
+        List<CabinetMessage> cabinetMessages = cabinetMessageRepository.findMessageByMasterUuid(masterUuid);
+        assertFalse(cabinetMessages.isEmpty());
+
+    }
 }

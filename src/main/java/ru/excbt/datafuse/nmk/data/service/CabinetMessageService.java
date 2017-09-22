@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.UUIDGenerator;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,12 +9,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
-import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
-import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
 import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 import ru.excbt.datafuse.nmk.data.service.support.RepositoryUtils;
@@ -28,6 +29,7 @@ import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -45,10 +47,13 @@ public class CabinetMessageService {
 
     private final SessionService sessionService;
 
-    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SessionService sessionService) {
+    private final SubscriberRepository subscriberRepository;
+
+    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SessionService sessionService, SubscriberRepository subscriberRepository) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
         this.sessionService = sessionService;
+        this.subscriberRepository = subscriberRepository;
     }
 
     public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
@@ -76,7 +81,7 @@ public class CabinetMessageService {
     private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
         Session session = sessionService.getSession();
         final Long id = getId();
-        log.info("id: {}", id);
+        log.debug("new cabinet message id: {}", id);
         session.doWork((Connection c) -> {
             try (PreparedStatement preparedStatement = c.prepareStatement(INS_SQL_QRY)) {
                 preparedStatement.setObject(1, id);
@@ -285,6 +290,29 @@ public class CabinetMessageService {
                 int cnt = updateCabinetMessageReviewDate(i.getId(), ZonedDateTime.now());
                 return cnt > 0 ? i.getId() : null;
             }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+
+    public UUID sendNotificationToCabinets(PortalUserIds parentIds, String messageSubject, String messageBody) {
+
+        final UUID masterUuid = Generators.timeBasedGenerator().generate();
+
+        subscriberRepository.selectChildSubscribers(parentIds.getSubscriberId()).stream()
+            .forEach(s -> {
+                CabinetMessage cabinetMessage = new CabinetMessage();
+                cabinetMessage.setFromPortalSubscriberId(parentIds.getSubscriberId());
+                cabinetMessage.setFromPortalUserId(parentIds.getUserId());
+                cabinetMessage.setMessageDirection(CabinetMessageDirection.OUT.name());
+                cabinetMessage.setMessageType(CabinetMessageType.NOTIFICATION.name());
+                cabinetMessage.setToPortalSubscriberId(s.getId());
+                cabinetMessage.setMessageSubject(messageSubject);
+                cabinetMessage.setMessageBody(messageBody);
+                cabinetMessage.setMasterUuid(masterUuid);
+                cabinetMessage.setCreationDateTime(ZonedDateTime.now());
+                insertCabinetMessageSQL(cabinetMessage);
+            });
+
+        return masterUuid;
     }
 
 }

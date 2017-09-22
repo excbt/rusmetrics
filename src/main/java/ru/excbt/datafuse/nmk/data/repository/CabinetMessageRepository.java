@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
 
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -37,5 +38,9 @@ public interface CabinetMessageRepository extends JpaRepository<CabinetMessage,L
     @Query("SELECT cm FROM CabinetMessage cm WHERE cm.masterId = :masterId  or  cm.id = :masterId " +
         " ORDER BY cm.creationDateTime")
     public List<CabinetMessage> findMessageChainByMasterId(@Param("masterId") Long masterId);
+
+    @Query("SELECT cm FROM CabinetMessage cm WHERE cm.masterUuid = :masterUuid ")
+    public List<CabinetMessage> findMessageByMasterUuid(@Param("masterUuid") UUID masterUuid);
+
 
 }
