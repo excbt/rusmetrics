@@ -23,6 +23,7 @@
         <springfox.version>2.7.0</springfox.version>
         <metrics-spring.version>3.1.3</metrics-spring.version>
         <dropwizard-metrics.version>3.2.2</dropwizard-metrics.version>
+        <logstash-logback-encoder.version>4.9</logstash-logback-encoder.version>
 	</properties>
 
 	<prerequisites>
@@ -361,6 +362,28 @@
             <groupId>com.ryantenney.metrics</groupId>
             <artifactId>metrics-spring</artifactId>
             <version>${metrics-spring.version}</version>
+        </dependency>
+
+
+        <!--Logback-Logstash-->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-access</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Test Artifacts -->
