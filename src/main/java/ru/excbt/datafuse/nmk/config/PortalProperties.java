@@ -11,15 +11,29 @@ import javax.validation.constraints.NotNull;
 @ConfigurationProperties(prefix = "portal")
 public class PortalProperties {
 
-    @Getter
     private final Async async = new Async();
 
-    @Getter
     private final Security security = new Security();
 
-    @Getter
     private final PortalProperties.Cache cache = new PortalProperties.Cache();
 
+    private final Metrics metrics = new Metrics();
+
+    public Async getAsync() {
+        return async;
+    }
+
+    public Security getSecurity() {
+        return security;
+    }
+
+    public Cache getCache() {
+        return cache;
+    }
+
+    public Metrics getMetrics() {
+        return metrics;
+    }
 
     public static class Async {
 
@@ -141,6 +155,214 @@ public class PortalProperties {
             }
         }
     }
+
+
+    public static class Metrics {
+
+        private final Jmx jmx = new Jmx();
+
+        private final Graphite graphite = new Graphite();
+
+        private final Prometheus prometheus = new Prometheus();
+
+        private final Logs logs = new Logs();
+
+        public Jmx getJmx() {
+            return jmx;
+        }
+
+        public Graphite getGraphite() {
+            return graphite;
+        }
+
+        public Prometheus getPrometheus() {
+            return prometheus;
+        }
+
+        public Logs getLogs() {
+            return logs;
+        }
+
+        public static class Jmx {
+
+            private boolean enabled = true;
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+        }
+
+        public static class Graphite {
+
+            private boolean enabled = false;
+
+            private String host = "localhost";
+
+            private int port = 2003;
+
+            private String prefix = "jhipsterApplication";
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public String getHost() {
+                return host;
+            }
+
+            public void setHost(String host) {
+                this.host = host;
+            }
+
+            public int getPort() {
+                return port;
+            }
+
+            public void setPort(int port) {
+                this.port = port;
+            }
+
+            public String getPrefix() {
+                return prefix;
+            }
+
+            public void setPrefix(String prefix) {
+                this.prefix = prefix;
+            }
+        }
+
+        public static class Prometheus {
+
+            private boolean enabled = false;
+
+            private String endpoint = "/prometheusMetrics";
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public String getEndpoint() {
+                return endpoint;
+            }
+
+            public void setEndpoint(String endpoint) {
+                this.endpoint = endpoint;
+            }
+        }
+
+        public static class Logs {
+
+            private boolean enabled = false;
+
+            private long reportFrequency = 60;
+
+            public long getReportFrequency() {
+                return reportFrequency;
+            }
+
+            public void setReportFrequency(int reportFrequency) {
+                this.reportFrequency = reportFrequency;
+            }
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+        }
+    }
+
+    private final Logging logging = new Logging();
+
+    public Logging getLogging() {
+        return logging;
+    }
+
+    public static class Logging {
+
+        private final Logstash logstash = new Logstash();
+
+        public Logstash getLogstash() {
+            return logstash;
+        }
+
+        public static class Logstash {
+
+            private boolean enabled = false;
+
+            private String host = "localhost";
+
+            private int port = 5000;
+
+            private int queueSize = 512;
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+
+            public String getHost() {
+                return host;
+            }
+
+            public void setHost(String host) {
+                this.host = host;
+            }
+
+            public int getPort() {
+                return port;
+            }
+
+            public void setPort(int port) {
+                this.port = port;
+            }
+
+            public int getQueueSize() {
+                return queueSize;
+            }
+
+            public void setQueueSize(int queueSize) {
+                this.queueSize = queueSize;
+            }
+        }
+
+        private final SpectatorMetrics spectatorMetrics = new SpectatorMetrics();
+
+        public SpectatorMetrics getSpectatorMetrics() {
+            return spectatorMetrics;
+        }
+
+        public static class SpectatorMetrics {
+
+            private boolean enabled = false;
+
+            public boolean isEnabled() {
+                return enabled;
+            }
+
+            public void setEnabled(boolean enabled) {
+                this.enabled = enabled;
+            }
+        }
+    }
+
 
 
 }
