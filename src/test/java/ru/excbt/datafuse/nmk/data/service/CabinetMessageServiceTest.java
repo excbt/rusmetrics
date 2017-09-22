@@ -143,7 +143,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
     @Test
     public void testSentNotification() throws Exception {
-        UUID masterUuid = cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), "Test Notification", "Test body");
+        UUID masterUuid = cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), "Test Notification", "Test body", null);
 
         List<CabinetMessage> cabinetMessages = cabinetMessageRepository.findMessageByMasterUuid(masterUuid);
         assertFalse(cabinetMessages.isEmpty());

@@ -57,20 +57,21 @@ public class CabinetMessageService {
     }
 
     public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
-        "id, " +
-        "message_type, " +
-        "message_direction, " +
-        "from_portal_subscriber_id, " +
-        "from_portal_user_id, " +
-        "to_portal_subscriber_id, " +
-        "to_portal_user_id, " +
-        "message_body, " +
-        "master_id, " +
-        "response_to_id, " +
-        "creation_date_time, " +
-        "review_date_time," +
-        "master_uuid) " +
-        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+        "id, " + //1
+        "message_type, " + //2
+        "message_direction, " + //3
+        "from_portal_subscriber_id, " + //4
+        "from_portal_user_id, " + //5
+        "to_portal_subscriber_id, " + //6
+        "to_portal_user_id, " + //7
+        "message_subject, " + //8
+        "message_body, " + //9
+        "master_id, " + //10
+        "response_to_id, " + //11
+        "creation_date_time, " + //12
+        "review_date_time," + //13
+        "master_uuid) " + //14
+        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
 
 
     public static final String UPD_SQL_QRY = "UPDATE " + DBMetadata.SCHEME_CABINET2 +".cabinet_message" +
@@ -91,21 +92,22 @@ public class CabinetMessageService {
                 preparedStatement.setObject(5, cabinetMessage.getFromPortalUserId());
                 preparedStatement.setObject(6, cabinetMessage.getToPortalSubscriberId());
                 preparedStatement.setObject(7, cabinetMessage.getToPortalUserId());
-                preparedStatement.setObject(8, cabinetMessage.getToPortalSubscriberId());
-                preparedStatement.setObject(9, cabinetMessage.getToPortalSubscriberId());
-                preparedStatement.setObject(10, cabinetMessage.getToPortalSubscriberId());
+                preparedStatement.setObject(8, cabinetMessage.getMessageSubject());
+                preparedStatement.setObject(9, cabinetMessage.getMessageBody());
+                preparedStatement.setObject(10, cabinetMessage.getMasterId());
+                preparedStatement.setObject(11, cabinetMessage.getResponseToId());
 
                 if (cabinetMessage.getCreationDateTime() != null) {
-                    preparedStatement.setTimestamp(11,
-                        Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
-                } else preparedStatement.setNull(11, Types.TIMESTAMP);
-
-                if (cabinetMessage.getReviewDateTime() != null) {
                     preparedStatement.setTimestamp(12,
-                        Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
+                        Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
                 } else preparedStatement.setNull(12, Types.TIMESTAMP);
 
-                preparedStatement.setObject(13, cabinetMessage.getMasterUuid());
+                if (cabinetMessage.getReviewDateTime() != null) {
+                    preparedStatement.setTimestamp(13,
+                        Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
+                } else preparedStatement.setNull(13, Types.TIMESTAMP);
+
+                preparedStatement.setObject(14, cabinetMessage.getMasterUuid());
 
                 log.debug("Create CabinetMessage SQL: {}", preparedStatement.toString());
                 preparedStatement.execute();
@@ -286,11 +288,13 @@ public class CabinetMessageService {
     }
 
 
-    public UUID sendNotificationToCabinets(PortalUserIds parentIds, String messageSubject, String messageBody) {
+    @Transactional
+    public UUID sendNotificationToCabinets(PortalUserIds parentIds, String messageSubject, String messageBody, List<Long> subscrCabinetIds) {
 
         final UUID masterUuid = Generators.timeBasedGenerator().generate();
 
         subscriberRepository.selectChildSubscribers(parentIds.getSubscriberId()).stream()
+            .filter(i -> subscrCabinetIds == null || subscrCabinetIds.isEmpty() || subscrCabinetIds.contains(i.getId()))
             .forEach(s -> {
                 CabinetMessage cabinetMessage = new CabinetMessage();
                 cabinetMessage.setFromPortalSubscriberId(parentIds.getSubscriberId());
@@ -309,5 +313,6 @@ public class CabinetMessageService {
 
         return masterUuid;
     }
+
 
 }
