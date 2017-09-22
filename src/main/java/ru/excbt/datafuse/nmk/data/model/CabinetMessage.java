@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * A CabinetMessage.
@@ -61,6 +62,10 @@ public class CabinetMessage implements Serializable {
 
     @Column(name = "review_date_time")
     private ZonedDateTime reviewDateTime;
+
+    @Column(name = "master_uuid", updatable = false)
+    @org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+    private UUID masterUuid;
 
 
     public CabinetMessage messageType(String messageType) {
@@ -246,4 +251,13 @@ public class CabinetMessage implements Serializable {
     public void setReviewDateTime(ZonedDateTime reviewDateTime) {
         this.reviewDateTime = reviewDateTime;
     }
+
+    public UUID getMasterUuid() {
+        return masterUuid;
+    }
+
+    public void setMasterUuid(UUID masterUuid) {
+        this.masterUuid = masterUuid;
+    }
+
 }
