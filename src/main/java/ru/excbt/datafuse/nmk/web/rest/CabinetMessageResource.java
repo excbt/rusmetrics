@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,8 +43,9 @@ public class CabinetMessageResource {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of cabinetMessages in body
      */
+    @ApiOperation("Get all cabinet messages to current subscriber")
     @GetMapping("/cabinet-messages")
-    public ResponseEntity<List<CabinetMessageDTO>> getAllCabinetMessageRequests(@ApiParam @RequestParam(name = "messageType", required = false) @Valid CabinetMessageType cabinetMessageType , Pageable pageable) {
+    public ResponseEntity<List<CabinetMessageDTO>> getAllCabinetMessageRequests(@ApiParam("message type") @RequestParam(name = "messageType", required = false) @Valid CabinetMessageType cabinetMessageType , Pageable pageable) {
         log.debug("REST request to get a page of CabinetMessages");
 //        CabinetMessageType cabinetMessageType = EnumUtils.getEnum(CabinetMessageType.class, messageType);
 //        if (cabinetMessageType == null) {
@@ -54,16 +56,17 @@ public class CabinetMessageResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-
+    @ApiOperation("Get chain of messages by master message id")
     @GetMapping("/cabinet-messages/{id}/chain")
-    public ResponseEntity<List<CabinetMessageDTO>> getCabinetMessageChain(@PathVariable("id") Long id) {
+    public ResponseEntity<List<CabinetMessageDTO>> getCabinetMessageChain(@ApiParam("id of master message") @PathVariable("id") Long masterMessageId) {
         log.debug("REST request to get a page of CabinetMessages");
-        List<CabinetMessageDTO> list = cabinetMessageService.findMessageChain(id);
+        List<CabinetMessageDTO> list = cabinetMessageService.findMessageChain(masterMessageId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
+    @ApiOperation("Update review datetime of chain of messages by master message id")
     @PutMapping("/cabinet-messages/{id}/chainReview")
-    public ResponseEntity<?> updateMessageChainReview(@PathVariable("id") Long masterMessageId,
+    public ResponseEntity<?> updateMessageChainReview(@ApiParam("id of master  message") @PathVariable("id") Long masterMessageId,
                                                       @RequestParam(name = "resetReviews", required = false) @ApiParam() Boolean resetReviews) {
         log.debug("REST request to get a page of CabinetMessages");
         cabinetMessageService.updateMessageChainReview(masterMessageId, idsService.getCurrentIds(), Boolean.TRUE.equals(resetReviews));
