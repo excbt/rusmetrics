@@ -354,7 +354,7 @@ body{
 
 /* главная область в распахнутом состоянии - при минимизации левого меню*/
 .nmc-main-workspace-maximize {
-    width: 96%;
+    width: 100%;
     margin-left: 0;
 }
 
@@ -391,7 +391,7 @@ body{
 
 /* Фон главного окна */
 .nmc-main-window-background {
-    padding-top: 15px;
+/*    padding-top: 15px;*/
     padding-bottom: 20px;
     font-size: 12px;
     background-color: #BEBEBE !important; /*body background color*/
@@ -528,7 +528,7 @@ body{
     word-wrap: break-word;
     padding-right: 1px;
     border: none;
-    margin-right: -30%;
+/*    margin-right: -30%;*/
     margin-bottom: 3px;/*2%;*/
     font-size: 16px;
     border-radius: 4px 0px 0px 4px;
@@ -548,9 +548,9 @@ body{
         /*в фокусе*/    /* на который наведен курсор*/
 .nmc-main-menu-item:focus, .nmc-main-menu-item:hover {
     word-wrap: break-word;
-    padding-right: 1px;
+/*    padding-right: 1px;*/
     border: none;
-    margin-right: -30%;
+/*    margin-right: -30%;*/
     margin-bottom: 3px;/*2%;*/
     background-color: #DCDCDC;
 }

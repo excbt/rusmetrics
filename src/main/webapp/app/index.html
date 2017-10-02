@@ -154,13 +154,234 @@
   </div>
 -->
 <!--   энд оф Навигационная строка в верху страницы    -->
+    <div class = "" style = "margin-bottom: 2px;">
+        <div class="btn-group">
+          <i title="Главное меню" 
+             type="button" 
+             class="btn btn-default btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+             data-toggle="dropdown" 
+             aria-haspopup="true" 
+             aria-expanded="false" 
+             ng-click="selectedObjectBy(object)" 
+             style="font-size: .9em;">
+            </i>
+          <ul class="dropdown-menu nmc-dropdown-menu">
+            <li class="menu-item" role="presentation">
+                <a id="object_main_menu_item"
+                   class="list-group-item nmc-main-menu-item nmc-hide"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
+                   href="#/"
+                   data-toggle="offcanvas"
+                   ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
+                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
+                       title="Объекты">
+                    </i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
+                </a>
+            </li>
+            <li class = "menu-item" role = "presentation">
+                <a id="report_main_menu_item"
+                   class="list-group-item nmc-main-menu-item nmc-hide"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
+                   href="#/reports/" 
+                   data-toggle="offcanvas" 
+                   ng-click="clickMenu('report_menu_item')">
+                   <i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты">
+                       
+                   </i>
+                   <span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span>
+                </a>
+            </li>
+            <li class = "menu-item" role = "presentation">
+                <a ng-show="!isCabinet()"
+                   ng-hide="isTestMode()"
+                   id="log_main_menu_item"
+                   class="list-group-item nmc-main-menu-item"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
+
+                   href="#/log/session-log/"
+                   data-toggle="offcanvas"
+                   ng-click="clickMenu('log_menu_item')"
+                   ng-cloak>
+                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                        Журналы
+                    </span>
+                </a>
+            </li>
+            <li class = "menu-item" role = "presentation">
+                <a ng-show="!isCabinet() && !isTestMode()"                                   
+                   id="energy_main_menu_item"
+                   class="list-group-item nmc-main-menu-item"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
+                   href="#/documents/energo-passports/"
+                   data-toggle="offcanvas"
+                   ng-click="clickMenu('energy_menu_item')"
+                   ng-cloak>
+                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon" title="Энергоэффективность"></i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                        Энерго - эффективность
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a id="setting_main_menu_item"
+                   class="list-group-item nmc-main-menu-item nmc-hide"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
+                   href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> 
+                   <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i>
+                   <span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span>
+                </a>
+            </li>
+            <li>
+                <a id = "management_main_menu_item"
+                   class = "list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
+                   ng-class = "{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
+                   href = "#/management/objects/"
+                   data-toggle = "offcanvas"
+                   ng-click = "clickMenu('admin_menu_item'); showAdminSettings = true">
+                    <i class = "glyphicon glyphicon-wrench nmc-main-menu-item-icon"
+                       title = "Управление">
+                    </i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
+                </a>
+            </li>
+            <li>
+                <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle"
+                       data-toggle="dropdown">
+<!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
+                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon"
+                                   title="Пользовательское меню">
+                                </i>
+                                <span ng-show="mainCtrlSettings.showFullMenuFlag"
+                                      ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
+                                      >
+                                    <span class="nmc-hide"
+                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
+                                        <b>{{userInfo.userNameCaption}}</b><br/>
+                                    </span>
+                                    <span class="nmc-hide"
+                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}"
+                                          ng-show="userInfo.subscriber != null">
+                                        {{userInfo.userSubscrCaption}}
+                                    </span>
+                                </span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
+                            <a href="#/private/"
+                               title='Private office'
+                               ng-click="showPrivateOfficeMenu=true;showMenuReport=false;">
+                                <p> <b>Личный кабинет</b>
+                        </p></a></li>
+
+                        <li ng-if="userInfo.isReadonly != true"><a href=""
+                               ng-click="changePasswordInit()"
+                               title='Сменить пароль'
+                               data-target="#changePasswordModal"
+                               data-toggle="modal">
+                                <p>
+                                    <b>Сменить пароль</b>
+                                </p>
+                            </a>
+                        </li>
+                        <li><a href="../logout" ng-click="logOut();"
+                            title='logout'><p> <b>Выход </b>
+                        </p></a></li>
+                    </ul>
+            </li>
+            
+            
+<!--
+            <li ng-if="data.reportEntities && data.reportEntities.length > 0" class="menu-item dropdown dropdown-submenu" role="presentation">
+                <a href="" 
+                   class="" 
+                   data-toggle="dropdown" 
+                   aria-haspopup="true" 
+                   aria-expanded="false"  
+                   >
+                    Отчеты
+                </a>
+                <ul class="dropdown-menu nmc-dropdown-menu">
+                    <li class="menu-item dropdown" 
+                        ng-repeat="reportEntity in data.reportEntities" 
+                        ng-class="{'dropdown-submenu': reportEntity.reports}">
+-->
+<!--                                            ng-if="report.allRequiredParamsPassed"-->                                            
+<!--
+                        <a href=""
+                           class="paddingRight30" 
+                           data-toggle="dropdown" 
+                           aria-haspopup="true" 
+                           aria-expanded="false"                                               
+                           >
+                            <i title="Сформировать отчет" ng-if="!reportEntity.reports"
+                                class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
+                                ng-click="createContextReport(reportEntity)"
+                                ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
+                            </i>
+                            <span title="Предварительный просмотр отчета" 
+                                  ng-click="previewContextReport(reportEntity)">
+                                {{reportEntity.caption || reportEntity.name || 'Без названия'}}
+                            </span>
+-->
+<!--
+                            <i title="Сформировать отчет" ng-if="!reportEntity.reports"
+                                class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run"
+                                ng-click="createContextReport(reportEntity)"
+                                ng-class="{'nmc-button-in-table-run-green': reportEntity.checkFlag, 'nmc-button-in-table-run-red': !reportEntity.checkFlag}">
+                            </i>
+-->
+<!--
+                        </a>
+                        <ul ng-if="reportEntity.reports && reportEntity.reports.length > 0" 
+                            class="dropdown-menu nmc-dropdown-menu">
+                            <li ng-repeat="report in reportEntity.reports">
+                                <a
+                                   class="paddingRight30"
+                                   >
+                                    <i title="Сформировать отчет" 
+                                       class="btn btn-xs glyphicon glyphicon-download-alt nmc-button-in-context-run" 
+                                       ng-click="createContextReport(report)"
+                                       ng-class="{'nmc-button-in-table-run-green':report.checkFlag, 'nmc-button-in-table-run-red':!report.checkFlag}"
+                                       >
+                                    </i>
+                                    <span title="Предварительный просмотр отчета" 
+                                          ng-click="previewContextReport(report)">
+                                        {{report.name || 'Без названия'}}
+                                    </span>
+
+                                </a>
+                            </li>                                                
+                        </ul>
+                    </li>                                        
+                </ul>                                    
+            </li>
+-->
+
+<!--
+            <li class="menu-item" role="presentation"
+                ng-mousedown="setNoticeFilterByObject(object.id)"
+                >
+                <a ng-href="#/notices/list/?objectMonitorId={{object.id}}&monitorFlag=true&fromDate={{monitorStart}}&toDate={{monitorEnd}}"
+                   target = "_blank"
+                   >
+                    Посмотреть уведомления                                        
+                </a>                                            
+            </li>
+-->
+
+          </ul>
+        </div>
+    </div>
 
     <div class="container-fluid noMargin" >
 
     <div class="row row-offcanvas row-offcanvas-left">
 
         <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu"
+        <div style = "display: none" 
+            class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu"
              ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
                         <nav class="sidebar-nav"
                              role="navigation"
@@ -387,8 +608,8 @@
 
         </div>
 
-        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace"
-             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
+        <div id="div-main-area" class="col-xs-12 well mainarea nmc-main-workspace nmc-main-workspace-maximize" ng-cloak>
+<!--             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>-->
 
 					<div id="main" ng-view></div>
 <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
