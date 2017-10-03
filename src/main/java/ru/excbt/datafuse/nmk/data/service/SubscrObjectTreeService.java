@@ -43,8 +43,8 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since dd.02.2016
@@ -55,8 +55,8 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since dd.02.2016
@@ -72,7 +72,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -82,7 +82,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectTreeType
 	 * @return
@@ -129,7 +129,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -140,7 +140,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param operator
 	 * @return
@@ -175,7 +175,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectTreeType
 	 * @return
@@ -191,7 +191,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tree
 	 * @param subscriberParam
 	 */
@@ -205,7 +205,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param templateId
 	 * @return
@@ -238,7 +238,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @return
@@ -258,7 +258,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @param searchLevel
@@ -288,7 +288,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param operator
 	 * @param searchLevel
@@ -319,7 +319,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @param searchLevel
@@ -331,7 +331,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @param searchLevel
@@ -342,7 +342,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @return
@@ -352,7 +352,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param subscrObjectTreeId
 	 * @param searchLevel
@@ -365,7 +365,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -381,7 +381,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -396,7 +396,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
@@ -428,7 +428,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
@@ -455,7 +455,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -474,7 +474,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -491,7 +491,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -519,7 +519,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -530,7 +530,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -541,7 +541,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -552,7 +552,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @param subscrObjectTreeId
 	 */
@@ -567,7 +567,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param subscrObjectTreeId
 	 * @return
@@ -585,7 +585,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param o1
 	 * @param o2
 	 * @return
@@ -602,7 +602,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */

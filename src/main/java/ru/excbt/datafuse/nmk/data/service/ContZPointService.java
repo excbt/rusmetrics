@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
@@ -505,7 +506,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPoint createOne(SubscrUserInfo subscrUserInfo, Long contObjectId, ContZPoint contZPoint) {
+	public ContZPoint createOne(PortalUserIds userIds, Long contObjectId, ContZPoint contZPoint) {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 		checkNotNull(contZPoint.getStartDate());
@@ -523,7 +524,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		ContZPoint result = contZPointRepository.save(contZPoint);
 		contZPointSettingModeService.initContZPointSettingMode(result.getId());
 
-        subscriberAccessService.grantContZPointAccess(new Subscriber().id(subscrUserInfo.getSubscriberId()), result);
+        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), result);
 
 		return result;
 	}
@@ -534,12 +535,12 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public void deleteOne(SubscrUserInfo userInfo, Long contZpointId) {
+	public void deleteOne(PortalUserIds userIds, Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
 		contZPointRepository.save(softDelete(contZPoint));
 
-        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userInfo.getSubscriberId()), contZPoint);
+        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
 
 	}
 

@@ -51,7 +51,7 @@ public class DBExceptionUtils {
      * @param id
      * @return
      */
-    public static <T extends Persistable<?>> PersistenceException entityNotFoundException(Class<T> clazz, Object id) {
+    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id) {
         return entityNotFoundException(clazz, id, false);
     }
 
@@ -60,7 +60,7 @@ public class DBExceptionUtils {
      * @param id
      * @return
      */
-    public static <T extends Persistable<?>> PersistenceException entityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
+    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
         throw new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
             (idKeyname ? "keyname" : "ID")
             + "=" + id + " is not found");
