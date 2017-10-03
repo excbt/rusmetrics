@@ -5,15 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscrUserInfo;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -71,9 +69,12 @@ public class RmaSubscriberResource extends SubscriberController {
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.GET)
 	public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
 
-        SubscrUserInfo userInfo = getSubscriberParam();
 
-		if (!userInfo.isRma()) {
+        PortalUserIds portalUserIds = getSubscriberParam().asPortalUserIds();
+
+        //SubscrUserInfo userInfo = getSubscriberParam();
+
+		if (!portalUserIds.isRma()) {
 			logger.warn("Current User is not RMA");
 			return ApiResponse.responseForbidden();
 		}
@@ -81,7 +82,7 @@ public class RmaSubscriberResource extends SubscriberController {
 		Optional<SubscriberDTO> subscriberDTOOptional = subscriberService.findSubscriberDTO(rSubscriberId);
 		if (subscriberDTOOptional.isPresent()) {
             if (subscriberDTOOptional.get().getRmaSubscriberId() == null
-                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(userInfo.getSubscriberId())) {
+                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
                 return ApiResponse.responseForbidden();
             }
         }
@@ -172,7 +173,7 @@ public class RmaSubscriberResource extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOrganizations() {
-		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam());
+		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().asPortalUserIds());
 		return ApiResponse.responseOK(organizations);
 	}
 

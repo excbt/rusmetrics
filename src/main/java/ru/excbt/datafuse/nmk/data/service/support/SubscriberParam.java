@@ -1,8 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
-public final class SubscriberParam implements SubscrUserInfo {
+public final class SubscriberParam {
 
 	private final long subscriberId;
 	private final long subscrUserId;
@@ -62,7 +63,7 @@ public final class SubscriberParam implements SubscrUserInfo {
 
 	/**
 	 *
-	 * @param subscriberId
+	 * @param builder
 	 */
 	private SubscriberParam(Builder builder) {
 		this.subscriberId = builder.subscriberId;
@@ -81,7 +82,6 @@ public final class SubscriberParam implements SubscrUserInfo {
 		return subscriberId;
 	}
 
-    @Override
     public long getUserId() {
         return subscrUserId;
     }
@@ -163,5 +163,42 @@ public final class SubscriberParam implements SubscrUserInfo {
 		builder2.append("]");
 		return builder2.toString();
 	}
+
+
+    public boolean isCabinet() {
+	    return SubscrTypeKey.CABINET.equals(subscrTypeKey);
+    }
+
+
+    public PortalUserIds asPortalUserIds() {
+	    return new PortalUserIds() {
+            @Override
+            public Long getSubscriberId() {
+                return subscriberId;
+            }
+
+            @Override
+            public Long getUserId() {
+                return subscrUserId;
+            }
+
+            @Override
+            public boolean isRma() {
+                return isRma;
+            }
+
+            @Override
+            public Long getRmaId() {
+                return rmaSubscriberId;
+            }
+
+            @Override
+            public Long getParentSubscriberId() {
+                return parentSubscriberId;
+            }
+
+        };
+    }
+
 
 }
