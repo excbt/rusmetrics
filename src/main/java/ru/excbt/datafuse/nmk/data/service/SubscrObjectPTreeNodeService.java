@@ -18,10 +18,7 @@ import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -93,11 +90,9 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
         List<Long> contObjectIds = contObjects.stream()
             .filter(i -> contObjectAccess.test(i)).map(i -> i.getId()).collect(Collectors.toList());
 
-        if (contObjectIds.isEmpty()) {
-            return;
-        }
 
-        List<ContZPoint> contZPoints = contZPointRepository.findByContObjectIds(contObjectIds);
+        List<ContZPoint> contZPoints = contObjectIds.isEmpty() ? Collections.emptyList() :
+            contZPointRepository.findByContObjectIds(contObjectIds);
 
         Map<Long,List<ContZPoint>> contZPointMap = new HashMap<>();
         contZPoints.stream().filter(zp -> contZPointAccess.test(zp)).forEach(i -> {
@@ -170,7 +165,7 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
     private void addContZPointsMap(PTreeContObjectNode pTreeContObjectNode, final ContObject contObject, final Map<Long, List<ContZPoint>> contZPointMap) {
         List<ContZPoint> contZPoints = contZPointMap.get(contObject.getId());
 
-        if (contZPoints == null) return;
+        if (contZPoints == null) contZPoints = Collections.emptyList();
 
         for (ContZPoint contZPoint : contZPoints) {
             if (contZPoint.getDeleted() != 0) continue;
