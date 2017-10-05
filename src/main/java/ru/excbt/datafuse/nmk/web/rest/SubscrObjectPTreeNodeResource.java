@@ -21,7 +21,8 @@ public class SubscrObjectPTreeNodeResource extends AbstractSubscrApiResource {
     @GetMapping("/{subscrObjectTreeId}")
     public ResponseEntity<?> getPTreeNode(@PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
                                           @RequestParam(name = "childLevel", required = false) Integer childLevel) {
-        return ApiResponse.responseOK(() -> subscrObjectPTreeNodeService.readSubscrObjectTree(subscrObjectTreeId, childLevel));
+        return ApiResponse.responseOK(() ->
+            subscrObjectPTreeNodeService.readSubscrObjectTree(subscrObjectTreeId, childLevel, getSubscriberParam().asPortalUserIds()));
     }
 
 
