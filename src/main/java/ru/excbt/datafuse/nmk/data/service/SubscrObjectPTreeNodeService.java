@@ -17,7 +17,11 @@ import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SubscrObjectPTreeNodeService extends AbstractService implements SecuredRoles {
@@ -72,10 +76,31 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
 
         List<ContObject> contObjects = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTree.getId());
 
+
+        List<Long> contObjectIds = contObjects.stream().map(i -> i.getId()).collect(Collectors.toList());
+
+        if (contObjectIds.isEmpty()) {
+            return;
+        }
+
+        List<ContZPoint> contZPoints = contZPointRepository.findByContObjectIds(contObjectIds);
+
+        Map<Long,List<ContZPoint>> contZPointMap = new HashMap<>();
+        contZPoints.forEach(i -> {
+            List<ContZPoint> contZPointList = contZPointMap.get(i.getContObjectId());
+            if (contZPointList == null) {
+                contZPointList = new ArrayList<>();
+                contZPointMap.put(i.getContObjectId(), contZPointList);
+            }
+            contZPointList.add(i);
+        });
+
+
         for (ContObject contObject : contObjects) {
             PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
             pTreeElement.addLinkedObject(pTreeContObjectNode);
-            addContZPoints(pTreeContObjectNode, contObject);
+            addContZPointsMap(pTreeContObjectNode, contObject, contZPointMap);
+            //addContZPoints(pTreeContObjectNode, contObject);
         }
 
         boolean levelThreshold = childLevel != null && childLevel < 1;
@@ -122,6 +147,20 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
             addDeviceObject(contZPointNode, contZPoint);
         }
     }
+
+
+    private void addContZPointsMap(PTreeContObjectNode pTreeContObjectNode, final ContObject contObject, final Map<Long, List<ContZPoint>> contZPointMap) {
+        List<ContZPoint> contZPoints = contZPointMap.get(contObject.getId());
+
+        if (contZPoints == null) return;
+
+        for (ContZPoint contZPoint : contZPoints) {
+            if (contZPoint.getDeleted() != 0) continue;
+            PTreeContZPointNode contZPointNode = pTreeContObjectNode.addContZPoint(contZPointMapper.toDto(contZPoint));
+            addDeviceObject(contZPointNode, contZPoint);
+        }
+    }
+
 
 
     private void addDeviceObject (PTreeContZPointNode pTreeContZPointNode, ContZPoint contZPoint) {
