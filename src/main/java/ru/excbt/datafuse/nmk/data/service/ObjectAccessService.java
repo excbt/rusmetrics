@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
@@ -119,6 +120,16 @@ public class ObjectAccessService {
             result = contObjectAccessRepository.findAllContObjectIds(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContObjectIds(subscriberId);
+        }
+        return result;
+    }
+
+    public List<Long> findContObjectIds(PortalUserIds portalUserIds) {
+        List<Long> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findAllContObjectIds(portalUserIds.getSubscriberId());
+        } else {
+            result = subscrContObjectRepository.selectContObjectIds(portalUserIds.getSubscriberId());
         }
         return result;
     }
@@ -289,6 +300,16 @@ public class ObjectAccessService {
             result = contZPointAccessRepository.findAllContZPointIds(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContZPointIds(subscriberId);
+        }
+        return result;
+    }
+
+    public List<Long> findAllContZPointIds(PortalUserIds portalUserIds) {
+        List<Long> result;
+        if (NEW_ACCESS) {
+            result = contZPointAccessRepository.findAllContZPointIds(portalUserIds.getSubscriberId());
+        } else {
+            result = subscrContObjectRepository.selectContZPointIds(portalUserIds.getSubscriberId());
         }
         return result;
     }
