@@ -15,7 +15,6 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 @Entity
 @Table(name = "cont_service_type")
 @JsonInclude(Include.NON_NULL)
-@Getter
 public class ContServiceType extends AbstractKeynameEntity {
 
 	/**
@@ -46,4 +45,32 @@ public class ContServiceType extends AbstractKeynameEntity {
 	@Column(name = "caption_short")
 	private String captionShort;
 
+
+    public String getCaption() {
+        return caption;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public String getExCode() {
+        return exCode;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public Integer getServiceOrder() {
+        return serviceOrder;
+    }
+
+    public String getCaptionShort() {
+        return captionShort;
+    }
 }
