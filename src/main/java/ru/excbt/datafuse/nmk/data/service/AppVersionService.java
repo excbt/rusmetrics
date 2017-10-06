@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,7 +50,7 @@ public class AppVersionService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAppVersion() {
@@ -58,7 +58,7 @@ public class AppVersionService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Properties getAppVersionProps() {
@@ -85,7 +85,7 @@ public class AppVersionService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<AppModuleInfo> getAppModulesInfo() {

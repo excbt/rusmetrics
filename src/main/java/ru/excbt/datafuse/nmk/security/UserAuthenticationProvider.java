@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
+import ru.excbt.datafuse.nmk.data.service.PasswordService;
 
 /**
  * Компонент для авторизации

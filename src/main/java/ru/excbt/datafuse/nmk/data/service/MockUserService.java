@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
