@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -34,11 +34,11 @@ public class SubscrServicePermissionFilter {
 
 	private final SubscriberParam subscriberParam;
 
-	/**
-	 *
-	 * @param permissionList
-	 * @param isRma
-	 */
+    /**
+     *
+     * @param permissionList
+     * @param subscriberParam
+     */
 	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList,
 			SubscriberParam subscriberParam) {
 		checkNotNull(permissionList);
@@ -46,14 +46,6 @@ public class SubscrServicePermissionFilter {
 		this.subscriberParam = subscriberParam;
 		this.isRma = subscriberParam.isRma();
 	}
-
-	/**
-	 *
-	 * @param permissionList
-	 */
-	//	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
-	//		this(permissionList, false);
-	//	}
 
 	/**
 	 *

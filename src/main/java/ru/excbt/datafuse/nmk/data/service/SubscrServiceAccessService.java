@@ -27,7 +27,6 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;

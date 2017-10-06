@@ -26,7 +26,6 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
-import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
