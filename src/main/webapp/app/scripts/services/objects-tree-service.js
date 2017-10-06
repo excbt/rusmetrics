@@ -19,11 +19,12 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', function ($http, mainSvc) {
     
     var findNodeInPTree = function (node, tree) {
         var result = null;
-//        console.log("Serching tree: " + tree.nodeType);
+//        console.log("Serching tree: " + tree.nodeType + "; " + tree._id);
+//        console.log("Serching node: " + node.nodeType + "; " + node.nodeName + "; " + node._id);
         if (angular.isArray(tree.childNodes)) {
             tree.childNodes.some(function (curNode) {
-//                console.log("curNode node: " + curNode.nodeType + "; " + curNode.nodeName);                
-                if (node.nodeType == 'ELEMENT' && node.nodeType === curNode.nodeType && node._id == curNode._id && node.nodeName == curNode.nodeName) {
+//                console.log("curNode node: " + curNode.nodeType + "; " + curNode.nodeName + "; " + curNode._id);
+                if (node.nodeType == 'ELEMENT' && node.nodeType === curNode.nodeType && node._id == curNode._id) {
                     result = curNode;
                     return true;
                 } else if (node.nodeType == 'CONT_ZPOINT' && node.nodeType === curNode.nodeType && node.nodeObject.id == curNode.nodeObject.id) {
@@ -39,9 +40,9 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', function ($http, mainSvc) {
             });
         }
 //        console.log("Serching tree - linkedNodeObjects: " + tree.hasOwnProperty('linkedNodeObjects'));
-        if (angular.isArray(tree.linkedNodeObjects)) {
+        if (angular.isArray(tree.linkedNodeObjects) && result == null) {
             tree.linkedNodeObjects.some(function (curLinkedNode) {
-//                console.log("curLinked node: " + curLinkedNode.nodeType + "; " + curLinkedNode.nodeName);
+//                console.log("curLinked node: " + curLinkedNode.nodeType + "; " + curLinkedNode.nodeName + "; " + curLinkedNode._id);
                 if (node.nodeType == 'CONT_OBJECT' && node.nodeType === curLinkedNode.nodeType && node.nodeObject.id == curLinkedNode.nodeObject.id) {
                     result = curLinkedNode;
                     return true;

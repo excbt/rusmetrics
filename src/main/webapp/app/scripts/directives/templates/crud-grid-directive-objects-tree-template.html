@@ -41,7 +41,7 @@
     <div ui-layout = "{flow: 'column'}">
        <div ui-layout-container>
           <div class = "row">
-              <div class="noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
+              <div class="noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true">                    
                 <div class="row nmc-main-workspace-header marginBottom5"
                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
                      >
@@ -84,7 +84,7 @@
             </div>    
           </div>
           <div class = "row">
-              <div class = "noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
+              <div class = "noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
                     <div ng-show="treeLoading" class="nmc-loading">
                     <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
                 </div>
@@ -727,7 +727,7 @@
 </script>
 
 <script type="text/ng-template" id="subscr_object_p_tree_items_renderer.html">
-    <div ui-tree-handle ng-click="selectPNode(item)"
+    <div ui-tree-handle ng-click="selectPNode(item, $event)"
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
          ng-class="{'nmc-bg-distinguish': item.isSelected}">

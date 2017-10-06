@@ -2802,7 +2802,11 @@ console.log(headers);
                 
 // *******************************************************************************************
 //          Upgrade Tree Interface                
-//********************************************************************************************                
+//********************************************************************************************
+                
+                $scope.data.selectedPNode = null;
+                var selectedPNodes = [];
+                
                 function successLoadPTreeCallback(resp) {
                     console.log(resp);
                     console.log(resp.data);
@@ -2870,42 +2874,38 @@ console.log(headers);
                     return objectsTreeSvc.findNodeInPTree(node, tree);
                 }
                 
-                $scope.selectPNode = function (item) {
+                $scope.selectPNode = function (item, ev) {
 //console.log("Select node:", item);
+console.log(ev);                    
                     if ($scope.isContObjectNode(item)) {
                         $scope.selectedObjectBy(item.nodeObject);
                         loadViewMode(item.nodeObject)
-console.log($scope.currentObject);                        
+//console.log($scope.currentObject);                        
                     }
-                    var treeForSearch = $scope.data.currentPTree;
-                    var selectedNode = $scope.data.selectedPNode;
-                    if (!mainSvc.checkUndefinedNull(selectedNode)) {
-//                        if (selectedNode.id == item.id || selectedNode.type == item.type == 'root') {
-//                            return;
-//                        }
-                        var preNode = findNodeInPTree(selectedNode, treeForSearch);
+//                    var treeForSearch = $scope.data.currentPTree;
+//                    var selectedNode = $scope.data.selectedPNode;
+//                    if (!mainSvc.checkUndefinedNull(selectedNode)) {
+//                        var preNode = findNodeInPTree(selectedNode, treeForSearch);
 //console.log("Previous select:", preNode);                        
-                        if (!mainSvc.checkUndefinedNull(preNode)) {
-                            preNode.isSelected = false;
-                        }
+//                        if (!mainSvc.checkUndefinedNull(preNode)) {
+//                            preNode.isSelected = false;
+//                        }
+//                    }
+                    if (!mainSvc.checkUndefinedNull($scope.data.selectedPNode) && !ev.ctrlKey && !ev.shiftKey) {
+                        $scope.data.selectedPNode.isSelected = false;
                     }
-//                    if (!mainSvc.checkUndefinedNull($scope.data.selectedPNode)) {
-//                        $scope.data.selectedPNode.isSelected = false;
-//                    }
-                    item.isSelected = true;
-                    $scope.data.selectedPNode = angular.copy(item);
-//console.log($scope.data.selectedPNode); 
                     
-//                    $scope.loading = true;
-//                    if (item.type === 'root') {
-//                        objectSvc.loadSubscrFreeObjectsByTree($scope.data.currentTree.id).then(successGetObjectsCallback);
-//                    } else {
-//                        monitorSvc.setMonitorSettings({loadingFlag: true, curTreeId: $scope.data.currentTree.id, curTreeNodeId: item.id});
-//                        monitorSvc.setMonitorSettings({currentTree: angular.copy($scope.data.currentTree), currentTreeNode: angular.copy(item)});
-//
-//                        $rootScope.$broadcast('monitor:updateObjectsRequest');
-//                        objectSvc.loadSubscrObjectsByTreeNode($scope.data.currentTree.id, item.id).then(successGetObjectsCallback);
-//                    }
+                    if (!ev.ctrlKey && selectedPNodes.length > 0) {
+                        selectedPNodes.forEach(function (csn) {
+                            csn.isSelected = false;
+                        });
+                        selectedPNodes = [];
+                    }
+                    if (!item.isSelected) {
+                        selectedPNodes.push(item);
+                    }
+                    item.isSelected = true;
+                    $scope.data.selectedPNode = item; //angular.copy(item);
                 };
                 
                 function createContObjectWidgetForPTree(contObject) {
