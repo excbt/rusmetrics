@@ -1,4 +1,4 @@
-describe("PortalNMC: documentsObjectPassportCtrl test:", function () {
+xdescribe("PortalNMC: documentsObjectPassportCtrl test:", function () {
 	var APP_NAME = "portalNMC",
 		CONTROLLER_NAME = "documentsObjectPassportCtrl";
 	var ctrl, rootScope, scope, controller, httpBackend;	
