@@ -59,6 +59,8 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 
 	private final ObjectAccessService objectAccessService;
 
+	private final DBSessionService dbSessionService;
+
 	@Autowired
     public SubscrCabinetService(SubscrUserService subscrUserService,
                                 SubscrRoleService subscrRoleService,
@@ -68,7 +70,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
                                 LdapService ldapService,
                                 EmailNotificationService emailNotificationService,
                                 DeviceObjectService deviceObjectService,
-                                SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService) {
+                                SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, DBSessionService dbSessionService) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.subscriberService = subscriberService;
@@ -79,6 +81,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
         this.deviceObjectService = deviceObjectService;
         this.subscriberAccessService = subscriberAccessService;
         this.objectAccessService = objectAccessService;
+        this.dbSessionService = dbSessionService;
     }
 
     /*
@@ -108,7 +111,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Long getSubscrCabinetNr() {
-		Query q = em.createNativeQuery("select nextval('portal.seq_subscr_cabinet_nr') as nr");
+		Query q = dbSessionService.getSession().createNativeQuery("select nextval('portal.seq_subscr_cabinet_nr') as nr");
 
 		Object qryResult = q.getSingleResult();
 
@@ -343,7 +346,7 @@ public class SubscrCabinetService extends AbstractService implements SecuredRole
 	 * @param parentSubscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
 		List<Object[]> qryResult = objectAccessService.findChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		List<SubscCabinetContObjectStats> result = new ArrayList<>();

@@ -29,9 +29,6 @@ public abstract class AbstractService {
 
 	public final static List<Long> NO_DATA_IDS = Collections.unmodifiableList(Arrays.asList(Long.MIN_VALUE));
 
-	@PersistenceContext(unitName = "nmk-p")
-	protected EntityManager em;
-
 	/**
 	 *
 	 * @param entity
@@ -114,14 +111,5 @@ public abstract class AbstractService {
 		return result;
 	}
 
-//	/**
-//	 *
-//	 * @param clazz
-//	 * @param id
-//	 * @return
-//	 */
-//	public static <T extends Persistable<?>> PersistenceException entityNotFoundException (Class<T> clazz, Object id) {
-//		throw new PersistenceException("Entity " + clazz.getSimpleName() + " with ID=" + id + " is not found");
-//	}
 
 }

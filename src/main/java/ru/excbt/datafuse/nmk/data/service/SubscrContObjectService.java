@@ -53,14 +53,17 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
     private final ObjectAccessService objectAccessService;
 
+    private final DBSessionService dbSessionService;
+
 	@Autowired
-    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService) {
+    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService, DBSessionService dbSessionService) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.subscriberService = subscriberService;
         this.contGroupService = contGroupService;
         this.contObjectMapper = contObjectMapper;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.objectAccessService = objectAccessService;
+        this.dbSessionService = dbSessionService;
     }
 
     private final Access access = new Access();
@@ -142,7 +145,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
      * @param subscrBeginDate
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    //@Transactional(value = TxConst.TX_DEFAULT)
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
     private SubscrContObject createSubscrContObjectLink(Long contObjectId, Subscriber subscriber,
                                                         LocalDate subscrBeginDate) {
@@ -218,7 +221,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 	 * @return
 	 */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo22(Long subscriberId) {
 		checkNotNull(subscriberId);
 
@@ -243,7 +246,7 @@ public class SubscrContObjectService extends AbstractService implements SecuredR
 
 		logger.debug("SQL: {}", sqlString.toString());
 
-		Query q1 = em.createQuery(sqlString.toString());
+		Query q1 = dbSessionService.getSession().createQuery(sqlString.toString());
 
 		q1.setParameter("subscriberId", subscriberId);
 

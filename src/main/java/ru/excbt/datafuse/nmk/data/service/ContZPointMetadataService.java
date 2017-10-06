@@ -70,6 +70,9 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	@Autowired
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
+    @Autowired
+	private DBSessionService dbSessionService;
+
 	/**
 	 *
 	 * @param contZPointId
@@ -325,11 +328,12 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 		return contZPointMetadataRepository.deleteOtherContZPointMetadata(contZPointId, deviceObjectId);
 	}
 
-	/**
-	 *
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param entityList
+     * @param contZPointId
+     * @return
+     */
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<ContZPointMetadata> saveContZPointMetadata(List<ContZPointMetadata> entityList, Long contZPointId) {
@@ -389,7 +393,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 		sb.append("WHERE device_object_id = :par_device_object_id AND ");
 		sb.append(" device_metadata_type = :par_device_metadata_type ");
 
-		Query qry = em.createNativeQuery(sb.toString());
+		Query qry = dbSessionService.getSession().createNativeQuery(sb.toString());
 		qry.setParameter("par_device_object_id", deviceObjectId);
 		qry.setParameter("par_device_metadata_type", deviceMetadataType);
 
