@@ -619,6 +619,7 @@ body{
 /* Вкладки рабочей области */
 .nmc-main-tab-panel {
     margin-bottom: 5px;
+    margin-left: 8px;
 }
     /* неактивная вкладка*/
 .nmc-main-tab-button{
@@ -3222,3 +3223,18 @@ div.nmc-energy-simple-line > div {
 .nmc-energy-td-counter {
     text-align: right;
 }
+
+/********************************************************
+    Разметка рабочей области с использованием ui-layout
+*********************************************************/
+.ui-splitbar > a > .glyphicon-chevron-left, .ui-splitbar > a > .glyphicon-chevron-right {
+    color: #aaa;
+}
+
+.ui-splitbar {
+    border-right: 1px solid #646263;
+    border-left: 1px solid #646263;
+    background-color: #eee !important;
+}
+
+/* Иконки для дерева объектов*/

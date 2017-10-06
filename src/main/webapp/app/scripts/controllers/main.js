@@ -51,6 +51,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //console.log(loca);          
         //set menu flag with current location
         $scope.menuMassive.object_menu_item = (loca.indexOf("/objects/list") !== -1 ? true : false);
+        $scope.menuMassive.object_new_menu_item = (loca.indexOf("/objects/newlist") !== -1 ? true : false);
+        
         $scope.menuMassive.report_menu_item = (loca === "/reports" ? true : false);
         $scope.menuMassive.object_menu_item = (loca.indexOf("/notices/") !== -1 ? true : false);
         $scope.menuMassive.setting_menu_item = (loca.indexOf("/settings/") !== -1 ? true : false);
@@ -85,6 +87,9 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         //look menu flags and set location with current flag value
         if ($scope.menuMassive.object_menu_item) {
           window.location.assign("#/");
+        }
+        if ($scope.menuMassive.object_new_menu_item) {
+          window.location.assign("#/objects/newlist");
         }
         if ($scope.menuMassive.report_menu_item) {
           window.location.assign("#/reports/");

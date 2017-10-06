@@ -43,6 +43,8 @@
       <link rel="stylesheet" href="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.css"/>
 <!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.min.css"/>      -->
       <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.css"/>
+      
+      <link rel = "stylesheet" href = "https://rawgithub.com/angular-ui/ui-layout/v1.0.5/ui-layout.css"/>
 
       <script src="/public/vendor_components/RightsJS/right.js"></script>
       <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
@@ -154,7 +156,7 @@
   </div>
 -->
 <!--   энд оф Навигационная строка в верху страницы    -->
-    <div class = "" style = "margin-bottom: 2px;">
+    <div class = "" style = "margin-bottom: 2px; position: absolute; top: 10px; left: 2px; z-index: 1;">
         <div class="btn-group">
           <i title="Главное меню" 
              type="button" 
@@ -163,7 +165,7 @@
              aria-haspopup="true" 
              aria-expanded="false" 
              ng-click="selectedObjectBy(object)" 
-             style="font-size: .9em;">
+             style="font-size: .9em; color: #fff; background-color: #646263">
             </i>
           <ul class="dropdown-menu nmc-dropdown-menu">
             <li class="menu-item" role="presentation">
@@ -177,6 +179,19 @@
                        title="Объекты">
                     </i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
+                </a>
+            </li>
+            <li class="menu-item" role="presentation">
+                <a id="object_new_main_menu_item"
+                   class="list-group-item nmc-main-menu-item"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_new_menu_item, 'nmc-show': isCabinet()}"
+                   href="#/objects/newlist"
+                   data-toggle="offcanvas"
+                   ng-click="clickMenu('object_new_menu_item'); showAdminSettings = false;">
+                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
+                       title="Объекты (NEW!)">
+                    </i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты (NEW!)</span>
                 </a>
             </li>
             <li class = "menu-item" role = "presentation">
@@ -859,6 +874,8 @@
       <script src="/public/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
       <script src="/public/bower_components/Blob/Blob.js"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
+      
+      <script src = "https://rawgithub.com/angular-ui/ui-layout/v1.0.5/ui-layout.min.js"></script>
 <!--
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
@@ -932,6 +949,7 @@
 
      <script src="scripts/controllers/directory.js"></script>
      <script src="scripts/controllers/objects.js"></script>
+     <script src="scripts/controllers/objects-newlist.js"></script>
 
      <script src="scripts/controllers/reports_use_svc.js"></script>
      <script src="scripts/controllers/indicator.js"></script>
@@ -997,7 +1015,10 @@
 <!---->
      <script src="scripts/directives/crud-grid-data-factory.js"></script>
      <script src="scripts/directives/crud-grid-directive-directories.js"></script>
+      
        <script src="scripts/directives/crud-grid-directive-objects.js"></script>
+       <script src="scripts/directives/crud-grid-directive-objects-tree.js"></script>
+       
        <script src="scripts/directives/ng-right-click.js"></script>
        <script src="scripts/directives/nmc-view-electricity.js"></script>
        <script src="scripts/directives/nmc-view-message-for-user.js"></script>
@@ -1020,7 +1041,10 @@
 <!--        <script src="scripts.min/services.min.js"></script>-->
 <!---->
        <script src="scripts/services/notification-factory.js"></script>
+       
        <script src="scripts/services/object-service.js"></script>
+       <script src="scripts/services/objects-tree-service.js"></script>
+       
        <script src="scripts/services/monitor-service.js"></script>
        <script src="scripts/services/indicator-service.js"></script>
        <script src="scripts/services/main-service.js"></script>

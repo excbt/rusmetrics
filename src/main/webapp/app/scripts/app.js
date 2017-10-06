@@ -29,7 +29,8 @@ var app = angular
         'ui.select',
         'ui.mask',
         'angularWidget',
-        'chart.js'
+        'chart.js',
+        'ui.layout'
     ]);
 
 //routing config
@@ -57,6 +58,16 @@ app.config(['$routeProvider', function ($routeProvider) {
         .when('/objects/demo-map', {
             templateUrl: 'views/objects_map.html',
             controller: 'ObjectsMapCtrl',
+            resolve: {
+                permissions: ['mainSvc', function (mainSvc) {
+                    return mainSvc.getLoadedServicePermission();
+                }]
+            }
+        })
+    
+        .when('/objects/newlist', {
+            templateUrl: 'views/objects-newlist.html',
+            controller: 'NewObjectsCtrl',
             resolve: {
                 permissions: ['mainSvc', function (mainSvc) {
                     return mainSvc.getLoadedServicePermission();
