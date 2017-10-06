@@ -53,6 +53,7 @@ module.exports = function(config) {
       '../app/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.js',
       '../app/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js',      
       '../app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      '../app/bower_components/angular-ui-layout/src/ui-layout.js',
       '../app/scripts/app.js',
       '../app/scripts/services/*.js',
       '../app/scripts/directives/*.js',

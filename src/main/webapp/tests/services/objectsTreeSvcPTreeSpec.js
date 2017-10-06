@@ -567,7 +567,7 @@ describe("Portal NMC, objects tree servce tests", function () {
 	it("objectsTreeSvc.findNodeInPTree search ELEMENT test:", function () {
 		expect(objectsTreeService.findNodeInPTree).toBeDefined();
 		// httpBackend.flush();
-		var testNode = TEST_P_TREE.childNodes[0];
+		var testNode = TEST_P_TREE.childNodes[1].childNodes[0];
 		var foundedNode = objectsTreeService.findNodeInPTree(testNode, TEST_P_TREE);
 //		console.log("Founded ELEMENT node: " + foundedNode.nodeType + "; " + foundedNode._id + "; " + foundedNode.nodeName);
 		expect(foundedNode).toEqual(testNode);
