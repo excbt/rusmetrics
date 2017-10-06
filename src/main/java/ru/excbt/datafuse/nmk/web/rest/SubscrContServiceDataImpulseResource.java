@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -123,8 +123,8 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 
         SubscriberParam subscriberParam = getSubscriberParam();
 
-        List<CsvUtils.CheckFileResult> checkFileResults = CsvUtils.checkCsvFiles(multipartFiles);
-        List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
+        List<CsvUtil.CheckFileResult> checkFileResults = CsvUtil.checkCsvFiles(multipartFiles);
+        List<CsvUtil.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
 
         if (isNotPassed.size() > 0) {
             return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));

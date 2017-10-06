@@ -1,9 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.slogwriter.service.SLogSession;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
-import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,7 +53,7 @@ public class SLogSessionUtils {
 
         boolean checkCsvSeparators;
         try {
-            checkCsvSeparators = CsvUtils.checkCsvSeparators(new File(fileImportInfo.getInternalFileName()));
+            checkCsvSeparators = CsvUtil.checkCsvSeparators(new File(fileImportInfo.getInternalFileName()));
         } catch (FileNotFoundException e1) {
 
             failSession(session,
