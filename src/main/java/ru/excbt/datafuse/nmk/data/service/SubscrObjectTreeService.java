@@ -20,16 +20,16 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrObjectTreeService extends AbstractService implements SecuredRoles {
+public class SubscrObjectTreeService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
 
@@ -135,7 +135,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 */
 	private SubscrObjectTree _softDeleteSubscrObjectTree(SubscrObjectTree node) {
 		checkNotNull(node);
-		TreeNodeOperator operator = (i) -> softDelete(i);
+		TreeNodeOperator operator = (i) -> EntityActions.softDelete(i);
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 

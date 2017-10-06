@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.service.utils;
 
 import lombok.Getter;
 import org.apache.commons.io.FilenameUtils;
@@ -17,14 +17,12 @@ import java.util.List;
 /**
  * Created by kovtonyk on 01.06.2017.
  */
-public class CsvUtils {
+public class CsvUtil {
 
-    private static final Logger log = LoggerFactory.getLogger(CsvUtils.class);
-
-    private static final Logger logger = LoggerFactory.getLogger(CsvUtils.class);
+    private static final Logger log = LoggerFactory.getLogger(CsvUtil.class);
 
 
-    private CsvUtils() {
+    private CsvUtil() {
     }
 
     @Getter
@@ -64,7 +62,7 @@ public class CsvUtils {
             CheckFileResult checkFilesResult = new CheckFileResult(multipartFile);
 
             String fileName = checkFilesResult.getFileName();
-            logger.debug("Checking file to import {}", fileName);
+            log.debug("Checking file to import {}", fileName);
             if (fileName == null || fileName.isEmpty()) {
                 checkFilesResult.errorDesc = "Имя файла не указано";
                 continue;

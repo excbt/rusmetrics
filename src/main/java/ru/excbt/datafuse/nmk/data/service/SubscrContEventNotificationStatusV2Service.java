@@ -26,12 +26,12 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 @Service
-public class SubscrContEventNotificationStatusV2Service extends AbstractService {
+public class SubscrContEventNotificationStatusV2Service {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscrContEventNotificationStatusV2Service.class);
 
@@ -108,7 +108,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 
 		// Second check. For safe only
 		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
+			contObjectIds = RepositoryUtil.NO_DATA_IDS;
 		}
 
 		CounterInfoMap allNotificationsMap = new CounterInfoMap(subscrContEventNotificationService

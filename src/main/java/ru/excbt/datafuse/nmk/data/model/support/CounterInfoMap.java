@@ -1,4 +1,6 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.model.support;
+
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -7,7 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 
+ *
  * @author kovtonyk
  *
  */

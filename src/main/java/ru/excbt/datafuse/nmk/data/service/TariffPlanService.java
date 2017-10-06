@@ -26,12 +26,12 @@ import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffPlanRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с тарифными планами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.04.2015
@@ -59,7 +59,7 @@ public class TariffPlanService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -68,7 +68,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -77,7 +77,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -86,7 +86,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rsoOrganizationId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -119,7 +119,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rsoOrganizationId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -129,7 +129,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param tariffPlan
 	 * @return
@@ -167,7 +167,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param tariffPlan
 	 * @return
@@ -191,7 +191,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param tariffPlan
 	 * @return
@@ -211,7 +211,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param tariffPlan
 	 * @return
@@ -226,7 +226,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @return
 	 */
@@ -237,7 +237,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @param subscriberId
 	 * @return
@@ -248,7 +248,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @param subscriberId
 	 * @return
@@ -259,7 +259,7 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tariffPlanId
 	 * @return
 	 */

@@ -19,21 +19,21 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsAddrRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 /**
  * Сервис для работы с настройкой смс уведомлений для событий
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
  *
  */
 @Service
-public class SubscrContEventTypeSmsService extends AbstractService {
+public class SubscrContEventTypeSmsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventTypeSmsService.class);
 
@@ -47,7 +47,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	private SubscrContEventTypeSmsAddrRepository subscrContEventTypeSmsAddrRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -56,7 +56,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventTypeSmsId
 	 * @return
 	 */
@@ -80,7 +80,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param contEventType
 	 * @param smsAddrList
@@ -112,7 +112,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventTypeSmsId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -126,8 +126,8 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 		List<SubscrContEventTypeSmsAddr> smsAddList = subscrContEventTypeSmsAddrRepository
 				.findBySubscrContEventTypeSmsId(subscrContEventTypeSmsId);
 
-		subscrContEventTypeSmsAddrRepository.save(softDelete(smsAddList));
-		subscrContEventTypeSmsRepository.save(softDelete(sms));
+		subscrContEventTypeSmsAddrRepository.save(EntityActions.softDelete(smsAddList));
+		subscrContEventTypeSmsRepository.save(EntityActions.softDelete(sms));
 	}
 
 }

@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -7,18 +7,27 @@ import javax.persistence.PersistenceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+
+import java.util.Optional;
 
 @Service
 public class BenchmarkService {
 
 	private volatile Long benchmarkSubscriberId;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberRepository subscriberRepository;
 
-	/**
-	 * 
+	@Autowired
+    public BenchmarkService(SubscriberRepository subscriberRepository) {
+        this.subscriberRepository = subscriberRepository;
+    }
+
+    /**
+	 *
 	 * @return
 	 */
 	public Long getBenchmarkSubscriberId() {
@@ -27,19 +36,19 @@ public class BenchmarkService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param benchmarkSubscriberId
 	 */
 	public void setBenchmarkSubscriberId(Long benchmarkSubscriberId) {
 
-		if (!subscriberService.checkSubscriberId(benchmarkSubscriberId)) {
-			throw new PersistenceException(String.format("Subscriber (Id:%d) is not found", benchmarkSubscriberId));
-		}
+        Optional.ofNullable(subscriberRepository.findOne(benchmarkSubscriberId))
+            .orElseThrow(() -> DBExceptionUtil.entityNotFoundException(Subscriber.class, benchmarkSubscriberId));
+
 		this.benchmarkSubscriberId = benchmarkSubscriberId;
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void reset() {
 		benchmarkSubscriberId = null;

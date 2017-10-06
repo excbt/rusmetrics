@@ -48,9 +48,7 @@ import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -65,7 +63,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  *
  */
 @Service
-public class ContServiceDataHWaterService extends AbstractService implements SecuredRoles {
+public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
 
@@ -679,7 +677,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkArgument(contZpointIds != null);
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZpointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
 						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZpointIds))
 				: new HashMap<>();
 

@@ -1,7 +1,7 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.model.support;
 
 /**
- * 
+ *
  * @author kovtonyk
  *
  */

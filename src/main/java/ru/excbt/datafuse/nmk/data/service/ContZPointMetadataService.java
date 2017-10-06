@@ -32,11 +32,10 @@ import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContZPointMetadataService extends AbstractService implements SecuredRoles {
+public class ContZPointMetadataService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataService.class);
 
@@ -71,8 +70,11 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	@Autowired
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
+    @Autowired
+	private DBSessionService dbSessionService;
+
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -119,7 +121,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	};
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -159,7 +161,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -168,7 +170,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcList
 	 * @return
 	 */
@@ -183,7 +185,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -197,7 +199,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -215,7 +217,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -229,7 +231,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -247,7 +249,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -266,7 +268,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -295,7 +297,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 * @return
 	 */
@@ -315,7 +317,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param deviceObjectId
 	 * @return
@@ -326,11 +328,12 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 		return contZPointMetadataRepository.deleteOtherContZPointMetadata(contZPointId, deviceObjectId);
 	}
 
-	/**
-	 * 
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param entityList
+     * @param contZPointId
+     * @return
+     */
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<ContZPointMetadata> saveContZPointMetadata(List<ContZPointMetadata> entityList, Long contZPointId) {
@@ -377,7 +380,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param deviceMetadataType
 	 * @return
@@ -390,7 +393,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 		sb.append("WHERE device_object_id = :par_device_object_id AND ");
 		sb.append(" device_metadata_type = :par_device_metadata_type ");
 
-		Query qry = em.createNativeQuery(sb.toString());
+		Query qry = dbSessionService.getSession().createNativeQuery(sb.toString());
 		qry.setParameter("par_device_object_id", deviceObjectId);
 		qry.setParameter("par_device_metadata_type", deviceMetadataType);
 

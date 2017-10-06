@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository")
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog","ru.excbt.datafuse.nmk.service" })
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog","ru.excbt.datafuse.nmk.service"})
 @EnableConfigurationProperties(value = { PortalDBProps.class, SLogDBProps.class })
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {

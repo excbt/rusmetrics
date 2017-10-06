@@ -1,9 +1,9 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.slog.service;
 
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.slogwriter.service.SLogSession;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
-import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -12,9 +12,9 @@ import java.io.IOException;
 /**
  * Created by kovtonyk on 02.06.2017.
  */
-public class SLogSessionUtils {
+public class SLogSessionUtil {
 
-    private SLogSessionUtils() {
+    private SLogSessionUtil() {
     }
 
     /**
@@ -53,7 +53,7 @@ public class SLogSessionUtils {
 
         boolean checkCsvSeparators;
         try {
-            checkCsvSeparators = CsvUtils.checkCsvSeparators(new File(fileImportInfo.getInternalFileName()));
+            checkCsvSeparators = CsvUtil.checkCsvSeparators(new File(fileImportInfo.getInternalFileName()));
         } catch (FileNotFoundException e1) {
 
             failSession(session,
@@ -72,7 +72,7 @@ public class SLogSessionUtils {
 
         if (!checkCsvSeparators) {
 
-            SLogSessionUtils.failSession(session,
+            SLogSessionUtil.failSession(session,
                 "Ошибка. Файл не содержит полных данных", fileNameErrorTemplate);
 
             throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,

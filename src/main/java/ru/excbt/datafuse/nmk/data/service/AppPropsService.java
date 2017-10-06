@@ -4,11 +4,9 @@ import java.io.File;
 
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvProps;
-
 /**
  * Сервис для обработки путей к файлам приложения
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.07.2015
@@ -18,7 +16,7 @@ import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvProps;
 public class AppPropsService implements HWatersCsvProps {
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAppHomeDirectory() {

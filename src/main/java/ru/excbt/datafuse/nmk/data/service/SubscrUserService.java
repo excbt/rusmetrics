@@ -13,11 +13,11 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class SubscrUserService extends AbstractService implements SecuredRoles {
+public class SubscrUserService implements SecuredRoles {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrUserService.class);
 
@@ -245,7 +245,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		if (subscrUser == null) {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
 		}
-		subscrUserRepository.save(softDelete(subscrUser));
+		subscrUserRepository.save(EntityActions.softDelete(subscrUser));
 
 		// Delete from Ldap
 		LdapAction action = (u) -> {

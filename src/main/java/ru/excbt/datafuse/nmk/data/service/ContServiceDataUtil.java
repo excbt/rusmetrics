@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -8,9 +8,9 @@ import java.util.List;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
-public final class ContServiceDataUtils {
+public final class ContServiceDataUtil {
 
-	private ContServiceDataUtils() {
+	private ContServiceDataUtil() {
 
 	}
 

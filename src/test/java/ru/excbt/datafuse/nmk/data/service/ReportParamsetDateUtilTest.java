@@ -7,20 +7,19 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.excbt.datafuse.nmk.data.service.support.ReportParamsetUtils;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 
-public class ReportParamsetUtilsTest {
+public class ReportParamsetDateUtilTest {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(ReportParamsetUtilsTest.class);
+			.getLogger(ReportParamsetDateUtilTest.class);
 
 	private LocalDateTime[] testKey(ReportPeriodKey reportPeriodKey) {
 		LocalDateTime[] result = new LocalDateTime[2];
-		LocalDateTime dtStart = ReportParamsetUtils.getStartDateTime(
+		LocalDateTime dtStart = ReportParamsetDateUtil.getStartDateTime(
 				LocalDateTime.now(), reportPeriodKey);
-		LocalDateTime dtEnd = ReportParamsetUtils.getEndDateTime(
+		LocalDateTime dtEnd = ReportParamsetDateUtil.getEndDateTime(
 				LocalDateTime.now(), reportPeriodKey);
 
 		assertNotNull(dtStart);

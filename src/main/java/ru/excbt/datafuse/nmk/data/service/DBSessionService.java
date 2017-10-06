@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import org.hibernate.Session;
 import org.springframework.stereotype.Service;
@@ -7,7 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 @Service
-public class SessionService {
+public class DBSessionService {
 
     @PersistenceContext(unitName = "nmk-p")
     private EntityManager em;
@@ -19,5 +19,7 @@ public class SessionService {
         Session session = em.unwrap(Session.class);
         return session;
     }
+
+
 
 }

@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemReposit
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -45,7 +45,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
  * Сервис для работы с набором параметров отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.04.2015
@@ -89,7 +89,7 @@ public class ReportParamsetService implements SecuredRoles {
 	private ReportMetaParamDirectoryItemRepository reportMetaParamDirectoryItemRepository;
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @return
 	 */
@@ -120,7 +120,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -136,7 +136,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -178,7 +178,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */
@@ -197,7 +197,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -214,7 +214,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -223,7 +223,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -244,7 +244,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -263,7 +263,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -274,7 +274,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @return
 	 */
@@ -298,7 +298,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcReportTemplateId
 	 * @return
 	 */
@@ -341,7 +341,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -351,7 +351,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -361,7 +361,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -371,7 +371,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -383,7 +383,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -407,7 +407,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param objectIds
 	 */
@@ -424,7 +424,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -436,7 +436,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetUnitId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -463,7 +463,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param contObjectIds
 	 */
@@ -476,7 +476,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @param unitId
 	 * @return
@@ -487,7 +487,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param reportParamsetName
 	 * @param reportPeriod
@@ -513,7 +513,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @param reportParamsetName
 	 * @param reportPeriod
@@ -548,7 +548,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param activeDate
 	 * @return
@@ -559,7 +559,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplateId
 	 * @param activeDate
 	 * @return
@@ -570,7 +570,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
@@ -598,7 +598,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void setupRequiredPassed() {
@@ -606,7 +606,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -653,7 +653,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -673,7 +673,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsets
 	 * @return
 	 */
@@ -695,7 +695,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -746,7 +746,7 @@ public class ReportParamsetService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param paramDirectoryKeyname
 	 * @return
 	 */

@@ -22,12 +22,12 @@ import ru.excbt.datafuse.nmk.data.service.SecuritySubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SecuritySubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
 import ru.excbt.datafuse.nmk.data.service.SystemUserService;
-import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
+import ru.excbt.datafuse.nmk.data.service.PasswordService;
 
 /**
  * Компонент для авторизации
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.03.2015
@@ -59,7 +59,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	private SubscrUserLoginLogService subscrUserLoginLogService;
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -106,7 +106,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
@@ -114,7 +114,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param authentication
 	 * @return
 	 */
@@ -141,7 +141,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberUserDetails
 	 * @param password
 	 * @param grantedAuths
@@ -162,7 +162,7 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @param actualPassword

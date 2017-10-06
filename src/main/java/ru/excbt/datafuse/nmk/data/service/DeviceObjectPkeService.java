@@ -27,18 +27,18 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeLimitRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeWarnRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceObjectPkeTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
+import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 
 /**
  * Сервис для работы с ПКЭ
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.02.2016
  *
  */
 @Service
-public class DeviceObjectPkeService extends AbstractService {
+public class DeviceObjectPkeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceObjectPkeService.class);
 
@@ -80,7 +80,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -89,7 +89,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param period
 	 * @return
@@ -104,7 +104,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param searchConditions
 	 * @return
 	 */
@@ -112,11 +112,11 @@ public class DeviceObjectPkeService extends AbstractService {
 	public List<DeviceObjectPkeWarn> selectDeviceObjectPkeWarn(PkeWarnSearchConditions searchConditions) {
 
 		List<Specification<DeviceObjectPkeWarn>> specList = Arrays.asList( //
-				specDeviceObjectId(searchConditions.deviceObjectId), // 
-				specDatePeriod(searchConditions.period), // 
+				specDeviceObjectId(searchConditions.deviceObjectId), //
+				specDatePeriod(searchConditions.period), //
 				specPkeTypes(searchConditions.pkeTypeKeynames));
 
-		Specifications<DeviceObjectPkeWarn> specs = specsAndFilterBuild(specList);
+		Specifications<DeviceObjectPkeWarn> specs = DBSpecUtil.specsAndFilterBuild(specList);
 
 		Page<DeviceObjectPkeWarn> resultPage = deviceObjectPkeWarnRepository.findAll(specs,
 				DEFAULT_MAX_EVENTS_PAGE_REQUEST);
@@ -125,7 +125,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -136,7 +136,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param period
 	 * @return
 	 */
@@ -154,7 +154,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pkeTypeKeynames
 	 * @return
 	 */

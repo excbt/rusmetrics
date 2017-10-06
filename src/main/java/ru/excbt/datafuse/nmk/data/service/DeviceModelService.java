@@ -22,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelHeatRadiatorRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ImpulseCounterTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
 
@@ -35,7 +34,7 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
  *
  */
 @Service
-public class DeviceModelService extends AbstractService implements SecuredRoles {
+public class DeviceModelService implements SecuredRoles {
 
 	private final DeviceModelRepository deviceModelRepository;
 

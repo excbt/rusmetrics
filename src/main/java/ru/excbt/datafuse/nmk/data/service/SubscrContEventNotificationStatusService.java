@@ -13,10 +13,10 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 @Service
-public class SubscrContEventNotificationStatusService extends AbstractService {
+public class SubscrContEventNotificationStatusService {
 
 
 	private final SubscrContEventNotificationService subscrContEventNotificationService;
@@ -219,7 +219,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
+			contObjectIds = RepositoryUtil.NO_DATA_IDS;
 		}
 
 		CounterInfoMap allMap = new CounterInfoMap(subscrContEventNotificationService
