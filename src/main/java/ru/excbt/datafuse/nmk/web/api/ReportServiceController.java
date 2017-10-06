@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;

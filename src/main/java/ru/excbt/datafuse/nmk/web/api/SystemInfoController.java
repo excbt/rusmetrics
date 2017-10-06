@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ExSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.ApiConst;

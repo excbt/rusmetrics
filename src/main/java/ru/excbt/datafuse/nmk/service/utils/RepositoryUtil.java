@@ -1,11 +1,11 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.service.utils;
 
 import java.util.Arrays;
 import java.util.List;
 
-public final class RepositoryUtils {
+public final class RepositoryUtil {
 
-    private RepositoryUtils() {
+    private RepositoryUtil() {
     }
 
     public static <T> List<T> safeList(List<T> inList) {

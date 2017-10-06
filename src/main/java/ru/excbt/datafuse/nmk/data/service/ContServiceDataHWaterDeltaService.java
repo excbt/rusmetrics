@@ -11,12 +11,10 @@ import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,7 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 /**
  * Сервис по работе с вычисляемыми данными по горячей воде
@@ -245,14 +243,14 @@ public class ContServiceDataHWaterDeltaService {
 			List<Object[]> dbResult) {
 		Map<Long, ContServiceTypeInfoART> resultMap = new HashMap<>();
 		for (Object[] row : dbResult) {
-			Long contObjectId = DBRowUtils.asLong(row[0]);
+			Long contObjectId = DBRowUtil.asLong(row[0]);
 			ContServiceTypeInfoART art = new ContServiceTypeInfoART(contServiceTypeKey);
 			if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.V_M3) {
-				art.setAbsConsValue(DBRowUtils.asDouble(row[2])); // sum_v_delta
+				art.setAbsConsValue(DBRowUtil.asDouble(row[2])); // sum_v_delta
 			} else if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.W_GCAL) {
-				art.setAbsConsValue(DBRowUtils.asDouble(row[3])); // sum_h_delta
+				art.setAbsConsValue(DBRowUtil.asDouble(row[3])); // sum_h_delta
 			}
-			art.setTempValue(DBRowUtils.asDouble(row[4])); // avg_t_in
+			art.setTempValue(DBRowUtil.asDouble(row[4])); // avg_t_in
 			resultMap.put(contObjectId, art);
 		}
 

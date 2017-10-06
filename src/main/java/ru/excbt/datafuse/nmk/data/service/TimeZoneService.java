@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.TimeZone;
 
@@ -6,11 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
-import ru.excbt.datafuse.nmk.data.service.TimezoneDefService;
 
 /**
  * Класс для работы с часовыми поясами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.07.2015
@@ -21,11 +20,16 @@ public class TimeZoneService {
 
 	private static volatile String defaultTimezoneCanonicalId = null;
 
-	@Autowired
-	private TimezoneDefService timezoneDefService;
 
-	/**
-	 * 
+	private final TimezoneDefService timezoneDefService;
+
+    @Autowired
+    public TimeZoneService(TimezoneDefService timezoneDefService) {
+        this.timezoneDefService = timezoneDefService;
+    }
+
+    /**
+	 *
 	 * @return
 	 */
 	public TimeZone getDefaultTimeZone() {

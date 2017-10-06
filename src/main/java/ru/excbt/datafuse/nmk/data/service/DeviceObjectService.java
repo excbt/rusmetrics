@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.*;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
@@ -150,7 +150,7 @@ public class DeviceObjectService implements SecuredRoles {
         if (deviceObjectDataSource != null && dsi != null) {
             SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
             if (ds == null) {
-                DBExceptionUtils.entityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
+                DBExceptionUtil.entityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
             }
             deviceObjectDataSource.setSubscrDataSource(ds);
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());

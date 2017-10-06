@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 @Service
@@ -16,10 +17,15 @@ public class CurrentSubscriberUserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberUserDetailsService.class);
 
-	@Autowired
-	private MockUserService mockUserService;
 
-	/**
+	private final MockUserService mockUserService;
+
+    @Autowired
+    public CurrentSubscriberUserDetailsService(MockUserService mockUserService) {
+        this.mockUserService = mockUserService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

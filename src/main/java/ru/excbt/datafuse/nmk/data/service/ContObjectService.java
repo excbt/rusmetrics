@@ -18,15 +18,14 @@ import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 import javax.persistence.Tuple;
 import java.util.*;
 import java.util.function.Function;
@@ -746,7 +745,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 //		List<Object[]> resultList = q1.getResultList();
 
 		return resultList.stream()
-				.collect(Collectors.toMap(i -> DBRowUtils.asLong(i[0]), i -> DBRowUtils.asInteger(i[1])));
+				.collect(Collectors.toMap(i -> DBRowUtil.asLong(i[0]), i -> DBRowUtil.asInteger(i[1])));
 
 	}
 
@@ -806,7 +805,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		if (contObjectMeterPeriodSettingsDTO.isSingle()) {
 			ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
 			if (contObject == null) {
-				DBExceptionUtils.entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
+				DBExceptionUtil.entityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
 			}
 			contObjectList.add(contObject);
 		} else if (contObjectMeterPeriodSettingsDTO.isMulti()) {

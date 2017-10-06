@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeContObject;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 

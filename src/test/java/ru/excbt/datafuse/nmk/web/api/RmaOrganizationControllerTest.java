@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 
@@ -41,7 +41,7 @@ public class RmaOrganizationControllerTest extends RmaControllerTest {
 		logger.info("Organization ID: {}", orgId);
 
 		organization = organizationService.findOneOrganization(orgId)
-            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, orgId));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, orgId));
 
 		organization.setOrganizationFullAddress("FULL Address");
 		organization.setOrganizationDescription("Modified By AK");

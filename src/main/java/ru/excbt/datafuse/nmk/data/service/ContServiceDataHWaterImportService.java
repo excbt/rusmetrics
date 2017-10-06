@@ -6,10 +6,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
@@ -30,13 +26,10 @@ import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -248,7 +241,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 //				PSQLException pe = DBExceptionUtils.getPSQLException(e);
 //				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
-                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+                String sqlExceptiomMessage =  DBExceptionUtil.getPSQLExceptionMessage(e);
 
               log.error("Hwater Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
