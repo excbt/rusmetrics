@@ -2,6 +2,10 @@
  *  Файл со стилями, используемыми во всём интерфейсе
  */
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+
 /* Полоса прокрутки*/
 /*
 ::-webkit-scrollbar{
@@ -273,6 +277,10 @@ body{
     width: 100%;
 }
 
+.nmc-logo-main-menu-h-div {
+    
+}
+
     /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
 .nmc-nav-user-menu {
     position: absolute; 
@@ -509,6 +517,17 @@ body{
  * Элементы навигации 
  ***********************/
 /* Главное меню */
+.nmc-main-menu-div {
+    margin-bottom: 2px; 
+    position: absolute; 
+    top: 10px; 
+    left: 2px; 
+    z-index: 3; 
+/*    border: 1px solid #ddd; */
+    padding: 7px 5px; 
+    border-radius: 4px;
+}
+
 .nmc-main-menu {
     min-height: 501px;
     padding-top: 21px;
@@ -527,7 +546,7 @@ body{
 .nmc-main-menu-item {
     word-wrap: break-word;
     padding-right: 1px;
-    border: none;
+    border: 1px solid #DCDCDC;
 /*    margin-right: -30%;*/
     margin-bottom: 3px;/*2%;*/
     font-size: 16px;
@@ -549,9 +568,9 @@ body{
 .nmc-main-menu-item:focus, .nmc-main-menu-item:hover {
     word-wrap: break-word;
 /*    padding-right: 1px;*/
-    border: none;
+    border: 1px solid #aaa;
 /*    margin-right: -30%;*/
-    margin-bottom: 3px;/*2%;*/
+/*    margin-bottom: 3px;2%;*/
     background-color: #DCDCDC;
 }
 
@@ -567,6 +586,7 @@ body{
     /* Иконка пункта меню*/
 .nmc-main-menu-item-icon {
     margin-right: 10px;
+/*    color: #4a88d2;*/
 }
 
 
@@ -619,7 +639,7 @@ body{
 /* Вкладки рабочей области */
 .nmc-main-tab-panel {
     margin-bottom: 5px;
-    margin-left: 8px;
+    margin-left: 20px;
 }
     /* неактивная вкладка*/
 .nmc-main-tab-button{
@@ -2370,9 +2390,20 @@ tr.nmc-inactive-price > td {
 .nmc-normal-alter {
     color:green;
 }
+.nmc-color {
+    color: #4a88d2;
+}
 
 .nmc-bg-alert {
     background-color: red;
+}
+
+.nmc-bg-warning {
+    background-color: yellow;
+}
+
+.nmc-bg-attention {
+    background-color: yellow;
 }
 
 /* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
@@ -2885,6 +2916,11 @@ input[type="checkbox"] {
     margin-top: 5px;
     margin-right: -10px;
 }
+
+a.user-menu:after {
+    margin-top: -3px;
+}
+
 .dropdown-submenu:hover > a:after {
     border-left-color: #ffffff;
 }

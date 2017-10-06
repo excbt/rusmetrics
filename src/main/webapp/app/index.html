@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" ng-app="portalNMC" ng-controller="MainCtrl" ng-cloak>
   <head>
     <!--[if IE]>
         <script src="/public1/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
     <meta charset="utf-8">
-    <title></title>
+      <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width = device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -44,7 +44,7 @@
 <!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.min.css"/>      -->
       <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.css"/>
       
-      <link rel = "stylesheet" href = "https://rawgithub.com/angular-ui/ui-layout/v1.0.5/ui-layout.css"/>
+      <link rel = "stylesheet" href = "/public/bower_components/angular-ui-layout/src/ui-layout.css"/>
 
       <script src="/public/vendor_components/RightsJS/right.js"></script>
       <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
@@ -59,7 +59,7 @@
 <!--    <script src="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.21/ui-grid.min.js"></script>-->
 
   </head>
-  <body class="nmc-main-window-background" ng-app="portalNMC">
+  <body class="nmc-main-window-background">
 <!--
       <div >
         <ng-widget src="'test'"></ng-widget>
@@ -96,7 +96,7 @@
 </div>
 -->
       <!--[if !IE]>-->
-<div ng-controller="MainCtrl">
+<div >
 <div id="wrap" class="wrap">
 <!--    ng-class="{'nmc-hide':mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':!mainCtrlSettings.loadingServicePermissionFlag}">-->
 <!--    Навигационная строка в верху страницы-->
@@ -156,18 +156,19 @@
   </div>
 -->
 <!--   энд оф Навигационная строка в верху страницы    -->
-    <div class = "" style = "margin-bottom: 2px; position: absolute; top: 10px; left: 2px; z-index: 1;">
-        <div class="btn-group">
-          <i title="Главное меню" 
-             type="button" 
-             class="btn btn-default btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
-             data-toggle="dropdown" 
-             aria-haspopup="true" 
-             aria-expanded="false" 
-             ng-click="selectedObjectBy(object)" 
-             style="font-size: .9em; color: #fff; background-color: #646263">
+    <div class = "nmc-main-menu-div"
+       ng-class = "{'nmc-bg-attention': debugModeFlag}">
+        <div class = "btn-group">
+          <i title = "Главное меню" 
+             type = "button" 
+             class = "btn btn-default btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+             data-toggle = "dropdown" 
+             aria-haspopup = "true" 
+             aria-expanded = "false"               
+             >
             </i>
-          <ul class="dropdown-menu nmc-dropdown-menu">
+<!--            style="font-size: .9em; color: #fff; background-color: #646263"-->
+          <ul class="dropdown-menu nmc-dropdown-menu" style = "padding: 0">
             <li class="menu-item" role="presentation">
                 <a id="object_main_menu_item"
                    class="list-group-item nmc-main-menu-item nmc-hide"
@@ -175,7 +176,7 @@
                    href="#/"
                    data-toggle="offcanvas"
                    ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
-                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
+                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                        title="Объекты">
                     </i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
@@ -188,7 +189,7 @@
                    href="#/objects/newlist"
                    data-toggle="offcanvas"
                    ng-click="clickMenu('object_new_menu_item'); showAdminSettings = false;">
-                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
+                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                        title="Объекты (NEW!)">
                     </i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты (NEW!)</span>
@@ -201,7 +202,7 @@
                    href="#/reports/" 
                    data-toggle="offcanvas" 
                    ng-click="clickMenu('report_menu_item')">
-                   <i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты">
+                   <i class="glyphicon glyphicon-file nmc-main-menu-item-icon nmc-color" title="Отчеты">
                        
                    </i>
                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span>
@@ -218,7 +219,7 @@
                    data-toggle="offcanvas"
                    ng-click="clickMenu('log_menu_item')"
                    ng-cloak>
-                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i>
+                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon nmc-color" title="Журнал"></i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">
                         Журналы
                     </span>
@@ -233,7 +234,7 @@
                    data-toggle="offcanvas"
                    ng-click="clickMenu('energy_menu_item')"
                    ng-cloak>
-                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon" title="Энергоэффективность"></i>
+                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon nmc-color" title="Энергоэффективность"></i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">
                         Энерго - эффективность
                     </span>
@@ -244,7 +245,7 @@
                    class="list-group-item nmc-main-menu-item nmc-hide"
                    ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
                    href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> 
-                   <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i>
+                   <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon nmc-color" title="Настройки"></i>
                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span>
                 </a>
             </li>
@@ -255,17 +256,46 @@
                    href = "#/management/objects/"
                    data-toggle = "offcanvas"
                    ng-click = "clickMenu('admin_menu_item'); showAdminSettings = true">
-                    <i class = "glyphicon glyphicon-wrench nmc-main-menu-item-icon"
+                    <i class = "glyphicon glyphicon-wrench nmc-main-menu-item-icon nmc-color"
                        title = "Управление">
                     </i>
                     <span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
                 </a>
             </li>
+            <li ng-if = "isRma()" role = "separator" class = "divider">
+                
+            </li>
             <li>
-                <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle"
-                       data-toggle="dropdown">
+                <a id = "management_main_menu_item"
+                   class = "nmc-hide"
+                   ng-class = "{'nmc-bg-attention': debugModeFlag, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
+                   
+                   data-toggle = "offcanvas"
+                   ng-click = "debugModeClick(); showAdminSettings = true">
+                    <i class = "glyphicon glyphicon-off nmc-main-menu-item-icon text-danger"
+                       title = "Режим настройки">
+                    </i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Режим настройки</span>
+                </a>
+            </li>
+            <li role = "separator" class = "divider">
+                
+            </li>
+            <li class = "nmc-text-align-center">
+<!--               logo  -->
+              <img src="images/logo-main-menu-h.png"
+                     
+                     />
+           
+            </li>
+            <li role = "separator" class = "divider">
+            <li class = "menu-item dropdown dropdown-submenu" role = "presentation">
+                <a class = "user-menu" 
+                      data-toggle="dropdown"
+                       aria-haspopup="true" 
+                      aria-expanded="false">
 <!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
-                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon"
+                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon text-warning"
                                    title="Пользовательское меню">
                                 </i>
                                 <span ng-show="mainCtrlSettings.showFullMenuFlag"
@@ -282,13 +312,15 @@
                                     </span>
                                 </span>
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu nmc-dropdown-menu">
+<!--
                         <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
                             <a href="#/private/"
                                title='Private office'
                                ng-click="showPrivateOfficeMenu=true;showMenuReport=false;">
                                 <p> <b>Личный кабинет</b>
                         </p></a></li>
+-->
 
                         <li ng-if="userInfo.isReadonly != true"><a href=""
                                ng-click="changePasswordInit()"
@@ -388,6 +420,7 @@
 
           </ul>
         </div>
+        
     </div>
 
     <div class="container-fluid noMargin" >
@@ -875,7 +908,7 @@
       <script src="/public/bower_components/Blob/Blob.js"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
       
-      <script src = "https://rawgithub.com/angular-ui/ui-layout/v1.0.5/ui-layout.min.js"></script>
+      <script src = "/public/bower_components/angular-ui-layout/src/ui-layout.js"></script>
 <!--
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>

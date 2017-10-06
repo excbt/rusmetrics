@@ -33,6 +33,8 @@ var app = angular
         'ui.layout'
     ]);
 
+app.constant("APP_LABEL", "Русметрикс");
+
 //routing config
 app.config(['$routeProvider', function ($routeProvider) {
 //console.log("Run routeProviderConfig");    

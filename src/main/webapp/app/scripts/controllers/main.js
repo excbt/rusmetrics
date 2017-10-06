@@ -12,7 +12,7 @@
  * @date 2015
  */
 var app = angular.module('portalNMC');
-app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', 'monitorSvc', 'logSvc', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc, monitorSvc, logSvc) {
+app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'mainSvc', 'notificationFactory', '$http', 'objectSvc', 'reportSvc', 'monitorSvc', 'logSvc', 'APP_LABEL', function ($scope, $rootScope, $cookies, $location, mainSvc, notificationFactory, $http, objectSvc, reportSvc, monitorSvc, logSvc, APP_LABEL) {
 //console.log("MainCtrl");      
       //main ctrl settings
     $scope.mainCtrlSettings = {};
@@ -20,8 +20,20 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
     $scope.mainCtrlSettings.showFullMenuFlag = true;
     $scope.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag();
     $scope.mainCtrlSettings.ctxId = "nmc_main";
+    
+    $scope.debugModeFlag = false;
       
     $scope.data = {};
+    $scope.data.menuLabels = {
+        object_menu_item: "Объекты",
+        object_new_menu_item: "Объекты (NEW!)",
+        report_menu_item: "Отчеты",
+        setting_menu_item: "Настройки",
+        admin_menu_item: "Управление",
+        log_menu_item: "Журналы",
+        energy_menu_item: "Энерго - эффективность",
+        test_menu_item: "Тест"
+    };
 
     $scope.showPrivateOfficeMenu = false;
     $rootScope.showIndicatorsParam = false;
@@ -37,10 +49,22 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
        //   $rootScope.beginDate ="";// "2014-03-19";//endDate;  
 
       
-    //end for indicators  
+    //end for indicators 
+    
+    $scope.debugModeClick = function() {
+        $scope.debugModeFlag = !$scope.debugModeFlag;       
+    };
  
 //  flags for selected menu item                  
     $scope.menuMassive = {};
+    
+    function setPageTitle(pageName) {
+        var title = APP_LABEL;
+        if (!mainSvc.checkUndefinedNull(pageName)) {
+            title += " - " + pageName;
+        }
+        document.title = title;
+    }
 
       //Menu initialization
     function initMenu() {
@@ -67,7 +91,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
           if ($scope.menuMassive[mkey] === false) {
               return false;
           }
-          menuFlag = true;
+          menuFlag = true;          
+          setPageTitle($scope.data.menuLabels[mkey]);
           return true;
         });
 //        for (var k in $scope.menuMassive){
@@ -123,7 +148,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //          for (var k in $scope.menuMassive){ 
 //              $scope.menuMassive[k] = false;
 //          };        
-         $scope.menuMassive[menu] = true;  
+         $scope.menuMassive[menu] = true;         
+         setPageTitle($scope.data.menuLabels[menu]);
     };
 
       //set default menu state
@@ -136,7 +162,8 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
 //      for (var k in $scope.menuMassive){
 //              $scope.menuMassive[k] = false;
 //          };        
-         $scope.menuMassive.object_menu_item = true;
+         $scope.menuMassive.object_menu_item = true;         
+         setPageTitle($scope.data.menuLabels.object_menu_item);
 //console.log(window.location.href);        
 //console.log(window.location);        
     };
@@ -291,6 +318,7 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
             $('#changePasswordModal').modal('hide');
         }, errorCallback);
     };
+//    setPageTitle();
     
 //    function initCtrl () {
 //console.log(reportSvc.getRequestCanceler());        
