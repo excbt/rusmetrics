@@ -19,10 +19,9 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
-import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 
 import javax.persistence.Tuple;
-import java.time.LocalDate;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -59,6 +58,11 @@ public class ObjectAccessService {
         this.subscrServiceAccessService = subscrServiceAccessService;
     }
 
+
+
+    public ObjectAccessUtil objectAccessUtil() {
+        return new ObjectAccessUtil(this);
+    }
 
 
     private List<Long> makeFilterList (List<Long> idList) {

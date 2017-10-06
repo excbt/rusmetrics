@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -57,8 +58,6 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
 
         PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
 
-        Predicate<ContObject> access = object -> true;
-
         readChildSubscrObjectTree (pTreeElement, subscrObjectTree);
 
         return pTreeElement;
@@ -69,12 +68,15 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
 
         PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
 
-        List<Long> contObjectIds = objectAccessService.findContObjectIds(portalUserIds);
-        List<Long> contZPointIds = objectAccessService.findAllContZPointIds(portalUserIds);
-        Predicate<ContObject> contObjectAccess = (co) -> contObjectIds.contains(co.getId());
-        Predicate<ContZPoint> contZPointAccess = (zp) -> contZPointIds.contains(zp.getId());
+        ObjectAccessUtil objectAccessUtil = objectAccessService.objectAccessUtil();
 
-        readChildSubscrObjectTree (pTreeElement, subscrObjectTree, childLevel, contObjectAccess, contZPointAccess);
+        readChildSubscrObjectTree (
+            pTreeElement,
+            subscrObjectTree,
+            childLevel,
+            objectAccessUtil.checkContObject(portalUserIds),
+            objectAccessUtil.checkContZPoint(portalUserIds)
+        );
 
         return pTreeElement;
     }
@@ -109,7 +111,6 @@ public class SubscrObjectPTreeNodeService extends AbstractService implements Sec
             PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
             pTreeElement.addLinkedObject(pTreeContObjectNode);
             addContZPointsMap(pTreeContObjectNode, contObject, contZPointMap);
-            //addContZPoints(pTreeContObjectNode, contObject);
         }
 
         boolean levelThreshold = childLevel != null && childLevel < 1;
