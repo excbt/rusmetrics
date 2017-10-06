@@ -1,15 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.service.V_AuditUserService;
+import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 
 /**
  * Класс "заглушка" для работы с пользователем

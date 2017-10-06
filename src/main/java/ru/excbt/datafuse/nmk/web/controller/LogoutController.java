@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberUserDetailsService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberUserDetailsService;
 
 @Controller
 public class LogoutController {

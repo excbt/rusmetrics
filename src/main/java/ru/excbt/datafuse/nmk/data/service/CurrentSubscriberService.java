@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -8,14 +8,14 @@ import java.util.Date;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
+import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
@@ -31,25 +31,26 @@ public class CurrentSubscriberService {
 
 	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberService.class);
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberService subscriberService;
 
-	@Autowired
-	private MockSubscriberService mockSubscriberService;
+	private final MockSubscriberService mockSubscriberService;
 
-	//	@Autowired
-	//	protected UserSession userSession;
+	private final MockUserService mockUserService;
 
-	@Autowired
-	private MockUserService mockUserService;
+	private final V_FullUserInfoRepository fullUserInfoRepository;
 
-	@Autowired
-	private V_FullUserInfoRepository fullUserInfoRepository;
+	private final CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
-	@Autowired
-	private CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
-	/**
+    public CurrentSubscriberService(SubscriberService subscriberService, MockSubscriberService mockSubscriberService, MockUserService mockUserService, V_FullUserInfoRepository fullUserInfoRepository, CurrentSubscriberUserDetailsService subscriberUserDetailsService) {
+        this.subscriberService = subscriberService;
+        this.mockSubscriberService = mockSubscriberService;
+        this.mockUserService = mockUserService;
+        this.fullUserInfoRepository = fullUserInfoRepository;
+        this.subscriberUserDetailsService = subscriberUserDetailsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
