@@ -14,8 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 import java.util.ArrayList;

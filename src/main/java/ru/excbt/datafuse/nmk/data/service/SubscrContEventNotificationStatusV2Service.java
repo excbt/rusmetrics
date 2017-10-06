@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStat
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 
 @Service
