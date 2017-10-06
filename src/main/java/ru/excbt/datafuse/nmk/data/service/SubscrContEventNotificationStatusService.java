@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -218,7 +219,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
+			contObjectIds = RepositoryUtil.NO_DATA_IDS;
 		}
 
 		CounterInfoMap allMap = new CounterInfoMap(subscrContEventNotificationService

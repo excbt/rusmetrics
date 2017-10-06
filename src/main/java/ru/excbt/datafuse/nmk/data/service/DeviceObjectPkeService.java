@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeLimitRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeWarnRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceObjectPkeTypeRepository;
+import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 
 /**
  * Сервис для работы с ПКЭ
@@ -115,7 +116,7 @@ public class DeviceObjectPkeService extends AbstractService {
 				specDatePeriod(searchConditions.period), //
 				specPkeTypes(searchConditions.pkeTypeKeynames));
 
-		Specifications<DeviceObjectPkeWarn> specs = specsAndFilterBuild(specList);
+		Specifications<DeviceObjectPkeWarn> specs = DBSpecUtil.specsAndFilterBuild(specList);
 
 		Page<DeviceObjectPkeWarn> resultPage = deviceObjectPkeWarnRepository.findAll(specs,
 				DEFAULT_MAX_EVENTS_PAGE_REQUEST);

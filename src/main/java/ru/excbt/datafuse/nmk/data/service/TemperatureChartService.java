@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartRepository;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
@@ -183,7 +184,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 		if (entity == null) {
 			throw new PersistenceException(String.format("TemperatureChart (id=%d) is not found", id));
 		}
-		temperatureChartRepository.save(softDelete(entity));
+		temperatureChartRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**
@@ -197,11 +198,11 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 				.deletedFilter(temperatureChartItemRepository.selectTemperatureChartItems(temperatureChartId));
 	}
 
-	/**
-	 *
-	 * @param temperatureChartId
-	 * @return
-	 */
+    /**
+     *
+     * @param temperatureChartItemId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public TemperatureChartItem selectTemperatureChartItem(Long temperatureChartItemId) {
 		return temperatureChartItemRepository.findOne(temperatureChartItemId);
@@ -246,7 +247,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 		if (entity == null) {
 			throw new PersistenceException(String.format("TemperatureChartItem (id=%d) is not found", id));
 		}
-		temperatureChartItemRepository.save(softDelete(entity));
+		temperatureChartItemRepository.save(EntityActions.softDelete(entity));
 	}
 
 }

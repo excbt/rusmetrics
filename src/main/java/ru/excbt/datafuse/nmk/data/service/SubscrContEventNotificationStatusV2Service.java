@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 @Service
 public class SubscrContEventNotificationStatusV2Service extends AbstractService {
@@ -107,7 +108,7 @@ public class SubscrContEventNotificationStatusV2Service extends AbstractService 
 
 		// Second check. For safe only
 		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
+			contObjectIds = RepositoryUtil.NO_DATA_IDS;
 		}
 
 		CounterInfoMap allNotificationsMap = new CounterInfoMap(subscrContEventNotificationService

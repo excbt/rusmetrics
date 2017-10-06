@@ -15,10 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointStatInfo;
-import ru.excbt.datafuse.nmk.data.model.support.MinCheck;
+import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
@@ -540,7 +537,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	public void deleteOne(PortalUserIds userIds, Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
-		contZPointRepository.save(softDelete(contZPoint));
+		contZPointRepository.save(EntityActions.softDelete(contZPoint));
 
         subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
 

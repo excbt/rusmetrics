@@ -27,70 +27,51 @@ import static com.google.common.base.Preconditions.*;
  */
 public abstract class AbstractService {
 
-	public final static List<Long> NO_DATA_IDS = Collections.unmodifiableList(Arrays.asList(Long.MIN_VALUE));
+//	public final static List<Long> NO_DATA_IDS = Collections.unmodifiableList(Arrays.asList(Long.MIN_VALUE));
 
 	/**
 	 *
 	 * @param entity
 	 * @return
 	 */
-	protected <T extends DeletableObject> T softDelete(T entity) {
-		checkNotNull(entity);
-		entity.setDeleted(1);
-		return entity;
-	}
+//	protected <T extends DeletableObject> T softDelete(T entity) {
+//		checkNotNull(entity);
+//		entity.setDeleted(1);
+//		return entity;
+//	}
 
 	/**
 	 *
 	 * @param entities
 	 * @return
 	 */
-	protected <T extends DeletableObject> Iterable<T> softDelete(Iterable<T> entities) {
-		checkNotNull(entities);
-		entities.forEach(i -> {
-			i.setDeleted(1);
-		});
-		return entities;
-	}
+//	protected <T extends DeletableObject> Iterable<T> softDelete(Iterable<T> entities) {
+//		checkNotNull(entities);
+//		entities.forEach(i -> {
+//			i.setDeleted(1);
+//		});
+//		return entities;
+//	}
 
 	/**
 	 *
 	 * @param specs
 	 * @return
 	 */
-	protected <T> Specifications<T> specsAndFilterBuild(List<Specification<T>> specList) {
-		if (specList == null) {
-			return null;
-		}
-		Specifications<T> result = null;
-		for (Specification<T> i : specList) {
-			if (i == null) {
-				continue;
-			}
-			result = result == null ? Specifications.where(i) : result.and(i);
-		}
-
-		return result;
-	}
-
-	/**
-	 *
-	 * @param checkIds
-	 * @param availableIds
-	 * @return
-	 */
-	public static boolean checkIds(Long[] checkIds, List<Long> availableIds) {
-
-		if (availableIds == null || availableIds.isEmpty()) {
-			return false;
-		}
-
-		boolean result = true;
-		for (Long id : checkIds) {
-			result = result && availableIds.contains(id);
-		}
-		return result;
-	}
+//	protected <T> Specifications<T> specsAndFilterBuild(List<Specification<T>> specList) {
+//		if (specList == null) {
+//			return null;
+//		}
+//		Specifications<T> result = null;
+//		for (Specification<T> i : specList) {
+//			if (i == null) {
+//				continue;
+//			}
+//			result = result == null ? Specifications.where(i) : result.and(i);
+//		}
+//
+//		return result;
+//	}
 
 	/**
 	 *
@@ -98,18 +79,37 @@ public abstract class AbstractService {
 	 * @param availableIds
 	 * @return
 	 */
-	public static boolean checkIds(Collection<Long> checkIds, Collection<Long> availableIds) {
+//	public static boolean checkIds(Long[] checkIds, List<Long> availableIds) {
+//
+//		if (availableIds == null || availableIds.isEmpty()) {
+//			return false;
+//		}
+//
+//		boolean result = true;
+//		for (Long id : checkIds) {
+//			result = result && availableIds.contains(id);
+//		}
+//		return result;
+//	}
 
-		if (availableIds == null || availableIds.isEmpty()) {
-			return false;
-		}
-
-		boolean result = true;
-		for (Long id : checkIds) {
-			result = result && availableIds.contains(id);
-		}
-		return result;
-	}
+	/**
+	 *
+	 * @param checkIds
+	 * @param availableIds
+	 * @return
+	 */
+//	public static boolean checkIds(Collection<Long> checkIds, Collection<Long> availableIds) {
+//
+//		if (availableIds == null || availableIds.isEmpty()) {
+//			return false;
+//		}
+//
+//		boolean result = true;
+//		for (Long id : checkIds) {
+//			result = result && availableIds.contains(id);
+//		}
+//		return result;
+//	}
 
 
 }

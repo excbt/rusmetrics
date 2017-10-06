@@ -198,7 +198,7 @@ public class ObjectAccessService {
             return false;
         }
         List<Long> subscrContObjectIds = findContObjectIds(subscriberId);
-        return AbstractService.checkIds(contObjectIds, subscrContObjectIds);
+        return ObjectAccessUtil.checkIds(contObjectIds, subscrContObjectIds);
     }
 
 
@@ -396,7 +396,7 @@ public class ObjectAccessService {
             return false;
         }
         List<Long> subscrContObjectIds = findAllContZPointIds(subscriberId);
-        return AbstractService.checkIds(ContZPointIds, subscrContObjectIds);
+        return ObjectAccessUtil.checkIds(ContZPointIds, subscrContObjectIds);
     }
 
 

@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceTemperatureSstRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -131,7 +132,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 		if (entity == null) {
 			throw new PersistenceException(String.format("LocalPlaceTemperatureSst (id=%d) is not found", id));
 		}
-		localPlaceTemperatureSstRepository.save(softDelete(entity));
+		localPlaceTemperatureSstRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**
@@ -154,7 +155,7 @@ public class LocalPlaceTemperatureSstService extends AbstractService implements 
 					.format("LocalPlaceTemperatureSst (id=%d) property localPlaceId=%d is invalid", id, localPlaceId));
 		}
 
-		localPlaceTemperatureSstRepository.save(softDelete(entity));
+		localPlaceTemperatureSstRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**

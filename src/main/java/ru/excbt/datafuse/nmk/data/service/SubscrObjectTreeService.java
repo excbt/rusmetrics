@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
@@ -134,7 +135,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	 */
 	private SubscrObjectTree _softDeleteSubscrObjectTree(SubscrObjectTree node) {
 		checkNotNull(node);
-		TreeNodeOperator operator = (i) -> softDelete(i);
+		TreeNodeOperator operator = (i) -> EntityActions.softDelete(i);
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 

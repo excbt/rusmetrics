@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -175,7 +176,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
     @Deprecated
 	private ContObject updateContObject(ContObject contObject, Long cmOrganizationId) {
@@ -375,7 +376,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
     @Deprecated
 	private ContObject createContObject(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
@@ -537,13 +538,13 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 		ContObject contObject = findContObjectChecked(contObjectId);
 
 		contObject.setIsManual(true);
-		softDelete(contObject);
+		EntityActions.softDelete(contObject);
 
 		subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId));
 
 		List<ContObjectFias> contObjectFiasList = contObjectFiasRepository.findByContObjectId(contObjectId);
 		contObjectFiasList.forEach(i -> {
-			softDelete(i);
+            EntityActions.softDelete(i);
 		});
 		contObjectFiasRepository.save(contObjectFiasList);
 

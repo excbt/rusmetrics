@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -778,7 +779,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		List<Long> availableDataSourceIds = subscrDataSourceService
 				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
 
-		if (!checkDataSourceIds.isEmpty() && !AbstractService.checkIds(checkDataSourceIds, availableDataSourceIds)) {
+		if (!checkDataSourceIds.isEmpty() && !ObjectAccessUtil.checkIds(checkDataSourceIds, availableDataSourceIds)) {
 			fileNameErrorDesc.add("Нет доступа к источнику данных");
 		}
 

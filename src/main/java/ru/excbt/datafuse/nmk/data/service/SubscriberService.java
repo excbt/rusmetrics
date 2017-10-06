@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
@@ -134,7 +135,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteSubscriber(Subscriber entity) {
 		checkNotNull(entity);
-		subscriberRepository.save(softDelete(entity));
+		subscriberRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**

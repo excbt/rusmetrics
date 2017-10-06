@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsAddrRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
@@ -125,8 +126,8 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 		List<SubscrContEventTypeSmsAddr> smsAddList = subscrContEventTypeSmsAddrRepository
 				.findBySubscrContEventTypeSmsId(subscrContEventTypeSmsId);
 
-		subscrContEventTypeSmsAddrRepository.save(softDelete(smsAddList));
-		subscrContEventTypeSmsRepository.save(softDelete(sms));
+		subscrContEventTypeSmsAddrRepository.save(EntityActions.softDelete(smsAddList));
+		subscrContEventTypeSmsRepository.save(EntityActions.softDelete(sms));
 	}
 
 }

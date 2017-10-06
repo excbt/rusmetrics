@@ -39,6 +39,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -211,7 +212,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 				specContEventCategory(searchConditions.contEventCategoryList), //
 				specContEventDevation(searchConditions.contEventDeviationList));
 
-		Specifications<SubscrContEventNotification> specs = specsAndFilterBuild(andFilter);
+		Specifications<SubscrContEventNotification> specs = DBSpecUtil.specsAndFilterBuild(andFilter);
 
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
 
