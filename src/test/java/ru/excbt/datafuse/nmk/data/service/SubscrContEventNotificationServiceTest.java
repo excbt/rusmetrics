@@ -30,7 +30,6 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})

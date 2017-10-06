@@ -8,7 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;

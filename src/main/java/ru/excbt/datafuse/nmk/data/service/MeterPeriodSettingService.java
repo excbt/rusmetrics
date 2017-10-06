@@ -10,8 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
@@ -108,7 +107,7 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 			setting.setDeleted(1);
 			meterPeriodSettingRepository.save(setting);
 		} else {
-			DBExceptionUtils.entityNotFoundException (MeterPeriodSetting.class, id);
+			DBExceptionUtil.entityNotFoundException (MeterPeriodSetting.class, id);
 		}
 	}
 

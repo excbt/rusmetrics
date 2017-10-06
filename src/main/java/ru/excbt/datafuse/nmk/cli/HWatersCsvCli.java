@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.AppPropsService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
+import ru.excbt.datafuse.nmk.data.service.TimeZoneService;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -47,7 +47,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 	private AppPropsService appPropsService;
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 * @throws InvocationTargetException
 	 * @throws IllegalAccessException
@@ -66,7 +66,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws JsonProcessingException
 	 * @throws IllegalAccessException
 	 * @throws InvocationTargetException
@@ -94,7 +94,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 */
 	private void printCsv(String arg) {
@@ -106,7 +106,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 
 	/**
 	 * @throws JsonProcessingException
-	 * 
+	 *
 	 */
 	private String makeCsvData() throws JsonProcessingException {
 		LocalDatePeriod dp = LocalDatePeriod.lastWeek();
@@ -143,7 +143,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param csv
 	 * @throws IOException
 	 */
@@ -174,7 +174,7 @@ public class HWatersCsvCli extends AbstractDBToolCli {
 
 
 	/**
-	 * 
+	 *
 	 * @param s
 	 * @throws IOException
 	 * @throws FileNotFoundException

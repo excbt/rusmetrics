@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 
 /**
  * Шаблон класса доступа к данным

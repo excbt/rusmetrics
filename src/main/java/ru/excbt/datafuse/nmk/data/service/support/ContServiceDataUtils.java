@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 public final class ContServiceDataUtils {
 
@@ -22,7 +23,7 @@ public final class ContServiceDataUtils {
 	 * </b>
 	 * <p>
 	 * Function makes map (contZPointId, List(contServceType, dataDate))
-	 * 
+	 *
 	 * @param rowList
 	 * @return
 	 */
@@ -33,9 +34,9 @@ public final class ContServiceDataUtils {
 
 		for (Object[] row : rowList) {
 
-			Long id = DBRowUtils.asLong(row[0]);
-			String timeDetail = DBRowUtils.asString(row[1]);
-			Timestamp lastDate = DBRowUtils.asTimestamp(row[2]);
+			Long id = DBRowUtil.asLong(row[0]);
+			String timeDetail = DBRowUtil.asString(row[1]);
+			Timestamp lastDate = DBRowUtil.asTimestamp(row[2]);
 
 			List<TimeDetailLastDate> list = resultMap.get(id);
 			if (list == null) {

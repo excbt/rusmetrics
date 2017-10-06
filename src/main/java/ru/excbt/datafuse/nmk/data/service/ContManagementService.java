@@ -5,8 +5,6 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
@@ -18,7 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.repository.ContManagementRepository;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -76,7 +74,7 @@ public class ContManagementService implements SecuredRoles {
 //		}
 
         Organization org = organizationService.findOneOrganization(organizationId)
-            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, organizationId));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, organizationId));
 
 
 		ContManagement newRecord = new ContManagement();
@@ -99,7 +97,7 @@ public class ContManagementService implements SecuredRoles {
 
 
 		Organization org = organizationService.findOneOrganization(organizationId)
-            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, organizationId));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, organizationId));
 
 		List<ContManagement> checkExists = contManagementRepository.selectByContObject(contObject.getId());
 

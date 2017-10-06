@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -155,7 +155,7 @@ public class TemperatureChartService extends AbstractService implements SecuredR
 		//Organization rsoOrg = organizationService.selectOrganization(entity.getRsoOrganizationId());
 
         Organization rsoOrg = organizationService.findOneOrganization(entity.getRsoOrganizationId())
-            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, entity.getRsoOrganizationId()));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, entity.getRsoOrganizationId()));
 
 		if (!Boolean.TRUE.equals(rsoOrg.getFlagRso())) {
 			throw new IllegalArgumentException("Invalid rsoOrganizationId: " + entity.getRsoOrganizationId());

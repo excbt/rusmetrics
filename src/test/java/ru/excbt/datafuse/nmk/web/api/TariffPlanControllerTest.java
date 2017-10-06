@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.TariffType;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;

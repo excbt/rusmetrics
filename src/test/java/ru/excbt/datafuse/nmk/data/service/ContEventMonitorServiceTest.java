@@ -22,8 +22,6 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-
 
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,

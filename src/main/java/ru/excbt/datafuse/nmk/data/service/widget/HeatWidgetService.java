@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service.widget;
 
@@ -24,15 +24,15 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.12.2016
- * 
+ *
  */
 @Service
 public class HeatWidgetService extends WidgetService {
@@ -45,7 +45,7 @@ public class HeatWidgetService extends WidgetService {
 			.unmodifiableList(Arrays.asList(availableModes));
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param dateTime
 	 * @param mode
@@ -92,7 +92,7 @@ public class HeatWidgetService extends WidgetService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param dateTime
 	 * @param mode

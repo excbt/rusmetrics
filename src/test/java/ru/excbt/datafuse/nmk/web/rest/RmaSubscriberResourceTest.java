@@ -10,14 +10,9 @@ import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
-
-import javax.persistence.PersistenceException;
-import java.util.Optional;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -91,7 +86,7 @@ public class RmaSubscriberResourceTest extends RmaControllerTest {
             s.setComment("Updated By REST");
             s.setCanCreateChild(true);
             return s;
-        }).orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Subscriber.class, subscriberId));
+        }).orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, subscriberId));
 
 		_testUpdateJson("/api/rma/subscribers/" + subscriberId, createdDTO);
 

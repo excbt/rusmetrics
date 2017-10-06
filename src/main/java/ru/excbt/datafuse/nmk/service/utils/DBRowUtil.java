@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.service.utils;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -11,9 +11,9 @@ import java.sql.Timestamp;
  * @since 03.08.2015
  *
  */
-public class DBRowUtils {
+public class DBRowUtil {
 
-	private DBRowUtils() {
+	private DBRowUtil() {
 
 	}
 

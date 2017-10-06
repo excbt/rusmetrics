@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.UUIDGenerator;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,9 @@ import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
-import javax.persistence.Query;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
@@ -198,7 +198,7 @@ public class CabinetMessageService {
 
         CabinetMessage responseToMessage = cabinetMessageRepository.findOne(cabinetMessageDTO.getResponseToId());
         if (responseToMessage == null) {
-            throw DBExceptionUtils.entityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
+            throw DBExceptionUtil.entityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
         }
 
         setFromFields (cabinetMessageDTO, userIds);
@@ -269,7 +269,7 @@ public class CabinetMessageService {
     @Transactional(readOnly = true)
     public Page<CabinetMessageDTO> findAllRequestToSubscriber(PortalUserIds userIds, CabinetMessageType cabinetMessageType, Pageable pageable) {
         log.debug("Request to get all CabinetMessages");
-        return cabinetMessageRepository.findByToSubscriberIds(RepositoryUtils.safeList(userIds.getSubscriberId()),
+        return cabinetMessageRepository.findByToSubscriberIds(RepositoryUtil.safeList(userIds.getSubscriberId()),
             cabinetMessageType != null ? cabinetMessageType.name() : CabinetMessageType.REQUEST.name(),
             pageable).map(cabinetMessageMapper::toDto);
     }

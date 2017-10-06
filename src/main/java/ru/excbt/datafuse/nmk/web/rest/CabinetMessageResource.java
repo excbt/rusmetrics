@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.service.CabinetMessageService;
-import ru.excbt.datafuse.nmk.data.service.support.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.util.PaginationUtil;
 
 import javax.validation.Valid;

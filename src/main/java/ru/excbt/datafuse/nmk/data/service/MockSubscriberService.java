@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkState;
 
@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+
+import java.util.Optional;
 
 /**
  * Класс "заглушка" для работы с абонентом
@@ -27,10 +30,14 @@ public class MockSubscriberService {
 
 	private Long mockSubscriberId = DEV_SUBSCR_ORG_ID;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberRepository subscriberRepository;
 
-	/**
+	@Autowired
+    public MockSubscriberService(SubscriberRepository subscriberRepository) {
+        this.subscriberRepository = subscriberRepository;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -55,10 +62,11 @@ public class MockSubscriberService {
             logger.error("Mock Subscriber is disabled. Using temporary Subscriber");
             return new Subscriber().id(Long.MIN_VALUE);
         }
-		//checkState(mockSubscriberId != null, "Mock Subscriber Service is Disabled");
 
 		logger.warn("ATTENTION!!! Using MockUser");
-		return subscriberService.selectSubscriber(mockSubscriberId);
+
+		return Optional.ofNullable(subscriberRepository.findOne(mockSubscriberId))
+            .orElseThrow(() -> DBExceptionUtil.entityNotFoundException(Subscriber.class, mockSubscriberId));
 
 	}
 }

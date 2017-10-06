@@ -11,7 +11,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.HWatersCsvService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterControllerTest;

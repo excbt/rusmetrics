@@ -25,7 +25,6 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,

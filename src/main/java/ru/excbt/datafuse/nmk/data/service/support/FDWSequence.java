@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+
 import javax.persistence.Query;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -27,7 +29,7 @@ public class FDWSequence {
 
     private void loadSequence () {
         Query qry = sessionService.getSession().createNativeQuery(sql);
-        Long id = DBRowUtils.asLong(qry.getSingleResult());
+        Long id = DBRowUtil.asLong(qry.getSingleResult());
         for (int i = 0; i < increment; i++) {
             concurrentLinkedQueue.add(id + i);
         }
