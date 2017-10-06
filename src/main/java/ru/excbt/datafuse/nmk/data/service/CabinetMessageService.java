@@ -13,10 +13,8 @@ import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.service.utils.DBFDWSequence;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.sql.Connection;
@@ -43,13 +41,13 @@ public class CabinetMessageService {
 
     private final CabinetMessageMapper cabinetMessageMapper;
 
-    private final SessionService sessionService;
+    private final DBSessionService sessionService;
 
     private final SubscriberRepository subscriberRepository;
 
     private final DBFDWSequence fdwSequence;
 
-    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SessionService sessionService, SubscriberRepository subscriberRepository) {
+    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, DBSessionService sessionService, SubscriberRepository subscriberRepository) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
         this.sessionService = sessionService;

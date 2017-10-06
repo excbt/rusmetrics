@@ -1,6 +1,5 @@
-package ru.excbt.datafuse.nmk.service.utils;
+package ru.excbt.datafuse.nmk.data.service;
 
-import ru.excbt.datafuse.nmk.data.service.support.SessionService;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import javax.persistence.Query;
@@ -10,19 +9,19 @@ public class DBFDWSequence {
 
     private final String sql;
 
-    private final SessionService sessionService;
+    private final DBSessionService sessionService;
 
     private final int increment;
 
     private final ConcurrentLinkedQueue<Long> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();;
 
-    public DBFDWSequence(SessionService sessionService, String sql) {
+    public DBFDWSequence(DBSessionService sessionService, String sql) {
         this.sql = sql;
         this.sessionService = sessionService;
         this.increment = 1;
     }
 
-    public DBFDWSequence(SessionService sessionService, String sql, int increment) {
+    public DBFDWSequence(DBSessionService sessionService, String sql, int increment) {
         this.sql = sql;
         this.sessionService = sessionService;
         this.increment = increment;
