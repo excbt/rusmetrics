@@ -19,8 +19,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.slog.service.SLogSessionUtil;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
@@ -101,7 +101,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					"Загрузка файла: " + importInfo.getUserFileName());
 
 			session.web().trace("Проверка целостности CSV файла");
-			SLogSessionUtils.checkCsvSeparators(session, importInfo);
+			SLogSessionUtil.checkCsvSeparators(session, importInfo);
 			session.web().trace("Проверка целостности CSV пройдена");
             session.web().trace("Преобразование данных файла");
 
@@ -114,7 +114,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
                     session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
                 }
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Данные из файла не могут быть обработаны", errorMessage);
 
 				log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
@@ -130,7 +130,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			if (inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null)
 					.count() > 0) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Не задано значение detail_type", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -141,7 +141,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					.collect(Collectors.toList());
 			if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. В файле задано более 2-х типов detail_type", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -150,7 +150,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (inDataHWaterImport.stream().map(i -> i.getDataDate()).distinct().filter(s -> s == null).count() > 0) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Найдено пустое значение date", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -161,7 +161,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (timeDetailKey == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0), errorMessage);
 
 				throw new IllegalArgumentException(
@@ -173,7 +173,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (zpoint == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Точка учета не найдена", errorMessage);
 
 				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
@@ -185,7 +185,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (!BooleanUtils.isTrue(zpoint.getIsManualLoading())) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Точка учета не поддерживает импорт данных", errorMessage);
 
                 throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
@@ -220,7 +220,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Загрузка в БД временно не возможна", errorMessage);
 
                 log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
@@ -248,7 +248,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 				session.web().trace("Ошибка при обновлении данных");
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     sqlExceptiomMessage, errorMessage);
 
 				throw new IllegalArgumentException(
@@ -256,7 +256,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			}
 
 			session.web().trace("Обновление данных успешно завершено");
-            SLogSessionUtils.completeSession(session, completeMessage);
+            SLogSessionUtil.completeSession(session, completeMessage);
 		}
 	}
 
