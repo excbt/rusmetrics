@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -8,16 +8,16 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 
 /**
  * Утилиты для работы набором параметров отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.04.2015
  *
  */
-public class ReportParamsetUtils {
+public class ReportParamsetDateUtil {
 
 	/**
-	 * 
+	 *
 	 * @param reportDate
 	 * @param reportPeriodKey
 	 * @return
@@ -60,7 +60,7 @@ public class ReportParamsetUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportDate
 	 * @param reportPeriodKey
 	 * @return
@@ -101,7 +101,7 @@ public class ReportParamsetUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportDate
 	 * @param reportPeriodKey
 	 * @return
@@ -144,7 +144,7 @@ public class ReportParamsetUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportDate
 	 * @param reportPeriodKey
 	 * @return
