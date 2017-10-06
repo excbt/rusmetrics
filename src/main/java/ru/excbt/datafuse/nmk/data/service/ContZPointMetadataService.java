@@ -32,7 +32,6 @@ import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -72,7 +71,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	private DeviceObjectDataSourceService deviceObjectDataSourceService;
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -119,7 +118,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	};
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -159,7 +158,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -168,7 +167,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcList
 	 * @return
 	 */
@@ -183,7 +182,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -197,7 +196,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -215,7 +214,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param metadataList
 	 * @return
 	 */
@@ -229,7 +228,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -247,7 +246,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -266,7 +265,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -295,7 +294,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPoint
 	 * @return
 	 */
@@ -315,7 +314,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param deviceObjectId
 	 * @return
@@ -327,7 +326,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -377,7 +376,7 @@ public class ContZPointMetadataService extends AbstractService implements Secure
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param deviceMetadataType
 	 * @return

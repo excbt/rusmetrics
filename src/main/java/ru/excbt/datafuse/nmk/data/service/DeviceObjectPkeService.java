@@ -27,11 +27,10 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeLimitRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectPkeWarnRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DeviceObjectPkeTypeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 /**
  * Сервис для работы с ПКЭ
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.02.2016
@@ -80,7 +79,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -89,7 +88,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param period
 	 * @return
@@ -104,7 +103,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param searchConditions
 	 * @return
 	 */
@@ -112,8 +111,8 @@ public class DeviceObjectPkeService extends AbstractService {
 	public List<DeviceObjectPkeWarn> selectDeviceObjectPkeWarn(PkeWarnSearchConditions searchConditions) {
 
 		List<Specification<DeviceObjectPkeWarn>> specList = Arrays.asList( //
-				specDeviceObjectId(searchConditions.deviceObjectId), // 
-				specDatePeriod(searchConditions.period), // 
+				specDeviceObjectId(searchConditions.deviceObjectId), //
+				specDatePeriod(searchConditions.period), //
 				specPkeTypes(searchConditions.pkeTypeKeynames));
 
 		Specifications<DeviceObjectPkeWarn> specs = specsAndFilterBuild(specList);
@@ -125,7 +124,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -136,7 +135,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param period
 	 * @return
 	 */
@@ -154,7 +153,7 @@ public class DeviceObjectPkeService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pkeTypeKeynames
 	 * @return
 	 */

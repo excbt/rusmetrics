@@ -24,7 +24,6 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceTemperatureSstRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service

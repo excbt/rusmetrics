@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.EmailNotification;
 import ru.excbt.datafuse.nmk.data.repository.EmailNotificationRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
@@ -22,7 +21,7 @@ public class EmailNotificationService extends AbstractService implements Secured
 	private EmailNotificationRepository emailNotificationRepository;
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -32,7 +31,7 @@ public class EmailNotificationService extends AbstractService implements Secured
 	}
 
 	/***
-	 * 
+	 *
 	 * @param fromSubscrUserId
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_CREATE_CABINET })
@@ -48,7 +47,7 @@ public class EmailNotificationService extends AbstractService implements Secured
 	}
 
 	/**
-	 * 
+	 *
 	 * @param fromSubscrUserIds
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_CREATE_CABINET })

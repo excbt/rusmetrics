@@ -22,11 +22,10 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsAddrRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 /**
  * Сервис для работы с настройкой смс уведомлений для событий
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -47,7 +46,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	private SubscrContEventTypeSmsAddrRepository subscrContEventTypeSmsAddrRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -56,7 +55,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -68,7 +67,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventTypeSmsId
 	 * @return
 	 */
@@ -80,7 +79,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param contEventType
 	 * @param smsAddrList
@@ -112,7 +111,7 @@ public class SubscrContEventTypeSmsService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventTypeSmsId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)

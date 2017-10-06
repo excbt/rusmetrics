@@ -24,7 +24,6 @@ import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.TemperatureChartRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 

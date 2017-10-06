@@ -12,7 +12,6 @@ import ru.excbt.datafuse.nmk.data.ptree.*;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;

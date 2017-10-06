@@ -16,7 +16,6 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;

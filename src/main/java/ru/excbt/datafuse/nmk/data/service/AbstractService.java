@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 
