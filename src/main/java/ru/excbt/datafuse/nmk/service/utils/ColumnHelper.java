@@ -16,7 +16,6 @@ import javax.persistence.metamodel.SingularAttribute;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
 
 /**
  * Класс для работы с запросами
@@ -135,14 +134,14 @@ public class ColumnHelper {
 		int idx = indexOf(column);
 		checkState(idx >= 0, "Invalid column index");
 		Object value = results[idx];
-		return DBRowUtils.asBigDecimal(value);
+		return DBRowUtil.asBigDecimal(value);
 	}
 
 	public Double getResultDouble(Object[] results, String column) {
 		int idx = indexOf(column);
 		checkState(idx >= 0, "Invalid column index");
 		Object value = results[idx];
-		return DBRowUtils.asDouble(value);
+		return DBRowUtil.asDouble(value);
 	}
 
 	/**

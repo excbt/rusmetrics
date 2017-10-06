@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.data.service.support.DBRowUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
@@ -745,7 +745,7 @@ public class ContObjectService extends AbstractService implements SecuredRoles {
 //		List<Object[]> resultList = q1.getResultList();
 
 		return resultList.stream()
-				.collect(Collectors.toMap(i -> DBRowUtils.asLong(i[0]), i -> DBRowUtils.asInteger(i[1])));
+				.collect(Collectors.toMap(i -> DBRowUtil.asLong(i[0]), i -> DBRowUtil.asInteger(i[1])));
 
 	}
 

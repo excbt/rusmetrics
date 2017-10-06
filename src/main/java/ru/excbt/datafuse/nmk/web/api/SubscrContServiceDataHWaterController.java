@@ -31,6 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.support.*;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -752,7 +753,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			final Tuple row = checkRows.get(0);
 
-			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
+			if (!Boolean.TRUE.equals(DBRowUtil.asBoolean(row.get("isManualLoading")))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
                     data.deviceSerial, data.tsNumber, data.fileName));
@@ -764,10 +765,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		Collection<Long> checkContZPoints = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtils.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
 
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtils.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
 
 		if (!checkContZPoints.isEmpty() && !canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
@@ -814,8 +815,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			checkState(row != null);
 
 			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
-					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")),
-					DBRowUtils.asLong(row.get("deviceObjectId")), DBRowUtils.asLong(row.get("subscrDataSourceId")),
+					DBRowUtil.asLong(row.get("contObjectId")), DBRowUtil.asLong(row.get("contZPointId")),
+					DBRowUtil.asLong(row.get("deviceObjectId")), DBRowUtil.asLong(row.get("subscrDataSourceId")),
                 fileName, internalFilename);
 
 			serviceDataImportInfos.add(importInfo);

@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 import javax.persistence.PersistenceException;
@@ -399,7 +400,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 		List<Object[]> qryResult = contZPointRepository.selectContZPointServiceTypeIds(contObjectId);
 
 		List<Pair<String, Long>> resultPairList = qryResult.stream()
-				.map(i -> new ImmutablePair<>(DBRowUtils.asString(i[0]), DBRowUtils.asLong(i[1])))
+				.map(i -> new ImmutablePair<>(DBRowUtil.asString(i[0]), DBRowUtil.asLong(i[1])))
 				.collect(Collectors.toList());
 
 		return resultPairList;
