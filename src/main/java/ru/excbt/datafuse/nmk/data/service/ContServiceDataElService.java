@@ -23,7 +23,6 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
@@ -634,7 +633,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 				.map(i -> i.getRight()).collect(Collectors.toList());
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
 						contServiceDataElConsRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
 				: new HashMap<>();
 

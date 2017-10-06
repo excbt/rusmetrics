@@ -50,7 +50,6 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -679,7 +678,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkArgument(contZpointIds != null);
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZpointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
 						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZpointIds))
 				: new HashMap<>();
 
