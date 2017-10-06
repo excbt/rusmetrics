@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class TemperatureChartService extends AbstractService implements SecuredRoles {
+public class TemperatureChartService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartService.class);
 

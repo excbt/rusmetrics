@@ -45,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class ContZPointService extends AbstractService implements SecuredRoles {
+public class ContZPointService implements SecuredRoles {
 
 	private static final Logger log = LoggerFactory.getLogger(ContZPointService.class);
 

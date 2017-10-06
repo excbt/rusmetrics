@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.repository.LocalPlaceTemperatureSstRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class LocalPlaceTemperatureSstService extends AbstractService implements SecuredRoles {
+public class LocalPlaceTemperatureSstService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceTemperatureSstService.class);
 

@@ -32,7 +32,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
-public class SubscrCabinetService extends AbstractService implements SecuredRoles {
+public class SubscrCabinetService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetService.class);
 

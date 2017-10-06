@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
-public class SubscrObjectPTreeNodeService extends AbstractService implements SecuredRoles {
+public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
     private final SubscrObjectTreeRepository subscrObjectTreeRepository;
 

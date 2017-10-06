@@ -43,7 +43,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class ContObjectService extends AbstractService implements SecuredRoles {
+public class ContObjectService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContObjectService.class);
 

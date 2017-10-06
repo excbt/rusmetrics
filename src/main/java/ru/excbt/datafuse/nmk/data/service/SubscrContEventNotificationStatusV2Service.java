@@ -31,7 +31,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 @Service
-public class SubscrContEventNotificationStatusV2Service extends AbstractService {
+public class SubscrContEventNotificationStatusV2Service {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SubscrContEventNotificationStatusV2Service.class);
 

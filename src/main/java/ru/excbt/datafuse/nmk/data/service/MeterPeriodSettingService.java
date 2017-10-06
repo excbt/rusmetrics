@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
  *
  */
 @Service
-public class MeterPeriodSettingService extends AbstractService implements SecuredRoles {
+public class MeterPeriodSettingService implements SecuredRoles {
 
 	@Autowired
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;

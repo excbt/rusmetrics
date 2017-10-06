@@ -63,7 +63,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  *
  */
 @Service
-public class ContServiceDataHWaterService extends AbstractService implements SecuredRoles {
+public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
 

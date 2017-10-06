@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
  *
  */
 @Service
-public class SubscrContEventTypeSmsService extends AbstractService {
+public class SubscrContEventTypeSmsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventTypeSmsService.class);
 

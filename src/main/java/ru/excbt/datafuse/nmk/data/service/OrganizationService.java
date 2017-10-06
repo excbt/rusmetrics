@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
  *
  */
 @Service
-public class OrganizationService extends AbstractService implements SecuredRoles {
+public class OrganizationService implements SecuredRoles {
 
 	private final OrganizationRepository organizationRepository;
 

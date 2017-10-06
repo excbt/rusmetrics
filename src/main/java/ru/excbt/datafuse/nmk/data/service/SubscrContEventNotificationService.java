@@ -50,7 +50,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
  *
  */
 @Service
-public class SubscrContEventNotificationService extends AbstractService {
+public class SubscrContEventNotificationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationService.class);
 

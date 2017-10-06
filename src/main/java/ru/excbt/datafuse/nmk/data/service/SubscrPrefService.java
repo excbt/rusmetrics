@@ -33,7 +33,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrPrefService extends AbstractService implements SecuredRoles {
+public class SubscrPrefService implements SecuredRoles {
 
 	public final static String SUBSCR_TYPE_NORMAL = SubscrTypeKey.NORMAL.getKeyname();
 

@@ -47,7 +47,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  *
  */
 @Service
-public class SubscriberService extends AbstractService implements SecuredRoles {
+public class SubscriberService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscriberService.class);
 

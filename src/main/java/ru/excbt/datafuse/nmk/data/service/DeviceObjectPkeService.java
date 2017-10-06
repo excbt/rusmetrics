@@ -38,7 +38,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
  *
  */
 @Service
-public class DeviceObjectPkeService extends AbstractService {
+public class DeviceObjectPkeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceObjectPkeService.class);
 

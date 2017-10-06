@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.repository.EmailNotificationRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class EmailNotificationService extends AbstractService implements SecuredRoles {
+public class EmailNotificationService implements SecuredRoles {
 
 	@Autowired
 	private EmailNotificationRepository emailNotificationRepository;

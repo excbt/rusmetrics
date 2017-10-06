@@ -14,7 +14,6 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.AbstractService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.LocalDateTimeInterval;
 
@@ -25,7 +24,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateTimeInterval;
  * @since 11.01.2017
  *
  */
-public abstract class WidgetService extends AbstractService {
+public abstract class WidgetService {
 
 	public enum MODES {
 		DAY, TODAY, YESTERDAY, WEEK, MONTH, YEAR

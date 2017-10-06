@@ -40,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class SubscrUserService extends AbstractService implements SecuredRoles {
+public class SubscrUserService implements SecuredRoles {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrUserService.class);
 

@@ -28,7 +28,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 @Service
-public class SubscrContEventNotificationStatusService extends AbstractService {
+public class SubscrContEventNotificationStatusService {
 
 
 	private final SubscrContEventNotificationService subscrContEventNotificationService;

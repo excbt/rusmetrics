@@ -34,7 +34,7 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
  *
  */
 @Service
-public class DeviceModelService extends AbstractService implements SecuredRoles {
+public class DeviceModelService implements SecuredRoles {
 
 	private final DeviceModelRepository deviceModelRepository;
 

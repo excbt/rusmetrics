@@ -35,7 +35,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class ContZPointMetadataService extends AbstractService implements SecuredRoles {
+public class ContZPointMetadataService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataService.class);
 

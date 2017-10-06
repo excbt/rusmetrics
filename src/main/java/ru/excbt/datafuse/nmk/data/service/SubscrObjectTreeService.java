@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrObjectTreeService extends AbstractService implements SecuredRoles {
+public class SubscrObjectTreeService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
 
