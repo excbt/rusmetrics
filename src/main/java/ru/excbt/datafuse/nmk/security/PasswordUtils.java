@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.security;
 
 import java.security.SecureRandom;
 import java.util.Random;

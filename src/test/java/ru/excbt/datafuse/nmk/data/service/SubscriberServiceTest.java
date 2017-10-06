@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
+import ru.excbt.datafuse.nmk.security.PasswordService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
