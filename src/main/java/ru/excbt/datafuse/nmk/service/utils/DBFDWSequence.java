@@ -1,11 +1,12 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.service.utils;
 
+import ru.excbt.datafuse.nmk.data.service.support.SessionService;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import javax.persistence.Query;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-public class FDWSequence {
+public class DBFDWSequence {
 
     private final String sql;
 
@@ -15,13 +16,13 @@ public class FDWSequence {
 
     private final ConcurrentLinkedQueue<Long> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();;
 
-    public FDWSequence(SessionService sessionService, String sql) {
+    public DBFDWSequence(SessionService sessionService, String sql) {
         this.sql = sql;
         this.sessionService = sessionService;
         this.increment = 1;
     }
 
-    public FDWSequence(SessionService sessionService, String sql, int increment) {
+    public DBFDWSequence(SessionService sessionService, String sql, int increment) {
         this.sql = sql;
         this.sessionService = sessionService;
         this.increment = increment;

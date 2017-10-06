@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBFDWSequence;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.sql.Connection;
@@ -46,14 +47,14 @@ public class CabinetMessageService {
 
     private final SubscriberRepository subscriberRepository;
 
-    private final FDWSequence fdwSequence;
+    private final DBFDWSequence fdwSequence;
 
     public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SessionService sessionService, SubscriberRepository subscriberRepository) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
         this.sessionService = sessionService;
         this.subscriberRepository = subscriberRepository;
-        this.fdwSequence = new FDWSequence(sessionService, "SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table", 50);
+        this.fdwSequence = new DBFDWSequence(sessionService, "SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table", 50);
     }
 
     public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
