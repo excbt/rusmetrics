@@ -1,7 +1,7 @@
 /**
  *
  */
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.service.utils;
 
 import org.postgresql.util.PSQLException;
 import org.springframework.data.domain.Persistable;
@@ -14,9 +14,9 @@ import javax.persistence.PersistenceException;
  * @version 1.0
  * @since dd.12.2016
  */
-public class DBExceptionUtils {
+public class DBExceptionUtil {
 
-    private DBExceptionUtils() {
+    private DBExceptionUtil() {
 
     }
 

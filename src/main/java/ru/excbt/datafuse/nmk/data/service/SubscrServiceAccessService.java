@@ -26,7 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.repository.*;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SubscrServicePermissionFilter;
 import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -107,7 +107,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
 		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
 		if (subscriber == null) {
-            DBExceptionUtils.entityNotFoundException(Subscriber.class, subscriberId);
+            DBExceptionUtil.entityNotFoundException(Subscriber.class, subscriberId);
         }
 		entity.setSubscriber(subscriber);
 
@@ -146,7 +146,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
         if (subscriber == null) {
-            DBExceptionUtils.entityNotFoundException(Subscriber.class, subscriberId);
+            DBExceptionUtil.entityNotFoundException(Subscriber.class, subscriberId);
         }
 
 		currentAccessList.stream().filter((i) -> i.getAccessEndDate() == null).forEach((c) -> {

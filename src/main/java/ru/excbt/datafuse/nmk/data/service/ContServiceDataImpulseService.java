@@ -22,8 +22,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseImportReposit
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
@@ -34,8 +33,6 @@ import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 import javax.persistence.PersistenceException;
 import java.io.CharConversionException;
 import java.io.File;
-import java.io.FileInputStream;
-import java.nio.charset.Charset;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.Future;
@@ -360,7 +357,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 impulseImportRepository.processImport(session.getSessionUUID().toString());
                 log.debug("processImport.Calling Stored proc portal.process_service_data_impulse_import SUCCESS");
             } catch (Exception e) {
-                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+                String sqlExceptiomMessage =  DBExceptionUtil.getPSQLExceptionMessage(e);
                 log.error("Impulse Data Import. Exception: {}. sessionUUID({}). Exception : {}",
                     e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 

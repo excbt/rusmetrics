@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.support.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 import javax.persistence.PersistenceException;
@@ -636,7 +637,7 @@ public class ContZPointService extends AbstractService implements SecuredRoles {
 	private void initRso(ContZPoint contZPoint) {
 
         Organization org = organizationService.findOneOrganization(contZPoint.getRsoId())
-            .orElseThrow(() -> DBExceptionUtils.newEntityNotFoundException(Organization.class, contZPoint.getRsoId()));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, contZPoint.getRsoId()));
 
 
 		if (!Boolean.TRUE.equals(org.getFlagRso())) {
