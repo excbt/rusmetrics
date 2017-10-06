@@ -5,10 +5,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,24 +23,25 @@ import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
  * @since 17.12.2015
  *
  */
-public abstract class AbstractContServiceDataService {
+public class ContServiceDataTool {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractContServiceDataService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataTool.class);
 
-	@PersistenceContext(unitName = "nmk-p")
-	protected EntityManager em;
+    private ContServiceDataTool() {
+    }
 
-	/**
-	 *
-	 * @param columns
-	 * @param operator
-	 * @param contZPointId
-	 * @param timeDetail
-	 * @param period
-	 * @return
-	 */
-	protected Object[] serviceDataCustomQuery(Long contZPointId, TimeDetailKey timeDetail, LocalDatePeriod period,
-			ColumnHelper columnHelper, Class<?> entityClass) {
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetail
+     * @param period
+     * @param columnHelper
+     * @param entityClass
+     * @param session
+     * @return
+     */
+	public static final Object[] serviceDataCustomQuery(Long contZPointId, TimeDetailKey timeDetail, LocalDatePeriod period,
+                                              ColumnHelper columnHelper, Class<?> entityClass, Session session) {
 
 		StringBuilder sqlString = new StringBuilder();
 		sqlString.append(" SELECT ");
@@ -55,7 +55,7 @@ public abstract class AbstractContServiceDataService {
 		sqlString.append(" AND d.dataDate <= :endDate ");
 		logger.debug("Sql: {}", sqlString.toString());
 
-		Query q1 = em.createQuery(sqlString.toString());
+		Query q1 = session.createQuery(sqlString.toString());
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
 		q1.setParameter("contZPointId", contZPointId);
@@ -73,7 +73,7 @@ public abstract class AbstractContServiceDataService {
 	 * @param list
 	 * @return
 	 */
-	protected <T> T getFirstElement(List<T> list) {
+	public static final <T> T getFirstElement(List<T> list) {
 		checkNotNull(list);
 		return list.isEmpty() ? null : list.get(0);
 	};
@@ -84,11 +84,11 @@ public abstract class AbstractContServiceDataService {
 	 * @param b
 	 * @return
 	 */
-	protected BigDecimal processDelta(BigDecimal a, BigDecimal b) {
+	public static final BigDecimal processDelta(BigDecimal a, BigDecimal b) {
 		return a == null || b == null ? null : b.subtract(a);
 	}
 
-	protected Double processDelta(Double a, Double b) {
+	public static final Double processDelta(Double a, Double b) {
 		return a == null || b == null ? null : (b - a);
 	}
 
