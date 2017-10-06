@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Класс для работы с разрешениями абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.09.2015
@@ -34,7 +35,7 @@ public class SubscrServicePermissionFilter {
 	private final SubscriberParam subscriberParam;
 
 	/**
-	 * 
+	 *
 	 * @param permissionList
 	 * @param isRma
 	 */
@@ -47,7 +48,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param permissionList
 	 */
 	//	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
@@ -55,7 +56,7 @@ public class SubscrServicePermissionFilter {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param objectList
 	 * @return
 	 */
@@ -80,7 +81,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param permissions
 	 * @return
 	 */
@@ -99,7 +100,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectList
 	 * @param keynames
 	 * @return
@@ -116,7 +117,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param className
 	 * @return
 	 */

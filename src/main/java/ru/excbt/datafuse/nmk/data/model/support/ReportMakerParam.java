@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.types.ReportMetaParamSpecialTypeName;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -45,7 +45,7 @@ public class ReportMakerParam {
 	private final boolean previewMode;
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param contObjectIds
 	 */
@@ -68,7 +68,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param paramContObjectIdList
 	 */
@@ -80,7 +80,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long[] getParamContObjectIds() {
@@ -88,7 +88,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long[] getSubscrContObjectIds() {
@@ -96,7 +96,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Long> getSubscrContObjectList() {
@@ -107,7 +107,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ReportParamset getReportParamset() {
@@ -116,7 +116,7 @@ public class ReportMakerParam {
 
 	/**
 	 * (
-	 * 
+	 *
 	 * @return
 	 */
 	public List<Long> getReportContObjectIdList() {
@@ -132,7 +132,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isParamsetValid() {
@@ -144,7 +144,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isSubscriberValid() {
@@ -152,7 +152,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isOutputFileZipped() {
@@ -167,7 +167,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getMimeType() {
@@ -187,7 +187,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ReportOutputFileType reportOutputFileType() {
@@ -205,7 +205,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isSpecialIdParam() {
@@ -221,7 +221,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Long getIdParam() {
@@ -245,7 +245,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private ReportTemplate getParamserReportTemplate() {
@@ -255,7 +255,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -301,7 +301,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ReportTypeKey getReportTypeKey() {
@@ -311,7 +311,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param isRequred
 	 * @param obj
 	 * @return
@@ -324,7 +324,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param typeKey
 	 * @param param
 	 * @return
@@ -435,7 +435,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportMakerParam
 	 * @return
 	 */
@@ -513,7 +513,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public SubscriberParam getSubscriberParam() {
@@ -521,7 +521,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ReportTypeWithParamsVO getReportType() {
@@ -529,7 +529,7 @@ public class ReportMakerParam {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String toString() {
