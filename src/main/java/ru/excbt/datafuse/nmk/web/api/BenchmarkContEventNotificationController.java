@@ -4,11 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
+import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
 
 /**
  * Контроллер для замера отклика системы по уведомлениям
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.11.2015
@@ -22,7 +22,7 @@ public class BenchmarkContEventNotificationController extends SubscrContEventNot
 	private BenchmarkService benchmarkService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
