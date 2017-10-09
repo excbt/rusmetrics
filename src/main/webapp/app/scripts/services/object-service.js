@@ -30,6 +30,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             urlRefRange = urlSubscr + '/contObjects/',
             urlDeviceObjects = '/deviceObjects',
             urlDeviceModels = urlRma + urlDeviceObjects + '/deviceModels',
+            urlSubscrDeviceModels = urlSubscr + urlDeviceObjects + '/deviceModels',
             urlDeviceModelTypes = urlRma + urlDeviceObjects + '/deviceModelTypes',
             urlImpulseCounterTypes = urlRma + urlDeviceObjects + '/impulseCounterTypes',
             urlHeaterTypes = urlRma + urlDeviceObjects + '/heatRadiatorTypes',
@@ -270,6 +271,13 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
                  
         var getDeviceModels = function () {
             var url = urlDeviceModels;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        };
+        var getSubscrDeviceModels = function () {
+            var url = urlSubscrDeviceModels;
             if (isCancelParamsIncorrect() === true) {
                 return null;
             }
@@ -1031,6 +1039,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             getRsoOrganizationsWithId: getRsoOrganizationsWithId,
             getServiceTypes: getServiceTypes,
             getSubscrUrl: getSubscrUrl,
+            getSubscrDeviceModels: getSubscrDeviceModels,
             getTimezones: getTimezones,
             getRmaTreeTemplates: getRmaTreeTemplates,
             getVzletSystemList: getVzletSystemList,

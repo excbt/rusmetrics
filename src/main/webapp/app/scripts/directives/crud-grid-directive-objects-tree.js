@@ -125,6 +125,9 @@ app.directive('crudGridObjectsTree', function () {
                 $scope.data.currentGroupId = null; //current group id: use for group object filter
                 $scope.data.currentContObjectPassports = [];
                 
+                var thisdata = {};
+                thisdata.deviceModels = [];
+                
                 function findObjectById(objId) {
                     var obj = null;
                     $scope.objects.some(function (element) {
@@ -139,6 +142,7 @@ app.directive('crudGridObjectsTree', function () {
                 var errorCallback = function (e) {
                     $scope.treeLoading = false;
                     $scope.objectCtrlSettings.isPassportsLoading = false;
+                    $scope.objectCtrlSettings.deviceModelsLoading = false;
                     var errorObj = mainSvc.errorCallbackHandler(e);
                     notificationFactory.errorInfo(errorObj.caption, errorObj.description);
                 };
@@ -1469,42 +1473,50 @@ console.log(headers);
 
                 // Показания точек учета
                 $scope.getIndicators = function (objectId, zpointId) {
-                    $scope.setIndicatorsParams(objectId, zpointId);
-//                    $scope.selectedZpoint(objectId, zpointId);
-//                    $cookies.contZPoint = $scope.currentZpoint.id;
-//                    $cookies.contObject=$scope.currentObject.id;
-//                    $cookies.contZPointName = $scope.currentZpoint.zpointName;
-//                    $cookies.contObjectName=$scope.currentObject.fullName;
-//                    $cookies.timeDetailType="24h";
-//                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
-//console.log($scope.currentZpoint);                    
-//                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
-//                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
-                                      
-//                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
-                    
-
+console.log(objectId);
+console.log(zpointId);
                     var url = "#/objects";
-//                    url += "/impulse-indicators";
-                    if ($scope.currentZpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
-                        url += "/impulse-indicators";
-                    } else if ($scope.currentZpoint.zpointType === 'el') {
-                        url += "/indicator-electricity";
+                    
+                    if ($scope.data.selectedPNode != null) {
+                        url = setPTreeIndicatorParams(url, zpointId);
                     } else {
-                        url += "/indicators";
-                    }
-                    url += "/?objectId=" + encodeURIComponent(objectId) + "&zpointId=" + encodeURIComponent(zpointId) + "&objectName=" + encodeURIComponent($scope.currentObject.fullName) + "&zpointName=" + encodeURIComponent($scope.currentZpoint.zpointName);
-                    //add info about device
-//console.log($scope.currentZpoint);                    
-                    
-                    url += "&deviceModel=" + encodeURIComponent($scope.currentZpoint.zpointModel);
-                    url += "&deviceSN=" + encodeURIComponent($scope.currentZpoint.zpointNumber);
-                    
-                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
-                        url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
-                    }
-                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.isManualLoading)) {
-                        url += "&isManualLoading=" + encodeURIComponent($scope.currentZpoint.isManualLoading);
+                        $scope.setIndicatorsParams(objectId, zpointId);
+    //                    $scope.selectedZpoint(objectId, zpointId);
+    //                    $cookies.contZPoint = $scope.currentZpoint.id;
+    //                    $cookies.contObject=$scope.currentObject.id;
+    //                    $cookies.contZPointName = $scope.currentZpoint.zpointName;
+    //                    $cookies.contObjectName=$scope.currentObject.fullName;
+    //                    $cookies.timeDetailType="24h";
+    //                    $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading===null?false:$scope.currentZpoint.isManualLoading) || false;
+    //console.log($scope.currentZpoint);                    
+    //                    $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
+    //                    $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
+
+    //                    window.location.assign("#/objects/indicators/?objectId="+objectId+"&zpointId="+zpointId+"&objectName="+$scope.currentObject.fullName+"&zpointName="+$scope.currentZpoint.zpointName);
+
+
+                        
+    //                    url += "/impulse-indicators";
+                        if ($scope.currentZpoint.isImpulse === true || $scope.currentZpoint.isSpreader === true) {
+                            url += "/impulse-indicators";
+                        } else if ($scope.currentZpoint.zpointType === 'el') {
+                            url += "/indicator-electricity";
+                        } else {
+                            url += "/indicators";
+                        }
+                        url += "/?objectId=" + encodeURIComponent(objectId) + "&zpointId=" + encodeURIComponent(zpointId) + "&objectName=" + encodeURIComponent($scope.currentObject.fullName) + "&zpointName=" + encodeURIComponent($scope.currentZpoint.zpointName);
+                        //add info about device
+    //console.log($scope.currentZpoint);                    
+
+                        url += "&deviceModel=" + encodeURIComponent($scope.currentZpoint.zpointModel);
+                        url += "&deviceSN=" + encodeURIComponent($scope.currentZpoint.zpointNumber);
+
+                        if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
+                            url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
+                        }
+                        if (!mainSvc.checkUndefinedNull($scope.currentZpoint.isManualLoading)) {
+                            url += "&isManualLoading=" + encodeURIComponent($scope.currentZpoint.isManualLoading);
+                        }
                     }
                     
                     window.open(url, '_blank');
@@ -3017,6 +3029,47 @@ console.log(ev);
 //                    zpointWidget.zpointName = zpoint.zpointName;
                 }
                 
+                function setPTreeIndicatorParams(url, zpId) {
+//                    zpId;                    
+                    var zpointNode = null,
+                        zpModel = null;                    
+                    $scope.data.selectedPNode.childNodes.some(function (elm) {
+                        if (elm.nodeObject.id === zpId) {                            
+                            zpointNode = elm;
+                            return true;
+                        }
+                    });
+                    
+                    thisdata.deviceModels.some(function (dm) {
+                        if (dm.id === zpointNode.childNodes[0].nodeObject.deviceModelId) {
+                            zpModel = dm;
+                            return true;
+                        }
+                    });
+                    //                    url += "/impulse-indicators";
+                    if (zpModel.isImpulse === true || zpModel.deviceType === objectSvc.HEAT_DISTRIBUTOR) {
+                        url += "/impulse-indicators";
+                    } else if (zpointNode.nodeObject.contServiceTypeKeyname === 'el') {
+                        url += "/indicator-electricity";
+                    } else {
+                        url += "/indicators";
+                    }
+                    url += "/?objectId=" + encodeURIComponent($scope.data.selectedPNode.nodeObject.id) + "&zpointId=" + encodeURIComponent(zpId) + "&objectName=" + encodeURIComponent($scope.data.selectedPNode.nodeObject.fullName) + "&zpointName=" + encodeURIComponent(zpointNode.nodeObject.customServiceName);
+                    //add info about device
+//console.log($scope.currentZpoint);                    
+
+//                    url += "&deviceModel=" + encodeURIComponent($scope.currentZpoint.zpointModel);
+//                    url += "&deviceSN=" + encodeURIComponent($scope.currentZpoint.zpointNumber);
+//
+//                    if (!mainSvc.checkUndefinedNull($scope.currentZpoint.measureUnitCaption)) {
+//                        url += "&mu=" + encodeURIComponent($scope.currentZpoint.measureUnitCaption);
+//                    }
+                    if (!mainSvc.checkUndefinedNull(zpointNode.childNodes[0].nodeObject.isManual)) {
+                        url += "&isManualLoading=" + encodeURIComponent(zpointNode.childNodes[0].nodeObject.isManual);
+                    }
+                    return url;
+                }
+                
 
 // *******************************************************************************************
 //         End of  Upgrade Tree Interface                
@@ -3070,11 +3123,24 @@ console.log(ev);
                     setActiveObjectPropertiesTab("view_main_object_properties_tab");
                 });
                 
+                
+                function successLoadDeviceModelsCallback(resp) {
+                    $scope.objectCtrlSettings.deviceModelsLoading = false;
+                    thisdata.deviceModels = resp.data;
+//                    console.log(thisdata.deviceModels);
+                }
+                
+                function loadDeviceModels() {
+                    $scope.objectCtrlSettings.deviceModelsLoading = true;
+                    objectSvc.getSubscrDeviceModels().then(successLoadDeviceModelsCallback, errorCallback);
+                }
+                
                 var initCtrl = function () {
 //console.log('initCtrl');
                     getWidgetList();
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
                     checkTreeSettingsAndGetObjectsData();
+                    loadDeviceModels();
                                         //if tree is off
 //                    if ($scope.objectCtrlSettings.isTreeView == false){
 //                        getObjectsData();
