@@ -2283,26 +2283,30 @@ console.log(headers);
                 $scope.loadTree = function (tree, objId) {
                     $scope.loading = true;
                     $scope.treeLoading = true;
-                    objectSvc.loadSubscrTree(tree.id).then(function (resp) {
-//                        $scope.treeLoading = false;
-                        $scope.messages.treeMenuHeader = tree.objectName || tree.id;
-                        var respTree = angular.copy(resp.data);
-                        mainSvc.sortTreeNodesBy(respTree, "objectName");
-                        $scope.data.currentTree = respTree;
-                        $scope.objects = [];
-                        $scope.objectsOnPage = [];
-//                        $scope.loading = false;
-                        $rootScope.$broadcast('objectSvc:loaded');
-                        //set monitor settings
-                        monitorSvc.setMonitorSettings({isFullObjectView: false});
-                        monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
-//console.log("loadTree");
-                        $rootScope.$broadcast('monitor:updateObjectsRequest');
-
-                        $scope.messages.noObjects = "";
-                    }, errorCallback);
-                    
-                    loadPTree(tree.id);
+//                    objectSvc.loadSubscrTree(tree.id).then(function (resp) {
+//
+//                        $scope.messages.treeMenuHeader = tree.objectName || tree.id;
+//                        var respTree = angular.copy(resp.data);
+//                        mainSvc.sortTreeNodesBy(respTree, "objectName");
+//                        $scope.data.currentTree = respTree;
+//                        $scope.objects = [];
+//                        $scope.objectsOnPage = [];
+//
+//                        $rootScope.$broadcast('objectSvc:loaded');
+//                        
+//                        monitorSvc.setMonitorSettings({isFullObjectView: false});
+//                        monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
+//                        $rootScope.$broadcast('monitor:updateObjectsRequest');
+//
+//                        $scope.messages.noObjects = "";
+//                    }, errorCallback);
+                    var tmpPTree = objectsTreeSvc.getPTree();
+                    if (mainSvc.checkUndefinedNull(tmpPTree) || tmpPTree._id !== tree.id) {
+                        loadPTree(tree.id);
+                    } else {
+                        getPTree();
+                    }
+//                    loadPTreeWithStartRefresh(tree.id);
                 };
                 
                 var loadTrees = function (treeSetting) {
@@ -2311,7 +2315,10 @@ console.log(headers);
                         $scope.treeLoading = false;
                         mainSvc.sortItemsBy(resp.data, "objectName");
                         $scope.data.trees = angular.copy(resp.data);
-                        if (!mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)) {
+                        if (angular.isDefined($cookies.loadedPTreeId)) {
+                            $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number($cookies.loadedPTreeId));
+                        }
+                        if ($scope.data.defaultTree == null && !mainSvc.checkUndefinedNull(treeSetting) && (treeSetting.isActive == true)) {
                             $scope.data.defaultTree = mainSvc.findItemBy($scope.data.trees, "id", Number(treeSetting.value));
                         }
                         if (!angular.isArray($scope.data.trees) || $scope.data.trees.length <= 0 || mainSvc.checkUndefinedNull($scope.data.defaultTree)) {
@@ -2804,16 +2811,56 @@ console.log(headers);
 //          Upgrade Tree Interface                
 //********************************************************************************************
                 
-                $scope.data.selectedPNode = null;
-                var selectedPNodes = [];
+                $scope.data.selectedPNode = null; // текущий выбранный узел дерева, виджет которого отображается в инфо панели
+                var selectedPNodes = []; // массив выбранных через ctrl/shift узлов дерева
                 
                 function successLoadPTreeCallback(resp) {
                     console.log(resp);
                     console.log(resp.data);
+                    
                     $scope.data.currentPTree = resp.data;
+                    objectsTreeSvc.setPTree($scope.data.currentPTree);
+                    $cookies.loadedPTreeId = $scope.data.currentPTree._id;
+                    
+                    $scope.loading = false;
+                    $scope.treeLoading = false;
+                    
+                    $scope.messages.treeMenuHeader = resp.data.nodeName || resp.data._id;
+                    var respTree = angular.copy(resp.data);
+//                    mainSvc.sortTreeNodesBy(respTree, "objectName");
+//                    $scope.data.currentTree = respTree;
+                    $scope.objects = [];
+                    $scope.objectsOnPage = [];
+//                        $scope.loading = false;
+//                    $rootScope.$broadcast('objectSvc:loaded');
+                    //set monitor settings
+                    monitorSvc.setMonitorSettings({isFullObjectView: false});
+                    monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});
+//console.log("loadTree");
+//                    $rootScope.$broadcast('monitor:updateObjectsRequest');
+
+                    $scope.messages.noObjects = "";
+                }
+                
+                function loadPTreeWithStartRefresh(treeId, depthLvl) {
+                    $scope.loading = true;
+                    $scope.treeLoading = true;
+                    if (mainSvc.checkUndefinedNull(depthLvl)) {
+                        var depthLvl = 0;
+                    }
+                    $rootScope.$broadcast(objectsTreeSvc.BROADCASTS.requestPTreeLoading, {subscrObjectTreeId: treeId, childLevel: depthLvl});
+                }
+                
+                function getPTree() {
+                    $scope.data.currentPTree = objectsTreeSvc.getPTree();
+                    $scope.messages.treeMenuHeader = $scope.data.currentPTree.nodeName || $scope.data.currentPTree._id;
                     $scope.loading = false;
                     $scope.treeLoading = false;
                 }
+                
+                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeLoaded, function () {
+                    getPTree();
+                });
                 
                 function loadPTree(treeId, depthLvl) {
                     $scope.loading = true;
