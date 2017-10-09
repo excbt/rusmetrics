@@ -29,12 +29,11 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrPrefObjectTreeTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPrefValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrTypePrefRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SubscrPrefRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrPrefService extends AbstractService implements SecuredRoles {
+public class SubscrPrefService implements SecuredRoles {
 
 	public final static String SUBSCR_TYPE_NORMAL = SubscrTypeKey.NORMAL.getKeyname();
 
@@ -56,7 +55,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 */
 	public static Comparator<SubscrPrefValue> SUBSCR_PREF_COMPARATOR = new Comparator<SubscrPrefValue>() {
 		@Override
@@ -76,7 +75,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	};
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -95,7 +94,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -117,7 +116,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param prefValueList
 	 * @return
@@ -137,7 +136,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -163,7 +162,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -189,7 +188,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param prefValueList
 	 * @return
 	 */
@@ -225,7 +224,7 @@ public class SubscrPrefService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrPrefKeyname
 	 * @return
 	 */

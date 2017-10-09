@@ -40,7 +40,6 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.service.support.ReportParamsetUtils;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
@@ -53,7 +52,7 @@ import ru.excbt.nmk.reports.NmkReport.ReportType;
 
 /**
  * Сервис для работы с отчетами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
@@ -107,7 +106,7 @@ public class ReportService {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
 		 */
 		public boolean externalJasperServerEnable() {
@@ -123,7 +122,7 @@ public class ReportService {
 		}
 
 		/**
-		 * 
+		 *
 		 * @return
 		 */
 		public String externalJasperServerUrl() {
@@ -134,7 +133,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param beginDate
 	 * @param endDate
@@ -145,7 +144,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param beginDate
 	 * @param endDate
@@ -156,7 +155,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param beginDate
 	 * @param endDate
@@ -179,7 +178,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
@@ -194,7 +193,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param subscriberId
 	 * @param reportDate
@@ -245,7 +244,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param outputStream
 	 * @param reportParamsetId
 	 */
@@ -340,7 +339,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -351,7 +350,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @throws SQLException
 	 */
 	@Transactional(readOnly = true)
@@ -375,7 +374,7 @@ public class ReportService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param reportDate
 	 * @return
@@ -397,12 +396,12 @@ public class ReportService {
 			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
 
 		}
-		//--------------------------------------------------------------------			
+		//--------------------------------------------------------------------
 		else if ((reportParamset.getReportPeriodKey() == ReportPeriodKey.LAST_MONTH
 				&& reportParamset.getReportPeriodKey().isSettlementDay() && reportParamset.getSettlementDay() != null)
 				|| (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH &&
 				//reportParamset.getSettlementDay() != null
-				//&& 
+				//&&
 						reportParamset.getReportPeriodKey().isSettlementDay()
 						&& reportParamset.getSettlementMonth() != null && reportParamset.getSettlementYear() != null)) {
 
@@ -451,9 +450,9 @@ public class ReportService {
 			if (dtStart == null || dtEnd == null) {
 				LocalDateTime processedReportDate = reportDate;
 
-				dtStart = ReportParamsetUtils.getStartDateTime(processedReportDate,
+				dtStart = ReportParamsetDateUtil.getStartDateTime(processedReportDate,
 						reportParamset.getReportPeriodKey());
-				dtEnd = ReportParamsetUtils.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
+				dtEnd = ReportParamsetDateUtil.getEndDateTime(processedReportDate, reportParamset.getReportPeriodKey());
 			}
 
 		}
@@ -470,8 +469,8 @@ public class ReportService {
 				}
 			}
 
-			dtStart = ReportParamsetUtils.getStartDateTime(modReportDate, reportParamset.getReportPeriodKey());
-			dtEnd = ReportParamsetUtils.getEndDateTime(modReportDate, reportParamset.getReportPeriodKey());
+			dtStart = ReportParamsetDateUtil.getStartDateTime(modReportDate, reportParamset.getReportPeriodKey());
+			dtEnd = ReportParamsetDateUtil.getEndDateTime(modReportDate, reportParamset.getReportPeriodKey());
 
 		}
 

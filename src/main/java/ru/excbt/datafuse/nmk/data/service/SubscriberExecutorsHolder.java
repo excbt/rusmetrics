@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,11 +12,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.12.2016
- * 
+ *
  */
 public class SubscriberExecutorsHolder {
 
@@ -37,7 +37,7 @@ public class SubscriberExecutorsHolder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -64,7 +64,7 @@ public class SubscriberExecutorsHolder {
 
 	/**
 	 * @throws InterruptedException
-	 * 
+	 *
 	 */
 	public void shutDown() throws InterruptedException {
 		if (isShutdown.get() == true) {
@@ -89,7 +89,7 @@ public class SubscriberExecutorsHolder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param task
 	 * @return
@@ -102,7 +102,7 @@ public class SubscriberExecutorsHolder {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param task
 	 * @return

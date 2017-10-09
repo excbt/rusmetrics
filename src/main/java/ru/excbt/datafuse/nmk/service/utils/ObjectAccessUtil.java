@@ -5,6 +5,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
@@ -25,6 +26,19 @@ public class ObjectAccessUtil {
     public Predicate<ContZPoint> checkContZPoint(PortalUserIds portalUserIds) {
         final CopyOnWriteArrayList<Long> contZPointIds = new CopyOnWriteArrayList<>(objectAccessService.findAllContZPointIds(portalUserIds));
         return (co) -> contZPointIds.contains(co.getId());
+    }
+
+    public static final boolean checkIds(Collection<Long> checkIds, Collection<Long> availableIds) {
+
+        if (availableIds == null || availableIds.isEmpty()) {
+            return false;
+        }
+
+        boolean result = true;
+        for (Long id : checkIds) {
+            result = result && availableIds.contains(id);
+        }
+        return result;
     }
 
 }

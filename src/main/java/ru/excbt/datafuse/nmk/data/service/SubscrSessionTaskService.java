@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskLogRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
 @Service
 public class SubscrSessionTaskService {
@@ -27,7 +27,7 @@ public class SubscrSessionTaskService {
 	private SubscrSessionTaskLogRepository subscrSessionTaskLogRepository;
 
 	/**
-	 * 
+	 *
 	 * @param task
 	 * @return
 	 */
@@ -38,7 +38,7 @@ public class SubscrSessionTaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -48,7 +48,7 @@ public class SubscrSessionTaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrSessionTaskId
 	 * @return
 	 */
@@ -59,7 +59,7 @@ public class SubscrSessionTaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param task
 	 * @return
 	 */
@@ -74,18 +74,18 @@ public class SubscrSessionTaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param task
 	 * @return
 	 */
 	public boolean checkTaskValid(SubscrSessionTask task) {
 		return task != null && task.getSubscriberId() != null && task.getSubscrUserId() != null
-		//&& task.getContZpointId() != null 
+		//&& task.getContZpointId() != null
 				&& task.getDeviceObjectId() != null;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param task
 	 */
@@ -97,7 +97,7 @@ public class SubscrSessionTaskService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrSessionTaskId
 	 * @return
 	 */

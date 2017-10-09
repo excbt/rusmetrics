@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 /**

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service;
 
@@ -14,14 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberExecutorsHolder;
-
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.12.2016
- * 
+ *
  */
 @Service
 public class SubscriberExecutorService {
@@ -31,7 +29,7 @@ public class SubscriberExecutorService {
 	private final SubscriberExecutorsHolder subscriberExecutors = new SubscriberExecutorsHolder();
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -42,7 +40,7 @@ public class SubscriberExecutorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param task
 	 * @return
@@ -55,7 +53,7 @@ public class SubscriberExecutorService {
 
 	/**
 	 * @throws InterruptedException
-	 * 
+	 *
 	 */
 	@PreDestroy
 	private void shutdown() throws InterruptedException {

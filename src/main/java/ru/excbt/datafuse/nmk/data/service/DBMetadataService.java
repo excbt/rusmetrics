@@ -1,20 +1,17 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 
+import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-
-import org.springframework.stereotype.Service;
-
-import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 @Service
 public class DBMetadataService {
@@ -26,10 +23,14 @@ public class DBMetadataService {
 				Arrays.asList("id", "created_date", "last_modified_date", "created_by", "last_modified_by"));
 	}
 
-	@PersistenceContext(unitName = "nmk-p")
-	private EntityManager em;
+	private final DBSessionService dbSessionService;
 
-	private static class ColumnHolder {
+	@Autowired
+    public DBMetadataService(DBSessionService dbSessionService) {
+        this.dbSessionService = dbSessionService;
+    }
+
+    private static class ColumnHolder {
 		private final String[] columns;
 		private final String operator;
 		private final List<String> columnList;
@@ -71,13 +72,13 @@ public class DBMetadataService {
 		}
 	}
 
-	/**
-	 * 
-	 * @param columnHelper
-	 * @param schemaName
-	 * @param tableName
-	 * @return
-	 */
+    /**
+     *
+     * @param columnHolder
+     * @param schemaName
+     * @param tableName
+     * @return
+     */
 	protected List<Object[]> columnQueryTool(ColumnHolder columnHolder, String schemaName, String tableName) {
 
 		StringBuilder sqlString = new StringBuilder();
@@ -88,7 +89,7 @@ public class DBMetadataService {
 		sqlString.append(" AND table_name = :tableName ");
 		sqlString.append(" ORDER BY ordinal_position");
 
-		Query q1 = em.createNativeQuery(sqlString.toString());
+		Query q1 = dbSessionService.getSession().createNativeQuery(sqlString.toString());
 
 		q1.setParameter("tableSchema", schemaName);
 		q1.setParameter("tableName", tableName);
@@ -101,7 +102,7 @@ public class DBMetadataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param schemaName
 	 * @param tableName
 	 * @return

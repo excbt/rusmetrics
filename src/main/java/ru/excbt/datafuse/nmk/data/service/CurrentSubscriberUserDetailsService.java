@@ -9,7 +9,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.service.support.MockUserService;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 @Service

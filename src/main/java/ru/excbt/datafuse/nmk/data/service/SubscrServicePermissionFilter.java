@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -13,12 +13,13 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Класс для работы с разрешениями абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.09.2015
@@ -33,11 +34,11 @@ public class SubscrServicePermissionFilter {
 
 	private final SubscriberParam subscriberParam;
 
-	/**
-	 * 
-	 * @param permissionList
-	 * @param isRma
-	 */
+    /**
+     *
+     * @param permissionList
+     * @param subscriberParam
+     */
 	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList,
 			SubscriberParam subscriberParam) {
 		checkNotNull(permissionList);
@@ -47,15 +48,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
-	 * @param permissionList
-	 */
-	//	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList) {
-	//		this(permissionList, false);
-	//	}
-
-	/**
-	 * 
+	 *
 	 * @param objectList
 	 * @return
 	 */
@@ -80,7 +73,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param permissions
 	 * @return
 	 */
@@ -99,7 +92,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param objectList
 	 * @param keynames
 	 * @return
@@ -116,7 +109,7 @@ public class SubscrServicePermissionFilter {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param className
 	 * @return
 	 */

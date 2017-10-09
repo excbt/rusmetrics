@@ -7,7 +7,7 @@ import javax.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvProps;
+import ru.excbt.datafuse.nmk.data.service.HWatersCsvProps;
 
 @Service
 public class WebAppPropsService implements HWatersCsvProps {
@@ -18,7 +18,7 @@ public class WebAppPropsService implements HWatersCsvProps {
 	private ServletContext servletContext;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getWebAppHomeDirectory() {
@@ -26,7 +26,7 @@ public class WebAppPropsService implements HWatersCsvProps {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getServerHomeDirectory() {
@@ -36,7 +36,7 @@ public class WebAppPropsService implements HWatersCsvProps {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -45,7 +45,7 @@ public class WebAppPropsService implements HWatersCsvProps {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String getHWatersCsvInputDir() {

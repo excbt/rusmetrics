@@ -17,7 +17,7 @@ import com.google.common.collect.Lists;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.repository.SubscrVCookieRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
 @Service
 public class SubscrVCookieService {
@@ -28,7 +28,7 @@ public class SubscrVCookieService {
 	private SubscrVCookieRepository subscrVCookieRepository;
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @return
 	 */
@@ -40,7 +40,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @return
 	 */
@@ -52,7 +52,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -70,7 +70,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -88,7 +88,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @param existingVCList
 	 * @return
@@ -119,7 +119,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entities
 	 * @return
 	 */
@@ -140,7 +140,7 @@ public class SubscrVCookieService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entities
 	 * @return
 	 */

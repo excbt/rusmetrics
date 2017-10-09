@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
@@ -237,7 +238,7 @@ public class RmaSubscriberService extends SubscriberService {
 		if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
 			throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
 		}
-		subscriberRepository.save(softDelete(subscriber));
+		subscriberRepository.save(EntityActions.softDelete(subscriber));
 	}
 
 	/**

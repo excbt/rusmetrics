@@ -25,17 +25,15 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -49,7 +47,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  *
  */
 @Service
-public class SubscriberService extends AbstractService implements SecuredRoles {
+public class SubscriberService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscriberService.class);
 
@@ -137,7 +135,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteSubscriber(Subscriber entity) {
 		checkNotNull(entity);
-		subscriberRepository.save(softDelete(entity));
+		subscriberRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**

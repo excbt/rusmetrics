@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -10,7 +10,7 @@ import org.joda.time.DateTime;
 
 /**
  * Класс для работы с каталогами CSV
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.07.2015
@@ -29,7 +29,7 @@ public interface HWatersCsvProps {
 	public String getHWatersCsvInputDir();
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrUserId
 	 * @return
@@ -60,7 +60,7 @@ public interface HWatersCsvProps {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrUserId
 	 * @param filename

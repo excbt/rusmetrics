@@ -37,20 +37,20 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.06.2015
  *
  */
 @Service
-public class SubscrContEventNotificationService extends AbstractService {
+public class SubscrContEventNotificationService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationService.class);
 
@@ -69,8 +69,8 @@ public class SubscrContEventNotificationService extends AbstractService {
 	private ContEventService contEventService;
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since dd.02.2016
@@ -147,7 +147,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param isNew
 	 * @param pageable
@@ -170,7 +170,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param specs
 	 * @return
 	 */
@@ -190,7 +190,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param searchConditions
 	 * @param pageable
 	 * @return
@@ -204,15 +204,15 @@ public class SubscrContEventNotificationService extends AbstractService {
 		Pageable pageRequest = setupPageRequest(pageable);
 
 		List<Specification<SubscrContEventNotification>> andFilter = Arrays.asList( //
-				specSubscriberId(searchConditions.subscriberId), // 
-				specContEventDate(searchConditions.period), // 
-				specIsNew(searchConditions.isNew), // 
+				specSubscriberId(searchConditions.subscriberId), //
+				specContEventDate(searchConditions.period), //
+				specIsNew(searchConditions.isNew), //
 				specContObjectId(searchConditions.contObjectIdList), //
 				specContEventTypeId(searchConditions.contEventTypeList), //
 				specContEventCategory(searchConditions.contEventCategoryList), //
 				specContEventDevation(searchConditions.contEventDeviationList));
 
-		Specifications<SubscrContEventNotification> specs = specsAndFilterBuild(andFilter);
+		Specifications<SubscrContEventNotification> specs = DBSpecUtil.specsAndFilterBuild(andFilter);
 
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
 
@@ -224,7 +224,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param datePeriod
 	 * @param contObjectList
@@ -251,7 +251,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param datePeriod
 	 * @param contObjectList
@@ -270,7 +270,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
 			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
 					subscriberParam.getSubscrUserId());
-		} else // another case 
+		} else // another case
 		if ((contObjectIds != null && !contObjectIds.isEmpty())
 				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
 			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
@@ -285,7 +285,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private static Sort makeDefaultSort() {
@@ -293,7 +293,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	private static Sort makeSort(Direction sortDirection) {
@@ -304,7 +304,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param sort
 	 * @return
 	 */
@@ -320,7 +320,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pageable
 	 * @return
 	 */
@@ -337,7 +337,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param pageable
 	 * @param sortDesc
 	 * @return
@@ -356,7 +356,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param searchTerm
 	 * @return
 	 */
@@ -371,7 +371,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -385,7 +385,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -402,7 +402,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param period
 	 * @return
 	 */
@@ -420,7 +420,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIdList
 	 * @return
 	 */
@@ -434,7 +434,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventTypeIdList
 	 * @return
 	 */
@@ -451,7 +451,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventCategoryList
 	 * @return
 	 */
@@ -483,7 +483,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -495,7 +495,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventNotificationId
 	 * @return
 	 */
@@ -518,7 +518,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrContEventNotification
 	 * @param isNew
 	 * @param revisionSubscrUserId
@@ -542,7 +542,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberParam
 	 * @param notificationIds
 	 * @param isNew
@@ -563,7 +563,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notificationIds
 	 */
 	@Deprecated
@@ -578,7 +578,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param datePeriod
 	 * @param subscriberId
@@ -599,7 +599,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param datePeriod
 	 * @param subscriberId
@@ -621,7 +621,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @param datePeriod
 	 * @param subscriberId
@@ -643,7 +643,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param datePeriod
@@ -658,7 +658,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	/**
 	 *
 	 * Selects ContEvent notifications count by array of contObjectIds
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param datePeriod
@@ -694,7 +694,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param datePeriod
@@ -717,7 +717,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param datePeriod
@@ -741,7 +741,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notifications
 	 */
 	private void initContEvent(Collection<SubscrContEventNotification> notifications) {
@@ -759,7 +759,7 @@ public class SubscrContEventNotificationService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param notification
 	 */
 	private void initContEvent(SubscrContEventNotification notification) {

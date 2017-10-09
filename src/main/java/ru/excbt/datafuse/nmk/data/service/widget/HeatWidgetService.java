@@ -18,12 +18,14 @@ import javax.persistence.Query;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
+import ru.excbt.datafuse.nmk.data.service.DBSessionService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
@@ -44,7 +46,14 @@ public class HeatWidgetService extends WidgetService {
 	private final static Collection<MODES> availableModesCollection = Collections
 			.unmodifiableList(Arrays.asList(availableModes));
 
-	/**
+	private final DBSessionService dbSessionService;
+
+	@Autowired
+    public HeatWidgetService(DBSessionService dbSessionService) {
+        this.dbSessionService = dbSessionService;
+    }
+
+    /**
 	 *
 	 * @param contZpointId
 	 * @param dateTime
@@ -67,7 +76,7 @@ public class HeatWidgetService extends WidgetService {
 		sqlString.append(" FROM widgets.get_heat_data(:contZpointId, :currentDate, :mode)");
 		log.debug("Sql: {}", sqlString.toString());
 
-		Query q1 = em.createNativeQuery(sqlString.toString());
+		Query q1 = dbSessionService.getSession().createNativeQuery(sqlString.toString());
 
 		q1.setParameter("contZpointId", contZpointId);
 		q1.setParameter("currentDate", Date.from(dateTime.toInstant()));
@@ -125,7 +134,7 @@ public class HeatWidgetService extends WidgetService {
 		sqlString.append(" FROM widgets.get_heat_data_ex(:contZpointId, :timeDetailType, :b_date, :e_date)");
 		log.debug("Sql: {}", sqlString.toString());
 
-		Query q1 = em.createNativeQuery(sqlString.toString());
+		Query q1 = dbSessionService.getSession().createNativeQuery(sqlString.toString());
 
 		q1.setParameter("contZpointId", contZpointId);
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());

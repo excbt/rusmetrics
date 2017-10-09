@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Класс для работы с файлами CSV
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.07.2015
@@ -35,7 +35,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @return
@@ -46,7 +46,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @param filename
@@ -58,7 +58,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @param filename
@@ -70,7 +70,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @return
@@ -81,7 +81,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @param filename
@@ -93,7 +93,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param hWatersCsvProps
 	 * @param subscriberId
 	 * @param filename
@@ -105,7 +105,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directory
 	 * @param subscriberId
 	 * @return
@@ -130,7 +130,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directory
 	 * @param subscriberId
 	 * @param filename
@@ -169,7 +169,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directory
 	 * @param subscriberId
 	 * @return
@@ -187,7 +187,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param filename
 	 * @return
 	 */
@@ -197,7 +197,7 @@ public class HWatersCsvFileUtils {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param filename
 	 * @return
 	 */

@@ -1,6 +1,5 @@
-package ru.excbt.datafuse.nmk.data.service.support;
+package ru.excbt.datafuse.nmk.data.model.ids;
 
-import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 
 public final class SubscriberParam {

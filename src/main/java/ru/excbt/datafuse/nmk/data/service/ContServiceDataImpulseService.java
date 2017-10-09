@@ -23,8 +23,8 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.slog.service.SLogSessionUtil;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
@@ -173,7 +173,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
 
             session.web().trace("Проверка целостности CSV файла");
-            SLogSessionUtils.checkCsvSeparators(session, importInfo);
+            SLogSessionUtil.checkCsvSeparators(session, importInfo);
             session.web().trace("Проверка целостности CSV пройдена");
             session.web().trace("Преобразование данных файла");
 
@@ -191,7 +191,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                     session.web().error("Общая ошибка: " + e.getMessage());
                 }
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Данные из файла не могут быть обработаны", errorStatusMessage);
 
                 log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
@@ -230,7 +230,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
                 session.web().error("Не найденные пользователи:" + sb.toString());
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     errorMessage, errorStatusMessage);
                 return;
             }
@@ -239,7 +239,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 StringBuilder sb = new StringBuilder();
                 accessDeniedLoginNames.forEach((i) -> sb.append("\n").append(i));
                 session.web().error("Отказано в доступе к пользователям:" + sb.toString());
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     errorMessage, errorStatusMessage);
                 return;
             }
@@ -276,7 +276,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 StringBuilder sb = new StringBuilder();
                 invalidDeviceObjects.forEach((i) -> sb.append("\n").append(i));
                 session.web().error("Не найдены приборы:" + sb.toString());
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     errorMessage, errorStatusMessage);
                 return;
             }
@@ -294,7 +294,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
                 if (deviceObject == null) {
                     session.web().error("Внутренняя ошибка. Не найден прибор " + data.getSerial());
-                    SLogSessionUtils.failSession(session,
+                    SLogSessionUtil.failSession(session,
                         errorMessage, errorStatusMessage);
                     return;
 
@@ -303,13 +303,13 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 List<ContZPoint> contZPoints = contZPointService.selectContPointsByDeviceObject(deviceObject.getId());
                 if (contZPoints.size() == 0) {
                     session.web().error("Не найдена точка учета для прибора:" + data.getSerial());
-                    SLogSessionUtils.failSession(session,
+                    SLogSessionUtil.failSession(session,
                         errorMessage, errorStatusMessage);
                     return;
                 }
                 if (contZPoints.size() > 1) {
                     session.web().error("Точка учета для прибора:" + data.getSerial() + " не уникальна");
-                    SLogSessionUtils.failSession(session,
+                    SLogSessionUtil.failSession(session,
                         errorMessage, errorStatusMessage);
                     return;
                 }
@@ -317,7 +317,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 ContZPoint contZPoint = contZPoints.get(0);
                 if (!Boolean.TRUE.equals(contZPoint.getIsManualLoading())) {
                     session.web().error("Точка учета для прибора: " + data.getSerial() + " не поддерживает прямую загрузку.");
-                    SLogSessionUtils.failSession(session,
+                    SLogSessionUtil.failSession(session,
                         errorMessage, errorStatusMessage);
                     return;
                 }
@@ -344,7 +344,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
                 impulseImportRepository.save(impulseImportList);
             } catch (IllegalStateException e) {
                 session.web().error("Ошибка при загрузке данных");
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     errorMessage, errorStatusMessage);
                 return;
             }
@@ -363,7 +363,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
                 session.web().trace("Ошибка при обновлении данных");
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     sqlExceptiomMessage, errorMessage);
 
                 throw new IllegalArgumentException(
@@ -372,7 +372,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
             session.web().trace("Обновление данных успешно завершено");
 
-            SLogSessionUtils.completeSession(session, completeStatusMessage);
+            SLogSessionUtil.completeSession(session, completeStatusMessage);
         }
 
     }
