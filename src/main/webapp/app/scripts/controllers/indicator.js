@@ -1158,9 +1158,9 @@ angular.module('portalNMC')
     $scope.$watch('indicatorDates', function (newDates, oldDates, scope) {
 //console.log(scope);        
 //console.log("Date-range-settings indicatorDates");        
-        if ($location.path() !== "/objects/indicators") {
-            return;
-        }
+//        if ($location.path() !== "/objects/indicators") {
+//            return;
+//        }
 //console.log("Date-range-settings indicatorDates1");  
         if (newDates === oldDates) {
             return;

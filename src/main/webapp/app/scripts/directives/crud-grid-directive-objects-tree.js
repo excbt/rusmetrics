@@ -2935,11 +2935,17 @@ console.log(zpointId);
                 
                 $scope.selectPNode = function (item, ev) {
 //console.log("Select node:", item);
-console.log(ev);                    
+//console.log(ev);                    
                     if ($scope.isContObjectNode(item)) {
                         $scope.selectedObjectBy(item.nodeObject);
                         loadViewMode(item.nodeObject)
 //console.log($scope.currentObject);                        
+                    }
+                    if ($scope.isContZpointNode(item)) {
+                        item.isIndicatorsView = false;
+                        $timeout(function () {
+                            item.isIndicatorsView = true;
+                        }, 0);
                     }
 //                    var treeForSearch = $scope.data.currentPTree;
 //                    var selectedNode = $scope.data.selectedPNode;
@@ -3047,7 +3053,7 @@ console.log(ev);
                         }
                     });
                     //                    url += "/impulse-indicators";
-                    if (zpModel.isImpulse === true || zpModel.deviceType === objectSvc.HEAT_DISTRIBUTOR) {
+                    if (zpModel != null && (zpModel.isImpulse === true || zpModel.deviceType === objectSvc.HEAT_DISTRIBUTOR)) {
                         url += "/impulse-indicators";
                     } else if (zpointNode.nodeObject.contServiceTypeKeyname === 'el') {
                         url += "/indicator-electricity";

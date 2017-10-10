@@ -178,23 +178,17 @@
           <div class = "row">
              <div class = "col-xs-12">
                  <div ng-if = "isElementNode(data.selectedPNode)">
-                    <div>
-                        Узел: {{data.selectedPNode.nodeName}}
-                    </div>
-                     <div>
-                         Дочерних узлов: {{data.selectedPNode.childNodes.length}}
-                     </div>
-                     <div>
-                         Объектов: {{data.selectedPNode.linkedNodeObjects.length}}
+                    <div class = "paddingLeft10">
+                        <h3>Узел: {{data.selectedPNode.nodeName}}</h3>                    
+                        <h4>Дочерних узлов: {{data.selectedPNode.childNodes.length || 0}}</h4>
+                        <h4>Объектов: {{data.selectedPNode.linkedNodeObjects.length || 0}}</h4>
                      </div>
                  </div>
                  <div ng-if = "isContObjectNode(data.selectedPNode)">
-                     <div>
-                         Название объекта: {{data.selectedPNode.nodeObject.fullName}}
-                     </div>
-                     <div>
-                         Точек учета: {{data.selectedPNode.childNodes.length || 0}}
-                     </div>
+                     <div class = "paddingLeft10">
+                         <h3>Объект: {{data.selectedPNode.nodeObject.fullName}}</h3>                     
+                         <h4>Точек учета: {{data.selectedPNode.childNodes.length || 0}}</h4>
+                     </div>                     
                      <div>
                          <div ng-repeat = "zpointNode in data.selectedPNode.childNodes track by $index">
                            <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
@@ -207,85 +201,43 @@
 
                                 </ng-widget>
                            </div>
-                            
-<!--
-                    trHTML += "<div ng-controller='widgetContainer'>" +
-                              "<span ng-show='title' ng-bind='title'></span>" +
-                              "<div ng-show='isLoading'>Загрузка...</div>" +
-                              "<div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>" +
-                              "<ng-widget src=\"'" + zpointWidget.type +
-                            "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName +
-                                                        
-                            "', 'contZpointId': '" + zpoint.id +
-                            "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +
-                            "', 'zpointNumber': '" + zpoint.zpointNumber +
-                            "', 'zpointType': '" + zpoint.zpointType +
-                            "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
-                            "', 'contObjectId': '" + object.id +
-                            "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
-                            "', 'isImpulse': '" + zpoint.isImpulse +
-                            "', 'isManualLoading': '" + zpoint.isManualLoading +
-                            "' }\" ng-show=\"!isLoading && !isError\"></ng-widget>" +
-                            "</div>";
-                        
-                        trHTML += "</div>";
--->
                              
                          </div>
                      </div>
-<!--
-                     <div>
-                         <ng-widget src = "data.selectedPNode.widgetObject.type"
-                            options = "data.selectedPNode.widgetObject.widgetOptions">
-                             
-                         </ng-widget>
-                     </div>
--->
                  </div>
                  <div ng-if = "isContZpointNode(data.selectedPNode)">
-                     <div>
-                         Название точки учета: {{data.selectedPNode.nodeObject.customServiceName}}
-                     </div>
-                     <div>
-                         Приборов: {{data.selectedPNode.childNodes.length}}
-                     </div>
+                     <div  class = "paddingLeft10">
 <!--
-                     <div>
-                         <ng-widget src = "data.selectedPNode.widgetObject.type"
-                            options = "data.selectedPNode.widgetObject.widgetOptions">
-                             
-                         </ng-widget>
+                         <h3>Точка учета: {{data.selectedPNode.nodeObject.customServiceName}}</h3>                     
+                         <h4>Приборов: {{data.selectedPNode.childNodes.length || 0}}</h4>
+-->
+                     
+                         <div ng-if = "data.selectedPNode.isIndicatorsView">
+                             <nmc-view-indicators
+                                 cont-object-id = data.selectedPNode.nodeObject.contObjectId
+                                 cont-object-name = data.selectedPNode.nodeObject.contObjectId
+                                 cont-zpoint-id = data.selectedPNode.nodeObject.id
+                                 cont-zpoint-name = data.selectedPNode.nodeObject.customServiceName
+                                 cont-zpoint-type = data.selectedPNode.nodeObject.contServiceTypeKeyname
+                                 device-model-id = data.selectedPNode.childNodes[0].nodeObject.deviceModelId
+                                 device-number = "data.selectedPNode.childNodes[0].nodeObject.number"
+                                 is-manual = "data.selectedPNode.childNodes[0].nodeObject.isManual"
+                             >
+
+                             </nmc-view-indicators>
+                         </div>
                      </div>
--->
-<!--
-                     <ng-widget src= "zpointWidget.type "
-                             options=\"{'zpointName' : '" + zpointWidget.zpointName +
-                                                        
-                            "', 'contZpointId': '" + zpoint.id +
-                            "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +
-                            "', 'zpointNumber': '" + zpoint.zpointNumber +
-                            "', 'zpointType': '" + zpoint.zpointType +
-                            "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
-                            "', 'contObjectId': '" + object.id +
-                            "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
-                            "', 'isImpulse': '" + zpoint.isImpulse +
-                            "', 'isManualLoading': '" + zpoint.isManualLoading +
-                            "' }\" ng-show=\"!isLoading && !isError\">
-                    </ng-widget>
--->
+
                  </div>
                  <div ng-if = "isDeviceNode(data.selectedPNode)">
-                     <div>
-                         Прибор:
-                     </div>
-                     <div>
-                         S/N: {{data.selectedPNode.nodeObject.number}}
-                     </div>
-                     <div>
-                         Название: {{data.selectedPNode.nodeObject.deviceObjectName}}
-                     </div>
-                     <div>
-                         Модель: {{data.selectedPNode.nodeObject.deviceModelId}}
+                     <div class = "paddingLeft10">
+                         <p>Прибор:</p>
+                     
+                         <p>S/N: {{data.selectedPNode.nodeObject.number}}</p>
+                     
+                         <p>Название: {{data.selectedPNode.nodeObject.deviceObjectName}}</p>
+                     
+                         <p>Модель: {{data.selectedPNode.nodeObject.deviceModelId}}</p>
                      </div>
                  </div>
 <!--

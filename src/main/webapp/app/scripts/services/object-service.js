@@ -284,6 +284,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             return $http.get(url, httpOptions);
         };
                  
+        var getDeviceModel = function (devModelId) {
+            var url = urlSubscrDeviceModels + "/" + devModelId;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        };
+                 
 //        var getDeviceModelTypes = function(){
 //            var url = urlDeviceModelTypes;
 //            if (isCancelParamsIncorrect() === true){
@@ -1024,6 +1032,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             getDeviceMetadataMeasures: getDeviceMetadataMeasures,
             getDeviceMetaDataVzlet: getDeviceMetaDataVzlet,
             getDeviceMetaDataVzletSystemList: getDeviceMetaDataVzletSystemList,
+            getDeviceModel: getDeviceModel,
             getLoadingStatus: getLoadingStatus,
             getObjectsUrl: getObjectsUrl,
             getPromise: getPromise,
