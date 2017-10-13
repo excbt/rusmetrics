@@ -8,7 +8,6 @@ angular.module('portalNMC')
             replace: true,
             scope: {
                 contObjectId: "@",
-                contObjectName: "@",
                 contZpointId: "@",
                 contZpointName: "@",
                 contZpointType: "@",
@@ -86,6 +85,8 @@ angular.module('portalNMC')
 //                    console.log($scope.contZpointId);
 //                    console.log($scope.deviceModelId);
                     //loadDeviceModel($scope.deviceModelId);
+//                    console.log($cookies.fromDate);
+//                    console.log($cookies.toDate);
                     loadContObject($scope.contObjectId);
                 }
                 
