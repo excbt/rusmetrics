@@ -2941,12 +2941,7 @@ console.log(zpointId);
                         loadViewMode(item.nodeObject)
 //console.log($scope.currentObject);                        
                     }
-                    if ($scope.isContZpointNode(item)) {
-                        item.isIndicatorsView = false;
-                        $timeout(function () {
-                            item.isIndicatorsView = true;
-                        }, 0);
-                    }
+                    
 //                    var treeForSearch = $scope.data.currentPTree;
 //                    var selectedNode = $scope.data.selectedPNode;
 //                    if (!mainSvc.checkUndefinedNull(selectedNode)) {
@@ -2958,6 +2953,9 @@ console.log(zpointId);
 //                    }
                     if (!mainSvc.checkUndefinedNull($scope.data.selectedPNode) && !ev.ctrlKey && !ev.shiftKey) {
                         $scope.data.selectedPNode.isSelected = false;
+                        if ($scope.isContZpointNode($scope.data.selectedPNode)) {                        
+                            $scope.data.selectedPNode.isIndicatorsView = false;
+                        }
                     }
                     
                     if (!ev.ctrlKey && selectedPNodes.length > 0) {
@@ -2971,6 +2969,14 @@ console.log(zpointId);
                     }
                     item.isSelected = true;
                     $scope.data.selectedPNode = item; //angular.copy(item);
+console.log($scope.data.selectedPNode);                    
+                    if ($scope.isContZpointNode(item)) {
+                        // for refresh indicator directive
+                        item.isIndicatorsView = false;
+                        $timeout(function () {
+                            item.isIndicatorsView = true;
+                        }, 0);
+                    }
                 };
                 
                 function createContObjectWidgetForPTree(contObject) {

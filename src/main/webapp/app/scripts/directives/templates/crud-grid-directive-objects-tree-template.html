@@ -102,8 +102,8 @@
                  </div>
 -->
                  
-                 <div class="row nmc-tree-with-fixed-header"
-                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+                 <div class="row nmc-tree-with-fixed-header marginRight10"
+                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"                      
                       >
                       <div ui-tree="options" data-drag-enabled="false">
                         <ol ui-tree-nodes ng-model="data.currentPTree" >
@@ -213,18 +213,18 @@
 -->
                      
                          <div ng-if = "data.selectedPNode.isIndicatorsView">
-                             <nmc-view-indicators
-                                 cont-object-id = data.selectedPNode.nodeObject.contObjectId
-                                 cont-object-name = data.selectedPNode.nodeObject.contObjectId
-                                 cont-zpoint-id = data.selectedPNode.nodeObject.id
-                                 cont-zpoint-name = data.selectedPNode.nodeObject.customServiceName
-                                 cont-zpoint-type = data.selectedPNode.nodeObject.contServiceTypeKeyname
-                                 device-model-id = data.selectedPNode.childNodes[0].nodeObject.deviceModelId
-                                 device-number = "data.selectedPNode.childNodes[0].nodeObject.number"
-                                 is-manual = "data.selectedPNode.childNodes[0].nodeObject.isManual"
+                             <nmc-view-indicators-container
+                                 cont-object-id = {{data.selectedPNode.nodeObject.contObjectId}}
+                                 cont-object-name = {{data.selectedPNode.nodeObject.contObjectId}}
+                                 cont-zpoint-id = {{data.selectedPNode.nodeObject.id}}
+                                 cont-zpoint-name = {{data.selectedPNode.nodeObject.customServiceName}}
+                                 cont-zpoint-type = {{data.selectedPNode.nodeObject.contServiceTypeKeyname}}
+                                 device-model-id = {{data.selectedPNode.childNodes[0].nodeObject.deviceModelId}}
+                                 device-number = {{data.selectedPNode.childNodes[0].nodeObject.number}}
+                                 is-manual = {{data.selectedPNode.childNodes[0].nodeObject.isManual}}
                              >
 
-                             </nmc-view-indicators>
+                             </nmc-view-indicators-container>
                          </div>
                      </div>
 

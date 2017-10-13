@@ -1170,7 +1170,7 @@ tr.nmc-main-table-header-indicator > th {
 
 /*  Дерево объектов*/
 .nmc-tree-with-fixed-header {
-    overflow: scroll;
+    overflow: auto;
     height: 73vh;
     min-height: 360px;
     position:relative;
@@ -2622,6 +2622,9 @@ tr.nmc-bg-distinguish > td {
 }
 .marginRight15 {
     margin-right: 15px;
+}
+.marginRight10 {
+    margin-right: 10px;
 }
 .marginRight5 {
     margin-right: 5px;
