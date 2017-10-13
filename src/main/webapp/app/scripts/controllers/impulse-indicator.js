@@ -127,9 +127,9 @@ angular.module('portalNMC')
     
     $scope.$watch('date.deleteIndicatorDates', function (newDates, oldDates, scope) {
 //console.log(scope);        
-        if ($location.path() !== "/objects/impulse-indicators") {
-            return;
-        }
+//        if ($location.path() !== "/objects/impulse-indicators") {
+//            return;
+//        }
 //console.log("Date-range-settings impulseIndicatorDates1");  
         if (newDates === oldDates) {
             return;
@@ -856,9 +856,9 @@ angular.module('portalNMC')
     $scope.$watch('impulseIndicatorDates', function (newDates, oldDates, scope) {
 //console.log(scope);        
 //console.log("Date-range-settings impulseIndicatorDates");        
-        if ($location.path() !== "/objects/impulse-indicators") {
-            return;
-        }
+//        if ($location.path() !== "/objects/impulse-indicators") {
+//            return;
+//        }
 //console.log("Date-range-settings impulseIndicatorDates1");  
         if (newDates === oldDates) {
             return;

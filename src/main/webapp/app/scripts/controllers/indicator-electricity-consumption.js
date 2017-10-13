@@ -554,9 +554,9 @@ app.controller('ElectricityConsumptionCtrl', ['$scope', '$http', 'indicatorSvc',
     
     $scope.$watch('indicatorDates', function (newDates, oldDates) {
 //console.log("watch indicatorDates");        
-        if ($location.path() !== "/objects/indicator-electricity") {
-            return;
-        }
+//        if ($location.path() !== "/objects/indicator-electricity") {
+//            return;
+//        }
         if (newDates === oldDates) {
             return;
         }
