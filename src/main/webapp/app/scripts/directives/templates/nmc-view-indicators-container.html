@@ -1,0 +1,51 @@
+<div ng-show = "!contObjectLoadingFlag && !modelLoadingFlag">
+    <div ng-switch on = "indicatorsType">
+       <div ng-switch-when = "IMPULSE">
+           
+               <nmc-view-indicators-impulse
+                 cont-object-id = contObjectId
+                 cont-object-name = contObjectName
+                 cont-zpoint-id = contZpointId
+                 cont-zpoint-name = contZpointName
+                 cont-zpoint-type = zontZpointType
+                 device-model-id = deviceModelId
+                 device-model-name = deviceModelName
+                 device-number = deviceNumber
+                 is-manual = isManual
+                  >
+
+                </nmc-view-indicators-impulse>
+           
+       </div>
+       <div ng-switch-when = "EL">           
+           <nmc-view-indicators-electricity
+                 cont-object-id = contObjectId
+                 cont-object-name = contObjectName
+                 cont-zpoint-id = contZpointId
+                 cont-zpoint-name = contZpointName
+                 cont-zpoint-type = zontZpointType
+                 device-model-id = deviceModelId
+                 device-model-name = deviceModelName
+                 device-number = deviceNumber
+                 is-manual = isManual
+                  >
+
+            </nmc-view-indicators-electricity>
+       </div>
+        <div ng-switch-default>
+           <nmc-view-indicators
+             cont-object-id = contObjectId
+             cont-object-name = contObjectName
+             cont-zpoint-id = contZpointId
+             cont-zpoint-name = contZpointName
+             cont-zpoint-type = zontZpointType
+             device-model-id = deviceModelId
+             device-model-name = deviceModelName
+             device-number = deviceNumber
+             is-manual = isManual
+              >
+               
+           </nmc-view-indicators>
+       </div>       
+    </div>
+</div>
