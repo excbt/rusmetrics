@@ -1,6 +1,7 @@
 
 
 <div ng-if = "!modelLoadingFlag">
+<!--
     <div ng-hide = "true">
         <p>
             contObjectId: {{contObjectId}}
@@ -33,7 +34,8 @@
             isManual: {{isManual}}
         </p>
     </div>
-    <div ng-if = "true" id="zpoint_indicator_page" ng-controller = "IndicatorsCtrl">
+-->
+    <div id="zpoint_indicator_page" ng-controller = "IndicatorsCtrl">
     <div class="col-xs-10 paddingTop10 paddingLeft20 nmc-main-workspace-header">
         <h3 class="noMargin nmc-page-header">
             Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;
