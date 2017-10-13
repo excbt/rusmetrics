@@ -1,6 +1,9 @@
 /*jslint node: true, eqeq: true */
 /*global angular, $, moment*/
 
+/*
+    Директива отображает ПКЭ и Энергоприфили
+*/
 'use strict';
 var app = angular.module('portalNMC');
 app.directive('nmcViewElectricity', function () {
