@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 
 /**
  * Repository для SubscrContEventNotification
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 25.06.2015
@@ -24,7 +24,7 @@ public interface SubscrContEventNotificationRepository
 		JpaSpecificationExecutor<SubscrContEventNotification> {
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -38,7 +38,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("contObjectId") Long contObjectId, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -49,12 +49,12 @@ public interface SubscrContEventNotificationRepository
 			+ " WHERE cen.subscriberId = :subscriberId AND " + " cen.contEventTime >= :dateFrom AND "
 			+ " cen.contEventTime <= :dateTo AND " + " cen.contObjectId IN (:contObjectIds) "
 			+ " GROUP BY cen.contObjectId ")
-	public List<Object[]> selectNotificatoinsCountList(@Param("subscriberId") Long subscriberId,
+	public List<Object[]> selectContObjectNotificatoinsCountList(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectIds") List<Long> contObjectIds, @Param("dateFrom") Date dateFrom,
 			@Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -70,7 +70,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("isNew") Boolean isNew);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -82,12 +82,12 @@ public interface SubscrContEventNotificationRepository
 			+ " WHERE cen.subscriberId = :subscriberId AND " + " cen.isNew = :isNew AND"
 			+ " cen.contEventTime >= :dateFrom AND " + " cen.contEventTime <= :dateTo AND "
 			+ " cen.contObjectId IN (:contObjectIds) " + " GROUP BY cen.contObjectId ")
-	public List<Object[]> selectNotificatoinsCountList(@Param("subscriberId") Long subscriberId,
+	public List<Object[]> selectContObjectNotificatoinsCountList(@Param("subscriberId") Long subscriberId,
 			@Param("contObjectIds") List<Long> contObjectIds, @Param("dateFrom") Date dateFrom,
 			@Param("dateTo") Date dateTo, @Param("isNew") Boolean isNew);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -102,7 +102,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("contObjectId") Long contObjectId, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -121,7 +121,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("contObjectId") Long contObjectId, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * select cont_event_type_id, sum(count_events) as count_events from
 	 * (
 	 * select pre1.cont_object_id,
@@ -144,7 +144,7 @@ public interface SubscrContEventNotificationRepository
 	 */
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectId
 	 * @param dateFrom
@@ -159,7 +159,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("contObjectId") Long contObjectId, @Param("dateFrom") Date dateFrom, @Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param dateFrom
@@ -176,7 +176,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("dateTo") Date dateTo);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param dateFrom
@@ -197,32 +197,32 @@ public interface SubscrContEventNotificationRepository
 			@Param("dateTo") Date dateTo);
 
 	/*
-	
+
 	SELECT cont_object_id, count(1) FROM
 	(
-	select distinct pre1.cont_object_id, 
-			CASE 
-				WHEN et.is_base_event=false THEN et.reverse_id 
-				ELSE et.id 
+	select distinct pre1.cont_object_id,
+			CASE
+				WHEN et.is_base_event=false THEN et.reverse_id
+				ELSE et.id
 			END as cont_event_type_id
-	from (       
+	from (
 		select n.cont_object_id, n.cont_event_type_id
 		from subscr_cont_event_notification n
 		where 	n.cont_object_id IN (
-				select sco.cont_object_id 
+				select sco.cont_object_id
 				from subscr_cont_object sco
-				where sco.subscriber_id = 728) and 
-			n.subscriber_id = 728 and 
-			n.cont_event_time > now() -  interval '7 days' 
+				where sco.subscriber_id = 728) and
+			n.subscriber_id = 728 and
+			n.cont_event_time > now() -  interval '7 days'
 		Group by n.cont_object_id, n.cont_event_type_id
 	) pre1, cont_event_type et
 	WHERE pre1.cont_event_type_id = et.id
 	) pre2
-	GROUP BY cont_object_id	
+	GROUP BY cont_object_id
 	 */
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrUserId
 	 */
@@ -234,7 +234,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("subscrUserId") Long subscrUserId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param subscrUserId
@@ -248,7 +248,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("subscrUserId") Long subscrUserId, @Param("contObjectIds") List<Long> contObjectIds);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param contEventTypeIds
@@ -264,7 +264,7 @@ public interface SubscrContEventNotificationRepository
 			@Param("contEventTypeIds") List<Long> contEventTypeIds);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrUserId
 	 * @param oldIsNew

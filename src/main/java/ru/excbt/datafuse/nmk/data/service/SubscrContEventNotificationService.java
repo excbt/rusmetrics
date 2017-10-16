@@ -657,8 +657,11 @@ public class SubscrContEventNotificationService {
 
 	/**
 	 *
+     * ****************
+     * **** Actual ****
+     * ****************
 	 * Selects ContEvent notifications count by array of contObjectIds
-	 *
+     *
 	 * @param subscriberId
 	 * @param contObjectIds
 	 * @param datePeriod
@@ -678,10 +681,10 @@ public class SubscrContEventNotificationService {
 
 		List<Object[]> selectResult = null;
 		if (isNew == null) {
-			selectResult = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId,
+			selectResult = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(subscriberId,
 					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo());
 		} else {
-			selectResult = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId,
+			selectResult = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(subscriberId,
 					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
 		}
 

@@ -56,7 +56,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 				//.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
 		DatePeriod dp = DatePeriod.lastWeek();
 
-		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(
+		List<?> resultList = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(
 				currentSubscriberService.getSubscriberId(), vList, dp.getDateFrom(), dp.getDateTo());
 
 		assertNotNull(resultList);
@@ -75,7 +75,7 @@ public class SubscrContEventNotificationRepositoryTest extends JpaSupportTest {
 
 		DatePeriod dp = DatePeriod.lastWeek();
 
-		List<?> resultList = subscrContEventNotificationRepository.selectNotificatoinsCountList(subscriberId(), vList,
+		List<?> resultList = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(subscriberId(), vList,
 				dp.getDateFrom(), dp.getDateTo(), Boolean.TRUE);
 
 		assertNotNull(resultList);
