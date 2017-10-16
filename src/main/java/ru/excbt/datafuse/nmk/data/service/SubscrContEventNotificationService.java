@@ -39,7 +39,9 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
+import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -651,7 +653,7 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
-			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
+			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		return selectContEventNotificationCounterInfo(subscriberId, contObjectIds, datePeriod, null);
 	}
 
@@ -670,7 +672,7 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
-			final List<Long> contObjectIds, final LocalDatePeriod datePeriod, Boolean isNew) {
+                                                                    final List<Long> contObjectIds, final DateInterval datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
@@ -682,16 +684,22 @@ public class SubscrContEventNotificationService {
 		List<Object[]> selectResult = null;
 		if (isNew == null) {
 			selectResult = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(subscriberId,
-					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo());
+					contObjectIds, datePeriod.getFromDate(), datePeriod.getToDate());
 		} else {
 			selectResult = subscrContEventNotificationRepository.selectContObjectNotificatoinsCountList(subscriberId,
-					contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
+					contObjectIds, datePeriod.getFromDate(), datePeriod.getToDate(), isNew);
 		}
 
 		checkNotNull(selectResult);
 
+		// objects[0] - contObjectId
+        // objects[1] - count(*)
 		List<CounterInfo> resultList = selectResult.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
+				.map((objects) -> new CounterInfo (
+                                            DBRowUtil.asLong(objects[0]),
+                                            DBRowUtil.asLong(objects[1]),
+                                            CounterInfo.IdRole.CONT_OBJECT)
+                ).collect(Collectors.toList());
 
 		return resultList;
 	}
@@ -728,17 +736,21 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CounterInfo> selectContObjectEventTypeGroupCollapseCounterInfo(final Long subscriberId,
-			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
+			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
 		List<Object[]> selectResult = subscrContEventNotificationRepository
-				.selectNotificationEventTypeCountGroupCollapse(subscriberId, contObjectIds, datePeriod.getDateFrom(),
-						datePeriod.getDateTo());
+				.selectNotificationEventTypeCountGroupCollapse(subscriberId, contObjectIds, datePeriod.getFromDate(),
+						datePeriod.getToDate());
 
 		List<CounterInfo> resultList = selectResult.stream()
-				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());
+				.map((objects) -> new CounterInfo(
+                                DBRowUtil.asLong(objects[0]),
+                                DBRowUtil.asLong(objects[1]),
+                                CounterInfo.IdRole.CONT_OBJECT)
+                ).collect(Collectors.toList());
 
 		return resultList;
 	}

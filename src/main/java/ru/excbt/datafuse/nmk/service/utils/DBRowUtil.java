@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.service.utils;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.sql.Timestamp;
 
 /**
@@ -64,6 +65,16 @@ public class DBRowUtil {
 		}
 		throw new IllegalArgumentException();
 	}
+
+    public static BigInteger asBigInteger(Object arg) {
+        if (arg == null) {
+            return null;
+        }
+        if (arg instanceof BigInteger) {
+            return (BigInteger) arg;
+        }
+        throw new IllegalArgumentException();
+    }
 
 	public static Double asDouble(Object arg) {
 		if (arg == null) {
