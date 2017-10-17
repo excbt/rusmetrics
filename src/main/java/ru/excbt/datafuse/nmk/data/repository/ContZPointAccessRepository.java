@@ -30,29 +30,34 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
     List<Long> findContZPointIds(@Param("subscriberId") Long subscriberId);
 
     /// Queries for ContZPoint
+    // TODO Check AccessTtl
 
-    @Query("SELECT a.contZPoint FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId "
-        + " AND a.accessTtl IS NULL "
-        + " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPoint.id")
+    @Query("SELECT a.contZPoint FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL " +
+        " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPoint.id")
     List<ContZPoint> findAllContZPointsBySubscriberId(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT a.contZPoint FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL"
-        + " AND a.accessTtl IS NULL AND a.contZPoint.contObjectId = :contObjectId"
-        + " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPointId")
+    @Query("SELECT a.contZPoint FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL " +
+        " AND a.contZPoint.contObjectId = :contObjectId" +
+        " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPointId")
     List<ContZPoint> findAllContZPointsBySubscriberId(@Param("subscriberId") Long subscriberId, @Param("contObjectId") Long contObjectId);
 
 
-    @Query("SELECT a.contZPointId FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId "
-        + " AND a.accessTtl IS NULL AND a.contZPoint.deleted = 0 "
-        + " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPoint.id")
+    @Query("SELECT a.contZPointId FROM ContZPointAccess a WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL " +
+        " AND a.contZPoint.deleted = 0 " +
+        " ORDER BY a.contZPoint.contServiceTypeKeyname, a.contZPoint.id")
     List<Long> findAllContZPointIds(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT zp.id, zp.contObjectId, zp.customServiceName, zp.contServiceTypeKeyname, st.caption "
-        + " FROM ContZPoint zp INNER JOIN zp.contServiceType st WHERE zp.id IN "
-        + " (SELECT a.contZPointId FROM ContZPointAccess a "
-        + " WHERE a.subscriberId = :subscriberId  AND a.accessTtl IS NULL) AND zp.deleted = 0")
+    @Query("SELECT zp.id, zp.contObjectId, zp.customServiceName, zp.contServiceTypeKeyname, st.caption " +
+            " FROM ContZPoint zp INNER JOIN zp.contServiceType st WHERE zp.id IN " +
+            " (SELECT a.contZPointId FROM ContZPointAccess a " +
+            "  WHERE a.subscriberId = :subscriberId  " +
+            "  AND a.accessTtl IS NULL" +
+            " ) AND zp.deleted = 0")
     List<Object[]> findAllContZPointShortInfo(@Param("subscriberId") Long subscriberId);
 
     /**
@@ -60,33 +65,38 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
      * @param subscriberId
      * @return
      */
-    @Query("SELECT zp.id, zp.contObjectId "
-        + " FROM ContZPoint zp WHERE zp.id IN "
-        + " (SELECT a.contZPointId FROM ContZPointAccess a "
-        + " WHERE a.subscriberId = :subscriberId  AND a.accessTtl IS NULL) AND zp.deleted = 0")
+    @Query("SELECT zp.id, zp.contObjectId " +
+            " FROM ContZPoint zp WHERE zp.id IN " +
+            " (SELECT a.contZPointId FROM ContZPointAccess a " +
+            "  WHERE a.subscriberId = :subscriberId " +
+            "  AND a.accessTtl IS NULL" +
+            " ) AND zp.deleted = 0")
     List<Object[]> findAllContZPointIdPairs(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT zp.deviceObjects FROM ContZPointAccess a LEFT JOIN a.contZPoint zp "
-        + " WHERE a.subscriberId = :subscriberId AND a.accessTtl IS NULL"
-        + " AND a.contZPoint.deleted = 0 ")
+    @Query("SELECT zp.deviceObjects FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
+        " WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL" +
+        " AND a.contZPoint.deleted = 0 ")
     List<DeviceObject> findAllDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 
-    @Query(value = "SELECT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, "
-        + " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSourceId as subscrDataSourceId"
-        + " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObjects d LEFT JOIN d.deviceObjectDataSources ds"
-        + " WHERE a.subscriberId = :subscriberId AND zp.id = a.contZPointId AND d.number IN (:deviceObjectNumbers) AND ds.isActive = true "
-        + "  AND a.accessTtl IS NULL AND zp.deleted = 0")
+    @Query(value = "SELECT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, " +
+        " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSourceId as subscrDataSourceId" +
+        " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObjects d LEFT JOIN d.deviceObjectDataSources ds" +
+        " WHERE a.subscriberId = :subscriberId AND zp.id = a.contZPointId AND d.number IN (:deviceObjectNumbers) AND ds.isActive = true " +
+        " AND a.accessTtl IS NULL " +
+        " AND zp.deleted = 0")
     List<Tuple> findAllDeviceObjectsEx(@Param("subscriberId") Long subscriberId,
                                        @Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
 
 
-    @Query("SELECT a.contZPoint.contObjectId as contObjectId, count(a.contZPointId) FROM ContZPointAccess a "
-        + " WHERE a.subscriberId = :subscriberId AND a.contZPoint.contObjectId IN (:contObjectIds) "
-        + " AND a.accessTtl IS NULL AND a.contZPoint.deleted = 0 "
-        + " GROUP BY a.contZPoint.contObjectId"
-        + " ORDER BY a.contZPoint.contObjectId")
+    @Query("SELECT a.contZPoint.contObjectId as contObjectId, count(a.contZPointId) FROM ContZPointAccess a " +
+        " WHERE a.subscriberId = :subscriberId AND a.contZPoint.contObjectId IN (:contObjectIds) "  +
+        " AND a.accessTtl IS NULL " +
+        " AND a.contZPoint.deleted = 0 " +
+        " GROUP BY a.contZPoint.contObjectId" +
+        " ORDER BY a.contZPoint.contObjectId")
     List<Object[]> findContObjectZPointStats(@Param("subscriberId") Long subscriberId,
                                              @Param("contObjectIds") List<Long> contObjectIds);
 
