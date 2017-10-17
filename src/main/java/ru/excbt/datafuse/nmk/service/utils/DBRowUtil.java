@@ -95,6 +95,9 @@ public class DBRowUtil {
 	 * @return
 	 */
 	public static String asString(Object arg) {
+	    if (arg == null) {
+	        return null;
+        }
 		if (arg instanceof String) {
 			return (String) arg;
 		}
