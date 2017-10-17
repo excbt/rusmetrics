@@ -1,18 +1,36 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 /**
  *
  * @author kovtonyk
  *
  */
 public class CounterInfo {
-	private final Long id;
+
+    public enum IdRole {
+        CONT_OBJECT,
+        CONT_ZPOINT;
+    }
+
+    // contObjectId and other...
+    private final Long id;
 	private final Long count;
+	private final IdRole idRole;
 
 	private CounterInfo(Long id, Long count) {
 		this.id = id;
 		this.count = count;
+        this.idRole = IdRole.CONT_OBJECT;
 	}
+
+    public CounterInfo(Long id, Long count, IdRole idRole) {
+        this.id = id;
+        this.count = count;
+        this.idRole = idRole;
+    }
+
 
 	public static CounterInfo newInstance(Object id, Object count) {
 
@@ -39,4 +57,8 @@ public class CounterInfo {
 		return count;
 	}
 
+	@JsonIgnore
+    public IdRole getIdRole() {
+        return idRole;
+    }
 }
