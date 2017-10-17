@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
@@ -22,6 +23,7 @@ import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 
 import javax.persistence.Tuple;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -317,6 +319,12 @@ public class ObjectAccessService {
         return result;
     }
 
+
+    public List<ContZPointIdPair> findAllContZPointPairIds(PortalUserIds portalUserIds) {
+        return findContZPointShortInfo(portalUserIds.getSubscriberId()).stream().collect(Collectors.toList());
+    }
+
+
     public List<ContZPointShortInfo> findContZPointShortInfo(Long subscriberId) {
         List<ContZPointShortInfo> result;
         if (NEW_ACCESS) {
@@ -332,10 +340,8 @@ public class ObjectAccessService {
         checkNotNull(subscriberId);
         List<ContZPointShortInfo> result = new ArrayList<>();
 
-        String[] QUERY_COLUMNS = new String[] { "id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
-            "caption" };
-
-        ColumnHelper columnHelper = new ColumnHelper(QUERY_COLUMNS);
+        ColumnHelper columnHelper = new ColumnHelper("id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
+            "caption");
 
         List<Object[]> queryResult = contZPointAccessRepository.findAllContZPointShortInfo(subscriberId);
 
@@ -346,7 +352,6 @@ public class ObjectAccessService {
             String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
             String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
             String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
-
 
             ContZPointShortInfo shortInfo = ContZPointDTO.ShortInfo.builder()
                 .contZPointId(contZPointId)

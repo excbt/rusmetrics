@@ -7,47 +7,19 @@ import java.io.Serializable;
 
 public class PTreeNodeMonitorDTO implements Serializable {
 
-    private PTreeNodeType pTreeNodeType;
+    private final PTreeNodeType nodeType;
 
-    private Long pTreeNodeId;
-
-    private Long contZPointId;
-
-    private Long contObjectId;
+    private final Long monitorObjectId;
 
     private ContEventLevelColorKeyV2 colorKey;
 
-
-    public PTreeNodeType getpTreeNodeType() {
-        return pTreeNodeType;
+    public PTreeNodeMonitorDTO(PTreeNodeType nodeType, Long monitorObjectId) {
+        this.nodeType = nodeType;
+        this.monitorObjectId = monitorObjectId;
     }
 
-    public void setpTreeNodeType(PTreeNodeType pTreeNodeType) {
-        this.pTreeNodeType = pTreeNodeType;
-    }
-
-    public Long getpTreeNodeId() {
-        return pTreeNodeId;
-    }
-
-    public void setpTreeNodeId(Long pTreeNodeId) {
-        this.pTreeNodeId = pTreeNodeId;
-    }
-
-    public Long getContZPointId() {
-        return contZPointId;
-    }
-
-    public void setContZPointId(Long contZPointId) {
-        this.contZPointId = contZPointId;
-    }
-
-    public Long getContObjectId() {
-        return contObjectId;
-    }
-
-    public void setContObjectId(Long contObjectId) {
-        this.contObjectId = contObjectId;
+    public PTreeNodeType getNodeType() {
+        return nodeType;
     }
 
     public ContEventLevelColorKeyV2 getColorKey() {
@@ -56,5 +28,9 @@ public class PTreeNodeMonitorDTO implements Serializable {
 
     public void setColorKey(ContEventLevelColorKeyV2 colorKey) {
         this.colorKey = colorKey;
+    }
+
+    public Long getMonitorObjectId() {
+        return monitorObjectId;
     }
 }
