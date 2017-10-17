@@ -239,7 +239,7 @@ public class ContEventService {
 	}
 
 	/**
-	 *
+	 * TODO Check if necessary
 	 * @param contEvents
 	 * @return
 	 */

@@ -22,6 +22,8 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
+import ru.excbt.datafuse.nmk.data.util.GroupUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 /**
  * Сервис для работы с монитором событий
@@ -169,18 +171,14 @@ public class ContEventMonitorV2Service {
 	 * @return
 	 */
 	public Map<Long, List<ContEventMonitorV2>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
-		List<ContEventMonitorV2> monitorList = contEventService
-				.enhanceContEventType(contEventMonitorV2Repository.selectByContObjectIds(contObjectIds));
 
-		Map<Long, List<ContEventMonitorV2>> resultMap = new HashMap<>();
-		for (ContEventMonitorV2 m : monitorList) {
-			if (!resultMap.containsKey(m.getContObjectId())) {
-				resultMap.put(m.getContObjectId(), new ArrayList<>());
-			}
-			resultMap.get(m.getContObjectId()).add(m);
-		}
+        final List<ContEventMonitorV2> rawMonitorList = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		return resultMap;
+		List<ContEventMonitorV2> monitorList = contEventService.enhanceContEventType(rawMonitorList);
+
+        Map<Long, List<ContEventMonitorV2>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
+
+        return resultMap;
 	}
 
 	/**
@@ -190,15 +188,15 @@ public class ContEventMonitorV2Service {
 	 */
 	public Map<UUID, Long> selectCityContObjectMonitorEventCount(Long subscriberId) {
 
-		Map<UUID, Long> resultMap = new HashMap<>();
 
 		List<Object[]> cityContEventCount = contEventMonitorV2Repository
 				.selectCityContObjectMonitorEventCount(subscriberId);
 
+        Map<UUID, Long> resultMap = new HashMap<>();
 		cityContEventCount.forEach((i) -> {
-			String strUUID = (String) i[0];
+			String strUUID = DBRowUtil.asString(i[0]);
 			UUID cityUUID = strUUID != null ? UUID.fromString(strUUID) : null;
-			BigInteger count = (BigInteger) i[1];
+			BigInteger count = DBRowUtil.asBigInteger(i[1]);
 			resultMap.put(cityUUID, count.longValue());
 		});
 
