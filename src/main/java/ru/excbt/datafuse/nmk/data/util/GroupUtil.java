@@ -13,14 +13,16 @@ public class GroupUtil {
 
     /**
      * Make Map from List grouped by id
+     *
      * @param inList
      * @param idGetter
-     * @param <T>
+     * @param <K>
+     * @param <V>
      * @return
      */
-    public static <T> Map<Long, List<T>> makeIdMap(List<T> inList, Function<T, Long> idGetter) {
-        Map<Long, List<T>> resultMap = new HashMap<>();
-        for (T m : inList) {
+    public static <K,V> Map<K, List<V>> makeIdMap(List<V> inList, Function<V, K> idGetter) {
+        Map<K, List<V>> resultMap = new HashMap<>();
+        for (V m : inList) {
             if (!resultMap.containsKey(idGetter.apply(m))) {
                 resultMap.put(idGetter.apply(m), new ArrayList<>());
             }
