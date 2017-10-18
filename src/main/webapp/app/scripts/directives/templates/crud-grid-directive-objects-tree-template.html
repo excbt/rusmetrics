@@ -1,10 +1,8 @@
 
+<!--
 <div role="tabpanel" class="nmc-main-tab-panel">
-
-  <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
-<!--
         <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
         <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
         
@@ -30,7 +28,6 @@
                data-toggle="modal">                
             </i>
         </li>
--->
     </ul>    
 
     <div class="tab-content">
@@ -38,14 +35,16 @@
       </div>
     </div>
 </div>        
+-->
 <!--<hr>-->
-<div class = "nmc-object-layout-wrapper" style = "position: absolute; top: 50px; left:0; bottom: 0; right:0;">
+<div class = "nmc-object-layout-wrapper" style = "position: absolute; top: 16px; left:0; bottom: 0; right:0;">
     <div ui-layout = "{flow: 'column'}">
        <div ui-layout-container>
           <div class = "row">
               <div class="noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true">                    
                 <div class="row nmc-main-workspace-header marginBottom5"
                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+                     style = "padding-left: 33px;"
                      >
                     <div class="col-xs-6">
                         <div class="btn-group">
@@ -87,9 +86,10 @@
           </div>
           <div class = "row">
               <div class = "noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
-                    <div ng-show="treeLoading" class="nmc-loading">
-                    <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
-                </div>
+                    <div ng-show="treeLoading" class="nmc-loading" 
+                       style = "padding-left: 33px;">
+                        <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
+                    </div>
 <!--
                  <div class="row nmc-tree-with-fixed-header"
                       ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
@@ -179,6 +179,46 @@
 -->
           <div class = "row">
              <div class = "col-xs-12">
+                <div role="tabpanel" class="nmc-main-tab-panel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li id = "object_list_2nd_menu_item" role = "presentation" class = "nmc-hide active">
+                        <a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Информация</a></li>
+                        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
+                        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
+
+                        <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
+                            <a class="nmc-main-tab-button" 
+                               href="#/objects/demo-map/" 
+                               aria-controls="objects_map" 
+                               role="tab" 
+                               data-target="#objects_map" 
+                               data-toggle="tab"
+                               >
+                                Демо-карта
+                            </a>
+                        </li>
+                        
+                        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button"  aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Настройки</a></li>
+                        
+                        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button"  aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Поиск</a></li>
+
+                        <li ng-hide="isTestMode() || !isRma() || objects.length <= 0" role="presentation" class="pull-right">
+                            <i               
+                               title="Загрузка показаний из файлов"               
+                               class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
+                               aria-controls="upload_files" 
+                               role="tab"
+                               data-target="#upLoadFilesModal" 
+                               data-toggle="modal">                
+                            </i>
+                        </li>
+                    </ul>    
+
+                    <div class="tab-content">
+                      <div role="tabpanel" class="tab-pane fade in active" id="monitor">
+                      </div>
+                    </div>
+                </div> 
                  <div ng-if = "isElementNode(data.selectedPNode)">
                     <div class = "paddingLeft10">
                         <h3>Узел: {{data.selectedPNode.nodeName}}</h3>                    
