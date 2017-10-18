@@ -52,7 +52,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
-            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix,
+            urlContServiceTypes = urlApi + '/contServiceTypes';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -978,6 +979,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             }
             recentHeaterTypes.push(heaterType);
         }
+                 
+/**
+    Cont service types
+*/
+        function getContServiceTypes() {
+            var url = urlContServiceTypes;
+            return $http.get(url);
+        }
         
         //service initialization
         var initSvc = function () {
@@ -1012,6 +1021,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             getCitiesConsumingData: getCitiesConsumingData,
             getCmOrganizations: getCmOrganizations,
             getCmOrganizationsWithId: getCmOrganizationsWithId,
+            getContServiceTypes: getContServiceTypes,
             getCurrentObject: getCurrentObject,
             getDatasourcesUrl: getDatasourcesUrl,
             getDeviceInstTypes: getDeviceInstTypes,

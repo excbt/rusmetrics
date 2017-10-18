@@ -128,6 +128,7 @@ app.directive('crudGridObjectsTree', function () {
                 
                 var thisdata = {};
                 thisdata.deviceModels = [];
+                thisdata.contServiceTypes = {};
                 
                 function findObjectById(objId) {
                     var obj = null;
@@ -2943,7 +2944,7 @@ console.log(zpointId);
                     });
                     
                     $scope.data.currentPTreeMonitor = monitor;
-console.log($scope.data.currentPTreeMonitor);                    
+//console.log($scope.data.currentPTreeMonitor);                    
                     
                 }
                 
@@ -3085,7 +3086,11 @@ console.log($scope.data.selectedPNode);
 //console.log(foundedObjectNode);
 //                    zpoint.zpointOrder = "" + zPointsByObject[i].contServiceType.serviceOrder + zPointsByObject[i].customServiceName;
                     if ($scope.data.selectedPNode.hasOwnProperty('childNodes')) {
+//console.log(thisdata.contServiceTypes);                        
                         $scope.data.selectedPNode.childNodes.forEach(function (zpNode) {
+                            if (thisdata.contServiceTypes.hasOwnProperty(zpNode.nodeObject.contServiceTypeKeyname)) {
+                                zpNode.zpointOrder = thisdata.contServiceTypes[zpNode.nodeObject.contServiceTypeKeyname].serviceOrder + zpNode.nodeObject.customServiceName;
+                            }
                             var zpWidgetOpts = {};
                             zpWidgetOpts.type = contObject.widgets[zpNode.nodeObject.contServiceTypeKeyname];
                             zpWidgetOpts.zpointName = zpNode.nodeObject.customServiceName || zpNode.nodeObject.contServiceTypeKeyname;
@@ -3100,6 +3105,9 @@ console.log($scope.data.selectedPNode);
                             zpWidgetOpts.isManualLoading = zpNode.childNodes[0].nodeObject.isManual;
                             zpNode.widgetOptions = zpWidgetOpts;
                         });
+                        
+                        mainSvc.sortItemsBy($scope.data.selectedPNode.childNodes, 'zpointOrder');
+//console.log($scope.data.selectedPNode.childNodes);                        
                     }
 
 //                    zpointWidget.type = contObject.widgets[zpoint.zpointType];
@@ -3235,12 +3243,32 @@ console.log($scope.data.selectedPNode);
                     objectSvc.getSubscrDeviceModels().then(successLoadDeviceModelsCallback, errorCallback);
                 }
                 
+                function successLoadContServiceTypesCallback(resp) {
+                    if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+                        console.warn("Loaded cont service types is empty: ", resp);
+                        return false;
+                    }
+                    if (resp.data.length > 0) {
+                        var contServTypes = {};
+                        resp.data.forEach(function (cst) {
+                            contServTypes[cst.keyname] = cst;
+                        });
+                        thisdata.contServiceTypes = contServTypes;
+                    }
+                }
+                
+                function loadContServiceTypes() {
+                    objectSvc.getContServiceTypes()
+                        .then(successLoadContServiceTypesCallback, errorCallback);
+                }
+                
                 var initCtrl = function () {
 //console.log('initCtrl');
                     getWidgetList();
                     measureUnits = objectSvc.getDeviceMetadataMeasures();
                     checkTreeSettingsAndGetObjectsData();
                     loadDeviceModels();
+                    loadContServiceTypes();
                                         //if tree is off
 //                    if ($scope.objectCtrlSettings.isTreeView == false){
 //                        getObjectsData();
