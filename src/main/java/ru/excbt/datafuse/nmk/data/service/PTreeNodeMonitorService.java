@@ -5,8 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
@@ -14,14 +13,13 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.ptree.PTreeNodeType;
+import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -40,10 +38,19 @@ public class PTreeNodeMonitorService {
 
     private final ObjectAccessService objectAccessService;
 
-    public PTreeNodeMonitorService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV2Service contEventMonitorV2Service, ObjectAccessService objectAccessService) {
+    private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
+
+    private final SubscrObjectTreeRepository subscrObjectTreeRepository;
+
+    private final SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
+
+    public PTreeNodeMonitorService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV2Service contEventMonitorV2Service, ObjectAccessService objectAccessService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository) {
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.contEventMonitorV2Service = contEventMonitorV2Service;
         this.objectAccessService = objectAccessService;
+        this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
+        this.subscrObjectTreeRepository = subscrObjectTreeRepository;
+        this.subscrObjectTreeContObjectRepository = subscrObjectTreeContObjectRepository;
     }
 
 
@@ -195,6 +202,60 @@ public class PTreeNodeMonitorService {
     }
 
 
+    private List<PTreeNodeMonitorDTO> findPTreeNodeMonitorElements(final PortalUserIds portalUserIds,
+                                                                   final SubscrObjectTree node,
+                                                                   final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
+
+        //List<Long> allContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId);
+
+//        SubscrObjectTree node = subscrObjectTreeRepository.findOne(nodeId);
+        if (node == null) {
+            return Collections.emptyList();
+        }
+
+        List<Long> contObjectIds = subscrObjectTreeContObjectRepository.selectContObjectIds(node.getId());
+
+        List<PTreeNodeMonitorDTO> currentContObjectMons = contObjectMonitorList.stream()
+            .filter(i -> PTreeNodeType.CONT_OBJECT.equals(i.getNodeType()) && contObjectIds.contains(i.getMonitorObjectId()))
+            .collect(Collectors.toList());
+
+        List<PTreeNodeMonitorDTO> resultList = new ArrayList<>();
+        List<PTreeNodeMonitorDTO> childContObjectMons = new ArrayList<>();
+
+        for (SubscrObjectTree childNode: node.getChildObjectList()) {
+            List<PTreeNodeMonitorDTO> childResult = findPTreeNodeMonitorElements(portalUserIds, childNode, contObjectMonitorList);
+            childContObjectMons.addAll(childResult);
+        }
+
+        List<PTreeNodeMonitorDTO> decisionList = new ArrayList<>();
+        decisionList.addAll(childContObjectMons);
+        decisionList.addAll(currentContObjectMons);
+
+        // Sort by color rank
+        ContEventLevelColorKeyV2 colorKey = decisionList.stream().filter(i -> Objects.nonNull(i.getColorKey()))
+            .sorted(Comparator.comparingInt(e -> e.getColorKey().getColorRank()))
+            .findFirst()
+            .map(i -> i.getColorKey()).orElse(ContEventLevelColorKeyV2.GREEN);
+
+        PTreeNodeMonitorDTO nodeStatus = new PTreeNodeMonitorDTO(PTreeNodeType.ELEMENT, node.getId());
+        nodeStatus.setColorKey(colorKey);
+
+        resultList.add(nodeStatus);
+        resultList.addAll(childContObjectMons);
+
+        return resultList;
+    }
+
+    public List<PTreeNodeMonitorDTO> findPTreeNodeMonitorElements(final PortalUserIds portalUserIds,
+                                                                  final Long nodeId,
+                                                                  final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
+
+        SubscrObjectTree node = subscrObjectTreeRepository.findOne(nodeId);
+        if (node == null) {
+            return Collections.emptyList();
+        }
+        return findPTreeNodeMonitorElements(portalUserIds, node, Collections.unmodifiableList(contObjectMonitorList));
+    }
 
 
 }

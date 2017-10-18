@@ -12,18 +12,17 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 
 import javax.persistence.Tuple;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -321,7 +320,26 @@ public class ObjectAccessService {
 
 
     public List<ContZPointIdPair> findAllContZPointPairIds(PortalUserIds portalUserIds) {
-        return findContZPointShortInfo(portalUserIds.getSubscriberId()).stream().collect(Collectors.toList());
+
+        checkNotNull(portalUserIds);
+        List<ContZPointIdPair> result = new ArrayList<>();
+
+        ColumnHelper columnHelper = new ColumnHelper("id", "contObjectId");
+
+        List<Object[]> queryResult = contZPointAccessRepository.findAllContZPointIdPairs(portalUserIds.getSubscriberId());
+
+        for (Object[] row : queryResult) {
+
+            Long contZPointId = columnHelper.getResultAsClass(row, "id", Long.class);
+            Long contObjectId = columnHelper.getResultAsClass(row, "contObjectId", Long.class);
+            ContZPointShortInfo shortInfo = ContZPointDTO.ShortInfo.builder()
+                .contZPointId(contZPointId)
+                .contObjectId(contObjectId)
+                .build();
+            result.add(shortInfo);
+        }
+
+        return result;
     }
 
 
