@@ -174,12 +174,12 @@ app.directive('crudGridObjectsTree', function () {
                                 text: function (event, api) {
                                     monitorSvc.loadMonitorEventsForObject(objId)
                                         .then(function (resp) {
-                                        console.log(resp);
+//                                        console.log(resp);
                                             var message = "";
                                             if (!mainSvc.checkUndefinedNull(resp) && !mainSvc.checkUndefinedNull(resp.data) && angular.isArray(resp.data)) {
                                                 message = monitorSvc.prepareEventMessage(resp.data);
                                             } else {
-                                                if (!mainSvc.checkUndefinedNull(resp.data)) {
+                                                if (!mainSvc.checkUndefinedNull(resp.data) && resp.data.length > 0) {
                                                     message = "Ответ от сервера: " + resp.data;
                                                 } else {
                                                     message = "Нет событий!";
@@ -2870,8 +2870,8 @@ console.log(zpointId);
                 }
                 
                 function loadPTreeMonitorWithStartRefresh(treeId, depthLvl) {
-                    $scope.loading = true;
-                    $scope.treeLoading = true;
+//                    $scope.loading = true;
+//                    $scope.treeLoading = true;
                     if (mainSvc.checkUndefinedNull(depthLvl)) {
                         var depthLvl = 0;
                     }
@@ -2938,17 +2938,16 @@ console.log(zpointId);
                     }
                     var monitor = {};
                     monitorData.forEach(function (md) {
-                        monitor[md.monitorObjectId] = IMG_PATH_MONITOR_TEMPLATE + md.colorKey.toLowerCase() + IMG_EXT; // IMG_PATH_TEMPLATE +  + element. + currentSettingMode + IMG_EXT;
+                        monitor[md.nodeType + md.monitorObjectId] = IMG_PATH_MONITOR_TEMPLATE + md.colorKey.toLowerCase() + IMG_EXT; // IMG_PATH_TEMPLATE +  + element. + currentSettingMode + IMG_EXT;
                         setEventsForObject(md.monitorObjectId);
                     });
                     
                     $scope.data.currentPTreeMonitor = monitor;
-//console.log($scope.data.currentPTreeMonitor);                    
+console.log($scope.data.currentPTreeMonitor);                    
                     
                 }
-//                getPTreeMonitor();
-                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded, function () {
-//console.log("On " + objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded);                    
+                
+                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded, function () {                   
                     getPTreeMonitor();
                 });
                 
@@ -3160,16 +3159,16 @@ console.log($scope.data.selectedPNode);
                     return url;
                 }
                 
-                $scope.onPTreeNodeMouseover = function (item) {
+//                $scope.onPTreeNodeMouseover = function (item) {
 //console.log(item);                    
-                    if (!mainSvc.checkUndefinedNull(item.nodeObject) && !mainSvc.checkUndefinedNull(item.nodeObject.id)) {
+//                    if (!mainSvc.checkUndefinedNull(item.nodeObject) && !mainSvc.checkUndefinedNull(item.nodeObject.id)) {
 //                        setEventsForObject(item.nodeObject.id);
 //                        var obj = {
 //                            contObject: item.nodeObject
 //                        }
 //                        monitorSvc.getMonitorEventsByObject(obj);
-                    }
-                };
+//                    }
+//                };
                 
 
 // *******************************************************************************************

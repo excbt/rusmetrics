@@ -690,7 +690,7 @@
              class = "marginRight2" 
               height = "12" 
               width = "12" 
-              ng-src = "{{data.currentPTreeMonitor[item.nodeObject.id] || data.currentPTreeMonitorDefault}}"              
+              ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}"              
               >
          
       <i class="btn btn-xs glyphicon"

@@ -157,9 +157,10 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
         $rootScope.$broadcast(BROADCASTS.pTreeMonitorLoaded);
     }
     
-    function loadPTreeMonitor() {
+    function loadPTreeMonitor(ptreeId) {
         console.log("objectsTreeSvc.loadPTreeMonitor");
         var url = P_TREE_NODE_MONITOR_URL;
+        url = mainSvc.addParamToURL(url, "nodeId", ptreeId);
         pTreeMonitorLoadingFlag = true;
         $http.get(url).then(successPTreeMonotorLoadCallback, errorCallback);
     }
@@ -179,10 +180,10 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
         
 //console.log("Interval start");
 //        loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
-        loadPTreeMonitor();
+        loadPTreeMonitor(args.subscrObjectTreeId);
         interval = $interval(function () {
 //            loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
-            loadPTreeMonitor();
+            loadPTreeMonitor(args.subscrObjectTreeId);
         }, REFRESH_PERIOD);
     });
     
