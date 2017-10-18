@@ -5,6 +5,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -23,9 +24,19 @@ public class ObjectAccessUtil {
         return (co) -> contObjectIds.contains(co.getId());
     }
 
+    public Predicate<Long> checkContObjectId(PortalUserIds portalUserIds) {
+        final List<Long> contObjectIds = objectAccessService.findContObjectIds(portalUserIds);
+        return (i) -> contObjectIds.contains(i);
+    }
+
     public Predicate<ContZPoint> checkContZPoint(PortalUserIds portalUserIds) {
         final CopyOnWriteArrayList<Long> contZPointIds = new CopyOnWriteArrayList<>(objectAccessService.findAllContZPointIds(portalUserIds));
         return (co) -> contZPointIds.contains(co.getId());
+    }
+
+    public Predicate<Long> checkContZPointId(PortalUserIds portalUserIds) {
+        final List<Long> contZPointIds = objectAccessService.findAllContZPointIds(portalUserIds);
+        return (i) -> contZPointIds.contains(i);
     }
 
     public static final boolean checkIds(Collection<Long> checkIds, Collection<Long> availableIds) {
