@@ -30,7 +30,8 @@ var app = angular
         'ui.mask',
         'angularWidget',
         'chart.js',
-        'ui.layout'
+        'ui.layout',
+        'ui.router'
     ]);
 
 app.constant("APP_LABEL", "Русметрикс");
