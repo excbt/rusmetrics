@@ -43,15 +43,14 @@ public class ContEventMonitorV2Service {
 	/**
 	 *
 	 */
-	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK = (e1, e2) -> Integer.compare(
-			e1.getContEventLevelColor() == null ? -1 : e1.getContEventLevelColor().getColorRank(),
-			e2.getContEventLevelColor() == null ? -1 : e2.getContEventLevelColor().getColorRank());
+	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK =
+        Comparator.comparingInt(e -> e.getContEventLevelColor() == null ? -1 : e.getContEventLevelColor().getColorRank());
 
 	/**
 	 *
 	 */
-	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME = (e1, e2) -> e1.getContEventTime()
-			.compareTo(e2.getContEventTime());
+	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME =
+        Comparator.comparing(ContEventMonitorV2::getContEventTime);
 
 	/**
 	 *

@@ -37,16 +37,23 @@ public class PTreeNodeMonitorResource {
 
     @GetMapping("/all-linked-objects")
     @ApiOperation("Get all monitor status of cont objects")
-    public ResponseEntity<?> getLinkedObjectsMonitor() {
+    public ResponseEntity<?> getLinkedObjectsMonitor(@RequestParam(value = "nodeId", required = false) Long nodeId) {
 
         PortalUserIds portalUserIds = currentSubscriberServicel.getSubscriberParam().asPortalUserIds();
 
         List<Long> availableContObjectIds = objectAccessService.findContObjectIds(portalUserIds);
 
+        List<PTreeNodeMonitorDTO> resultList = new ArrayList<>();
+
         List<PTreeNodeMonitorDTO> coMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorCO(portalUserIds, availableContObjectIds, null, false);
         List<PTreeNodeMonitorDTO> zpMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorZP(portalUserIds, coMonitorDTOList);
-        List<PTreeNodeMonitorDTO> resultList = new ArrayList<>(coMonitorDTOList);
+        resultList.addAll(coMonitorDTOList);
         resultList.addAll(zpMonitorDTOList);
+
+        if (nodeId != null) {
+            List<PTreeNodeMonitorDTO> elMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorElements(portalUserIds, nodeId, coMonitorDTOList);
+            resultList.addAll(elMonitorDTOList);
+        }
 
         return ApiResponse.responseOK(() -> resultList);
     }
