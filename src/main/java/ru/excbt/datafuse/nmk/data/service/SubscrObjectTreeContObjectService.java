@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -248,16 +249,12 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
 		List<?> queryResultList = q1.getResultList();
 
-		for (Object object : queryResultList) {
-			if (object instanceof BigInteger) {
-				BigInteger value = (BigInteger) object;
-				Long id = value.longValue();
-				resultList.add(id);
-			} else {
-				throw new PersistenceException(String.format("Invalid return result for %s, subscrObjectTreeId = %d",
-						funcName, subscrObjectTreeId));
-			}
-		}
+        for (Object object : queryResultList) {
+            BigInteger value = DBRowUtil.asBigInteger(object,
+                () -> new PersistenceException(String.format("Invalid return result for %s, subscrObjectTreeId = %d",
+                    funcName, subscrObjectTreeId)));
+            resultList.add(value.longValue());
+        }
 
 		return resultList;
 	}
