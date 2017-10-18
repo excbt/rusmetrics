@@ -139,6 +139,8 @@ public class PTreeNodeMonitorService {
             : monitorStatusList;
     }
 
+
+
     /**
      *
      * @param portalUserIds
@@ -180,18 +182,18 @@ public class PTreeNodeMonitorService {
      * @return
      */
     public List<PTreeNodeMonitorDTO> findPTreeNodeMonitorZP(final PortalUserIds portalUserIds,
+                                                            final List<ContZPointIdPair> contZPointIdPars,
                                                             final List<PTreeNodeMonitorDTO> nodeMonitorDTOList) {
 
         checkNotNull(portalUserIds);
         checkNotNull(nodeMonitorDTOList);
 
-        List<ContZPointIdPair> idPairList = objectAccessService.findAllContZPointPairIds(portalUserIds);
 
         List<PTreeNodeMonitorDTO> filteredList = nodeMonitorDTOList.stream().filter(i -> PTreeNodeType.CONT_OBJECT.equals(i.getNodeType())).collect(Collectors.toList());
 
         Map<Long, List<PTreeNodeMonitorDTO>> coMap = GroupUtil.makeIdMap(filteredList, (i) -> i.getMonitorObjectId());
 
-        return idPairList.stream().map( z -> {
+        return contZPointIdPars.stream().map( z -> {
             PTreeNodeMonitorDTO item = new PTreeNodeMonitorDTO (PTreeNodeType.CONT_ZPOINT, z.getContZPointId());
             List<PTreeNodeMonitorDTO> cMon = coMap.get(z.getContObjectId());
             ContEventLevelColorKeyV2 colorKey = cMon == null || cMon.isEmpty() ? ContEventLevelColorKeyV2.GREEN :
@@ -202,13 +204,17 @@ public class PTreeNodeMonitorService {
     }
 
 
+    /**
+     *
+     * @param portalUserIds
+     * @param node
+     * @param contObjectMonitorList
+     * @return
+     */
     private List<PTreeNodeMonitorDTO> findPTreeNodeMonitorElements(final PortalUserIds portalUserIds,
                                                                    final SubscrObjectTree node,
                                                                    final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
 
-        //List<Long> allContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId);
-
-//        SubscrObjectTree node = subscrObjectTreeRepository.findOne(nodeId);
         if (node == null) {
             return Collections.emptyList();
         }
