@@ -16,7 +16,7 @@ WITH RECURSIVE nodes(id, parent_id, object_name, path, LEVEL, cycle) AS (
 			false
 		FROM portal.subscr_object_tree t1
 		WHERE t1.id = p_subscr_object_tree_id
-			AND t1.parent_id IS NULL
+			--AND t1.parent_id IS NULL
 			and t1.subscriber_id = p_subscriber_id
 		
 		UNION ALL
