@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
@@ -204,12 +205,12 @@ public class SubscrObjectTreeService implements SecuredRoles {
 		tree.setIsRma(subscriberParam.isRma());
 	}
 
-	/**
-	 *
-	 * @param rmaSubscriberId
-	 * @param templateId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param templateId
+     * @return
+     */
 	public SubscrObjectTree newSubscrObjectTree(SubscriberParam subscriberParam, Long templateId) {
 		SubscrObjectTree root = new SubscrObjectTree();
 
@@ -330,13 +331,13 @@ public class SubscrObjectTreeService implements SecuredRoles {
 		return _searchObject(node, operator, searchLevel, 0);
 	}
 
-	/**
-	 *
-	 * @param node
-	 * @param objectName
-	 * @param searchLevel
-	 * @return
-	 */
+    /**
+     *
+     * @param node
+     * @param operator
+     * @param searchLevel
+     * @return
+     */
 	public SubscrObjectTree searchObject(SubscrObjectTree node, CheckConditionOperator operator, Integer searchLevel) {
 		return _searchObject(node, operator, searchLevel, 0);
 	}
@@ -490,11 +491,11 @@ public class SubscrObjectTreeService implements SecuredRoles {
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 
-	/**
-	 *
-	 * @param rmaSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrObjectTree> selectSubscrObjectTreeShort(final SubscriberParam subscriberParam) {
 		List<Object[]> results = subscriberParam.isRma()
@@ -551,11 +552,11 @@ public class SubscrObjectTreeService implements SecuredRoles {
 		return ids.isEmpty() ? false : Boolean.TRUE.equals(ids.get(0));
 	}
 
-	/**
-	 *
-	 * @param rmaSubscriberId
-	 * @param subscrObjectTreeId
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param subscrObjectTreeId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
 
@@ -566,21 +567,31 @@ public class SubscrObjectTreeService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param subscriberParam
-	 * @param subscrObjectTreeId
-	 * @return
-	 */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+
+        if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
+            throw new PersistenceException(
+                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
+        }
+    }
+
+
+    /**
+     *
+     * @param portalUserIds
+     * @param subscrObjectTreeId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkValidSubscriberOk(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-		checkNotNull(subscriberParam);
+	public boolean checkValidSubscriberOk(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+		checkNotNull(portalUserIds);
 		checkNotNull(subscrObjectTreeId);
 
-		Long checkTreeSubscriberId = subscriberParam.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
+		Long checkTreeSubscriberId = portalUserIds.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
 				: selectSubscriberId(subscrObjectTreeId);
 
-		return Long.valueOf(subscriberParam.getSubscriberId()).equals(checkTreeSubscriberId);
+		return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
 
 	}
 
