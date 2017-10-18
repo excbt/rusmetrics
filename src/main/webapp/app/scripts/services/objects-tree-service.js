@@ -6,19 +6,24 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
     var service = {};
     var API_URL = "../api",
         P_TREE_NODE_URL = API_URL + "/p-tree-node",
+        P_TREE_NODE_MONITOR_URL = API_URL + "/p-tree-node-monitor/all-linked-objects",
         REFRESH_PERIOD = 600000,
         TREE_ID_FIELD_NAME = "_id",
         NODE_ID_FIELD_NAME = "_id";
     
     var BROADCASTS = {
         requestPTreeLoading: 'objectsTreeSvc:requestPTreeLoading',
+        requestPTreeMonitorLoading: 'objectsTreeSvc:requestPTreeMonitorLoading',
         cancelInterval: 'objectsTreeSvc:cancelInterval',
-        pTreeLoaded: 'objectsTreeSvc:pTreeLoaded'
+        pTreeLoaded: 'objectsTreeSvc:pTreeLoaded',
+        pTreeMonitorLoaded: 'objectsTreeSvc:pTreeMonitorLoaded'
     };
     
     var pTreeLoadedId = null,
         pTree = null,
-        pTreeLoadingFlag = false;
+        pTreeLoadingFlag = false,
+        pTreeMonitor = null,
+        pTreeMonitorLoadingFlag = false;
     
     var interval = null,
         requestParams = {};
@@ -48,8 +53,17 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
         pTree = inputPTree;
     }
     
+    function getPTreeMonitorLoadingFlag() {
+        return pTreeMonitorLoadingFlag;
+    }
+    
+    function getPTreeMonitor() {
+        return pTreeMonitor;
+    }
+    
     function errorCallback(e) {
         pTreeLoadingFlag = false;
+        pTreeMonitorLoadingFlag = false;
         console.error(e);
     }
     
@@ -61,9 +75,9 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
     }
     
     function loadPTreeNode(subscrObjectTreeId, childLevel) {
-console.log("objectsTreeService.loadPTreeNode");
-console.log("subscrObjectTreeId = " + subscrObjectTreeId);
-console.log("requestParams: ", requestParams);
+        console.log("objectsTreeService.loadPTreeNode");
+        console.log("subscrObjectTreeId = " + subscrObjectTreeId);
+        console.log("requestParams: ", requestParams);
         if (mainSvc.checkUndefinedNull(subscrObjectTreeId)) {
             console.warn("Incorrect input param: ", subscrObjectTreeId);
             return null;
@@ -132,8 +146,26 @@ console.log("requestParams: ", requestParams);
         return null;
     }
     
-    $rootScope.$on(BROADCASTS.requestPTreeLoading, function (even, args) {
-console.log("Start ptree refresher: ", args);
+    function successPTreeMonotorLoadCallback(resp) {
+        console.log(resp);
+        pTreeMonitorLoadingFlag = false;
+        if (mainSvc.checkUndefinedNull(resp) || mainSvc.checkUndefinedNull(resp.data)) {
+            $rootScope.$broadcast(BROADCASTS.pTreeMonitorLoaded);
+            return false;
+        }
+        pTreeMonitor = resp.data;
+        $rootScope.$broadcast(BROADCASTS.pTreeMonitorLoaded);
+    }
+    
+    function loadPTreeMonitor() {
+        console.log("objectsTreeSvc.loadPTreeMonitor");
+        var url = P_TREE_NODE_MONITOR_URL;
+        pTreeMonitorLoadingFlag = true;
+        $http.get(url).then(successPTreeMonotorLoadCallback, errorCallback);
+    }
+    
+    $rootScope.$on(BROADCASTS.requestPTreeMonitorLoading, function (even, args) {
+        console.log("Start ptree monitor refresher: ", args);
         if (mainSvc.checkUndefinedNull(args.subscrObjectTreeId) || Number(args.subscrObjectTreeId) === pTreeLoadedId) {
             return false;
         }
@@ -146,9 +178,11 @@ console.log("Start ptree refresher: ", args);
 //        requestParams = args.params;
         
 //console.log("Interval start");
-        loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
+//        loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
+        loadPTreeMonitor();
         interval = $interval(function () {
-            loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
+//            loadingPTreeNode(Number(args.subscrObjectTreeId), args.childLevel);
+            loadPTreeMonitor();
         }, REFRESH_PERIOD);
     });
     
@@ -171,6 +205,7 @@ console.log("Start ptree refresher: ", args);
     service.BROADCASTS = BROADCASTS;
     service.loadPTreeNode = loadPTreeNode;
     service.findNodeInPTree = findNodeInPTree;
+    service.getPTreeMonitor = getPTreeMonitor;
     service.getRequestCanceler = getRequestCanceler;
     service.getPTree = getPTree;
     service.setPTree = setPTree;

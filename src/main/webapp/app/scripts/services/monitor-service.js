@@ -57,7 +57,9 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
     var setMonitorSettings = function (monitorSettings) {
         var key;
         for (key in monitorSettings) {
-            monitorSvcSettings[key] = monitorSettings[key];
+            if (monitorSettings.hasOwnProperty(key)) {
+                monitorSvcSettings[key] = monitorSettings[key];
+            }
         }
     };
 
@@ -275,11 +277,12 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
     }
     
     function loadMonitorEventsForObject(objId) {
+console.log("loadMonitorEventsForObject: " + objId);        
         var url = objectUrl + "/" + objId + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         if (isCancelParamsIncorrect() === true) {
             return null;
         }
-        return $http.get(url, httpOptions);            
+        return $http.get(url, httpOptions);
     }
         
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)

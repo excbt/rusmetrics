@@ -658,6 +658,7 @@
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
          ng-class="{'nmc-bg-distinguish': item.isSelected}">
+         
       <i class="btn btn-xs glyphicon"
          ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
          data-nodrag ng-click="toggle(this)">                                  
@@ -684,6 +685,14 @@
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
          ng-class="{'nmc-bg-distinguish': item.isSelected}">
+         
+        <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
+             class = "marginRight2" 
+              height = "12" 
+              width = "12" 
+              ng-src = "{{data.currentPTreeMonitor[item.nodeObject.id] || data.currentPTreeMonitorDefault}}"              
+              >
+         
       <i class="btn btn-xs glyphicon"
          ng-class="{'glyphicon-chevron-right': isChevronRight(collapsed, item), 'glyphicon-chevron-down': isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': isChevronDisabled(collapsed, item)}"
          data-nodrag ng-click="toggle(this)">                                  

@@ -31,6 +31,7 @@ app.directive('crudGridObjectsTree', function () {
                     OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
                     WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
                     IMG_PATH_TEMPLATE = "images/object-mode-",
+                    IMG_PATH_MONITOR_TEMPLATE = "images/object-state-",
                     IMG_EXT = ".png",
                     SERVER_DATE_FORMAT = 'YYYY-MM-DD';
                 
@@ -164,32 +165,41 @@ app.directive('crudGridObjectsTree', function () {
                 });
                 
                 function setEventsForObject(objId) {
+//console.log(objId);
                     var imgObj = "#objState" + objId;
-                    $(imgObj).qtip({
-                        content: {
-                            text: function (event, api) {
-                                monitorSvc.loadMonitorEventsForObject(objId)
-                                    .then(function (resp) {
-                                        var message = "";
-                                        if (!mainSvc.checkUndefinedNull(resp) && !mainSvc.checkUndefinedNull(resp.data) && angular.isArray(resp.data)) {
-                                            message = monitorSvc.prepareEventMessage(resp.data);
-                                        } else {
-                                            message = "Непонятный ответ от сервера. Смотри консоль браузера.";
-                                            console.log(resp);
-                                        }
-                                        api.set('content.text', message);
-                                    },
-                                         function (error) {
-                                            api.set('content.text', error.status + ': ' + error.data);
-                                        });
-                                return "Загружаются сообытия...";
-                            }
-                        },
+//console.log($(imgObj));
+                    $timeout(function () {
+                        $(imgObj).qtip({
+                            content: {
+                                text: function (event, api) {
+                                    monitorSvc.loadMonitorEventsForObject(objId)
+                                        .then(function (resp) {
+                                        console.log(resp);
+                                            var message = "";
+                                            if (!mainSvc.checkUndefinedNull(resp) && !mainSvc.checkUndefinedNull(resp.data) && angular.isArray(resp.data)) {
+                                                message = monitorSvc.prepareEventMessage(resp.data);
+                                            } else {
+                                                if (!mainSvc.checkUndefinedNull(resp.data)) {
+                                                    message = "Ответ от сервера: " + resp.data;
+                                                } else {
+                                                    message = "Нет событий!";
+                                                }
+                                                console.log(resp);
+                                            }
+                                            api.set('content.text', message);
+                                        },
+                                             function (error) {
+                                                api.set('content.text', error.status + ': ' + error.data);
+                                            });
+                                    return "Загружаются сообытия...";
+                                }
+                            },
 
-                        style: {
-                            classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-                        }
-                    });
+                            style: {
+                                classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
+                            }
+                        });
+                    }, 1);
                 }
             
 // ***********************************************************************************************                
@@ -2318,7 +2328,7 @@ console.log(zpointId);
                     } else {
                         getPTree();
                     }
-//                    loadPTreeWithStartRefresh(tree.id);
+                    loadPTreeMonitorWithStartRefresh(tree.id);
                 };
                 
                 var loadTrees = function (treeSetting) {
@@ -2824,6 +2834,8 @@ console.log(zpointId);
 //********************************************************************************************
                 
                 $scope.data.selectedPNode = null; // текущий выбранный узел дерева, виджет которого отображается в инфо панели
+                $scope.data.currentPTreeMonitor = {}; // monitor statuses for current tree;
+                $scope.data.currentPTreeMonitorDefault = IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT;
                 var selectedPNodes = []; // массив выбранных через ctrl/shift узлов дерева
                 
                 function successLoadPTreeCallback(resp) {
@@ -2838,7 +2850,7 @@ console.log(zpointId);
                     $scope.treeLoading = false;
                     
                     $scope.messages.treeMenuHeader = resp.data.nodeName || resp.data._id;
-                    var respTree = angular.copy(resp.data);
+//                    var respTree = angular.copy(resp.data);
 //                    mainSvc.sortTreeNodesBy(respTree, "objectName");
 //                    $scope.data.currentTree = respTree;
                     $scope.objects = [];
@@ -2852,26 +2864,92 @@ console.log(zpointId);
 //                    $rootScope.$broadcast('monitor:updateObjectsRequest');
 
                     $scope.messages.noObjects = "";
+                    $timeout(function () {
+                        setEventsForCurrentPTree($scope.data.currentPTree);
+                    }, 1000);
                 }
                 
-                function loadPTreeWithStartRefresh(treeId, depthLvl) {
+                function loadPTreeMonitorWithStartRefresh(treeId, depthLvl) {
                     $scope.loading = true;
                     $scope.treeLoading = true;
                     if (mainSvc.checkUndefinedNull(depthLvl)) {
                         var depthLvl = 0;
                     }
-                    $rootScope.$broadcast(objectsTreeSvc.BROADCASTS.requestPTreeLoading, {subscrObjectTreeId: treeId, childLevel: depthLvl});
+                    $rootScope.$broadcast(objectsTreeSvc.BROADCASTS.requestPTreeMonitorLoading, {subscrObjectTreeId: treeId, childLevel: depthLvl});
+                }
+                
+                function setEventsForPTreeNode(node, nodeFn) {
+                    if ($scope.isElementNode(node)) {
+                        setEventsForObject(node._id);    
+                    } else {
+                        setEventsForObject(node.nodeObject.id);
+                    }
+                    if (angular.isDefined(nodeFn)) {
+                        nodeFn(node);
+                    }
+                }
+                
+                function setEventsForCurrentPTree(curPTree) {
+                    if (angular.isArray(curPTree.childNodes)) {
+                        curPTree.childNodes.forEach(function (cn) {
+                            setEventsForPTreeNode(cn, setEventsForCurrentPTree);
+    //                        if ($scope.isElementNode(cn)) {
+    //                            setEventsForObject(cn._id);    
+    //                        } else {
+    //                            setEventsForObject(cn.nodeObject.id);
+    //                        }
+    //                        setEventsForCurrentPTree(cn);
+                        });
+                    }
+                    if (angular.isArray(curPTree.linkedNodeObjects)) {
+                        curPTree.linkedNodeObjects.forEach(function (ln) {
+                            setEventsForPTreeNode(ln, setEventsForCurrentPTree);
+                        });
+                    }
+                    return true;
                 }
                 
                 function getPTree() {
-                    $scope.data.currentPTree = objectsTreeSvc.getPTree();
+//                    console.log("getPTree");
+                    $scope.data.currentPTree = objectsTreeSvc.getPTree();                    
                     $scope.messages.treeMenuHeader = $scope.data.currentPTree.nodeName || $scope.data.currentPTree._id;
                     $scope.loading = false;
                     $scope.treeLoading = false;
+                    setEventsForCurrentPTree($scope.data.currentPTree);
+//                    $timeout(function () {
+//                        console.log("$timeout for setEventsForCurrentPTree");
+//                        setEventsForCurrentPTree($scope.data.currentPTree);
+//                    }, 1);
                 }
                 
                 $scope.$on(objectsTreeSvc.BROADCASTS.pTreeLoaded, function () {
                     getPTree();
+                });
+                
+//                function setPTreeMonitorEvents() {
+//                    setEventsForObject(md.monitorObjectId);
+//                }
+                
+                function getPTreeMonitor() {                    
+                    var monitorData = objectsTreeSvc.getPTreeMonitor();
+//console.log(monitorData);                    
+                    if (mainSvc.checkUndefinedNull(monitorData)) {
+                        return false;
+                    }
+                    var monitor = {};
+                    monitorData.forEach(function (md) {
+                        monitor[md.monitorObjectId] = IMG_PATH_MONITOR_TEMPLATE + md.colorKey.toLowerCase() + IMG_EXT; // IMG_PATH_TEMPLATE +  + element. + currentSettingMode + IMG_EXT;
+                        setEventsForObject(md.monitorObjectId);
+                    });
+                    
+                    $scope.data.currentPTreeMonitor = monitor;
+//console.log($scope.data.currentPTreeMonitor);                    
+                    
+                }
+//                getPTreeMonitor();
+                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded, function () {
+//console.log("On " + objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded);                    
+                    getPTreeMonitor();
                 });
                 
                 function loadPTree(treeId, depthLvl) {
@@ -3081,6 +3159,17 @@ console.log($scope.data.selectedPNode);
                     }
                     return url;
                 }
+                
+                $scope.onPTreeNodeMouseover = function (item) {
+//console.log(item);                    
+                    if (!mainSvc.checkUndefinedNull(item.nodeObject) && !mainSvc.checkUndefinedNull(item.nodeObject.id)) {
+//                        setEventsForObject(item.nodeObject.id);
+//                        var obj = {
+//                            contObject: item.nodeObject
+//                        }
+//                        monitorSvc.getMonitorEventsByObject(obj);
+                    }
+                };
                 
 
 // *******************************************************************************************
