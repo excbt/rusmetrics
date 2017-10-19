@@ -169,7 +169,22 @@
             </i>
 <!--            style="font-size: .9em; color: #fff; background-color: #646263"-->
           <ul class="dropdown-menu nmc-dropdown-menu" style = "padding: 0">
-            <li class="menu-item" role="presentation">
+<!--
+           <li class="menu-item" role="presentation">
+               <a id="object_main_menu_item"
+                   class="list-group-item nmc-main-menu-item nmc-hide"
+                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
+                   ui-sref = "objects"
+                   data-toggle="offcanvas"
+                   ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
+                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
+                       title="Объекты">
+                    </i>
+                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты1</span>
+                </a>
+           </li>
+-->
+            <li class="menu-item" role="presentation">               
                 <a id="object_main_menu_item"
                    class="list-group-item nmc-main-menu-item nmc-hide"
                    ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
@@ -659,7 +674,8 @@
         <div id="div-main-area" class="col-xs-12 well mainarea nmc-main-workspace nmc-main-workspace-maximize" ng-cloak>
 <!--             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>-->
 
-					<div id="main" ng-view></div>
+					<div id="main" ui-view></div>
+<!--					<div id="main" ng-view></div>-->
 <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
         </div>
 
@@ -879,7 +895,7 @@
     <script src="/public/bower_components/angular-1.4.1/angular-sanitize.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-touch.js"></script>
     
-    <script src = "bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src = "/public/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 
 <!--    <script src="/public/bower_components/jquery-ui/jquery-ui.min.js"></script>-->
       <script src="/public/bower_components/jquery-ui/jquery-ui.js"></script>
@@ -970,7 +986,9 @@
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/js/jquery.suggestions.min.js"></script>
 
         <script src="scripts/app.js"></script>
-        <script src="scripts/app-ng-route.js"></script>
+<!--        <script src="scripts/app-ng-route.js"></script>-->
+        <script src="scripts/app-ui-route.js"></script>
+        
 <!--      <script src="scripts.min/app.min.js"></script>-->
 <!--       <script src="scripts.min/controllers/main.min.js"></script> -->
 <!--      <script src="scripts.min/controllers/notice.min.js"></script>-->
