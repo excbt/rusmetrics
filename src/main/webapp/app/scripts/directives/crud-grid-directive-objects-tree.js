@@ -3095,14 +3095,17 @@ console.log($scope.data.selectedPNode);
                             zpWidgetOpts.type = contObject.widgets[zpNode.nodeObject.contServiceTypeKeyname];
                             zpWidgetOpts.zpointName = zpNode.nodeObject.customServiceName || zpNode.nodeObject.contServiceTypeKeyname;
                             zpWidgetOpts.contZpointId = zpNode.nodeObject.id;
-                            zpWidgetOpts.zpointModel = zpNode.childNodes[0].deviceModelId;
-                            zpWidgetOpts.zpointNumber = zpNode.childNodes[0].number;
+                            if (angular.isArray(zpNode.childNodes) && zpNode.childNodes.length > 0) {
+                                zpWidgetOpts.zpointModel = zpNode.childNodes[0].deviceModelId;
+                                zpWidgetOpts.zpointNumber = zpNode.childNodes[0].number;
+                                zpWidgetOpts.isImpulse = zpNode.childNodes[0].nodeObject.isImpulse;
+                                zpWidgetOpts.isManualLoading = zpNode.childNodes[0].nodeObject.isManual;
+                            }
                             zpWidgetOpts.zpointType = zpNode.nodeObject.contServiceTypeKeyname;
                             //measureUnitCaption 
                             zpWidgetOpts.contObjectId = zpNode.nodeObject.contObjectId;
                             zpWidgetOpts.contObjectFullName = contObject.fullName;
-                            zpWidgetOpts.isImpulse = zpNode.childNodes[0].nodeObject.isImpulse;
-                            zpWidgetOpts.isManualLoading = zpNode.childNodes[0].nodeObject.isManual;
+                            
                             zpNode.widgetOptions = zpWidgetOpts;
                         });
                         
