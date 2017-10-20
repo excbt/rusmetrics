@@ -164,7 +164,9 @@ app.controller('documentsEnergoPassportsCtrl', ['$rootScope', '$scope', '$http',
     };
     
     $scope.openEnergyDocument = function (doc) {
-        $location.path("/documents/energo-passport/" + doc.id);
+        var newurl = "/documents/energo-passport/" + doc.id;
+//        console.log("Doc url: " + newurl);
+        $location.path(newurl);
     };
     
     var setConfirmCode = function (useImprovedMethodFlag) {

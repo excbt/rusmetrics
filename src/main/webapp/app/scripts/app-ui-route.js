@@ -19,19 +19,18 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'objectsPTree',
-            url: '/objects/newlist',
+            url: '/objects/newlist/',
             templateUrl: 'views/objects-newlist.html',
             controller: 'NewObjectsCtrl',
             resolve: {
                 permissions: ['mainSvc', function (mainSvc) {
                     return mainSvc.getLoadedServicePermission();
                 }]
-            },
-            cache: true
+            }
         },
         {
             name: 'demoMap',
-            url: '/objects/demo-map',
+            url: '/objects/demo-map/',
             templateUrl: 'views/objects_map.html',
             controller: 'ObjectsMapCtrl',
             resolve: {
@@ -42,13 +41,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'energoPassports',
-            url: '/documents/energo-passports',
+            url: '/documents/energo-passports/',
             templateUrl: 'views/documents-energo-passports.html',
             controller: 'documentsEnergoPassportsCtrl'
         },
         {
             name: 'energoPassport',
-            url: '/documents/energo-passports/:param',
+            url: '/documents/energo-passport/:param',
             reloadOnSearch: false,
             templateUrl: 'views/documents-energo-passport.html',
             controller: 'documentsEnergoPassportCtrl'
@@ -62,7 +61,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'notices',
-            url: '/notices/list',
+            url: '/notices/list/',
             templateUrl: 'views/notice.html',
             controller: 'NoticeCtrl',
             reloadOnSearch: false,
@@ -74,7 +73,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'noticesMonitor',
-            url: '/notices/monitor',
+            url: '/notices/monitor/',
             templateUrl: 'views/monitor.html',
             controller: 'MonitorCtrl',
             reloadOnSearch: false,
@@ -86,7 +85,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'noticesMonitorMap',
-            url: '/notices/monitor_map',
+            url: '/notices/monitor_map/',
             templateUrl: 'views/monitor_map.html',
             controller: 'MonitorMapCtrl',
             resolve: {
@@ -97,13 +96,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'privateOffice',
-            url: '/private',
+            url: '/private/',
             templateUrl: 'views/private_office.html',
             controller: 'ObjectsCtrl'
         },
         {
             name: 'objectsEdit',
-            url: '/objects_edit',
+            url: '/objects_edit/',
             templateUrl: 'views/objects_edit.html',
             controller: 'ObjectsCtrl',
             resolve: {
@@ -114,31 +113,31 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'privateOfficeObjectsList',
-            url: '/private/objects_list',
+            url: '/private/objects_list/',
             templateUrl: 'views/objects_list.html',
             controller: 'ObjectsCtrl'
         },
         {
             name: 'privateOfficeDirectories',
-            url: '/private/directories',
+            url: '/private/directories/',
             templateUrl: 'views/directories.html',
             controller: 'DirectoryCtrl'
         },
         {
             name: 'reports',
-            url: '/reports',
+            url: '/reports/',
             templateUrl: 'views/reports_with_cst.html',
             controller: 'ReportsCtrl'
         },
         {
             name: 'reportsCommercial',
-            url: '/reports/commercial_report',
+            url: '/reports/commercial_report/',
             templateUrl: 'views/commercial_report.html',
             controller: 'MainCtrl'
         },
         {
             name: 'indicators',
-            url: '/objects/indicators',
+            url: '/objects/indicators/',
             templateUrl: 'views/indicators.html',
             controller: 'IndicatorsCtrl',
             reloadOnSearch: false,
@@ -150,7 +149,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'indicatorsElectricity',
-            url: '/objects/indicator-electricity',
+            url: '/objects/indicator-electricity/',
             templateUrl: 'views/indicator-electricity.html',
             controller: 'ElectricityCtrl',
             reloadOnSearch: false,
@@ -162,7 +161,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'indicatorsImpulse',
-            url: '/objects/impulse-indicators',
+            url: '/objects/impulse-indicators/',
             templateUrl: 'views/impulse-indicators.html',
             controller: 'ImpulseIndicatorsCtrl',
             reloadOnSearch: false,
@@ -174,37 +173,37 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'settigsTariffs',
-            url: '/settings/tariffs',
+            url: '/settings/tariffs/',
             templateUrl: 'views/tariffs.html',
             controller: 'TariffsCtrl'
         },
         {
             name: 'settigsParamsets',
-            url: '/settings/paramsets',
+            url: '/settings/paramsets/',
             templateUrl: 'views/param_sets.html',
             controller: 'ParamSetsCtrl'
         },
         {
             name: 'settigsDelivery',
-            url: '/settings/delivery',
+            url: '/settings/delivery/',
             templateUrl: 'views/delivery.html',
             controller: 'DlvrCtrl'
         },
         {
             name: 'settigsContacts',
-            url: '/settings/contacts',
+            url: '/settings/contacts/',
             templateUrl: 'views/contacts.html',
             controller: 'ContactsCtrl'
         },
         {
             name: 'settigsObjectGroups',
-            url: '/settings/object_groups',
+            url: '/settings/object_groups/',
             templateUrl: 'views/object_groups.html',
             controller: 'ObjectGroupsCtrl'
         },
         {
             name: 'settigsUsers',
-            url: '/settings/users',
+            url: '/settings/users/',
             templateUrl: 'views/settings-users.html',
             controller: 'SettingsUsersCtrl'
         },
@@ -222,13 +221,13 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'settigsTenants',
-            url: '/settings/tenants',
+            url: '/settings/tenants/',
             templateUrl: 'views/settings-tenants.html',
             controller: 'SettingsTenantsCtrl'
         },
         {
             name: 'settigsObjectTrees',
-            url: '/settings/object_trees',
+            url: '/settings/object_trees/',
             templateUrl: 'views/settings-object-trees.html',
             controller: 'SettingsObjectTreesCtrl'
         },
@@ -240,19 +239,19 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'settigsMeterPeriodSetting',
-            url: '/settings/meter-period-setting',
+            url: '/settings/meter-period-setting/',
             templateUrl: 'views/settings-meter-period-setting.html',
             controller: 'SettingsMeterPeriodSettingCtrl'
         },
         {
             name: 'settigsObjectView',
-            url: '/settings/object-view',
+            url: '/settings/object-view/',
             templateUrl: 'views/settings-object-view.html',
             controller: 'SettingsObjectViewCtrl'
         },
         {
             name: 'settigsAboutProgram',
-            url: '/settings/about-program',
+            url: '/settings/about-program/',
             templateUrl: 'views/about-program.html',
             controller: 'AboutProgramCtrl',
             resolve: {
@@ -270,7 +269,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'managementObjects',
-            url: '/management/objects',
+            url: '/management/objects/',
             templateUrl: 'views/management-rma-objects.html',
             controller: 'MngmtObjectsCtrl',
             resolve: {
@@ -284,79 +283,79 @@ app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $u
         },
         {
             name: 'managementClients',
-            url: '/management/clients',
+            url: '/management/clients/',
             templateUrl: 'views/management-rma-clients.html',
             controller: 'MngmtClientsCtrl'
         },
         {
             name: 'managementDatasources',
-            url: '/management/datasources',
+            url: '/management/datasources/',
             templateUrl: 'views/management-rma-data-sources.html',
             controller: 'MngmtDatasourcesCtrl'
         },
         {
             name: 'managementDevices',
-            url: '/management/devices',
+            url: '/management/devices/',
             templateUrl: 'views/management-rma-devices.html',
             controller: 'MngmtDevicesCtrl'
         },
         {
             name: 'managementUsers',
-            url: '/management/users',
+            url: '/management/users/',
             templateUrl: 'views/management-rma-users.html',
             controller: 'MngmtUsersCtrl'
         },
         {
             name: 'managementPrice',
-            url: '/management/price',
+            url: '/management/price/',
             templateUrl: 'views/management-rma-price.html',
             controller: 'MngmtPriceCtrl'
         },
         {
             name: 'managementOrganizations',
-            url: '/management/organizations',
+            url: '/management/organizations/',
             templateUrl: 'views/management-rma-organizations.html',
             controller: 'MngmtOrganizationsCtrl'
         },
         {
             name: 'managementTempSch',
-            url: '/management/temp-sch',
+            url: '/management/temp-sch/',
             templateUrl: 'views/management-rma-temp-sch.html',
             controller: 'TempSchCtrl'
         },
         {
             name: 'managementModems',
-            url: '/management/modems',
+            url: '/management/modems/',
             templateUrl: 'views/management-rma-modems.html',
             controller: 'MngmtModemsCtrl'
         },
         {
             name: 'managementDeviceModels',
-            url: '/management/device-models',
+            url: '/management/device-models/',
             templateUrl: 'views/management-rma-device-models.html',
             controller: 'MngmtDeviceModelsController'
         },
         {
             name: 'logSessionLog',
-            url: '/log/session-log',
+            url: '/log/session-log/',
             templateUrl: 'views/log-view-resizable-paged.html',
             controller: 'LogViewCtrl'
         },
         {
             name: 'logSmsLog',
-            url: '/log/sms-log',
+            url: '/log/sms-log/',
             templateUrl: 'views/log-sms.html',
             controller: 'LogSmsCtrl'
         },
         {
             name: 'test',
-            url: '/test',
+            url: '/test/',
             templateUrl: 'views/test.html',
             controller: 'testCtrl'
         }
         
     ];
-    
+//console.log(states);
     states.forEach(function (state) {
         $stateProvider.state(state);
     });

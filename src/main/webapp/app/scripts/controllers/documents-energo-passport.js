@@ -10,6 +10,6 @@ app.controller('documentsEnergoPassportCtrl', ['$location', 'mainSvc', '$scope',
     };
     
     $scope.cancelEnergoPassportEdit = function () {
-        $location.path("/documents/energo-passports");
+        $location.path("/documents/energo-passports/");
     };
 }]);
