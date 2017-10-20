@@ -2301,6 +2301,7 @@ tr.nmc-inactive-price > td {
     height: 80vh;
     min-height: 450px;
     width: 100%;
+    z-index: 0;
 }
 
 /* Карта потребления - на странице объектов*/
@@ -2309,6 +2310,7 @@ tr.nmc-inactive-price > td {
     height: 80vh;
     min-height: 450px;
     width: 100%;
+    z-index: 0;
 }
 /* Настройки для попапа маркера города на карте потребления*/
 .nmc-city-marker-popup-in-objects {
