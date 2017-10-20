@@ -3,9 +3,10 @@
 'use strict';
 var app = angular.module('portalNMC');
 
-app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParams', 'energoPassportSvc', '$q', 'notificationFactory', function (mainSvc, $scope, $routeParams, energoPassportSvc, $q, notificationFactory) {
+app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParams', 'energoPassportSvc', '$q', 'notificationFactory', '$stateParams', function (mainSvc, $scope, $routeParams, energoPassportSvc, $q, notificationFactory, $stateParams) {
     
-    var passportRequestCanceller = null;
+    var passportRequestCanceller = null,
+        rParams = {}; // route params
     
     $scope.isActivePassport = false;
     $scope.passportsLoading = true;
@@ -48,8 +49,8 @@ app.controller('documentsObjectPassportCtrl', ['mainSvc', '$scope', '$routeParam
 //        });
         var activePassport = energoPassportSvc.findContObjectActivePassport(resp.data);
 console.log(activePassport);
-console.log($routeParams);
-        if (activePassport !== null && activePassport.id === Number($routeParams.param)) {
+console.log(rParams);
+        if (activePassport !== null && activePassport.id === Number(rParams.param)) {
             $scope.isActivePassport = true;
         }
     }
@@ -187,15 +188,20 @@ console.log($routeParams);
     
     function initCtrl() {
 //        console.log($routeParams);
-        if ($routeParams.object !== "new") {
-            loadContObjectPassports(Number($routeParams.object));
+        if (!mainSvc.checkEmptyObject($routeParams)) {
+            rParams = $routeParams;
+        } else if (!mainSvc.checkEmptyObject($stateParams)) {
+            rParams = $stateParams;
+        }
+        if (rParams.object !== "new") {
+            loadContObjectPassports(Number(rParams.object));
         } else {
             $scope.passportsLoading = false;
             $scope.isActivePassport = true;
         }
 //console.log($routeParams.buildingType);
 //console.log($routeParams.buildingTypeCategory);
-        prepareExtraPassportValues($routeParams);
+        prepareExtraPassportValues(rParams);
     }
     
     initCtrl();
