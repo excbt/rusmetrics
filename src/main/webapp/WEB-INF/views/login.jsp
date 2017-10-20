@@ -27,9 +27,11 @@
 <!-- 			</div> -->
 			<div class="row paddingTop10PC" ng-controller="LoginController">
 				<div class="well col-md-offset-4 col-xs-4 col-md-4"
-					style=""
 				>
-					<h1 style="color: #5a646d"><b>Вход в Rusmetrics</b></h1>
+					<h1 class = "nmc-login-logo">
+                        <%--<b>Вход в Rusmetrics</b>--%>
+                        <img src = "resources/images/logo-main-menu-h.png"/>
+                    </h1>
 
 					<!-- <form role="form" method="post" action="j_spring_security_check" class="form-horizontal"> -->
 					<form role="form" class="form-horizontal">
@@ -70,14 +72,14 @@
 							</div>
 						</div> -->
 						<div class="form-group">
-							<div class="col-xs-9" style="color: green">
+							<div class="col-xs-9 text-success">
 								Вход для демонстрационного доступа:<br/>
 								Пользователь: demo<br/>
 								Пароль: demodemo<br/>
 							</div>
 							<div class="col-xs-3">
 								<button type="submit" name="submit"
-									class="btn btn-primary pull-right"
+									class="btn btn-primary pull-right nmc-bg-color"
 									ng-click = "loginFn(cred)">Войти</button>
 							</div>
 
@@ -131,7 +133,7 @@
 						delete body.rememberMe;
 						$http({
 								method: "POST",
-								url: url, 
+								url: url,
 								data: body,
 								headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 								transformRequest: function(obj) {
