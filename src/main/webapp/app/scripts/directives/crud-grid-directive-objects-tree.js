@@ -455,9 +455,9 @@ app.directive('crudGridObjectsTree', function () {
                 var getCmOrganizations = function () {
                     objectSvc.getCmOrganizations()
                         .then(function (response) {
-console.log(response);
+// console.log(response);
                             var headers = response.headers();
-console.log(headers);
+// console.log(headers);
                             if (response.status === 302 && !mainSvc.checkUndefinedNull(headers) && !mainSvc.checkUndefinedNull(headers.location)) {
                                 window.location.replace(headers.location);
                             }
@@ -1484,8 +1484,8 @@ console.log(headers);
 
                 // Показания точек учета
                 $scope.getIndicators = function (objectId, zpointId) {
-console.log(objectId);
-console.log(zpointId);
+// console.log(objectId);
+// console.log(zpointId);
                     var url = "#/objects";
                     
                     if ($scope.data.selectedPNode != null) {
@@ -1533,7 +1533,7 @@ console.log(zpointId);
                     window.open(url, '_blank');
                 };
                 
-                $scope.setIndicatorsParams = function (objectId, zpointId) {                    
+                $scope.setIndicatorsParams = function (objectId, zpointId) {
                     $scope.selectedZpoint(objectId, zpointId);
 //console.log($scope.currentZpoint);                    
                     $cookies.contZPoint = $scope.currentZpoint.id;
@@ -2870,18 +2870,19 @@ console.log(zpointId);
                     }, 1000);
                 }
                 
-                function loadPTreeMonitorWithStartRefresh(treeId, depthLvl) {
+                function loadPTreeMonitorWithStartRefresh(treeId, depthLvlInp) {
 //                    $scope.loading = true;
 //                    $scope.treeLoading = true;
+                    var depthLvl = depthLvlInp;
                     if (mainSvc.checkUndefinedNull(depthLvl)) {
-                        var depthLvl = 0;
+                        depthLvl = 0;
                     }
                     $rootScope.$broadcast(objectsTreeSvc.BROADCASTS.requestPTreeMonitorLoading, {subscrObjectTreeId: treeId, childLevel: depthLvl});
                 }
                 
                 function setEventsForPTreeNode(node, nodeFn) {
                     if ($scope.isElementNode(node)) {
-                        setEventsForObject(node._id);    
+                        setEventsForObject(node._id);
                     } else {
                         setEventsForObject(node.nodeObject.id);
                     }
@@ -2912,7 +2913,7 @@ console.log(zpointId);
                 
                 function getPTree() {
 //                    console.log("getPTree");
-                    $scope.data.currentPTree = objectsTreeSvc.getPTree();                    
+                    $scope.data.currentPTree = objectsTreeSvc.getPTree();
                     $scope.messages.treeMenuHeader = $scope.data.currentPTree.nodeName || $scope.data.currentPTree._id;
                     $scope.loading = false;
                     $scope.treeLoading = false;
@@ -2931,7 +2932,7 @@ console.log(zpointId);
 //                    setEventsForObject(md.monitorObjectId);
 //                }
                 
-                function getPTreeMonitor() {                    
+                function getPTreeMonitor() {
                     var monitorData = objectsTreeSvc.getPTreeMonitor();
 //console.log(monitorData);                    
                     if (mainSvc.checkUndefinedNull(monitorData)) {
@@ -2948,18 +2949,19 @@ console.log(zpointId);
                     
                 }
                 
-                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded, function () {                   
+                $scope.$on(objectsTreeSvc.BROADCASTS.pTreeMonitorLoaded, function () {
                     getPTreeMonitor();
                 });
                 
-                function loadPTree(treeId, depthLvl) {
+                function loadPTree(treeId, depthLvlInp) {
                     $scope.loading = true;
                     $scope.treeLoading = true;
+                    var depthLvl = depthLvlInp;
                     if (mainSvc.checkUndefinedNull(depthLvl)) {
-                        var depthLvl = 0;
+                        depthLvl = 0;
                     }
                     objectsTreeSvc.loadPTreeNode(treeId, depthLvl)
-                        .then(successLoadPTreeCallback, errorCallback)
+                        .then(successLoadPTreeCallback, errorCallback);
                 }
                 
                 $scope.isElementNode = function (item) {
@@ -3016,7 +3018,7 @@ console.log(zpointId);
 //console.log(ev);                    
                     if ($scope.isContObjectNode(item)) {
                         $scope.selectedObjectBy(item.nodeObject);
-                        loadViewMode(item.nodeObject)
+                        loadViewMode(item.nodeObject);
 //console.log($scope.currentObject);                        
                     }
                     
@@ -3031,7 +3033,7 @@ console.log(zpointId);
 //                    }
                     if (!mainSvc.checkUndefinedNull($scope.data.selectedPNode) && !ev.ctrlKey && !ev.shiftKey) {
                         $scope.data.selectedPNode.isSelected = false;
-                        if ($scope.isContZpointNode($scope.data.selectedPNode)) {                        
+                        if ($scope.isContZpointNode($scope.data.selectedPNode)) {
                             $scope.data.selectedPNode.isIndicatorsView = false;
                         }
                     }
@@ -3047,7 +3049,7 @@ console.log(zpointId);
                     }
                     item.isSelected = true;
                     $scope.data.selectedPNode = item; //angular.copy(item);
-console.log($scope.data.selectedPNode);                    
+// console.log($scope.data.selectedPNode);
                     if ($scope.isContZpointNode(item)) {
                         // for refresh indicator directive
                         item.isIndicatorsView = false;
@@ -3132,9 +3134,9 @@ console.log($scope.data.selectedPNode);
                 function setPTreeIndicatorParams(url, zpId) {
 //                    zpId;                    
                     var zpointNode = null,
-                        zpModel = null;                    
+                        zpModel = null;
                     $scope.data.selectedPNode.childNodes.some(function (elm) {
-                        if (elm.nodeObject.id === zpId) {                            
+                        if (elm.nodeObject.id === zpId) {
                             zpointNode = elm;
                             return true;
                         }
