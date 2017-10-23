@@ -3279,3 +3279,7 @@ div.nmc-energy-simple-line > div {
 }
 
 /* Иконки для дерева объектов*/
+.nmc-p-tree-status-img {
+    max-width: 12px;
+    max-height: 12px;
+}
