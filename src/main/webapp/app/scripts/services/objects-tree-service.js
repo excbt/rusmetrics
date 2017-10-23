@@ -78,18 +78,22 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
         console.log("objectsTreeService.loadPTreeNode");
         console.log("subscrObjectTreeId = " + subscrObjectTreeId);
         console.log("requestParams: ", requestParams);
+        console.log("childLevel: ", childLevel);
         if (mainSvc.checkUndefinedNull(subscrObjectTreeId)) {
             console.warn("Incorrect input param: ", subscrObjectTreeId);
             return null;
         }
         var url = P_TREE_NODE_URL + "/" + subscrObjectTreeId; // "";
-        mainSvc.addParamToURL(url, "childLevel", childLevel);
-//        return $http.get(url);
-        return $http({
-            method: 'GET',
-            url: url,
-            params: requestParams
-        });
+        url = mainSvc.addParamToURL(url, "childLevel", childLevel);
+        
+        console.log("url: " + url);
+        
+        return $http.get(url, requestParams);
+//        return $http({
+//            method: 'GET',
+//            url: url,
+//            params: requestParams
+//        });
     }
     
     function loadingPTreeNode(subscrObjectTreeId, childLevel) {

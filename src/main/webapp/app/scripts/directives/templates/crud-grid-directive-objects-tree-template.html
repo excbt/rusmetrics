@@ -3,57 +3,57 @@
 <div role="tabpanel" class="nmc-main-tab-panel">
     <ul class="nav nav-tabs" role="tablist">
         <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
-        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
-        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
-        
+        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
+
         <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
-            <a class="nmc-main-tab-button" 
-               href="#/objects/demo-map/" 
-               aria-controls="objects_map" 
-               role="tab" 
-               data-target="#objects_map" 
+            <a class="nmc-main-tab-button"
+               href="#/objects/demo-map/"
+               aria-controls="objects_map"
+               role="tab"
+               data-target="#objects_map"
                data-toggle="tab"
                >
                 Демо-карта
             </a>
         </li>
-        
+
         <li ng-hide="isTestMode() || !isRma() || objects.length <= 0" role="presentation" class="pull-right">
-            <i               
-               title="Загрузка показаний из файлов"               
+            <i
+               title="Загрузка показаний из файлов"
                class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
-               aria-controls="upload_files" 
+               aria-controls="upload_files"
                role="tab"
-               data-target="#upLoadFilesModal" 
-               data-toggle="modal">                
+               data-target="#upLoadFilesModal"
+               data-toggle="modal">
             </i>
         </li>
-    </ul>    
+    </ul>
 
     <div class="tab-content">
       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
       </div>
     </div>
-</div>        
+</div>
 -->
 <!--<hr>-->
 <div class = "nmc-object-layout-wrapper" style = "position: absolute; top: 16px; left:0; bottom: 0; right:0;">
     <div ui-layout = "{flow: 'column'}">
        <div ui-layout-container>
           <div class = "row">
-              <div class="noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true">                    
+              <div class="noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true">
                 <div class="row nmc-main-workspace-header marginBottom5"
                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
                      style = "padding-left: 33px;"
                      >
                     <div class="col-xs-6">
                         <div class="btn-group">
-                              <button 
-                                      title="Иерархии объектов" 
-                                     type="button" 
-                                     class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
-                                     data-toggle="dropdown" 
-                                     aria-haspopup="true" 
+                              <button
+                                      title="Иерархии объектов"
+                                     type="button"
+                                     class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees"
+                                     data-toggle="dropdown"
+                                     aria-haspopup="true"
                                      aria-expanded="false"
                                       ng-disabled="!(data.trees.length > 0)"
                                  >
@@ -79,16 +79,16 @@
                             </div>
 
                     </div>
-                    <div class="input-group col-xs-6 filter pull-left nmc-search-form">   
+                    <div class="input-group col-xs-6 filter pull-left nmc-search-form">
                     </div>
                 </div>
-            </div>    
+            </div>
           </div>
           <div class = "row">
               <div class = "noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
-                    <div ng-show="treeLoading" class="nmc-loading" 
+                    <div ng-show="treeLoading" class="nmc-loading"
                        style = "padding-left: 33px;">
-                        <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
+                        <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
                     </div>
 <!--
                  <div class="row nmc-tree-with-fixed-header"
@@ -96,20 +96,20 @@
                       >
                       <div ui-tree="options" data-drag-enabled="false">
                         <ol ui-tree-nodes ng-model="data.currentTree" >
-                          <li ng-repeat="item in data.currentTree.childObjectList" 
-                              ui-tree-node 
+                          <li ng-repeat="item in data.currentTree.childObjectList"
+                              ui-tree-node
                               ng-include="'subscr_object_tree_items_renderer.html'"></li>
                         </ol>
                       </div>
                  </div>
 -->
-                 
+
                  <div class="row nmc-tree-with-fixed-header marginRight10"
-                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"                      
+                      ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
                       >
                       <div ui-tree="options" data-drag-enabled="false">
                         <ol ui-tree-nodes ng-model="data.currentPTree" >
-                          <li ng-repeat="item in data.currentPTree.childNodes" 
+                          <li ng-repeat="item in data.currentPTree.childNodes"
                               ui-tree-node
                               ng-include="'subscr_object_p_tree_items_renderer.html'"></li>
                         </ol>
@@ -121,17 +121,17 @@
        <div ui-layout-container style = "overflow-y: hidden;">
 <!--
            <div class = "row">
-              <div >            
-                <div class="container-fluid" ng-hide="loading">            
+              <div >
+                <div class="container-fluid" ng-hide="loading">
                     <div class="row nmc-main-workspace-header">
                         <div class="col-xs-2 noPadding" ng-controller="ObjectGroupsCtrl">
                             <div class="btn-group" ng-show="objectCtrlSettings.isTreeView != true">
-                                  <button 
-                                          title="Фильтр по группам объектов" 
-                                         type="button" 
-                                         class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
-                                         data-toggle="dropdown" 
-                                         aria-haspopup="true" 
+                                  <button
+                                          title="Фильтр по группам объектов"
+                                         type="button"
+                                         class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees"
+                                         data-toggle="dropdown"
+                                         aria-haspopup="true"
                                          aria-expanded="false"
                                           ng-disabled="!(groups.length > 0)"
                                      >
@@ -153,15 +153,15 @@
                                           </a>
                                       </li>
                                   </ul>
-                                </div>   
+                                </div>
                         </div>
-                        <div class="input-group col-xs-3 filter marginBottom5 pull-left nmc-search-form">   
+                        <div class="input-group col-xs-3 filter marginBottom5 pull-left nmc-search-form">
                             <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                             <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
-                        </div>                
+                        </div>
                         <div class="col-xs-1 nmc-div-refresh">
-                            <button title="Обновить" 
-                                    class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                            <button title="Обновить"
+                                    class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh"
                                     ng-click="refreshObjectsData()"
                                     ng-show="objectCtrlSettings.isTreeView != true"
                                     >
@@ -183,54 +183,54 @@
                     <ul class="nav nav-tabs" role="tablist">
                         <li id = "object_list_2nd_menu_item" role = "presentation" class = "nmc-hide active">
                         <a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Информация</a></li>
-                        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map/" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
-                        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list/" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
+                        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map/" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>
+                        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list/" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>
 
                         <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
-                            <a class="nmc-main-tab-button" 
-                               href="#/objects/demo-map/" 
-                               aria-controls="objects_map" 
-                               role="tab" 
-                               data-target="#objects_map" 
+                            <a class="nmc-main-tab-button"
+                               href="#/objects/demo-map/"
+                               aria-controls="objects_map"
+                               role="tab"
+                               data-target="#objects_map"
                                data-toggle="tab"
                                >
                                 Демо-карта
                             </a>
                         </li>
-                        
+
                         <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button"  aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Настройки</a></li>
-                        
+
                         <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button"  aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Поиск</a></li>
 
                         <li ng-hide="isTestMode() || !isRma() || objects.length <= 0" role="presentation" class="pull-right">
-                            <i               
-                               title="Загрузка показаний из файлов"               
+                            <i
+                               title="Загрузка показаний из файлов"
                                class="btn btn-sm glyphicon glyphicon-download-alt gly-rotate-180"
-                               aria-controls="upload_files" 
+                               aria-controls="upload_files"
                                role="tab"
-                               data-target="#upLoadFilesModal" 
-                               data-toggle="modal">                
+                               data-target="#upLoadFilesModal"
+                               data-toggle="modal">
                             </i>
                         </li>
-                    </ul>    
+                    </ul>
 
                     <div class="tab-content">
                       <div role="tabpanel" class="tab-pane fade in active" id="monitor">
                       </div>
                     </div>
-                </div> 
+                </div>
                  <div ng-if = "isElementNode(data.selectedPNode)">
                     <div class = "paddingLeft10">
-                        <h3>Узел: {{data.selectedPNode.nodeName}}</h3>                    
+                        <h3>Узел: {{data.selectedPNode.nodeName}}</h3>
                         <h4>Дочерних узлов: {{data.selectedPNode.childNodes.length || 0}}</h4>
                         <h4>Объектов: {{data.selectedPNode.linkedNodeObjects.length || 0}}</h4>
                      </div>
                  </div>
                  <div ng-if = "isContObjectNode(data.selectedPNode)">
                      <div class = "paddingLeft10">
-                         <h3>Объект: {{data.selectedPNode.nodeObject.fullName}}</h3>                     
+                         <h3>Объект: {{data.selectedPNode.nodeObject.fullName}}</h3>
                          <h4>Точек учета: {{data.selectedPNode.childNodes.length || 0}}</h4>
-                     </div>                     
+                     </div>
                      <div>
                          <div ng-repeat = "zpointNode in data.selectedPNode.childNodes track by $index">
                            <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
@@ -238,25 +238,25 @@
                                <div ng-show='isLoading'>Загрузка...</div>
                                <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
                                <ng-widget ng-show = "!isLoading && !isError"
-                                   src = "zpointNode.widgetOptions.type" 
+                                   src = "zpointNode.widgetOptions.type"
                                    options = "zpointNode.widgetOptions">
 
                                 </ng-widget>
                            </div>
-                             
+
                          </div>
                      </div>
                  </div>
                  <div ng-if = "isContZpointNode(data.selectedPNode)">
                      <div  class = "paddingLeft10">
 <!--
-                         <h3>Точка учета: {{data.selectedPNode.nodeObject.customServiceName}}</h3>                     
+                         <h3>Точка учета: {{data.selectedPNode.nodeObject.customServiceName}}</h3>
                          <h4>Приборов: {{data.selectedPNode.childNodes.length || 0}}</h4>
 -->
-                     
+
                          <div ng-if = "data.selectedPNode.isIndicatorsView">
                              <nmc-view-indicators-container
-                                 cont-object-id = {{data.selectedPNode.nodeObject.contObjectId}}                                 
+                                 cont-object-id = {{data.selectedPNode.nodeObject.contObjectId}}
                                  cont-zpoint-id = {{data.selectedPNode.nodeObject.id}}
                                  cont-zpoint-name = {{data.selectedPNode.nodeObject.customServiceName}}
                                  cont-zpoint-type = {{data.selectedPNode.nodeObject.contServiceTypeKeyname}}
@@ -273,11 +273,11 @@
                  <div ng-if = "isDeviceNode(data.selectedPNode)">
                      <div class = "paddingLeft10">
                          <p>Прибор:</p>
-                     
+
                          <p>S/N: {{data.selectedPNode.nodeObject.number}}</p>
-                     
+
                          <p>Название: {{data.selectedPNode.nodeObject.deviceObjectName}}</p>
-                     
+
                          <p>Модель: {{data.selectedPNode.nodeObject.deviceModelId}}</p>
                      </div>
                  </div>
@@ -304,56 +304,56 @@
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
+            <div role="tabpanel"
                  class="nmc-tab-panel">
-              
+
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" 
-                    class="active" 
+                <li role="presentation"
+                    class="active"
                     id="view_main_object_properties_tab">
-                    <a class="nmc-tab-button" 
-                       href="" 
-                       aria-controls="view_main_object_properties" 
-                       data-target="#view_main_object_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+                    <a class="nmc-tab-button"
+                       href=""
+                       aria-controls="view_main_object_properties"
+                       data-target="#view_main_object_properties"
+                       role="tab"
+                       data-toggle="tab"
                        >Основные
                     </a>
                   </li>
-                <li role="presentation" 
-                    id="view_extra_object_properties_tab"> 
+                <li role="presentation"
+                    id="view_extra_object_properties_tab">
                     <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="view_extra_object_properties" 
-                       data-target="#view_extra_object_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+                       href=""
+                       aria-controls="view_extra_object_properties"
+                       data-target="#view_extra_object_properties"
+                       role="tab"
+                       data-toggle="tab"
                        >Тип здания
                     </a>
                   </li>
-                <li role="presentation" 
-                    id="object_passports_tab"> 
+                <li role="presentation"
+                    id="object_passports_tab">
                     <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="object_passports" 
-                       data-target="#object_passports" 
-                       role="tab" 
-                       data-toggle="tab" 
+                       href=""
+                       aria-controls="object_passports"
+                       data-target="#object_passports"
+                       role="tab"
+                       data-toggle="tab"
                        >Паспорта
                     </a>
-                </li>  
+                </li>
               </ul>
 
               <!-- реализация вкладок -->
               <div class="tab-content">
             <!--      Варианты отчетов-->
-                <div role="tabpanel" 
-                     class="tab-pane fade in active" 
+                <div role="tabpanel"
+                     class="tab-pane fade in active"
                      id="view_main_object_properties">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
-                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">   
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                                         <tr>
                                             <td class="col-sm-3"><label for="inputName">Наименование</label>
                                             </td>
@@ -388,7 +388,7 @@
                                         <tr>
                                             <td class="col-sm-3"><label for="inputCC">Управляющая компания</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left">            
+                                            <td class="col-sm-9 nmc-text-align-left">
                                                 <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
                                                 </select>
                                             </td>
@@ -399,32 +399,32 @@
                                             <td class="nmc-text-align-left col-sm-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
                                                 </select>
                                             </td>
-                                        </tr>       
+                                        </tr>
                                         <tr>
                                             <td class="col-sm-3"><label for="inputThv">Температура холодной воды</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-9">
                                                 <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
-                                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
+                                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C
                                                 </div>
-                                            </td>                               
-                                        </tr>                           
+                                            </td>
+                                        </tr>
                                         <tr>
                                             <td class="col-sm-3"><label for="inputSquare">Отапливаемая площадь</label>
                                             </td>
                                             <td class="col-sm-9 nmc-text-align-left">
                                                 <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
                                                 <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
-                                                </div>        
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>
-                                </div>    
-                            </div>  
-                        </div> 
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div role="tabpanel" 
-                     class="tab-pane fade" 
+                    <div role="tabpanel"
+                     class="tab-pane fade"
                      id="view_extra_object_properties">
                       <div class="container-fluid">
                           <div class="row">
@@ -435,17 +435,17 @@
                                             </td>
                                             <td class="nmc-text-align-left col-sm-9">
                                                 <div class="form-group noMarginBottom">
-                                                    <select class="form-control nmc-select-form" 
-                                                            id="inputMode" 
-                                                            ng-model="currentObject.buildingType" 
+                                                    <select class="form-control nmc-select-form"
+                                                            id="inputMode"
+                                                            ng-model="currentObject.buildingType"
                                                             ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
                                                             ng-change="changeBuildingType(currentObject.buildingType)"
                                                             ng-disabled="!isAdmin()">
                                                     </select>
                                                 </div>
                                             </td>
-                                        </tr>                                        
-                                        
+                                        </tr>
+
                                         <tr>
                                             <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
                                             </td>
@@ -453,16 +453,16 @@
                                                 <div class="form-group noMarginBottom"
                                                      >
                                                         <ui-select id = "inputBuildingCategoryUI"
-                                                                   
-                                                                   class = "nmc-ui-select-form" 
-                                                                   ng-model = "currentObject.buildingTypeCategory" 
-                                                                   theme = "bootstrap" 
+
+                                                                   class = "nmc-ui-select-form"
+                                                                   ng-model = "currentObject.buildingTypeCategory"
+                                                                   theme = "bootstrap"
                                                                    search-enabled = "false"
                                                                    on-select = "changeBuildingCategory()"
                                                                    ng-disabled="!currentObject.buildingType || !isAdmin()"
                                                                    >
                                                         <ui-select-match>{{$select.selected.caption}}</ui-select-match>
-                                                        <ui-select-choices 
+                                                        <ui-select-choices
                                                                            repeat = "bcategory.keyname as bcategory in data.preparedBuildingCategoryListForUiSelect">
                                                           <div class = "nmc-bcategory-depth-{{bcategory.depth}}"
                                                                ng-bind-html = "bcategory.caption"></div>
@@ -471,39 +471,39 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        
+
                                         <tr>
                                             <td class="col-sm-3"><label for="inputNumOfStories">Количество этажей</label>
                                             </td>
                                             <td class="nmc-text-align-left col-sm-9">
                                                 <div class="form-group noMarginBottom">
                                                     <input class="form-control nmc-input-digital-data nmc-text-input-form"
-                                                           ng-disabled="!isAdmin()" 
-                                                           type="text" 
-                                                           id="inputNumOfStories"                                                           
+                                                           ng-disabled="!isAdmin()"
+                                                           type="text"
+                                                           id="inputNumOfStories"
                                                            ng-model="currentObject.numOfStories">
                                                 </div>
                                             </td>
                                         </tr>
                                   </table>
                               </div>
-                              
+
                           </div>
                       </div>
                   </div>
-                                    <div role = "tabpanel" 
-                       class = "tab-pane fade" 
+                                    <div role = "tabpanel"
+                       class = "tab-pane fade"
                        id = "object_passports">
                       <div class="container-fluid">
                           <div class = "row nmc-modal-panel-with-objects-tp">
                               <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                                  <div ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                  <div ng-show = "objectCtrlSettings.isPassportsLoading"
                                         class = "menu-item dropdown nmc-loading">
-                                        
-                                            <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
-                                        
-                                    </div>                                                
-                                  
+
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов...
+
+                                    </div>
+
                                     <table ng-show = "!objectCtrlSettings.isPassportsLoading"
                                            class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
 
@@ -517,7 +517,7 @@
                                             <td colspan = "2">
                                                 <table class = "table table-lighter table-striped table-condensed noMarginBottom">
                                                     <tr>
-                                                        <td colspan = "2">                                                
+                                                        <td colspan = "2">
                                                             <i title = "Открыть реквизиты паспорта"
                                                                class = "btn btn-xs glyphicon glyphicon-edit"
                                                                ng-click = "editContObjectPassportFromTabInit(passport, currentObject)">
@@ -533,7 +533,7 @@
                                                                   ng-class = "{'nmc-distinguish': passport.isActive}">
                                                                 <span ng-bind="passport.passportName"></span>
                                                             </span>
-                                                        </td>        
+                                                        </td>
                                                     </tr>
                                                     <tr ng-show = "passport.isPassportEditing">
                                                         <td colspan = "2"
@@ -545,13 +545,13 @@
                                                                         <span class = "nmc-required-star">*</span>
                                                                     </td>
                                                                     <td class = "col-xs-9 nmc-text-align-left">
-                                                                        <div class = "form-group noMarginBottom" 
+                                                                        <div class = "form-group noMarginBottom"
                                                                              ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
-                                                                            <input  
-                                                                                   class = "form-control nmc-text-input-form" 
-                                                                                   type = "text" 
-                                                                                   id = "inputEnergyDocName" 
-                                                                                   ng-model = "data.currentDocument.passportName" 
+                                                                            <input
+                                                                                   class = "form-control nmc-text-input-form"
+                                                                                   type = "text"
+                                                                                   id = "inputEnergyDocName"
+                                                                                   ng-model = "data.currentDocument.passportName"
                                                                                    ng-disabled = "true"/>
                                                                         </div>
                                                                     </td>
@@ -559,16 +559,16 @@
 
                                                                 <tr>
                                                                     <td class = "col-xs-3">
-                                                                        <label for = "inputEnergyDocDate" 
+                                                                        <label for = "inputEnergyDocDate"
                                                                                class = "nmc-form-label">Дата документа</label>
                                                                         <span class = "nmc-required-star">*</span>
                                                                     </td>
                                                                     <td class = "col-xs-9 nmc-text-align-left">
-                                                                        <span class = "form-group" 
+                                                                        <span class = "form-group"
                                                                               ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
-                                                                            <input id = "inputEnergyDocDate" 
-                                                                                   class = "form-control nmc-date-input-form nmc-spec-date" 
-                                                                                   type = "text"                                                                                               
+                                                                            <input id = "inputEnergyDocDate"
+                                                                                   class = "form-control nmc-date-input-form nmc-spec-date"
+                                                                                   type = "text"
                                                                                    ng-model = "data.currentDocument.docDateFormatted"
                                                                                    ng-disabled = "true"
                                                                                    readonly
@@ -582,9 +582,9 @@
                                                                         <label for = "inputEnergyDocDescription" >Комментарий</label>
                                                                     </td>
                                                                     <td class = "nmc-text-align-left">
-                                                                        <textarea class = "form-control nmc-textarea-form" 
-                                                                                  id = "inputEnergyDocDescription" 
-                                                                                  placeholder = "Описание" 
+                                                                        <textarea class = "form-control nmc-textarea-form"
+                                                                                  id = "inputEnergyDocDescription"
+                                                                                  placeholder = "Описание"
                                                                                   ng-model = "data.currentDocument.description"
                                                                                   ng-disabled = "true">
                                                                         </textarea>
@@ -595,7 +595,7 @@
                                                                         <div class = "container-fluid">
                                                                             <div class = "row">
                                                                                 <div class = "col-xs-offset-2 col-xs-3">
-                                                                                    <button ng-if = "!isReadOnly()" 
+                                                                                    <button ng-if = "!isReadOnly()"
                                                                                             class = "btn btn-block btn-xs nmc-add-button-in-modal"
                                                                                             ng-click = "openContObjectPassport(passport, currentObject)"
                                                                                             ng-disabled = "objectCtrlSettings.isDocumentSaving">
@@ -620,7 +620,7 @@
                                         </tr>
                                   </table>
                               </div>
-                              
+
                           </div>
                       </div>
                   </div>
@@ -643,7 +643,7 @@
 							</button>
 						</div>
 					</div>
-				</div>		
+				</div>
 		</div>
 	</div>
 </div>
@@ -657,14 +657,14 @@
 		<div class="modal-header nmc-modal-header">
             <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			<h3 id="confirmActionLabel" class="nmc-h3">
-				Подтверждение 
+				Подтверждение
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body">
 			<form name="confirmActionForm" novalidate>
 				<p>
-					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
-					</label> 
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите
+					</label>
 					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
 					<label
 						class="text-warning nmc-form-label"> ? </label>
@@ -688,20 +688,20 @@
 							</button>
 						</div>
 					</div>
-				</div>		
+				</div>
 		</div>
 	</div>
 </div>
-    
+
 <script type="text/ng-template" id="subscr_object_tree_items_renderer.html">
     <div ui-tree-handle ng-click="selectNode(item)"
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
          ng-class="{'nmc-bg-distinguish': item.isSelected}">
-         
+
       <i class="btn btn-xs glyphicon"
          ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
-         data-nodrag ng-click="toggle(this)">                                  
+         data-nodrag ng-click="toggle(this)">
         </i>
         <span ng-if = "item.type == 'root'">
               <strong>\</strong>
@@ -710,30 +710,30 @@
             {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
         </span>
     </div>
-    <ol ui-tree-nodes="options" 
-        ng-model="item.childObjectList" 
+    <ol ui-tree-nodes="options"
+        ng-model="item.childObjectList"
         ng-class="{hidden: collapsed}">
-      <li ng-repeat="item in item.childObjectList" 
-          ui-tree-node 
+      <li ng-repeat="item in item.childObjectList"
+          ui-tree-node
           ng-include="'subscr_object_tree_items_renderer.html'">
       </li>
     </ol>
 </script>
 
 <script type="text/ng-template" id="subscr_object_p_tree_items_renderer.html">
-    <div ui-tree-handle ng-click="selectPNode(item, $event)"
+    <div ui-tree-handle ng-click="selectPNode(item, $event, collapsed)"
          ng-mouseover = "item.isHover = true"
          ng-mouseleave = "item.isHover = false"
          ng-class="{'nmc-bg-distinguish': item.isSelected}">
-         
+
         <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
-             class = "marginRight2 nmc-p-tree-status-img"                
-              ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}" 
+             class = "marginRight2 nmc-p-tree-status-img"
+              ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}"
               >
-         
+
       <i class="btn btn-xs glyphicon"
          ng-class="{'glyphicon-chevron-right': isChevronRight(collapsed, item), 'glyphicon-chevron-down': isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': isChevronDisabled(collapsed, item)}"
-         data-nodrag ng-click="toggle(this)">                                  
+         data-nodrag ng-click="toggle(this)">
         </i>
         <span ng-if = "item.type == 'root'">
               <strong>\</strong>
@@ -757,22 +757,27 @@
            <span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
         </span>
     </div>
-    <ol ui-tree-nodes="options" 
-        ng-model="item.childNodes" 
-        ng-class="{hidden: collapsed}">
-      <li ng-repeat="item in item.childNodes" 
-          ui-tree-node data-collapsed = "true"
-          ng-include="'subscr_object_p_tree_items_renderer.html'">
-      </li>
-    </ol>
-    <ol ui-tree-nodes="options" 
-        ng-model="item.linkedNodeObjects" 
-        ng-class="{hidden: collapsed}">
-      <li ng-repeat="item in item.linkedNodeObjects" 
-          ui-tree-node data-collapsed = "true"
-          ng-include="'subscr_object_p_tree_items_renderer.html'">
-      </li>
-    </ol>
+    <div ng-show = "item.loading">
+        <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
+    </div>
+    <div ng-hide = "item.loading">
+        <ol ui-tree-nodes="options"
+            ng-model="item.childNodes"
+            ng-class="{hidden: collapsed}">
+          <li ng-repeat="item in item.childNodes"
+              ui-tree-node data-collapsed = "true"
+              ng-include="'subscr_object_p_tree_items_renderer.html'">
+          </li>
+        </ol>
+        <ol ui-tree-nodes="options"
+            ng-model="item.linkedNodeObjects"
+            ng-class="{hidden: collapsed}">
+          <li ng-repeat="item in item.linkedNodeObjects"
+              ui-tree-node data-collapsed = "true"
+              ng-include="'subscr_object_p_tree_items_renderer.html'">
+          </li>
+        </ol>
+    </div>
 </script>
 
 <!--Show data source options-->
@@ -786,48 +791,48 @@
 			</h3>
 		</div>
 		<div class="modal-body nmc-modal-body paddingLeftRight15">
-            <div role="tabpanel" 
+            <div role="tabpanel"
                  class="nmc-tab-panel">
               <!-- Навигационная полоса для варианта отчета-->
               <ul class="nav nav-tabs" role="tablist">
-                <li role="presentation" 
-                    class="active" 
+                <li role="presentation"
+                    class="active"
                     id="water_column_properties_tab">
-                    <a class="nmc-tab-button" 
-                       href="" 
-                       aria-controls="water_column_properties" 
-                       data-target="#water_column_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+                    <a class="nmc-tab-button"
+                       href=""
+                       aria-controls="water_column_properties"
+                       data-target="#water_column_properties"
+                       role="tab"
+                       data-toggle="tab"
                        ng-click="">Колонки для водных показаний
                     </a>
                   </li>
-                <li role="presentation" 
-                    id="electricity_column_properties_tab"                                         
-                    > 
+                <li role="presentation"
+                    id="electricity_column_properties_tab"
+                    >
                     <a class="nmc-tab-button"
-                       href="" 
-                       aria-controls="electricity_column_properties" 
-                       data-target="#electricity_column_properties" 
-                       role="tab" 
-                       data-toggle="tab" 
+                       href=""
+                       aria-controls="electricity_column_properties"
+                       data-target="#electricity_column_properties"
+                       role="tab"
+                       data-toggle="tab"
                        >Колонки для электрических показаний
                     </a>
-                  </li>  
+                  </li>
               </ul>
 
               <!-- реализация вкладок -->
               <div class="tab-content">
             <!--      Основные свойства-->
-                <div role="tabpanel" 
-                     class="tab-pane fade in active" 
+                <div role="tabpanel"
+                     class="tab-pane fade in active"
                      id="water_column_properties">
-                    
+
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="marginLeft20">
-                                    <input type="checkbox" 
-                                           class="nmc-checkbox-form" 
+                                    <input type="checkbox"
+                                           class="nmc-checkbox-form"
                                            ng-model="selectAllWaterColumnFlag"
                                            ng-click="selectAllWaterColumns()"/>
                                     <label>
@@ -838,28 +843,28 @@
                                     <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="waterColumn in data.waterColumns | columnFilter: 'istunable'">
                                             <td>
-                                                <input type="checkbox" 
-                                                       class="nmc-checkbox-form" 
+                                                <input type="checkbox"
+                                                       class="nmc-checkbox-form"
                                                        ng-model="waterColumn.isVisible"/>
                                                 <label>
                                                     <span ng-bind="waterColumn.header"></span>
                                                 </label>
                                             </td>
                                         </tr>
-                                        
+
                                     </table>
-                                </div>    
-                            </div>  
-                        </div> 
+                                </div>
+                            </div>
+                        </div>
                   </div>
-                  <div role="tabpanel" 
-                     class="tab-pane fade" 
+                  <div role="tabpanel"
+                     class="tab-pane fade"
                      id="electricity_column_properties">
                         <div class="container-fluid">
                             <div class="row">
                                 <div class="marginLeft20">
-                                    <input type="checkbox" 
-                                           class="nmc-checkbox-form" 
+                                    <input type="checkbox"
+                                           class="nmc-checkbox-form"
                                            ng-model="selectAllElectricityColumnFlag"
                                            ng-click="selectAllElectricityColumns()"/>
                                     <label>
@@ -867,26 +872,26 @@
                                     </label>
                                 </div>
                                 <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-column-list nmc-modal-panel-with-table">
-                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
+                                    <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
                                         <tr ng-repeat="electricityColumn in data.electricityColumns | columnFilter: 'istunable'">
                                             <td>
-                                                <input type="checkbox" 
-                                                       class="nmc-checkbox-form" 
+                                                <input type="checkbox"
+                                                       class="nmc-checkbox-form"
                                                        ng-model="electricityColumn.isVisible"/>
                                                 <label>
                                                     <span ng-bind="electricityColumn.header"></span>
                                                 </label>
                                             </td>
-                                        </tr>                                        
+                                        </tr>
                                     </table>
                                 </div>
                             </div>
                       </div>
                   </div>
-                  
+
                 </div>
             </div>
-            
+
 		</div>
 		<div class="modal-footer nmc-modal-footer">
 				<div class="container-fluid  ">
@@ -904,7 +909,7 @@
 							</button>
 						</div>
 					</div>
-				</div>		
+				</div>
 		</div>
 	</div>
 </div>
