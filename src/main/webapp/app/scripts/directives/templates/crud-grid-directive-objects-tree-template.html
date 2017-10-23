@@ -727,10 +727,8 @@
          ng-class="{'nmc-bg-distinguish': item.isSelected}">
          
         <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
-             class = "marginRight2" 
-              height = "12" 
-              width = "12" 
-              ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}"              
+             class = "marginRight2 nmc-p-tree-status-img"                
+              ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}" 
               >
          
       <i class="btn btn-xs glyphicon"

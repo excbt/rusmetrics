@@ -2988,23 +2988,23 @@ console.log(zpointId);
                 };
                 
                 $scope.isChevronRight = function (collapsed, item) {
-                    if (mainSvc.checkUndefinedNull(item) || mainSvc.checkUndefinedNull(item.childNodes)) {
+                    if (mainSvc.checkUndefinedNull(item) || (mainSvc.checkUndefinedNull(item.childNodes) && mainSvc.checkUndefinedNull(item.linkedNodeObjects))) {
                         return false;
                     }
-                    return collapsed && item.childNodes.length > 0;
+                    return collapsed && ((!mainSvc.checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!mainSvc.checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
                 };
                 $scope.isChevronDown = function (collapsed, item) {
-                    if (mainSvc.checkUndefinedNull(item) || mainSvc.checkUndefinedNull(item.childNodes)) {
+                    if (mainSvc.checkUndefinedNull(item) || (mainSvc.checkUndefinedNull(item.childNodes) && mainSvc.checkUndefinedNull(item.linkedNodeObjects))) {
                         return false;
                     }
-                    return !collapsed && item.childNodes.length > 0;
+                    return !collapsed && ((!mainSvc.checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!mainSvc.checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
                 };
                 
                 $scope.isChevronDisabled = function (collapsed, item) {
-                    if (mainSvc.checkUndefinedNull(item) || mainSvc.checkUndefinedNull(item.childNodes)) {
+                    if (mainSvc.checkUndefinedNull(item) || (mainSvc.checkUndefinedNull(item.childNodes) && mainSvc.checkUndefinedNull(item.linkedNodeObjects))) {
                         return true;
                     }
-                    return !(item.childNodes.length > 0);
+                    return !((!mainSvc.checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!mainSvc.checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
                 };
                 
                 function findNodeInPTree(node, tree) {
