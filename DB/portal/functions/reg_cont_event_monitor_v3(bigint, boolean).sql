@@ -21,6 +21,8 @@ DECLARE
 
 	v_monitor_log_id	bigint = null;
 	
+	c_MONITOR_VERSION INTEGER = 3;
+
 	-- RETURNS integer codes:
 	-- null - if no process.
 	-- 0 - if no monitor data changed.
@@ -34,7 +36,7 @@ DECLARE
 	v_result integer = null;
 
 	V_RES_NO_PROCESS integer = NULL;
-	V_RES_NO_CHANGED_DATA integer = 0;
+	V_RES_NO_NEW_DATA integer = 0;
 	V_RES_NEW_MONITOR integer = 1;
 	V_RES_GOOD_EVENT integer = 2;
 	V_RES_WORSE_EVENT integer = 3;
@@ -43,44 +45,44 @@ DECLARE
 	V_RES_EMPTY_LEVEL integer = 6;
 
 	v_monitor_event_type_id bigint;
-	v_monitor_rec record;
+	v_same_monitor_rec record;
 
 	v_check_hist_cont_event_time timestamp without time zone = null;
 	v_deleted_count bigint;
 BEGIN
 
-	select m.id 
-		into v_monitor_log_id
-	from portal.v_cont_event_monitor_log_v2 m
-	where m.cont_event_id = p_cont_event_id;
+	SELECT m.id 
+		INTO v_monitor_log_id
+	FROM portal.v_cont_event_monitor_log_v2 m
+	WHERE m.cont_event_id = p_cont_event_id;
 
 	-- we already processed event
-	if v_monitor_log_id is not null then
-		return V_RES_NO_PROCESS;
-	end if;
+	IF v_monitor_log_id IS NOT NULL THEN
+		RETURN V_RES_NO_PROCESS;
+	END IF;
 
 	-- Reading current cont event 
-	select * 
-		into v_curr_cont_event_rec
-	from cont_event ce
-	where ce.id = p_cont_event_id;
+	SELECT * 
+		INTO v_curr_cont_event_rec
+	FROM cont_event ce
+	WHERE ce.id = p_cont_event_id;
 
 	-- Reading current cont event type
-	select * 
-		into v_curr_event_type_rec
-	from cont_event_type cet
-	where cet.id = v_curr_cont_event_rec.cont_event_type_id;
+	SELECT * 
+		INTO v_curr_event_type_rec
+	FROM cont_event_type cet
+	WHERE cet.id = v_curr_cont_event_rec.cont_event_type_id;
 
 
-        -- If cont event type is disabled or deleted
-        if (v_curr_event_type_rec.is_disabled = true or v_curr_event_type_rec.deleted <> 0) then
-                return V_RES_NO_PROCESS;
-        end if;
+    -- If cont event type is disabled or deleted
+    IF (v_curr_event_type_rec.is_disabled = TRUE or v_curr_event_type_rec.deleted <> 0) THEN
+            RETURN V_RES_NO_PROCESS;
+    END IF;
 
-	-- scalar 
-	if (v_curr_event_type_rec.is_scalar_event = true) then
-		return V_RES_SCALAR_EVENT;
-	end if;
+	-- CHECK: scalar 
+	IF (v_curr_event_type_rec.is_scalar_event = TRUE) THEN
+		RETURN V_RES_SCALAR_EVENT;
+	END IF;
 
 	-- Check cont event level: no process for empty level
 	--if (v_curr_event_type_rec.cont_event_level_v2 is null) then
@@ -88,85 +90,96 @@ BEGIN
 	--end if;
 
 	-- Process YELLOW event
-	if (v_curr_event_type_rec.is_base_event = false) then
+	IF (v_curr_event_type_rec.is_base_event = FALSE) THEN
 		-- Switch to base event type id
 		v_monitor_event_type_id = v_curr_event_type_rec.reverse_id;
-	else
+	ELSE
 		v_monitor_event_type_id = v_curr_event_type_rec.id;
-	end if;
+	END IF;
 
 
-	select 	cem.id, cem.cont_event_id, cem.cont_event_level_color, cem.monitor_time, cem.monitor_time_tz, cem.worse_cont_event_id, cem.worse_cont_event_time
+	SELECT 	cem.id, cem.cont_event_id, cem.cont_event_level_color, cem.monitor_time, cem.monitor_time_tz, cem.worse_cont_event_id, cem.worse_cont_event_time
 	--into 	v_check_id, v_check_timestamp_ntz, v_check_monitor_time, v_check_monitor_time_tz
-	into 	v_monitor_rec
-	from 	portal.cont_event_monitor_v2 cem
-	where 	cem.cont_object_id = v_curr_cont_event_rec.cont_object_id and
-		cem.cont_event_type_id = v_monitor_event_type_id
+	INTO 	v_same_monitor_rec
+	FROM 	portal.cont_event_monitor_v3 cem
+	WHERE 	cem.cont_object_id = v_curr_cont_event_rec.cont_object_id 
+		AND cem.cont_zpoint_id = v_curr_cont_event_rec.cont_zpoint_id 
+		AND cem.cont_event_type_id = v_monitor_event_type_id
+		AND cem.monitor_version = c_MONITOR_VERSION
 	FOR UPDATE;
 
-	if not FOUND then
-		-- EVENT TYPE NOT FOUND
-		begin
+	-- IF NOT FOUND current event type in monitor (v_same_monitor_rec)
+	IF NOT FOUND then
+		-- event type NOT FOUND
+		BEGIN
 
-			-- Check if any newer event for cont_object_id was processed and exists in history
-			SELECT 	max(ce.cont_event_time) max_cont_event_time
-				into	v_check_hist_cont_event_time
-			FROM 	portal.cont_event_monitor_history_v2 mh, cont_event ce
-			where 	mh.cont_event_id = ce.id 
-			and 	ce.cont_object_id = v_curr_cont_event_rec.cont_object_id
-			and 	ce.cont_event_type_id = v_monitor_event_type_id;
+			-- Check if any newer event for cont_object_id & cont_zpoint_id  was processed and exists in history
+			-- cont_event_time - internal time of device/object/etc
+			SELECT 	MAX(ce.cont_event_time) max_cont_event_time
+				INTO	v_check_hist_cont_event_time
+			FROM 	portal.cont_event_monitor_history_v3 mh, cont_event ce
+			WHERE 	mh.cont_event_id = ce.id 
+				AND ce.cont_object_id = v_curr_cont_event_rec.cont_object_id
+				AND ce.cont_zpoint_id = v_curr_cont_event_rec.cont_zpoint_id
+				AND ce.cont_event_type_id = v_monitor_event_type_id
+				AND mh.monitor_version = c_MONITOR_VERSION;
 
 
 			-- If base event && we dont process event or we already processed earlier event before
-			if (v_curr_event_type_rec.is_base_event = true) and 
-				(v_check_hist_cont_event_time is null or 
-				v_curr_cont_event_rec.cont_event_time >= v_check_hist_cont_event_time) then
+			IF (v_curr_event_type_rec.is_base_event = TRUE) AND 
+				(v_check_hist_cont_event_time IS NULL OR v_curr_cont_event_rec.cont_event_time >= v_check_hist_cont_event_time) THEN
 				
 				-- Insertint new base event
-				select portal.get_cont_event_level_color_v2(v_curr_event_type_rec.cont_event_level_v2) into v_level_color;
+				-- Gets level color
+				SELECT portal.get_cont_event_level_color_v2(v_curr_event_type_rec.cont_event_level_v2) INTO v_level_color;
 
 				
-				if (v_curr_cont_event_rec.cont_event_deviation is not null) then
+				IF (v_curr_cont_event_rec.cont_event_deviation IS NOT NULL) THEN
 					v_worse_cont_event_id = v_curr_cont_event_rec.id;
 					v_worse_cont_event_time = v_curr_cont_event_rec.cont_event_time;
-				end if;	
+				END IF;	
 
-				INSERT INTO 	portal.cont_event_monitor_v2(
-						cont_object_id, 
-						cont_event_id, 
-						cont_event_type_id, 
-						cont_event_time, 
-						cont_event_level, 
-						cont_event_level_color,
-						last_cont_event_id,
-						last_cont_event_time,
-						worse_cont_event_id,
-						worse_cont_event_time,
-						is_scalar
-						)
-				VALUES (	v_curr_cont_event_rec.cont_object_id, 
-						p_cont_event_id, 
-						v_curr_cont_event_rec.cont_event_type_id, 
-						v_curr_cont_event_rec.cont_event_time, 
-						v_curr_event_type_rec.cont_event_level_v2, 
-						v_level_color,
+				INSERT INTO portal.cont_event_monitor_v3(
+								cont_object_id, --1
+								cont_zpoint_id, --1.1
+								cont_event_id, --2
+								cont_event_type_id, --3
+								cont_event_time, --4
+								cont_event_level, --5
+								cont_event_level_color, --6
+								last_cont_event_id, --7
+								last_cont_event_time, --8
+								worse_cont_event_id, --9
+								worse_cont_event_time, --10
+								is_scalar, 			--11
+								monitor_version
+								)
+				VALUES (v_curr_cont_event_rec.cont_object_id, --1
+						v_curr_cont_event_rec.cont_zpoint_id, --1.1
+						p_cont_event_id, --2
+						v_curr_cont_event_rec.cont_event_type_id, --3
+						v_curr_cont_event_rec.cont_event_time, --4
+						v_curr_event_type_rec.cont_event_level_v2, --5
+						v_level_color, --6
 						--- last data
-						p_cont_event_id,
-						v_curr_cont_event_rec.cont_event_time,
+						p_cont_event_id, --7
+						v_curr_cont_event_rec.cont_event_time, --8
 						--- worse data
-						v_worse_cont_event_id,
-						v_worse_cont_event_time,
+						v_worse_cont_event_id, --9
+						v_worse_cont_event_time, --10
 						-- is scalar sign
-						v_curr_event_type_rec.is_scalar_event);
+						v_curr_event_type_rec.is_scalar_event,
+						c_MONITOR_VERSION --11
+						);
 
 
-				if (v_curr_event_type_rec.is_scalar_event = true) then
+				IF (v_curr_event_type_rec.is_scalar_event = TRUE) THEN
 					v_result  = V_RES_SCALAR_EVENT;		
-				else			
+				ELSE			
 					v_result  = V_RES_NEW_MONITOR;		
-				end if;	
-			end if;	
-		exception			
+				END IF;	
+			END IF;	
+		EXCEPTION			
 		when OTHERS THEN 
 			IF p_ignore_errors = TRUE THEN
 				RAISE NOTICE 'Ingore Error during register_cont_event_monitor_v2 for cont_event_id=%, SQLERRM=%, SQLSTATE=%', p_cont_event_id,SQLERRM, SQLSTATE;
@@ -177,84 +190,91 @@ BEGIN
 				--RAISE EXCEPTION 'Error during register cont_event for subscriber_id=%, cont_event_id=%', subscrs.subscriber_id,subscrs.cont_event_id;
 			END IF;			
 			--v_result = V_RES_NO_PROCESS;
-		end;
-	else
-		-- FOUND CURRENT EVENT TYPE
-		if (v_curr_event_type_rec.is_base_event = true or v_curr_event_type_rec.is_scalar_event = true) then
+		END;
+	ELSE
+		-- if FOUND current event type in monitor (v_same_monitor_rec)
+		-- if event is scalar is redundant, becouse we check event in CHECK: scalar (line ~ 82)
+		IF (v_curr_event_type_rec.is_base_event = TRUE OR v_curr_event_type_rec.is_scalar_event = TRUE) THEN
 		
-			-- Updating base or scalar event
-			update 	portal.cont_event_monitor_v2
-			set 	last_cont_event_id = p_cont_event_id, 
-				last_cont_event_time = v_curr_cont_event_rec.cont_event_time
-			where 	id = v_monitor_rec.id and last_cont_event_time <= v_curr_cont_event_rec.cont_event_time;
+			-- Updating last_* fields of existing rec with values from new event
+			UPDATE 	portal.cont_event_monitor_v3
+			SET 	last_cont_event_id = p_cont_event_id, 
+					last_cont_event_time = v_curr_cont_event_rec.cont_event_time
+			WHERE id = v_same_monitor_rec.id 
+				AND last_cont_event_time <= v_curr_cont_event_rec.cont_event_time;
 
-			v_result = V_RES_NO_CHANGED_DATA;
+			v_result = V_RES_NO_NEW_DATA;
 
-			if (v_curr_event_type_rec.is_base_event = true 
-				AND v_monitor_rec.worse_cont_event_id is not null 
-				and v_curr_cont_event_rec.cont_event_deviation is not null) then
+			IF (v_curr_event_type_rec.is_base_event = TRUE 
+				AND v_same_monitor_rec.worse_cont_event_id IS NOT NULL 
+				AND v_curr_cont_event_rec.cont_event_deviation IS NOT NULL) THEN
 				
 				SELECT * 
 					INTO v_worse_cont_event_rec
 				FROM cont_event ce 
-				where ce.id = v_monitor_rec.worse_cont_event_id;
+				WHERE ce.id = v_same_monitor_rec.worse_cont_event_id;
 
-				select d.deviation_level 
-					into v_worse_deviation_level 
-				from portal.cont_event_deviation d
+				SELECT d.deviation_level 
+					INTO v_worse_deviation_level 
+				FROM portal.cont_event_deviation d
 				WHERE d.keyname = v_worse_cont_event_rec.cont_event_deviation;	
 
-				select d.deviation_level 
-					into v_curr_deviation_level 
-				from portal.cont_event_deviation d
+				SELECT d.deviation_level 
+					INTO v_curr_deviation_level 
+				FROM portal.cont_event_deviation d
 				WHERE d.keyname = v_curr_cont_event_rec.cont_event_deviation;	
 
 
 				if (v_curr_deviation_level > v_worse_deviation_level) then
 					-- Update worse cont event
-					update 	portal.cont_event_monitor_v2 
-					set 	worse_cont_event_id = p_cont_event_id, 
+					UPDATE 	portal.cont_event_monitor_v3 
+					SET	worse_cont_event_id = p_cont_event_id, 
 						worse_cont_event_time = v_curr_cont_event_rec.cont_event_time
-					where 	id = v_monitor_rec.id and worse_cont_event_time <= v_curr_cont_event_rec.cont_event_time;
+					WHERE id = v_same_monitor_rec.id and worse_cont_event_time <= v_curr_cont_event_rec.cont_event_time;
 
-					if FOUND then
+					IF FOUND then
 						v_result = V_RES_WORSE_EVENT;
-					end if;	
-				end if;
+					END IF;	
+				END IF;
 				
-			end if;
+			END IF;
 			
-		else
+		ELSE
 			-- Deleting base event
 			WITH deleted AS (
-				delete 
-				FROM 	portal.cont_event_monitor_v2
-				--where 	id = v_monitor_rec.id and cont_event_time <= v_curr_cont_event_rec.cont_event_time
-				where 	id = v_monitor_rec.id and cont_event_time <= v_curr_cont_event_rec.cont_event_time
+				DELETE 
+				FROM 	portal.cont_event_monitor_v3
+				--where 	id = v_same_monitor_rec.id and cont_event_time <= v_curr_cont_event_rec.cont_event_time
+				WHERE 	id = v_same_monitor_rec.id and cont_event_time <= v_curr_cont_event_rec.cont_event_time
 				RETURNING *) 
-			SELECT count(*) into v_deleted_count FROM deleted;
+			SELECT count(*) INTO v_deleted_count FROM deleted;
 			
 			-- Insert event into history
 			if (v_deleted_count > 0) then
 				-- Insert History Rec
-				INSERT INTO 	portal.cont_event_monitor_history_v2(
+				INSERT INTO 	portal.cont_event_monitor_history_v3(
 						cont_event_id, 
 						reverse_cont_event_id, 
 						cont_event_level_color, 
 						monitor_time, 
-						monitor_time_tz)
-				VALUES 		(v_monitor_rec.cont_event_id, 
+						monitor_time_tz,
+						monitor_version
+						)
+				VALUES 	(
+						v_same_monitor_rec.cont_event_id, 
 						p_cont_event_id, 
-						v_monitor_rec.cont_event_level_color, 
-						v_monitor_rec.monitor_time, 
-						v_monitor_rec.monitor_time_tz);
+						v_same_monitor_rec.cont_event_level_color, 
+						v_same_monitor_rec.monitor_time, 
+						v_same_monitor_rec.monitor_time_tz,
+						c_MONITOR_VERSION
+						);
 			
 				v_result = V_RES_GOOD_EVENT;
-			end if;
-		end if;
-	end if;	
+			END IF;
+		END IF;
+	END IF;	
 
-return v_result;
+RETURN v_result;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
