@@ -76,7 +76,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId) {
-		return enhanceContEventType(selectEventsBySubscriber(subscriberId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
+		return loadContEventTypeModel(selectEventsBySubscriber(subscriberId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -86,7 +86,7 @@ public class ContEventService {
 	 */
 	public Page<ContEvent> selectEventsBySubscriber(long subscriberId, Pageable pageable) {
 		Page<ContEvent> result = contEventRepository.selectBySubscriber(subscriberId, pageable);
-		return enhanceContEventType(result);
+		return loadContEventTypeModel(result);
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public List<ContEvent> findEventsByContObjectId(long contObjectId) {
-		return enhanceContEventType(findEventsByContObjectId(contObjectId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
+		return loadContEventTypeModel(findEventsByContObjectId(contObjectId, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public List<ContEvent> findEventsByContObjectId(long contObjectId, Pageable pageable) {
-		return enhanceContEventType(contEventRepository.findByContObjectId(contObjectId, pageable));
+		return loadContEventTypeModel(contEventRepository.findByContObjectId(contObjectId, pageable));
 	}
 
 	/**
@@ -131,7 +131,7 @@ public class ContEventService {
 		checkNotNull(endDate);
 		checkArgument(subscriberId > 0);
 		checkNotNull(pageable);
-		return enhanceContEventType(contEventRepository.selectBySubscriberAndDate(subscriberId, startDate.toDate(),
+		return loadContEventTypeModel(contEventRepository.selectBySubscriberAndDate(subscriberId, startDate.toDate(),
 				endDate.toDate(), pageable));
 	}
 
@@ -145,7 +145,7 @@ public class ContEventService {
 	 */
 	public Page<ContEvent> selectBySubscriberAndDateAndContObjectIds(long subscriberId, DateTime startDate,
 			DateTime endDate, List<Long> contObjectIds) {
-		return enhanceContEventType(selectBySubscriberAndDateAndContObjectIds(subscriberId, startDate, endDate,
+		return loadContEventTypeModel(selectBySubscriberAndDateAndContObjectIds(subscriberId, startDate, endDate,
 				contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
@@ -169,7 +169,7 @@ public class ContEventService {
 					pageable);
 		}
 
-		return enhanceContEventType(contEventRepository.selectBySubscriberAndDateAndContObjects(subscriberId,
+		return loadContEventTypeModel(contEventRepository.selectBySubscriberAndDateAndContObjects(subscriberId,
 				startDate.toDate(), endDate.toDate(), contObjectIds, pageable));
 	}
 
@@ -180,7 +180,7 @@ public class ContEventService {
 	 * @return
 	 */
 	public Page<ContEvent> selectBySubscriberAndContObjectIds(long subscriberId, List<Long> contObjectIds) {
-		return enhanceContEventType(
+		return loadContEventTypeModel(
 				selectBySubscriberAndContObjectIds(subscriberId, contObjectIds, DEFAULT_MAX_EVENTS_PAGE_REQUEST));
 	}
 
@@ -202,7 +202,7 @@ public class ContEventService {
 			contEventRepository.selectBySubscriber(subscriberId, pageable);
 		}
 
-		return enhanceContEventType(
+		return loadContEventTypeModel(
 				contEventRepository.selectBySubscriberAndContObjects(subscriberId, contObjectIds, pageable));
 
 	}
@@ -235,21 +235,21 @@ public class ContEventService {
 			return new ArrayList<>();
 		}
 
-		return enhanceContEventType(contEventRepository.selectContEventsByIds(contEventsIds));
+		return loadContEventTypeModel(contEventRepository.selectContEventsByIds(contEventsIds));
 	}
 
 	/**
-	 * TODO Check if necessary
+	 * Gets Ids of ContEventType, load from database and setup model
 	 * @param contEvents
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T extends ContEventTypeModel> List<T> enhanceContEventType(List<T> contEvents) {
+	public <T extends ContEventTypeModel> List<T> loadContEventTypeModel(List<T> contEvents) {
 
 		List<Long> contEventTypeIds = contEvents.stream().map(i -> i.getContEventTypeId()).distinct()
 				.collect(Collectors.toList());
 
-		if (contEventTypeIds.size() == 0) {
+		if (contEventTypeIds.isEmpty()) {
 			return contEvents;
 		}
 
@@ -258,22 +258,20 @@ public class ContEventService {
 		final Map<Long, ContEventType> contEventTypes = contEventTypeList.stream()
 				.collect(Collectors.toMap(ContEventType::getId, Function.identity()));
 
-		contEvents.forEach(i -> {
-			i.setContEventType(contEventTypes.get(i.getContEventTypeId()));
-		});
+		contEvents.forEach(i -> i.setContEventType(contEventTypes.get(i.getContEventTypeId())));
 
 		return contEvents;
 	}
 
 	/**
-	 *
+	 * Gets Ids of ContEventType, load from database and setup model
 	 * @param contEventsPage
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T extends ContEventTypeModel> Page<T> enhanceContEventType(Page<T> contEventsPage) {
+	public <T extends ContEventTypeModel> Page<T> loadContEventTypeModel(Page<T> contEventsPage) {
 
-		enhanceContEventType(contEventsPage.getContent());
+		loadContEventTypeModel(contEventsPage.getContent());
 		return contEventsPage;
 
 	}

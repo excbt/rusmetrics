@@ -74,7 +74,7 @@ public class ContEventMonitorV2Service {
 		List<ContEventMonitorV2> result = contEventMonitor.stream().sorted(CMP_BY_EVENT_TIME)
 				.collect(Collectors.toList());
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class ContEventMonitorV2Service {
 
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectId(contObjectId);
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class ContEventMonitorV2Service {
 
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -126,7 +126,7 @@ public class ContEventMonitorV2Service {
 	public List<ContEventMonitorV2> selectBySubscriberId(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectBySubscriberId(subscriberId);
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class ContEventMonitorV2Service {
 
         final List<ContEventMonitorV2> rawMonitorList = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		List<ContEventMonitorV2> monitorList = contEventService.enhanceContEventType(rawMonitorList);
+		List<ContEventMonitorV2> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
 
         Map<Long, List<ContEventMonitorV2>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
 

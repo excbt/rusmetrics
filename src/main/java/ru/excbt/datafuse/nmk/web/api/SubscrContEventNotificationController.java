@@ -533,7 +533,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
 				.collect(Collectors.toList());
 
-		return ResponseEntity.ok(contEventService.enhanceContEventType(filteredResultList));
+		return ResponseEntity.ok(contEventService.loadContEventTypeModel(filteredResultList));
 	}
 
 	/**
