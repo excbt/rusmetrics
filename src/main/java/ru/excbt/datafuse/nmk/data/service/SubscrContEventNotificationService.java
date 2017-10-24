@@ -165,7 +165,7 @@ public class SubscrContEventNotificationService {
 				.findAll(Specifications.where(specSubscriberId(subscriberId)).and(specIsNew(isNew)), pageRequest);
 
 		initContEvent(resultPage.getContent());
-		contEventService.enhanceContEventType(resultPage.getContent());
+		contEventService.loadContEventTypeModel(resultPage.getContent());
 
 		return resultPage;
 
@@ -219,7 +219,7 @@ public class SubscrContEventNotificationService {
 		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
 
 		initContEvent(result.getContent());
-		contEventService.enhanceContEventType(result.getContent());
+		contEventService.loadContEventTypeModel(result.getContent());
 
 		return result;
 
