@@ -3,23 +3,23 @@
 -- DROP FUNCTION portal.reg_cont_event_monitor_v3(bigint, boolean);
 
 CREATE OR REPLACE FUNCTION portal.reg_cont_event_monitor_v3(
-    p_cont_event_id bigint,
-    p_ignore_errors boolean)
+    p_cont_event_id BIGINT,
+    p_ignore_errors BOOLEAN)
   RETURNS integer AS
 $BODY$
 DECLARE
-	v_curr_event_type_rec record;
-	v_curr_cont_event_rec record;
-	v_last_cont_event_rec record;
-	v_worse_cont_event_rec record;
-	v_level_color text;
+	v_curr_event_type_rec RECORD;
+	v_curr_cont_event_rec RECORD;
+	v_last_cont_event_rec RECORD;
+	v_worse_cont_event_rec RECORD;
+	v_level_color TEXT;
 
-	v_worse_deviation_level integer;
-	v_curr_deviation_level integer;
-	v_worse_cont_event_id integer = null;
-	v_worse_cont_event_time timestamp without time zone = null;
+	v_worse_deviation_level INTEGER;
+	v_curr_deviation_level INTEGER;
+	v_worse_cont_event_id INTEGER = NULL;
+	v_worse_cont_event_time timestamp without time zone = NULL;
 
-	v_monitor_log_id	bigint = null;
+	v_monitor_log_id	BIGINT = NULL;
 	
 	c_MONITOR_VERSION INTEGER = 3;
 
@@ -33,22 +33,22 @@ DECLARE
 	-- 5 - if same event appears
 	-- 6 - if no level event appears
 
-	v_result integer = null;
+	v_result INTEGER = NULL;
 
-	V_RES_NO_PROCESS integer = NULL;
-	V_RES_NO_NEW_DATA integer = 0;
-	V_RES_NEW_MONITOR integer = 1;
-	V_RES_GOOD_EVENT integer = 2;
-	V_RES_WORSE_EVENT integer = 3;
-	V_RES_SCALAR_EVENT integer = 4;
-	V_RES_SAME_EVENT integer = 5;	
-	V_RES_EMPTY_LEVEL integer = 6;
+	V_RES_NO_PROCESS INTEGER = NULL;
+	V_RES_NO_NEW_DATA INTEGER = 0;
+	V_RES_NEW_MONITOR INTEGER = 1;
+	V_RES_GOOD_EVENT INTEGER = 2;
+	V_RES_WORSE_EVENT INTEGER = 3;
+	V_RES_SCALAR_EVENT INTEGER = 4;
+	V_RES_SAME_EVENT INTEGER = 5;	
+	V_RES_EMPTY_LEVEL INTEGER = 6;
 
-	v_monitor_event_type_id bigint;
-	v_same_monitor_rec record;
+	v_monitor_event_type_id BIGINT;
+	v_same_monitor_rec RECORD;
 
-	v_check_hist_cont_event_time timestamp without time zone = null;
-	v_deleted_count bigint;
+	v_check_hist_cont_event_time timestamp without time zone = NULL;
+	v_deleted_count BIGINT;
 BEGIN
 
 	SELECT m.id 

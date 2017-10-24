@@ -14,16 +14,19 @@ begin
 RAISE NOTICE 'Registering notification for cont_event id=% ', p_cont_event_id;
 
 -- Registering notifications
-for subscrs in select ce.id cont_event_id, sco.cont_object_id, sco.subscriber_id, s.subscriber_info
-		from cont_event ce, subscr_cont_object sco, subscriber s, cont_object co
-		where 	ce.id = p_cont_event_id and 
-			ce.cont_object_id = sco.cont_object_id and 
-			sco.subscriber_id = s.id and
-			sco.cont_object_id = co.id and 
-			ce.deleted = 0 and
-			s.deleted = 0 and 
-			co.deleted = 0 AND
-			sco.subscr_end_date is null
+for subscrs IN (
+			SELECT ce.id cont_event_id, ce.cont_object_id, ce.cont_zpoint_id, acc.subscriber_id, s.subscriber_info
+			FROM cont_event ce, portal.cont_zpoint_access acc, subscriber s, cont_zpoint zp
+			WHERE ce.id = p_cont_event_id AND
+						--ce.cont_object_id = acc.cont_object_id and 
+						ce.cont_zpoint_id = acc.cont_zpoint_id AND
+						acc.subscriber_id = s.id AND
+						zp.id = ce.cont_zpoint_id AND
+						ce.deleted = 0 AND
+						s.deleted = 0 AND
+						zp.deleted = 0 AND
+						acc.access_ttl_tz IS NULL
+			)
 loop
 	--RAISE NOTICE 'Processing subscriber id=% info=%', subscrs.subscriber_id, subscrs.subscriber_info;
 	BEGIN

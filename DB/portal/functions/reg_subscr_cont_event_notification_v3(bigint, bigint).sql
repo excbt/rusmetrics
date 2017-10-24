@@ -3,27 +3,29 @@
 -- DROP FUNCTION portal.reg_subscr_cont_event_notification_v3(bigint, bigint);
 
 CREATE OR REPLACE FUNCTION portal.reg_subscr_cont_event_notification_v3(
-    p_subscriber_id bigint,
-    p_cont_event_id bigint)
+    p_subscriber_id BIGINT,
+    p_cont_event_id BIGINT)
   RETURNS void AS
 $BODY$
-  declare
-	check_id bigint;
-	v_cont_event_level integer;
-	v_cont_event_category text;
-	v_level_color text;
+  DECLARE
+	check_id BIGINT;
+	v_cont_event_level INTEGER;
+	v_cont_event_category TEXT;
+	v_level_color TEXT;
 
-	v_cont_event record;
-	v_cont_event_type record;
-	v_notification_id bigint;
+	v_cont_event RECORD;
+	v_cont_event_type RECORD;
+	v_notification_id BIGINT;
 
-	r_actions record;
+	r_actions RECORD;
 	
+	c_MONITOR_VERSION INTEGER = 3;
+
 BEGIN
 
-	if (p_subscriber_id is null) THEN
+	IF (p_subscriber_id is null) THEN
 		RAISE EXCEPTION 'p_subscriber_id is NULL';
-	end if;
+	END IF;
 
 /*
 	begin
@@ -35,66 +37,78 @@ BEGIN
 
 */
 
-	select ce.* into v_cont_event from cont_event ce where ce.id = p_cont_event_id;
-	if not FOUND then
+	SELECT ce.* 
+		INTO v_cont_event 
+	FROM cont_event ce 
+	WHERE ce.id = p_cont_event_id;
+	IF NOT FOUND THEN
 		RAISE EXCEPTION 'cont_event with id %s is not found', p_cont_event_id;
-	end if;
+	END IF;
 
-	select cet.cont_event_level_v2, cet.cont_event_category into v_cont_event_type from cont_event_type cet where cet.id = v_cont_event.cont_event_type_id;
-	if not FOUND then
+	SELECT cet.cont_event_level_v2, cet.cont_event_category 
+		INTO v_cont_event_type 
+	FROM cont_event_type cet 
+	WHERE cet.id = v_cont_event.cont_event_type_id;
+	IF NOT FOUND THEN
 		RAISE EXCEPTION 'cont_event_type wit id %s is not found', v_cont_event.cont_event_type_id;
-	end if;
+	END IF;
 
-	if (v_cont_event_type.cont_event_level_v2 is NOT null) then
-		SELECT portal.get_cont_event_level_color_v2(v_cont_event_type.cont_event_level_v2) into v_level_color;
-	end if;
+	IF (v_cont_event_type.cont_event_level_v2 IS NOT NULL) THEN
+		SELECT portal.get_cont_event_level_color_v2(v_cont_event_type.cont_event_level_v2) INTO v_level_color;
+	END IF;
 
 
 	--SELECT cont_event_level, cont_event_category INTO v_cont_event_level, v_cont_event_category 
 	--FROM get_cont_event_type_rec(p_cont_event_id);
 
 	INSERT INTO subscr_cont_event_notification(
-            subscriber_id, 
-            cont_object_id, 
-            cont_event_id, 
-            cont_event_type_id, 
-            cont_event_time, 
-            cont_event_level, 
-            cont_event_level_color, 
-            cont_event_category,
-            cont_event_deviation,
-            mon_version)
-	VALUES (p_subscriber_id, 
-		v_cont_event.cont_object_id, 
-		p_cont_event_id, 
-		v_cont_event.cont_event_type_id,
-		v_cont_event.cont_event_time, 
-		v_cont_event_type.cont_event_level_v2, 
-		v_level_color, 
-		v_cont_event_type.cont_event_category,
-		v_cont_event.cont_event_deviation,
-		2) 
-	returning id into v_notification_id;
+            subscriber_id, --1
+            cont_object_id, --2
+			cont_zpoint_id, --3
+            cont_event_id, --4
+            cont_event_type_id, --5
+            cont_event_time, --6
+            cont_event_level, --7
+            cont_event_level_color, --8
+            cont_event_category, --9
+            cont_event_deviation, --10
+            mon_version --11
+			)
+	VALUES (
+		p_subscriber_id, --1
+		v_cont_event.cont_object_id, --2
+		v_cont_event.cont_zpoint_id, --3
+		p_cont_event_id, --4
+		v_cont_event.cont_event_type_id, --5
+		v_cont_event.cont_event_time, --6
+		v_cont_event_type.cont_event_level_v2, --7
+		v_level_color, --8
+		v_cont_event_type.cont_event_category, --9
+		v_cont_event.cont_event_deviation, --10
+		c_MONITOR_VERSION --11
+		) 
+	RETURNING id INTO v_notification_id;
 
 
 	RAISE NOTICE 'Processing r_cont_events_actions for cont_event_id=%', p_cont_event_id;
-	for r_actions in (
+	FOR R_ACTIONS IN (
 					SELECT subscr_action_user_id, is_sms, is_email
 					FROM subscr_cont_event_type_action ceta
-					where ceta.subscriber_id = p_subscriber_id and ceta.cont_event_type_id = v_cont_event.cont_event_type_id )
-	loop
+					WHERE ceta.subscriber_id = p_subscriber_id AND 
+						ceta.cont_event_type_id = v_cont_event.cont_event_type_id 
+					)
+	LOOP
 
-		if (r_actions.subscr_action_user_id is not null and r_actions.is_sms = true) then
+		IF (r_actions.subscr_action_user_id IS NOT NULL AND r_actions.is_sms = TRUE) THEN
 		        -- RAISE NOTICE 'Adding sms notification for %', r_actions.subscr_action_user_id;
 			PERFORM portal.reg_subscr_cont_event_action_task(v_notification_id, r_actions.subscr_action_user_id, 'sms');
-		end if;
+		END IF;
 
-		if (r_actions.subscr_action_user_id is not null and r_actions.is_email = true) then
+		IF (r_actions.subscr_action_user_id IS NOT NULL AND r_actions.is_email = TRUE) THEN
 			-- RAISE NOTICE 'Adding sms notification for %', r_actions.subscr_action_user_id;
 			PERFORM portal.reg_subscr_cont_event_action_task(v_notification_id, r_actions.subscr_action_user_id, 'email');
-		end if;
-	end loop;
-
+		END IF;
+	END LOOP;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
