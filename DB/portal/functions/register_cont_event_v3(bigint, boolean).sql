@@ -3,24 +3,22 @@
 -- DROP FUNCTION portal.register_cont_event_v3(bigint, boolean);
 
 CREATE OR REPLACE FUNCTION portal.register_cont_event_v3(
-    p_cont_event_id bigint,
-    p_ignore_errors boolean)
+    p_cont_event_id BIGINT,
+    p_ignore_errors BOOLEAN)
   RETURNS void AS
 $BODY$
 DECLARE
-	r_cont_event_type record;
-	r_cont_event record;
-	v_level_color text;
-	v_monitor_result integer = null;
-	v_monitor_result_v2 integer = null;
-begin
+	r_cont_event_type RECORD;
+	r_cont_event RECORD;
+	v_level_color TEXT;
+	v_monitor_result INTEGER = NULL;
+BEGIN
 
 RAISE NOTICE 'Registering cont_event id=% ', p_cont_event_id;
 
 -- Registering monitor
-select portal.reg_cont_event_monitor_new (p_cont_event_id, p_ignore_errors) into v_monitor_result;
 
-select portal.reg_cont_event_monitor_new_v2 (p_cont_event_id, p_ignore_errors) into v_monitor_result_v2;
+SELECT portal.reg_cont_event_monitor_v3 (p_cont_event_id, p_ignore_errors) INTO v_monitor_result;
 
 -- v_monitor_result codes	
 -- null - if no process.
@@ -32,21 +30,12 @@ select portal.reg_cont_event_monitor_new_v2 (p_cont_event_id, p_ignore_errors) i
 -- 5 - if same event appears
 -- 6 - if no level event appears
 
-if v_monitor_result IN (1,2,3,4) then
+if v_monitor_result IN (1,2,3,4,6) then
 	-- Registering notifications
-	--PERFORM portal.reg_cont_event_notifications (p_cont_event_id, p_ignore_errors);
-        INSERT INTO portal.cont_event_mon_v1_bak(
-            cont_event_id)
-        VALUES (p_cont_event_id);
-end if;	
-
-if v_monitor_result_v2 IN (1,2,3,4,6) then
-	-- Registering notifications
-	PERFORM portal.reg_cont_event_notifications_v2 (p_cont_event_id, p_ignore_errors);
-end if;	
-
+	PERFORM portal.reg_cont_event_notifications_v3 (p_cont_event_id, p_ignore_errors);
+END IF;	
 	
-end;
+END;
 $BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;

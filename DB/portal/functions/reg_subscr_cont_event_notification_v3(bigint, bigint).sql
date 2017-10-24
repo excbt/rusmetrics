@@ -72,7 +72,7 @@ BEGIN
             cont_event_level_color, --8
             cont_event_category, --9
             cont_event_deviation, --10
-            mon_version --11
+			monitor_version --11
 			)
 	VALUES (
 		p_subscriber_id, --1
