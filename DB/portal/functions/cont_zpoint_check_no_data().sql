@@ -94,7 +94,7 @@ loop
 
         for r_mon_cont_events in (
                                 SELECT m.*, ce.cont_zpoint_id, ce.cont_event_message
-                                  FROM portal.cont_event_monitor_v2 m LEFT JOIN cont_event ce ON (m.cont_event_id = ce.id)
+                                  FROM portal.cont_event_monitor_v3 m LEFT JOIN cont_event ce ON (m.cont_event_id = ce.id)
                                 where m.cont_event_type_id in (
                                                         SELECT id AS cont_event_type_id
                                                         FROM cont_event_type
