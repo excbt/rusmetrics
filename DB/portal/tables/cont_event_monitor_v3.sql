@@ -21,7 +21,7 @@ CREATE TABLE portal.cont_event_monitor_v3
   is_scalar boolean,
   monitor_version smallint NOT NULL DEFAULT 3,
   CONSTRAINT cont_event_monitor_v3_pkey PRIMARY KEY (id),
-  CONSTRAINT cont_event_monitor_v3_cont_object_id_cont_event_type_id_key UNIQUE (cont_object_id, cont_event_type_id)
+  CONSTRAINT cont_event_monitor_v3_cont_object_id_cont_event_type_id_key UNIQUE (cont_object_id, cont_zpoint_id, cont_event_type_id)
 )
 WITH (
   OIDS=FALSE

@@ -10,20 +10,57 @@ BEGIN
 	select MAX(cont_event_id)
 	into v_result
 	FROM (
+		-- v1
 		SELECT max(cont_event_id) as cont_event_id , 'MON'
 		FROM cont_event_monitor
-	union all
+
+		UNION ALL
+
 		SELECT max(cont_event_id) , 'MON_HIST'
 		FROM cont_event_monitor_history
-	UNION ALL
+
+		UNION ALL
+
 		SELECT max(reverse_cont_event_id) , 'MON_HISR'
 		FROM cont_event_monitor_history
-	UNION all
+
+		UNION ALL
+
 		SELECT max(cont_event_id) , 'NOTIFY'
 		FROM subscr_cont_event_notification
-	) as t;
+		-- v2
+		UNION ALL
 
-	return v_result;
+		SELECT max(cont_event_id) as cont_event_id , 'MON'
+		FROM portal.cont_event_monitor_v2
+
+		UNION ALL
+
+		SELECT max(cont_event_id) , 'MON_HIST'
+		FROM portal.cont_event_monitor_history_v2
+
+		UNION ALL
+
+		SELECT max(reverse_cont_event_id) , 'MON_HISR'
+		FROM portal.cont_event_monitor_history_v2
+		-- v3
+
+		UNION ALL
+
+		SELECT max(cont_event_id) as cont_event_id , 'MON'
+		FROM portal.cont_event_monitor_v3
+
+		UNION ALL
+
+		SELECT max(cont_event_id) , 'MON_HIST'
+		FROM portal.cont_event_monitor_history_v3
+
+		UNION ALL
+
+		SELECT max(reverse_cont_event_id) , 'MON_HISR'
+		FROM portal.cont_event_monitor_history_v3	) as t;
+
+	RETURN v_result;
 END;$BODY$
   LANGUAGE plpgsql STABLE
   COST 100;

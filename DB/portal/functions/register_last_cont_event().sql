@@ -3,26 +3,26 @@
 -- DROP FUNCTION portal.register_last_cont_event();
 
 CREATE OR REPLACE FUNCTION portal.register_last_cont_event()
-  RETURNS bigint AS
+  RETURNS BIGINT AS
 $BODY$
 declare
 
-v_adv_lock                      boolean;
-r_cont_events 			record;
-v_cnt 				bigint = 0;
+v_adv_lock          BOOLEAN;
+r_cont_events 		RECORD;
+v_cnt 				BIGINT = 0;
 
-v_check_disabled                boolean;
+v_check_disabled    BOOLEAN;
 
-v_job_id                        bigint;
-v_step_id                       bigint;
-v_jobmon_schema                 text;
-v_new_search_path               text := 'public,portal,pg_temp';
-v_old_search_path               text;
-v_step_overflow_id              bigint;	
-v_process_limit integer = 500000;
+v_job_id            BIGINT;
+v_step_id           BIGINT;
+v_jobmon_schema     TEXT;
+v_new_search_path   TEXT := 'public,portal,pg_temp';
+v_old_search_path   TEXT;
+v_step_overflow_id  BIGINT;	
+v_process_limit		INTEGER = 500000;
 
 	--v_process_limit integer = 10;
-begin
+BEGIN
 v_adv_lock := pg_try_advisory_xact_lock(hashtext('portal register_last_cont_even'));
 IF v_adv_lock = 'false' THEN
 	RAISE NOTICE 'Portal register_last_cont_event already running.';
@@ -30,14 +30,14 @@ IF v_adv_lock = 'false' THEN
 END IF;
 
 
-SELECT param_value::boolean into v_check_disabled
+SELECT param_value::BOOLEAN INTO v_check_disabled
   FROM system_param
 where keyname = 'CONT_EVENT_MONITOR_DISABLED' and param_group = 'SYSTEM';
 
-if (v_check_disabled = true) then
+IF (v_check_disabled = TRUE) THEN
    RAISE NOTICE 'Portal register_last_cont_event is disabled';
    RETURN 0;
-end if;
+END IF;
 
 SELECT current_setting('search_path') INTO v_old_search_path;
 SELECT nspname INTO v_jobmon_schema FROM pg_catalog.pg_namespace n, pg_catalog.pg_extension e WHERE e.extname = 'pg_jobmon'::name AND e.extnamespace = n.oid;
@@ -52,24 +52,26 @@ IF v_jobmon_schema IS NOT NULL THEN
     v_step_id := add_step(v_job_id, 'Running register_cont_event_unchecked loop');
 END IF;
 
-for r_cont_events in (	SELECT 	ce.id
+FOR r_cont_events in (	
+			SELECT 	ce.id
 			FROM 	cont_event ce, cont_event_type cet
-			where 	ce.id > portal.get_last_monitor_cont_event_id()
-				and ce.cont_event_type_id = cet.id 
-				and (coalesce(cet.is_disabled,false) = false)
-				and (coalesce(cet.is_dev_mode, false) = false)
-			order by ce.cont_event_registration_time_tz, ce.id
-			limit v_process_limit
+			where 	ce.id > portal.get_last_monitor_cont_event_id() AND
+				ce.cont_event_type_id = cet.id AND
+				(COALESCE(cet.is_disabled,FALSE) = FALSE) AND
+				(COALESCE(cet.is_dev_mode, FALSE) = FALSE)
+			ORDER BY ce.cont_event_registration_time_tz, ce.id
+			LIMIT v_process_limit
 			)
-loop
+LOOP
 	
 	PERFORM portal.register_cont_event_unchecked(r_cont_events.id);
+	PERFORM portal.register_cont_event_v3(r_cont_events.id, FALSE);
 	v_cnt = v_cnt + 1;
-	if (v_cnt > v_process_limit) then
-		return v_cnt;
-	end if;
+	IF (v_cnt > v_process_limit) then
+		RETURN v_cnt;
+	END IF;
 		
-end loop;
+END LOOP;
 /*	
 	return v_cnt;
 */
@@ -85,7 +87,7 @@ END IF;
 
 EXECUTE format('SELECT set_config(%L, %L, %L)', 'search_path', v_old_search_path, 'false');
 
-return v_cnt;	
+RETURN v_cnt;	
 END;$BODY$
   LANGUAGE plpgsql VOLATILE
   COST 100;
