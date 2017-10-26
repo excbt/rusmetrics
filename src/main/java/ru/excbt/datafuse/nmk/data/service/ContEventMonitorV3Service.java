@@ -86,7 +86,7 @@ public class ContEventMonitorV3Service {
      * @param contObjectIds
      * @return
      */
-    public Map<Long, List<ContEventMonitorV3>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
+    public Map<Long, List<ContEventMonitorX>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
 
         checkNotNull(contObjectIds);
 
@@ -94,11 +94,11 @@ public class ContEventMonitorV3Service {
             return Collections.emptyMap();
         }
 
-        final List<ContEventMonitorV3> rawMonitorList = contEventMonitorV3Repository.selectByContObjectIds(contObjectIds);
+        final List<ContEventMonitorX> rawMonitorList = contEventMonitorV3Repository.selectByContObjectIds(contObjectIds).stream().collect(Collectors.toList());
 
-        List<ContEventMonitorV3> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
+        List<ContEventMonitorX> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
 
-        Map<Long, List<ContEventMonitorV3>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
+        Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
 
         return resultMap;
     }
