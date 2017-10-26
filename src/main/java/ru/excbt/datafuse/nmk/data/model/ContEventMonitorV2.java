@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -35,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
-public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
+public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implements ContEventTypeModel, ContEventMonitorX {
 
 	/**
 	 *
@@ -55,8 +56,8 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implemen
 	private ContEventType contEventType;
 
 	@Column(name = "cont_event_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date contEventTime;
+	//@Temporal(TemporalType.TIMESTAMP)
+	private LocalDateTime contEventTime;
 
 	@Column(name = "cont_event_level")
 	private Integer ContEventLevel;

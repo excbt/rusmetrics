@@ -35,7 +35,6 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -81,22 +80,22 @@ public class SubscrContEventNotificationService {
 	public static class SearchConditions {
 
 		private final long subscriberId;
-		private final LocalDatePeriod period;
+		private final DateInterval dateInterval;
 		private final Boolean isNew;
 		private final List<Long> contObjectIdList = new ArrayList<>();
 		private final List<Long> contEventTypeList = new ArrayList<>();
 		private final List<String> contEventCategoryList = new ArrayList<>();
 		private final List<String> contEventDeviationList = new ArrayList<>();
 
-		public SearchConditions(long subscriberId, LocalDatePeriod period) {
+		public SearchConditions(long subscriberId, DateInterval dateInterval) {
 			this.subscriberId = subscriberId;
-			this.period = period;
+			this.dateInterval = dateInterval;
 			this.isNew = null;
 		}
 
-		public SearchConditions(long subscriberId, LocalDatePeriod period, Boolean isNew) {
+		public SearchConditions(long subscriberId, DateInterval dateInterval, Boolean isNew) {
 			this.subscriberId = subscriberId;
-			this.period = period;
+			this.dateInterval = dateInterval;
 			this.isNew = isNew;
 		}
 
@@ -139,8 +138,8 @@ public class SubscrContEventNotificationService {
 			return subscriberId;
 		}
 
-		public LocalDatePeriod getPeriod() {
-			return period;
+		public DateInterval getPeriod() {
+			return dateInterval;
 		}
 
 		public Boolean getIsNew() {
@@ -207,7 +206,7 @@ public class SubscrContEventNotificationService {
 
 		List<Specification<SubscrContEventNotification>> andFilter = Arrays.asList( //
 				specSubscriberId(searchConditions.subscriberId), //
-				specContEventDate(searchConditions.period), //
+				specContEventDate(searchConditions.dateInterval), //
 				specIsNew(searchConditions.isNew), //
 				specContObjectId(searchConditions.contObjectIdList), //
 				specContEventTypeId(searchConditions.contEventTypeList), //
@@ -225,17 +224,18 @@ public class SubscrContEventNotificationService {
 
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param datePeriod
-	 * @param contObjectList
-	 * @param contEventTypeList
-	 * @param isNew
-	 * @param pageable
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param dateInterval
+     * @param contObjectList
+     * @param contEventTypeList
+     * @param isNew
+     * @param revisionIsNew
+     * @param revisionSubscrUserId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditions(final SubscriberParam subscriberParam, final LocalDatePeriod datePeriod,
+	public void updateRevisionByConditions(final SubscriberParam subscriberParam, final DateInterval dateInterval,
 			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
 
@@ -243,7 +243,7 @@ public class SubscrContEventNotificationService {
 
 		Specifications<SubscrContEventNotification> specs = Specifications
 				.where(specSubscriberId(subscriberParam.getSubscriberId()))
-				.and(specContEventDate(datePeriod.getDateFrom(), datePeriod.getDateTo())).and(specIsNew(isNew))
+				.and(specContEventDate(dateInterval.getFromDate(), dateInterval.getToDate())).and(specIsNew(isNew))
 				.and(specContObjectId(contObjectList)).and(specContEventTypeId(contEventTypeList));
 
 		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository.findAll(specs);
@@ -252,18 +252,16 @@ public class SubscrContEventNotificationService {
 		}
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param datePeriod
-	 * @param contObjectList
-	 * @param contEventTypeList
-	 * @param isNew
-	 * @param revisionIsNew
-	 * @param revisionSubscrUserId
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param datePeriod
+     * @param contObjectIds
+     * @param contEventTypeIds
+     * @param revisionIsNew
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditionsFast(SubscriberParam subscriberParam, final LocalDatePeriod datePeriod,
+	public void updateRevisionByConditionsFast(SubscriberParam subscriberParam, final DateInterval datePeriod,
 			final List<Long> contObjectIds, final List<Long> contEventTypeIds, final Boolean revisionIsNew) {
 
 		checkNotNull(subscriberParam);
@@ -357,11 +355,11 @@ public class SubscrContEventNotificationService {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param searchTerm
-	 * @return
-	 */
+    /**
+     *
+     * @param isNew
+     * @return
+     */
 	private static Specification<SubscrContEventNotification> specIsNew(final Boolean isNew) {
 		return (root, query, cb) -> {
 			if (isNew == null) {
@@ -386,11 +384,12 @@ public class SubscrContEventNotificationService {
 		};
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
 	private static Specification<SubscrContEventNotification> specContEventDate(final Date fromDate,
 			final Date toDate) {
 		return (root, query, cb) -> {
@@ -403,21 +402,21 @@ public class SubscrContEventNotificationService {
 		};
 	}
 
-	/**
-	 *
-	 * @param period
-	 * @return
-	 */
-	private static Specification<SubscrContEventNotification> specContEventDate(final LocalDatePeriod period) {
+    /**
+     *
+     * @param interval
+     * @return
+     */
+	private static Specification<SubscrContEventNotification> specContEventDate(final DateInterval interval) {
 		return (root, query, cb) -> {
-			if (period == null || period.isInvalidEq()) {
+			if (interval == null || interval.isInvalidEq()) {
 				return null;
 			}
 			return cb.and(
 					cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime),
-							period.getDateFrom()),
+                        interval.getFromDate()),
 					cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime),
-							period.getDateTo()));
+                        interval.getToDate()));
 		};
 	}
 
@@ -519,15 +518,15 @@ public class SubscrContEventNotificationService {
 
 	}
 
-	/**
-	 *
-	 * @param subscrContEventNotification
-	 * @param isNew
-	 * @param revisionSubscrUserId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param subscrContEventNotification
+     * @param isNew
+     * @return
+     */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional(value = TxConst.TX_DEFAULT)
 	private SubscrContEventNotification updateNotificationRevision(SubscriberParam subscriberParam,
 			SubscrContEventNotification subscrContEventNotification, Boolean isNew) {
 
@@ -543,14 +542,13 @@ public class SubscrContEventNotificationService {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param subscriberParam
-	 * @param notificationIds
-	 * @param isNew
-	 * @param revisionSubscrUserId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param notificationIds
+     * @param isNew
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<Long> updateNotificationsRevisions(SubscriberParam subscriberParam, List<Long> notificationIds,
 			Boolean isNew) {
@@ -588,14 +586,14 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
-			final LocalDatePeriod datePeriod) {
+			final DateInterval datePeriod) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
 		Long result = subscrContEventNotificationRepository.selectNotificatoinsCount(subscriberId, contObjectId,
-				datePeriod.getDateFrom(), datePeriod.getDateTo());
+				datePeriod.getFromDate(), datePeriod.getToDate());
 
 		return result == null ? 0 : result.longValue();
 	}
@@ -609,7 +607,7 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
-			final LocalDatePeriod datePeriod, Boolean isNew) {
+			final DateInterval datePeriod, Boolean isNew) {
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
@@ -617,7 +615,7 @@ public class SubscrContEventNotificationService {
 		checkState(datePeriod.isValidEq());
 
 		Long result = subscrContEventNotificationRepository.selectNotificatoinsCount(subscriberId, contObjectId,
-				datePeriod.getDateFrom(), datePeriod.getDateTo(), isNew);
+				datePeriod.getFromDate(), datePeriod.getToDate(), isNew);
 
 		return result == null ? 0 : result.longValue();
 	}
@@ -631,7 +629,7 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public long selectContEventTypeCountGroup(final Long subscriberId, final Long contObjectId,
-			final LocalDatePeriod datePeriod) {
+			final DateInterval datePeriod) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(subscriberId);
@@ -639,7 +637,7 @@ public class SubscrContEventNotificationService {
 		checkState(datePeriod.isValidEq());
 
 		List<Object[]> typesList = subscrContEventNotificationRepository.selectNotificationEventTypeCountGroup(
-				subscriberId, contObjectId, datePeriod.getDateFrom(), datePeriod.getDateTo());
+				subscriberId, contObjectId, datePeriod.getFromDate(), datePeriod.getToDate());
 
 		return typesList.size();
 	}
@@ -713,13 +711,13 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CounterInfo> selectContObjectEventTypeGroupCounterInfo(final Long subscriberId,
-			final List<Long> contObjectIds, final LocalDatePeriod datePeriod) {
+			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		checkNotNull(subscriberId);
 		checkNotNull(datePeriod);
 		checkArgument(datePeriod.isValidEq());
 
 		List<Object[]> selectResult = subscrContEventNotificationRepository.selectNotificationEventTypeCountGroup(
-				subscriberId, contObjectIds, datePeriod.getDateFrom(), datePeriod.getDateTo());
+				subscriberId, contObjectIds, datePeriod.getFromDate(), datePeriod.getToDate());
 
 		List<CounterInfo> resultList = selectResult.stream()
 				.map((objects) -> CounterInfo.newInstance(objects[0], objects[1])).collect(Collectors.toList());

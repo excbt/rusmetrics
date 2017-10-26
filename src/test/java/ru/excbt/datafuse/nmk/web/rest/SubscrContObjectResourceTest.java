@@ -3,12 +3,14 @@ package ru.excbt.datafuse.nmk.web.rest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
+import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -67,6 +69,9 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
 
     @Autowired
     private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     /**
      * @return
@@ -139,6 +144,14 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
         _testGetSuccessful(url);
     }
 
+
+    private Organization newCMOrganization (String orgName) {
+        Organization organization = new Organization();
+        organization.setOrganizationName(orgName);
+        organization.setFlagCm(true);
+        return organization;
+    }
+
     /**
      * @throws Exception
      */
@@ -146,15 +159,15 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Transactional
     public void testUpdate() throws Exception {
 
+        Organization organization = organizationRepository.saveAndFlush(newCMOrganization("My Organization"));
+
         ContObject testCO = findFirstContObject();
         log.info("Found ContObject (id={})", testCO.getId());
         testCO.setComment("Updated by REST test at " + DateTime.now().toString());
 
         String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
-        RequestExtraInitializer param = (builder) -> {
-            builder.param("cmOrganizationId", testCO.get_activeContManagement().getOrganization().getId().toString());
-        };
+        RequestExtraInitializer param = (builder) -> builder.param("cmOrganizationId", organization.getId().toString());
 
         _testUpdateJson(urlStr, testCO, param);
     }

@@ -11,17 +11,21 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -35,20 +39,25 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  * @since 29.12.2016
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr/widgets/hw/{contZpointId}")
 public class HwWidgetController extends WidgetController {
 
-	@Inject
-	private ContServiceDataHWaterService contServiceDataHWaterService;
+	private final ContServiceDataHWaterService contServiceDataHWaterService;
 
-	@Inject
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	@Inject
-	private HwWidgetService hwWidgetService;
+	private final HwWidgetService hwWidgetService;
 
-	/**
+	@Autowired
+    public HwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContObjectService contObjectService, HwWidgetService hwWidgetService) {
+        super(contEventMonitorV3Service, contZPointService);
+        this.contServiceDataHWaterService = contServiceDataHWaterService;
+        this.contObjectService = contObjectService;
+        this.hwWidgetService = hwWidgetService;
+    }
+
+    /**
 	 *
 	 * @param contZpointId
 	 * @return
