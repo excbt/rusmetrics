@@ -6,11 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV3Repository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
@@ -18,7 +16,6 @@ import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,12 +34,16 @@ public class ContEventMonitorV3Service {
         this.contEventService = contEventService;
     }
 
+    public final static Comparator<ContEventMonitorX> CMP_BY_COLOR_RANK = Comparator.comparingInt(e -> e.getContEventLevelColorKeyname() == null ? -1 :
+        ContEventLevelColorKeyV2.findByKeyname(e.getContEventLevelColorKeyname()).getColorRank());
+
+
     /**
      *
      * @param contObjectIds
      * @return
      */
-    public List<ContEventMonitorX> selectXByContObjectIds(List<Long> contObjectIds) {
+    public List<ContEventMonitorX> selectByContObjectIds(List<Long> contObjectIds) {
         checkNotNull(contObjectIds);
 
         if (contObjectIds.isEmpty()) {
@@ -54,37 +55,13 @@ public class ContEventMonitorV3Service {
         return contEventService.loadContEventTypeModel(result);
     }
 
-
-    /**
-     *
-     * @param contObjectIds
-     * @return
-     */
-    public List<ContEventMonitorV3> selectByContObjectIds(List<Long> contObjectIds) {
-        checkNotNull(contObjectIds);
-
-        if (contObjectIds.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<ContEventMonitorV3> result = contEventMonitorV3Repository.selectByContObjectIds(contObjectIds);
-
-        return contEventService.loadContEventTypeModel(result);
-    }
-
-
-    public final static Comparator<ContEventMonitorV3> CMP_BY_COLOR_RANK =
-        Comparator.comparingInt(e -> e.getContEventLevelColor() == null ? -1 : e.getContEventLevelColor().getColorRank());
-
-
     /**
      *
      * @param contEventMonitor
      * @return
      */
 
-
-    public ContEventLevelColorV2 sortWorseColor(List<ContEventMonitorV3> contEventMonitor) {
+    public <T extends ContEventMonitorX> ContEventLevelColorKeyV2 sortWorseColor(List<T> contEventMonitor) {
 
         checkNotNull(contEventMonitor);
 
@@ -92,14 +69,14 @@ public class ContEventMonitorV3Service {
             return null;
         }
 
-        Optional<ContEventMonitorV3> sorted = contEventMonitor.stream().filter(i -> i.getContEventLevel() != null)
+        Optional<T> sorted = contEventMonitor.stream().filter(i -> i.getContEventLevel() != null)
             .sorted(CMP_BY_COLOR_RANK).findFirst();
 
         if (!sorted.isPresent()) {
             return null;
         }
 
-        return sorted.get().getContEventLevelColor();
+        return ContEventLevelColorKeyV2.findByKeyname(sorted.get().getContEventLevelColorKeyname());
     }
 
 
@@ -179,7 +156,7 @@ public class ContEventMonitorV3Service {
      * @param contZPointId
      * @return
      */
-    public ContEventLevelColorV2 findMonitorColor(Long contObjectId, Long contZPointId) {
+    public ContEventLevelColorKeyV2 findMonitorColor(Long contObjectId, Long contZPointId) {
         List<ContEventMonitorV3> mon = contEventMonitorV3Repository.selectByZPointId(contObjectId, contZPointId);
         return sortWorseColor(mon);
     }

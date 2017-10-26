@@ -76,8 +76,7 @@ public class WidgetController extends AbstractSubscrApiResource {
 			return null;
 		}
 
-		ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.findMonitorColor(contObjectId, contZPointId);
-		ContEventLevelColorKeyV2 worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
+        ContEventLevelColorKeyV2 worseMonitorColorKey = contEventMonitorV3Service.findMonitorColor(contObjectId, contZPointId);
 
 		final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
 				: ContEventLevelColorKeyV2.GREEN;

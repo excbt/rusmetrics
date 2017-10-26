@@ -141,8 +141,7 @@ public class SubscrContEventNotificationStatusV2Service {
 			ContEventLevelColorKeyV2 worseMonitorColorKey = null;
 
 			if (contObjectMonitors != null) {
-				ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
-				worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
+                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
 			}
 
 			final long allCnt = allNotificationsMap.getCountValue(co.getId());

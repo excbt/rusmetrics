@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -668,14 +669,14 @@ public class ContObjectService implements SecuredRoles {
         Map<Long, Integer> contObjectStats = selectContObjectZPointCounter(subscriberParam, contObjectIds);
 
         // Cont Event Block
-        List<ContEventMonitorV3> contEventMonitors = contEventStats ?
+        List<ContEventMonitorX> contEventMonitors = contEventStats ?
             contEventMonitorV3Service.selectByContObjectIds(contObjectIds) :
             Collections.emptyList();
 
-        final Map<Long, List<ContEventMonitorV3>> contEventMonitorMapList = new HashMap<>();
+        final Map<Long, List<ContEventMonitorX>> contEventMonitorMapList = new HashMap<>();
 
         contEventMonitors.forEach(i -> {
-            List<ContEventMonitorV3> l = contEventMonitorMapList.get(i.getContObjectId());
+            List<ContEventMonitorX> l = contEventMonitorMapList.get(i.getContObjectId());
             if (l == null) {
                 l = new ArrayList<>();
                 contEventMonitorMapList.put(i.getContObjectId(), l);
@@ -691,9 +692,9 @@ public class ContObjectService implements SecuredRoles {
             Integer res = contObjectStats.get(i.getId());
 
             i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-            List<ContEventMonitorV3> m = contEventMonitorMapList.get(i.getId());
+            List<ContEventMonitorX> m = contEventMonitorMapList.get(i.getId());
             if (m != null && !m.isEmpty()) {
-                ContEventLevelColorV2 color = contEventMonitorV3Service.sortWorseColor(m);
+                ContEventLevelColorKeyV2 color = contEventMonitorV3Service.sortWorseColor(m);
                 if (color != null) {
                     i.getContObjectStats().setContEventLevelColor(color.getKeyname());
                 }
