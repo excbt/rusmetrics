@@ -400,8 +400,8 @@ public class SubscrContEventNotificationService {
 				return null;
 			}
 			return cb.and(
-					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), LocalDateUtils.asLocalDateTime(fromDate)),
-					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), LocalDateUtils.asLocalDateTime(toDate)));
+					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), fromDate),
+					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), toDate));
 		};
 	}
 
@@ -417,9 +417,9 @@ public class SubscrContEventNotificationService {
 			}
 			return cb.and(
 					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
-                        LocalDateUtils.asLocalDateTime(interval.getFromDate())),
+                        interval.getFromDate()),
 					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
-                        LocalDateUtils.asLocalDateTime(interval.getToDate())));
+                        interval.getToDate()));
 		};
 	}
 
@@ -535,10 +535,11 @@ public class SubscrContEventNotificationService {
 
 		checkNotNull(subscrContEventNotification);
 		subscrContEventNotification.setIsNew(isNew);
-        ZonedDateTime revisionDate = ZonedDateTime.now();
+        //ZonedDateTime revisionDate = ZonedDateTime.now();
+        Date revisionDate = new Date();
 
 
-		subscrContEventNotification.setRevisionTime(revisionDate.toLocalDateTime());
+		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
 		subscrContEventNotification.setRevisionSubscrUserId(subscriberParam.getSubscrUserId());
 		SubscrContEventNotification result = subscrContEventNotificationRepository.save(subscrContEventNotification);

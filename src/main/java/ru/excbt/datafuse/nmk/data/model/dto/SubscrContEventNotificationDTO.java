@@ -1,19 +1,17 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import ru.excbt.datafuse.nmk.data.model.ContEvent;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.Date;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubscrContEventNotificationDTO {
 
-    Long id;
+    private Long id;
 
     private Long subscriberId;
 
-    private ContEvent contEvent;
+    private ContEventDTO contEvent;
 
     private Long contEventId;
 
@@ -21,7 +19,7 @@ public class SubscrContEventNotificationDTO {
 
     private String contEventLevelColor;
 
-    private LocalDateTime contEventTime;
+    private Date contEventTime;
 
     private Long contObjectId;
 
@@ -31,13 +29,13 @@ public class SubscrContEventNotificationDTO {
 
     private Boolean isNew;
 
-    private LocalDateTime notificationTime;
+    private Date notificationTime;
 
-    private ZonedDateTime notificationTimeTZ;
+    private Date notificationTimeTZ;
 
-    private LocalDateTime revisionTime;
+    private Date revisionTime;
 
-    private ZonedDateTime revisionTimeTZ;
+    private Date revisionTimeTZ;
 
     private Long revisionSubscrUserId;
 
@@ -48,7 +46,7 @@ public class SubscrContEventNotificationDTO {
     private Short monVersion;
 
     public Date getContEventTimeDT() {
-        return LocalDateUtils.asDate(contEventTime);
+        return contEventTime;
     }
 
     public Long getId() {
@@ -67,11 +65,11 @@ public class SubscrContEventNotificationDTO {
         this.subscriberId = subscriberId;
     }
 
-    public ContEvent getContEvent() {
+    public ContEventDTO getContEvent() {
         return contEvent;
     }
 
-    public void setContEvent(ContEvent contEvent) {
+    public void setContEvent(ContEventDTO contEvent) {
         this.contEvent = contEvent;
     }
 
@@ -99,11 +97,11 @@ public class SubscrContEventNotificationDTO {
         this.contEventLevelColor = contEventLevelColor;
     }
 
-    public LocalDateTime getContEventTime() {
+    public Date getContEventTime() {
         return contEventTime;
     }
 
-    public void setContEventTime(LocalDateTime contEventTime) {
+    public void setContEventTime(Date contEventTime) {
         this.contEventTime = contEventTime;
     }
 
@@ -139,35 +137,35 @@ public class SubscrContEventNotificationDTO {
         isNew = aNew;
     }
 
-    public LocalDateTime getNotificationTime() {
+    public Date getNotificationTime() {
         return notificationTime;
     }
 
-    public void setNotificationTime(LocalDateTime notificationTime) {
+    public void setNotificationTime(Date notificationTime) {
         this.notificationTime = notificationTime;
     }
 
-    public ZonedDateTime getNotificationTimeTZ() {
+    public Date getNotificationTimeTZ() {
         return notificationTimeTZ;
     }
 
-    public void setNotificationTimeTZ(ZonedDateTime notificationTimeTZ) {
+    public void setNotificationTimeTZ(Date notificationTimeTZ) {
         this.notificationTimeTZ = notificationTimeTZ;
     }
 
-    public LocalDateTime getRevisionTime() {
+    public Date getRevisionTime() {
         return revisionTime;
     }
 
-    public void setRevisionTime(LocalDateTime revisionTime) {
+    public void setRevisionTime(Date revisionTime) {
         this.revisionTime = revisionTime;
     }
 
-    public ZonedDateTime getRevisionTimeTZ() {
+    public Date getRevisionTimeTZ() {
         return revisionTimeTZ;
     }
 
-    public void setRevisionTimeTZ(ZonedDateTime revisionTimeTZ) {
+    public void setRevisionTimeTZ(Date revisionTimeTZ) {
         this.revisionTimeTZ = revisionTimeTZ;
     }
 
