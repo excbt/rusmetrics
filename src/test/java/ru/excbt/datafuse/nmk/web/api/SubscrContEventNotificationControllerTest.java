@@ -11,23 +11,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
-import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscrContEventNotificationDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
-import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrContEventNotificationMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
@@ -75,6 +71,9 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
     private ObjectAccessService objectAccessService;
 
 
+    @Autowired
+    private SubscrContEventNotificationMapper mapper;
+
     /**
      * @return
      */
@@ -116,21 +115,16 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
 				SubscrContEventNotificationService.AVAILABLE_SORT_FIELDS[0]);
 
-		Page<SubscrContEventNotification> canidate = subscrContEventNotifiicationService
-				.selectAll(currentSubscriberService.getSubscriberId(), true, request);
+		Page<SubscrContEventNotificationDTO> canidate = subscrContEventNotifiicationService
+				.selectAll(currentSubscriberService.getSubscriberId(), true, request).map(mapper::toDto);
 
 		assertNotNull(canidate);
-		List<SubscrContEventNotification> lst = canidate.getContent();
+		List<SubscrContEventNotificationDTO> lst = canidate.getContent();
 		assertTrue(lst.size() == 1);
 
 		List<Long> updateIds = lst.stream().map(v -> v.getId()).collect(Collectors.toList());
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("notificationIds", TestUtils.listToString(updateIds));
-			}
-		};
+		RequestExtraInitializer extraInitializer = builder -> builder.param("notificationIds", TestUtils.listToString(updateIds));
 
 		_testUpdateJson("/api/subscr/contEvent/notifications/revision", null, extraInitializer);
 

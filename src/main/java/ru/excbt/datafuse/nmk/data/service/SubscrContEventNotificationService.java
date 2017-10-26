@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +43,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -397,8 +400,8 @@ public class SubscrContEventNotificationService {
 				return null;
 			}
 			return cb.and(
-					cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), fromDate),
-					cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime), toDate));
+					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), fromDate),
+					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), toDate));
 		};
 	}
 
@@ -413,9 +416,9 @@ public class SubscrContEventNotificationService {
 				return null;
 			}
 			return cb.and(
-					cb.greaterThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime),
+					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
                         interval.getFromDate()),
-					cb.lessThanOrEqualTo(root.<Date> get(SubscrContEventNotification_.contEventTime),
+					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
                         interval.getToDate()));
 		};
 	}
@@ -532,7 +535,9 @@ public class SubscrContEventNotificationService {
 
 		checkNotNull(subscrContEventNotification);
 		subscrContEventNotification.setIsNew(isNew);
-		Date revisionDate = new Date();
+        //ZonedDateTime revisionDate = ZonedDateTime.now();
+        Date revisionDate = new Date();
+
 
 		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);

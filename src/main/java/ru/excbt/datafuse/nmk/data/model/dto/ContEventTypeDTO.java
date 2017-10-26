@@ -1,8 +1,10 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.mapstruct.factory.Mappers;
 import ru.excbt.datafuse.nmk.service.mapper.ContEventTypeMapper;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ContEventTypeDTO {
 
     public static final ContEventTypeMapper MAPPER = Mappers.getMapper( ContEventTypeMapper.class );
