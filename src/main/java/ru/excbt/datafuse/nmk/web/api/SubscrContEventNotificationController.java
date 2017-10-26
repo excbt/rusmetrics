@@ -16,9 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventMonitorXDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscrContEventNotificationDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
@@ -26,11 +27,12 @@ import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrContEventNotificationMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.Arrays;
 import java.util.List;
@@ -54,42 +56,49 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 	private final static Pageable PAGE_LIMIT_1 = new PageRequest(0, 1);
 
-	@Autowired
-	private SubscrContEventNotificationService subscrContEventNotifiicationService;
+	private final SubscrContEventNotificationService subscrContEventNotifiicationService;
+
+	private final SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+
+	private final ContEventMonitorService contEventMonitorService;
+
+	private final ContEventMonitorV3Service contEventMonitorV3Service;
+
+	private final ContEventLevelColorService contEventLevelColorService;
+
+	private final ContEventTypeService contEventTypeService;
+
+	private final  ContEventService contEventService;
+
+	private final SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
+
+	private final ObjectAccessService objectAccessService;
+
+	private final SubscrContEventNotificationMapper mapper;
 
 	@Autowired
-	private SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService;
+    public SubscrContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper) {
+        this.subscrContEventNotifiicationService = subscrContEventNotifiicationService;
+        this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
+        this.contEventMonitorService = contEventMonitorService;
+        this.contEventMonitorV3Service = contEventMonitorV3Service;
+        this.contEventLevelColorService = contEventLevelColorService;
+        this.contEventTypeService = contEventTypeService;
+        this.contEventService = contEventService;
+        this.subscrContEventNotifiicationStatusV2Service = subscrContEventNotifiicationStatusV2Service;
+        this.objectAccessService = objectAccessService;
+        this.mapper = mapper;
+    }
 
-	@Autowired
-	private ContEventMonitorService contEventMonitorService;
-
-	@Autowired
-	private ContEventMonitorV2Service contEventMonitorV2Service;
-
-	@Autowired
-	private ContEventLevelColorService contEventLevelColorService;
-
-	@Autowired
-	private ContEventTypeService contEventTypeService;
-
-	@Autowired
-	private ContEventService contEventService;
-
-	@Autowired
-	private SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service;
-
-    @Autowired
-	private ObjectAccessService objectAccessService;
-
-	/**
+    /**
 	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/notifications/all", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> contEventNotificationsAll() {
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
-				.selectAll(getCurrentSubscriberId(), null, null);
+		Page<SubscrContEventNotificationDTO> resultPage = subscrContEventNotifiicationService
+				.selectAll(getCurrentSubscriberId(), null, null).map(mapper::toDto);
 
 		return ResponseEntity.ok(new PageInfoList<>(resultPage));
 
@@ -148,8 +157,8 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		searchConditions.initContEventCategories(contEventCategoryList);
 		searchConditions.initContEventDeviations(contEventDeviations);
 		// TODO query upgrade
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotifiicationService
-				.selectNotificationByConditions(searchConditions, pageRequest);
+		Page<SubscrContEventNotificationDTO> resultPage = subscrContEventNotifiicationService
+				.selectNotificationByConditions(searchConditions, pageRequest).map(mapper::toDto);
 
 		return ResponseEntity.ok(new PageInfoList<>(resultPage));
 
@@ -165,7 +174,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		checkNotNull(id);
 
-		SubscrContEventNotification result = subscrContEventNotifiicationService.findNotification(id);
+		SubscrContEventNotificationDTO result = mapper.toDto(subscrContEventNotifiicationService.findNotification(id));
 
 		if (result == null) {
 
@@ -502,14 +511,16 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContObject(contObjectId);
+		List<ContEventMonitorXDTO> resultList = contEventMonitorV3Service.selectByContObject(contObjectId).stream()
+            .map(ContEventMonitorXDTO::new)
+            .collect(Collectors.toList());
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
-				.collect(Collectors.toList());
+		List<ContEventMonitorXDTO> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+			.collect(Collectors.toList());
 
 		return ResponseEntity.ok(filteredResultList);
 	}
@@ -524,16 +535,17 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContZPoint(contObjectId,contZPointId);
+		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContZPoint(contObjectId,contZPointId).stream().filter(i -> i.getContEventLevel() != null)
+            .collect(Collectors.toList());
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
-				.collect(Collectors.toList());
+        List<ContEventMonitorXDTO> resultDTO = contEventService.loadContEventTypeModel(resultList).stream()
+            .map(ContEventMonitorXDTO::new).collect(Collectors.toList());
 
-		return ResponseEntity.ok(contEventService.enhanceContEventType(filteredResultList));
+        return ResponseEntity.ok(resultDTO);
 	}
 
 	/**
@@ -559,8 +571,8 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 				SearchConditions searchConditions = new SearchConditions(getCurrentSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
-				Page<SubscrContEventNotification> pageResult = subscrContEventNotifiicationService
-						.selectNotificationByConditions(searchConditions, PAGE_LIMIT_1);
+				Page<SubscrContEventNotificationDTO> pageResult = subscrContEventNotifiicationService
+						.selectNotificationByConditions(searchConditions, PAGE_LIMIT_1).map(mapper::toDto);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.YELLOW);

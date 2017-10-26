@@ -69,13 +69,13 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
             monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
         });
-    
+
         $scope.widgetPath = "widgets/zpointHeat_v1";
         var DATA_URL = "../api/subscr/widgets/heat",/*//chart/heatTemp";*/
             ZPOINT_STATUS_TEMPLATE = $scope.widgetPath + "/zpoint-state-",
             SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
             ZPOINT_EVENTS_URL = null;
-        
+
         $scope.widgetOptions = widgetConfig.getOptions();
         var contObjectId = $scope.widgetOptions.contObjectId;
         if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
@@ -125,14 +125,14 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
         ];
         $scope.data.startModeIndex = 3;//default mode index; 0 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
-    
+
         $scope.data.imgPath = $scope.widgetPath + "/glyphicons-85-heat.png";
         $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHeat/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
-    
+
         $scope.presentDataFlag = false;
-    
+
         $scope.lineChart = {};
         $scope.lineChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
         $scope.lineChart.series = ['t норм., ' + '\u2103', 't факт., ' + '\u2103'];
@@ -179,20 +179,20 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                         }
                         return result;
                     }
-                    
+
                 }
             }
         };
-        
+
         function prepareEventMessage(inputData) {
                         //temp array
             var tmpMessage = "";
     //                var tmpMessageEx = "";
             //make the new array of the types wich formatted to display
             inputData.forEach(function (element) {
-    //console.log(element);                        
+    //console.log(element);
                 var tmpEvent = "";
-                var contEventTime = new Date(element.contEventTime);
+                var contEventTime = new Date(element.contEventTimeDT);
                 var pstyle = "";
                 if (element.contEventLevelColorKeyname === "RED") {
                     pstyle = "color: red;";
@@ -202,7 +202,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             });
             return tmpMessage;
         }
-    
+
         function getDataSuccessCallback(rsp) {
             var tmpData = rsp.data;
             if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
@@ -229,11 +229,11 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 $scope.lineChart.dataTitle.push(dataTitleElem);
             });
         }
-    
+
         function errorCallback(e) {
             console.log(e);
         }
-        
+
         function setEventsForZpoint(url, zpointId) {
             var imgObj = "#zpStatusImg" + zpointId;
             $(imgObj).qtip({
@@ -274,7 +274,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 }
             });
         }
-    
+
         function getStatusSuccessCallback(resp) {
             if (angular.isUndefined(resp) || resp === null) {
 //                console.log("zpointHeatWidget: status response is empty.");
@@ -305,7 +305,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
                 console.log("zpointHeatWidget: forecast temperature is empty.");
             }*/
         }
-    
+
         $scope.modeChange = function () {
             //set class
             $scope.data.MODES.forEach(function (mod) {
@@ -322,7 +322,7 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent($scope.data.currentMode.keyname);
             $http.get(url).then(getDataSuccessCallback, errorCallback);
         };
-    
+
         function getZpointState() {
             if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
                 return true;
@@ -338,26 +338,26 @@ angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
             return true;
         };
-    
+
         $scope.openNotices = function () {
             if (angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true) {
                 return true;
             }
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
         };
-    
+
         $scope.$on('chart-create', function (event, chart) {
             var chartLegend = document.getElementById("heat-chart-legend-" + $scope.data.contZpointId);
             if (angular.isDefined(chartLegend) && chartLegend !== null) {
                 chartLegend.innerHTML = chart.generateLegend();
             }
         });
-        
+
         function initWidget() {
             $scope.modeChange();
             getZpointState();
         }
-        
+
         initWidget();
-        
+
     }]);

@@ -4,7 +4,7 @@
 var app = angular.module('portalNMC');
 app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', '$q', function ($rootScope, $http, $interval, $cookies, $location, objectSvc, $q) {
 //console.log("Monitor service. Run Monitor service.");
-    var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";//"SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";        
+    var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";//"SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";
             //url to data
     var notificationsUrl = "../api/subscr/contEvent/notifications";
     var objectUrl = notificationsUrl + "/contObject";
@@ -21,15 +21,15 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
     var monitorSvcSettings = {};
     monitorSvcSettings.refreshPeriod = "300";
     monitorSvcSettings.loadingFlag = true;
-//console.log(monitorSvcSettings.loadingFlag);        
+//console.log(monitorSvcSettings.loadingFlag);
     monitorSvcSettings.noGreenObjectsFlag = false;
     monitorSvcSettings.fromDate = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
     monitorSvcSettings.toDate = moment().endOf('day').format('YYYY-MM-DD');
 
-    ////////////////////////////request canceler 
+    ////////////////////////////request canceler
     var requestCanceler = null;
     var httpOptions = null;
-    
+
     var checkUndefinedNull = function (numvalue) {
         var result = false;
         if ((angular.isUndefined(numvalue)) || (numvalue == null)) {
@@ -93,19 +93,19 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         citiesMonitorSvc = [];
         objectsMonitorSvc = [];
         monitorSvcSettings.loadingFlag = false;//data has been loaded
-//console.log(monitorSvcSettings.loadingFlag);                
+//console.log(monitorSvcSettings.loadingFlag);
         $rootScope.$broadcast('monitorObjects:updated');
     };
-        
+
                     //get cities with objects function
     var getCitiesAndObjects = function (url, monitorSvcSettings) {
-//console.log(url);            
+//console.log(url);
         if (checkUndefinedNull(url)) {
             return 400;
         }
-//console.log("MonitorSvc. Get cities and objects");    
+//console.log("MonitorSvc. Get cities and objects");
         monitorSvcSettings.loadingFlag = true;
-//console.log(monitorSvcSettings.loadingFlag);            
+//console.log(monitorSvcSettings.loadingFlag);
         var targetUrl = url + "/?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
         if (!checkUndefinedNull(monitorSvcSettings.contGroupId)) {
             targetUrl += "&contGroupId=" + monitorSvcSettings.contGroupId;
@@ -115,41 +115,41 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         }
         $http.get(targetUrl, httpOptions)
             .success(function (data) {
-//console.log(data);                
+//console.log(data);
                 citiesMonitorSvc = data;
                 objectsMonitorSvc = getObjectsFromCities(data);
 
                 //sort objects by name
                 objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
                 monitorSvcSettings.loadingFlag = false;//data has been loaded
-//console.log(monitorSvcSettings.loadingFlag);                
+//console.log(monitorSvcSettings.loadingFlag);
                 $rootScope.$broadcast('monitorObjects:updated');
             })
             .error(errorLoadingMonitorData);
 //            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
     };
-        
+
             //get objects function
-//        var getObjects = function(url, monitorSvcSettings){    
+//        var getObjects = function(url, monitorSvcSettings){
 //            monitorSvcSettings.loadingFlag = true;
-//console.log(monitorSvcSettings.loadingFlag);            
-//            var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag; 
+//console.log(monitorSvcSettings.loadingFlag);
+//            var targetUrl = url + "/statusCollapse?fromDate=" + monitorSvcSettings.fromDate + "&toDate=" + monitorSvcSettings.toDate + "&noGreenColor=" + monitorSvcSettings.noGreenObjectsFlag;
 //            $http.get(targetUrl)
 //                .success(function(data){
 //                    objectsMonitorSvc = data;
 //                    objectSvc.sortObjectsByConObjectFullName(objectsMonitorSvc);
 //                    monitorSvcSettings.loadingFlag = false;
-//console.log(monitorSvcSettings.loadingFlag);                
+//console.log(monitorSvcSettings.loadingFlag);
 //                    $rootScope.$broadcast('monitorObjects:updated');
 //                })
 //                .error(function(e){
 //                    console.log(e);
 //                });
-//        };        
-            
+//        };
+
         //get monitor events
     var getMonitorEventsByObject = function (obj) {
-//console.log(obj);           
+//console.log(obj);
         var url = objectUrl + "/" + obj.contObject.id + "/monitorEvents";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         if (isCancelParamsIncorrect() === true) {
             return null;
@@ -157,7 +157,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         $http.get(url, httpOptions)
             .success(function (data) {
 //console.log("success");
-//console.log(data);                
+//console.log(data);
             //if data is not array - exit
                 if (!data.hasOwnProperty('length') || (data.length == 0)) {
                     if (obj.statusColor === "YELLOW") {
@@ -171,9 +171,9 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
 //                var tmpMessageEx = "";
                 //make the new array of the types wich formatted to display
                 data.forEach(function (element) {
-//console.log(element);                        
+//console.log(element);
                     var tmpEvent = "";
-                    var contEventTime = new Date(element.contEventTime);
+                    var contEventTime = new Date(element.contEventTimeDT);
                     var pstyle = "";
                     if (element.contEventLevelColorKey === "RED") {
                         pstyle = "color: red;";
@@ -181,14 +181,14 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
                     tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
                     tmpMessage += tmpEvent;
                 });
-//console.log(tmpMessage);     
+//console.log(tmpMessage);
                 if (obj.statusColor === "YELLOW") {
                     obj.monitorEvents = "На объекте нет нештатных ситуаций";
                 } else if ((obj.statusColor === "RED") || (obj.statusColor === "ORANGE")) {
                     obj.monitorEvents = tmpMessage;
                     obj.monitorEventsForMap = data;
                 }
-//console.log(obj);                
+//console.log(obj);
                 $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
             })
             .error(errorCallbackConsole);
@@ -199,9 +199,9 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
 //                var tmpMessageEx = "";
         //make the new array of the types wich formatted to display
         inputData.forEach(function (element) {
-//console.log(element);                        
+//console.log(element);
             var tmpEvent = "";
-            var contEventTime = new Date(element.contEventTime);
+            var contEventTime = new Date(element.contEventTimeDT);
             var pstyle = "";
             if (element.contEventLevelColorKeyname === "RED") {
                 pstyle = "color: red;";
@@ -211,7 +211,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         });
         return tmpMessage;
     }
-    
+
     var getMonitorEventsForObject = function (obj) {
         var url = objectUrl + "/" + obj.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         if (isCancelParamsIncorrect() === true) {
@@ -220,7 +220,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
         $http.get(url, httpOptions)
             .success(function (data) {
 //console.log("success");
-//console.log(data);                
+//console.log(data);
             //if data is not array - exit
                 if (!data.hasOwnProperty('length') || (data.length === 0)) {
 //                        if (obj.contObjectStats.contEventLevelColor === "GREEN"){
@@ -234,7 +234,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
 //                var tmpMessageEx = "";
                 //make the new array of the types wich formatted to display
 //                data.forEach(function (element) {
-//console.log(element);                        
+//console.log(element);
 //                    var tmpEvent = "";
 //                    var contEventTime = new Date(element.contEventTime);
 //                    var pstyle = "";
@@ -244,20 +244,20 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
 //                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
 //                    tmpMessage += tmpEvent;
 //                });
-//console.log(tmpMessage);     
+//console.log(tmpMessage);
 //                    if (obj.contObjectStats.contEventLevelColor === "GREEN"){
 //                        obj.monitorEvents = "На объекте нет нештатных ситуаций";
-//                    }else 
+//                    }else
                 if ((obj.contObjectStats.contEventLevelColor === "RED") || (obj.contObjectStats.contEventLevelColor === "YELLOW")) {
                     obj.monitorEvents = prepareEventMessage(data);
                     obj.monitorEventsForMap = data;
                 }
-//console.log(obj);                
+//console.log(obj);
                 $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
             })
             .error(errorCallbackConsole);
     };
-        
+
     function getMonitorEventsByObjectForMap(obj) {
         var url = objectUrl + "/" + obj.contObject.id + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         if (isCancelParamsIncorrect() === true) {
@@ -275,7 +275,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$loc
             })
             .error(errorCallbackConsole);
     }
-    
+
     function loadMonitorEventsForObject(objId) {
 console.log("loadMonitorEventsForObject: " + objId);        
         var url = objectUrl + "/" + objId + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
@@ -284,16 +284,16 @@ console.log("loadMonitorEventsForObject: " + objId);
         }
         return $http.get(url, httpOptions);
     }
-        
+
         //The control of the period monitor refresh(Управление перодическим обновлением монитора)
-//**************************************************************************  
+//**************************************************************************
     var interval;
 
     function startRefreshing() {
 //            var time = (new Date()).toLocaleString();
-//console.log("Обновление данных для монитора. " + time);            
+//console.log("Обновление данных для монитора. " + time);
 //            monitorSvcSettings.loadingFlag = true;
-//console.log(monitorSvcSettings.loadingFlag);            
+//console.log(monitorSvcSettings.loadingFlag);
 //            getCitiesAndObjects(cityWithObjectsUrl, monitorSvcSettings);
     }
 
@@ -312,38 +312,38 @@ console.log("loadMonitorEventsForObject: " + objId);
         interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
 
     }, false);
-        
+
             //Вызвываем с заданным периодом обновление монитора
     interval = $interval(startRefreshing, Number(monitorSvcSettings.refreshPeriod) * 1000);
-    
-    
+
+
     var loadDefaultMonitorTreeSetting = function () {
         if (isCancelParamsIncorrect() === true) {
             return null;
         }
         return $http.get(defaultTreeUrl, httpOptions);
     };
-        
+
     var getMonitorData = function () {
-//console.log("getMonitorData start111");            
+//console.log("getMonitorData start111");
         loadDefaultMonitorTreeSetting().then(function (resp) {
-//console.log(resp.data);                
+//console.log(resp.data);
             monitorSvcSettings.isTreeView = resp.data.isActive;
 //console.log(monitorSvcSettings.isTreeView === true && monitorSvcSettings.isFullObjectView !== true);
 //console.log("monitorSvcSettings.isFullObjectView = " + monitorSvcSettings.isFullObjectView);
 //console.log("monitorSvcSettings.isFullObjectView !== true : " + (monitorSvcSettings.isFullObjectView !== true));
             if (monitorSvcSettings.isTreeView === true && monitorSvcSettings.isFullObjectView !== true) {
                 monitorSvcSettings.defaultTreeId = Number(resp.data.value);
-//console.log(checkUndefinedNull(monitorSvcSettings.curTreeId));                    
+//console.log(checkUndefinedNull(monitorSvcSettings.curTreeId));
                 if (checkUndefinedNull(monitorSvcSettings.curTreeId)) {
                     monitorSvcSettings.curTreeId = monitorSvcSettings.defaultTreeId;
                 }
-//console.log(checkUndefinedNull(monitorSvcSettings.curTreeNodeId));                    
+//console.log(checkUndefinedNull(monitorSvcSettings.curTreeNodeId));
                 if (checkUndefinedNull(monitorSvcSettings.curTreeNodeId)) {
                     citiesMonitorSvc = [];
                     objectsMonitorSvc = [];
                     monitorSvcSettings.loadingFlag = false;//data has been loaded
-//console.log(monitorSvcSettings.loadingFlag);                        
+//console.log(monitorSvcSettings.loadingFlag);
                     $rootScope.$broadcast('monitorObjects:updated');
                 } else {
                     cityWithObjectsUrl = subscrTreesUrl + '/' + monitorSvcSettings.curTreeId + '/node/' + monitorSvcSettings.curTreeNodeId + '/contObjects/cityStatusCollapseV2';
@@ -355,13 +355,13 @@ console.log("loadMonitorEventsForObject: " + objId);
             }
         }, errorLoadingMonitorData);
     };
-        
+
     $rootScope.$on('monitor:updateObjectsRequest', function () {
 //console.log("MonitorSvc. monitor:updateObjectsRequest");
         getMonitorData();
-//            if (monitorSvcSettings.isTreeView == true && checkUndefinedNull(monitorSvcSettings.curTreeId)){                
+//            if (monitorSvcSettings.isTreeView == true && checkUndefinedNull(monitorSvcSettings.curTreeId)){
 //                if (checkUndefinedNull(monitorSvcSettings.curTreeNodeId)){
-//                    citiesMonitorSvc = [];                
+//                    citiesMonitorSvc = [];
 //                    objectsMonitorSvc = [];
 //                    monitorSvcSettings.loadingFlag = false;//data has been loaded
 //                    $rootScope.$broadcast('monitorObjects:updated');
@@ -380,7 +380,7 @@ console.log("loadMonitorEventsForObject: " + objId);
         alert("MonitorSvc destroy");
         stopRefreshing();
     });
-        
+
 //******************************************************************
 //  Work with trees
 //******************************************************************
@@ -413,7 +413,7 @@ console.log("loadMonitorEventsForObject: " + objId);
     };
 //******************************************************************
 //******************************************************************
-        
+
     var initSvc = function () {
 
         requestCanceler = $q.defer();
@@ -446,5 +446,5 @@ console.log("loadMonitorEventsForObject: " + objId);
         prepareEventMessage: prepareEventMessage,
         setMonitorSettings: setMonitorSettings
     };
-        
+
 }]);

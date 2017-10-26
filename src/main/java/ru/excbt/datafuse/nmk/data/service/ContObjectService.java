@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
@@ -69,7 +70,7 @@ public class ContObjectService implements SecuredRoles {
 
 	private final LocalPlaceService localPlaceService;
 
-	private final ContEventMonitorV2Service contEventMonitorV2Service;
+	private final ContEventMonitorV3Service contEventMonitorV3Service;
 
 	private final WeatherForecastService weatherForecastService;
 
@@ -95,7 +96,7 @@ public class ContObjectService implements SecuredRoles {
                              ContManagementService contManagementService,
                              FiasService fiasService,
                              LocalPlaceService localPlaceService,
-                             ContEventMonitorV2Service contEventMonitorV2Service,
+                             ContEventMonitorV3Service contEventMonitorV3Service,
                              WeatherForecastService weatherForecastService,
                              MeterPeriodSettingRepository meterPeriodSettingRepository,
                              ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, ContZPointAccessRepository contZPointAccessRepository) {
@@ -109,7 +110,7 @@ public class ContObjectService implements SecuredRoles {
         this.contManagementService = contManagementService;
         this.fiasService = fiasService;
         this.localPlaceService = localPlaceService;
-        this.contEventMonitorV2Service = contEventMonitorV2Service;
+        this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.weatherForecastService = weatherForecastService;
         this.meterPeriodSettingRepository = meterPeriodSettingRepository;
         this.contObjectMapper = contObjectMapper;
@@ -668,14 +669,14 @@ public class ContObjectService implements SecuredRoles {
         Map<Long, Integer> contObjectStats = selectContObjectZPointCounter(subscriberParam, contObjectIds);
 
         // Cont Event Block
-        List<ContEventMonitorV2> contEventMonitors = contEventStats ?
-            contEventMonitorV2Service.selectByContObjectIds(contObjectIds) :
+        List<ContEventMonitorX> contEventMonitors = contEventStats ?
+            contEventMonitorV3Service.selectByContObjectIds(contObjectIds) :
             Collections.emptyList();
 
-        final Map<Long, List<ContEventMonitorV2>> contEventMonitorMapList = new HashMap<>();
+        final Map<Long, List<ContEventMonitorX>> contEventMonitorMapList = new HashMap<>();
 
         contEventMonitors.forEach(i -> {
-            List<ContEventMonitorV2> l = contEventMonitorMapList.get(i.getContObjectId());
+            List<ContEventMonitorX> l = contEventMonitorMapList.get(i.getContObjectId());
             if (l == null) {
                 l = new ArrayList<>();
                 contEventMonitorMapList.put(i.getContObjectId(), l);
@@ -691,9 +692,9 @@ public class ContObjectService implements SecuredRoles {
             Integer res = contObjectStats.get(i.getId());
 
             i.getContObjectStats().setContZpointCount(res != null ? res : 0);
-            List<ContEventMonitorV2> m = contEventMonitorMapList.get(i.getId());
+            List<ContEventMonitorX> m = contEventMonitorMapList.get(i.getId());
             if (m != null && !m.isEmpty()) {
-                ContEventLevelColorV2 color = contEventMonitorV2Service.sortWorseColor(m);
+                ContEventLevelColorKeyV2 color = contEventMonitorV3Service.sortWorseColor(m);
                 if (color != null) {
                     i.getContObjectStats().setContEventLevelColor(color.getKeyname());
                 }

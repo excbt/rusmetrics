@@ -1,14 +1,21 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV3Repository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+
+import java.util.List;
 
 import static org.junit.Assert.*;
 
 @Transactional
 public class PTreeNodeMonitorResourceTest extends AnyControllerTest {
+
+    @Autowired
+    private ContEventMonitorV3Repository contEventMonitorV3Repository;
 
     @Test
     public void getPTreeNode() throws Exception {
@@ -30,4 +37,9 @@ public class PTreeNodeMonitorResourceTest extends AnyControllerTest {
     }
 
 
+    @Test
+    public void testRepository() throws Exception {
+        List<?> resultList = contEventMonitorV3Repository.selectCityContObjectMonitorEventCount(getSubscriberId());
+        assertNotNull(resultList);
+    }
 }

@@ -1,29 +1,19 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+
+import java.math.BigInteger;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с монитором событий
@@ -34,8 +24,8 @@ import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
  *
  */
 
-@Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//@Service
+//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 public class ContEventMonitorV2Service {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorV2Service.class);
@@ -43,6 +33,7 @@ public class ContEventMonitorV2Service {
 	/**
 	 *
 	 */
+
 	public final static Comparator<ContEventMonitorV2> CMP_BY_COLOR_RANK =
         Comparator.comparingInt(e -> e.getContEventLevelColor() == null ? -1 : e.getContEventLevelColor().getColorRank());
 
@@ -71,10 +62,11 @@ public class ContEventMonitorV2Service {
 
 		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.findByContObjectId(contObjectId);
 
-		List<ContEventMonitorV2> result = contEventMonitor.stream().sorted(CMP_BY_EVENT_TIME)
+		List<ContEventMonitorV2> result = contEventMonitor.stream()
+                .sorted(Comparator.comparing(ContEventMonitorV2::getContEventTime))
 				.collect(Collectors.toList());
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -87,7 +79,7 @@ public class ContEventMonitorV2Service {
 
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectId(contObjectId);
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -104,7 +96,7 @@ public class ContEventMonitorV2Service {
 
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -126,7 +118,7 @@ public class ContEventMonitorV2Service {
 	public List<ContEventMonitorV2> selectBySubscriberId(Long subscriberId) {
 		checkNotNull(subscriberId);
 		List<ContEventMonitorV2> result = contEventMonitorV2Repository.selectBySubscriberId(subscriberId);
-		return contEventService.enhanceContEventType(result);
+		return contEventService.loadContEventTypeModel(result);
 	}
 
 	/**
@@ -171,9 +163,15 @@ public class ContEventMonitorV2Service {
 	 */
 	public Map<Long, List<ContEventMonitorV2>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
 
+	    checkNotNull(contObjectIds);
+
+	    if (contObjectIds.isEmpty()) {
+	        return Collections.emptyMap();
+        }
+
         final List<ContEventMonitorV2> rawMonitorList = contEventMonitorV2Repository.selectByContObjectIds(contObjectIds);
 
-		List<ContEventMonitorV2> monitorList = contEventService.enhanceContEventType(rawMonitorList);
+		List<ContEventMonitorV2> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
 
         Map<Long, List<ContEventMonitorV2>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
 

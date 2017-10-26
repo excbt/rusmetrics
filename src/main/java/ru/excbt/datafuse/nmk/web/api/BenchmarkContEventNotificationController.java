@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrContEventNotificationMapper;
 
 /**
  * Контроллер для замера отклика системы по уведомлениям
@@ -18,10 +19,14 @@ import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
 @RequestMapping("/api/benchmark/contEvent")
 public class BenchmarkContEventNotificationController extends SubscrContEventNotificationController {
 
-	@Autowired
-	private BenchmarkService benchmarkService;
+	private final BenchmarkService benchmarkService;
 
-	/**
+    public BenchmarkContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper, BenchmarkService benchmarkService) {
+        super(subscrContEventNotifiicationService, subscrContEventNotifiicationStatusService, contEventMonitorService, contEventMonitorV3Service, contEventLevelColorService, contEventTypeService, contEventService, subscrContEventNotifiicationStatusV2Service, objectAccessService, mapper);
+        this.benchmarkService = benchmarkService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

@@ -79,7 +79,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
             ZPOINT_STATUS_TEMPLATE = $scope.widgetPath + "/zpoint-state-",
             SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
             ZPOINT_EVENTS_URL = null;
-        
+
         $scope.widgetOptions = widgetConfig.getOptions();
         //console.log($scope.widgetOptions);
 //        var zpstatus = $scope.widgetOptions.zpointStatus;
@@ -129,14 +129,14 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
         ];
         $scope.data.startModeIndex = 3;//default mode index; 3 - WEEK
         $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
-    
+
         $scope.data.imgPath = $scope.widgetPath + "/snowflake.png";
         $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
         $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
         $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
-    
+
         $scope.presentDataFlag = false;
-    
+
         $scope.barChart = {};
         $scope.barChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
         $scope.barChart.series = ['Потребление холодной воды, м' + '\u00B3'];
@@ -175,7 +175,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
                         return "";
                     }
                 }
-                
+
             }
         };
         function prepareEventMessage(inputData) {
@@ -184,9 +184,9 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
     //                var tmpMessageEx = "";
             //make the new array of the types wich formatted to display
             inputData.forEach(function (element) {
-    //console.log(element);                        
+    //console.log(element);
                 var tmpEvent = "";
-                var contEventTime = new Date(element.contEventTime);
+                var contEventTime = new Date(element.contEventTimeDT);
                 var pstyle = "";
                 if (element.contEventLevelColorKeyname === "RED") {
                     pstyle = "color: red;";
@@ -196,7 +196,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
             });
             return tmpMessage;
         }
-    
+
         function getDataSuccessCallback(rsp) {
 //            console.log(rsp.data);
             var tmpData = rsp.data;
@@ -222,11 +222,11 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
                 $scope.barChart.dataTitle.push(dataTitleElem);
             });
         }
-    
+
         function errorCallback(e) {
             console.log(e);
         }
-        
+
         function setEventsForZpoint(url, zpointId) {
             var imgObj = "#zpStatusImg" + zpointId;
             $(imgObj).qtip({
@@ -267,7 +267,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
                 }
             });
         }
-    
+
         function getStatusSuccessCallback(resp) {
             if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
                 return true;
@@ -290,7 +290,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
                 console.log("zpointCwWidget: zpoint status color is empty or not string.");
             }*/
         }
-    
+
         $scope.modeChange = function () {
             var mode = $scope.data.currentMode;
             //set class
@@ -310,7 +310,7 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
             var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
             $http.get(url).then(getDataSuccessCallback, errorCallback);
         };
-    
+
         function getZpointState() {
             if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
                 return true;
@@ -326,26 +326,26 @@ angular.module('zpointCw_v1Widget', ['angularWidget', 'chart.js'])
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
             return true;
         };
-    
+
         $scope.openNotices = function () {
             if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
                 return true;
             }
             widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
         };
-    
+
         $scope.$on('chart-create', function (event, chart) {
             var chartLegend = document.getElementById("cw-chart-legend-" + $scope.data.contZpointId);
             if (angular.isDefined(chartLegend) && chartLegend !== null) {
                 chartLegend.innerHTML = chart.generateLegend();
             }
         });
-        
+
         function initWidget() {
             $scope.modeChange();
             getZpointState();
         }
-        
+
         initWidget();
-        
+
     }]);
