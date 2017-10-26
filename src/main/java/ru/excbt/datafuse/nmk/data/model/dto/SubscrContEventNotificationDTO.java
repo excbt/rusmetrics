@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 public class SubscrContEventNotificationDTO {
@@ -18,7 +21,7 @@ public class SubscrContEventNotificationDTO {
 
     private String contEventLevelColor;
 
-    private Date contEventTime;
+    private LocalDateTime contEventTime;
 
     private Long contObjectId;
 
@@ -28,13 +31,13 @@ public class SubscrContEventNotificationDTO {
 
     private Boolean isNew;
 
-    private Date notificationTime;
+    private LocalDateTime notificationTime;
 
-    private Date notificationTimeTZ;
+    private ZonedDateTime notificationTimeTZ;
 
-    private Date revisionTime;
+    private LocalDateTime revisionTime;
 
-    private Date revisionTimeTZ;
+    private ZonedDateTime revisionTimeTZ;
 
     private Long revisionSubscrUserId;
 
@@ -44,6 +47,9 @@ public class SubscrContEventNotificationDTO {
 
     private Short monVersion;
 
+    public Date getContEventTimeDT() {
+        return LocalDateUtils.asDate(contEventTime);
+    }
 
     public Long getId() {
         return id;
@@ -93,11 +99,11 @@ public class SubscrContEventNotificationDTO {
         this.contEventLevelColor = contEventLevelColor;
     }
 
-    public Date getContEventTime() {
+    public LocalDateTime getContEventTime() {
         return contEventTime;
     }
 
-    public void setContEventTime(Date contEventTime) {
+    public void setContEventTime(LocalDateTime contEventTime) {
         this.contEventTime = contEventTime;
     }
 
@@ -133,35 +139,35 @@ public class SubscrContEventNotificationDTO {
         isNew = aNew;
     }
 
-    public Date getNotificationTime() {
+    public LocalDateTime getNotificationTime() {
         return notificationTime;
     }
 
-    public void setNotificationTime(Date notificationTime) {
+    public void setNotificationTime(LocalDateTime notificationTime) {
         this.notificationTime = notificationTime;
     }
 
-    public Date getNotificationTimeTZ() {
+    public ZonedDateTime getNotificationTimeTZ() {
         return notificationTimeTZ;
     }
 
-    public void setNotificationTimeTZ(Date notificationTimeTZ) {
+    public void setNotificationTimeTZ(ZonedDateTime notificationTimeTZ) {
         this.notificationTimeTZ = notificationTimeTZ;
     }
 
-    public Date getRevisionTime() {
+    public LocalDateTime getRevisionTime() {
         return revisionTime;
     }
 
-    public void setRevisionTime(Date revisionTime) {
+    public void setRevisionTime(LocalDateTime revisionTime) {
         this.revisionTime = revisionTime;
     }
 
-    public Date getRevisionTimeTZ() {
+    public ZonedDateTime getRevisionTimeTZ() {
         return revisionTimeTZ;
     }
 
-    public void setRevisionTimeTZ(Date revisionTimeTZ) {
+    public void setRevisionTimeTZ(ZonedDateTime revisionTimeTZ) {
         this.revisionTimeTZ = revisionTimeTZ;
     }
 

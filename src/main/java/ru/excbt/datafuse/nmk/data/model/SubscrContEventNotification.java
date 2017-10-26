@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -65,8 +67,7 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 	private String contEventLevelColor;
 
 	@Column(name = "cont_event_time", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date contEventTime;
+	private LocalDateTime contEventTime;
 
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
@@ -81,20 +82,16 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 	private Boolean isNew;
 
 	@Column(name = "notification_time", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date notificationTime;
+	private LocalDateTime notificationTime;
 
 	@Column(name = "notification_time_tz", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date notificationTimeTZ;
+	private ZonedDateTime notificationTimeTZ;
 
 	@Column(name = "revision_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date revisionTime;
+	private LocalDateTime revisionTime;
 
 	@Column(name = "revision_time_tz")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date revisionTimeTZ;
+	private ZonedDateTime revisionTimeTZ;
 
 	@Column(name = "revision_subscr_user_id")
 	private Long revisionSubscrUserId;
