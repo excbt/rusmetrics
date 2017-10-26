@@ -54,7 +54,7 @@ public class PTreeNodeMonitorService {
 
 
     /**
-     * Read Monitor status for ContObjects
+     * Read Monitor status for ContObjects. Old Version
      * @param portalUserIds
      * @param contObjectIds
      * @param dateInterval
@@ -127,6 +127,67 @@ public class PTreeNodeMonitorService {
 //            item.setEventsCount(allCnt);
 //            item.setNewEventsCount(newCnt);
 //            item.setEventsTypesCount(typesCnt);
+            item.setColorKey(resultColorKey);
+
+            monitorStatusList.add(item);
+        }
+
+        return Boolean.TRUE.equals(noGreenColor)
+            ? monitorStatusList.stream().filter((n) ->  n.getColorKey() != ContEventLevelColorKeyV2.GREEN).collect(Collectors.toList())
+            : monitorStatusList;
+    }
+
+
+
+    /**
+     *
+     * @param portalUserIds
+     * @param contZPointIds
+     * @param dateInterval
+     * @param noGreenColor
+     * @return
+     */
+    public List<PTreeNodeMonitorDTO> findPTreeNodeMonitorZP(final PortalUserIds portalUserIds,
+                                                            final List<Long> contZPointIds,
+                                                            final DateInterval dateInterval,
+                                                            final Boolean noGreenColor) {
+
+        checkNotNull(portalUserIds);
+        checkNotNull(contZPointIds);
+
+        if (contZPointIds.isEmpty()) {
+            log.warn("contZPoint ids is empty");
+            return Collections.emptyList();
+        }
+
+        List<Long> qryContZPointIds = contZPointIds;
+
+        // Second check. For safe only
+        if (qryContZPointIds.isEmpty()) {
+            qryContZPointIds = RepositoryUtil.NO_DATA_IDS;
+        }
+
+        // Includes colors of notifications
+        Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
+            .getContZPointContEventMonitorMap(qryContZPointIds);
+
+
+        List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
+        for (Long coId : qryContZPointIds) {
+
+            List<ContEventMonitorX> contObjectMonitors = monitorContObjectsMap.get(coId);
+
+            ContEventLevelColorKeyV2 worseMonitorColorKey = null;
+
+            if (contObjectMonitors != null) {
+                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
+            }
+
+            final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
+                : ContEventLevelColorKeyV2.GREEN;
+
+            PTreeNodeMonitorDTO item = new PTreeNodeMonitorDTO(PTreeNodeType.CONT_ZPOINT, coId);
+
             item.setColorKey(resultColorKey);
 
             monitorStatusList.add(item);
