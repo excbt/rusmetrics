@@ -29,11 +29,11 @@ public interface ContEventMonitorX extends ContEventTypeModel {
 
     Long getLastContEventId();
 
-    Date getLastContEventTime();
+    LocalDateTime getLastContEventTime();
 
     Long getWorseContEventId();
 
-    Date getWorseContEventTime();
+    LocalDateTime getWorseContEventTime();
 
     Boolean getIsScalar();
 

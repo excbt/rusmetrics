@@ -28,11 +28,11 @@ public class ContEventMonitorXDTO {
 
     private Long lastContEventId;
 
-    private Date lastContEventTime;
+    private LocalDateTime lastContEventTime;
 
     private Long worseContEventId;
 
-    private Date worseContEventTime;
+    private LocalDateTime worseContEventTime;
 
     private Boolean isScalar;
 
@@ -56,6 +56,12 @@ public class ContEventMonitorXDTO {
         this.worseContEventTime = x.getWorseContEventTime();
         this.isScalar = x.getIsScalar();
     }
+
+    public Date getContEventTimeDT() {
+        return LocalDateUtils.asDate(contEventTime);
+    }
+
+    ////////
 
     public Long getId() {
         return id;
@@ -97,7 +103,7 @@ public class ContEventMonitorXDTO {
         return lastContEventId;
     }
 
-    public Date getLastContEventTime() {
+    public LocalDateTime getLastContEventTime() {
         return lastContEventTime;
     }
 
@@ -105,17 +111,11 @@ public class ContEventMonitorXDTO {
         return worseContEventId;
     }
 
-    public Date getWorseContEventTime() {
+    public LocalDateTime getWorseContEventTime() {
         return worseContEventTime;
     }
 
     public Boolean getScalar() {
         return isScalar;
     }
-
-
-    public Date getContEventTimeDT() {
-        return LocalDateUtils.asDate(getContEventTime());
-    }
-
 }
