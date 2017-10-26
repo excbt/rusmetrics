@@ -1,24 +1,19 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
+import ru.excbt.datafuse.nmk.data.util.GroupUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
-import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
-import ru.excbt.datafuse.nmk.data.util.GroupUtil;
-import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с монитором событий
@@ -46,7 +41,7 @@ public class ContEventMonitorV2Service {
 	 *
 	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME =
-        Comparator.comparing(ContEventMonitorX::getContEventTime);
+        Comparator.comparing(ContEventMonitorV2::getContEventTime);
 
 	/**
 	 *
@@ -68,7 +63,7 @@ public class ContEventMonitorV2Service {
 		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.findByContObjectId(contObjectId);
 
 		List<ContEventMonitorV2> result = contEventMonitor.stream()
-                .sorted(Comparator.comparing(ContEventMonitorX::getContEventTime))
+                .sorted(Comparator.comparing(ContEventMonitorV2::getContEventTime))
 				.collect(Collectors.toList());
 
 		return contEventService.loadContEventTypeModel(result);

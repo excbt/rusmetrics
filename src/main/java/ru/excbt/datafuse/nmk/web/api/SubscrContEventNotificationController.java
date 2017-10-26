@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventMonitorXDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
@@ -499,14 +500,16 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContObject(contObjectId);
+		List<ContEventMonitorXDTO> resultList = contEventMonitorV3Service.selectByContObject(contObjectId).stream()
+            .map(ContEventMonitorXDTO::new)
+            .collect(Collectors.toList());
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorX> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
-				.collect(Collectors.toList());
+		List<ContEventMonitorXDTO> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+			.collect(Collectors.toList());
 
 		return ResponseEntity.ok(filteredResultList);
 	}
@@ -521,16 +524,17 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContZPoint(contObjectId,contZPointId);
+		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContZPoint(contObjectId,contZPointId).stream().filter(i -> i.getContEventLevel() != null)
+            .collect(Collectors.toList());
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorX> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
-				.collect(Collectors.toList());
+        List<ContEventMonitorXDTO> resultDTO = contEventService.loadContEventTypeModel(resultList).stream()
+            .map(ContEventMonitorXDTO::new).collect(Collectors.toList());
 
-		return ResponseEntity.ok(contEventService.loadContEventTypeModel(filteredResultList));
+        return ResponseEntity.ok(resultDTO);
 	}
 
 	/**

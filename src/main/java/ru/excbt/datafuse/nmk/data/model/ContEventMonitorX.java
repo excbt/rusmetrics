@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model;
 
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventMonitorXDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -7,6 +8,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 public interface ContEventMonitorX extends ContEventTypeModel {
+
+    Long getId();
 
     Long getContObjectId();
 
@@ -18,8 +21,6 @@ public interface ContEventMonitorX extends ContEventTypeModel {
 
     Long getContEventTypeId();
 
-    ContEventType getContEventType();
-
     LocalDateTime getContEventTime();
 
     Integer getContEventLevel();
@@ -28,16 +29,12 @@ public interface ContEventMonitorX extends ContEventTypeModel {
 
     Long getLastContEventId();
 
-    Date getLastContEventTime();
+    LocalDateTime getLastContEventTime();
 
     Long getWorseContEventId();
 
-    Date getWorseContEventTime();
+    LocalDateTime getWorseContEventTime();
 
     Boolean getIsScalar();
-
-    default Date getContEventTimeDT() {
-        return LocalDateUtils.asDate(getContEventTime());
-    }
 
 }

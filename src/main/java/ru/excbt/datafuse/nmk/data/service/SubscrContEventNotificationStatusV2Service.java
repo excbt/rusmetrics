@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
@@ -127,7 +124,7 @@ public class SubscrContEventNotificationStatusV2Service {
 				subscrContEventNotificationService.selectContObjectEventTypeGroupCollapseCounterInfo(
 						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
 
-		Map<Long, List<ContEventMonitorV3>> monitorContObjectsMap = contEventMonitorV3Service
+		Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
 				.getContObjectsContEventMonitorMap(contObjectIds);
 
 		Map<Long, ContObjectFias> contObjectFiasMap = contObjectFiasService.selectContObjectsFiasMap(contObjectIds);
@@ -136,13 +133,12 @@ public class SubscrContEventNotificationStatusV2Service {
 		List<MonitorContEventNotificationStatusV2> monitorStatusList = new ArrayList<>();
 		for (ContObject co : contObjects) {
 
-			List<ContEventMonitorV3> contObjectMonitors = monitorContObjectsMap.get(co.getId());
+			List<ContEventMonitorX> contObjectMonitors = monitorContObjectsMap.get(co.getId());
 
 			ContEventLevelColorKeyV2 worseMonitorColorKey = null;
 
 			if (contObjectMonitors != null) {
-				ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
-				worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
+                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
 			}
 
 			final long allCnt = allNotificationsMap.getCountValue(co.getId());

@@ -56,7 +56,6 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implemen
 	private ContEventType contEventType;
 
 	@Column(name = "cont_event_time")
-	//@Temporal(TemporalType.TIMESTAMP)
 	private LocalDateTime contEventTime;
 
 	@Column(name = "cont_event_level")
@@ -74,15 +73,13 @@ public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implemen
 	private Long lastContEventId;
 
 	@Column(name = "last_cont_event_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastContEventTime;
+	private LocalDateTime lastContEventTime;
 
 	@Column(name = "worse_cont_event_id")
 	private Long worseContEventId;
 
 	@Column(name = "worse_cont_event_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date worseContEventTime;
+	private LocalDateTime worseContEventTime;
 
 	@Column(name = "is_scalar")
 	private Boolean isScalar;

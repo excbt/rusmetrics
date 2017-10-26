@@ -4,12 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
@@ -97,20 +95,19 @@ public class PTreeNodeMonitorService {
         }
 
         // Includes colors of notifications
-        Map<Long, List<ContEventMonitorV3>> monitorContObjectsMap = contEventMonitorV3Service
+        Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
             .getContObjectsContEventMonitorMap(qryContObjectIds);
 
 
         List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
         for (Long coId : qryContObjectIds) {
 
-            List<ContEventMonitorV3> contObjectMonitors = monitorContObjectsMap.get(coId);
+            List<ContEventMonitorX> contObjectMonitors = monitorContObjectsMap.get(coId);
 
             ContEventLevelColorKeyV2 worseMonitorColorKey = null;
 
             if (contObjectMonitors != null) {
-                ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
-                worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
+                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
             }
 
             // Comment counting notifications

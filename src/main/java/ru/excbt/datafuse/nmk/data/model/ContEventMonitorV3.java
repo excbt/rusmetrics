@@ -49,7 +49,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
 	private LocalDateTime contEventTime;
 
 	@Column(name = "cont_event_level")
-	private Integer ContEventLevel;
+	private Integer contEventLevel;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_event_level_color", insertable = false, updatable = false)
@@ -63,15 +63,13 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
 	private Long lastContEventId;
 
 	@Column(name = "last_cont_event_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date lastContEventTime;
+	private LocalDateTime lastContEventTime;
 
 	@Column(name = "worse_cont_event_id")
 	private Long worseContEventId;
 
 	@Column(name = "worse_cont_event_time")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date worseContEventTime;
+	private LocalDateTime worseContEventTime;
 
 	@Column(name = "is_scalar")
 	private Boolean isScalar;
@@ -101,7 +99,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
     }
 
     public Integer getContEventLevel() {
-        return this.ContEventLevel;
+        return this.contEventLevel;
     }
 
     public ContEventLevelColorV2 getContEventLevelColor() {
@@ -116,7 +114,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
         return this.lastContEventId;
     }
 
-    public Date getLastContEventTime() {
+    public LocalDateTime getLastContEventTime() {
         return this.lastContEventTime;
     }
 
@@ -124,7 +122,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
         return this.worseContEventId;
     }
 
-    public Date getWorseContEventTime() {
+    public LocalDateTime getWorseContEventTime() {
         return this.worseContEventTime;
     }
 
@@ -157,7 +155,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
     }
 
     public void setContEventLevel(Integer ContEventLevel) {
-        this.ContEventLevel = ContEventLevel;
+        this.contEventLevel = ContEventLevel;
     }
 
     public void setContEventLevelColor(ContEventLevelColorV2 contEventLevelColor) {
@@ -172,7 +170,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
         this.lastContEventId = lastContEventId;
     }
 
-    public void setLastContEventTime(Date lastContEventTime) {
+    public void setLastContEventTime(LocalDateTime lastContEventTime) {
         this.lastContEventTime = lastContEventTime;
     }
 
@@ -180,7 +178,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
         this.worseContEventId = worseContEventId;
     }
 
-    public void setWorseContEventTime(Date worseContEventTime) {
+    public void setWorseContEventTime(LocalDateTime worseContEventTime) {
         this.worseContEventTime = worseContEventTime;
     }
 
