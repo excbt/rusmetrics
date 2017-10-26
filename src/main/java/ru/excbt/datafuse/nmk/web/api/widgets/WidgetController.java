@@ -8,17 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
-import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV2Service;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,13 +30,17 @@ import java.util.Map;
 @RequestMapping("/{contZpointId}")
 public class WidgetController extends AbstractSubscrApiResource {
 
-	@Autowired
-	private ContEventMonitorV2Service contEventMonitorV2Service;
+	private final ContEventMonitorV3Service contEventMonitorV3Service;
+
+	protected final ContZPointService contZPointService;
 
 	@Autowired
-	protected ContZPointService contZPointService;
+    public WidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService) {
+        this.contEventMonitorV3Service = contEventMonitorV3Service;
+        this.contZPointService = contZPointService;
+    }
 
-	/**
+    /**
 	 *
 	 * @param contZpointId
 	 * @return
@@ -64,18 +67,16 @@ public class WidgetController extends AbstractSubscrApiResource {
 
 	/**
 	 *
-	 * @param contZpointId
+	 * @param contZPointId
 	 * @return
 	 */
-	protected ContEventLevelColorKeyV2 getMonitorColorValue(Long contObjectId, Long contZpointId) {
+	protected ContEventLevelColorKeyV2 getMonitorColorValue(Long contObjectId, Long contZPointId) {
 
-		if (contObjectId == null || contZpointId == null) {
+		if (contObjectId == null || contZPointId == null) {
 			return null;
 		}
 
-		List<ContEventMonitorV2> mon = contEventMonitorV2Service.selectByContZPoint(contObjectId, contZpointId);
-
-		ContEventLevelColorV2 worseMonitorColor = contEventMonitorV2Service.sortWorseColor(mon);
+		ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.findMonitorColor(contObjectId, contZPointId);
 		ContEventLevelColorKeyV2 worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
 
 		final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey

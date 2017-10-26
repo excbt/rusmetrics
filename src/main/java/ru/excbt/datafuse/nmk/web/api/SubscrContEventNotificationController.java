@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventDeviation;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
@@ -64,7 +61,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	private ContEventMonitorService contEventMonitorService;
 
 	@Autowired
-	private ContEventMonitorV2Service contEventMonitorV2Service;
+	private ContEventMonitorV3Service contEventMonitorV3Service;
 
 	@Autowired
 	private ContEventLevelColorService contEventLevelColorService;
@@ -502,13 +499,13 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		checkNotNull(contObjectId);
 
-		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContObject(contObjectId);
+		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContObject(contObjectId);
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+		List<ContEventMonitorX> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(filteredResultList);
@@ -524,13 +521,13 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		List<ContEventMonitorV2> resultList = contEventMonitorV2Service.selectByContZPoint(contObjectId,contZPointId);
+		List<ContEventMonitorX> resultList = contEventMonitorV3Service.selectByContZPoint(contObjectId,contZPointId);
 
 		if (resultList.isEmpty()) {
 			return ApiResponse.responseOK();
 		}
 
-		List<ContEventMonitorV2> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
+		List<ContEventMonitorX> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
 				.collect(Collectors.toList());
 
 		return ResponseEntity.ok(contEventService.loadContEventTypeModel(filteredResultList));

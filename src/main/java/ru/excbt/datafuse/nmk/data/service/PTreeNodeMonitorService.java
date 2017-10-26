@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV2;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
@@ -34,7 +35,7 @@ public class PTreeNodeMonitorService {
 
     private final SubscrContEventNotificationService subscrContEventNotificationService;
 
-    private final ContEventMonitorV2Service contEventMonitorV2Service;
+    private final ContEventMonitorV3Service contEventMonitorV3Service;
 
     private final ObjectAccessService objectAccessService;
 
@@ -44,9 +45,9 @@ public class PTreeNodeMonitorService {
 
     private final SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
 
-    public PTreeNodeMonitorService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV2Service contEventMonitorV2Service, ObjectAccessService objectAccessService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository) {
+    public PTreeNodeMonitorService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV3Service contEventMonitorV3Service, ObjectAccessService objectAccessService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository) {
         this.subscrContEventNotificationService = subscrContEventNotificationService;
-        this.contEventMonitorV2Service = contEventMonitorV2Service;
+        this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.objectAccessService = objectAccessService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
         this.subscrObjectTreeRepository = subscrObjectTreeRepository;
@@ -96,19 +97,19 @@ public class PTreeNodeMonitorService {
         }
 
         // Includes colors of notifications
-        Map<Long, List<ContEventMonitorV2>> monitorContObjectsMap = contEventMonitorV2Service
+        Map<Long, List<ContEventMonitorV3>> monitorContObjectsMap = contEventMonitorV3Service
             .getContObjectsContEventMonitorMap(qryContObjectIds);
 
 
         List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
         for (Long coId : qryContObjectIds) {
 
-            List<ContEventMonitorV2> contObjectMonitors = monitorContObjectsMap.get(coId);
+            List<ContEventMonitorV3> contObjectMonitors = monitorContObjectsMap.get(coId);
 
             ContEventLevelColorKeyV2 worseMonitorColorKey = null;
 
             if (contObjectMonitors != null) {
-                ContEventLevelColorV2 worseMonitorColor = contEventMonitorV2Service.sortWorseColor(contObjectMonitors);
+                ContEventLevelColorV2 worseMonitorColor = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
                 worseMonitorColorKey = ContEventLevelColorKeyV2.findByKeyname(worseMonitorColor);
             }
 

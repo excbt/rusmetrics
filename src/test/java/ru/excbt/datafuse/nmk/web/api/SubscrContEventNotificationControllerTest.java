@@ -304,7 +304,7 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
         contEventMonitorV2.setContEventId(contEvent.getId());
         contEventMonitorV2.setContEventLevel(1000);
         contEventMonitorV2.setContEventLevelColor(new ContEventLevelColorV2().keyname(ContEventLevelColorKeyV2.RED.keyName()));
-        contEventMonitorV2.setContEventTime(contEvent.getEventTime());
+        contEventMonitorV2.setContEventTime(LocalDateUtils.asLocalDateTime(contEvent.getEventTime()));
         contEventMonitorV2Repository.saveAndFlush(contEventMonitorV2);
 
 

@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.widget.CwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -40,13 +43,18 @@ public class CwWidgetController extends WidgetController {
 
 	private static final Logger log = LoggerFactory.getLogger(CwWidgetController.class);
 
-	@Inject
-	private CwWidgetService cwWidgetService;
+	private final CwWidgetService cwWidgetService;
 
-	@Inject
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	/**
+	@Autowired
+    public CwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, CwWidgetService cwWidgetService, ContObjectService contObjectService) {
+        super(contEventMonitorV3Service, contZPointService);
+        this.cwWidgetService = cwWidgetService;
+        this.contObjectService = contObjectService;
+    }
+
+    /**
 	 *
 	 * @param contZpointId
 	 * @param mode
