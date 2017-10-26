@@ -1,6 +1,11 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import org.mapstruct.factory.Mappers;
+import ru.excbt.datafuse.nmk.service.mapper.ContEventTypeMapper;
+
 public class ContEventTypeDTO {
+
+    public static final ContEventTypeMapper MAPPER = Mappers.getMapper( ContEventTypeMapper.class );
 
     private Long id;
 

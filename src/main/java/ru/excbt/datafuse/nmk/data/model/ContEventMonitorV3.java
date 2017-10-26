@@ -49,7 +49,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
 	private LocalDateTime contEventTime;
 
 	@Column(name = "cont_event_level")
-	private Integer ContEventLevel;
+	private Integer contEventLevel;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "cont_event_level_color", insertable = false, updatable = false)
@@ -101,7 +101,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
     }
 
     public Integer getContEventLevel() {
-        return this.ContEventLevel;
+        return this.contEventLevel;
     }
 
     public ContEventLevelColorV2 getContEventLevelColor() {
@@ -157,7 +157,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
     }
 
     public void setContEventLevel(Integer ContEventLevel) {
-        this.ContEventLevel = ContEventLevel;
+        this.contEventLevel = ContEventLevel;
     }
 
     public void setContEventLevelColor(ContEventLevelColorV2 contEventLevelColor) {
