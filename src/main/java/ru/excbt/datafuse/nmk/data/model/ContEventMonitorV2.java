@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContEventTypeModel;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
-public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implements ContEventTypeModel, ContEventMonitorX {
+public class ContEventMonitorV2 extends AbstractPersistableEntity<Long> implements ContEventTypeModel {
 
 	/**
 	 *

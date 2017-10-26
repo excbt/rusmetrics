@@ -46,7 +46,7 @@ public class ContEventMonitorV2Service {
 	 *
 	 */
 	public final static Comparator<ContEventMonitorV2> CMP_BY_EVENT_TIME =
-        Comparator.comparing(ContEventMonitorX::getContEventTime);
+        Comparator.comparing(ContEventMonitorV2::getContEventTime);
 
 	/**
 	 *
@@ -68,7 +68,7 @@ public class ContEventMonitorV2Service {
 		List<ContEventMonitorV2> contEventMonitor = contEventMonitorV2Repository.findByContObjectId(contObjectId);
 
 		List<ContEventMonitorV2> result = contEventMonitor.stream()
-                .sorted(Comparator.comparing(ContEventMonitorX::getContEventTime))
+                .sorted(Comparator.comparing(ContEventMonitorV2::getContEventTime))
 				.collect(Collectors.toList());
 
 		return contEventService.loadContEventTypeModel(result);
