@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrContEventNotificationDTO;
 
-@Mapper(componentModel = "spring", uses = {ContEventTypeMapper.class})
+@Mapper(componentModel = "spring", uses = {ContEventTypeMapper.class, ContEventMapper.class})
 public interface SubscrContEventNotificationMapper extends EntityMapper<SubscrContEventNotificationDTO, SubscrContEventNotification> {
 
 }
