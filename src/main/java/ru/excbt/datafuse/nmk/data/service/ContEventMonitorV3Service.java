@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 import java.math.BigInteger;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -101,6 +102,36 @@ public class ContEventMonitorV3Service {
         Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
 
         return resultMap;
+    }
+
+
+    /**
+     *
+     * @param ids
+     * @param monitorLoader
+     * @return
+     */
+    private Map<Long, List<ContEventMonitorX>> loadMonitorMap(List<Long> ids, Function<List<Long>, List<ContEventMonitorX>> monitorLoader) {
+        checkNotNull(monitorLoader);
+        checkNotNull(ids);
+        if (ids.isEmpty()) {
+            return Collections.emptyMap();
+        }
+        final List<ContEventMonitorX> rawMonitorList = monitorLoader.apply(ids).stream().collect(Collectors.toList());
+        List<ContEventMonitorX> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
+        Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
+        return resultMap;
+    }
+
+
+    /**
+     *
+     * @param contZPointIds
+     * @return
+     */
+    public Map<Long, List<ContEventMonitorX>> getContZPointContEventMonitorMap(final List<Long> contZPointIds) {
+        return loadMonitorMap(contZPointIds,
+            (x) -> contEventMonitorV3Repository.selectByContZPointIds(x).stream().collect(Collectors.toList()));
     }
 
 
