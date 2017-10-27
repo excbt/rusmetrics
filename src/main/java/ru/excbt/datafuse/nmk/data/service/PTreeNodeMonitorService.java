@@ -298,6 +298,13 @@ public class PTreeNodeMonitorService {
         return resultList;
     }
 
+    /**
+     *
+     * @param portalUserIds
+     * @param nodeId
+     * @param contObjectMonitorList
+     * @return
+     */
     public List<PTreeNodeMonitorDTO> findPTreeNodeMonitorElements(final PortalUserIds portalUserIds,
                                                                   final Long nodeId,
                                                                   final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
@@ -307,6 +314,30 @@ public class PTreeNodeMonitorService {
             return Collections.emptyList();
         }
         return findPTreeNodeMonitorElements(portalUserIds, node, Collections.unmodifiableList(contObjectMonitorList));
+    }
+
+    /**
+     *
+     * @param portalUserIds
+     * @param contZPointIdPairs
+     * @param dateInterval
+     * @param noGreenColor
+     * @return
+     */
+    public List<PTreeNodeMonitorDTO> findPTreeNodeMonitor (final PortalUserIds portalUserIds,
+                                                           final List<ContZPointIdPair> contZPointIdPairs,
+                                                           final DateInterval dateInterval,
+                                                           final Boolean noGreenColor) {
+
+        List<Long> contObjectIds = contZPointIdPairs.stream().map(ContZPointIdPair::getContObjectId).distinct().collect(Collectors.toList());
+        List<Long> contZPointIds = contZPointIdPairs.stream().map(ContZPointIdPair::getContZPointId).distinct().collect(Collectors.toList());
+
+        List<PTreeNodeMonitorDTO> coMonitorDTOList = findPTreeNodeMonitorCO(portalUserIds, contObjectIds, dateInterval, noGreenColor);
+        List<PTreeNodeMonitorDTO> zpMonitorDTOList = findPTreeNodeMonitorZP(portalUserIds, contZPointIds, dateInterval, noGreenColor);
+        List<PTreeNodeMonitorDTO> result = new ArrayList<>();
+        result.addAll(coMonitorDTOList);
+        result.addAll(zpMonitorDTOList);
+        return result;
     }
 
 
