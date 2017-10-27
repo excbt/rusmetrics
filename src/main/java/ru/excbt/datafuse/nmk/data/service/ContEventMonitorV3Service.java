@@ -80,30 +80,28 @@ public class ContEventMonitorV3Service {
         return ContEventLevelColorKeyV2.findByKeyname(sorted.get().getContEventLevelColorKeyname());
     }
 
-
-
     /**
      *
      * @param contObjectIds
      * @return
      */
     public Map<Long, List<ContEventMonitorX>> getContObjectsContEventMonitorMap(List<Long> contObjectIds) {
-
-        checkNotNull(contObjectIds);
-
-        if (contObjectIds.isEmpty()) {
-            return Collections.emptyMap();
-        }
-
-        final List<ContEventMonitorX> rawMonitorList = contEventMonitorV3Repository.selectByContObjectIds(contObjectIds).stream().collect(Collectors.toList());
-
-        List<ContEventMonitorX> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
-
-        Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
-
-        return resultMap;
+        return loadMonitorMap(contObjectIds,
+            ids -> contEventMonitorV3Repository.selectByContObjectIds(ids).stream().collect(Collectors.toList()),
+            mon -> mon.getContObjectId());
     }
 
+
+    /**
+     *
+     * @param contZPointIds
+     * @return
+     */
+    public Map<Long, List<ContEventMonitorX>> getContZPointContEventMonitorMap(final List<Long> contZPointIds) {
+        return loadMonitorMap(contZPointIds,
+            ids -> contEventMonitorV3Repository.selectByContZPointIds(ids).stream().collect(Collectors.toList()),
+            mon -> mon.getContZPointId());
+    }
 
     /**
      *
@@ -124,19 +122,6 @@ public class ContEventMonitorV3Service {
         Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, idGetter);
         return resultMap;
     }
-
-
-    /**
-     *
-     * @param contZPointIds
-     * @return
-     */
-    public Map<Long, List<ContEventMonitorX>> getContZPointContEventMonitorMap(final List<Long> contZPointIds) {
-        return loadMonitorMap(contZPointIds,
-            ids -> contEventMonitorV3Repository.selectByContZPointIds(ids).stream().collect(Collectors.toList()),
-            mon -> mon.getContZPointId());
-    }
-
 
     /**
      *
