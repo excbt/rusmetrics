@@ -50,18 +50,18 @@ public class PTreeNodeMonitorResource {
 
         PortalUserIds portalUserIds = currentSubscriberServicel.getSubscriberParam().asPortalUserIds();
 
-        ObjectAccessUtil objectAccessUtil = objectAccessService.objectAccessUtil();
+//        ObjectAccessUtil objectAccessUtil = objectAccessService.objectAccessUtil();
 
         List<Long> nodeContObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId);
 
         // Find monitorContObjectIds
-        List<Long> monitorContObjectIds = nodeContObjectIds.stream()
-            .filter(objectAccessUtil.checkContObjectId(portalUserIds)).collect(Collectors.toList());
+//        List<Long> monitorContObjectIds = nodeContObjectIds.stream()
+//            .filter(objectAccessUtil.checkContObjectId(portalUserIds)).collect(Collectors.toList());
 
         // Find monitorContZPointIds
-        List<ContZPointIdPair> nodeZPoint = objectAccessService.findAllContZPointPairIds(portalUserIds).stream()
+        List<ContZPointIdPair> nodeZPointIdPairs = objectAccessService.findAllContZPointPairIds(portalUserIds).stream()
             .filter(i -> nodeContObjectIds.contains(i.getContObjectId())).collect(Collectors.toList());
-        List<Long> monitorContZPointIds = nodeZPoint.stream().map(ContZPointIdPair::getContZPointId)
+        List<Long> monitorContZPointIds = nodeZPointIdPairs.stream().map(ContZPointIdPair::getContZPointId)
             // No Need check access because we take findAllContZPointPairIds fromobjectAccessService
             //.filter(objectAccessUtil.checkContZPointId(portalUserIds))
             .collect(Collectors.toList());
@@ -69,14 +69,12 @@ public class PTreeNodeMonitorResource {
         // Make Result List
         List<PTreeNodeMonitorDTO> resultList = new ArrayList<>();
 
-        List<PTreeNodeMonitorDTO> coMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorCO(portalUserIds, monitorContObjectIds, null, false);
-        List<PTreeNodeMonitorDTO> zpMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorZP(portalUserIds, monitorContZPointIds, null, false);
+        List<PTreeNodeMonitorDTO> objectsMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitor(portalUserIds, nodeZPointIdPairs, null, false);
 
-        resultList.addAll(coMonitorDTOList);
-        resultList.addAll(zpMonitorDTOList);
+        resultList.addAll(objectsMonitorDTOList);
 
         if (nodeId != null) {
-            List<PTreeNodeMonitorDTO> elMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorElements(portalUserIds, nodeId, coMonitorDTOList);
+            List<PTreeNodeMonitorDTO> elMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorElements(portalUserIds, nodeId, objectsMonitorDTOList);
             resultList.addAll(elMonitorDTOList);
         }
 
