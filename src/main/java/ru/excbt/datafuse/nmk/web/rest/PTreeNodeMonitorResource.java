@@ -75,10 +75,10 @@ public class PTreeNodeMonitorResource {
         resultList.addAll(coMonitorDTOList);
         resultList.addAll(zpMonitorDTOList);
 
-        if (nodeId != null) {
-            List<PTreeNodeMonitorDTO> elMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorElements(portalUserIds, nodeId, coMonitorDTOList);
-            resultList.addAll(elMonitorDTOList);
-        }
+//        if (nodeId != null) {
+//            List<PTreeNodeMonitorDTO> elMonitorDTOList = pTreeNodeMonitorService.findPTreeNodeMonitorElements(portalUserIds, nodeId, coMonitorDTOList);
+//            resultList.addAll(elMonitorDTOList);
+//        }
 
         return ApiResponse.responseOK(() -> resultList);
     }

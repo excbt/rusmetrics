@@ -168,29 +168,16 @@ public class PTreeNodeMonitorService {
         }
 
         // Includes colors of notifications
-        Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
+        Map<Long, List<ContEventMonitorX>> monitorContZPointMap = contEventMonitorV3Service
             .getContZPointContEventMonitorMap(qryContZPointIds);
 
 
-        List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
-        for (Long coId : qryContZPointIds) {
-
-            List<ContEventMonitorX> contObjectMonitors = monitorContObjectsMap.get(coId);
-
-            ContEventLevelColorKeyV2 worseMonitorColorKey = null;
-
-            if (contObjectMonitors != null) {
-                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
-            }
-
-            final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
-                : ContEventLevelColorKeyV2.GREEN;
-
-            PTreeNodeMonitorDTO item = new PTreeNodeMonitorDTO(PTreeNodeType.CONT_ZPOINT, coId);
-
-            item.setColorKey(resultColorKey);
-
-            monitorStatusList.add(item);
+        final List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
+        for (Long zpId : qryContZPointIds) {
+            // Get All monitors of ContZPoint
+            List<ContEventMonitorX> monitors = monitorContZPointMap.get(zpId);
+            final ContEventLevelColorKeyV2 resultColorKey = monitors != null ? contEventMonitorV3Service.sortWorseColor(monitors) : ContEventLevelColorKeyV2.GREEN;
+            monitorStatusList.add(new PTreeNodeMonitorDTO(PTreeNodeType.CONT_ZPOINT, zpId, resultColorKey));
         }
 
         return Boolean.TRUE.equals(noGreenColor)

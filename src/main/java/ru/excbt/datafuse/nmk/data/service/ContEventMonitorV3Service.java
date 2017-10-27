@@ -111,7 +111,9 @@ public class ContEventMonitorV3Service {
      * @param monitorLoader
      * @return
      */
-    private Map<Long, List<ContEventMonitorX>> loadMonitorMap(List<Long> ids, Function<List<Long>, List<ContEventMonitorX>> monitorLoader) {
+    private Map<Long, List<ContEventMonitorX>> loadMonitorMap(List<Long> ids,
+                                                              Function<List<Long>, List<ContEventMonitorX>> monitorLoader,
+                                                              Function<ContEventMonitorX, Long> idGetter) {
         checkNotNull(monitorLoader);
         checkNotNull(ids);
         if (ids.isEmpty()) {
@@ -119,7 +121,7 @@ public class ContEventMonitorV3Service {
         }
         final List<ContEventMonitorX> rawMonitorList = monitorLoader.apply(ids).stream().collect(Collectors.toList());
         List<ContEventMonitorX> monitorList = contEventService.loadContEventTypeModel(rawMonitorList);
-        Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, (m) -> m.getContObjectId());
+        Map<Long, List<ContEventMonitorX>> resultMap = GroupUtil.makeIdMap(monitorList, idGetter);
         return resultMap;
     }
 
@@ -131,7 +133,8 @@ public class ContEventMonitorV3Service {
      */
     public Map<Long, List<ContEventMonitorX>> getContZPointContEventMonitorMap(final List<Long> contZPointIds) {
         return loadMonitorMap(contZPointIds,
-            (x) -> contEventMonitorV3Repository.selectByContZPointIds(x).stream().collect(Collectors.toList()));
+            ids -> contEventMonitorV3Repository.selectByContZPointIds(ids).stream().collect(Collectors.toList()),
+            mon -> mon.getContZPointId());
     }
 
 
