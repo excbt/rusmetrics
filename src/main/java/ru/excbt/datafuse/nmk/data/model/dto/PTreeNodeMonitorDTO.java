@@ -18,6 +18,12 @@ public class PTreeNodeMonitorDTO implements Serializable {
         this.monitorObjectId = monitorObjectId;
     }
 
+    public PTreeNodeMonitorDTO(PTreeNodeType nodeType, Long monitorObjectId, ContEventLevelColorKeyV2 colorKey) {
+        this.nodeType = nodeType;
+        this.monitorObjectId = monitorObjectId;
+        this.colorKey = colorKey;
+    }
+
     public PTreeNodeType getNodeType() {
         return nodeType;
     }

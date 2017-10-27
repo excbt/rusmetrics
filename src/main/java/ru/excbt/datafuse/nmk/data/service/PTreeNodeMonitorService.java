@@ -168,29 +168,16 @@ public class PTreeNodeMonitorService {
         }
 
         // Includes colors of notifications
-        Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
+        Map<Long, List<ContEventMonitorX>> monitorContZPointMap = contEventMonitorV3Service
             .getContZPointContEventMonitorMap(qryContZPointIds);
 
 
-        List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
-        for (Long coId : qryContZPointIds) {
-
-            List<ContEventMonitorX> contObjectMonitors = monitorContObjectsMap.get(coId);
-
-            ContEventLevelColorKeyV2 worseMonitorColorKey = null;
-
-            if (contObjectMonitors != null) {
-                worseMonitorColorKey = contEventMonitorV3Service.sortWorseColor(contObjectMonitors);
-            }
-
-            final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
-                : ContEventLevelColorKeyV2.GREEN;
-
-            PTreeNodeMonitorDTO item = new PTreeNodeMonitorDTO(PTreeNodeType.CONT_ZPOINT, coId);
-
-            item.setColorKey(resultColorKey);
-
-            monitorStatusList.add(item);
+        final List<PTreeNodeMonitorDTO> monitorStatusList = new ArrayList<>();
+        for (Long zpId : qryContZPointIds) {
+            // Get All monitors of ContZPoint
+            List<ContEventMonitorX> monitors = monitorContZPointMap.get(zpId);
+            final ContEventLevelColorKeyV2 resultColorKey = monitors != null ? contEventMonitorV3Service.sortWorseColor(monitors) : ContEventLevelColorKeyV2.GREEN;
+            monitorStatusList.add(new PTreeNodeMonitorDTO(PTreeNodeType.CONT_ZPOINT, zpId, resultColorKey));
         }
 
         return Boolean.TRUE.equals(noGreenColor)
@@ -311,6 +298,13 @@ public class PTreeNodeMonitorService {
         return resultList;
     }
 
+    /**
+     *
+     * @param portalUserIds
+     * @param nodeId
+     * @param contObjectMonitorList
+     * @return
+     */
     public List<PTreeNodeMonitorDTO> findPTreeNodeMonitorElements(final PortalUserIds portalUserIds,
                                                                   final Long nodeId,
                                                                   final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
@@ -320,6 +314,30 @@ public class PTreeNodeMonitorService {
             return Collections.emptyList();
         }
         return findPTreeNodeMonitorElements(portalUserIds, node, Collections.unmodifiableList(contObjectMonitorList));
+    }
+
+    /**
+     *
+     * @param portalUserIds
+     * @param contZPointIdPairs
+     * @param dateInterval
+     * @param noGreenColor
+     * @return
+     */
+    public List<PTreeNodeMonitorDTO> findPTreeNodeMonitor (final PortalUserIds portalUserIds,
+                                                           final List<ContZPointIdPair> contZPointIdPairs,
+                                                           final DateInterval dateInterval,
+                                                           final Boolean noGreenColor) {
+
+        List<Long> contObjectIds = contZPointIdPairs.stream().map(ContZPointIdPair::getContObjectId).distinct().collect(Collectors.toList());
+        List<Long> contZPointIds = contZPointIdPairs.stream().map(ContZPointIdPair::getContZPointId).distinct().collect(Collectors.toList());
+
+        List<PTreeNodeMonitorDTO> coMonitorDTOList = findPTreeNodeMonitorCO(portalUserIds, contObjectIds, dateInterval, noGreenColor);
+        List<PTreeNodeMonitorDTO> zpMonitorDTOList = findPTreeNodeMonitorZP(portalUserIds, contZPointIds, dateInterval, noGreenColor);
+        List<PTreeNodeMonitorDTO> result = new ArrayList<>();
+        result.addAll(coMonitorDTOList);
+        result.addAll(zpMonitorDTOList);
+        return result;
     }
 
 
