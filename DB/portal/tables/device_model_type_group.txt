@@ -1,0 +1,32 @@
+
+CREATE TABLE portal.device_model_type_group
+(
+  id bigint NOT NULL DEFAULT nextval('seq_global_id'::regclass),
+  device_model_id bigint NOT NULL,
+  device_model_type text NOT NULL,
+  version integer NOT NULL DEFAULT 0,
+  deleted integer NOT NULL DEFAULT 0,
+  created_date timestamp without time zone NOT NULL DEFAULT now(),
+  last_modified_date timestamp without time zone,
+  created_by bigint,
+  last_modified_by bigint,
+  CONSTRAINT device_model_type_group_pkey PRIMARY KEY (id),
+  CONSTRAINT device_model_type_group_device_model_id_fkey FOREIGN KEY (device_model_id)
+      REFERENCES device_model (id) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT device_model_type_group_device_model_type_fkey FOREIGN KEY (device_model_type)
+      REFERENCES portal._device_model_type (keyname) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION,
+  CONSTRAINT device_model_type_group_device_model_id_device_model_type_key UNIQUE (device_model_id, device_model_type)
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE portal.device_model_type_group
+  OWNER TO dbuser1;
+GRANT ALL ON TABLE portal.device_model_type_group TO dbuser1;
+GRANT SELECT, UPDATE, INSERT, DELETE ON TABLE portal.device_model_type_group TO portal_role;
+GRANT SELECT ON TABLE portal.device_model_type_group TO ro_role;
+GRANT SELECT, REFERENCES, TRIGGER ON TABLE portal.device_model_type_group TO cabinet_role;
+COMMENT ON TABLE portal.device_model_type_group
+  IS 'Тип данных учета и модели приборов';
