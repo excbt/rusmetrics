@@ -13,11 +13,11 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SystemUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
@@ -25,10 +25,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -43,7 +40,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class SubscrUserService extends AbstractService implements SecuredRoles {
+public class SubscrUserService implements SecuredRoles {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrUserService.class);
 
@@ -248,7 +245,7 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 		if (subscrUser == null) {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
 		}
-		subscrUserRepository.save(softDelete(subscrUser));
+		subscrUserRepository.save(EntityActions.softDelete(subscrUser));
 
 		// Delete from Ldap
 		LdapAction action = (u) -> {
@@ -340,9 +337,8 @@ public class SubscrUserService extends AbstractService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrUser> findByUsername(String userName) {
-		List<SubscrUser> result = subscrUserRepository.findByUserNameIgnoreCase(userName);
-		return ObjectFilters.deletedFilter(result);
+	public Optional<SubscrUser> findByUsername(String userName) {
+		return subscrUserRepository.findOneByUserNameIgnoreCase(userName);
 	}
 
 	/**

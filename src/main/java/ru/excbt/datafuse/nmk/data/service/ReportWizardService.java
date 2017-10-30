@@ -30,12 +30,12 @@ import ru.excbt.datafuse.nmk.report.ReportColumn;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.nmk.reports.ColumnElement;
-import ru.excbt.nmk.reports.ReportConvert;
+import ru.excbt.nmk.reports.com_report.ColumnElement;
+import ru.excbt.nmk.reports.com_report.ReportConvert;
 
 /**
  * Сервис для работы с конструктором отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.04.2015
@@ -59,7 +59,7 @@ public class ReportWizardService implements SecuredRoles {
 	private ReportTemplateService reportTemplateService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ReportColumnSettings getReportColumnSettings() {
@@ -85,7 +85,7 @@ public class ReportWizardService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -94,7 +94,7 @@ public class ReportWizardService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportColumnSettings
 	 * @return
 	 */
@@ -125,7 +125,7 @@ public class ReportWizardService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTemplate
 	 * @return
 	 */

@@ -1,10 +1,15 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
@@ -12,19 +17,11 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-
-import org.joda.time.LocalDate;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
@@ -39,8 +36,11 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Autowired
 	private ContObjectRepository contObjectRepository;
 
-	@Autowired
-	private SubscrContObjectRepository subscrContObjectRepository;
+	//@Autowired
+	//private SubscrContObjectRepository subscrContObjectRepository;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -91,7 +91,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Test
 	@Transactional
 	public void testFindMeterPeriodSetting() throws Exception {
-		List<Long> ids = subscrContObjectRepository.selectContObjectIds(getSubscriberId());
+		List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
 		List<ContObjectMeterPeriodSettingsDTO> resultList = contObjectService.findMeterPeriodSettings(ids);
 		assertTrue(resultList != null);
 	}
@@ -99,7 +99,7 @@ public class ContObjectServiceTest extends JpaSupportTest {
 	@Test
 	@Transactional
 	public void testUpdateMeterPeriodSettingMulty() throws Exception {
-		List<Long> ids = subscrContObjectRepository.selectContObjectIds(getSubscriberId());
+		List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
 		MeterPeriodSettingDTO settings = meterPeriodSettingService
 				.save(MeterPeriodSettingDTO.builder().name("My MeterPeriodSetting").build());
 		ContObjectMeterPeriodSettingsDTO contObjectsSettings = ContObjectMeterPeriodSettingsDTO.builder().contObjectIds(ids)

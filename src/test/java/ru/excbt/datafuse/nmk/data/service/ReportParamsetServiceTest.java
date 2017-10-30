@@ -24,8 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
@@ -54,8 +53,8 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	@Test
 	public void testSelectReportParamset() {
@@ -88,8 +87,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	 * @param reportParamset
 	 */
 	private void testAddUnitToParamset(ReportParamset reportParamset) {
-		List<ContObject> contObjects = subscrContObjectService
-				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
 		assertTrue(contObjects.size() > 0);
 
 		ContObject co = contObjects.get(0);

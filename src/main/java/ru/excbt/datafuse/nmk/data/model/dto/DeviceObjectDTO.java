@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -131,5 +132,9 @@ public class DeviceObjectDTO {
         this.deviceLoginInfo = new DeviceLoginInfoDTO();
     }
 
+    @Getter
+    @Setter
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean activeDeviceObject;
 
 }

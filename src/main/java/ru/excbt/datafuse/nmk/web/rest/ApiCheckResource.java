@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +12,7 @@ import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 @RequestMapping(value = "/rest/check")
 public class ApiCheckResource {
 
+    @ApiOperation(value = "Check rest for russian lan suppirt")
 	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
 		return ResponseEntity.ok(ApiResult

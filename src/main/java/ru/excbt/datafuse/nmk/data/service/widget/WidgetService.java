@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service.widget;
 
@@ -14,18 +14,17 @@ import java.util.Map;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.LocalDateTimeInterval;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 11.01.2017
- * 
+ *
  */
-public abstract class WidgetService extends AbstractService {
+public abstract class WidgetService {
 
 	public enum MODES {
 		DAY, TODAY, YESTERDAY, WEEK, MONTH, YEAR
@@ -45,7 +44,7 @@ public abstract class WidgetService extends AbstractService {
 			});
 
 	/**
-	 * 
+	 *
 	 * @param dateTime
 	 * @param mode
 	 * @return
@@ -77,7 +76,7 @@ public abstract class WidgetService extends AbstractService {
 			if (dateTime.getDayOfMonth() < 15) {
 				return Pair.of(dateTime.minusMonths(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
 						endOfDay.toLocalDateTime());
-				// Current Month	
+				// Current Month
 			} else {
 				return Pair.of(dateTime.withDayOfMonth(1).truncatedTo(ChronoUnit.DAYS).toLocalDateTime(),
 						endOfDay.toLocalDateTime());
@@ -93,7 +92,7 @@ public abstract class WidgetService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateTime
 	 * @param mode
 	 * @return
@@ -104,7 +103,7 @@ public abstract class WidgetService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param mode
 	 * @return
 	 */
@@ -114,13 +113,13 @@ public abstract class WidgetService extends AbstractService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract Collection<MODES> getAvailableModes();
 
 	/**
-	 * 
+	 *
 	 * @param mode
 	 * @return
 	 */

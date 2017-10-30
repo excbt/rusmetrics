@@ -5,13 +5,12 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 import org.modelmapper.ModelMapper;
@@ -21,6 +20,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
  *
  */
 @Service
-public class MeterPeriodSettingService extends AbstractService implements SecuredRoles {
+public class MeterPeriodSettingService implements SecuredRoles {
 
 	@Autowired
 	private MeterPeriodSettingRepository meterPeriodSettingRepository;
@@ -106,10 +106,22 @@ public class MeterPeriodSettingService extends AbstractService implements Secure
 			setting.setDeleted(1);
 			meterPeriodSettingRepository.save(setting);
 		} else {
-			DBExceptionUtils.entityNotFoundException (MeterPeriodSetting.class, id);
+			DBExceptionUtil.entityNotFoundException (MeterPeriodSetting.class, id);
 		}
 	}
 
+    public List<ContObject> filterMeterPeriodSettingIds(List<ContObject> contObjects, List<Long> meterPeriodSettingIds) {
+        if (contObjects == null)
+            return null;
+        return contObjects.stream().filter(i -> {
+            if (meterPeriodSettingIds == null)
+                return true;
+            List<Long> checkIds = i.getMeterPeriodSettings().values().stream().map(s -> s.getId()).collect(Collectors.toList());
+            List<Long> filerM = new ArrayList<>(meterPeriodSettingIds);
+            filerM.retainAll(checkIds);
+            return !checkIds.isEmpty();
+        }).collect(Collectors.toList());
+    }
 
 
 

@@ -22,8 +22,6 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-
 
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -36,8 +34,11 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
 
+//	@Autowired
+//	private SubscrContObjectService subscrContObjectService;
+
 	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	private ObjectAccessService objectAccessService;
 
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
@@ -45,8 +46,7 @@ public class ContEventMonitorServiceTest extends JpaSupportTest {
 	@Test
 	public void testMonitor() throws Exception {
 
-		List<ContObject> vList = subscrContObjectService
-				.selectSubscriberContObjects(currentSubscriberService.getSubscriberId());
+		List<ContObject> vList = objectAccessService.findContObjects(currentSubscriberService.getSubscriberId());
 
 		for (ContObject co : vList) {
 			List<ContEventMonitor> monitorList = contEventMonitorService.findByContObject(co.getId());

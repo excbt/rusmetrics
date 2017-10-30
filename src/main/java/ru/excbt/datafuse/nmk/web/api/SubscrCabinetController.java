@@ -1,20 +1,21 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
+import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
+import ru.excbt.datafuse.nmk.data.service.CabinetMessageService;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
-import ru.excbt.datafuse.nmk.data.service.support.PasswordUtils;
+import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -27,6 +28,8 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -46,6 +49,12 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private SubscrCabinetService subscrCabinetService;
+
+    @Autowired
+	private CabinetMessageService cabinetMessageService;
+
+    @Autowired
+    private CabinetMessageRepository cabinetMessageRepository;
 
     /**
      *
@@ -218,5 +227,19 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 
 		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
+
+    @ApiOperation(value = "Send notification to cabinets")
+	@PutMapping(value = "cabinetMessageNotification",produces = ApiConst.APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> putSubscrCabinetMessageNotification(@ApiParam @RequestParam("messageSubject") String messageSubject,
+                                                                 @ApiParam @RequestParam("messageBody") String messageBody,
+                                                                 @ApiParam(name = "subscrCabinetIds", value = "array of ids of subscriber cabinets. " +
+                                                                     "If empty, message wil be sent to all cabinets", required = false)
+                                                                 @RequestBody(required = false) final List<Long> subscrCabinetIds) {
+
+        UUID masterUuid =  cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), messageSubject, messageBody, subscrCabinetIds);
+        List<Long> subscriberIds = cabinetMessageRepository.findMessageByMasterUuid(masterUuid)
+            .stream().map(i -> i.getToPortalSubscriberId()).distinct().collect(Collectors.toList());
+	    return ResponseEntity.ok(subscriberIds);
+    }
 
 }

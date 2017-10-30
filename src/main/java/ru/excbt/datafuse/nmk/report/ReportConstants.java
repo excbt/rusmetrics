@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.report;
 
 /**
  * Константы для работы с отчетами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
@@ -23,6 +23,7 @@ public class ReportConstants {
 	public static final String EXT_JASPER = ".jasper";
 	public static final String EXT_JRXML = ".jrxml";
 	public static final String EXT_PRPT = ".prpt";
+    public static final String EXT_XLSX = ".xlsx";
 
 	public static class Files {
 
@@ -66,6 +67,9 @@ public class ReportConstants {
 		public static final String HW_QUALITY_1_FILE_COMPILED = "jasper_reports/nmk_hw_quality_1_report.prpt";
 		public static final String HW_QUALITY_2_FILE_COMPILED = "jasper_reports/nmk_hw_quality_2_report.prpt";
 		public static final String RMA_ZPOINT_STAT_FILE_COMPILED = "jasper_reports/nmk_rma_zpoint_stat_report.prpt";
+        public static final String ELECTRIC_CONSUMPTION_EXPORT_FILE_COMPILED = "jasper_reports/nmk_electric_consumption_export.xlsx";
+        public static final String NO_DATA_FILE_COMPILED = "jasper_reports/nmk_no_data_report.prpt";
+        public static final String ELECTRIC_T5_FILE_COMPILED = "jasper_reports/nmk_electric_t5_report.prpt";
 
 		private Files() {
 
@@ -78,7 +82,7 @@ public class ReportConstants {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rtk
 	 * @return
 	 */
@@ -113,7 +117,7 @@ public class ReportConstants {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rtk
 	 * @return
 	 */

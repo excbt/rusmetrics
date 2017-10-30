@@ -20,10 +20,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -193,8 +190,8 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 					subscrUser.getUserName()));
 		}
 
-		List<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
-		if (!checkUser.isEmpty()) {
+		Optional<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
+		if (checkUser.isPresent()) {
 			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 

@@ -27,10 +27,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
-import ru.excbt.datafuse.nmk.data.service.support.*;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 import ru.excbt.datafuse.nmk.utils.FileInfoMD5;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -47,8 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -89,12 +90,11 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ContServiceDataHWaterDeltaService contObjectHWaterDeltaService;
 
-	private final SubscrContObjectService subscrContObjectService;
-
 	private final ContServiceDataHWaterImportService contServiceDataHWaterImportService;
 
 	private final SubscrDataSourceService subscrDataSourceService;
 
+	private final ObjectAccessService objectAccessService;
 
 	@Autowired
     public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
@@ -103,18 +103,17 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
                                                  CurrentSubscriberService currentSubscriberService,
                                                  ContServiceDataHWaterService contServiceDataHWaterService,
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 SubscrContObjectService subscrContObjectService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService) {
+                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
         this.webAppPropsService = webAppPropsService;
         this.currentSubscriberService = currentSubscriberService;
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contObjectHWaterDeltaService = contObjectHWaterDeltaService;
-        this.subscrContObjectService = subscrContObjectService;
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
         this.subscrDataSourceService = subscrDataSourceService;
+        this.objectAccessService = objectAccessService;
     }
 
     /**
@@ -678,8 +677,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		SubscriberParam subscriberParam = getSubscriberParam();
 
-        List<CsvUtils.CheckFileResult> checkFileResults = CsvUtils.checkCsvFiles(multipartFiles);
-        List<CsvUtils.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
+        List<CsvUtil.CheckFileResult> checkFileResults = CsvUtil.checkCsvFiles(multipartFiles);
+        List<CsvUtil.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
 
         if (isNotPassed.size() > 0) {
             return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
@@ -724,8 +723,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
-		List<Tuple> deviceObjectsData = subscrContObjectService.selectSubscriberDeviceObjectByNumber(
-				getSubscriberParam(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
+		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
@@ -757,7 +755,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			final Tuple row = checkRows.get(0);
 
-			if (!Boolean.TRUE.equals(DBRowUtils.asBoolean(row.get("isManualLoading")))) {
+			if (!Boolean.TRUE.equals(DBRowUtil.asBoolean(row.get("isManualLoading")))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
                     data.deviceSerial, data.tsNumber, data.fileName));
@@ -769,10 +767,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		Collection<Long> checkContZPoints = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtils.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
 
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtils.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
 
 		if (!checkContZPoints.isEmpty() && !canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
@@ -781,7 +779,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		List<Long> availableDataSourceIds = subscrDataSourceService
 				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
 
-		if (!checkDataSourceIds.isEmpty() && !AbstractService.checkIds(checkDataSourceIds, availableDataSourceIds)) {
+		if (!checkDataSourceIds.isEmpty() && !ObjectAccessUtil.checkIds(checkDataSourceIds, availableDataSourceIds)) {
 			fileNameErrorDesc.add("Нет доступа к источнику данных");
 		}
 
@@ -819,8 +817,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			checkState(row != null);
 
 			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
-					DBRowUtils.asLong(row.get("contObjectId")), DBRowUtils.asLong(row.get("contZPointId")),
-					DBRowUtils.asLong(row.get("deviceObjectId")), DBRowUtils.asLong(row.get("subscrDataSourceId")),
+					DBRowUtil.asLong(row.get("contObjectId")), DBRowUtil.asLong(row.get("contZPointId")),
+					DBRowUtil.asLong(row.get("deviceObjectId")), DBRowUtil.asLong(row.get("subscrDataSourceId")),
                 fileName, internalFilename);
 
 			serviceDataImportInfos.add(importInfo);

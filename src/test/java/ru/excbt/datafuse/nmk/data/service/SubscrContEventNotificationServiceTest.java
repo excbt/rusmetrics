@@ -30,7 +30,6 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventNotificationService.SearchConditions;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
@@ -49,16 +48,10 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 	private CurrentSubscriberService currentSubscriberService;
 
 	@Autowired
-	private SubscriberService subscriberService;
-
-	@Autowired
-	private ContEventService contEventService;
-
-	@Autowired
 	private ContEventTypeService contEventTypeService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	/**
 	 *
@@ -79,8 +72,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		Pageable request = new PageRequest(0, 1, Direction.DESC,
 				SubscrContEventNotificationService.AVAILABLE_SORT_FIELDS[0]);
 
-		List<Long> contObjectList = subscrContObjectService
-				.selectSubscriberContObjectIds(currentSubscriberService.getSubscriberId());
+		List<Long> contObjectList = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
 
 		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
 				.map(cet -> cet.getId()).collect(Collectors.toList());

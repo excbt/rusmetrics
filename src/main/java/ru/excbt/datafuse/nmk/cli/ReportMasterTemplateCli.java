@@ -135,7 +135,12 @@ public class ReportMasterTemplateCli {
 					.savePentahoReportMasterTemplateBody(templateBody.getId(),
 							correctedFilename, isCompiled);
 
-		} else {
+        } else if (reportTypeKey.getReportSystem() == ReportSystem.EXCEL) {
+            res = reportMasterTemplateBodyService
+                .saveExcelReportMasterTemplateBody(templateBody.getId(),
+                    correctedFilename, isCompiled);
+
+        } else {
 			new OperationNotSupportedException();
 		}
 		checkState(res);
@@ -292,7 +297,15 @@ public class ReportMasterTemplateCli {
 		loadReportMasterTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT,
 				ReportConstants.Files.RMA_ZPOINT_STAT_FILE_COMPILED, isCompiled);
 
-	}
+        loadReportMasterTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_EXPORT,
+            ReportConstants.Files.ELECTRIC_CONSUMPTION_EXPORT_FILE_COMPILED, isCompiled);
+
+        loadReportMasterTemplate(ReportTypeKey.NO_DATA_REPORT,
+            ReportConstants.Files.NO_DATA_FILE_COMPILED, isCompiled);
+
+        loadReportMasterTemplate(ReportTypeKey.ELECTRIC_T5_REPORT,
+            ReportConstants.Files.ELECTRIC_T5_FILE_COMPILED, isCompiled);
+    }
 
 	/**
 	 *
@@ -337,6 +350,9 @@ public class ReportMasterTemplateCli {
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_1_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.HW_QUALITY_2_REPORT);
 		updateAnyCommonReportTemplate(ReportTypeKey.RMA_ZPOINT_STAT_REPORT);
+        updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_CONSUMPTION_EXPORT);
+        updateAnyCommonReportTemplate(ReportTypeKey.NO_DATA_REPORT);
+        updateAnyCommonReportTemplate(ReportTypeKey.ELECTRIC_T5_REPORT);
 
 	}
 

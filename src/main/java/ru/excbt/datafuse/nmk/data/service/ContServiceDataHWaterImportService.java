@@ -6,10 +6,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import com.fasterxml.jackson.databind.RuntimeJsonMappingException;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.BooleanUtils;
-import org.postgresql.util.PSQLException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,23 +18,18 @@ import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ServiceDataImportInfo;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterImportRepository;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
-import ru.excbt.datafuse.nmk.data.service.support.DBExceptionUtils;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
-import ru.excbt.datafuse.nmk.data.service.support.SLogSessionUtils;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.slog.service.SLogSessionUtil;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -108,7 +101,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					"Загрузка файла: " + importInfo.getUserFileName());
 
 			session.web().trace("Проверка целостности CSV файла");
-			SLogSessionUtils.checkCsvSeparators(session, importInfo);
+			SLogSessionUtil.checkCsvSeparators(session, importInfo);
 			session.web().trace("Проверка целостности CSV пройдена");
             session.web().trace("Преобразование данных файла");
 
@@ -121,7 +114,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
                     session.web().trace("Ошибка преобразования данных файла. Некорректные данные: " + e.getMessage());
                 }
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Данные из файла не могут быть обработаны", errorMessage);
 
 				log.error("Data Import. Exception: IOException. sessionUUID({}). Exception message: {}",
@@ -137,7 +130,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			if (inDataHWaterImport.stream().map(i -> i.getTimeDetailType()).distinct().filter(s -> s == null)
 					.count() > 0) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Не задано значение detail_type", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -148,7 +141,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 					.collect(Collectors.toList());
 			if (timeDetailTypes.size() > 1 || timeDetailTypes.get(0) == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. В файле задано более 2-х типов detail_type", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -157,7 +150,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (inDataHWaterImport.stream().map(i -> i.getDataDate()).distinct().filter(s -> s == null).count() > 0) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Найдено пустое значение date", errorMessage);
 
 				throw new IllegalArgumentException(
@@ -168,7 +161,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (timeDetailKey == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Не найдено значение detail_type=" + timeDetailTypes.get(0), errorMessage);
 
 				throw new IllegalArgumentException(
@@ -180,7 +173,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (zpoint == null) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Точка учета не найдена", errorMessage);
 
 				throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "ContZPoint is not found",
@@ -192,7 +185,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 			if (!BooleanUtils.isTrue(zpoint.getIsManualLoading())) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Точка учета не поддерживает импорт данных", errorMessage);
 
                 throw new IllegalArgumentException(String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE,
@@ -227,7 +220,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
 			} catch (Exception e) {
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     "Ошибка. Загрузка в БД временно не возможна", errorMessage);
 
                 log.error("Data Import. Exception: {}. sessionUUID({}). Exception : {}",
@@ -248,14 +241,14 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 
 //				PSQLException pe = DBExceptionUtils.getPSQLException(e);
 //				String sqlExceptiomMessage = pe != null ? pe.getMessage() : e.getMessage();
-                String sqlExceptiomMessage =  DBExceptionUtils.getPSQLExceptionMessage(e);
+                String sqlExceptiomMessage =  DBExceptionUtil.getPSQLExceptionMessage(e);
 
               log.error("Hwater Data Import. Exception: {}. sessionUUID({}). Exception : {}",
 						e.getClass().getSimpleName(), session.getSessionUUID(), sqlExceptiomMessage);
 
 				session.web().trace("Ошибка при обновлении данных");
 
-                SLogSessionUtils.failSession(session,
+                SLogSessionUtil.failSession(session,
                     sqlExceptiomMessage, errorMessage);
 
 				throw new IllegalArgumentException(
@@ -263,7 +256,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			}
 
 			session.web().trace("Обновление данных успешно завершено");
-            SLogSessionUtils.completeSession(session, completeMessage);
+            SLogSessionUtil.completeSession(session, completeMessage);
 		}
 	}
 

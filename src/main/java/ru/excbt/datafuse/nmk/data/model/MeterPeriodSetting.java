@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model;
 
@@ -14,11 +14,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 20.02.2017
- * 
+ *
  */
 
 @Entity
@@ -28,11 +28,11 @@ import lombok.Setter;
 public class MeterPeriodSetting extends AbstractAuditableModel implements DeletedMarker {
 
 	/**
-		 * 
+		 *
 		 */
 	private static final long serialVersionUID = 7750787101754538870L;
 
-	@Column(name = "subscriber_id")
+	@Column(name = "subscriber_id", updatable = false)
 	private Long subscriberId;
 
 	@Column(name = "name")
@@ -61,9 +61,9 @@ public class MeterPeriodSetting extends AbstractAuditableModel implements Delete
 
 	@Column(name = "deleted")
 	private int deleted;
-	
+
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */

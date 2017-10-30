@@ -40,6 +40,7 @@ public class LogSessionServiceTest extends JpaSupportTest {
 	 */
 	@Test
     @Transactional
+    @Ignore
 	public void testLogSettionSelect() throws Exception {
 		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(EXCBT_RMA_SUBSCRIBER_ID);
 

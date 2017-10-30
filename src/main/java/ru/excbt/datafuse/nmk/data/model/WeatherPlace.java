@@ -70,8 +70,7 @@ public class WeatherPlace extends AbstractAuditableModel implements DisabledObje
 	@Column(name = "is_disabled")
 	private Boolean isDisabled;
 
-	@Column(name = "fias_uuid")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "fias_uuid", columnDefinition = "uuid")
 	private UUID fiasUuid;
 
 	@Column(name = "fias_sc_name")

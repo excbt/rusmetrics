@@ -11,7 +11,6 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +21,14 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 /**
  * Сервис для работы с параметрами отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.06.2015
@@ -42,68 +42,75 @@ public class ReportMakerParamService {
 	private static final boolean PREVIEW_ON = true;
 	private static final boolean PREVIEW_OFF = false;
 
-	@Autowired
-	private ReportParamsetService reportParamsetService;
 
-	@Autowired
-	private ReportTypeService reportTypeService;
+	private final ReportParamsetRepository reportParamsetRepository;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+	private final ReportParamsetUnitRepository reportParamsetUnitRepository;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	private final ReportTypeService reportTypeService;
 
-	/**
-	 * 
+	private final CurrentSubscriberService currentSubscriberService;
+
+	private final ObjectAccessService objectAccessService;
+
+    public ReportMakerParamService(ReportParamsetRepository reportParamsetRepository, ReportParamsetUnitRepository reportParamsetUnitRepository, ReportTypeService reportTypeService, CurrentSubscriberService currentSubscriberService, ObjectAccessService objectAccessService) {
+        this.reportParamsetRepository = reportParamsetRepository;
+        this.reportParamsetUnitRepository = reportParamsetUnitRepository;
+        this.reportTypeService = reportTypeService;
+        this.currentSubscriberService = currentSubscriberService;
+        this.objectAccessService = objectAccessService;
+    }
+
+    /**
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_OFF);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_ON);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds) {
-		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId, Long[] contObjectIds) {
-		ReportParamset reportParamset = reportParamsetService.findReportParamset(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_ON);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param contObjectIds
 	 * @return
@@ -113,19 +120,18 @@ public class ReportMakerParamService {
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
 	}
 
-	/**
-	 * 
-	 * @param reportParamset
-	 * @param contObjectIds
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamset
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset) {
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_OFF);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param contObjectIds
 	 * @return
@@ -139,7 +145,7 @@ public class ReportMakerParamService {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamset
 	 * @param contObjectIds
 	 * @param previewMode
@@ -155,7 +161,7 @@ public class ReportMakerParamService {
 		if (contObjectIds != null && contObjectIds.length > 0) {
 			paramContObjectIdList = Arrays.asList(contObjectIds);
 		} else if (contObjectIds == null && reportParamset.getId() != null) {
-			paramContObjectIdList = reportParamsetService.selectReportParamsetObjectIds(reportParamset.getId());
+			paramContObjectIdList = reportParamsetUnitRepository.selectObjectIds(reportParamset.getId());
 		}
 
 		List<Long> subscrContObjectIds = null;
@@ -176,7 +182,7 @@ public class ReportMakerParamService {
 				//						: reportParamset.getSubscriberId();
 				Long subscriberId = subscriberParam.getSubscriberId();
 
-				subscrContObjectIds = subscrContObjectService.selectSubscriberContObjectIds(subscriberId);
+				subscrContObjectIds = objectAccessService.findContObjectIds(subscriberId);
 			}
 
 		}
@@ -187,7 +193,7 @@ public class ReportMakerParamService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)

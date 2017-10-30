@@ -46,16 +46,14 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
     //@Column(name = "cont_object_id")
     //private Long contObjectId;
 
-    @Column(name = "fias_uuid")
-    @org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+    @Column(name = "fias_uuid", columnDefinition = "uuid")
     private UUID fiasUUID;
 
     @Column(name = "fias_full_address")
     @JsonIgnore
     private String fiasFullAddress;
 
-    @Column(name = "city_fias_uuid")
-    @org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+    @Column(name = "city_fias_uuid", columnDefinition = "uuid")
     private UUID cityFiasUUID;
 
     @Column(name = "geo_full_address")
@@ -72,12 +70,12 @@ public class ContObjectFias extends AbstractAuditableModel implements DeletableO
 
     @JsonIgnore
     @Column(name = "geo_json")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String geoJson;
 
     @JsonIgnore
     @Column(name = "geo_json_2")
-    @Type(type = "StringJsonObject")
+    @Type(type = "JsonbAsString")
     private String geoJson2;
 
     @JsonIgnore

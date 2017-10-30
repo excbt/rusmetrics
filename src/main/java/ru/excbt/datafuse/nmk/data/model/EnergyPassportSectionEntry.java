@@ -34,7 +34,7 @@ DTOModel<EnergyPassportSectionEntryDTO>, DTOUpdatableModel<EnergyPassportSection
     @NotNull
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "section_id")
+    @JoinColumn(name = "section_id", updatable = false)
     private EnergyPassportSection section;
 
     @Column(name = "entry_name")

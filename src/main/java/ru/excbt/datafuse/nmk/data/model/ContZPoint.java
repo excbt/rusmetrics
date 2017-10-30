@@ -31,6 +31,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
@@ -51,7 +52,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @Getter
 @Setter
-public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId {
+public class ContZPoint extends AbstractAuditableModel implements ExSystemObject, ExCodeObject, DeletableObjectId,
+    PersistableBuilder<ContZPoint, Long> {
 
 	/**
 	 *
@@ -59,7 +61,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private static final long serialVersionUID = 1L;
 
 	@ManyToOne
-	@JoinColumn(name = "cont_object_id")
+	@JoinColumn(name = "cont_object_id", updatable = false)
 	@JsonIgnore
 	private ContObject contObject;
 

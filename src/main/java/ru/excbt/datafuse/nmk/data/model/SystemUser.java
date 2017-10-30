@@ -54,7 +54,7 @@ public class SystemUser extends AbstractAuditableModel implements SubscriberUser
 	private int version;
 
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	private Subscriber subscriber;
 
 }

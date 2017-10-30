@@ -31,7 +31,6 @@ public enum ReportTypeKey implements KeynameObject {
 	PARTNER_SERVICE_REPORT(15, "partner_service"), //
 	ABONENT_SERVICE_REPORT(1, "abonent_service"), //
 	RMA_ABONENT_SERVICE_REPORT(16, "rma_abonent_service"), //
-	// ELECTRIC_READINGS_REPORT(18, "electric_readings", ReportSystem.PENTAHO), //
 	ELECTRIC_READINGS_REPORT(18, "electric_readings"), //
 	HW_QUALITY_REPORT(19, "hw_quality", ReportSystem.PENTAHO), //
 	ELECTRIC_CONSUMPTION_REPORT(21, "electric_consumption", ReportSystem.PENTAHO), //
@@ -40,7 +39,8 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_QUALITY_ACT_1_REPORT(24, "hw_quality_act_1", ReportSystem.PENTAHO), //
 	HW_QUALITY_ACT_2_REPORT(25, "hw_quality_act_2", ReportSystem.PENTAHO), //
 	HW_DATA_REPORT(26, "hw_data", ReportSystem.PENTAHO), //
-	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO), ELECTRIC_CONSUMPTION_ABONENT_REPORT(28, "electric_consumption_abonent"), //
+	EL_QUALITY_REPORT(27, "el_quality", ReportSystem.PENTAHO), //
+    ELECTRIC_CONSUMPTION_ABONENT_REPORT(28, "electric_consumption_abonent"), //
 	HW_LAST_EVENT_REPORT(29, "hw_last_event", ReportSystem.PENTAHO), //
 	CW_CONSUMPTION_REPORT(30, "cw_consumption", ReportSystem.PENTAHO), //
 	HW_CALC_CONSUMPTION_BY_AVG_REPORT(31, "hw_calc_consumption_by_avg"), //
@@ -52,7 +52,10 @@ public enum ReportTypeKey implements KeynameObject {
 	HW_BAD_PERIODS_REPORT(37, "hw_bad_periods", ReportSystem.PENTAHO), //
 	HW_QUALITY_1_REPORT(38, "hw_quality_1", ReportSystem.PENTAHO), //
 	HW_QUALITY_2_REPORT(39, "hw_quality_2", ReportSystem.PENTAHO), //
-	RMA_ZPOINT_STAT_REPORT(40, "rma_zpoint_stat", ReportSystem.PENTAHO); //
+	RMA_ZPOINT_STAT_REPORT(40, "rma_zpoint_stat", ReportSystem.PENTAHO), //
+    ELECTRIC_CONSUMPTION_EXPORT(41, "electric_consumption_export", ReportSystem.EXCEL), //
+    NO_DATA_REPORT(42, "no_data", ReportSystem.PENTAHO), //
+    ELECTRIC_T5_REPORT(43, "electric_t5", ReportSystem.PENTAHO); //
 
 	private final String urlName;
 	private final String defaultFileName;

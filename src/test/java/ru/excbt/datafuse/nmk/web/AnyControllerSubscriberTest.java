@@ -7,19 +7,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 
 public class AnyControllerSubscriberTest extends AnyControllerTest {
 
 	@Autowired
 	private CurrentSubscriberService cs;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+    @Autowired
+	private ObjectAccessService objectAccessService;
+
 
 	protected List<ContObject> selectSubscriberContObjects() {
-		return subscrContObjectService.selectSubscriberContObjects(cs.getSubscriberId());
+		return objectAccessService.findContObjects(cs.getSubscriberId());
 	}
 
 	protected ContObject getFirstContObject() {
@@ -29,7 +30,7 @@ public class AnyControllerSubscriberTest extends AnyControllerTest {
 	}
 
 	protected Long getFirstContObjectId() {
-		List<Long> contObjectIds = subscrContObjectService.selectSubscriberContObjectIds(cs.getSubscriberId());
+		List<Long> contObjectIds = objectAccessService.findContObjectIds(cs.getSubscriberId());
 		assertTrue(contObjectIds.size() > 0);
 		return contObjectIds.get(0);
 	}

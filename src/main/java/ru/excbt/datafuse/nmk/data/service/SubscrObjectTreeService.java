@@ -20,16 +20,17 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrObjectTreeService extends AbstractService implements SecuredRoles {
+public class SubscrObjectTreeService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
 
@@ -43,8 +44,8 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since dd.02.2016
@@ -55,8 +56,8 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @author A.Kovtonyuk
 	 * @version 1.0
 	 * @since dd.02.2016
@@ -72,7 +73,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -82,7 +83,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectTreeType
 	 * @return
@@ -129,18 +130,18 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
 	private SubscrObjectTree _softDeleteSubscrObjectTree(SubscrObjectTree node) {
 		checkNotNull(node);
-		TreeNodeOperator operator = (i) -> softDelete(i);
+		TreeNodeOperator operator = (i) -> EntityActions.softDelete(i);
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param operator
 	 * @return
@@ -175,7 +176,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectTreeType
 	 * @return
@@ -191,7 +192,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param tree
 	 * @param subscriberParam
 	 */
@@ -204,12 +205,12 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		tree.setIsRma(subscriberParam.isRma());
 	}
 
-	/**
-	 * 
-	 * @param rmaSubscriberId
-	 * @param templateId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param templateId
+     * @return
+     */
 	public SubscrObjectTree newSubscrObjectTree(SubscriberParam subscriberParam, Long templateId) {
 		SubscrObjectTree root = new SubscrObjectTree();
 
@@ -238,7 +239,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @return
@@ -258,7 +259,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @param searchLevel
@@ -288,7 +289,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param operator
 	 * @param searchLevel
@@ -319,7 +320,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @param searchLevel
@@ -330,19 +331,19 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		return _searchObject(node, operator, searchLevel, 0);
 	}
 
-	/**
-	 * 
-	 * @param node
-	 * @param objectName
-	 * @param searchLevel
-	 * @return
-	 */
+    /**
+     *
+     * @param node
+     * @param operator
+     * @param searchLevel
+     * @return
+     */
 	public SubscrObjectTree searchObject(SubscrObjectTree node, CheckConditionOperator operator, Integer searchLevel) {
 		return _searchObject(node, operator, searchLevel, 0);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param objectName
 	 * @return
@@ -352,7 +353,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @param subscrObjectTreeId
 	 * @param searchLevel
@@ -365,7 +366,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -381,7 +382,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -396,7 +397,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
@@ -428,7 +429,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
@@ -455,7 +456,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -474,7 +475,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */
@@ -490,11 +491,11 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
 
-	/**
-	 * 
-	 * @param rmaSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrObjectTree> selectSubscrObjectTreeShort(final SubscriberParam subscriberParam) {
 		List<Object[]> results = subscriberParam.isRma()
@@ -519,7 +520,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -530,7 +531,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -541,7 +542,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -551,11 +552,11 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 		return ids.isEmpty() ? false : Boolean.TRUE.equals(ids.get(0));
 	}
 
-	/**
-	 * 
-	 * @param rmaSubscriberId
-	 * @param subscrObjectTreeId
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param subscrObjectTreeId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
 
@@ -566,26 +567,36 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 
 	}
 
-	/**
-	 * 
-	 * @param subscriberParam
-	 * @param subscrObjectTreeId
-	 * @return
-	 */
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+
+        if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
+            throw new PersistenceException(
+                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
+        }
+    }
+
+
+    /**
+     *
+     * @param portalUserIds
+     * @param subscrObjectTreeId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public boolean checkValidSubscriberOk(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-		checkNotNull(subscriberParam);
+	public boolean checkValidSubscriberOk(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+		checkNotNull(portalUserIds);
 		checkNotNull(subscrObjectTreeId);
 
-		Long checkTreeSubscriberId = subscriberParam.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
+		Long checkTreeSubscriberId = portalUserIds.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
 				: selectSubscriberId(subscrObjectTreeId);
 
-		return Long.valueOf(subscriberParam.getSubscriberId()).equals(checkTreeSubscriberId);
+		return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param o1
 	 * @param o2
 	 * @return
@@ -602,7 +613,7 @@ public class SubscrObjectTreeService extends AbstractService implements SecuredR
 	}
 
 	/**
-	 * 
+	 *
 	 * @param node
 	 * @return
 	 */

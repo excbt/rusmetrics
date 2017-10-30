@@ -4,7 +4,6 @@ import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +16,12 @@ import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.service.*;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.HashMap;
 import java.util.List;
@@ -43,27 +41,33 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @RequestMapping(value = "/api/subscr")
 public class SubscrContZPointController extends AbstractSubscrApiResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointController.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrContZPointController.class);
 
-	@Autowired
-	protected ContZPointService contZPointService;
+	protected final ContZPointService contZPointService;
 
-	@Autowired
-	protected ContServiceDataHWaterService contServiceDataHWaterService;
+	protected final ContServiceDataHWaterService contServiceDataHWaterService;
 
-	@Autowired
-	protected ContServiceDataElService contServiceDataElService;
+	protected final ContServiceDataElService contServiceDataElService;
 
-	@Autowired
-	protected ContZPointMetadataService contZPointMetadataService;
+	protected final ContZPointMetadataService contZPointMetadataService;
 
-	@Autowired
-	protected MeasureUnitService measureUnitService;
+	protected final MeasureUnitService measureUnitService;
 
-	@Autowired
-	protected OrganizationService organizationService;
+	protected final OrganizationService organizationService;
 
-	/**
+	protected final ObjectAccessService objectAccessService;
+
+    public SubscrContZPointController(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService) {
+        this.contZPointService = contZPointService;
+        this.contServiceDataHWaterService = contServiceDataHWaterService;
+        this.contServiceDataElService = contServiceDataElService;
+        this.contZPointMetadataService = contZPointMetadataService;
+        this.measureUnitService = measureUnitService;
+        this.organizationService = organizationService;
+        this.objectAccessService = objectAccessService;
+    }
+
+    /**
 	 *
 	 * @param contObjectId
 	 * @return
@@ -71,7 +75,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId);
+		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(getSubscriberParam(), contObjectId);
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
@@ -95,7 +99,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(contObjectId);
+		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(getSubscriberParam(),contObjectId);
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
@@ -177,7 +181,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints() {
 
-		List<ContZPoint> contZPoints = subscrContObjectService.selectSubscriberContZPoints(getCurrentSubscriberId());
+		List<ContZPoint> contZPoints = objectAccessService.findAllContZPoints(getCurrentSubscriberId());
 
 		return ApiResponse.responseOK(contZPoints);
 	}
@@ -190,8 +194,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsInfo() {
 
-		List<ContZPointShortInfo> contZPoints = subscrContObjectService
-				.selectSubscriberContZPointShortInfo(getCurrentSubscriberId());
+		List<ContZPointShortInfo> contZPoints = objectAccessService.findContZPointShortInfo(getCurrentSubscriberId());
 
 		return ApiResponse.responseOK(contZPoints);
 	}
@@ -202,7 +205,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContServieTypes() {
+	public ResponseEntity<?> getContServiceTypes() {
 		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
 
 		return ApiResponse.responseOK(contServiceTypes);

@@ -39,16 +39,16 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	 */
 	private static final long serialVersionUID = -147661728148659523L;
 
-	@Column(name = "data_date")
+	@Column(name = "data_date", updatable = false)
 	private Date dataDate;
 
-	@Column(name = "cont_zpoint_id")
+	@Column(name = "cont_zpoint_id", updatable = false)
 	private Long contZpointId;
 
-	@Column(name = "device_object_id")
+	@Column(name = "device_object_id", updatable = false)
 	private Long deviceObjectId;
 
-	@Column(name = "time_detail_type")
+	@Column(name = "time_detail_type", updatable = false)
 	private String timeDetailType;
 
 	@Column(name = "data_value", columnDefinition = "numeric")

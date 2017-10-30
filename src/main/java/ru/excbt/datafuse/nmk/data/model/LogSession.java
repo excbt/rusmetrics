@@ -39,12 +39,10 @@ public class LogSession extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "session_type")
 	private String sessionType;
 
-	@Column(name = "session_uuid")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "session_uuid", columnDefinition = "uuid")
 	private UUID sessionUuid;
 
-	@Column(name = "master_session_uuid")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "master_session_uuid", columnDefinition = "uuid")
 	private UUID masterSessionUuid;
 
 	@Column(name = "session_date")

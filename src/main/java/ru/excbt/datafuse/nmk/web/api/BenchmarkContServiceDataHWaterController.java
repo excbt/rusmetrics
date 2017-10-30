@@ -1,12 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.excbt.datafuse.nmk.data.service.*;
-import ru.excbt.datafuse.nmk.data.service.support.BenchmarkService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.HWatersCsvService;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 /**
@@ -23,31 +22,13 @@ public class BenchmarkContServiceDataHWaterController extends SubscrContServiceD
 
 	private final BenchmarkService benchmarkService;
 
-
-	@Autowired
-    public BenchmarkContServiceDataHWaterController(ContZPointService contZPointService,
-                                                 HWatersCsvService hWatersCsvService,
-                                                 WebAppPropsService webAppPropsService,
-                                                 CurrentSubscriberService currentSubscriberService,
-                                                 ContServiceDataHWaterService contServiceDataHWaterService,
-                                                 ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 SubscrContObjectService subscrContObjectService,
-                                                 ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService,
-                                                 BenchmarkService benchmarkService) {
-        super(contZPointService,
-            hWatersCsvService,
-            webAppPropsService,
-            currentSubscriberService,
-            contServiceDataHWaterService,
-            contObjectHWaterDeltaService,
-            subscrContObjectService,
-            contServiceDataHWaterImportService,
-            subscrDataSourceService);
+    public BenchmarkContServiceDataHWaterController(ContZPointService contZPointService, HWatersCsvService hWatersCsvService, WebAppPropsService webAppPropsService, CurrentSubscriberService currentSubscriberService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataHWaterDeltaService contObjectHWaterDeltaService, ContServiceDataHWaterImportService contServiceDataHWaterImportService, SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, BenchmarkService benchmarkService) {
+        super(contZPointService, hWatersCsvService, webAppPropsService, currentSubscriberService, contServiceDataHWaterService, contObjectHWaterDeltaService, contServiceDataHWaterImportService, subscrDataSourceService, objectAccessService);
         this.benchmarkService = benchmarkService;
     }
 
-	/**
+
+    /**
 	 *
 	 * @return
 	 */

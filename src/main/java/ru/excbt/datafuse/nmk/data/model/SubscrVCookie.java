@@ -17,7 +17,6 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_vcookie")
-@TypeDefs({ @TypeDef(name = "StringJsonObject", typeClass = StringJsonUserType.class) })
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 //@JsonIgnoreProperties(value = { PropertyFilter.DEV_COMMENT_PROPERTY_IGNORE, "deleted", "id" }, ignoreUnknown = true)
 @Getter
@@ -30,11 +29,11 @@ public class SubscrVCookie extends JsonAbstractAuditableModel implements Deletab
 	private static final long serialVersionUID = -7674107555412412995L;
 
 	@JsonIgnore
-	@Column(name = "subscriber_id")
+	@Column(name = "subscriber_id", updatable = false)
 	private Long subscriberId;
 
 	@JsonIgnore
-	@Column(name = "subscr_user_id")
+	@Column(name = "subscr_user_id", updatable = false)
 	private Long subscrUserId;
 
 	@Column(name = "vc_mode")
@@ -44,7 +43,7 @@ public class SubscrVCookie extends JsonAbstractAuditableModel implements Deletab
 	private String vcKey;
 
 	@Column(name = "vc_value")
-	@Type(type = "StringJsonObject")
+	@Type(type = "JsonbAsString")
 	private String vcValue;
 
 	@JsonIgnore

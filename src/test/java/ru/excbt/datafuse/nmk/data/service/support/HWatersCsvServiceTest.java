@@ -5,18 +5,9 @@ package ru.excbt.datafuse.nmk.data.service.support;
 
 import static org.junit.Assert.assertTrue;
 
-import javax.inject.Inject;
-
 import org.junit.Test;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 
 /**
  *
@@ -38,7 +29,7 @@ public class HWatersCsvServiceTest {
 		sb.append("0,1,2,3,4,5,6,7");
 		sb.append(System.lineSeparator());
 		sb.append("0,1,2,3,4,5,6,7");
-		boolean result = CsvUtils.checkByteCsvSeparators(sb.toString().getBytes());
+		boolean result = CsvUtil.checkByteCsvSeparators(sb.toString().getBytes());
 		assertTrue(result);
 	}
 
@@ -52,7 +43,7 @@ public class HWatersCsvServiceTest {
 		sb.append("0,1,2,3,4,5,6,7");
 		sb.append(System.lineSeparator());
 		sb.append(",,,,,,,");
-		boolean result = CsvUtils.checkByteCsvSeparators(sb.toString().getBytes());
+		boolean result = CsvUtil.checkByteCsvSeparators(sb.toString().getBytes());
 		assertTrue(result);
 	}
 }

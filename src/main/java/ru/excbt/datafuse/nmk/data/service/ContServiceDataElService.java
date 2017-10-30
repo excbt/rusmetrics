@@ -22,8 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
@@ -45,7 +44,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
-public class ContServiceDataElService extends AbstractContServiceDataService {
+public class ContServiceDataElService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataElService.class);
 
@@ -63,14 +62,16 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 	private final ContServiceDataElProfileRepository contServiceDataElProfileRepository;
 
+	private final DBSessionService dbSessionService;
 
 	@Autowired
     public ContServiceDataElService(ContServiceDataElConsRepository contServiceDataElConsRepository,
                                     ContServiceDataElTechRepository contServiceDataElTechRepository,
-                                    ContServiceDataElProfileRepository contServiceDataElProfileRepository) {
+                                    ContServiceDataElProfileRepository contServiceDataElProfileRepository, DBSessionService dbSessionService) {
         this.contServiceDataElConsRepository = contServiceDataElConsRepository;
         this.contServiceDataElTechRepository = contServiceDataElTechRepository;
         this.contServiceDataElProfileRepository = contServiceDataElProfileRepository;
+        this.dbSessionService = dbSessionService;
     }
 
     /**
@@ -140,10 +141,10 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		totals.setContZPointId(contZPointId);
 
 		// First @ Last Data Data
-		ContServiceDataElCons firstData = getFirstElement(contServiceDataElConsRepository.selectFirstDataByZPoint(
+		ContServiceDataElCons firstData = ContServiceDataTool.getFirstElement(contServiceDataElConsRepository.selectFirstDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
-		ContServiceDataElCons lastData = getFirstElement(contServiceDataElConsRepository.selectLastDataByZPoint(
+		ContServiceDataElCons lastData = ContServiceDataTool.getFirstElement(contServiceDataElConsRepository.selectLastDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
 
 		// Abs values
@@ -153,11 +154,11 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 			String[] timeDetailAbsTypes = new String[] { timeDetail.getAbsPair() };
 
-			ContServiceDataElCons firstDataAbs = getFirstElement(
+			ContServiceDataElCons firstDataAbs = ContServiceDataTool.getFirstElement(
 					contServiceDataElConsRepository.selectFirstDataByZPoint(contZPointId, timeDetailAbsTypes,
 							localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
-			ContServiceDataElCons lastDataAbs = getFirstElement(
+			ContServiceDataElCons lastDataAbs = ContServiceDataTool.getFirstElement(
 					contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId, timeDetailAbsTypes,
 							localDatePeriod.buildDateToNextDay().getDateTo(), LIMIT1_PAGE_REQUEST));
 
@@ -194,26 +195,26 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 	 */
 	private void processDiffs(ContServiceDataElCons diffs, ContServiceDataElCons firstData,
 			ContServiceDataElCons lastData) {
-		diffs.setP_Ap1(processDelta(firstData.getP_Ap1(), lastData.getP_Ap1()));
-		diffs.setP_An1(processDelta(firstData.getP_An1(), lastData.getP_An1()));
-		diffs.setQ_Rp1(processDelta(firstData.getQ_Rp1(), lastData.getQ_Rp1()));
-		diffs.setQ_Rn1(processDelta(firstData.getQ_Rn1(), lastData.getQ_Rn1()));
-		diffs.setP_Ap2(processDelta(firstData.getP_Ap2(), lastData.getP_Ap2()));
-		diffs.setP_An2(processDelta(firstData.getP_An2(), lastData.getP_An2()));
-		diffs.setQ_Rp2(processDelta(firstData.getQ_Rp2(), lastData.getQ_Rp2()));
-		diffs.setQ_Rn2(processDelta(firstData.getQ_Rn2(), lastData.getQ_Rn2()));
-		diffs.setP_Ap3(processDelta(firstData.getP_Ap3(), lastData.getP_Ap3()));
-		diffs.setP_An3(processDelta(firstData.getP_An3(), lastData.getP_An3()));
-		diffs.setQ_Rp3(processDelta(firstData.getQ_Rp3(), lastData.getQ_Rp3()));
-		diffs.setQ_Rn3(processDelta(firstData.getQ_Rn3(), lastData.getQ_Rn3()));
-		diffs.setP_Ap4(processDelta(firstData.getP_Ap4(), lastData.getP_Ap4()));
-		diffs.setP_An4(processDelta(firstData.getP_An4(), lastData.getP_An4()));
-		diffs.setQ_Rp4(processDelta(firstData.getQ_Rp4(), lastData.getQ_Rp4()));
-		diffs.setQ_Rn4(processDelta(firstData.getQ_Rn4(), lastData.getQ_Rn4()));
-		diffs.setP_Ap(processDelta(firstData.getP_Ap(), lastData.getP_Ap()));
-		diffs.setP_An(processDelta(firstData.getP_An(), lastData.getP_An()));
-		diffs.setQ_Rp(processDelta(firstData.getQ_Rp(), lastData.getQ_Rp()));
-		diffs.setQ_Rn(processDelta(firstData.getQ_Rn(), lastData.getQ_Rn()));
+		diffs.setP_Ap1(ContServiceDataTool.processDelta(firstData.getP_Ap1(), lastData.getP_Ap1()));
+		diffs.setP_An1(ContServiceDataTool.processDelta(firstData.getP_An1(), lastData.getP_An1()));
+		diffs.setQ_Rp1(ContServiceDataTool.processDelta(firstData.getQ_Rp1(), lastData.getQ_Rp1()));
+		diffs.setQ_Rn1(ContServiceDataTool.processDelta(firstData.getQ_Rn1(), lastData.getQ_Rn1()));
+		diffs.setP_Ap2(ContServiceDataTool.processDelta(firstData.getP_Ap2(), lastData.getP_Ap2()));
+		diffs.setP_An2(ContServiceDataTool.processDelta(firstData.getP_An2(), lastData.getP_An2()));
+		diffs.setQ_Rp2(ContServiceDataTool.processDelta(firstData.getQ_Rp2(), lastData.getQ_Rp2()));
+		diffs.setQ_Rn2(ContServiceDataTool.processDelta(firstData.getQ_Rn2(), lastData.getQ_Rn2()));
+		diffs.setP_Ap3(ContServiceDataTool.processDelta(firstData.getP_Ap3(), lastData.getP_Ap3()));
+		diffs.setP_An3(ContServiceDataTool.processDelta(firstData.getP_An3(), lastData.getP_An3()));
+		diffs.setQ_Rp3(ContServiceDataTool.processDelta(firstData.getQ_Rp3(), lastData.getQ_Rp3()));
+		diffs.setQ_Rn3(ContServiceDataTool.processDelta(firstData.getQ_Rn3(), lastData.getQ_Rn3()));
+		diffs.setP_Ap4(ContServiceDataTool.processDelta(firstData.getP_Ap4(), lastData.getP_Ap4()));
+		diffs.setP_An4(ContServiceDataTool.processDelta(firstData.getP_An4(), lastData.getP_An4()));
+		diffs.setQ_Rp4(ContServiceDataTool.processDelta(firstData.getQ_Rp4(), lastData.getQ_Rp4()));
+		diffs.setQ_Rn4(ContServiceDataTool.processDelta(firstData.getQ_Rn4(), lastData.getQ_Rn4()));
+		diffs.setP_Ap(ContServiceDataTool.processDelta(firstData.getP_Ap(), lastData.getP_Ap()));
+		diffs.setP_An(ContServiceDataTool.processDelta(firstData.getP_An(), lastData.getP_An()));
+		diffs.setQ_Rp(ContServiceDataTool.processDelta(firstData.getQ_Rp(), lastData.getQ_Rp()));
+		diffs.setQ_Rn(ContServiceDataTool.processDelta(firstData.getQ_Rn(), lastData.getQ_Rn()));
 	}
 
 	/**
@@ -253,13 +254,13 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param contZPointId
-	 * @param timeDetail
-	 * @param period
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetail
+     * @param localDatePeriod
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataElCons selectCons_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
@@ -270,8 +271,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "avg(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class, dbSessionService.getSession());
 
 		return consColumnHelperReader(columnHelper, queryResults);
 
@@ -294,8 +295,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "min(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class, dbSessionService.getSession());
 
 		return consColumnHelperReader(columnHelper, queryResults);
 
@@ -318,8 +319,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "max(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class, dbSessionService.getSession());
 
 		return consColumnHelperReader(columnHelper, queryResults);
 
@@ -342,8 +343,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "sum(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElCons.class, dbSessionService.getSession());
 
 		return consColumnHelperReader(columnHelper, queryResults);
 
@@ -412,10 +413,10 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ContServiceDataElTech totals = null;
 
-		ContServiceDataElTech firstData = getFirstElement(contServiceDataElTechRepository.selectFirstDataByZPoint(
+		ContServiceDataElTech firstData = ContServiceDataTool.getFirstElement(contServiceDataElTechRepository.selectFirstDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
-		ContServiceDataElTech lastData = getFirstElement(contServiceDataElTechRepository.selectLastDataByZPoint(
+		ContServiceDataElTech lastData = ContServiceDataTool.getFirstElement(contServiceDataElTechRepository.selectLastDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
 
 		ContServiceDataElTech avg = selectTech_Avg(contZPointId, timeDetail, localDatePeriod);
@@ -444,8 +445,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElTech.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElTech.class, dbSessionService.getSession());
 
 		ContServiceDataElTech result = new ContServiceDataElTech();
 		result.setU1(columnHelper.getResultDouble(queryResults, "u1"));
@@ -464,15 +465,14 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 	}
 
-	/**
-	 *
-	 * @param contZPointId
-	 * @param timeDetail
-	 * @param beginDate
-	 * @param endDate
-	 * @param pageRequest
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetail
+     * @param localDatePeriod
+     * @param pageRequest
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataElProfile> selectProfileByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
@@ -527,10 +527,10 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ContServiceDataElProfile totals = null;
 
-		ContServiceDataElProfile firstData = getFirstElement(contServiceDataElProfileRepository.selectFirstDataByZPoint(
+		ContServiceDataElProfile firstData = ContServiceDataTool.getFirstElement(contServiceDataElProfileRepository.selectFirstDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateFrom(), LIMIT1_PAGE_REQUEST));
 
-		ContServiceDataElProfile lastData = getFirstElement(contServiceDataElProfileRepository.selectLastDataByZPoint(
+		ContServiceDataElProfile lastData = ContServiceDataTool.getFirstElement(contServiceDataElProfileRepository.selectLastDataByZPoint(
 				contZPointId, timeDetailTypes, localDatePeriod.getDateTo(), LIMIT1_PAGE_REQUEST));
 
 		ContServiceDataElProfile avg = selectProfile_Avg(contZPointId, timeDetail, localDatePeriod);
@@ -547,13 +547,13 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 	}
 
-	/**
-	 *
-	 * @param contZPointId
-	 * @param timeDetail
-	 * @param period
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetail
+     * @param localDatePeriod
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataElProfile selectProfile_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
@@ -566,8 +566,8 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 
 		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
 
-		Object[] queryResults = serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElProfile.class);
+		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
+				ContServiceDataElProfile.class, dbSessionService.getSession());
 
 		ContServiceDataElProfile result = new ContServiceDataElProfile();
 		result.setP_Ap(columnHelper.getResultDouble(queryResults, "p_Ap"));
@@ -634,7 +634,7 @@ public class ContServiceDataElService extends AbstractContServiceDataService {
 				.map(i -> i.getRight()).collect(Collectors.toList());
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
 						contServiceDataElConsRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
 				: new HashMap<>();
 

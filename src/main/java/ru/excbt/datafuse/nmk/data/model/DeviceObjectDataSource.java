@@ -38,7 +38,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 	private static final long serialVersionUID = -9218504365025332432L;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "device_object_id")
+	@JoinColumn(name = "device_object_id", updatable = false)
 	@JsonIgnore
 	private DeviceObject deviceObject;
 

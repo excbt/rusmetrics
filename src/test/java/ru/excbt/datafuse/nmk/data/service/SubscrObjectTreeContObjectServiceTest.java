@@ -16,7 +16,7 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
@@ -26,8 +26,11 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 	@Autowired
 	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
+//	@Autowired
+//	private SubscrContObjectService subscrContObjectService;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	/**
 	 * Test ignored due to deleting of subscrObjectTree ID = 64166466L
@@ -44,8 +47,8 @@ public class SubscrObjectTreeContObjectServiceTest extends JpaSupportTest {
 				512111663L);
 		assertNotNull(contObjectIds);
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjectsExcludingIds(64166466L,
-				contObjectIds);
+		List<ContObject> contObjects = objectAccessService.findContObjectsExcludingIds(64166466L,
+            contObjectIds);
 
 		assertNotNull(contObjects);
 

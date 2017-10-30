@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Ignore;
 import org.junit.Test;
@@ -22,8 +23,6 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.PasswordService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -59,10 +58,10 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 	@Ignore
 	@Test
 	public void tesArgon19() {
-		List<SubscrUser> subscrUsers = subscriberService.findUserByUsername(ARGON_19);
-		assertTrue(subscrUsers.size() == 1);
+		Optional<SubscrUser> userOptional = subscrUserService.findByUsername("ARGON_19");
+		assertTrue(userOptional.isPresent());
 
-		SubscrUser user = subscrUsers.get(0);
+		SubscrUser user = userOptional.get();
 
 		assertEquals(passwordService.passwordEncoder().encode(SIMPLE_PASSWORD), user.getPassword());
 

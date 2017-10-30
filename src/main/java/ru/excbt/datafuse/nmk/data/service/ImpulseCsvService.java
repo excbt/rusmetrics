@@ -11,8 +11,7 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulse_CsvFormat;
-import ru.excbt.datafuse.nmk.data.service.support.CsvUtils;
-import ru.excbt.datafuse.nmk.data.service.support.TimeZoneService;
+import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -86,7 +85,7 @@ public class ImpulseCsvService {
     }
 
     public static boolean fileStarts(String fileName) {
-        return CsvUtils.extractFileName(fileName).toLowerCase().startsWith(FILE_STARTS.toLowerCase());
+        return CsvUtil.extractFileName(fileName).toLowerCase().startsWith(FILE_STARTS.toLowerCase());
     }
 
 
@@ -121,7 +120,7 @@ public class ImpulseCsvService {
     public List<ContServiceDataImpulseUCsv> parseDataImpulseUCsvImport(File file)
         throws IOException {
 
-        Charset charset = CsvUtils.determineCharset(file);
+        Charset charset = CsvUtil.determineCharset(file);
 
         try (FileInputStream is = new FileInputStream(file)) {
             InputStreamReader isr = new InputStreamReader(is, charset);

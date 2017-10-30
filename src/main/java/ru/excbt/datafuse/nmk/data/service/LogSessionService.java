@@ -10,7 +10,6 @@ import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionRepository;
 import ru.excbt.datafuse.nmk.data.repository.LogSessionStepRepository;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
-public class LogSessionService extends AbstractService {
+public class LogSessionService {
 
 	@Autowired
 	private LogSessionRepository logSessionRepository;

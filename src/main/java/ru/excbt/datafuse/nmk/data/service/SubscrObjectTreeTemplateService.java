@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
 @Service
 public class SubscrObjectTreeTemplateService {
@@ -25,7 +25,7 @@ public class SubscrObjectTreeTemplateService {
 	private SubscrObjectTreeTemplateItemRepository subscrObjectTreeTemplateItemRepository;
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberTemplate
 	 * @return
 	 */
@@ -40,7 +40,7 @@ public class SubscrObjectTreeTemplateService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -50,7 +50,7 @@ public class SubscrObjectTreeTemplateService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param templateId
 	 * @return
 	 */

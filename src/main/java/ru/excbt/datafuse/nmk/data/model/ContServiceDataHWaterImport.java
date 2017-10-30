@@ -38,7 +38,7 @@ public class ContServiceDataHWaterImport extends AbstractPersistableEntity<Long>
 	 */
 	private static final long serialVersionUID = -9047907605001865566L;
 
-	@Column(name = "data_date")
+	@Column(name = "data_date", updatable = false)
 	private Date dataDate;
 
 	@Column(name = "device_object_id")
@@ -127,8 +127,7 @@ public class ContServiceDataHWaterImport extends AbstractPersistableEntity<Long>
 	private Boolean dataChanged;
 
 	@JsonIgnore
-	@Column(name = "trx_id")
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "trx_id", columnDefinition = "uuid")
 	private UUID trxId;
 
 	@Column(name = "created_by", updatable = false)

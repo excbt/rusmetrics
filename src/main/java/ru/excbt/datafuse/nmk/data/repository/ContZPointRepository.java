@@ -26,15 +26,15 @@ public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, C
 	 * @param contObjectId
 	 * @return
 	 */
-	@Query("SELECT zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId ")
-	List<Long> selectContZPointIds(@Param("contObjectId") long contObjectId);
+	@Query("SELECT zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId AND zp.deleted = 0")
+	List<Long> findContZPointIds(@Param("contObjectId") long contObjectId);
 
 	/**
 	 *
 	 * @param contObjectId
 	 * @return
 	 */
-	@Query("SELECT zp.contServiceTypeKeyname, zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId ")
+	@Query("SELECT zp.contServiceTypeKeyname, zp.id FROM ContZPoint zp WHERE zp.contObject.id = :contObjectId AND zp.deleted = 0")
 	List<Object[]> selectContZPointServiceTypeIds(@Param("contObjectId") long contObjectId);
 
 	/**

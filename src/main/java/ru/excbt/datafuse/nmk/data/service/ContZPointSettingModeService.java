@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с настройками точки учета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 01.04.2015
@@ -43,7 +43,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	private ContZPointService contZPointService;
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @return
 	 */
@@ -63,7 +63,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param settingMode
 	 * @return
@@ -85,7 +85,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param arg
 	 * @return
 	 */
@@ -105,10 +105,10 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	@Deprecated
 	private void delete(ContZPointSettingMode entity) {
@@ -117,10 +117,10 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	@Deprecated
 	private void delete(long id) {
@@ -129,7 +129,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -157,7 +157,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointSettingModeId
 	 * @return
 	 */
@@ -167,7 +167,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_ZPOINT_ADMIN })

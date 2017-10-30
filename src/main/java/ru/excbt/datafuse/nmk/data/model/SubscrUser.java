@@ -83,15 +83,14 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id")
+	@JoinColumn(name = "subscriber_id", updatable = false)
 	private Subscriber subscriber;
 
 	@Column(name = "subscriber_id", insertable = false, updatable = false)
 	private Long subscriberId;
 
 	@JsonIgnore
-	@Column(name = "user_uuid", insertable = false, updatable = false)
-	@org.hibernate.annotations.Type(type = "org.hibernate.type.PostgresUUIDType")
+	@Column(name = "user_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
 	private UUID userUUID;
 
 	@JsonIgnore

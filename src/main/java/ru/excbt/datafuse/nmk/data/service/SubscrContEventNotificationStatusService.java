@@ -1,7 +1,22 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
+import ru.excbt.datafuse.nmk.data.model.support.*;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
+import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,58 +24,41 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
-import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatus;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatus;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventTypeStatus;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
-import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
-import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfo;
-import ru.excbt.datafuse.nmk.data.service.support.CounterInfoMap;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 @Service
-public class SubscrContEventNotificationStatusService extends AbstractService {
+public class SubscrContEventNotificationStatusService {
 
-	@Autowired
-	private SubscrContObjectService subscrContObjectService;
 
-	@Autowired
-	private SubscrContEventNotificationService subscrContEventNotificationService;
+	private final SubscrContEventNotificationService subscrContEventNotificationService;
 
-	@Autowired
-	private ContEventMonitorService contEventMonitorService;
+	private final ContEventMonitorService contEventMonitorService;
 
-	@Autowired
-	private ContEventTypeService contEventTypeService;
+	private final ContEventTypeService contEventTypeService;
 
-	@Autowired
-	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
+	private final SubscrContEventNotificationRepository subscrContEventNotificationRepository;
 
-	@Autowired
-	private ContEventLevelColorRepository contEventLevelColorRepository;
+	private final ContEventLevelColorRepository contEventLevelColorRepository;
 
-	@Autowired
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	@Autowired
-	private ContObjectFiasService contObjectFiasService;
+	private final ContObjectFiasService contObjectFiasService;
 
-	/**
+	private final ObjectAccessService objectAccessService;
+
+    public SubscrContEventNotificationStatusService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorService contEventMonitorService, ContEventTypeService contEventTypeService, SubscrContEventNotificationRepository subscrContEventNotificationRepository, ContEventLevelColorRepository contEventLevelColorRepository, ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService) {
+        this.subscrContEventNotificationService = subscrContEventNotificationService;
+        this.contEventMonitorService = contEventMonitorService;
+        this.contEventTypeService = contEventTypeService;
+        this.subscrContEventNotificationRepository = subscrContEventNotificationRepository;
+        this.contEventLevelColorRepository = contEventLevelColorRepository;
+        this.contObjectService = contObjectService;
+        this.contObjectFiasService = contObjectFiasService;
+        this.objectAccessService = objectAccessService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -70,8 +68,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 			final SubscriberParam subscriberParam, final Long contGroupId, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberParam,
-				contGroupId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(subscriberParam.getSubscriberId(), contGroupId);
 
 		List<MonitorContEventNotificationStatus> resultObjects = selectMonitorContEventNotificationStatusCollapse(
 				subscriberParam, contObjects, datePeriod, noGreenColor);
@@ -131,7 +128,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
 
-		List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(subscriberId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
 
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
@@ -222,7 +219,7 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		List<Long> contObjectIds = contObjects.stream().map((i) -> i.getId()).collect(Collectors.toList());
 
 		if (contObjectIds.isEmpty()) {
-			contObjectIds = NO_DATA_IDS;
+			contObjectIds = RepositoryUtil.NO_DATA_IDS;
 		}
 
 		CounterInfoMap allMap = new CounterInfoMap(subscrContEventNotificationService
@@ -345,13 +342,13 @@ public class SubscrContEventNotificationStatusService extends AbstractService {
 		return resultList;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param contObjectId
-	 * @param datePeriod
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberParam
+     * @param contObjectId
+     * @param datePeriod
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
 			final SubscriberParam subscriberParam, final Long contObjectId, final LocalDatePeriod datePeriod) {

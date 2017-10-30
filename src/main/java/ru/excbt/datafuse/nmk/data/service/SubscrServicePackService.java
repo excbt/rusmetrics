@@ -13,11 +13,11 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePackSpecial;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackSpecialRepository;
-import ru.excbt.datafuse.nmk.data.service.support.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
 /**
  * Сервис для работы с пакетом услуг абонента
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.09.2015
@@ -33,7 +33,7 @@ public class SubscrServicePackService {
 	private SubscrServicePackSpecialRepository subscrServicePackSpecialRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -52,7 +52,7 @@ public class SubscrServicePackService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */

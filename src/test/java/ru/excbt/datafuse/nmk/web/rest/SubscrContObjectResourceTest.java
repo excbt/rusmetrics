@@ -3,17 +3,16 @@ package ru.excbt.datafuse.nmk.web.rest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
+import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
 import ru.excbt.datafuse.nmk.data.repository.MeterPeriodSettingRepository;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
-import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
@@ -59,13 +58,8 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Autowired
     private ContObjectRepository contObjectRepository;
 
-
-    @Autowired
-    private SubscrContObjectService subscrContObjectService;
-
     @Autowired
     private ContObjectFiasRepository contObjectFiasRepository;
-    ;
 
     @Autowired
     private MeterPeriodSettingService meterPeriodSettingService;
@@ -73,13 +67,18 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Autowired
     private MeterPeriodSettingRepository meterPeriodSettingRepository;
 
+    @Autowired
+    private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private OrganizationRepository organizationRepository;
 
     /**
      * @return
      */
     private List<Long> findSubscriberContObjectIds() {
         log.debug("Finding objects for subscriberId:{}", getSubscriberId());
-        List<Long> result = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> result =  objectAccessService.findContObjectIds(getSubscriberId());
         assertFalse(result.isEmpty());
         return result;
     }
@@ -95,7 +94,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Test
     @Transactional
     public void testContObjectsByMeterPeriodGet() throws Exception {
-        List<ContObject> contObjects = subscrContObjectService.selectSubscriberContObjects(getSubscriberId());
+        List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
         MeterPeriodSetting meterPeriodSetting = new MeterPeriodSetting();
         meterPeriodSetting.setName("TEST PERIOD");
         meterPeriodSetting.setFromDay(1);
@@ -132,7 +131,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Transactional
     public void testContObjectFiasGet() throws Exception {
 
-        List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
 
 
         List<ContObjectFias> fiasIds = contObjectFiasRepository.findByContObjectIds(ids);
@@ -145,6 +144,14 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
         _testGetSuccessful(url);
     }
 
+
+    private Organization newCMOrganization (String orgName) {
+        Organization organization = new Organization();
+        organization.setOrganizationName(orgName);
+        organization.setFlagCm(true);
+        return organization;
+    }
+
     /**
      * @throws Exception
      */
@@ -152,15 +159,15 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Transactional
     public void testUpdate() throws Exception {
 
+        Organization organization = organizationRepository.saveAndFlush(newCMOrganization("My Organization"));
+
         ContObject testCO = findFirstContObject();
         log.info("Found ContObject (id={})", testCO.getId());
         testCO.setComment("Updated by REST test at " + DateTime.now().toString());
 
         String urlStr = "/api/subscr/contObjects/" + testCO.getId();
 
-        RequestExtraInitializer param = (builder) -> {
-            builder.param("cmOrganizationId", testCO.get_activeContManagement().getOrganization().getId().toString());
-        };
+        RequestExtraInitializer param = (builder) -> builder.param("cmOrganizationId", organization.getId().toString());
 
         _testUpdateJson(urlStr, testCO, param);
     }
@@ -181,8 +188,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
     @Transactional
     public void testSettingModeUpdate() throws Exception {
 
-        List<ContObject> contObjects = subscrContObjectService
-            .selectSubscriberContObjects(currentSubscriberService.getSubscriberParam());
+        List<ContObject> contObjects = objectAccessService.findContObjects(currentSubscriberService.getSubscriberId());
 
         assertNotNull(contObjects);
         assertTrue(contObjects.size() > 0);
@@ -205,7 +211,7 @@ public class SubscrContObjectResourceTest extends AnyControllerTest {
      * @return
      */
     private ContObject findFirstContObject() {
-        List<Long> ids = subscrContObjectService.selectSubscriberContObjectIds(getSubscriberId());
+        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
         ContObject testCO = ids.isEmpty() ? null : contObjectService.findContObjectChecked(ids.get(0));
         assertNotNull(testCO);
         return testCO;

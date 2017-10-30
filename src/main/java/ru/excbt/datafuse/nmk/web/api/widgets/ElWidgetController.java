@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.widget.ElWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -37,13 +40,18 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 @RequestMapping(value = "/api/subscr/widgets/el/{contZpointId}")
 public class ElWidgetController extends WidgetController {
 
-	@Inject
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	@Inject
-	private ElWidgetService elWidgetService;
+	private final ElWidgetService elWidgetService;
 
-	/**
+	@Autowired
+    public ElWidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ContObjectService contObjectService, ElWidgetService elWidgetService) {
+        super(contEventMonitorV3Service, contZPointService);
+        this.contObjectService = contObjectService;
+        this.elWidgetService = elWidgetService;
+    }
+
+    /**
 	 *
 	 * @param contZpointId
 	 * @param mode

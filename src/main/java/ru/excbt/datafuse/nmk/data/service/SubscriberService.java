@@ -2,11 +2,8 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -28,63 +25,71 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с абонентами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 24.03.2015
  *
  */
 @Service
-public class SubscriberService extends AbstractService implements SecuredRoles {
+public class SubscriberService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscriberService.class);
 
 	private final static String LDAP_DESCRIPTION_SUFFIX_PARAM = "LDAP_CABINETS_DESCRIPTION_SUFFIX";
 	private final static String LDAP_DESCRIPTION_SUFFIX_DEFAULT = "Cabinets-";
 
-	@Autowired
-	protected SubscriberRepository subscriberRepository;
+    @PersistenceContext(unitName = "nmk-p")
+    protected EntityManager em;
 
-	@Autowired
-	protected SubscrUserRepository subscrUserRepository;
+	protected final SubscriberRepository subscriberRepository;
 
-	@Autowired
-	protected ContZPointRepository contZPointRepository;
+	protected final SubscrUserRepository subscrUserRepository;
 
-	@PersistenceContext(unitName = "nmk-p")
-	protected EntityManager em;
+	protected final ContZPointRepository contZPointRepository;
 
-	@Autowired
-	protected TimezoneDefService timezoneDefService;
+	protected final TimezoneDefService timezoneDefService;
 
-	@Autowired
-	protected SubscrServiceAccessService subscrServiceAccessService;
+	protected final SubscrServiceAccessService subscrServiceAccessService;
 
-	@Autowired
-	private SystemParamService systemParamService;
+	private final SystemParamService systemParamService;
 
-	@Autowired
-	private OrganizationRepository organizationRepository;
+	private final OrganizationRepository organizationRepository;
 
-	/**
-	 * 
-	 * @param id
-	 * @return
-	 */
+    protected final SubscriberMapper subscriberMapper;
+
+    @Autowired
+    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper) {
+        this.subscriberRepository = subscriberRepository;
+        this.subscrUserRepository = subscrUserRepository;
+        this.contZPointRepository = contZPointRepository;
+        this.timezoneDefService = timezoneDefService;
+        this.subscrServiceAccessService = subscrServiceAccessService;
+        this.systemParamService = systemParamService;
+        this.organizationRepository = organizationRepository;
+        this.subscriberMapper = subscriberMapper;
+    }
+
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Subscriber selectSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
@@ -95,93 +100,56 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 * 
-	 * @param subscriberId
-	 * @return
-	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private Subscriber findOne2(Long subscriberId) {
-		Subscriber result = subscriberRepository.findOne(subscriberId);
-		if (result == null) {
-			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
-		}
-		return result;
+	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
+		return Optional.ofNullable(subscriberMapper.subscriberToDTO(subscriberRepository.findOne(subscriberId)));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public Subscriber saveSubscriber(Subscriber entity) {
-		return subscriberRepository.save(entity);
+		return subscriberRepository.saveAndFlush(entity);
+	}
+
+    /**
+     *
+     * @param subscriberDTO
+     * @return
+     */
+	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Subscriber saveSubscriberDTO(SubscriberDTO subscriberDTO) {
+		return subscriberRepository.saveAndFlush(subscriberMapper.DTOToSubscriber(subscriberDTO));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteSubscriber(Subscriber entity) {
 		checkNotNull(entity);
-		subscriberRepository.save(softDelete(entity));
+		subscriberRepository.save(EntityActions.softDelete(entity));
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Subscriber findOneSubscriber(Long subscriberId) {
-		Subscriber result = subscriberRepository.findOne(subscriberId);
-		return result;
+	public Optional<Subscriber> findOneSubscriber(Long subscriberId) {
+		return Optional.ofNullable(subscriberRepository.findOne(subscriberId));
 	}
 
 	/**
-	 * 
-	 * @param contObjectId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	@Deprecated
-	public List<ContZPoint> findContZPoints(long contObjectId) {
-		List<ContZPoint> result = contZPointRepository.findByContObjectId(contObjectId);
-		return result;
-	}
-
-	/**
-	 * 
-	 * @param subscrUserId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrUser findSubscrUser(long subscrUserId) {
-		return subscrUserRepository.findOne(subscrUserId);
-	}
-
-	/**
-	 * 
-	 * @param userName
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrUser> findUserByUsername(String userName) {
-		List<SubscrUser> userList = subscrUserRepository.findByUserNameIgnoreCase(userName);
-		List<SubscrUser> result = userList.stream().filter(i -> i.getId() > 0).collect(Collectors.toList());
-		result.forEach(i -> {
-			i.getSubscriber();
-		});
-
-		return result;
-	}
-
-	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -197,8 +165,16 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 		return (Date) dbResult;
 	}
 
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public LocalDateTime getSubscriberCurrentDateTime(Long subscriberId) {
+	    Date date = getSubscriberCurrentTime(subscriberId);
+        return LocalDateUtils.asLocalDateTime(date);
+    }
+
+
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -209,7 +185,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -219,7 +195,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -230,7 +206,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -257,7 +233,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -283,7 +259,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -292,7 +268,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentSubscriberId
 	 * @return
 	 */
@@ -303,7 +279,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */
@@ -334,7 +310,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -344,7 +320,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */
@@ -368,7 +344,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscribers
 	 * @return
 	 */
@@ -395,7 +371,7 @@ public class SubscriberService extends AbstractService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @return
 	 */

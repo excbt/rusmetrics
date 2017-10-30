@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
-import ru.excbt.datafuse.nmk.data.service.support.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 
 /**
  * Компонент для аудита сущностей
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.03.2015

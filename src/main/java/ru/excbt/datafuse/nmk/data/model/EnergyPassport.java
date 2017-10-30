@@ -39,12 +39,12 @@ public class EnergyPassport extends JsonAbstractAuditableModel implements Delete
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "subscriber_id")
+    @JoinColumn(name = "subscriber_id", updatable = false)
     private Subscriber subscriber;
 
     @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "passport_template_id")
+    @JoinColumn(name = "passport_template_id", updatable = false)
     private EnergyPassportTemplate passportTemplate;
 
     @Column(name = "passport_name")

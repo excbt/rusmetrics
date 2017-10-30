@@ -8,7 +8,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -49,10 +48,7 @@ import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.data.service.support.AbstractService;
-import ru.excbt.datafuse.nmk.data.service.support.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.service.support.ContServiceDataUtils;
-import ru.excbt.datafuse.nmk.data.service.support.HWatersCsvService;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
@@ -67,7 +63,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
  *
  */
 @Service
-public class ContServiceDataHWaterService extends AbstractService implements SecuredRoles {
+public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
 
@@ -115,7 +111,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
 		checkArgument(contZpointId > 0);
@@ -681,7 +677,7 @@ public class ContServiceDataHWaterService extends AbstractService implements Sec
 		checkArgument(contZpointIds != null);
 
 		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZpointIds.isEmpty()
-				? ContServiceDataUtils.collectContZPointTimeDetailTypes(
+				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
 						contServiceDataHWaterRepository.selectTimeDetailLastDataByZPoint(contZpointIds))
 				: new HashMap<>();
 
