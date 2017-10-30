@@ -105,8 +105,8 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 	@Column(name = "cont_event_deviation", insertable = false, updatable = false)
 	private String contEventDeviationKeyname;
 
-	@Column(name = "mon_version")
+	@Column(name = "monitor_version")
 	@NotNull
-	private Short monVersion = 1;
+	private Short monitorVersion = 3;
 
 }
