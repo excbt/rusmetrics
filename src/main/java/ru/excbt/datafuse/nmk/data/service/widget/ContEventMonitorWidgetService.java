@@ -1,9 +1,13 @@
 package ru.excbt.datafuse.nmk.data.service.widget;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.dto.ContEventTypeDTO;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.widget.ContEventMonitorWidgetRepository;
@@ -16,6 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -38,6 +43,7 @@ public class ContEventMonitorWidgetService {
     }
 
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ContObjectStats {
 
         private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -107,18 +113,17 @@ public class ContEventMonitorWidgetService {
      *
      * @return
      */
-    public List<ContObjectStats> loadMonitorData(Predicate<Long> contObjectFilter) {
+    public List<ContObjectStats> loadMonitorData(Predicate<Long> contObjectFilter, boolean nestedTypes) {
         List<ContObjectStats> statsObjList = monitorWidgetRepository.findContObjectStats()
             .stream().map(ContObjectStats::new).filter(i -> contObjectFilter.test(i.contObjectId)).collect(Collectors.toList());
 
-        List<Long> contEventTypeIds = statsObjList.stream().map(ContObjectStats::getContEventTypeId).distinct().collect(Collectors.toList());
-
-        List<ContEventTypeDTO> types = contEventTypeRepository.selectContEventTypes(contEventTypeIds).stream().map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
-
-        types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
-
-        Map<Long, ContEventTypeDTO> typeMap = types.stream().collect(Collectors.toMap(ContEventTypeDTO::getId, Function.identity()));
-        statsObjList.forEach(i -> i.setContEventType(typeMap.get(i.getContEventTypeId())));
+        if (nestedTypes) {
+            List<Long> contEventTypeIds = statsObjList.stream().map(ContObjectStats::getContEventTypeId).distinct().collect(Collectors.toList());
+            List<ContEventTypeDTO> types = contEventTypeRepository.selectContEventTypes(contEventTypeIds).stream().map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
+            types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
+            Map<Long, ContEventTypeDTO> typeMap = types.stream().collect(Collectors.toMap(ContEventTypeDTO::getId, Function.identity()));
+            statsObjList.forEach(i -> i.setContEventType(typeMap.get(i.getContEventTypeId())));
+        }
         return statsObjList;
     }
 
@@ -127,8 +132,21 @@ public class ContEventMonitorWidgetService {
      *
      * @return
      */
-    public List<ContObjectStats> loadMonitorData() {
-        return loadMonitorData(i -> true);
+    public List<ContObjectStats> loadMonitorData(boolean nestedTypes) {
+        return loadMonitorData(i -> true, nestedTypes);
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    public List<ContEventTypeDTO> findMonitorContEventTypes() {
+        List<ContEventTypeDTO> types = contEventTypeRepository.findAll().stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
+            .filter(i -> i.getContEventLevel() != null)
+            .map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
+        types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
+        return types;
     }
 
 }

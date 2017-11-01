@@ -26,6 +26,9 @@ public class ContEventLevelColorV2Service {
      * @return
      */
     public String getColorName (final Integer colorLevel) {
+
+        if (colorLevel == null) return null;
+
         if (colorsCache.isEmpty()) {
             colorsCache.addAll(contEventLevelColorV2Repository.findAll());
         }

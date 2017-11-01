@@ -43,14 +43,32 @@ public class ContEventMonitorWidgetResource {
         this.contEventTypeService = contEventTypeService;
     }
 
+    /**
+     *
+     * @param nodeId
+     * @param nestedTypes
+     * @return
+     */
     @Timed
     @ApiOperation(value = "Get cont event monitor stats for PTreeNode")
     @GetMapping("/p-tree-node/stats")
-    public ResponseEntity<?> getStats(@ApiParam("nodeId of requested PTreeNode") @RequestParam(value = "nodeId", required = false) Long nodeId) {
+    public ResponseEntity<?> getStats(@ApiParam("nodeId of requested PTreeNode") @RequestParam(value = "nodeId", required = false) Long nodeId,
+                                      @ApiParam("option for including ContEventType in widget") @RequestParam(value = "nestedTypes", required = false) Boolean nestedTypes) {
 
         PortalUserIds portalUserIds = currentSubscriberService.getSubscriberParam();
         List<Long> contObjectIds = nodeId != null ? subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId) : EMPTY_LIST;
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i)));
+        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes)));
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Timed
+    @ApiOperation(value = "Get cont event monitor stats for PTreeNode")
+    @GetMapping("/cont-event-types")
+    public ResponseEntity<?> getContEventTypes() {
+        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventTypes());
     }
 
 

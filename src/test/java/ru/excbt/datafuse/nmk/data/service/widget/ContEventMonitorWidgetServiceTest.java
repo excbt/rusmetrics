@@ -27,7 +27,13 @@ public class ContEventMonitorWidgetServiceTest extends JpaSupportTest {
 
     @Test
     public void testGetMonitor() throws Exception {
-        List<ContEventMonitorWidgetService.ContObjectStats> stats = monitorWidgetService.loadMonitorData();
+        List<ContEventMonitorWidgetService.ContObjectStats> stats = monitorWidgetService.loadMonitorData(false);
+        stats.forEach(i -> log.info("{}", i.toString()));
+    }
+
+    @Test
+    public void testGetMonitorNested() throws Exception {
+        List<ContEventMonitorWidgetService.ContObjectStats> stats = monitorWidgetService.loadMonitorData(true);
         stats.forEach(i -> log.info("{}", i.toString()));
     }
 }

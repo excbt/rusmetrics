@@ -32,8 +32,36 @@ public class ContEventMonitorWidgetResourceTest extends AnyControllerTest {
 
 
     @Test
+    public void testGetContObjectsStatsNested() throws Exception {
+        String content = _testGetJson("/api/widgets/cont-event-monitor/p-tree-node/stats",
+            b -> b.param("nestedTypes","true"));
+        assertNotNull(content);
+        showJsonArray(content);
+    }
+
+
+    @Test
     public void testGetContObjectNodeStats() throws Exception {
-        String content = _testGetJson("/api/widgets/cont-event-monitor/p-tree-node/stats", b -> b.param("nodeId", "129634385"));
+        String content = _testGetJson("/api/widgets/cont-event-monitor/p-tree-node/stats",
+            b -> b.param("nodeId", "129634385"));
+        assertNotNull(content);
+        showJsonArray(content);
+    }
+
+    @Test
+    public void testGetContObjectNodeStatsNested() throws Exception {
+        String content = _testGetJson("/api/widgets/cont-event-monitor/p-tree-node/stats",
+            b -> b.param("nodeId", "129634385")
+                .param("nestedTypes","true"));
+        assertNotNull(content);
+        showJsonArray(content);
+    }
+
+
+    @Test
+    public void testGetContEventTypes() throws Exception {
+        String content = _testGetJson("/api/widgets/cont-event-monitor/cont-event-types",
+            b -> b.param("nodeId", "129634385"));
         assertNotNull(content);
         showJsonArray(content);
     }
