@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
@@ -14,6 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_level_color_v2")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
