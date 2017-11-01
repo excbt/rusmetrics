@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
  * @since 25.06.2015
  *
  */
-public interface ContEventTypeRepository extends CrudRepository<ContEventType, Long> {
+public interface ContEventTypeRepository extends JpaRepository<ContEventType, Long> {
 
 	@Query("SELECT t FROM ContEventType t " + " WHERE t.isBaseEvent = :isBaseEvent ORDER BY t.name")
 	public List<ContEventType> selectBaseEventTypes(@Param("isBaseEvent") Boolean isBaseEvent);
