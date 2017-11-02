@@ -75,18 +75,8 @@ public class ContEventMonitorWidgetService {
         }
 
 
-        @JsonIgnore
-        public LocalDateTime getLastContEventTime() {
-            return lastContEventTime;
-        }
-
-        @JsonIgnore
-        public Date getLastContEventTimeDT() {
-            return lastContEventTime != null ? LocalDateUtils.asDate(lastContEventTime) : null;
-        }
-
-        public String getLastContEventTimeStr() {
-            return lastContEventTime != null ? lastContEventTime.format(formatter) : null;
+        public String getLastContEventTime() {
+            return lastContEventTime != null ? lastContEventTime.format(DateTimeFormatter.ISO_DATE_TIME) : null;
         }
 
         public Integer getCount() {
