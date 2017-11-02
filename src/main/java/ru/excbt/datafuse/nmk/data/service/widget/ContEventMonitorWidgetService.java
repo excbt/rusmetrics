@@ -142,7 +142,7 @@ public class ContEventMonitorWidgetService {
      * @return
      */
     public List<ContEventTypeDTO> findMonitorContEventTypes() {
-        List<ContEventTypeDTO> types = contEventTypeRepository.findAll().stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
+        List<ContEventTypeDTO> types = contEventTypeRepository.selectBaseEventTypes(true).stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
             .filter(i -> i.getContEventLevel() != null)
             .map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
         types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
