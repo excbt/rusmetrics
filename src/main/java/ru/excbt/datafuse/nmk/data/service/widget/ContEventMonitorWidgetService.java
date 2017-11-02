@@ -1,26 +1,25 @@
 package ru.excbt.datafuse.nmk.data.service.widget;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventCategoryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContEventTypeDTO;
+import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.widget.ContEventMonitorWidgetRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorV2Service;
+import ru.excbt.datafuse.nmk.service.mapper.ContEventCategoryMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -35,11 +34,17 @@ public class ContEventMonitorWidgetService {
 
     private final ContEventLevelColorV2Service contEventLevelColorV2Service;
 
+    private final ContEventCategoryRepository contEventCategoryRepository;
+
+    private final ContEventCategoryMapper contEventCategoryMapper;
+
     @Autowired
-    public ContEventMonitorWidgetService(ContEventMonitorWidgetRepository monitorWidgetRepository, ContEventTypeRepository contEventTypeRepository, ContEventLevelColorV2Service contEventLevelColorV2Service) {
+    public ContEventMonitorWidgetService(ContEventMonitorWidgetRepository monitorWidgetRepository, ContEventTypeRepository contEventTypeRepository, ContEventLevelColorV2Service contEventLevelColorV2Service, ContEventCategoryRepository contEventCategoryRepository, ContEventCategoryMapper contEventCategoryMapper) {
         this.monitorWidgetRepository = monitorWidgetRepository;
         this.contEventTypeRepository = contEventTypeRepository;
         this.contEventLevelColorV2Service = contEventLevelColorV2Service;
+        this.contEventCategoryRepository = contEventCategoryRepository;
+        this.contEventCategoryMapper = contEventCategoryMapper;
     }
 
 
@@ -70,18 +75,8 @@ public class ContEventMonitorWidgetService {
         }
 
 
-        @JsonIgnore
-        public LocalDateTime getLastContEventTime() {
-            return lastContEventTime;
-        }
-
-        @JsonIgnore
-        public Date getLastContEventTimeDT() {
-            return lastContEventTime != null ? LocalDateUtils.asDate(lastContEventTime) : null;
-        }
-
-        public String getLastContEventTimeStr() {
-            return lastContEventTime != null ? lastContEventTime.format(formatter) : null;
+        public String getLastContEventTime() {
+            return lastContEventTime != null ? lastContEventTime.format(DateTimeFormatter.ISO_DATE_TIME) : null;
         }
 
         public Integer getCount() {
@@ -142,11 +137,23 @@ public class ContEventMonitorWidgetService {
      * @return
      */
     public List<ContEventTypeDTO> findMonitorContEventTypes() {
-        List<ContEventTypeDTO> types = contEventTypeRepository.findAll().stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
+        List<ContEventTypeDTO> types = contEventTypeRepository.selectBaseEventTypes(true).stream().filter(ObjectFilters.NO_DISABLED_OBJECT_PREDICATE)
             .filter(i -> i.getContEventLevel() != null)
             .map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
         types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
         return types;
+    }
+
+
+    private final static Comparator<ContEventCategory> sortCategory = Comparator.comparing(ContEventCategory::getCategoryOrder, Comparator.nullsLast(Comparator.naturalOrder()));
+
+    /**
+     *
+     * @return
+     */
+    public List<ContEventCategoryDTO> findMonitorContEventCategories() {
+        return contEventCategoryRepository.findAll().stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .sorted(sortCategory).map(c -> contEventCategoryMapper.toDto(c)).collect(Collectors.toList());
     }
 
 }

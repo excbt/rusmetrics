@@ -60,8 +60,14 @@ public class ContEventMonitorWidgetResourceTest extends AnyControllerTest {
 
     @Test
     public void testGetContEventTypes() throws Exception {
-        String content = _testGetJson("/api/widgets/cont-event-monitor/cont-event-types",
-            b -> b.param("nodeId", "129634385"));
+        String content = _testGetJson("/api/widgets/cont-event-monitor/cont-event-types");
+        assertNotNull(content);
+        showJsonArray(content);
+    }
+
+    @Test
+    public void testGetContEventCategories() throws Exception {
+        String content = _testGetJson("/api/widgets/cont-event-monitor/cont-event-categories");
         assertNotNull(content);
         showJsonArray(content);
     }

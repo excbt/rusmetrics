@@ -65,10 +65,21 @@ public class ContEventMonitorWidgetResource {
      * @return
      */
     @Timed
-    @ApiOperation(value = "Get cont event monitor stats for PTreeNode")
+    @ApiOperation(value = "Get cont event types")
     @GetMapping("/cont-event-types")
     public ResponseEntity<?> getContEventTypes() {
         return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventTypes());
+    }
+
+    /**
+     *
+     * @return
+     */
+    @Timed
+    @ApiOperation(value = "Get cont event categories")
+    @GetMapping("/cont-event-categories")
+    public ResponseEntity<?> getContEventCategories() {
+        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventCategories());
     }
 
 
