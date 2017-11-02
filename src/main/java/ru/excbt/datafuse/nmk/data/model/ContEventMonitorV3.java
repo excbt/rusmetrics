@@ -51,7 +51,7 @@ public class ContEventMonitorV3 extends AbstractPersistableEntity<Long> implemen
 	@Column(name = "cont_event_level")
 	private Integer contEventLevel;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_event_level_color", insertable = false, updatable = false)
 	@JsonIgnore
 	private ContEventLevelColorV2 contEventLevelColor;

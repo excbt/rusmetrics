@@ -61,11 +61,12 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.WeatherProvider.class.getName());
 
-
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceModel.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName());
 
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName());
 
 
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName());
@@ -103,7 +104,6 @@ public class CacheConfiguration {
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrServicePack.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContManagement.class.getName());
 
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassport.class.getName());
