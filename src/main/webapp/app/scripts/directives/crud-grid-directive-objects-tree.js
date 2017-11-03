@@ -3082,6 +3082,7 @@ app.directive('crudGridObjectsTree', function () {
                         if ($scope.isContZpointNode($scope.data.selectedPNode)) {
                             $scope.data.selectedPNode.isIndicatorsView = false;
                         }
+                        $scope.data.selectedPNode.isWidgetView = false;
                     }
 
                     if (!ev.ctrlKey && selectedPNodes.length > 0) {
@@ -3108,6 +3109,11 @@ app.directive('crudGridObjectsTree', function () {
                             item.isIndicatorsView = true;
                         }, 0);
                     }
+                    
+                    item.isWidgetView = false;
+                    $timeout(function () {
+                        item.isWidgetView = true;
+                    }, 0);
 
 
                 };

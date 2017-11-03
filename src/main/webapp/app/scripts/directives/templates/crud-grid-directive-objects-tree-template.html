@@ -225,6 +225,22 @@
                         <h4>Дочерних узлов: {{data.selectedPNode.childNodes.length || 0}}</h4>
                         <h4>Объектов: {{data.selectedPNode.linkedNodeObjects.length || 0}}</h4>
                      </div>
+                     <div ng-if = "data.selectedPNode.isWidgetView">
+                         <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                               <span ng-show='title' ng-bind='title'></span>
+                               <div ng-show='isLoading'>Загрузка...</div>
+                               <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                               <ng-widget ng-show = "!isLoading && !isError"
+                                   src = "'treeNotificationsDiagram'"
+                                   options = "{
+                                       previewMode: false,
+                                       contZpointId: 1,
+                                       ptreeNode: data.selectedPNode
+                                   }">
+
+                                </ng-widget>
+                           </div>
+                     </div>
                  </div>
                  <div ng-if = "isContObjectNode(data.selectedPNode)">
                      <div class = "paddingLeft10">
