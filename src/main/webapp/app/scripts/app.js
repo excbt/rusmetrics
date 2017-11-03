@@ -65,13 +65,27 @@ app.config(['uiMask.ConfigProvider', function (uiMaskConfigProvider) {
 
 //config widget
 app.config(['widgetsProvider', function initializemanifestGenerator(widgetsProvider) {
-    widgetsProvider.setManifestGenerator(function () {
+    widgetsProvider.setManifestGenerator(function resourceWidgetManufest() {
         return function (name) {
             return {
                 module: name + 'Widget',
                 html: 'widgets/' + name + '/' + name + '.html',
                 files: [
                     'widgets/' + name + '/' + name + '.js',
+                    'widgets/' + name + '/' + name + '.css'
+                ]
+            };
+        };
+    });
+    
+    widgetsProvider.setManifestGenerator(function treeNotificationsDiagramWidgetManifest() {
+        return function (name) {
+            return name === 'treeNotificationsDiagram' && {
+                module: name + 'Widget',
+                html: 'widgets/' + name + '/' + name + '.html',
+                files: [
+                    'widgets/' + name + '/' + name + '.js',
+                    'widgets/' + name + '/' + name + 'Service.js',
                     'widgets/' + name + '/' + name + '.css'
                 ]
             };

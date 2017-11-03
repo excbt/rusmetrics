@@ -1,0 +1,93 @@
+<!--<script src="/app/widgets/treeNotificationsDiagram/treeNotificationsDiagramService.js"></script>-->
+<div class="tree-notif-widget" ng-controller="treeNotificationsDiagramWidgetCtrl">
+    <div class="container-fluid">        
+        <div style = "display: none" class="row">
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-1">
+                        <img height="16" width="16" ng-src="{{data.imgPath}}">
+                    </div>
+                    <div class = "col-xs-10">                        
+                        <div class = "nmc-cw-widget-zpname" ng-bind="widgetOptions.zpointName"></div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "col-xs-12">
+                        <label class = "nmc-cw-widget-label">Период:</label>
+                        <select class="form-control nmc-select-form nmc-cw-widget-modes"
+                                ng-model = "data.currentMode"
+                                ng-options = "mode as mode.caption for mode in data.MODES"
+                                ng-change = "modeChange()">
+                        </select>
+                    </div>
+                </div>                
+            </div>
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-6 nmc-cw-widget-btnpanel">
+<!--
+                        <a href="" class = "nmc-cw-widget-a-status">
+
+                            <img class = "nmc-cw-widget-statusimg"                              
+                             height = "40" width = "40"
+                                 ng-attr-id = "{{'zpStatusImg' + widgetOptions.contZpointId}}"
+                             ng-src = "{{data.zpointStatus}}" 
+                             ng-attr-title = {{data.zpointStatusTitle}}>        
+
+                        </a>
+                        <a href="" class = "nmc-cw-widget-btn marginRight10"
+                           ng-click = "openNotices()">
+                            <img height = "30" width = "40" 
+                                 ng-src = "{{widgetPath + '/notices.png'}}" 
+                                 title = "Открыть уведомления"/>
+                        </a>
+                        <a href=""
+                           class = "nmc-cw-widget-btn"
+                           ng-click = "getIndicators()">        
+                            <img height = "40" width = "40" 
+                                 ng-src = "{{widgetPath + '/indicators.png'}}" 
+                                 title = "Открыть показания"/>
+                        </a>
+-->
+                    </div>
+                    <div class = "col-xs-6 nmc-cw-widget-temppanel">                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-xs-12">
+                Диаграмма событий по <span class = "text-primary">{{data.currentChartMode.chartCaption}}</span>
+            </div>
+        </div>
+        <br>
+        <div class="row">            
+            <div class = "col-xs-6">
+                <div ng-show = "presentDataFlag === false"
+                     class = "nmc-text-align-center">                    
+<!--                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.-->
+                </div>
+                <div ng-show = "presentDataFlag === true">
+                    <canvas id="doughnut" 
+                            class="chart chart-doughnut" 
+                            chart-data="barChart.data"
+                            chart-labels="barChart.labels"                              
+                            chart-options="barChart.options"
+                            >
+                    </canvas>
+                </div>
+            </div>
+            <div class = "col-xs-3" ng-show = "presentDataFlag === true">
+               <div ng-repeat = "chartMode in data.CHART_MODES" ng-click = "chartModeChange(chartMode)">
+                   <button type = "button" ng-class = "chartMode.class">{{chartMode.caption}}</button>
+               </div>
+                
+            </div>            
+        </div>
+        <div class="row">            
+            <div class = "col-xs-12">
+                <div ng-attr-id = "{{'cw-chart-legend-' + data.ptreeNodeId}}" class = "cw-chart-legend"></div>
+            </div>
+        </div>
+    </div>
+</div>
