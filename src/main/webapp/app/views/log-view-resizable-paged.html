@@ -174,14 +174,18 @@
     <div class="col-xs-5 noPadding nmc-div-page-legend">
         <div class="col-xs-7 noPadding">
             <label class="nmc-form-label">Записей на странице:</label>    
-            <select class="form-control nmc-select-form nmc-view-allcount" ng-model="ctrlSettings.itemPerPage"    
-                    ng-disabled="isDisabledFilters()">
+            <select class="form-control nmc-select-form nmc-view-allcount" 
+                       ng-model="ctrlSettings.itemPerPage" 
+                       ng-disabled="isDisabledFilters()"
+                       ng-options = "rowPerPage for rowPerPage in rowPerPageList">
+<!--
                         <option>15</option>
                         <option>20</option>
                         <option>25</option>
                         <option>50</option>
                         <option>75</option>
                         <option>100</option>    
+-->
             </select>
         </div>
         <div class="col-xs-5 noPadding">

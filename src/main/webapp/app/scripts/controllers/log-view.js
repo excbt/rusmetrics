@@ -61,6 +61,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     var REFRESH_PERIOD = 300000;
     var ROW_PER_PAGE = 20;
+    $scope.rowPerPageList = [15, 20, 25, 50, 75, 100];
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
