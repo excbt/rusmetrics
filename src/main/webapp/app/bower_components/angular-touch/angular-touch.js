@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.5.11
+ * @license AngularJS v1.6.6
  * (c) 2010-2017 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -28,6 +28,8 @@
 // define ngTouch module
 /* global -ngTouch */
 var ngTouch = angular.module('ngTouch', []);
+
+ngTouch.info({ angularVersion: '1.6.6' });
 
 ngTouch.provider('$touch', $TouchProvider);
 
