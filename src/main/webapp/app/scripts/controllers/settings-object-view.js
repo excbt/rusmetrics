@@ -95,6 +95,8 @@ angular.module('portalNMC')
             $scope.data.datasourceTypesForDatasource = {};
             $scope.data.currentContObjectPassports = [];
                 
+            $scope.data.indicatorsRowPerPageList = [15, 25, 50, 75, 100];
+                
             var checkGeo = function () {
                 $scope.currentObject.geoState = "red";
                 $scope.currentObject.geoStateText = "Не отображается на карте";
