@@ -312,7 +312,8 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
     //get user info
     var userInfoUrl = "../api/systemInfo/fullUserInfo";
     $http.get(userInfoUrl, httpOptions)
-        .success(function (data, satus, headers, config) {
+        .then(function (resp) {
+            var data = resp.data;
             if (checkUndefinedNull(data) || !data.hasOwnProperty("userName") || checkUndefinedNull(data.subscriber)) {
                 console.warn("FullUserInfo is incorrect!", data);
                 $rootScope.userInfo = null;
@@ -353,8 +354,7 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
 //                    };
 //                    
 //                };
-        })
-        .error(function (e) {
+        }, function (e) {
             console.log(e);
         });
     

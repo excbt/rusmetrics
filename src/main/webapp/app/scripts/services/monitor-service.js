@@ -112,7 +112,8 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
             return null;
         }
         $http.get(targetUrl, httpOptions)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
 //console.log(data);
                 citiesMonitorSvc = data;
                 objectsMonitorSvc = getObjectsFromCities(data);
@@ -122,8 +123,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
                 monitorSvcSettings.loadingFlag = false;//data has been loaded
 //console.log(monitorSvcSettings.loadingFlag);
                 $rootScope.$broadcast('monitorObjects:updated');
-            })
-            .error(errorLoadingMonitorData);
+            }, errorLoadingMonitorData);
 //            monitorSvcSettings.noGreenObjectsFlag = false; //reset flag
     };
 
@@ -153,7 +153,8 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
             return null;
         }
         $http.get(url, httpOptions)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
 //console.log("success");
 //console.log(data);
             //if data is not array - exit
@@ -188,8 +189,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
                 }
 //console.log(obj);
                 $rootScope.$broadcast('monitorObjects:getObjectEvents', {"obj": obj});
-            })
-            .error(errorCallbackConsole);
+            }, errorCallbackConsole);
     };
     function prepareEventMessage(inputData) {
                         //temp array
@@ -262,7 +262,8 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
             return null;
         }
         $http.get(url, httpOptions)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
             //if data is not array - exit
                 if (!data.hasOwnProperty('length') || (data.length === 0)) {
                     return;
@@ -270,8 +271,7 @@ app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'obj
                 if ((obj.contEventLevelColorKey === "RED") || (obj.contEventLevelColorKey === "YELLOW")) {
                     obj.monitorEventsForMap = data;
                 }
-            })
-            .error(errorCallbackConsole);
+            }, errorCallbackConsole);
     }
 
     function loadMonitorEventsForObject(objId) {

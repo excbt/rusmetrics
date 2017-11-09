@@ -71,7 +71,8 @@ app.controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$in
     $scope.getMonitorState = function () {
         var url = monitorUrl + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
         $http.get(url, httpOptions)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
                 $scope.monitorState = data;
                 var monitorTab = document.getElementById('monitorTab');
                 monitorTab.style.backgroundColor = $scope.monitorState.statusColor.toLowerCase();
@@ -79,8 +80,7 @@ app.controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$in
                     monitorTab.style.color = "#eee";
                 }
                 monitorTab.title = $scope.monitorState.colorDescription;
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };
@@ -113,7 +113,8 @@ app.controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$in
         var url = objectUrl + "/" + obj.contObject.id + "/eventTypes/statusCollapse" + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
 //console.log(url);          
         $http.get(url, httpOptions)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
 //console.log(data);            
             //if data is not array - exit
                 if (!data.hasOwnProperty('length') || (data.length == 0)) {
@@ -159,8 +160,7 @@ app.controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$in
                 } else {
                     makeEventTypesByObjectTable(obj);
                 }
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };
