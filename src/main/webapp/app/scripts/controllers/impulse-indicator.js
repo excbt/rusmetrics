@@ -106,10 +106,10 @@ angular.module('portalNMC')
 //            startDate : moment().subtract(6, 'days').startOf('day'),
 //            endDate :  moment().endOf('day')
 //        };
-        if (angular.isDefined($cookies.fromDate) && ($cookies.toDate != null)) {
+        if (angular.isDefined($cookies.get('fromDate')) && ($cookies.get('toDate') != null)) {
             $scope.impulseIndicatorDates = {
-                startDate : $cookies.fromDate,
-                endDate :  $cookies.toDate
+                startDate : $cookies.get('fromDate'),
+                endDate :  $cookies.get('toDate')
             };
         } else {
             $scope.impulseIndicatorDates = {
@@ -147,8 +147,8 @@ angular.module('portalNMC')
         
 //    sort settings
     $scope.ctrlSettings.orderBy = {};
-    if (angular.isDefined($cookies.indicatorsortorder) && ($cookies.indicatorsortorder != null)) {
-        switch ($cookies.indicatorsortorder) {
+    if (angular.isDefined($cookies.get('indicatorsortorder')) && ($cookies.get('indicatorsortorder') != null)) {
+        switch ($cookies.get('indicatorsortorder')) {
             case "asc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: true, desc: false, order: "asc"}; break;
             case "desc": $scope.ctrlSettings.orderBy = {field: "dataDate", asc: false, desc: true, order: "desc"}; break;
         }
@@ -191,9 +191,9 @@ angular.module('portalNMC')
         //The flag for the link to the file with delete data
     $scope.showLinkToFileFlag = false;
         //flag for zpoint, which control manual loading data - true: on manual loading, false: off manual loading
-    $scope.isManualLoading = $cookies.isManualLoading === "true" ? true : false;
+    $scope.isManualLoading = $cookies.get('isManualLoading') === "true" ? true : false;
         
-//console.log($cookies.isManualLoading);        
+//console.log($cookies.get('isManualLoading'));
 //console.log($scope.isManualLoading);
     var errorCallback = function (e) {
         $scope.ctrlSettings.loading = false;
@@ -212,9 +212,9 @@ angular.module('portalNMC')
         
     //file upload settings
     var initFileUploader =  function(){    
-         var contZPoint = $cookies.contZPoint;
+         var contZPoint = $cookies.get('contZPoint');
          var timeDetailType = "24h";
-         var contObject = $cookies.contObject;
+         var contObject = $cookies.get('contObject');
 //         /contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv
         $scope.uploader = new FileUploader({
             url: "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZPoint + "/service/" + timeDetailType + "/csv",
@@ -407,8 +407,8 @@ angular.module('portalNMC')
                 $scope.timeDetailType = pathParams.timeDetailType;
             }else{
 //console.log($cookies.timeDetailType);                
-                if (angular.isDefined($cookies.timeDetailType) && ($cookies.timeDetailType != "undefined") && ($cookies.timeDetailType != "null")){
-                    $scope.timeDetailType = $cookies.timeDetailType;
+                if (angular.isDefined($cookies.get('timeDetailType')) && ($cookies.get('timeDetailType') != "undefined") && ($cookies.get('timeDetailType') != "null")){
+                    $scope.timeDetailType = $cookies.get('timeDetailType');
                 }else{
 //console.log("param TDT and COOKie TDT is undefined");                    
                     $scope.timeDetailType = indicatorSvc.getTimeDetailType();
@@ -447,15 +447,15 @@ angular.module('portalNMC')
         //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate) && (pathParams.fromDate !== "null")) {
             $rootScope.reportStart = pathParams.fromDate;
-        } else if(angular.isDefined($cookies.fromDate) && ($cookies.fromDate !== "null")) {
-                $rootScope.reportStart = $cookies.fromDate;
+        } else if(angular.isDefined($cookies.get('fromDate')) && ($cookies.get('fromDate') !== "null")) {
+                $rootScope.reportStart = $cookies.get('fromDate');
             } else {
                 $rootScope.reportStart = indicatorSvc.getFromDate();
         }
         if (angular.isDefined(pathParams.toDate) && (pathParams.toDate !== "null")) {
             $rootScope.reportEnd = pathParams.toDate;
-        } else if (angular.isDefined($cookies.toDate) && ($cookies.toDate !== "null")) {
-                $rootScope.reportEnd = $cookies.toDate;
+        } else if (angular.isDefined($cookies.get('toDate')) && ($cookies.get('toDate') !== "null")) {
+                $rootScope.reportEnd = $cookies.get('toDate');
             } else {
                 $rootScope.reportEnd = indicatorSvc.getToDate();
         }
@@ -476,7 +476,7 @@ angular.module('portalNMC')
 //console.log("getData");        
         $scope.pagination.current = pageNumber;   
         
-         var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
+         var timeDetailType = $scope.timeDetailType || $cookies.get('timeDetailType');
          
          $scope.zpointTable = "../api/subscr/" + $scope.contObject + "/serviceImpulse/" + timeDetailType + "/" + $scope.contZPoint + "/paged?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd + "&page=" + (pageNumber - 1) + "&size=" + $scope.indicatorsPerPage + "&dataDateSort=" + $scope.ctrlSettings.orderBy.order;
         var table =  $scope.zpointTable;
@@ -848,7 +848,7 @@ angular.module('portalNMC')
     $scope.changeTimeDetailType = function() {
 //console.log("changeTimeDetailType getData");
         $scope.timeDetailType = $scope.timeType + $scope.detailType;
-        $cookies.timeDetailType = $scope.timeDetailType;
+        $cookies.put('timeDetailType', $scope.timeDetailType);
 //console.log($cookies.timeDetailType);        
         $scope.getData(1);
     };
@@ -863,8 +863,8 @@ angular.module('portalNMC')
         if (newDates === oldDates) {
             return;
         }
-        $cookies.fromDate = moment(newDates.startDate).format('YYYY-MM-DD');
-        $cookies.toDate = moment(newDates.endDate).format('YYYY-MM-DD');
+        $cookies.put('fromDate', moment(newDates.startDate).format('YYYY-MM-DD'));
+        $cookies.put('toDate', moment(newDates.endDate).format('YYYY-MM-DD'));
         indicatorSvc.setFromDate(moment(newDates.startDate).format('YYYY-MM-DD'));
         indicatorSvc.setToDate(moment(newDates.endDate).format('YYYY-MM-DD'));
         $rootScope.reportStart = moment(newDates.startDate).format('YYYY-MM-DD');
@@ -917,9 +917,9 @@ angular.module('portalNMC')
     });        
         
     $scope.saveIndicatorsToFile = function(exForUrl) {
-        var contZPoint = $scope.contZPoint || $cookies.contZPoint;
-        var contObject = $scope.contObject || $cookies.contObject;
-        var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
+        var contZPoint = $scope.contZPoint || $cookies.get('contZPoint');
+        var contObject = $scope.contObject || $cookies.get('contObject');
+        var timeDetailType = $scope.timeDetailType || $cookies.get('timeDetailType');
         var url = "../api/subscr/" + contObject + "/service/" + timeDetailType + "/" + contZPoint + "/csv" + exForUrl + "?beginDate=" + $rootScope.reportStart + "&endDate=" + $rootScope.reportEnd;
         window.open(url);
     };
@@ -930,8 +930,8 @@ angular.module('portalNMC')
     
         //delete indicator data for period
     $scope.deleteData = function(){
-        var contObject = $scope.contObject || $cookies.contObject;
-        var contZpoint = $scope.contZPoint || $cookies.contZpoint;
+        var contObject = $scope.contObject || $cookies.get('contObject');
+        var contZpoint = $scope.contZPoint || $cookies.get('contZpoint');
         var timeDetailType = "24h";
         var fromDate = $rootScope.startDateToDel;
         var toDate = $rootScope.endDateToDel;
@@ -951,8 +951,8 @@ angular.module('portalNMC')
     $scope.setOrderBy = function(field){
         var asc = $scope.ctrlSettings.orderBy.field === field ? !$scope.ctrlSettings.orderBy.asc : true;
         var ord = (asc == true) ? "asc" : "desc";
-        $cookies.indicatorsortorder = ord;
-        $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.indicatorsortorder };
+        $cookies.put('indicatorsortorder', ord);
+        $scope.ctrlSettings.orderBy = { field: field, asc: asc, order: $cookies.get('indicatorsortorder') };
 //console.log("getData on setOrderBy");
         $scope.getData(1);
     };

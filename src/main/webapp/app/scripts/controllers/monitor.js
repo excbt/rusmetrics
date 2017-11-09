@@ -311,12 +311,12 @@ app.controller('MonitorCtrl', ['$rootScope', '$http', '$scope', '$compile', '$in
     
     $scope.setNoticeFilterByObjectAndRevision = function (objId) {
         $scope.setNoticeFilterByObject(objId);
-        $cookies.isNew = true;
+        $cookies.put('isNew', 'true');
     };
     
     $scope.setNoticeFilterByObjectAndType = function (objId, typeId) {
         $scope.setNoticeFilterByObject(objId);
-        $cookies.typeIds = [typeId];
+        $cookies.put('typeIds', '[' + typeId + ']');
     };
     
     $scope.getNoticesByObjectAndType = function (objId, typeId) {

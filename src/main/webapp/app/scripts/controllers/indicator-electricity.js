@@ -75,8 +75,8 @@ app.controller('ElectricityCtrl', ['$scope', 'mainSvc', 'indicatorSvc', '$locati
             if (angular.isDefined(pathParams.timeDetailType) && (pathParams.timeDetailType !== "null")) {
                 $scope.timeDetailType = pathParams.timeDetailType;
             } else {
-                if (angular.isDefined($cookies.timeDetailType) && ($cookies.timeDetailType != "undefined") && ($cookies.timeDetailType != "null")) {
-                    $scope.timeDetailType = $cookies.timeDetailType;
+                if (angular.isDefined($cookies.get('timeDetailType')) && ($cookies.get('timeDetailType') != "undefined") && ($cookies.get('timeDetailType') != "null")) {
+                    $scope.timeDetailType = $cookies.get('timeDetailType');
                 } else {
                     $scope.timeDetailType = indicatorSvc.getTimeDetailType();
                 }
@@ -93,15 +93,15 @@ app.controller('ElectricityCtrl', ['$scope', 'mainSvc', 'indicatorSvc', '$locati
         //if exists url params "fromDate" and "toDate" get date interval from url params, else get interval from indicator service.
         if (angular.isDefined(pathParams.fromDate) && (pathParams.fromDate !== "null")) {
             $rootScope.reportStart = pathParams.fromDate;
-        } else if (angular.isDefined($cookies.fromDate) && ($cookies.fromDate !== "null")) {
-            $rootScope.reportStart = $cookies.fromDate;
+        } else if (angular.isDefined($cookies.get('fromDate')) && ($cookies.get('fromDate') !== "null")) {
+            $rootScope.reportStart = $cookies.get('fromDate');
         } else {
             $rootScope.reportStart = indicatorSvc.getFromDate();
         }
         if (angular.isDefined(pathParams.toDate) && (pathParams.toDate !== "null")) {
             $rootScope.reportEnd = pathParams.toDate;
-        } else if (angular.isDefined($cookies.toDate) && ($cookies.toDate !== "null")) {
-            $rootScope.reportEnd = $cookies.toDate;
+        } else if (angular.isDefined($cookies.get('toDate')) && ($cookies.get('toDate') !== "null")) {
+            $rootScope.reportEnd = $cookies.get('toDate');
         } else {
             $rootScope.reportEnd = indicatorSvc.getToDate();
         }

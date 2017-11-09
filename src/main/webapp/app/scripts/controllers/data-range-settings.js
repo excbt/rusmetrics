@@ -194,14 +194,14 @@ app.controller('DataRangeSettings', ['$scope', '$interval', '$rootScope', '$loca
     
     
     //monitor settings
-    if (angular.isDefined($cookies.fromDate)) {
+    if (angular.isDefined($cookies.get('fromDate'))) {
 //        $rootScope.monitor.toDate
 //console.log("Data-range-settings. Set monitor dates."); 
 //console.log($cookies.fromDate);        
 //console.log($rootScope.monitorStart); 
         $scope.monitorDates = {
-            startDate :  $cookies.fromDate,
-            endDate : $cookies.toDate
+            startDate :  $cookies.get('fromDate'),
+            endDate : $cookies.get('toDate')
         };
     } else {
 //        startDate :  moment().subtract(6, 'days').startOf('day'),
@@ -236,8 +236,8 @@ app.controller('DataRangeSettings', ['$scope', '$interval', '$rootScope', '$loca
                 moment().subtract(29, 'days').startOf('day'),
                 moment().endOf('day') ]
         },
-        startDate : moment($cookies.fromDate) || moment().subtract(6, 'days').startOf('day'),
-        endDate : moment($cookies.toDate) || moment().endOf('day'),
+        startDate : moment($cookies.get('fromDate')) || moment().subtract(6, 'days').startOf('day'),
+        endDate : moment($cookies.get('toDate')) || moment().endOf('day'),
 //        startDate : moment().subtract(6, 'days').startOf('day'),
 //        endDate : moment().endOf('day'),
         maxDate: moment().endOf('day'),
