@@ -198,8 +198,8 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
                 moment().subtract(29, 'days').startOf('day'),
                 moment().endOf('day') ]
         },
-        startDate : moment($cookies.fromDate) || moment().subtract(6, 'days').startOf('day'),
-        endDate : moment($cookies.toDate) || moment().endOf('day'),
+        startDate : moment($cookies.get('fromDate')) || moment().subtract(6, 'days').startOf('day'),
+        endDate : moment($cookies.get('toDate')) || moment().endOf('day'),
 
         format : 'DD.MM.YYYY',
         separator: " по "
@@ -221,8 +221,8 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
             break;
         case "indicator-ru":
             result = angular.copy(dateRangeMonitorOptsRu);
-            result.startDate = (angular.isDefined($cookies.fromDate) && ($cookies.fromDate != null)) ? moment($cookies.fromDate).startOf('day') : moment($rootScope.reportStart).startOf('day');
-            result.endDate = (angular.isDefined($cookies.toDate) && ($cookies.toDate != null)) ? moment($cookies.toDate).startOf('day') : moment($rootScope.reportEnd).startOf('day');
+            result.startDate = (angular.isDefined($cookies.get('fromDate')) && ($cookies.get('fromDate') != null)) ? moment($cookies.get('fromDate')).startOf('day') : moment($rootScope.reportStart).startOf('day');
+            result.endDate = (angular.isDefined($cookies.get('toDate')) && ($cookies.get('toDate') != null)) ? moment($cookies.get('toDate')).startOf('day') : moment($rootScope.reportEnd).startOf('day');
             if (!checkUndefinedNull(settings)) {
                 if (!checkUndefinedNull(settings.minDate)) {
                     result.minDate = settings.minDate;

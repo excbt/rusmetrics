@@ -2,7 +2,7 @@
 /*global angular, moment, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('LogSmsCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function ($scope, $cookies, $timeout, mainSvc, objectSvc, $http, notificationFactory) {
+app.controller('LogSmsCtrl', ['$scope', '$timeout', 'mainSvc', 'objectSvc', '$http', 'notificationFactory', function ($scope, $timeout, mainSvc, objectSvc, $http, notificationFactory) {
     
     var LOG_VIEW_LENGTH = 20;
     var COL_NAME_SUFFIX = "view";

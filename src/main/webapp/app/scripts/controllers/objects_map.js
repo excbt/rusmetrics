@@ -2,7 +2,7 @@
 /*global angular, moment, $*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('ObjectsMapCtrl', ['$rootScope', '$scope', '$cookies', 'objectSvc', 'mainSvc', '$timeout', function ($rootScope, $scope, $cookies, objectSvc, mainSvc, $timeout) {
+app.controller('ObjectsMapCtrl', ['$rootScope', '$scope', 'objectSvc', 'mainSvc', '$timeout', function ($rootScope, $scope, objectSvc, mainSvc, $timeout) {
     $rootScope.ctxId = "object_map_page";
     $scope.mapSettings = {};
     $scope.mapSettings.userFormat = "DD.MM.YYYY";

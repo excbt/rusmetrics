@@ -61,6 +61,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     var REFRESH_PERIOD = 300000;
     var ROW_PER_PAGE = 20;
+    $scope.rowPerPageList = [15, 20, 25, 50, 75, 100];
     $scope.messages = {};
     
     $scope.ctrlSettings = {};
@@ -232,7 +233,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         $scope.data.sessionsOnView = sessions;
         //set session table height
         $timeout(function () {
-            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));
+            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.get('heightLogUpperPart')));
         });
     }
     
@@ -263,7 +264,7 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         
                 //set log table height
         $timeout(function () {
-            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));
+            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.get('heightLogFooterPart')));
         });
     }
     
@@ -496,8 +497,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
     
     $scope.$on('$destroy', function () {
         //save session table height
-        $cookies.heightLogUpperPart = $("#log-upper-part > .rui-resizable-content").height();
-        $cookies.heightLogFooterPart = $("#log-footer-part > .rui-resizable-content").height();
+        $cookies.put('heightLogUpperPart', $("#log-upper-part > .rui-resizable-content").height());
+        $cookies.put('heightLogFooterPart', $("#log-footer-part > .rui-resizable-content").height());
         $rootScope.$broadcast('logSvc:cancelInterval');
     });
     
@@ -707,8 +708,8 @@ app.controller('LogViewCtrl', ['$scope', '$cookies', '$timeout', 'mainSvc', 'obj
         loadSessionsData();
         //set session and tables height
         $timeout(function () {
-            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.heightLogUpperPart));
-            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.heightLogFooterPart));
+            $("#log-upper-part > .rui-resizable-content").height(Number($cookies.get('heightLogUpperPart')));
+            $("#log-footer-part > .rui-resizable-content").height(Number($cookies.get('heightLogFooterPart')));
         });
     }
     

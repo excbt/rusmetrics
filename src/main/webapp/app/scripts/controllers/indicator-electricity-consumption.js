@@ -28,10 +28,10 @@ app.controller('ElectricityConsumptionCtrl', ['$scope', '$http', 'indicatorSvc',
             endDate :  $location.search().toDate
         };
     } else {
-        if (angular.isDefined($cookies.fromDate) && ($cookies.toDate != null)) {
+        if (angular.isDefined($cookies.get('fromDate')) && ($cookies.get('toDate') != null)) {
             $scope.indicatorDates = {
-                startDate : $cookies.fromDate,
-                endDate :  $cookies.toDate
+                startDate : $cookies.get('fromDate'),
+                endDate :  $cookies.get('toDate')
             };
         } else {
             $scope.indicatorDates = {
@@ -228,7 +228,7 @@ app.controller('ElectricityConsumptionCtrl', ['$scope', '$http', 'indicatorSvc',
     }
         
     function readIndicatorColumnPref(contObjId) {
-        var columnPrefs = $cookies["indicator" + "el" + contObjId];
+        var columnPrefs = $cookies.get("indicator" + "el" + contObjId);
         if (!mainSvc.checkUndefinedNull(columnPrefs)) {
             columnPrefs = columnPrefs.split(',');
         }
@@ -511,7 +511,7 @@ app.controller('ElectricityConsumptionCtrl', ['$scope', '$http', 'indicatorSvc',
         ($scope.ctrlSettings.viewMode.indexOf("_abs") >= 0) ? $scope.ctrlSettings.precision = 2 : $scope.ctrlSettings.precision = 3;
         $scope.data = [];
         var paramString = "";
-        var timeDetailType = $scope.timeDetailType || $cookies.timeDetailType;
+        var timeDetailType = $scope.timeDetailType || $cookies.get('timeDetailType');
         if (timeDetailType.indexOf("_abs") >= 0) {
             timeDetailType = "24h";
             $scope.timeDetailType = "24h";
@@ -560,8 +560,8 @@ app.controller('ElectricityConsumptionCtrl', ['$scope', '$http', 'indicatorSvc',
         if (newDates === oldDates) {
             return;
         }
-        $cookies.fromDate = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);
-        $cookies.toDate = moment(newDates.endDate).format($scope.ctrlSettings.requestFormat);
+        $cookies.put('fromDate', moment(newDates.startDate).format($scope.ctrlSettings.requestFormat));
+        $cookies.put('toDate', moment(newDates.endDate).format($scope.ctrlSettings.requestFormat));
         indicatorSvc.setFromDate(moment(newDates.startDate).format($scope.ctrlSettings.requestFormat));
         indicatorSvc.setToDate(moment(newDates.endDate).format($scope.ctrlSettings.requestFormat));
         $rootScope.reportStart = moment(newDates.startDate).format($scope.ctrlSettings.requestFormat);

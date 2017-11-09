@@ -2,8 +2,8 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', '$timeout',
-             function ($http, $cookies, $interval, $rootScope, $q, $timeout) {
+app.service('objectSvc', ['$http', '$interval', '$rootScope', '$q', '$timeout',
+             function ($http, $interval, $rootScope, $q, $timeout) {
 //console.log("Object Service. Run."); 
                  
         var svcObjects = [
