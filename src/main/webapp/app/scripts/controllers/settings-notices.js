@@ -82,7 +82,8 @@ app.controller('SettingsNoticesCtrl', ['$rootScope', '$scope', '$http', 'notific
         notificationFactory.errorInfo(errorObj.caption, errorObj.description);
     };
     
-    var successGetNoticeTypeSettingsCallback = function (data) {
+    var successGetNoticeTypeSettingsCallback = function (resp) {
+        var data = resp.data;
         //0)Перед этим методом я должен получить полный список контактов
         //1)Получить настройки для типа уведомлений
         var tmpTypeSettings = data;
@@ -104,7 +105,7 @@ app.controller('SettingsNoticesCtrl', ['$rootScope', '$scope', '$http', 'notific
 //console.log($scope.currentNotice.contacts);        
     };
     
-    var putSuccessCallback = function (data) {
+    var putSuccessCallback = function (resp) {
         $('#editNoticeModal').modal('hide');
         $scope.currentNotice = {};
     };
@@ -112,19 +113,18 @@ app.controller('SettingsNoticesCtrl', ['$rootScope', '$scope', '$http', 'notific
     //get all contacts
     $scope.getContacts = function (url) {
         $http.get(url)
-            .success(function (data) {
-                $scope.contacts = angular.copy(data);
+            .then(function (resp) {
+                $scope.contacts = angular.copy(resp.data);
     //console.log($scope.contacts);            
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
     $scope.getContacts($scope.ctrlSettings.contactsUrl);
     
     //get notice types
     $scope.getNoticeTypes = function (url) {
         $http.get(url)
-            .success(function (data) {
-                var tmp = angular.copy(data);
+            .then(function (resp) {
+                var tmp = angular.copy(resp.data);
             //sort types by name
                 tmp.sort(function (a, b) {
                     if (a.name > b.name) {
@@ -149,15 +149,14 @@ app.controller('SettingsNoticesCtrl', ['$rootScope', '$scope', '$http', 'notific
                 });
                 $scope.noticeTypes = tmp;
 //console.log(data);           
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
     $scope.getNoticeTypes($scope.ctrlSettings.noticeTypesUrl);
     
     $scope.getNoticeTypeSettings = function (noticeType) {
         $scope.selectItem(noticeType);
         var url = $scope.ctrlSettings.apiUrl + "/" + noticeType.id + "/actions";
-        $http.get(url).success(successGetNoticeTypeSettingsCallback).error(errorCallback);
+        $http.get(url).then(successGetNoticeTypeSettingsCallback, errorCallback);
     };
     
     $scope.putNoticeTypeSettings = function (noticeType) {
@@ -174,7 +173,7 @@ app.controller('SettingsNoticesCtrl', ['$rootScope', '$scope', '$http', 'notific
             
         });
 //console.log(settings);        
-        $http.put(url, settings).success(putSuccessCallback).error(errorCallback);
+        $http.put(url, settings).then(putSuccessCallback, errorCallback);
     };
     
     $scope.setOrderBy = function (column) {

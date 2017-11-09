@@ -363,15 +363,14 @@ app.controller('ReportsCtrl', ['$scope', '$rootScope', '$http', 'crudGridDataFac
             timeout: requestCanceler.promise
         };
         $http.get(url, httpOptions)
-            .success(function (data) {
-                obj.specialTypeDirectoryValues = data;
+            .then(function (resp) {
+                obj.specialTypeDirectoryValues = resp.data;
 //console.log(obj);    
 //                obj.specialTypeDirectoryValues.forEach(function(element){
 //                    console.log(element[obj.specialTypeDirectoryValue]);
 //                    console.log(element[obj.specialTypeDirectoryCaption]);
 //                });
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };

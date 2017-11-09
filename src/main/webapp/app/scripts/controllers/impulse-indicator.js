@@ -483,7 +483,8 @@ angular.module('portalNMC')
         var table =  $scope.zpointTable;
 //console.log(table);        
 //        crudGridDataFactory(table).get(function(data){
-        $http.get(table).success(function(data) {
+        $http.get(table).then(function (resp) {
+                var data = resp.data;
 //console.log(data);
             //dev
 //                var data = impulseDataRespond;
@@ -529,8 +530,7 @@ angular.module('portalNMC')
                 $timeout(function() {
                     $scope.setScoreStyles();
                 }, 100);
-        })
-        .error(errorCallback);
+        }, errorCallback);
     };
          
         $scope.setScoreStyles = function(){
@@ -938,15 +938,14 @@ angular.module('portalNMC')
         var toDate = $rootScope.endDateToDel;
         var url = "../api/subscr/contObjects/" + contObject + "/contZPoints/" + contZpoint + "/service/" + timeDetailType + "/csv" + "?beginDate=" + fromDate + "&endDate=" + toDate;
         $http.delete(url)
-            .success(function(data) {
+            .then(function(resp) {            
                 notificationFactory.success();
-                $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/" + data.filename;
-                $scope.fileWithDeleteData = data.filename;
+                $scope.linkToFileWithDeleteData = "../api/subscr/service/out/csv/" + resp.data.filename;
+                $scope.fileWithDeleteData = resp.data.filename;
                 $scope.showLinkToFileFlag = true;
 //console.log("getData on success deleteData");
                 $scope.getData(1);
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
         
     $scope.setOrderBy = function(field){

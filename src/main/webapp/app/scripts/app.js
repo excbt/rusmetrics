@@ -306,3 +306,8 @@ app.run(["$rootScope", "$location", "$q", "securityCheck", function ($rootScope,
         });
     });
 }]);
+
+//$location config
+app.config(['$locationProvider', function ($locationProvider) {
+    $locationProvider.hashPrefix('');
+}]);

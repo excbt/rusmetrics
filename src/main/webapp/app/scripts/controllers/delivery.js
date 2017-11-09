@@ -1,7 +1,7 @@
 /*
  * Управление рассылками отчётов
  */
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -42,10 +42,9 @@ app.controller('DlvrCtrl', ['$rootScope', '$scope', '$http', 'notificationFactor
     // Получение списка рассылок
     $scope.getReportShedules = function () {
         $http.get($scope.url_rep_shdls)
-            .success(function (data) {
-                $scope.rep_shdls = data;
-            })
-            .error(errorCallback);
+            .then(function (resp) {
+                $scope.rep_shdls = resp.data;
+            }, errorCallback);
     };
 			
     // Добавление/изменение рассылки
@@ -63,19 +62,17 @@ app.controller('DlvrCtrl', ['$rootScope', '$scope', '$http', 'notificationFactor
             url = $scope.url_rep_shdls + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
             $scope.cur_rep_shdl.id = null;
             $http.post(url, $scope.cur_rep_shdl)
-                .success(function () {
+                .then(function () {
                     notificationFactory.success();
                     $scope.getReportShedules();
-                })
-                .error(errorCallback);
+                }, errorCallback);
         } else {
             url = $scope.url_rep_shdls + '/' + $scope.cur_rep_shdl.id + '?reportTemplateId=' + tmpl_id + '&reportParamsetId=' + $scope.cur_rep_shdl.reportParamset.id;
             $http.put(url, $scope.cur_rep_shdl)
-                .success(function () {
+                .then(function () {
                     notificationFactory.success();
                     $scope.getReportShedules();
-                })
-                .error(errorCallback);
+                }, errorCallback);
         }
     };
 			
@@ -83,35 +80,31 @@ app.controller('DlvrCtrl', ['$rootScope', '$scope', '$http', 'notificationFactor
     $scope.delReportShedule = function (rep_shdl) {
         var url = $scope.url_rep_shdls + '/' + rep_shdl.id;
         $http.delete(url)
-            .success(function () {
+            .then(function () {
                 $('#div_delete_delivery').modal('hide');
                 notificationFactory.success();
                 $scope.getReportShedules();
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
 
     // Получение списков параметров рассылок
     $scope.getReportParameters = function () {
         // Получаем список типов отчётов
         $http.get($scope.url_rep_types)
-            .success(function (data) {
-                $scope.rep_types = data;
-            })
-            .error(errorCallback);
+            .then(function (resp) {
+                $scope.rep_types = resp.data;
+            }, errorCallback);
 
         // Получаем список периодов
         $http.get($scope.url_rep_act_types)
-            .success(function (data) {
-                $scope.rep_act_types = data;
-            })
-            .error(errorCallback);
+            .then(function (resp) {
+                $scope.rep_act_types = resp.data;
+            }, errorCallback);
         // Получаем список способов доставки
         $http.get($scope.url_rep_shdl_types)
-            .success(function (data) {
-                $scope.rep_shdl_types = data;
-            })
-            .error(errorCallback);
+            .then(function (resp) {
+                $scope.rep_shdl_types = resp.data;
+            }, errorCallback);
     };
 			
     // Получение списка вариантов шаблонов
@@ -128,8 +121,8 @@ app.controller('DlvrCtrl', ['$rootScope', '$scope', '$http', 'notificationFactor
 //console.log($scope.cur_rep_shdl);                
 //console.log($scope.rep_types);                
         $http.get(url)
-            .success(function (data) {
-                $scope.paramsets = data;
+            .then(function (resp) {
+                $scope.paramsets = resp.data;
                 if (!initialFlag) {
 //console.log($scope.paramsets);                            
                     if (angular.isArray($scope.paramsets) && ($scope.paramsets.length > 0)) {
@@ -138,8 +131,7 @@ app.controller('DlvrCtrl', ['$rootScope', '$scope', '$http', 'notificationFactor
                         $scope.cur_rep_shdl.reportParamset = null;
                     }
                 }
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
 			
     // Получение списка рассылок

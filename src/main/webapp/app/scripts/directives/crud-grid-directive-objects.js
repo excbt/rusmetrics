@@ -974,7 +974,8 @@ console.log(headers);
 //                    var url = $scope.urlRefRange + object.id + '/zpoints/' + zpoint.id + '/referencePeriod'; 
 //console.log(url);                    
                     objectSvc.getRefRangeByObjectAndZpoint(object, zpoint)
-                        .success(function (data) {
+                        .then(function (resp) {
+                            var data = resp.data;
                             if (data[0] != null) {
     //                            var beginDate = new Date(data[0].periodBeginDate);
     //                            var endDate =  new Date(data[0].periodEndDate);
@@ -989,8 +990,7 @@ console.log(headers);
                                 zpoint.zpointRefRangeAuto = "notSet";
                             }
                             viewRefRangeInTable(zpoint);
-                        })
-                        .error(function (e) {
+                        }, function (e) {
                             console.log(e);
                         });
                 }
@@ -1596,7 +1596,8 @@ console.log(headers);
                 var getRefRange = function (objectId, zpointId) {
                     var url = $scope.urlRefRange + '/' + objectId + '/zpoints/' + zpointId + '/referencePeriod';
                     $http.get(url)
-                        .success(function (data) {
+                        .then(function (resp) {
+                            var data = resp.data;
                             // Проверяем, задан ли интервал
                             if (data[0] != null) {
     //console.log(data);                            
@@ -1623,8 +1624,7 @@ console.log(headers);
                                 document.getElementById('spn_if_manual').style.display = 'none';
                                 document.getElementById('spn_if_auto').style.display = 'none';
                             }
-                        })
-                        .error(function (e) {
+                        }, function (e) {
                             notificationFactory.errorInfo(e.statusText, e.description);
                         });
                 };
@@ -1668,7 +1668,8 @@ console.log(headers);
                     var UTCenddt = Date.UTC(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
                     $scope.refRange.periodEndDate = (!isNaN(UTCenddt)) ? (new Date(UTCenddt)).getTime() : null;
                     $http.post(url, $scope.refRange)
-                        .success(function (data) {
+                        .then(function (resp) {
+                            var data = resp.data;
                             $scope.editRefRangeOff();
                             $scope.refRange = data;
                             //прорисовываем эталонный интервал в таблице
@@ -1684,8 +1685,7 @@ console.log(headers);
                             $scope.currentZpoint.zpointRefRangeAuto = $scope.refRange.isAuto ? "auto" : "manual";
 
                             viewRefRangeInTable($scope.currentZpoint);
-                        })
-                        .error(function (e) {
+                        }, function (e) {
                             notificationFactory.errorInfo(e.statusText, e.description);
                         });
                 };

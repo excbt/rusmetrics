@@ -1,4 +1,4 @@
-/*jslint node: true, eqeq: true*/
+/*jslint node: true, eqeq: true, es5: true*/
 /*global angular, $*/
 'use strict';
 var app = angular.module('portalNMC');
@@ -77,20 +77,18 @@ app.controller('ContactsCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'not
         if (typeof $scope.currentItem.id !== 'undefined') {
             url = $scope.url_users + '/' + $scope.currentItem.id + '?subscrGroupIds=' + $scope.cnt_lst;
             $http.put(url, $scope.currentItem)
-                .success(function () {
+                .then(function () {
                     $scope.getContacts();
                     $('#edit_contact').modal('hide');
-                })
-                .error(errorCallback);
+                }, errorCallback);
         } else {
         // Если не существует - делаем post
             url = $scope.url_users + '?subscrGroupIds=' + $scope.cnt_lst;
             $http.post(url, $scope.currentItem)
-                .success(function () {
+                .then(function () {
                     $scope.getContacts();
                     $('#edit_contact').modal('hide');
-                })
-                .error(errorCallback);
+                }, errorCallback);
         }
     };
 			
@@ -110,20 +108,18 @@ app.controller('ContactsCtrl', ['$rootScope', '$scope', '$http', 'mainSvc', 'not
         if (typeof $scope.currentItem.id !== 'undefined') {
             url = $scope.url_groups + '/' + $scope.currentItem.id  + '?subscrUserIds=' + $scope.cnt_lst;
             $http.put(url, $scope.currentItem)
-                .success(function () {
+                .then(function () {
                     $scope.getLists();
                     $('#edit_list').modal('hide');
-                })
-                .error(errorCallback);
+                }, errorCallback);
         } else {
         // Если не существует - делаем post        
             url = $scope.url_groups + '?subscrUserIds=' + $scope.cnt_lst;
             $http.post(url, $scope.currentItem)
-                .success(function () {
+                .then(function () {
                     $scope.getLists();
                     $('#edit_list').modal('hide');
-                })
-                .error(errorCallback);
+                }, errorCallback);
         }
     };
 

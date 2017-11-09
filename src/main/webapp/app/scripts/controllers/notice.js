@@ -830,46 +830,42 @@ app.controller('NoticeCtrl', ['$scope', '$http', '$resource', '$rootScope', '$co
 
     $scope.getNoticeDeviations = function (url) {
         $http.get(url)
-            .success(function (data) {
-                $scope.noticeDeviations = data;
+            .then(function (resp) {
+                $scope.noticeDeviations = resp.data;
                 $scope.$broadcast('notices:getNoticeTypes');
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };
 
     $scope.getNoticeCategories = function (url) {
         $http.get(url)
-            .success(function (data) {
-                $scope.noticeCategories = data;
+            .then(function (resp) {
+                $scope.noticeCategories = resp.data;
                 $scope.getNoticeDeviations($scope.noticeDeviationsUrl);
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };
 
     $scope.getNoticeTypes = function (url) {
         $http.get(url)
-            .success(function (data) {
-                $scope.noticeTypes = data;
+            .then(function (resp) {
+                $scope.noticeTypes = resp.data;
                 $scope.initCtrl();
                 $scope.getResultsPage(1);
 //console.log("$scope.noticeTypes");
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };
 
     $scope.getZpointList = function (url) {
         $http.get(url)
-            .success(function (data) {
-                $scope.zpointList = data;
+            .then(function (resp) {
+                $scope.zpointList = resp.data;
                 $scope.getNoticeCategories($scope.noticeCategoriesUrl);
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };

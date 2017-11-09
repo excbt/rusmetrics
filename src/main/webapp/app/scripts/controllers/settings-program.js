@@ -134,7 +134,8 @@ app.controller('SettingsProgramCtrl', ['$rootScope', '$scope', '$http', 'notific
     //get all settings
     var getProgramSettings = function () {
         $http.get($scope.ctrlSettings.settingsUrl)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
                 if (angular.isArray(data)) {
                     data.forEach(function (setting) {
                         if (setting.subscrPrefCategory == "SUBSCR_OBJECT_TREE") {
@@ -143,8 +144,7 @@ app.controller('SettingsProgramCtrl', ['$rootScope', '$scope', '$http', 'notific
                     });
                 }
                 performSettingsData(data);
-            })
-            .error(errorCallback);
+            }, errorCallback);
     };
     
     var getTreesForSetting = function (prefKey) {
@@ -154,10 +154,9 @@ app.controller('SettingsProgramCtrl', ['$rootScope', '$scope', '$http', 'notific
         }
         var url = $scope.ctrlSettings.settingsUrl + "/objectTreeTypes?subscrPrefKeyname=" + prefKey;
         $http.get(url)
-            .success(function (data) {
-                $scope.data.items[prefKey] = angular.copy(data);
-            })
-            .error(errorCallback);
+            .then(function (resp) {                
+                $scope.data.items[prefKey] = angular.copy(resp.data);
+            }, errorCallback);
     };
     
     function checkSMSUrlAndViewMessage(urlStr) {
@@ -311,12 +310,11 @@ app.controller('SettingsProgramCtrl', ['$rootScope', '$scope', '$http', 'notific
         
         $scope.ctrlSettings.isSaving = true;
         $http.put($scope.ctrlSettings.settingsUrl, $scope.data.modifySettings)
-            .success(function (data) {
+            .then(function (resp) {
                 $scope.ctrlSettings.isSaving = false;
                 notificationFactory.success();
-                performSettingsData(data);
-            })
-            .error(errorCallback);
+                performSettingsData(resp.data);
+            }, errorCallback);
     };
     
     $scope.cancelSettings = function () {

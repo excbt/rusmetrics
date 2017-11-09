@@ -361,7 +361,8 @@ app.controller('ParamSetsCtrl', ['$scope', '$rootScope', '$resource', '$http', '
     //get custom directory data
     $scope.getDirectory = function (url, obj) {
         $http.get(url)
-            .success(function (data) {
+            .then(function (resp) {
+                var data = resp.data;
                 obj.specialTypeDirectoryValues = data;
                 //set default directory value
                 if (!mainSvc.checkUndefinedNull(obj.directoryValue)) {
@@ -377,8 +378,7 @@ app.controller('ParamSetsCtrl', ['$scope', '$rootScope', '$resource', '$http', '
                     });
                 }
                 
-            })
-            .error(function (e) {
+            }, function (e) {
                 console.log(e);
             });
     };

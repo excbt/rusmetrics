@@ -773,7 +773,8 @@ angular.module('portalNMC')
         var table =  $scope.zpointTable;
 //console.log(table);        
 //        crudGridDataFactory(table).get(function(data){
-        $http.get(table).success(function(data) {
+        $http.get(table).then(function (resp) {
+                var data = resp.data;
 //console.log(data);
                 $scope.totalIndicators = data.totalElements;
  
@@ -819,8 +820,7 @@ angular.module('portalNMC')
                 });
                 $scope.data = data.objects;
                 $scope.ctrlSettings.loading = false;            
-        })
-        .error(errorCallback);
+        }, errorCallback);
          
         $scope.setScoreStyles = function () {
             //ровняем таблицу, если появляются полосы прокрутки
