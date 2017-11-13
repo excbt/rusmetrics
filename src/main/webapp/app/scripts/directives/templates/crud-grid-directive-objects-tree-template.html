@@ -220,26 +220,74 @@
                     </div>
                 </div>
                  <div ng-if = "isElementNode(data.selectedPNode)">
-                    <div class = "paddingLeft10">
-                        <h3>Узел: {{data.selectedPNode.nodeName}}</h3>
-                        <h4>Дочерних узлов: {{data.selectedPNode.childNodes.length || 0}}</h4>
-                        <h4>Объектов: {{data.selectedPNode.linkedNodeObjects.length || 0}}</h4>
-                     </div>
-                     <div ng-if = "data.selectedPNode.isWidgetView">
-                         <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
-                               <span ng-show='title' ng-bind='title'></span>
-                               <div ng-show='isLoading'>Загрузка...</div>
-                               <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
-                               <ng-widget ng-show = "!isLoading && !isError"
-                                   src = "'treeNotificationsDiagram'"
-                                   options = "{
-                                       previewMode: false,
-                                       contZpointId: 1,
-                                       ptreeNode: data.selectedPNode
-                                   }">
+                   <div class = "container">
+                        <div class = "row">
+                            <div class = "col-xs-3 noPadding">
+                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue;">
+                                    <h3>Узел: {{data.selectedPNode.nodeName}}</h3>
+                                    <h4>Дочерних узлов: {{data.selectedPNode.childNodes.length || 0}}</h4>
+                                    <h4>Объектов: {{data.selectedPNode.linkedNodeObjects.length || 0}}</h4>
+                                 </div>
+                            </div>
+                            <div class = "col-xs-1 noPadding">
+                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue; height: 116px;">
+                                    <h8>
+                                       Всего событий:        
+                                    </h8>
+                                    <h3>
+                                       165
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class = "col-xs-1 noPadding">
+                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue; height: 116px;">
+                                    <h8>
+                                       Объектов с событиями:        
+                                    </h8>
+                                    <h3>
+                                       65
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class = "col-xs-1 noPadding">
+                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: #ef473a; height: 116px;">
+                                    <h8>
+                                       Критических событий:        
+                                    </h8>
+                                    <h3>
+                                       15
+                                    </h3>
+                                </div>
+                            </div>
+                            <div class = "col-xs-1 noPadding">
+                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: #ef473a; height: 116px;">
+                                    <h8>
+                                       Объектов с критическими событиями:        
+                                    </h8>
+                                    <h3>
+                                       5
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class = "row">
+                                 <div ng-if = "data.selectedPNode.isWidgetView">
+                                     <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                                           <span ng-show='title' ng-bind='title'></span>
+                                           <div ng-show='isLoading'>Загрузка...</div>
+                                           <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                                           <ng-widget ng-show = "!isLoading && !isError"
+                                               src = "'treeNotificationsDiagram'"
+                                               options = "{
+                                                   previewMode: false,
+                                                   contZpointId: 1,
+                                                   ptreeNode: data.selectedPNode
+                                               }">
 
-                                </ng-widget>
-                           </div>
+                                            </ng-widget>
+                                       </div>
+                                 </div>
+                        </div>
                      </div>
                  </div>
                  <div ng-if = "isContObjectNode(data.selectedPNode)">
