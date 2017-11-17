@@ -1,4 +1,4 @@
-describe("Portal NMC, objects tree servce tests", function () {
+xdescribe("Portal NMC, objects tree servce tests", function () {
 	var USER_INFO = {
 			userName: "unitTestUser",
 			subscriber: {

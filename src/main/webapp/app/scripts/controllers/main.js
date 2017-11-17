@@ -275,20 +275,19 @@
     //    }, 500);
 
           //check user
-        vm.isRma = function () {
-            return mainSvc.isRma();
-        };
-        vm.isCabinet = function () {
-            return mainSvc.isCabinet();
-        };
+//        vm.isRma = function () {
+//            return mainSvc.isRma();
+//        };
+                           
+        vm.isRma = mainSvc.isRma;
+                           
+        vm.isCabinet = mainSvc.isCabinet;
 
         vm.getCtx = function () {
           return $rootScope.ctxId;
         };
 
-        vm.emptyString = function (str) {
-            return mainSvc.checkUndefinedEmptyNullValue(str);
-        };
+        vm.emptyString = mainSvc.checkUndefinedEmptyNullValue;        
 
         vm.isTestMode = function () {
     //console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
