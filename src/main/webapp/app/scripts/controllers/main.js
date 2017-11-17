@@ -65,7 +65,7 @@
             setting_menu_item: "Настройки",
             admin_menu_item: "Управление",
             log_menu_item: "Журналы",
-            energy_menu_item: "Энерго - эффективность",
+            energy_menu_item: "Энергоэффективность",
             test_menu_item: "Тест"
         };
 
