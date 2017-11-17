@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" ng-app="portalNMC" ng-controller="MainCtrl" ng-cloak>
+<html class="no-js" ng-app="portalNMC" ng-controller="MainCtrl as mainVm" ng-cloak>
   <head>
     <!--[if IE]>
         <script src="/public1/bower_components/html5shiv/dist/html5shiv.js"></script>
@@ -162,7 +162,7 @@
 -->
 <!--   энд оф Навигационная строка в верху страницы    -->
     <div class = "nmc-main-menu-div"
-       ng-class = "{'nmc-bg-attention': debugModeFlag}">
+       ng-class = "{'nmc-bg-attention': mainVm.debugModeFlag}">
         <div class = "btn-group">
           <i title = "Главное меню"
              type = "button"
@@ -192,110 +192,110 @@
             <li class="menu-item" role="presentation">
                 <a id="object_main_menu_item"
                    class="list-group-item nmc-main-menu-item nmc-hide"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
+                   ng-class="{'nmc-main-menu-item-active': mainVm.menuMassive.object_menu_item, 'nmc-hide': !mainVm.isCabinet(), 'nmc-show': mainVm.isCabinet()}"
                    href="#/"
                    data-toggle="offcanvas"
-                   ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
+                   ng-click="mainVm.clickMenu('object_menu_item'); mainVm.showAdminSettings = false;">
                     <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                        title="Объекты">
                     </i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
+                    <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">Объекты</span>
                 </a>
             </li>
             <li class="menu-item" role="presentation">
                 <a id="object_new_main_menu_item"
                    class="list-group-item nmc-main-menu-item"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_new_menu_item, 'nmc-show': isCabinet()}"
+                   ng-class="{'nmc-main-menu-item-active': mainVm.menuMassive.object_new_menu_item, 'nmc-show': mainVm.isCabinet()}"
                    href="#/objects/newlist/"
                    data-toggle="offcanvas"
-                   ng-click="clickMenu('object_new_menu_item'); showAdminSettings = false;">
+                   ng-click="mainVm.clickMenu('object_new_menu_item'); mainVm.showAdminSettings = false;">
                     <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                        title="Объекты (NEW!)">
                     </i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты (NEW!)</span>
+                    <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">Объекты (NEW!)</span>
                 </a>
             </li>
             <li class = "menu-item" role = "presentation">
                 <a id="report_main_menu_item"
                    class="list-group-item nmc-main-menu-item nmc-hide"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
+                   ng-class="{'nmc-main-menu-item-active': mainVm.menuMassive.report_menu_item}"
                    href="#/reports/"
                    data-toggle="offcanvas"
-                   ng-click="clickMenu('report_menu_item')">
+                   ng-click="mainVm.clickMenu('report_menu_item')">
                    <i class="glyphicon glyphicon-file nmc-main-menu-item-icon nmc-color" title="Отчеты">
 
                    </i>
-                   <span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span>
+                   <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">Отчеты</span>
                 </a>
             </li>
             <li class = "menu-item" role = "presentation">
-                <a ng-show="!isCabinet()"
-                   ng-hide="isTestMode()"
+                <a ng-show="!mainVm.isCabinet()"
+                   ng-hide="mainVm.isTestMode()"
                    id="log_main_menu_item"
                    class="list-group-item nmc-main-menu-item"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
+                   ng-class = "{'nmc-main-menu-item-active': mainVm.menuMassive.log_menu_item}"
 
-                   href="#/log/session-log/"
-                   data-toggle="offcanvas"
-                   ng-click="clickMenu('log_menu_item')"
+                   href = "#/log/session-log/"
+                   data-toggle = "offcanvas"
+                   ng-click = "mainVm.clickMenu('log_menu_item')"
                    ng-cloak>
-                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon nmc-color" title="Журнал"></i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
+                    <i class = "glyphicon glyphicon-list-alt nmc-main-menu-item-icon nmc-color" title="Журнал"></i>
+                    <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">
                         Журналы
                     </span>
                 </a>
             </li>
             <li class = "menu-item" role = "presentation">
-                <a ng-show="!isCabinet() && !isTestMode()"
+                <a ng-show="!mainVm.isCabinet() && !mainVm.isTestMode()"
                    id="energy_main_menu_item"
                    class="list-group-item nmc-main-menu-item"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
+                   ng-class="{'nmc-main-menu-item-active': mainVm.menuMassive.energy_menu_item}"
                    href="#/documents/energo-passports/"
                    data-toggle="offcanvas"
-                   ng-click="clickMenu('energy_menu_item')"
+                   ng-click="mainVm.clickMenu('energy_menu_item')"
                    ng-cloak>
                     <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon nmc-color" title="Энергоэффективность"></i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
-                        Энерго - эффективность
+                    <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">
+                        Энергоэффективность
                     </span>
                 </a>
             </li>
             <li>
-                <a id="setting_main_menu_item"
-                   class="list-group-item nmc-main-menu-item nmc-hide"
-                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
-                   href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')">
-                   <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon nmc-color" title="Настройки"></i>
-                   <span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span>
+                <a id = "setting_main_menu_item"
+                   class = "list-group-item nmc-main-menu-item nmc-hide"
+                   ng-class = "{'nmc-main-menu-item-active': mainVm.menuMassive.setting_menu_item}"
+                   href = "#/settings/paramsets/" data-toggle="offcanvas" ng-click="mainVm.clickMenu('setting_menu_item')">
+                   <i class = "glyphicon glyphicon-cog nmc-main-menu-item-icon nmc-color" title="Настройки"></i>
+                   <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">Настройки</span>
                 </a>
             </li>
             <li>
                 <a id = "management_main_menu_item"
                    class = "list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
-                   ng-class = "{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
+                   ng-class = "{ 'nmc-main-menu-item-active': mainVm.menuMassive.admin_menu_item, 'nmc-hide': !mainVm.isRma(), 'nmc-show': mainVm.isRma()}"
                    href = "#/management/objects/"
                    data-toggle = "offcanvas"
-                   ng-click = "clickMenu('admin_menu_item'); showAdminSettings = true">
+                   ng-click = "mainVm.clickMenu('admin_menu_item'); mainVm.showAdminSettings = true">
                     <i class = "glyphicon glyphicon-wrench nmc-main-menu-item-icon nmc-color"
                        title = "Управление">
                     </i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
+                    <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">Управление</span>
                 </a>
             </li>
-            <li ng-if = "isRma()" role = "separator" class = "divider">
+            <li ng-if = "mainVm.isRma()" role = "separator" class = "divider">
 
             </li>
             <li>
                 <a id = "management_main_menu_item"
                    class = "nmc-hide"
-                   ng-class = "{'nmc-bg-attention': debugModeFlag, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
+                   ng-class = "{'nmc-bg-attention': mainVm.debugModeFlag, 'nmc-hide': !mainVm.isRma(), 'nmc-show': mainVm.isRma()}"
 
                    data-toggle = "offcanvas"
-                   ng-click = "debugModeClick(); showAdminSettings = true">
+                   ng-click = "mainVm.debugModeClick(); mainVm.showAdminSettings = true">
                     <i class = "glyphicon glyphicon-off nmc-main-menu-item-icon text-danger"
                        title = "Режим настройки">
                     </i>
-                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Режим настройки</span>
+                    <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">Режим настройки</span>
                 </a>
             </li>
             <!--<li role = "separator" class = "divider">-->
@@ -310,28 +310,28 @@
             <li role = "separator" class = "divider">
             <li class = "menu-item dropdown dropdown-submenu" role = "presentation">
                 <a class = "user-menu"
-                      data-toggle="dropdown"
-                       aria-haspopup="true"
-                      aria-expanded="false">
+                      data-toggle = "dropdown"
+                       aria-haspopup = "true"
+                      aria-expanded = "false">
 <!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
-                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon text-warning"
-                                   title="Пользовательское меню">
+                                <i class = "glyphicon glyphicon-user nmc-main-menu-item-icon text-warning"
+                                   title = "Пользовательское меню">
                                 </i>
-                                <span ng-show="mainCtrlSettings.showFullMenuFlag"
-                                      ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
+                                <span ng-show = "mainVm.mainCtrlSettings.showFullMenuFlag"
+                                      ng-attr-title = "{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
                                       >
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
+                                    <span class = "nmc-hide"
+                                          ng-class = "{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
                                         <b>{{userInfo.userNameCaption}}</b><br/>
                                     </span>
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}"
-                                          ng-show="userInfo.subscriber != null">
+                                    <span class = "nmc-hide"
+                                          ng-class = "{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}"
+                                          ng-show = "userInfo.subscriber != null">
                                         {{userInfo.userSubscrCaption}}
                                     </span>
                                 </span>
                     </a>
-                    <ul class="dropdown-menu nmc-dropdown-menu">
+                    <ul class = "dropdown-menu nmc-dropdown-menu">
 <!--
                         <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
                             <a href="#/private/"
@@ -341,8 +341,8 @@
                         </p></a></li>
 -->
 
-                        <li ng-if="userInfo.isReadonly != true"><a href=""
-                               ng-click="changePasswordInit()"
+                        <li ng-if="mainVm.userInfo.isReadonly != true"><a href=""
+                               ng-click="mainVm.changePasswordInit()"
                                title='Сменить пароль'
                                data-target="#changePasswordModal"
                                data-toggle="modal">
@@ -351,7 +351,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li><a href="../logout" ng-click="logOut();"
+                        <li><a href="../logout" ng-click="mainVm.logOut();"
                             title='logout'><p> <b>Выход </b>
                         </p></a></li>
                     </ul>
@@ -705,7 +705,7 @@
                                     <td class="col-sm-3"><label for="viewLogin">Логин</label>
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
-                                        <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.userInfo.userName" disabled>
+                                        <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="mainVm.data.userInfo.userName" disabled>
                                     </td>
                                 </tr>
                                 <tr>
@@ -713,12 +713,12 @@
                                         <label for="inputTenantPassword">Текущий пароль</label>
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !mainVm.checkPasswordFields(data.userInfo)}">
                                             <input class="form-control nmc-text-input-form"
                                                    type="password"
                                                    id="inputUserInfoPassword"
                                                    placeholder=""
-                                                   ng-model="data.userInfo.oldPassword"
+                                                   ng-model="mainVm.data.userInfo.oldPassword"
                                                    />
                                         </div>
                                     </td>
@@ -728,12 +728,12 @@
                                         <label for="inputTenantPassword">Новый пароль</label>
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !mainVm.checkPasswordFields(data.userInfo)}">
                                             <input class="form-control nmc-text-input-form"
                                                    type="password"
                                                    id="inputUserInfoPassword"
                                                    placeholder=""
-                                                   ng-model="data.userInfo.newPassword"
+                                                   ng-model="mainVm.data.userInfo.newPassword"
                                                    />
                                         </div>
                                     </td>
@@ -743,12 +743,12 @@
                                         <label for="confirmTenantPassword">Подтверждение пароля</label>
                                     </td>
                                     <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
+                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !mainVm.checkPasswordFields(data.userInfo)}">
                                             <input class="form-control nmc-text-input-form"
                                                    type="password"
                                                    id="confirmUserInfoPassword"
                                                    placeholder="Повторите пароль"
-                                                   ng-model="data.userInfo.newPasswordConfirm"
+                                                   ng-model="mainVm.data.userInfo.newPasswordConfirm"
                                                    />
                                         </div>
                                     </td>
@@ -759,18 +759,18 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer nmc-modal-footer">
-                    <div class="container-fluid  ">
+            <div class = "modal-footer nmc-modal-footer">
+                    <div class = "container-fluid  ">
 
-                        <div class="row">
-                            <div class="col-xs-offset-6 col-md-3">
-                                <input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                    ng-click="changeUserPassword(data.userInfo)"
-                                    value="Сохранить" />
+                        <div class = "row">
+                            <div class = "col-xs-offset-6 col-md-3">
+                                <input type = "submit" class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                    ng-click = "mainVm.changeUserPassword(data.userInfo)"
+                                    value = "Сохранить" />
                             </div>
-                            <div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-                                <button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-                                    ng-click="exit('#createPasswordModal')">
+                            <div class = "pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+                                <button class = "btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+                                    ng-click = "exit('#createPasswordModal')">
                                     Отменить
                                 </button>
                             </div>
