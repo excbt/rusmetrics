@@ -220,7 +220,7 @@
                     </div>
                 </div>
                  <div ng-if = "isElementNode(data.selectedPNode)">
-                   <div class = "container">
+                   <div class = "container-fluid">
                         <div class = "row">
                             <div class = "col-xs-3 noPadding">
                                 <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue;">
@@ -272,20 +272,23 @@
                         </div>
                         <div class = "row">
                                  <div ng-if = "data.selectedPNode.isWidgetView">
-                                     <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
-                                           <span ng-show='title' ng-bind='title'></span>
-                                           <div ng-show='isLoading'>Загрузка...</div>
-                                           <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
-                                           <ng-widget ng-show = "!isLoading && !isError"
-                                               src = "'treeNotificationsDiagram'"
-                                               options = "{
-                                                   previewMode: false,
-                                                   contZpointId: 1,
-                                                   ptreeNode: data.selectedPNode
-                                               }">
+                                    <div ng-class = "data.chartClass" ng-repeat = "chartMode in data.chartModes">
+                                         <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                                               <span ng-show='title' ng-bind='title'></span>
+                                               <div ng-show='isLoading'>Загрузка...</div>
+                                               <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                                               <ng-widget ng-show = "!isLoading && !isError"
+                                                   src = "'treeNotificationsDiagram'"
+                                                   options = "{
+                                                       previewMode: false,
+                                                       contZpointId: 1,
+                                                       ptreeNode: data.selectedPNode,
+                                                       chartMode: chartMode
+                                                   }">
 
-                                            </ng-widget>
-                                       </div>
+                                                </ng-widget>
+                                           </div>
+                                    </div>
                                  </div>
                         </div>
                      </div>

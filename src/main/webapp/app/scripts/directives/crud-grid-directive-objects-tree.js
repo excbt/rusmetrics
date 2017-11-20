@@ -2843,6 +2843,9 @@
                     $scope.data.currentPTreeMonitor = {}; // monitor statuses for current tree;
                     $scope.data.currentPTreeMonitorDefault = IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT;
                     var selectedPNodes = []; // массив выбранных через ctrl/shift узлов дерева
+                    
+                    $scope.data.chartModes = ['CRITICALS', 'CATEGORIES', 'TYPES'];
+                    $scope.data.chartClass = 'col-xs-' + 12 / $scope.data.chartModes.length + ' noPadding'; // 12 - col count in grid
 
                     function isChildNodesEmpty(item) {
                         return mainSvc.checkUndefinedNull(item) || mainSvc.checkUndefinedNull(item.childNodes) || !angular.isArray(item.childNodes) || item.childNodes.length === 0;

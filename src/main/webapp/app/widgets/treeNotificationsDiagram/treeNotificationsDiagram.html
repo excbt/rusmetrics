@@ -1,6 +1,7 @@
 <!--<script src="/app/widgets/treeNotificationsDiagram/treeNotificationsDiagramService.js"></script>-->
 <div class="tree-notif-widget" ng-controller="treeNotificationsDiagramWidgetCtrl">
     <div class="container-fluid">        
+<!--
         <div style = "display: none" class="row">
             <div class = "col-xs-6">
                 <div class = "row">
@@ -25,6 +26,7 @@
             <div class = "col-xs-6">
                 <div class = "row">
                     <div class = "col-xs-6 nmc-cw-widget-btnpanel">
+-->
 <!--
                         <a href="" class = "nmc-cw-widget-a-status">
 
@@ -49,12 +51,14 @@
                                  title = "Открыть показания"/>
                         </a>
 -->
+<!--
                     </div>
                     <div class = "col-xs-6 nmc-cw-widget-temppanel">                        
                     </div>
                 </div>
             </div>
         </div>
+-->
         <div class = "row">
             <div class = "col-xs-12">
                 Диаграмма событий по <span class = "text-primary">{{data.currentChartMode.chartCaption}}</span>
@@ -62,12 +66,13 @@
         </div>
         <br>
         <div class="row">            
-            <div class = "col-xs-4">
+            <div class = "col-xs-12">
                 <div ng-show = "presentDataFlag === false"
                      class = "nmc-text-align-center">                    
 <!--                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.-->
                 </div>
-                <div ng-show = "presentDataFlag === true">
+                <div ng-show = "presentDataFlag === true" style = "position: relative">
+                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; width: 300px; text-align: center; transform: translateY(-50%)">{{data.eventsCount}}</label>
                     <canvas id="doughnut" 
                             class="chart chart-doughnut" 
                             chart-data="barChart.data"
@@ -78,14 +83,16 @@
                     </canvas>
                 </div>
             </div>
+<!--
             <div class = "col-xs-1" ng-show = "presentDataFlag === true">
                <div ng-repeat = "chartMode in data.CHART_MODES" ng-click = "chartModeChange(chartMode)">
                    <p type = "button" ng-class = "chartMode.class"
                       ng-attr-title = "{{chartMode.caption}}" 
                    ></p>
                </div>
-<!--                {{chartMode.caption}}-->
             </div>
+-->
+<!--
             <div class = "col-xs-6">
                 <h3>Список объектов</h3>
                 <div style = "border: 1px #aaa solid; max-height: 300px; overflow: auto">                       
@@ -94,10 +101,11 @@
                     </div>
                 </div>    
             </div>            
+-->
         </div>
         <div class="row">            
             <div class = "col-xs-12">
-                <div ng-attr-id = "{{'cw-chart-legend-' + data.ptreeNodeId}}" class = "cw-chart-legend"></div>
+                <div ng-attr-id = "{{'cw-chart-legend-' + data.ptreeNodeId + widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
             </div>
         </div>
     </div>
