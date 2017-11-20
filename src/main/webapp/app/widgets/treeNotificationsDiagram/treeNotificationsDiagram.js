@@ -17,7 +17,7 @@ angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', '
 //    .service('treeNotificationsDiagramService', [function () {
 //        console.log("Simple Hello.");
 //    }])
-    .controller('treeNotificationsDiagramWidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', 'treeNotificationsDiagramService', function ($scope, $http, $rootScope, widgetConfig, treeNotificationsDiagramService) {
+    .controller('treeNotificationsDiagramWidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', 'treeNotificationsDiagramService', '$timeout', function ($scope, $http, $rootScope, widgetConfig, treeNotificationsDiagramService, $timeout) {
     //data generator
         var timeDetailTypes = {
             month: {
@@ -348,6 +348,8 @@ angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', '
             }
         });
         
+        $scope.data.contObjectList = [];
+        
         thisdata.contEventCriticals = {
             YELLOW: {
                 caption: "Некритические",
@@ -434,7 +436,7 @@ angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', '
                     resultCategories[contEventCategoriesIndex].count = 0;
                 }
             }
-console.log(resultCategories);            
+// console.log(resultCategories);
             inputData.forEach(function (event) {
                 try {
                     resultCategories[thisdata.contEventTypes[event.contEventTypeId].contEventCategoryKeyname].count += event.count;
@@ -515,19 +517,19 @@ console.log(resultCategories);
         $scope.data.CHART_MODES = {
             CRITICALS: {
                 caption: "Критические",
-                class: "btn btn-default btn-lg btn-block text-primary",
+                class: "btn btn-lg glyphicon glyphicon-alert text-primary",
                 prepareFunction: prepareChartDataWithCritical,
                 chartCaption: "критичности"
             },
             CATEGORIES: {
                 caption: "Категории",
-                class: "btn btn-default btn-lg btn-block text-primary",
+                class: "btn btn-lg glyphicon glyphicon-tags text-primary",
                 prepareFunction: prepareChartDataWithCategories,
                 chartCaption: "категориям"
             },
             TYPES: {
                 caption: "Типы",
-                class: "btn btn-default btn-lg btn-block text-primary",
+                class: "btn btn-lg glyphicon glyphicon-tag text-primary",
                 prepareFunction: prepareChartDataWithTypes,
                 chartCaption: "типам"
             }
@@ -608,6 +610,21 @@ console.log(resultCategories);
             getContEventTypes();
             getPTreeNodeState();
         }
+        
+        function openObjectListModalWindow() {
+            $timeout(function () {
+                $('#objectListModal').modal();
+            });
+        }
+        
+        $scope.chartClick = function (ev) {
+            console.log(ev);
+            $scope.data.contObjectList = angular.copy(thisdata.contEventPTreeNodeData);
+            $scope.data.contObjectList = $scope.data.contObjectList.concat($scope.data.contObjectList);
+            $scope.data.contObjectList = $scope.data.contObjectList.concat($scope.data.contObjectList);
+// console.log($scope.data.contObjectList);
+            openObjectListModalWindow();
+        };
         
         $scope.$on(treeNotificationsDiagramService.EVENTS.categoriesLoaded, function () {
             getContEventCategories();
