@@ -1,72 +1,44 @@
-                   <div class = "container-fluid">
-                        <div class = "row">
-                            <div class = "col-xs-3 noPadding">
-                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue;">
-                                    <h3>Узел: {{$ctrl.spnode.nodeName}}</h3>
-                                    <h4>Дочерних узлов: {{$ctrl.spnode.childNodes.length || 0}}</h4>
-                                    <h4>Объектов: {{$ctrl.spnode.linkedNodeObjects.length || 0}}</h4>
-                                 </div>
-                            </div>
-                            <div class = "col-xs-1 noPadding">
-                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue; height: 116px;">
-                                    <h8>
-                                       Всего событий:        
-                                    </h8>
-                                    <h3>
-                                       165
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class = "col-xs-1 noPadding">
-                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue; height: 116px;">
-                                    <h8>
-                                       Объектов с событиями:        
-                                    </h8>
-                                    <h3>
-                                       65
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class = "col-xs-1 noPadding">
-                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: #ef473a; height: 116px;">
-                                    <h8>
-                                       Критических событий:        
-                                    </h8>
-                                    <h3>
-                                       15
-                                    </h3>
-                                </div>
-                            </div>
-                            <div class = "col-xs-1 noPadding">
-                                <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: #ef473a; height: 116px;">
-                                    <h8>
-                                       Объектов с критическими событиями:        
-                                    </h8>
-                                    <h3>
-                                       5
-                                    </h3>
-                                </div>
-                            </div>
-                        </div>
-                        <div class = "row">
-                                 <div ng-if = "$ctrl.spnode.isWidgetView">
-                                    <div ng-class = "$ctrl.data.chartClass" ng-repeat = "chartMode in $ctrl.data.chartModes">
-                                         <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
-                                               <span ng-show='title' ng-bind='title'></span>
-                                               <div ng-show='isLoading'>Загрузка...</div>
-                                               <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
-                                               <ng-widget ng-show = "!isLoading && !isError"
-                                                   src = "'treeNotificationsDiagram'"
-                                                   options = "{
-                                                       previewMode: false,
-                                                       contZpointId: 1,
-                                                       ptreeNode: $ctrl.spnode,
-                                                       chartMode: chartMode
-                                                   }">
+<div class = "container-fluid">
+    <div class = "row">
+        <div class = "col-xs-3 noPadding">
+            <div class = "paddingLeft10" style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue;">
+                <h3>Узел: {{$ctrl.spnode.nodeName}}</h3>
+                <h4>Дочерних узлов: {{$ctrl.spnode.childNodes.length || 0}}</h4>
+                <h4>Объектов: {{$ctrl.spnode.linkedNodeObjects.length || 0}}</h4>
+             </div>
+        </div>
+        <div class = "col-xs-1 noPadding">                      
+            <info-component message = "'Всего событий:'" value = "'165'" bg-color = "'lightblue'"></info-component>
+        </div>
+        <div class = "col-xs-1 noPadding">
+           <info-component message = "'Объектов с событиями:'" value = "'65'" bg-color = "'lightblue'"></info-component>
+        </div>
+        <div class = "col-xs-1 noPadding">
+           <info-component message = "'Критических событий:'" value = "'15'" bg-color = "'#ef473a'"></info-component>
+        </div>
+        <div class = "col-xs-1 noPadding">
+            <info-component message = "'Объектов с критическими событиями:'" value = "'5'" bg-color = "'#ef473a'"></info-component>
+        </div>                            
+    </div>
+    <div class = "row">
+             <div ng-if = "$ctrl.spnode.isWidgetView">
+                <div ng-class = "$ctrl.data.chartClass" ng-repeat = "chartMode in $ctrl.data.chartModes">
+                     <div ng-controller='widgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                           <span ng-show='title' ng-bind='title'></span>
+                           <div ng-show='isLoading'>Загрузка...</div>
+                           <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                           <ng-widget ng-show = "!isLoading && !isError"
+                               src = "'treeNotificationsDiagram'"
+                               options = "{
+                                   previewMode: false,
+                                   contZpointId: 1,
+                                   ptreeNode: $ctrl.spnode,
+                                   chartMode: chartMode
+                               }">
 
-                                                </ng-widget>
-                                           </div>
-                                    </div>
-                                 </div>
-                        </div>
-                     </div>
+                            </ng-widget>
+                       </div>
+                </div>
+             </div>
+    </div>
+ </div>
