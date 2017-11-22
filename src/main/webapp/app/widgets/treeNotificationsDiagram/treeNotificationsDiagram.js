@@ -193,50 +193,50 @@
                     console.log("BeforeDraw", chart);
                 }
             };
-            function prepareEventMessage(inputData) {
-                            //temp array
-                var tmpMessage = "";
-        //                var tmpMessageEx = "";
-                //make the new array of the types wich formatted to display
-                inputData.forEach(function (element) {
-        //console.log(element);
-                    var tmpEvent = "";
-                    var contEventTime = new Date(element.contEventTimeDT);
-                    var pstyle = "";
-                    if (element.contEventLevelColorKeyname === "RED") {
-                        pstyle = "color: red;";
-                    }
-                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
-                    tmpMessage += tmpEvent;
-                });
-                return tmpMessage;
-            }
+//            function prepareEventMessage(inputData) {
+//                            //temp array
+//                var tmpMessage = "";
+//        //                var tmpMessageEx = "";
+//                //make the new array of the types wich formatted to display
+//                inputData.forEach(function (element) {
+//        //console.log(element);
+//                    var tmpEvent = "";
+//                    var contEventTime = new Date(element.contEventTimeDT);
+//                    var pstyle = "";
+//                    if (element.contEventLevelColorKeyname === "RED") {
+//                        pstyle = "color: red;";
+//                    }
+//                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
+//                    tmpMessage += tmpEvent;
+//                });
+//                return tmpMessage;
+//            }
 
-            function getDataSuccessCallback(rsp) {
-                console.log(rsp.data);
-                var tmpData = rsp.data;
-                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
-                }
-                if (!angular.isArray(tmpData) || tmpData.length === 0) {
-                    $scope.presentDataFlag = false;
-    //                console.log("zpointCwWidget: response data is empty!");
-                    return false;
-                }
-                $scope.presentDataFlag = true;
-                $scope.barChart.labels = [];
-                $scope.barChart.data = [[]];
-                $scope.barChart.dataTitle = [];
-                var dataTitleElem = {};
-                tmpData.forEach(function (elm) {
-                    $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));
-                    $scope.barChart.data[0].push((elm.v_in - elm.v_out).toFixed(3));
-                    dataTitleElem = {
-                        dataDateString : elm.dataDateString
-                    };
-                    $scope.barChart.dataTitle.push(dataTitleElem);
-                });
-            }
+//            function getDataSuccessCallback(rsp) {
+//                console.log(rsp.data);
+//                var tmpData = rsp.data;
+//                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+//                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
+//                }
+//                if (!angular.isArray(tmpData) || tmpData.length === 0) {
+//                    $scope.presentDataFlag = false;
+//    //                console.log("zpointCwWidget: response data is empty!");
+//                    return false;
+//                }
+//                $scope.presentDataFlag = true;
+//                $scope.barChart.labels = [];
+//                $scope.barChart.data = [[]];
+//                $scope.barChart.dataTitle = [];
+//                var dataTitleElem = {};
+//                tmpData.forEach(function (elm) {
+//                    $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));
+//                    $scope.barChart.data[0].push((elm.v_in - elm.v_out).toFixed(3));
+//                    dataTitleElem = {
+//                        dataDateString : elm.dataDateString
+//                    };
+//                    $scope.barChart.dataTitle.push(dataTitleElem);
+//                });
+//            }
 
             function errorCallback(e) {
                 console.log(e);
@@ -283,28 +283,28 @@
     //            });
     //        }
 
-            function getStatusSuccessCallback(resp) {
-                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-                    return true;
-                }
-                if (angular.isUndefined(resp) || resp === null) {
-    //                console.log("zpointCwWidget: status response is empty.");
-                    return false;
-                }
-                if (angular.isUndefined(resp.data) || resp.data === null) {
-    //                console.log("zpointCwWidget: status response data is empty.");
-                    return false;
-                }
-                if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
-                    $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-    //                if (resp.data.color.toLowerCase() !== 'green' && ZPOINT_EVENTS_URL !== null) {
-                        //load zpoint events
-    //                    setEventsForZpoint(ZPOINT_EVENTS_URL, $scope.data.contZpointId);
-    //                }
-                }/* else {
-                    console.log("zpointCwWidget: zpoint status color is empty or not string.");
-                }*/
-            }
+//            function getStatusSuccessCallback(resp) {
+//                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
+//                    return true;
+//                }
+//                if (angular.isUndefined(resp) || resp === null) {
+//    //                console.log("zpointCwWidget: status response is empty.");
+//                    return false;
+//                }
+//                if (angular.isUndefined(resp.data) || resp.data === null) {
+//    //                console.log("zpointCwWidget: status response data is empty.");
+//                    return false;
+//                }
+//                if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
+//                    $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
+//    //                if (resp.data.color.toLowerCase() !== 'green' && ZPOINT_EVENTS_URL !== null) {
+//                        //load zpoint events
+//    //                    setEventsForZpoint(ZPOINT_EVENTS_URL, $scope.data.contZpointId);
+//    //                }
+//                }/* else {
+//                    console.log("zpointCwWidget: zpoint status color is empty or not string.");
+//                }*/
+//            }
 
 //            $scope.modeChange = function () {
 //                var mode = $scope.data.currentMode;
@@ -419,19 +419,6 @@
                 return false;
             }
 
-    //        function isCriticalEvent(event) {
-    //            var typeId = event.contEventTypeId;
-    //            var eventType = null;
-    //            if (thisdata.contEventTypes.hasOwnProperty(typeId)) {
-    //                eventType = thisdata.contEventTypes[typeId];
-    //                if (eventType.hasOwnProperty("levelColor") && eventType.levelColor === "RED") {
-    //                    return true;
-    //                } else {
-    //                    return false;
-    //                }
-    //            }
-    //            return false;
-    //        }
 
             function prepareChartDataWithCategories(chartObj, inputData) {
                 if (angular.isUndefined(chartObj) || chartObj === null || !angular.isArray(inputData)) {
@@ -645,6 +632,7 @@
 
             $scope.$on(treeNotificationsDiagramService.EVENTS.categoriesLoaded, function () {
                 getContEventCategories();
+//                getData();
             });
 
             $scope.$on(treeNotificationsDiagramService.EVENTS.typesLoaded, function () {
@@ -664,8 +652,5 @@
 
     angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', 'treeNotificationsDiagramWidgetSvc'])
         .config(chartJsProviderConfig)
-    //    .service('treeNotificationsDiagramService', [function () {
-    //        console.log("Simple Hello.");
-    //    }])
         .controller('treeNotificationsDiagramWidgetCtrl', treeNotificationsDiagramWidgetCtrl);
 }());
