@@ -18,141 +18,142 @@
     
     function treeNotificationsDiagramWidgetCtrl($scope, $http, $rootScope, widgetConfig, treeNotificationsDiagramService, $timeout) {
         //data generator
-            var timeDetailTypes = {
-                month: {
-                    timeDetailType: "24h",
-                    count: 30,
-                    dateFormatter: function (param) {
-                        return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
-                    }
-                },
-                day: {
-                    timeDetailType: "1h",
-                    count: 24,
-                    dateFormatter: function (param) {
-                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-                    }
-                },
-                week: {
-                    timeDetailType: "24h",
-                    count: 7,
-                    dateFormatter: function (param) {
-                        return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
-                    }
-                },
-                today: {
-                    timeDetailType: "1h",
-                    count: 24,
-                    dateFormatter: function (param) {
-                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-                    }
-                },
-                yesterday: {
-                    timeDetailType: "1h",
-                    count: 24,
-                    dateFormatter: function (param) {
-                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-                    }
-                }
-            };
-            function generateTestData(timeDetailType) {
-                var result = [],
-                    i,
-                    node;
-                for (i = 1; i <= timeDetailType.count; i += 1) {
-                    node = {};
-                    node.timeDetailType = timeDetailType.timeDetailType;
-                    node.v_in = Math.random() * 10 + 1;
-                    var v_delta = Math.random();
-                    node.v_out = node.v_in - v_delta;
-                    node.dataDateString = timeDetailType.dateFormatter(i);
-                    result.push(node);
-                }
-                //console.log(result);
-                return result;
-            }
+//            var timeDetailTypes = {
+//                month: {
+//                    timeDetailType: "24h",
+//                    count: 30,
+//                    dateFormatter: function (param) {
+//                        return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
+//                    }
+//                },
+//                day: {
+//                    timeDetailType: "1h",
+//                    count: 24,
+//                    dateFormatter: function (param) {
+//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+//                    }
+//                },
+//                week: {
+//                    timeDetailType: "24h",
+//                    count: 7,
+//                    dateFormatter: function (param) {
+//                        return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
+//                    }
+//                },
+//                today: {
+//                    timeDetailType: "1h",
+//                    count: 24,
+//                    dateFormatter: function (param) {
+//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+//                    }
+//                },
+//                yesterday: {
+//                    timeDetailType: "1h",
+//                    count: 24,
+//                    dateFormatter: function (param) {
+//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
+//                    }
+//                }
+//            };
+//            function generateTestData(timeDetailType) {
+//                var result = [],
+//                    i,
+//                    node;
+//                for (i = 1; i <= timeDetailType.count; i += 1) {
+//                    node = {};
+//                    node.timeDetailType = timeDetailType.timeDetailType;
+//                    node.v_in = Math.random() * 10 + 1;
+//                    var v_delta = Math.random();
+//                    node.v_out = node.v_in - v_delta;
+//                    node.dataDateString = timeDetailType.dateFormatter(i);
+//                    result.push(node);
+//                }
+//                //console.log(result);
+//                return result;
+//            }
         //end data generator
-            moment.locale('ru', {
-                months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
-                monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
-            });
-            $scope.widgetPath = "widgets/zpointCw_v1";
+//            moment.locale('ru', {
+//                months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
+//                monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
+//            });
+            
+            /*jshint validthis: true*/
+            var vm = this;
+            vm.widgetPath = "widgets/zpointCw_v1";
             var DATA_URL = "../api/subscr/widgets/cw",/*//chart/HwTemp";*/
-                ZPOINT_STATUS_TEMPLATE = $scope.widgetPath + "/zpoint-state-",
+                ZPOINT_STATUS_TEMPLATE = vm.widgetPath + "/zpoint-state-",
                 SERVER_DATE_FORMAT = "DD-MM-YYYY HH:mm",
                 ZPOINT_EVENTS_URL = null;
 
-            $scope.widgetOptions = widgetConfig.getOptions();
-            //console.log($scope.widgetOptions);
-    //        var zpstatus = $scope.widgetOptions.zpointStatus;
-            var contObjectId = $scope.widgetOptions.contObjectId;
-            if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
-                ZPOINT_EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + $scope.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
-            }
+            vm.widgetOptions = widgetConfig.getOptions();            
+            var contObjectId = vm.widgetOptions.contObjectId;
+//            if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
+//                ZPOINT_EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + vm.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
+//            }
 
             var thisdata = {};
 
-            $scope.data = {};
-            $scope.data.currentCwTemp = null;
-            $scope.data.MODES = [
-                {
-                    keyname: "TODAY",
-                    caption: "Сегодня",
-                    modeClass: "",
-                    timeDetailType: "1h",
-                    dateFormat: "HH:mm",
-                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-                }, {
-                    keyname: "DAY",
-                    caption: "Сутки",
-                    modeClass: "",
-                    timeDetailType: "1h",
-                    dateFormat: "HH:mm",
-                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-                }, {
-                    keyname: "YESTERDAY",
-                    caption: "Вчера",
-                    modeClass: "",
-                    timeDetailType: "1h",
-                    dateFormat: "HH:mm",
-                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-                }, {
-                    keyname: "WEEK",
-                    caption: "Неделя",
-                    modeClass: "active",
-                    timeDetailType: "24h",
-                    dateFormat: "DD, MMM",
-                    tooltipDateFormat: "DD.MM.YYYY"
-                }, {
-                    keyname: "MONTH",
-                    caption: "Текущий месяц",
-                    modeClass: "",
-                    timeDetailType: "24h",
-                    dateFormat: "DD",
-                    tooltipDateFormat: "DD.MM.YYYY"
-                }
-            ];
-            $scope.data.startModeIndex = 3;//default mode index; 3 - WEEK
-            $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
+            vm.data = {};
+//            $scope.data.currentCwTemp = null;
+//            $scope.data.MODES = [
+//                {
+//                    keyname: "TODAY",
+//                    caption: "Сегодня",
+//                    modeClass: "",
+//                    timeDetailType: "1h",
+//                    dateFormat: "HH:mm",
+//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
+//                }, {
+//                    keyname: "DAY",
+//                    caption: "Сутки",
+//                    modeClass: "",
+//                    timeDetailType: "1h",
+//                    dateFormat: "HH:mm",
+//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
+//                }, {
+//                    keyname: "YESTERDAY",
+//                    caption: "Вчера",
+//                    modeClass: "",
+//                    timeDetailType: "1h",
+//                    dateFormat: "HH:mm",
+//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
+//                }, {
+//                    keyname: "WEEK",
+//                    caption: "Неделя",
+//                    modeClass: "active",
+//                    timeDetailType: "24h",
+//                    dateFormat: "DD, MMM",
+//                    tooltipDateFormat: "DD.MM.YYYY"
+//                }, {
+//                    keyname: "MONTH",
+//                    caption: "Текущий месяц",
+//                    modeClass: "",
+//                    timeDetailType: "24h",
+//                    dateFormat: "DD",
+//                    tooltipDateFormat: "DD.MM.YYYY"
+//                }
+//            ];
+//            $scope.data.startModeIndex = 3;//default mode index; 3 - WEEK
+//            $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
 
-            $scope.data.imgPath = $scope.widgetPath + "/snowflake.png";
-            $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
-            $scope.data.zpointStatusTitle = $scope.widgetOptions.zpointStatusTitle;
-            $scope.data.contZpointId = $scope.widgetOptions.contZpointId;
+//            $scope.data.imgPath = vm.widgetPath + "/snowflake.png";
+//            $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
+//            $scope.data.zpointStatusTitle = vm.widgetOptions.zpointStatusTitle;
+            vm.data.contZpointId = vm.widgetOptions.contZpointId;
 
-            $scope.presentDataFlag = false;
+            vm.presentDataFlag = false;
 
-            $scope.barChart = {};
-            $scope.barChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-            $scope.barChart.series = [];//['Потребление холодной воды, м' + '\u00B3'];
-            $scope.barChart.data = [];//[[]]
-            $scope.barChart.dataTitle = [];
+            vm.barChart = {};
+            vm.barChart.labels = [];//["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+            vm.barChart.series = [];//['Потребление холодной воды, м' + '\u00B3'];
+            vm.barChart.data = [];//[[]]
+            vm.barChart.dataTitle = [];
 
-            $scope.onClick = function (points, evt) {
+            vm.onClick = function (points, evt) {
                 console.log(points, evt);
             };
-            $scope.barChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
-            $scope.barChart.options = {                
+            vm.barChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
+            vm.barChart.options = {                
                 responsive: false,
 //                legend: {
 //                    display: true
@@ -352,14 +353,14 @@
             $scope.$on('chart-create', function (event, chart) {
 //                console.log(event);
 //                console.log(chart);
-                var chartLegend = document.getElementById("cw-chart-legend-" + $scope.data.ptreeNodeId + $scope.widgetOptions.chartMode);
+                var chartLegend = document.getElementById("cw-chart-legend-" + vm.data.ptreeNodeId + vm.widgetOptions.chartMode);
                 if (angular.isDefined(chartLegend) && chartLegend !== null) {
                     chartLegend.innerHTML = chart.generateLegend();
                 }
             });
 
-            $scope.data.contObjectList = [];
-            $scope.data.eventsCount = 0;
+            vm.data.contObjectList = [];
+            vm.data.eventsCount = 0;
 
             thisdata.contEventCriticals = {
                 YELLOW: {
@@ -451,7 +452,7 @@
                             chartObj.labels.push(resultCategories[contEventCategoriesIndex].caption);
                             chartObj.data.push(resultCategories[contEventCategoriesIndex].count);
                             
-                            $scope.data.eventsCount += resultCategories[contEventCategoriesIndex].count;
+                            vm.data.eventsCount += resultCategories[contEventCategoriesIndex].count;
                         }
                     }
                 }
@@ -479,7 +480,7 @@
                 chartObj.labels.push(thisdata.contEventCriticals.YELLOW.caption);
                 chartObj.data.push(noCriticalCount);
                 
-                $scope.data.eventsCount = noCriticalCount + criticalCount;
+                vm.data.eventsCount = noCriticalCount + criticalCount;
             }
 
             function prepareChartDataWithTypes(chartObj, inputData) {
@@ -512,13 +513,13 @@
                             chartObj.labels.push(resultTypes[contEventTypeIndex].name);
                             chartObj.data.push(resultTypes[contEventTypeIndex].count);
                             
-                            $scope.data.eventsCount += resultTypes[contEventTypeIndex].count;
+                            vm.data.eventsCount += resultTypes[contEventTypeIndex].count;
                         }
                     }
                 }
             }
 
-            $scope.data.CHART_MODES = {
+            vm.data.CHART_MODES = {
                 CRITICALS: {
                     caption: "Критические",
                     class: "btn btn-lg glyphicon glyphicon-alert text-primary",
@@ -539,53 +540,53 @@
                 }
             };
 
-            $scope.data.currentChartMode = $scope.data.CHART_MODES[$scope.widgetOptions.chartMode];//$scope.data.CHART_MODES.TYPES;
-            $scope.data.currentChartMode.class += " active";
+            vm.data.currentChartMode = vm.data.CHART_MODES[vm.widgetOptions.chartMode];//$scope.data.CHART_MODES.TYPES;
+            vm.data.currentChartMode.class += " active";
 
             function executeChartModeFunction(chartMode) {
                 if (chartMode.hasOwnProperty("prepareFunction") && angular.isFunction(chartMode.prepareFunction)) {
-                    chartMode.prepareFunction($scope.barChart, thisdata.contEventPTreeNodeData);
+                    chartMode.prepareFunction(vm.barChart, thisdata.contEventPTreeNodeData);
                 } else {
                     console.warn("Chart can't be create! Transform function is not defined!", chartMode);
                 }
             }
 
-            $scope.chartModeChange = function (chMode) {
-                $scope.data.currentChartMode.class = $scope.data.currentChartMode.class.substring(0, $scope.data.currentChartMode.class.indexOf(" active"));
+            vm.chartModeChange = function (chMode) {
+                vm.data.currentChartMode.class = vm.data.currentChartMode.class.substring(0, vm.data.currentChartMode.class.indexOf(" active"));
     //console.log($scope.data.currentChartMode.class);            
-                $scope.data.currentChartMode = chMode;
-                $scope.data.currentChartMode.class += " active";
+                vm.data.currentChartMode = chMode;
+                vm.data.currentChartMode.class += " active";
     //console.log($scope.data.currentChartMode.class);                        
-                executeChartModeFunction($scope.data.currentChartMode);
+                executeChartModeFunction(vm.data.currentChartMode);
             };
 
             function successLoadPTreeNodeStatsCallback(resp) {
                 console.log(resp);
                 var tmpData = resp.data;
-                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
+                if ((angular.isDefined(vm.widgetOptions.previewMode) && vm.widgetOptions.previewMode === true)) {
+//                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
                 }
                 if (!angular.isArray(tmpData) || tmpData.length === 0) {
-                    $scope.presentDataFlag = false;
+                    vm.presentDataFlag = false;
     //                console.log("zpointCwWidget: response data is empty!");
                     return false;
                 }
 
                 thisdata.contEventPTreeNodeData = tmpData;
 
-                $scope.presentDataFlag = true;
-                $scope.barChart.labels = [];
-                $scope.barChart.data = [];
+                vm.presentDataFlag = true;
+                vm.barChart.labels = [];
+                vm.barChart.data = [];
 
     //            prepareChartDataWithCritical($scope.barChart, tmpData);
-                executeChartModeFunction($scope.data.currentChartMode);
+                executeChartModeFunction(vm.data.currentChartMode);
     //            if ($scope.data.currentChartMode.hasOwnProperty("prepareFunction") && angular.isFunction($scope.data.currentChartMode.prepareFunction)) {
     //                $scope.data.currentChartMode.prepareFunction($scope.barChart, tmpData);
     //            } else {
     //                console.warn("Chart can't be create! Transform function is not defined!", $scope.data.currentChartMode);
     //            }
 
-                console.log($scope.barChart);
+                console.log(vm.barChart);
             }
 
             function checkRequiredData() {
@@ -603,9 +604,9 @@
 
                 // var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
                 // $http.get(url).then(getStatusSuccessCallback, errorCallback);
-                var ptreeNode = $scope.widgetOptions.ptreeNode,
+                var ptreeNode = vm.widgetOptions.ptreeNode,
                     ptreeNodeId = isPTreeNodeElement(ptreeNode) ? ptreeNode._id : ptreeNode.nodeObject.id;
-                $scope.data.ptreeNodeId = ptreeNodeId;
+                vm.data.ptreeNodeId = ptreeNodeId;
                 console.log(ptreeNode);
                 treeNotificationsDiagramService.loadPTreeNodeStats(ptreeNodeId).then(successLoadPTreeNodeStatsCallback, errorCallback);
             }
@@ -619,13 +620,31 @@
                 $timeout(function () {
                     $('#objectListModal').modal();
                 });
-            }
+            }            
 
-            $scope.chartClick = function (ev) {
+            vm.chartClick = function (ev) {
                 console.log(ev);
-                $scope.data.contObjectList = angular.copy(thisdata.contEventPTreeNodeData);
-                $scope.data.contObjectList = $scope.data.contObjectList.concat($scope.data.contObjectList);
-                $scope.data.contObjectList = $scope.data.contObjectList.concat($scope.data.contObjectList);
+                vm.data.contObjectList = angular.copy(thisdata.contEventPTreeNodeData);
+                for (var i = 0; i < 3; i++) {
+                    vm.data.contObjectList = vm.data.contObjectList.concat(vm.data.contObjectList);
+                }                
+                vm.data.contObjectList = vm.data.contObjectList.concat(angular.copy(thisdata.contEventPTreeNodeData));
+                vm.data.contObjectList = vm.data.contObjectList.concat(angular.copy(thisdata.contEventPTreeNodeData));
+                vm.data.contObjectList = vm.data.contObjectList.concat(angular.copy(thisdata.contEventPTreeNodeData));
+                
+                console.log(vm.data.contObjectList.length);
+                
+                vm.data.contObjectList.forEach(function (coe) {
+                    coe.isLoaded = false;
+                    treeNotificationsDiagramService.loadContObject(coe.contObjectId)
+                        .then(function (resp) {                        
+                        coe.fullName = resp.data.fullName;
+                        coe.fullAddress = resp.data.fullAddress;
+                        coe.isLoaded = true;
+                    }, function (err) {
+                        coe.isLoaded = true;
+                    });
+                });
     // console.log($scope.data.contObjectList);
                 openObjectListModalWindow();
             };
@@ -640,7 +659,6 @@
             });
 
             function initWidget() {
-
                 getContEventCategories();
                 getData();
             }
@@ -650,7 +668,7 @@
     
     treeNotificationsDiagramWidgetCtrl.$inject = ['$scope', '$http', '$rootScope', 'widgetConfig', 'treeNotificationsDiagramService', '$timeout'];
 
-    angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', 'treeNotificationsDiagramWidgetSvc'])
+    angular.module('treeNotificationsDiagramWidget', ['angularWidget', 'chart.js', 'treeNotificationsDiagramWidgetSvc', 'objectTreeModule'])
         .config(chartJsProviderConfig)
         .controller('treeNotificationsDiagramWidgetCtrl', treeNotificationsDiagramWidgetCtrl);
 }());

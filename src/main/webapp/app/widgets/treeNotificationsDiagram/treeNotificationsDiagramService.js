@@ -8,7 +8,7 @@
         var WIDGETS_URL = "../api/widgets",
             CONT_EVENT_MONITOR = WIDGETS_URL + "/cont-event-monitor";
         var API = {
-
+            CONT_OBJECTS_URL: "../api/subscr/contObjects",
             CONT_EVENT_CATEGORIES_URL: CONT_EVENT_MONITOR + "/cont-event-categories",
             CONT_EVENT_TYPES_URL: CONT_EVENT_MONITOR + "/cont-event-types",
             PTREE_NODE_STATS_URL: /*"resource/treeNotificationStats.json"*/ CONT_EVENT_MONITOR + "/p-tree-node/stats"
@@ -68,6 +68,14 @@
             }
             return $http.get(url);
         }
+        
+        function loadContObject(contObjectId) {
+            if (angular.isUndefined(contObjectId) || contObjectId === null) {
+                return false;
+            }
+            var url = API.CONT_OBJECTS_URL + "/" + contObjectId;
+            return $http.get(url);
+        }
 
         function initSvc() {
             loadContEventCategories();
@@ -77,10 +85,11 @@
         initSvc();
 
         service.EVENTS = EVENTS;
-        service.checkEmptyObject = checkEmptyObject;
-        service.loadPTreeNodeStats = loadPTreeNodeStats;
+        service.checkEmptyObject = checkEmptyObject;        
         service.getContEventCategories = getContEventCategories;
         service.getContEventTypes = getContEventTypes;
+        service.loadContObject = loadContObject;
+        service.loadPTreeNodeStats = loadPTreeNodeStats;
 
         return service;
     }

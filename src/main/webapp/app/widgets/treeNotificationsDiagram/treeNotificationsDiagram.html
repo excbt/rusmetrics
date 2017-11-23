@@ -1,5 +1,5 @@
 <!--<script src="/app/widgets/treeNotificationsDiagram/treeNotificationsDiagramService.js"></script>-->
-<div class="tree-notif-widget" ng-controller="treeNotificationsDiagramWidgetCtrl">
+<div class="tree-notif-widget" ng-controller="treeNotificationsDiagramWidgetCtrl as widgetVm">
     <div class="container-fluid">        
 <!--
         <div style = "display: none" class="row">
@@ -61,24 +61,26 @@
 -->
         <div class = "row">
             <div class = "col-xs-12">
-                Диаграмма событий по <span class = "text-primary">{{data.currentChartMode.chartCaption}}</span>
+                Диаграмма событий по <span class = "text-primary">{{widgetVm.data.currentChartMode.chartCaption}}</span>
             </div>
         </div>
         <br>
         <div class="row">            
             <div class = "col-xs-12">
-                <div ng-show = "presentDataFlag === false"
+<!--
+                <div ng-show = "widgetVm.presentDataFlag === false"
                      class = "nmc-text-align-center">                    
+-->
 <!--                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.-->
-                </div>
-                <div ng-show = "presentDataFlag === true" style = "position: relative">
-                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; width: 300px; text-align: center; transform: translateY(-50%)">{{data.eventsCount}}</label>
+<!--                </div>-->
+                <div ng-show = "widgetVm.presentDataFlag === true" style = "position: relative">
+                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; width: 300px; text-align: center; transform: translateY(-50%)">{{widgetVm.data.eventsCount}}</label>
                     <canvas id="doughnut" 
                             class="chart chart-doughnut" 
-                            chart-data="barChart.data"
-                            chart-labels="barChart.labels"                              
-                            chart-options="barChart.options"
-                            chart-click = "chartClick"
+                            chart-data="widgetVm.barChart.data"
+                            chart-labels="widgetVm.barChart.labels"                              
+                            chart-options="widgetVm.barChart.options"
+                            chart-click = "widgetVm.chartClick"
                             >
                     </canvas>
                 </div>
@@ -105,7 +107,7 @@
         </div>
         <div class="row">            
             <div class = "col-xs-12">
-                <div ng-attr-id = "{{'cw-chart-legend-' + data.ptreeNodeId + widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
+                <div ng-attr-id = "{{'cw-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
             </div>
         </div>
     </div>
@@ -128,10 +130,39 @@
                     Список объектов учета 
                 </h3>
             </div>
-            <div class="modal-body nmc-modal-body">                
-                <div ng-repeat = "contObject in data.contObjectList track by $index">
-                    {{contObject.contObjectId}}
-                </div>                
+            <div class="modal-body nmc-modal-body normal-font">
+              <div class = "container-fluid">
+                <div class = "row-fluid">
+                    <div ng-if = "widgetVm.data.contObjectList.length <= 20" 
+                      class = "noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list">
+                       <table class = "table table-lighter table-striped table-condensed table-hover nmc-main-table noMarginBottom">
+                           <tr class = "nmc-main-table-header">
+                               <th>
+                                   Название объекта
+                               </th>
+                               <th>
+                                   Адрес
+                               </th>
+                           </tr>
+                           <tr ng-repeat = "contObject in widgetVm.data.contObjectList track by $index">
+                               <td ng-show = "!contObject.isLoaded" colspan = "2">
+                                   <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
+                               </td>
+                               <td>
+                                   {{contObject.fullName || contObject.contObjectId}}
+                               </td>
+                               <td>
+                                   {{contObject.fullAddress}}
+                               </td>
+                           </tr>
+                        </table>
+                    </div>
+                    <div ng-if = "widgetVm.data.contObjectList.length > 20">
+                        Тут должно быть дерево объектов...
+                        <ptree-component ptree-node = "widgetVm.widgetOptions.ptreeNode"></ptree-component>
+                    </div>
+                  </div>                
+                </div>
             </div>
             <div class="modal-footer nmc-modal-footer">
                     <div class="container-fluid">
