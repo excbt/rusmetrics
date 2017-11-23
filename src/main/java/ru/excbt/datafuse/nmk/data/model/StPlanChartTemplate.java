@@ -12,9 +12,9 @@ import java.util.Objects;
 
 
 @Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "st_plan_template_item")
-@IdClass(StPlanTemplateItem.PK.class)
-public class StPlanTemplateItem  {
+@Table(schema = DBMetadata.SCHEME_PORTAL, name = "st_plan_chart_template")
+@IdClass(StPlanChartTemplate.PK.class)
+public class StPlanChartTemplate {
 
 
     @Getter
@@ -31,12 +31,12 @@ public class StPlanTemplateItem  {
         private Integer rn;
 
 
-        public StPlanTemplateItem.PK templateKeyname(String templateKeyname) {
+        public StPlanChartTemplate.PK templateKeyname(String templateKeyname) {
             this.templateKeyname = templateKeyname;
             return this;
         }
 
-        public StPlanTemplateItem.PK rn(int rn) {
+        public StPlanChartTemplate.PK rn(int rn) {
             this.rn = rn;
             return this;
         }

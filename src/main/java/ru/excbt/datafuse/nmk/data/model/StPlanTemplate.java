@@ -25,79 +25,99 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
     @Max(32)
     private String spType;
 
+    @Column(name = "cont_service_type")
+    @Max(32)
+    private String contServiceType;
+
     @Column(name = "sp_name")
     private String spName;
 
-    @Column(name = "is_single_key")
-    @NotNull
-    private Boolean isSingleKey = false;
+    @Column(name = "sp_unit_keyname")
+    @Max(32)
+    private String spUnitKeyname;
 
-    @Column(name = "key1_name")
-    private String key1Name;
+    @Column(name = "sp_unit_mu")
+    @Max(32)
+    private String spUnitMu;
 
-    @Column(name = "key1_caption")
-    private String key1Caption;
+    @Column(name = "sp_val")
+    private Double spVal;
 
-    @Column(name = "key2_name")
-    private String key2Name;
+    @Column(name = "sp_val_mu")
+    @Max(32)
+    private String spValMu;
 
-    @Column(name = "key2_caption")
-    private String key2Caption;
+    @Column(name = "sp_period")
+    private String spPeriod;
 
-    @Column(name = "val1_name")
-    private String val1Name;
+    @Column(name = "is_mandatory")
+    private Boolean isMandatory;
 
-    @Column(name = "val1_caption")
-    private String val1Caption;
+    @Column(name = "is_enabled")
+    private Boolean isEnabled;
 
-    @Column(name = "val2_name")
-    private String val2Name;
-
-    @Column(name = "val2_caption")
-    private String val2Caption;
-
-    @Column(name = "default_val1")
-    private Double defaultVal1 ;
-
-    @Column(name = "default_val2")
-    private Double defaultVal2;
+    @Column(name = "is_deviation_enable")
+    private Boolean isDeviationEnable;
 
     @Column(name = "deviation_val")
     private Double deviationVal;
 
     @Column(name = "deviation_mu")
-    @Max(32)
     private String deviationMu;
 
-    @Column(name = "default_key1i")
-    @NotNull
-    private Boolean defaultKey1i = false;
+    @Column(name = "is_chart_enable")
+    private Boolean isChartEnable;
 
-    @Column(name = "default_key2i")
-    private Boolean defaultKey2i;
+    @Column(name = "chart_single_key")
+    private Boolean chartSingleKey;
 
-    @Column(name = "default_val1i")
-    @NotNull
-    private Boolean defaultVal1i = true;
+    @Column(name = "chart_key_mu")
+    private String chartKeyMu;
 
-    @Column(name = "default_val2i")
-    @NotNull
-    private Boolean defaultVal2i = false;
+    @Column(name = "chart_key1_keyname")
+    private String chartKey1Keyname;
 
-    @Column(name = "is_mandatory")
-    @NotNull
-    private Boolean isMandatory = false;
+    @Column(name = "chart_key2_keyname")
+    private String chartKey2Keyname;
 
-    @Column(name = "is_enabled")
-    @NotNull
-    private Boolean isEnabled = true;
+    @Column(name = "chart_val_mu")
+    private String chartValMu;
+
+    @Column(name = "chart_val1_keyname")
+    private String chartVal1Keyname;
+
+    @Column(name = "chart_val2_keyname")
+    private String chartVal2Keyname;
+
+    @Column(name = "chart_key1_caption")
+    private String chartKey1Caption;
+
+    @Column(name = "chart_key2_caption")
+    private String chartKey2Caption;
+
+    @Column(name = "chart_val1_caption")
+    private String chartVal1Caption;
+
+    @Column(name = "chart_val2_caption")
+    private String chartVal2Caption;
+
+    @Column(name = "chart_key1_i")
+    private Boolean chartKey1I;
+
+    @Column(name = "chart_val1_i")
+    private Boolean chartVal1I;
+
+    @Column(name = "chart_key2_i")
+    private Boolean chartKey2I;
+
+    @Column(name = "chart_val2_i")
+    private Boolean chartVal2I;
 
     @Version
     private int version;
 
     @Column(name = "deleted")
     private int deleted;
-
 
     @Override
     public String getKeyname() {
@@ -117,6 +137,14 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
         this.spType = spType;
     }
 
+    public String getContServiceType() {
+        return contServiceType;
+    }
+
+    public void setContServiceType(String contServiceType) {
+        this.contServiceType = contServiceType;
+    }
+
     public String getSpName() {
         return spName;
     }
@@ -125,92 +153,68 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
         this.spName = spName;
     }
 
-    public Boolean getSingleKey() {
-        return isSingleKey;
+    public String getSpUnitKeyname() {
+        return spUnitKeyname;
     }
 
-    public void setSingleKey(Boolean singleKey) {
-        isSingleKey = singleKey;
+    public void setSpUnitKeyname(String spUnitKeyname) {
+        this.spUnitKeyname = spUnitKeyname;
     }
 
-    public String getKey1Name() {
-        return key1Name;
+    public String getSpUnitMu() {
+        return spUnitMu;
     }
 
-    public void setKey1Name(String key1Name) {
-        this.key1Name = key1Name;
+    public void setSpUnitMu(String spUnitMu) {
+        this.spUnitMu = spUnitMu;
     }
 
-    public String getKey1Caption() {
-        return key1Caption;
+    public Double getSpVal() {
+        return spVal;
     }
 
-    public void setKey1Caption(String key1Caption) {
-        this.key1Caption = key1Caption;
+    public void setSpVal(Double spVal) {
+        this.spVal = spVal;
     }
 
-    public String getKey2Name() {
-        return key2Name;
+    public String getSpValMu() {
+        return spValMu;
     }
 
-    public void setKey2Name(String key2Name) {
-        this.key2Name = key2Name;
+    public void setSpValMu(String spValMu) {
+        this.spValMu = spValMu;
     }
 
-    public String getKey2Caption() {
-        return key2Caption;
+    public String getSpPeriod() {
+        return spPeriod;
     }
 
-    public void setKey2Caption(String key2Caption) {
-        this.key2Caption = key2Caption;
+    public void setSpPeriod(String spPeriod) {
+        this.spPeriod = spPeriod;
     }
 
-    public String getVal1Name() {
-        return val1Name;
+    public Boolean getMandatory() {
+        return isMandatory;
     }
 
-    public void setVal1Name(String val1Name) {
-        this.val1Name = val1Name;
+    public void setMandatory(Boolean mandatory) {
+        isMandatory = mandatory;
     }
 
-    public String getVal1Caption() {
-        return val1Caption;
+    public Boolean getEnabled() {
+        return isEnabled;
     }
 
-    public void setVal1Caption(String val1Caption) {
-        this.val1Caption = val1Caption;
+    public void setEnabled(Boolean enabled) {
+        isEnabled = enabled;
     }
 
-    public String getVal2Name() {
-        return val2Name;
+    public Boolean getDeviationEnable() {
+        return isDeviationEnable;
     }
 
-    public void setVal2Name(String val2Name) {
-        this.val2Name = val2Name;
-    }
-
-    public String getVal2Caption() {
-        return val2Caption;
-    }
-
-    public void setVal2Caption(String val2Caption) {
-        this.val2Caption = val2Caption;
-    }
-
-    public Double getDefaultVal1() {
-        return defaultVal1;
-    }
-
-    public void setDefaultVal1(Double defaultVal1) {
-        this.defaultVal1 = defaultVal1;
-    }
-
-    public Double getDefaultVal2() {
-        return defaultVal2;
-    }
-
-    public void setDefaultVal2(Double defaultVal2) {
-        this.defaultVal2 = defaultVal2;
+    public void setDeviationEnable(Boolean deviationEnable) {
+        isDeviationEnable = deviationEnable;
     }
 
     public Double getDeviationVal() {
@@ -229,52 +233,132 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
         this.deviationMu = deviationMu;
     }
 
-    public Boolean getDefaultKey1i() {
-        return defaultKey1i;
+    public Boolean getChartEnable() {
+        return isChartEnable;
     }
 
-    public void setDefaultKey1i(Boolean defaultKey1i) {
-        this.defaultKey1i = defaultKey1i;
+    public void setChartEnable(Boolean chartEnable) {
+        isChartEnable = chartEnable;
     }
 
-    public Boolean getDefaultKey2i() {
-        return defaultKey2i;
+    public Boolean getChartSingleKey() {
+        return chartSingleKey;
     }
 
-    public void setDefaultKey2i(Boolean defaultKey2i) {
-        this.defaultKey2i = defaultKey2i;
+    public void setChartSingleKey(Boolean chartSingleKey) {
+        this.chartSingleKey = chartSingleKey;
     }
 
-    public Boolean getDefaultVal1i() {
-        return defaultVal1i;
+    public String getChartKeyMu() {
+        return chartKeyMu;
     }
 
-    public void setDefaultVal1i(Boolean defaultVal1i) {
-        this.defaultVal1i = defaultVal1i;
+    public void setChartKeyMu(String chartKeyMu) {
+        this.chartKeyMu = chartKeyMu;
     }
 
-    public Boolean getDefaultVal2i() {
-        return defaultVal2i;
+    public String getChartKey1Keyname() {
+        return chartKey1Keyname;
     }
 
-    public void setDefaultVal2i(Boolean defaultVal2i) {
-        this.defaultVal2i = defaultVal2i;
+    public void setChartKey1Keyname(String chartKey1Keyname) {
+        this.chartKey1Keyname = chartKey1Keyname;
     }
 
-    public Boolean getMandatory() {
-        return isMandatory;
+    public String getChartKey2Keyname() {
+        return chartKey2Keyname;
     }
 
-    public void setMandatory(Boolean mandatory) {
-        isMandatory = mandatory;
+    public void setChartKey2Keyname(String chartKey2Keyname) {
+        this.chartKey2Keyname = chartKey2Keyname;
     }
 
-    public Boolean getEnabled() {
-        return isEnabled;
+    public String getChartValMu() {
+        return chartValMu;
     }
 
-    public void setEnabled(Boolean enabled) {
-        isEnabled = enabled;
+    public void setChartValMu(String chartValMu) {
+        this.chartValMu = chartValMu;
+    }
+
+    public String getChartVal1Keyname() {
+        return chartVal1Keyname;
+    }
+
+    public void setChartVal1Keyname(String chartVal1Keyname) {
+        this.chartVal1Keyname = chartVal1Keyname;
+    }
+
+    public String getChartVal2Keyname() {
+        return chartVal2Keyname;
+    }
+
+    public void setChartVal2Keyname(String chartVal2Keyname) {
+        this.chartVal2Keyname = chartVal2Keyname;
+    }
+
+    public String getChartKey1Caption() {
+        return chartKey1Caption;
+    }
+
+    public void setChartKey1Caption(String chartKey1Caption) {
+        this.chartKey1Caption = chartKey1Caption;
+    }
+
+    public String getChartKey2Caption() {
+        return chartKey2Caption;
+    }
+
+    public void setChartKey2Caption(String chartKey2Caption) {
+        this.chartKey2Caption = chartKey2Caption;
+    }
+
+    public String getChartVal1Caption() {
+        return chartVal1Caption;
+    }
+
+    public void setChartVal1Caption(String chartVal1Caption) {
+        this.chartVal1Caption = chartVal1Caption;
+    }
+
+    public String getChartVal2Caption() {
+        return chartVal2Caption;
+    }
+
+    public void setChartVal2Caption(String chartVal2Caption) {
+        this.chartVal2Caption = chartVal2Caption;
+    }
+
+    public Boolean getChartKey1I() {
+        return chartKey1I;
+    }
+
+    public void setChartKey1I(Boolean chartKey1I) {
+        this.chartKey1I = chartKey1I;
+    }
+
+    public Boolean getChartVal1I() {
+        return chartVal1I;
+    }
+
+    public void setChartVal1I(Boolean chartVal1I) {
+        this.chartVal1I = chartVal1I;
+    }
+
+    public Boolean getChartKey2I() {
+        return chartKey2I;
+    }
+
+    public void setChartKey2I(Boolean chartKey2I) {
+        this.chartKey2I = chartKey2I;
+    }
+
+    public Boolean getChartVal2I() {
+        return chartVal2I;
+    }
+
+    public void setChartVal2I(Boolean chartVal2I) {
+        this.chartVal2I = chartVal2I;
     }
 
     public int getVersion() {
