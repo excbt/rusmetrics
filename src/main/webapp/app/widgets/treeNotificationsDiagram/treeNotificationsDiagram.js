@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true, nomen: true, es5: true*/
-/*global angular, moment, $, document*/
+/*global angular, moment, $, document, Chart*/
 (function () {
     'use strict';
     
@@ -156,9 +156,44 @@
             vm.barChart.datasetOverride = [];//[{ yAxisID: 'y-axis-1' }, { yAxisID: 'y-axis-2' }];
             vm.barChart.options = {                
                 responsive: false,
-//                legend: {
-//                    display: true
-//                },
+                cutoutPercentage: 80,
+                legend: {
+                    display: false,
+                    position: 'right',
+                    fullWidth: false,
+                    labels: {
+                        boxWidth: 10,
+//                        generateLabels: function (chart) {
+//                            var data = chart.data;
+//                            if (data.labels.length && data.datasets.length) {
+//                                return data.labels.map(function(label, i) {
+//                                    var meta = chart.getDatasetMeta(0);
+//                                    var ds = data.datasets[0];
+//                                    var arc = meta.data[i];
+//                                    var custom = arc && arc.custom || {};
+//                                    var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+//                                    var arcOpts = chart.options.elements.arc;
+//                                    var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+//                                    var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+//                                    var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+//
+//                                    return {
+//                                        text: label.substring(0, 10),
+//                                        fillStyle: fill,
+//                                        strokeStyle: stroke,
+//                                        lineWidth: bw,
+//                                        hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+//
+//                                        // Extra data used for toggling the correct item
+//                                        index: i
+//                                    };
+//                                });
+//                            }
+//                            return [];
+//                        }
+                        
+                    }
+                },
                 legendCallback: function (chart) {
 //                    console.log(chart);
                     var text = [], i;
@@ -525,19 +560,19 @@
                     caption: "Критические",
                     class: "btn btn-lg glyphicon glyphicon-alert text-primary",
                     prepareFunction: prepareChartDataWithCritical,
-                    chartCaption: "критичности"
+                    chartCaption: "Критичность?"
                 },
                 CATEGORIES: {
                     caption: "Категории",
                     class: "btn btn-lg glyphicon glyphicon-tags text-primary",
                     prepareFunction: prepareChartDataWithCategories,
-                    chartCaption: "категориям"
+                    chartCaption: "Категории"
                 },
                 TYPES: {
                     caption: "Типы",
                     class: "btn btn-lg glyphicon glyphicon-tag text-primary",
                     prepareFunction: prepareChartDataWithTypes,
-                    chartCaption: "типам"
+                    chartCaption: "Типы"
                 }
             };
 

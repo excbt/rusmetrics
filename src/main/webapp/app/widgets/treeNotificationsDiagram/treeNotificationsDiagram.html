@@ -61,21 +61,23 @@
 -->
         <div class = "row">
             <div class = "col-xs-12">
-                Диаграмма событий по <span class = "text-primary">{{widgetVm.data.currentChartMode.chartCaption}}</span>
+                <span class = "text-primary">{{widgetVm.data.currentChartMode.chartCaption}}</span> событий
             </div>
         </div>
         <br>
         <div class="row">            
-            <div class = "col-xs-12">
+            <div class = "col-xs-11 noPadding">
 <!--
                 <div ng-show = "widgetVm.presentDataFlag === false"
                      class = "nmc-text-align-center">                    
 -->
 <!--                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.-->
 <!--                </div>-->
-                <div ng-show = "widgetVm.presentDataFlag === true" style = "position: relative">
-                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; width: 300px; text-align: center; transform: translateY(-50%)">{{widgetVm.data.eventsCount}}</label>
-                    <canvas id="doughnut" 
+                <div ng-show = "widgetVm.presentDataFlag === true">
+<!--                  style = "position: relative"-->
+                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; text-align: center; transform: translateY(-50%); color: lightblue; font-size: xx-large; width: 320px;">{{widgetVm.data.eventsCount}}</label>
+                    <canvas id="doughnut"
+                           style = "height: 150px;  width: 300px;"                           
                             class="chart chart-doughnut" 
                             chart-data="widgetVm.barChart.data"
                             chart-labels="widgetVm.barChart.labels"                              
@@ -85,6 +87,14 @@
                     </canvas>
                 </div>
             </div>
+            
+            <div class = "col-xs-1 noPadding">
+               <i class = "btn btn-xs glyphicon glyphicon-plus"></i>
+                <div style = "position: absolute; width: 100px;">
+                    <div ng-attr-id = "{{'cw-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
+                </div>
+            </div>
+            
 <!--
             <div class = "col-xs-1" ng-show = "presentDataFlag === true">
                <div ng-repeat = "chartMode in data.CHART_MODES" ng-click = "chartModeChange(chartMode)">
@@ -105,11 +115,13 @@
             </div>            
 -->
         </div>
+<!--
         <div class="row">            
             <div class = "col-xs-12">
                 <div ng-attr-id = "{{'cw-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
             </div>
         </div>
+-->
     </div>
 
     <!-- modal window -->
