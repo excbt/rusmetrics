@@ -79,6 +79,7 @@
             
             /*jshint validthis: true*/
             var vm = this;
+            vm.CONT_OBJECT_LIST_LENGTH = 20;
             vm.widgetPath = "widgets/zpointCw_v1";
             var DATA_URL = "../api/subscr/widgets/cw",/*//chart/HwTemp";*/
                 ZPOINT_STATUS_TEMPLATE = vm.widgetPath + "/zpoint-state-",

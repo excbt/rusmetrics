@@ -133,7 +133,7 @@
             <div class="modal-body nmc-modal-body normal-font">
               <div class = "container-fluid">
                 <div class = "row-fluid">
-                    <div ng-if = "widgetVm.data.contObjectList.length <= 20" 
+                    <div ng-if = "widgetVm.data.contObjectList.length <= widgetVm.CONT_OBJECT_LIST_LENGTH" 
                       class = "noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list">
                        <table class = "table table-lighter table-striped table-condensed table-hover nmc-main-table noMarginBottom">
                            <tr class = "nmc-main-table-header">
@@ -157,9 +157,14 @@
                            </tr>
                         </table>
                     </div>
-                    <div ng-if = "widgetVm.data.contObjectList.length > 20">
-                        Тут должно быть дерево объектов...
-                        <ptree-component ptree-node = "widgetVm.widgetOptions.ptreeNode"></ptree-component>
+                    <div ng-if = "widgetVm.data.contObjectList.length > widgetVm.CONT_OBJECT_LIST_LENGTH">
+<!--                        Тут должно быть дерево объектов...-->
+                        <ptree-component 
+                            
+                        ptree-node = "widgetVm.widgetOptions.ptreeNode" 
+                           filter-array = "widgetVm.data.contObjectList">
+                            
+                        </ptree-component>
                     </div>
                   </div>                
                 </div>

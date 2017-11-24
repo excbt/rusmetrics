@@ -1,24 +1,24 @@
 
 <div>
-   <div ui-tree="options" data-drag-enabled="false">
-        <ol ui-tree-nodes ng-model="ptreeNode" >
-            <li ng-repeat="item in $ctrl.ptreeNode.childNodes"
+   <div ui-tree = "options" data-drag-enabled = "false">
+        <ol ui-tree-nodes ng-model = "$ctrl.filtredTree" >
+            <li ng-repeat = "item in $ctrl.filtredTree.childNodes"
               ui-tree-node
-              ng-include="'p_tree_component_items_renderer.html'">
+              ng-include = "'p_tree_component_items_renderer.html'">
 
             </li>
-            <li ng-repeat="item in $ctrl.ptreeNode.linkedNodeObjects"
+            <li ng-repeat = "item in $ctrl.filtredTree.linkedNodeObjects"
                 ui-tree-node 
-                ng-include="'p_tree_component_items_renderer.html'">
+                ng-include = "'p_tree_component_items_renderer.html'">
             </li>      
         </ol>
     </div>   
 
-    <script type="text/ng-template" id="p_tree_component_items_renderer.html">
-        <div ui-tree-handle ng-click="selectPNode(item, $event, collapsed)"
+    <script type = "text/ng-template" id = "p_tree_component_items_renderer.html">
+        <div ui-tree-handle ng-click = "selectPNode(item, $event, collapsed)"
              ng-mouseover = "item.isHover = true"
              ng-mouseleave = "item.isHover = false"
-             ng-class="{'nmc-bg-distinguish': item.isSelected}">
+             ng-class = "{'nmc-bg-distinguish': item.isSelected}">
 
     <!--
             <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"

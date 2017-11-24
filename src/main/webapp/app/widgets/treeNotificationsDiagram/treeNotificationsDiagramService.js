@@ -11,7 +11,7 @@
             CONT_OBJECTS_URL: "../api/subscr/contObjects",
             CONT_EVENT_CATEGORIES_URL: CONT_EVENT_MONITOR + "/cont-event-categories",
             CONT_EVENT_TYPES_URL: CONT_EVENT_MONITOR + "/cont-event-types",
-            PTREE_NODE_STATS_URL: /*"resource/treeNotificationStats.json"*/ CONT_EVENT_MONITOR + "/p-tree-node/stats"
+            PTREE_NODE_STATS_URL: "resource/treeNotificationStats.json" /*CONT_EVENT_MONITOR + "/p-tree-node/stats"*/
         };
 
         var EVENTS = {
