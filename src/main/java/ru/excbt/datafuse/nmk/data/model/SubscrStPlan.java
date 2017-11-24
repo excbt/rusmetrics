@@ -1,13 +1,14 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import javax.persistence.*;
-
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
+
+import javax.persistence.*;
 
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_st_plan")
-public class SubscrStPlan extends AbstractAuditableModel {
+public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarker {
 
     @Column(name = "subscriber_id")
     private Long subscriberId;
@@ -16,7 +17,7 @@ public class SubscrStPlan extends AbstractAuditableModel {
     private String settingMode;
 
     @Column(name = "st_plan_template")
-    private String stPlanTemplate;
+    private String stPlanTemplateKey;
 
     @Column(name = "sp_type")
     private String spType;
@@ -135,12 +136,13 @@ public class SubscrStPlan extends AbstractAuditableModel {
         this.settingMode = settingMode;
     }
 
-    public String getStPlanTemplate() {
-        return stPlanTemplate;
+
+    public String getStPlanTemplateKey() {
+        return stPlanTemplateKey;
     }
 
-    public void setStPlanTemplate(String stPlanTemplate) {
-        this.stPlanTemplate = stPlanTemplate;
+    public void setStPlanTemplateKey(String stPlanTemplateKey) {
+        this.stPlanTemplateKey = stPlanTemplateKey;
     }
 
     public String getSpType() {

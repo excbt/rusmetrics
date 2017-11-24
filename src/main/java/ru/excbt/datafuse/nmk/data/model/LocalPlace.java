@@ -17,13 +17,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class LocalPlace extends AbstractAuditableModel {
+public class LocalPlace extends AbstractAuditableModel implements PersistableBuilder<LocalPlace, Long> {
 
     @Getter
 	public static class LocalPlaceInfo {

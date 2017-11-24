@@ -114,8 +114,8 @@ portal:
 
     logging:
         logstash: # Forward logs to logstash over a socket, used by LoggingConfiguration
-            enabled: false
-            host: localhost
+            enabled: true
+            host: 192.168.84.100
             port: 5000
             queue-size: 512
 

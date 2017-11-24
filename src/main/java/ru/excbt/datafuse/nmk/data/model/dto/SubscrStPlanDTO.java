@@ -1,132 +1,109 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model.dto;
 
+public class SubscrStPlanDTO {
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
-import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
+    private Long id;
 
-import javax.persistence.*;
-import javax.validation.constraints.Max;
-import java.util.List;
+    private Long subscriberId;
 
+    private String settingMode;
 
-@Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "st_plan_template")
-public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMarker {
+    private String stPlanTemplateKey;
 
-
-    @Column(name = "keyname")
-    @Max(32)
-    private String keyname;
-
-    @Column(name = "sp_type")
-    @Max(32)
     private String spType;
 
-    @Column(name = "cont_service_type")
-    @Max(32)
     private String contServiceType;
 
-    @Column(name = "sp_name")
+    private Long localPlaceId;
+
+    private Long rsoOrganizationId;
+
     private String spName;
 
-    @Column(name = "sp_unit_keyname")
-    @Max(32)
     private String spUnitKeyname;
 
-    @Column(name = "sp_unit_mu")
-    @Max(32)
     private String spUnitMu;
 
-    @Column(name = "sp_val")
     private Double spVal;
 
-    @Column(name = "sp_val_mu")
-    @Max(32)
     private String spValMu;
 
-    @Column(name = "sp_period")
     private String spPeriod;
 
-    @Column(name = "is_mandatory")
     private Boolean isMandatory;
 
-    @Column(name = "is_enabled")
     private Boolean isEnabled;
 
-    @Column(name = "is_deviation_enable")
     private Boolean isDeviationEnable;
 
-    @Column(name = "deviation_val")
     private Double deviationVal;
 
-    @Column(name = "deviation_mu")
     private String deviationMu;
 
-    @Column(name = "is_chart_enable")
     private Boolean isChartEnable;
 
-    @Column(name = "chart_single_key")
     private Boolean chartSingleKey;
 
-    @Column(name = "chart_key_mu")
     private String chartKeyMu;
 
-    @Column(name = "chart_key1_keyname")
     private String chartKey1Keyname;
 
-    @Column(name = "chart_key2_keyname")
     private String chartKey2Keyname;
 
-    @Column(name = "chart_val_mu")
     private String chartValMu;
 
-    @Column(name = "chart_val1_keyname")
     private String chartVal1Keyname;
 
-    @Column(name = "chart_val2_keyname")
     private String chartVal2Keyname;
 
-    @Column(name = "chart_key1_caption")
     private String chartKey1Caption;
 
-    @Column(name = "chart_key2_caption")
     private String chartKey2Caption;
 
-    @Column(name = "chart_val1_caption")
     private String chartVal1Caption;
 
-    @Column(name = "chart_val2_caption")
     private String chartVal2Caption;
 
-    @Column(name = "chart_key1_i")
     private Boolean chartKey1I;
 
-    @Column(name = "chart_val1_i")
     private Boolean chartVal1I;
 
-    @Column(name = "chart_key2_i")
     private Boolean chartKey2I;
 
-    @Column(name = "chart_val2_i")
     private Boolean chartVal2I;
 
-    @Version
     private int version;
 
-    @Column(name = "deleted")
-    private int deleted;
-
-    @OneToMany(mappedBy = "templateKeyname", fetch = FetchType.LAZY)
-    private List<StPlanChartTemplate> chartTemplates;
-
-    @Override
-    public String getKeyname() {
-        return keyname;
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public void setKeyname(String keyname) {
-        this.keyname = keyname;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getSubscriberId() {
+        return subscriberId;
+    }
+
+    public void setSubscriberId(Long subscriberId) {
+        this.subscriberId = subscriberId;
+    }
+
+    public String getSettingMode() {
+        return settingMode;
+    }
+
+    public void setSettingMode(String settingMode) {
+        this.settingMode = settingMode;
+    }
+
+    public String getStPlanTemplateKey() {
+        return stPlanTemplateKey;
+    }
+
+    public void setStPlanTemplateKey(String stPlanTemplateKey) {
+        this.stPlanTemplateKey = stPlanTemplateKey;
     }
 
     public String getSpType() {
@@ -143,6 +120,22 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
 
     public void setContServiceType(String contServiceType) {
         this.contServiceType = contServiceType;
+    }
+
+    public Long getLocalPlaceId() {
+        return localPlaceId;
+    }
+
+    public void setLocalPlaceId(Long localPlaceId) {
+        this.localPlaceId = localPlaceId;
+    }
+
+    public Long getRsoOrganizationId() {
+        return rsoOrganizationId;
+    }
+
+    public void setRsoOrganizationId(Long rsoOrganizationId) {
+        this.rsoOrganizationId = rsoOrganizationId;
     }
 
     public String getSpName() {
@@ -370,19 +363,44 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
     }
 
     @Override
-    public int getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(int deleted) {
-        this.deleted = deleted;
-    }
-
-    public List<StPlanChartTemplate> getChartTemplates() {
-        return chartTemplates;
-    }
-
-    public void setChartTemplates(List<StPlanChartTemplate> chartTemplates) {
-        this.chartTemplates = chartTemplates;
+    public String toString() {
+        return "SubscrStPlanDTO{" +
+            "id=" + id +
+            ", subscriberId=" + subscriberId +
+            ", settingMode='" + settingMode + '\'' +
+            ", stPlanTemplateKey='" + stPlanTemplateKey + '\'' +
+            ", spType='" + spType + '\'' +
+            ", contServiceType='" + contServiceType + '\'' +
+            ", localPlaceId=" + localPlaceId +
+            ", rsoOrganizationId=" + rsoOrganizationId +
+            ", spName='" + spName + '\'' +
+            ", spUnitKeyname='" + spUnitKeyname + '\'' +
+            ", spUnitMu='" + spUnitMu + '\'' +
+            ", spVal=" + spVal +
+            ", spValMu='" + spValMu + '\'' +
+            ", spPeriod='" + spPeriod + '\'' +
+            ", isMandatory=" + isMandatory +
+            ", isEnabled=" + isEnabled +
+            ", isDeviationEnable=" + isDeviationEnable +
+            ", deviationVal=" + deviationVal +
+            ", deviationMu='" + deviationMu + '\'' +
+            ", isChartEnable=" + isChartEnable +
+            ", chartSingleKey=" + chartSingleKey +
+            ", chartKeyMu='" + chartKeyMu + '\'' +
+            ", chartKey1Keyname='" + chartKey1Keyname + '\'' +
+            ", chartKey2Keyname='" + chartKey2Keyname + '\'' +
+            ", chartValMu='" + chartValMu + '\'' +
+            ", chartVal1Keyname='" + chartVal1Keyname + '\'' +
+            ", chartVal2Keyname='" + chartVal2Keyname + '\'' +
+            ", chartKey1Caption='" + chartKey1Caption + '\'' +
+            ", chartKey2Caption='" + chartKey2Caption + '\'' +
+            ", chartVal1Caption='" + chartVal1Caption + '\'' +
+            ", chartVal2Caption='" + chartVal2Caption + '\'' +
+            ", chartKey1I=" + chartKey1I +
+            ", chartVal1I=" + chartVal1I +
+            ", chartKey2I=" + chartKey2I +
+            ", chartVal2I=" + chartVal2I +
+            ", version=" + version +
+            '}';
     }
 }
