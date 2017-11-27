@@ -4,6 +4,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,13 +55,16 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     private String spPeriod;
 
     @Column(name = "is_mandatory")
-    private Boolean isMandatory;
+    @NotNull
+    private Boolean isMandatory = false;
 
     @Column(name = "is_enabled")
-    private Boolean isEnabled;
+    @NotNull
+    private Boolean isEnabled = false;
 
     @Column(name = "is_deviation_enable")
-    private Boolean isDeviationEnable;
+    @NotNull
+    private Boolean isDeviationEnable = false;
 
     @Column(name = "deviation_val")
     private Double deviationVal;
@@ -69,10 +73,11 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     private String deviationMu;
 
     @Column(name = "is_chart_enable")
-    private Boolean isChartEnable;
+    private Boolean isChartEnable = false;
 
     @Column(name = "chart_single_key")
-    private Boolean chartSingleKey;
+    @NotNull
+    private Boolean chartSingleKey = false;
 
     @Column(name = "chart_key_mu")
     private String chartKeyMu;
@@ -105,10 +110,12 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     private String chartVal2Caption;
 
     @Column(name = "chart_key1_i")
-    private Boolean chartKey1I;
+    @NotNull
+    private Boolean chartKey1I = true;
 
     @Column(name = "chart_val1_i")
-    private Boolean chartVal1I;
+    @NotNull
+    private Boolean chartVal1I = true;
 
     @Column(name = "chart_key2_i")
     private Boolean chartKey2I;

@@ -42,11 +42,39 @@ public class SubscrStPlanService {
             .collect(Collectors.toList());
     }
 
-    @Transactional()
+    @Transactional
     public SubscrStPlan save(SubscrStPlan stPlan, PortalUserIds portalUserIds) {
         stPlan.setSubscriberId(portalUserIds.getSubscriberId());
         return subscrStPlanRepository.saveAndFlush(stPlan);
     }
 
+
+    private void initDefaults(SubscrStPlan stPlan) {
+        stPlan.setEnabled(false);
+        stPlan.setMandatory(false);
+        stPlan.setDeviationEnable(false);
+        stPlan.setChartEnable(false);
+        stPlan.setChartSingleKey(false);
+    }
+
+    @Transactional
+    public SubscrStPlan newPlanAndSave(PortalUserIds portalUserIds) {
+        SubscrStPlan stPlan = new SubscrStPlan();
+        stPlan.setSubscriberId(portalUserIds.getSubscriberId());
+        initDefaults(stPlan);
+        return subscrStPlanRepository.saveAndFlush(stPlan);
+    }
+
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
+    public SubscrStPlan newPlanBlank(PortalUserIds portalUserIds) {
+        SubscrStPlan stPlan = new SubscrStPlan();
+        stPlan.setSubscriberId(portalUserIds.getSubscriberId());
+        initDefaults(stPlan);
+        return stPlan;
+    }
 
 }
