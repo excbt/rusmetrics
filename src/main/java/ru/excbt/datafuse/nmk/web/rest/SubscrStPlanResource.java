@@ -29,7 +29,7 @@ public class SubscrStPlanResource {
      * @return
      */
     @GetMapping("")
-    @ApiOperation("Get all monitor status of cont objects")
+    @ApiOperation("Get all StPlans of subscriber")
     public ResponseEntity<?> getStPlans() {
         return ApiResponse.responseOK(() -> subscrStPlanService.findStPlanDTOs(portalUserIdsService.getCurrentIds()));
     }

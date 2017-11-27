@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 @Transactional
-public class SubscServiceManageControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
+public class SubscServiceManageControllerTest extends AnyControllerTest {
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
 

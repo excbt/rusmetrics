@@ -32,7 +32,7 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
-public class ReportParamsetServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+public class ReportParamsetServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetServiceTest.class);
 
@@ -153,7 +153,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest implements TestExc
 	@Ignore
 	public void testReportParamsetCreateDefault() throws Exception {
 
-		Subscriber subscriber = subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID);
+		Subscriber subscriber = subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 
 		logger.info("Creating ReportParamset for {}", subscriber.getId());
 
