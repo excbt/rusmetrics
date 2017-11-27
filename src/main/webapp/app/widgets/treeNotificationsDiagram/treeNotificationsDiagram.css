@@ -51,14 +51,14 @@
 }
 
 /* Легенда графика*/
-.cw-chart-legend li {
+.tree-chart-legend li {
     display: inline-block;
     margin-right: 10px;
     font-size: 12px;
     color: #666;
 }
 
-.cw-chart-legend li span {
+.tree-chart-legend li span {
     display: inline-block;
     position: static;
     left: 0;

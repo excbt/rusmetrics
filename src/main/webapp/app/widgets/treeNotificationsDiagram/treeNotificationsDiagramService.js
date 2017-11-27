@@ -1,10 +1,10 @@
 
 /*jslint node: true*/
-/*global angular*/
+/*global angular, $*/
 (function () {
     'use strict';
     
-    function treeNotificationsDiagramServiceFn($http, $rootScope) {
+    function treeNotificationsDiagramServiceFn($http, $rootScope, $timeout) {
         var WIDGETS_URL = "../api/widgets",
             CONT_EVENT_MONITOR = WIDGETS_URL + "/cont-event-monitor";
         var API = {
@@ -76,6 +76,68 @@
             var url = API.CONT_OBJECTS_URL + "/" + contObjectId;
             return $http.get(url);
         }
+        
+        function checkUndefinedNull(numvalue) {
+            var result = false;
+            if ((angular.isUndefined(numvalue)) || (numvalue === null)) {
+                result = true;
+            }
+            return result;
+        }
+        
+        var setToolTip = function (title, text, elDom, targetDom, delay, width, my, at, qtipclass) {
+            var tDelay = 1;
+            if (!checkUndefinedNull(delay)) {
+                tDelay = delay;
+            }
+            var tWidth = 1000;
+            if (!checkUndefinedNull(width)) {
+                tWidth = width;
+            }
+            var tMy = 'top right';
+            if (!checkUndefinedNull(my)) {
+                tMy = my;
+            }
+            var tAt = 'bottom right';
+            if (!checkUndefinedNull(at)) {
+                tAt = at;
+            }
+            var tQtipClass = 'qtip-nmc-indicator-tooltip';
+            if (!checkUndefinedNull(qtipclass)) {
+                tQtipClass = qtipclass;
+            }
+    //console.log(elDom);                
+    //console.log(targetDom);    
+    //console.log($(elDom));        
+    //console.log($(targetDom));        
+            $timeout(function () {
+//    console.log($(elDom));            
+                $(elDom).qtip({
+                    suppress: false,
+                    content: {
+                        text: text,
+                        title: title,
+                        button : false
+                    },
+                    show: {
+                        event: 'click'
+                    },
+                    style: {
+                        classes: tQtipClass,
+                        width: tWidth,
+                        "min-width": tWidth
+                    },
+                    hide: {
+                        event: 'unfocus click'
+                    },
+                    position: {
+                        my: tMy,
+                        at: tAt,
+                        target: $(targetDom)
+                    }
+                });
+            }, tDelay);
+        };
 
         function initSvc() {
             loadContEventCategories();
@@ -90,11 +152,12 @@
         service.getContEventTypes = getContEventTypes;
         service.loadContObject = loadContObject;
         service.loadPTreeNodeStats = loadPTreeNodeStats;
+        service.setToolTip = setToolTip;
 
         return service;
     }
     
-    treeNotificationsDiagramServiceFn.$inject = ['$http', '$rootScope'];
+    treeNotificationsDiagramServiceFn.$inject = ['$http', '$rootScope', '$timeout'];
     
     angular.module('treeNotificationsDiagramWidgetSvc', [])
         .service('treeNotificationsDiagramService', treeNotificationsDiagramServiceFn);

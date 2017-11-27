@@ -211,7 +211,8 @@
 
                     return text.join('');
                 },
-//                tooltips: {
+                tooltips: {
+                    position: 'nearest'
 //                    callbacks: {
 //                        beforeTitle: function (arr, data) {
 //                            var result = "";
@@ -225,7 +226,7 @@
 //                        }
 //                    }
 //
-//                },
+                },
                 beforeDraw: function(chart) {
                     console.log("BeforeDraw", chart);
                 }
@@ -389,10 +390,15 @@
             $scope.$on('chart-create', function (event, chart) {
 //                console.log(event);
 //                console.log(chart);
-                var chartLegend = document.getElementById("cw-chart-legend-" + vm.data.ptreeNodeId + vm.widgetOptions.chartMode);
+//  <div ng-attr-id = "{{'tree-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "tree-chart-legend"></div>
+                var chartLegend = document.getElementById("tree-chart-legend-" + vm.data.ptreeNodeId + vm.widgetOptions.chartMode);
                 if (angular.isDefined(chartLegend) && chartLegend !== null) {
                     chartLegend.innerHTML = chart.generateLegend();
                 }
+                
+                //set tooltip menu
+//                var chartLegendTooltip = document.getElementById();
+                treeNotificationsDiagramService.setToolTip("Легенда", chartLegend, '#tree-chart-legend-btn-' + vm.data.ptreeNodeId + vm.widgetOptions.chartMode, '#tree-chart-legend-btn-' + vm.data.ptreeNodeId + vm.widgetOptions.chartMode, null, 700, null, null, 'qtip-bootstrap qtip-nmc-tooltip-widget');
             });
 
             vm.data.contObjectList = [];
