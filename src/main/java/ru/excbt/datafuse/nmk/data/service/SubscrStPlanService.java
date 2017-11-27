@@ -45,7 +45,7 @@ public class SubscrStPlanService {
     @Transactional()
     public SubscrStPlan save(SubscrStPlan stPlan, PortalUserIds portalUserIds) {
         stPlan.setSubscriberId(portalUserIds.getSubscriberId());
-        return subscrStPlanRepository.save(stPlan);
+        return subscrStPlanRepository.saveAndFlush(stPlan);
     }
 
 

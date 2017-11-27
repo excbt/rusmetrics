@@ -408,4 +408,46 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     public void setDeleted(int deleted) {
         this.deleted = deleted;
     }
+
+    @Override
+    public String toString() {
+        return "SubscrStPlan{" +
+            "subscriberId=" + subscriberId +
+            ", settingMode='" + settingMode + '\'' +
+            ", stPlanTemplateKey='" + stPlanTemplateKey + '\'' +
+            ", spType='" + spType + '\'' +
+            ", contServiceType='" + contServiceType + '\'' +
+            ", localPlace=" + localPlace +
+            ", rsoOrganization=" + rsoOrganization +
+            ", spName='" + spName + '\'' +
+            ", spUnitKeyname='" + spUnitKeyname + '\'' +
+            ", spUnitMu='" + spUnitMu + '\'' +
+            ", spVal=" + spVal +
+            ", spValMu='" + spValMu + '\'' +
+            ", spPeriod='" + spPeriod + '\'' +
+            ", isMandatory=" + isMandatory +
+            ", isEnabled=" + isEnabled +
+            ", isDeviationEnable=" + isDeviationEnable +
+            ", deviationVal=" + deviationVal +
+            ", deviationMu='" + deviationMu + '\'' +
+            ", isChartEnable=" + isChartEnable +
+            ", chartSingleKey=" + chartSingleKey +
+            ", chartKeyMu='" + chartKeyMu + '\'' +
+            ", chartKey1Keyname='" + chartKey1Keyname + '\'' +
+            ", chartKey2Keyname='" + chartKey2Keyname + '\'' +
+            ", chartValMu='" + chartValMu + '\'' +
+            ", chartVal1Keyname='" + chartVal1Keyname + '\'' +
+            ", chartVal2Keyname='" + chartVal2Keyname + '\'' +
+            ", chartKey1Caption='" + chartKey1Caption + '\'' +
+            ", chartKey2Caption='" + chartKey2Caption + '\'' +
+            ", chartVal1Caption='" + chartVal1Caption + '\'' +
+            ", chartVal2Caption='" + chartVal2Caption + '\'' +
+            ", chartKey1I=" + chartKey1I +
+            ", chartVal1I=" + chartVal1I +
+            ", chartKey2I=" + chartKey2I +
+            ", chartVal2I=" + chartVal2I +
+            ", version=" + version +
+            ", deleted=" + deleted +
+            "} " + super.toString();
+    }
 }
