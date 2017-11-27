@@ -10,11 +10,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import ru.excbt.datafuse.nmk.data.constant.SecurityConstraints;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
@@ -149,7 +151,9 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Long getCurrentUserId() {
-		return getCurrentAuditor().getId();
+        SubscriberUserDetails userDetails = subscriberUserDetailsService.getCurrentUserDetails();
+        //fullUserInfoRepository.findOneIdByUserNameIgnoreCase(SecurityUtils.getCurrentUserLogin()).orElse(0L);
+		return (userDetails != null) ? userDetails.getId() : SecurityConstraints.SYSTEM_ID;
 	}
 
 	/**

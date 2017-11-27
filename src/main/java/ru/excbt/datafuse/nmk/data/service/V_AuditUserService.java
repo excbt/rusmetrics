@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.constant.SecurityConstraints;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 
@@ -70,7 +71,9 @@ public class V_AuditUserService {
 	 */
 	public V_AuditUser findByUserName(String userName) {
 
-	    return v_fullUserInfoRepository.findOneIdByUserNameIgnoreCase(userName).map(i -> new V_AuditUser().id(i)).orElse(new V_AuditUser().id(0L));
+	    return v_fullUserInfoRepository.findOneIdByUserNameIgnoreCase(userName)
+            .map(i -> new V_AuditUser().id(i))
+            .orElse(new V_AuditUser().id(SecurityConstraints.SYSTEM_ID));
 
 //		Query query = em.createQuery("from AuditUser s where s.userName = :arg1", V_AuditUser.class);
 //		query.setParameter("arg1", userName);

@@ -18,11 +18,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Базовый абстрактный класс сущности с аудитом
- * 
- * 
+ *
+ *
  * @version 1.0
  * @since 12.03.2015
- * 
+ *
  * @param <U>
  * @param <PK>
  */
@@ -54,7 +54,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Auditable#getCreatedBy()
 	 */
 	@Override
@@ -65,7 +65,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.springframework.data.domain.Auditable#setCreatedBy(java.lang.Object)
 	 */
@@ -77,7 +77,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Auditable#getCreatedDate()
 	 */
 	@Override
@@ -88,7 +88,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.springframework.data.domain.Auditable#setCreatedDate(org.joda.time
 	 * .DateTime)
@@ -100,7 +100,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Auditable#getLastModifiedBy()
 	 */
 	@Override
@@ -111,7 +111,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.springframework.data.domain.Auditable#setLastModifiedBy(java.lang
 	 * .Object)
@@ -124,7 +124,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Auditable#getLastModifiedDate()
 	 */
 	@Override
@@ -135,7 +135,7 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.springframework.data.domain.Auditable#setLastModifiedDate(org.joda
 	 * .time.DateTime)
@@ -146,4 +146,13 @@ public abstract class AbstractAuditableEntity<U, PK extends Serializable> extend
 		this.lastModifiedDate = null == lastModifiedDate ? null : lastModifiedDate.toDate();
 	}
 
+    @Override
+    public String toString() {
+        return "AbstractAuditableEntity{" +
+            "createdBy=" + createdBy +
+            ", createdDate=" + createdDate +
+            ", lastModifiedBy=" + lastModifiedBy +
+            ", lastModifiedDate=" + lastModifiedDate +
+            "} " + super.toString();
+    }
 }
