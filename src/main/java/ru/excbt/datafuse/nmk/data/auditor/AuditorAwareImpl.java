@@ -7,7 +7,10 @@ import org.springframework.stereotype.Component;
 
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
+import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
+import ru.excbt.datafuse.nmk.data.service.V_AuditUserService;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 
 /**
  * Компонент для аудита сущностей
@@ -21,14 +24,17 @@ import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 @Component(value = "auditorAwareImpl")
 public class AuditorAwareImpl implements AuditorAware<V_AuditUser> {
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	private final V_AuditUserService v_auditUserService;
 
-	private boolean isMock;
+	@Autowired
+    public AuditorAwareImpl(V_AuditUserService v_auditUserService) {
+        this.v_auditUserService = v_auditUserService;
+    }
 
 	@Override
 	public V_AuditUser getCurrentAuditor() {
-		return currentSubscriberService.getCurrentAuditor();
+	    String username = SecurityUtils.getCurrentUserLogin();
+		return v_auditUserService.findByUserName(username);
 	}
 
 }

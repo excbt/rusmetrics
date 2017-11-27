@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  *
  */
 @Entity
-@Subselect("select * from portal.v_audit_user")
+@Subselect("select id from portal.v_audit_user")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 public class V_AuditUser implements Serializable, PersistableBuilder<V_AuditUser, Long> {
 
@@ -38,23 +38,23 @@ public class V_AuditUser implements Serializable, PersistableBuilder<V_AuditUser
 
 	@Id
 	@Column(name = "id")
-    @Getter
-    @Setter
 	private Long id;
 
-	@Column(name = "user_name")
-    @Getter
-    @Setter
-	private String userName;
+//	@Column(name = "user_name")
+//    @Getter
+//    @Setter
+//	private String userName;
 
-	@Version
-    @Getter
-    @Setter
-	private int version;
 
-	@Column(name = "is_system")
-    @Getter
-	private Boolean isSystem;
+    public Long getId() {
+        return id;
+    }
+
+    @Override
+    public void setId(Long id) {
+        this.id = id;
+    }
+
 
 	public V_AuditUser() {
 
@@ -62,20 +62,17 @@ public class V_AuditUser implements Serializable, PersistableBuilder<V_AuditUser
 
 	public V_AuditUser(V_AuditUser srcObject) {
 		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
-
-		this.userName = srcObject.userName;
-		this.version = srcObject.version;
 		this.id = srcObject.id;
-		this.isSystem = srcObject.isSystem;
 	}
 
 	public V_AuditUser(SubscriberUserDetails srcObject) {
 		checkNotNull(srcObject, "AuditUser: parameter srcObject is null");
-
-		this.userName = srcObject.getUsername();
-		this.version = srcObject.getVersion();
 		this.id = srcObject.getId();
-		this.isSystem = srcObject.getIsSystem();
+	}
+
+	public V_AuditUser(V_FullUserInfo fullUserInfo) {
+		checkNotNull(fullUserInfo, "AuditUser: parameter srcObject is null");
+		this.id = fullUserInfo.getId();
 	}
 
 }

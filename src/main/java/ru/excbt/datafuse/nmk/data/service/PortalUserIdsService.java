@@ -16,7 +16,7 @@ public class PortalUserIdsService {
     }
 
     public PortalUserIds getCurrentIds() {
-        return currentSubscriberService.getSubscriberParam().asPortalUserIds();
+        return currentSubscriberService.getSubscriberParam();
     }
 
 }

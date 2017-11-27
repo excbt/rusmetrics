@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Utility class for Spring Security.
  */
-@Slf4j
 public final class SecurityUtils {
 
     private SecurityUtils() {
@@ -69,5 +68,21 @@ public final class SecurityUtils {
         }
         return false;
     }
+
+
+//    public static SubscriberUserDetails getCurrentUserDetails() {
+//        SecurityContext securityContext = SecurityContextHolder.getContext();
+//        Authentication authentication = securityContext.getAuthentication();
+//        SubscriberUserDetails userDetails = null;
+//        if (authentication != null) {
+//            if (authentication.getPrincipal() instanceof SubscriberUserDetails) {
+//                userDetails = (SubscriberUserDetails) authentication.getPrincipal();
+//            } else if (authentication.getPrincipal() instanceof String) {
+//                userDetails = SubscriberUserDetails
+//                    (String) authentication.getPrincipal();
+//            }
+//        }
+//        return userName;
+//    }
 
 }
