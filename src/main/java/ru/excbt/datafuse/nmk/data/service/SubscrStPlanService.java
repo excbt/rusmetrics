@@ -42,11 +42,13 @@ public class SubscrStPlanService {
             .collect(Collectors.toList());
     }
 
-    @Transactional
-    public SubscrStPlan save(SubscrStPlan stPlan, PortalUserIds portalUserIds) {
-        stPlan.setSubscriberId(portalUserIds.getSubscriberId());
-        return subscrStPlanRepository.saveAndFlush(stPlan);
-    }
+//    @Transactional
+//    public SubscrStPlanDTO save(SubscrStPlanDTO stPlanDTO, PortalUserIds portalUserIds) {
+//        SubscrStPlan subscrStPlan = subscrStPlanMapper.toEntity(stPlanDTO);
+//        subscrStPlan.setSubscriberId(portalUserIds.getSubscriberId());
+//        subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
+//        return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(subscrStPlan));
+//    }
 
 
     private void initDefaults(SubscrStPlan stPlan) {
@@ -58,11 +60,11 @@ public class SubscrStPlanService {
     }
 
     @Transactional
-    public SubscrStPlan newPlanAndSave(PortalUserIds portalUserIds) {
+    public SubscrStPlanDTO newStPlanAndSave(PortalUserIds portalUserIds) {
         SubscrStPlan stPlan = new SubscrStPlan();
         stPlan.setSubscriberId(portalUserIds.getSubscriberId());
         initDefaults(stPlan);
-        return subscrStPlanRepository.saveAndFlush(stPlan);
+        return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(stPlan));
     }
 
     /**
@@ -70,11 +72,21 @@ public class SubscrStPlanService {
      * @param portalUserIds
      * @return
      */
-    public SubscrStPlan newPlanBlank(PortalUserIds portalUserIds) {
+    public SubscrStPlanDTO newStPlanBlankDTO(PortalUserIds portalUserIds) {
         SubscrStPlan stPlan = new SubscrStPlan();
         stPlan.setSubscriberId(portalUserIds.getSubscriberId());
         initDefaults(stPlan);
-        return stPlan;
+        return subscrStPlanMapper.toDto(stPlan);
     }
+
+
+    @Transactional
+    public SubscrStPlanDTO saveStPlanDTO(SubscrStPlanDTO stPlanDTO, PortalUserIds portalUserIds) {
+        SubscrStPlan subscrStPlan = subscrStPlanMapper.toEntity(stPlanDTO);
+        subscrStPlan.setSubscriberId(portalUserIds.getSubscriberId());
+        subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
+        return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(subscrStPlan));
+    }
+
 
 }

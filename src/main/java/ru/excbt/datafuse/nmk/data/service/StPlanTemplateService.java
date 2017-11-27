@@ -30,6 +30,6 @@ public class StPlanTemplateService {
         SubscrStPlan subscrStPlan = planTemplateMapper.planTemplateToSubscrStPlan(planTemplate);
         subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
         return subscrStPlan;
-    };
+    }
 
 }

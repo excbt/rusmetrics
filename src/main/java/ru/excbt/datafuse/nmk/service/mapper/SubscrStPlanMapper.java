@@ -7,7 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrStPlan;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrStPlanDTO;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {SubscrStPlanChartMapper.class})
 public interface SubscrStPlanMapper extends EntityMapper<SubscrStPlanDTO, SubscrStPlan> {
 
     @Mapping(source = "rsoOrganization.id", target = "rsoOrganizationId")
@@ -22,6 +22,7 @@ public interface SubscrStPlanMapper extends EntityMapper<SubscrStPlanDTO, Subscr
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+    //@Mapping(target = "planCharts", ignore = true)
     SubscrStPlan toEntity(SubscrStPlanDTO dto);
 
 

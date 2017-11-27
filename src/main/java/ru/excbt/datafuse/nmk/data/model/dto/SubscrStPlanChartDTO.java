@@ -1,40 +1,17 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.data.model.dto;
 
-import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+public class SubscrStPlanChartDTO {
 
-import javax.persistence.*;
-
-
-@Entity
-@Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_st_plan_chart")
-public class SubscrStPlanChart extends AbstractAuditableModel {
-
-    @ManyToOne
-    @JoinColumn(name = "subscr_st_plan_id")
-    private SubscrStPlan subscrStPlan;
-
-    @Column(name = "rn")
     private Integer rn;
 
-    @Column(name = "key1")
     private Double key1;
 
-    @Column(name = "key2")
     private Double key2;
 
-    @Column(name = "val1")
     private Double val1;
 
-    @Column(name = "val2")
     private Double val2;
 
-    public SubscrStPlan getSubscrStPlan() {
-        return subscrStPlan;
-    }
-
-    public void setSubscrStPlan(SubscrStPlan subscrStPlan) {
-        this.subscrStPlan = subscrStPlan;
-    }
 
     public Integer getRn() {
         return rn;
@@ -78,13 +55,12 @@ public class SubscrStPlanChart extends AbstractAuditableModel {
 
     @Override
     public String toString() {
-        return "SubscrStPlanChart{" +
-            "subscrStPlan=" + subscrStPlan +
-            ", rn=" + rn +
+        return "SubscrStPlanChartDTO{" +
+            "rn=" + rn +
             ", key1=" + key1 +
             ", key2=" + key2 +
             ", val1=" + val1 +
             ", val2=" + val2 +
-            "} " + super.toString();
+            '}';
     }
 }

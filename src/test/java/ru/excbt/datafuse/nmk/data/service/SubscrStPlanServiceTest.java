@@ -68,7 +68,7 @@ public class SubscrStPlanServiceTest extends JpaSupportTest {
     @Test
     public void testCreateFromTemplate() throws Exception {
         SubscrStPlan stPlan = stPlanTemplateService.cloneFromTemplate("TEMP_CHART_001");
-        SubscrStPlan saved = service.save(stPlan, getSubscriberParam());
+        SubscrStPlanDTO saved = service.saveStPlanDTO(mapper.toDto(stPlan), getSubscriberParam());
         assertNotNull(saved);
 
         SubscrStPlan checkSaved = subscrStPlanRepository.findOne(saved.getId());

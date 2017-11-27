@@ -1,6 +1,12 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-public class SubscrStPlanDTO {
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.model.SubscrStPlanChart;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class SubscrStPlanDTO implements ModelIdable {
 
     private Long id;
 
@@ -73,6 +79,8 @@ public class SubscrStPlanDTO {
     private Boolean chartVal2I;
 
     private int version;
+
+    private List<SubscrStPlanChartDTO> planCharts = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -360,6 +368,14 @@ public class SubscrStPlanDTO {
 
     public void setVersion(int version) {
         this.version = version;
+    }
+
+    public List<SubscrStPlanChartDTO> getPlanCharts() {
+        return planCharts;
+    }
+
+    public void setPlanCharts(List<SubscrStPlanChartDTO> planCharts) {
+        this.planCharts = planCharts;
     }
 
     @Override
