@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import ru.excbt.datafuse.nmk.data.model.StPlanTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrStPlan;
 
-@Mapper(componentModel = "spring", uses = {})
+@Mapper(componentModel = "spring", uses = {StPlanChartTemplateMapper.class})
 public interface StPlanTemplateMapper {
 
 
@@ -19,6 +19,8 @@ public interface StPlanTemplateMapper {
     @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "planCharts", source = "chartTemplates")
+
     SubscrStPlan planTemplateToSubscrStPlan(StPlanTemplate stPlanTemplate);
 
 }

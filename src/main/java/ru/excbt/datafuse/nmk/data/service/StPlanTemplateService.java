@@ -20,9 +20,16 @@ public class StPlanTemplateService {
         this.planTemplateMapper = planTemplateMapper;
     }
 
+    /**
+     *
+     * @param keyname
+     * @return
+     */
     public SubscrStPlan cloneFromTemplate(String keyname) {
         StPlanTemplate planTemplate = stPlanTemplateRepository.findOne(keyname);
-        return planTemplateMapper.planTemplateToSubscrStPlan(planTemplate);
+        SubscrStPlan subscrStPlan = planTemplateMapper.planTemplateToSubscrStPlan(planTemplate);
+        subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
+        return subscrStPlan;
     };
 
 }

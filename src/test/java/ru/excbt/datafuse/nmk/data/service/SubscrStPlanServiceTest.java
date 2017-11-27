@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.SubscrStPlan;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrStPlanDTO;
+import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanRepository;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrStPlanMapper;
 
 import java.util.List;
@@ -36,6 +37,9 @@ public class SubscrStPlanServiceTest extends JpaSupportTest {
 
     @Autowired
     private StPlanTemplateService stPlanTemplateService;
+
+    @Autowired
+    private SubscrStPlanRepository subscrStPlanRepository;
 
     @Test
     public void testFindStPlan() throws Exception {
@@ -66,5 +70,11 @@ public class SubscrStPlanServiceTest extends JpaSupportTest {
         SubscrStPlan stPlan = stPlanTemplateService.cloneFromTemplate("TEMP_CHART_001");
         SubscrStPlan saved = service.save(stPlan, getSubscriberParam());
         assertNotNull(saved);
+
+        SubscrStPlan checkSaved = subscrStPlanRepository.findOne(saved.getId());
+        assertNotNull(checkSaved);
+        assertNotNull(checkSaved.getPlanCharts());
+//        assertTrue(checkSaved.getPlanCharts().size() > 0);
+
     }
 }

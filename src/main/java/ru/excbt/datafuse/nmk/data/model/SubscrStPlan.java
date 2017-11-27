@@ -4,6 +4,7 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -122,7 +123,7 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     private int deleted;
 
     @OneToMany(mappedBy = "subscrStPlan", fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    private List <SubscrStPlanChart> planCharts;
+    private List <SubscrStPlanChart> planCharts = new ArrayList<>();
 
     public Long getSubscriberId() {
         return subscriberId;
