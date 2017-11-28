@@ -75,9 +75,9 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     @Column(name = "is_chart_enable")
     private Boolean isChartEnable = false;
 
-    @Column(name = "chart_single_key")
+    @Column(name = "is_chart_single_key")
     @NotNull
-    private Boolean chartSingleKey = false;
+    private Boolean isChartSingleKey = false;
 
     @Column(name = "chart_key_mu")
     private String chartKeyMu;
@@ -286,11 +286,11 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
     }
 
     public Boolean getChartSingleKey() {
-        return chartSingleKey;
+        return isChartSingleKey;
     }
 
     public void setChartSingleKey(Boolean chartSingleKey) {
-        this.chartSingleKey = chartSingleKey;
+        isChartSingleKey = chartSingleKey;
     }
 
     public String getChartKeyMu() {
@@ -451,7 +451,7 @@ public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarke
             ", deviationVal=" + deviationVal +
             ", deviationMu='" + deviationMu + '\'' +
             ", isChartEnable=" + isChartEnable +
-            ", chartSingleKey=" + chartSingleKey +
+            ", isChartSingleKey=" + isChartSingleKey +
             ", chartKeyMu='" + chartKeyMu + '\'' +
             ", chartKey1Keyname='" + chartKey1Keyname + '\'' +
             ", chartKey2Keyname='" + chartKey2Keyname + '\'' +

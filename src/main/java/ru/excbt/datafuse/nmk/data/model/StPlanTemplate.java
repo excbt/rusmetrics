@@ -65,8 +65,8 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
     @Column(name = "is_chart_enable")
     private Boolean isChartEnable;
 
-    @Column(name = "chart_single_key")
-    private Boolean chartSingleKey;
+    @Column(name = "is_chart_single_key")
+    private Boolean isChartSingleKey;
 
     @Column(name = "chart_key_mu")
     private String chartKeyMu;
@@ -242,11 +242,11 @@ public class StPlanTemplate extends AbstractKeynameEntity implements DeletedMark
     }
 
     public Boolean getChartSingleKey() {
-        return chartSingleKey;
+        return isChartSingleKey;
     }
 
     public void setChartSingleKey(Boolean chartSingleKey) {
-        this.chartSingleKey = chartSingleKey;
+        isChartSingleKey = chartSingleKey;
     }
 
     public String getChartKeyMu() {
