@@ -5,7 +5,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.constant.SecurityConstraints;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
@@ -17,18 +16,14 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  * @since 12.03.2015
  *
  */
-@Profile(value = { "!" + Constants.SPRING_PROFILE_TEST })
 @Component(value = "auditorAwareImpl")
-public class AuditorAwareImpl implements AuditorAware<V_AuditUser> {
-
-    public AuditorAwareImpl() {
-    }
+public class AuditorAwareImpl implements AuditorAware<Long> {
 
 	@Override
-	public V_AuditUser getCurrentAuditor() {
+	public Long getCurrentAuditor() {
         SubscriberUserDetails userDetails = SecurityUtils.getPortalUserDetails();
-		return (userDetails == null) ? new V_AuditUser().id(SecurityConstraints.SYSTEM_ID) :
-            new V_AuditUser().id(userDetails.getId());
+		return (userDetails == null) ? SecurityConstraints.SYSTEM_ID :
+            userDetails.getId();
 	}
 
 }

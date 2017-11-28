@@ -10,8 +10,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.web.context.WebApplicationContext;
-import ru.excbt.datafuse.nmk.data.auditor.MockAuditorAware;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.service.MockSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.MockUserService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
@@ -42,9 +40,6 @@ public class AbstractControllerTest {
 	protected Filter springSecurityFilterChain;
 
 	@Autowired
-	protected MockAuditorAware auditorAware;
-
-	@Autowired
 	protected MockUserService mockUserService;
 
 	@Autowired
@@ -59,8 +54,6 @@ public class AbstractControllerTest {
 
      */
 	protected void setupAuditor(long userId, long subscriberId) {
-		this.auditorAware.setAuditUser(entityManager.getReference(V_AuditUser.class, userId));
-
 		this.mockUserService.setMockUserId(userId);
 		this.mockSubscriberService.setMockSubscriberId(subscriberId);
 	}

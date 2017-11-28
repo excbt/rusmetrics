@@ -1,31 +1,21 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-import java.util.Arrays;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EntityListeners;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Version;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
-import org.joda.time.DateTime;
-import org.springframework.data.domain.Auditable;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Arrays;
 
 /**
  * Файл шаблона отчета
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -35,10 +25,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Table(name = "report_template_body")
 @DynamicUpdate
 @EntityListeners({ AuditingEntityListener.class })
-public class ReportTemplateBody implements Serializable, Auditable<V_AuditUser, Long> {
+public class ReportTemplateBody implements Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -290908119102051460L;
 
@@ -61,25 +51,25 @@ public class ReportTemplateBody implements Serializable, Auditable<V_AuditUser, 
 	@Column(name = "report_template_body_compiled_filename")
 	private String bodyCompiledFilename;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", updatable = false)
+	@CreatedBy
+	@Column(name = "created_by", updatable = false)
 	@JsonIgnore
-	private V_AuditUser createdBy;
+	private Long createdBy;
 
+	@CreatedDate
 	@Column(name = "created_date", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
 	@JsonIgnore
-	private Date createdDate;
+	private Instant createdDate = Instant.now();
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "last_modified_by")
+	@LastModifiedBy
+	@Column(name = "last_modified_by")
 	@JsonIgnore
-	private V_AuditUser lastModifiedBy;
+	private Long lastModifiedBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@LastModifiedDate
 	@Column(name = "last_modified_date")
 	@JsonIgnore
-	private Date lastModifiedDate;
+	private Instant lastModifiedDate = Instant.now();
 
 	public Long getReportTemplateId() {
 		return reportTemplateId;
@@ -138,53 +128,39 @@ public class ReportTemplateBody implements Serializable, Auditable<V_AuditUser, 
 		this.bodyCompiledFilename = bodyCompiledFilename;
 	}
 
-	@Override
-	public Long getId() {
-		return reportTemplateId;
-	}
-
-	@Override
 	public boolean isNew() {
 		return reportTemplateId == null;
 	}
 
-	@Override
-	public V_AuditUser getCreatedBy() {
+	public Long getCreatedBy() {
 		return createdBy;
 	}
 
-	@Override
-	public void setCreatedBy(V_AuditUser createdBy) {
+	public void setCreatedBy(Long createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	@Override
-	public DateTime getCreatedDate() {
-		return createdDate == null ? null : new DateTime(createdDate);
+	public Instant getCreatedDate() {
+		return createdDate;
 	}
 
-	@Override
-	public void setCreatedDate(DateTime creationDate) {
-		this.createdDate = creationDate == null ? null : creationDate.toDate();
+	public void setCreatedDate(Instant creationDate) {
+		this.createdDate = creationDate;
 	}
 
-	@Override
-	public V_AuditUser getLastModifiedBy() {
+	public Long getLastModifiedBy() {
 		return lastModifiedBy;
 	}
 
-	@Override
-	public void setLastModifiedBy(V_AuditUser lastModifiedBy) {
+	public void setLastModifiedBy(Long lastModifiedBy) {
 		this.lastModifiedBy = lastModifiedBy;
 	}
 
-	@Override
-	public DateTime getLastModifiedDate() {
-		return lastModifiedDate == null ? null : new DateTime(lastModifiedDate);
+	public Instant getLastModifiedDate() {
+		return lastModifiedDate;
 	}
 
-	@Override
-	public void setLastModifiedDate(DateTime lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate == null ? null : lastModifiedDate.toDate();
+	public void setLastModifiedDate(Instant lastModifiedDate) {
+		this.lastModifiedDate = lastModifiedDate;
 	}
 }

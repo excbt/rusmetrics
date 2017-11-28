@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.constant.SecurityConstraints;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
@@ -196,26 +195,28 @@ public class CurrentSubscriberService {
 	 *
 	 * @return
 	 */
-	public V_AuditUser getCurrentAuditor() {
-		SubscriberUserDetails subscriberUserDetails = subscriberUserDetailsService.getCurrentUserDetails();
-		if (subscriberUserDetails == null) {
-			return mockUserService.getMockAuditUser();
-		}
-		return new V_AuditUser(subscriberUserDetails);
-
-	}
+//	public V_AuditUser getCurrentAuditor() {
+//		SubscriberUserDetails subscriberUserDetails = subscriberUserDetailsService.getCurrentUserDetails();
+//		if (subscriberUserDetails == null) {
+//			return mockUserService.getMockAuditUser();
+//		}
+//		return new V_AuditUser(subscriberUserDetails);
+//
+//	}
 
 	/**
 	 *
 	 * @return
 	 */
 	public V_FullUserInfo getFullUserInfo() {
-		V_AuditUser user = getCurrentAuditor();
-		if (user == null) {
+
+	    SubscriberUserDetails subscriberUserDetails = SecurityUtils.getPortalUserDetails();
+
+		if (subscriberUserDetails == null) {
 			return null;
 		}
 
-		V_FullUserInfo result = fullUserInfoRepository.findOne(user.getId());
+		V_FullUserInfo result = fullUserInfoRepository.findOne(subscriberUserDetails.getId());
 		return result == null ? null : new V_FullUserInfo(result);
 	}
 
