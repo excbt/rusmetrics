@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_st_plan")
-public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarker {
+public class SubscrStPlan extends AbstractAuditableModel implements DeletedMarker, PersistableBuilder<SubscrStPlan, Long> {
 
     @Column(name = "subscriber_id")
     private Long subscriberId;

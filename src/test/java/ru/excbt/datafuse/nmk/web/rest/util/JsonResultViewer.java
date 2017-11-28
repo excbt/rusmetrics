@@ -61,7 +61,23 @@ public final class JsonResultViewer {
         return resultJsonObject.toString(4);
     }
 
+    /**
+     * @param result
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws JSONException
+     */
+    public static final String arrayBeatifyResult(MvcResult result) throws UnsupportedEncodingException, JSONException {
+        String resultJson = result.getResponse().getContentAsString();
 
+        JSONArray resultJsonObject = new JSONArray(resultJson);
+        return resultJsonObject.toString(4);
+    }
+
+
+    /**
+     *
+     */
     public final ResultHandler objectBeatifyResultHandler = result -> {
         String resultJson = result.getResponse().getContentAsString();
         JSONObject resultJsonObject = new JSONObject(resultJson);

@@ -88,5 +88,12 @@ public class SubscrStPlanService {
         return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(subscrStPlan));
     }
 
+    @Transactional
+    public SubscrStPlanDTO saveStPlan(SubscrStPlan subscrStPlan, PortalUserIds portalUserIds) {
+        subscrStPlan.setSubscriberId(portalUserIds.getSubscriberId());
+        subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
+        return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(subscrStPlan));
+    }
+
 
 }

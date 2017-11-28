@@ -20,7 +20,6 @@ public interface StPlanTemplateMapper {
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "planCharts", source = "chartTemplates")
-
     SubscrStPlan planTemplateToSubscrStPlan(StPlanTemplate stPlanTemplate);
 
 }
