@@ -1,15 +1,21 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-public class SubscrContZPointStPlanDTO {
+public class SubscrContZPointStPlanDTO implements ModelIdable {
 
     private Long id;
 
+    @NotNull
     private Long subscriberId;
 
+    @NotNull
     private Long contZPointId;
 
+    @NotNull
     private Long subscrStPlanId;
 
     private LocalDate startDate;

@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.SubscrContZPointStPlan;
 import ru.excbt.datafuse.nmk.data.model.SubscrStPlan;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscrContZPointStPlanDTO;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContZPointStPlanRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -110,10 +112,8 @@ public class SubscrContZPointStPlanResourceTest {
         return contZPointIds.get(0);
     }
 
-    @Test
-    @Transactional
-    public void getContZPointStPlans() throws Exception {
 
+    private SubscrContZPointStPlan createSubscrContZpointStPlan() {
         SubscrStPlan stPlan = createSubscrStPlan();
         log.info("Created stPlan:{}",  stPlan.toString());
 
@@ -124,7 +124,18 @@ public class SubscrContZPointStPlanResourceTest {
         contZPointStPlan.setStPlanRole("PLAN");
         contZPointStPlan.setSubscrStPlan(stPlan);
         contZPointStPlan.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
-        SubscrContZPointStPlan savedPlan = subscrContZPointStPlanRepository.saveAndFlush(contZPointStPlan);
+        return  contZPointStPlan;
+    }
+
+    @Test
+    @Transactional
+    public void getContZPointStPlans() throws Exception {
+
+        SubscrContZPointStPlan zPointStPlan = createSubscrContZpointStPlan();
+
+        Long contZPointId = zPointStPlan.getContZPoint().getId();
+
+        SubscrContZPointStPlan savedPlan = subscrContZPointStPlanRepository.saveAndFlush(zPointStPlan);
 
         Assert.assertEquals(portalUserIdsService.getCurrentIds().getSubscriberId(), savedPlan.getSubscriberId());
         Assert.assertEquals(contZPointId, savedPlan.getContZPoint().getId());
@@ -132,16 +143,39 @@ public class SubscrContZPointStPlanResourceTest {
         log.info("Subscriber of stPlan: {}", savedPlan.getSubscriberId());
         log.info("ContZPoint of stPlan: {}", savedPlan.getContZPoint().getId());
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-st-plans/cont-zpoints/{contZPointId}",contZPointId))
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(
+            get("/api/subscr/cont-zpoint-st-plans/cont-zpoints/{contZPointId}", contZPointId))
+
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.arrayBeatifyResult(i)))
             .andExpect(jsonPath("$.[*].id").value(hasItem(savedPlan.getId().intValue())))
             .andExpect(jsonPath("$.[*].subscriberId").value(hasItem(savedPlan.getSubscriberId().intValue())))
-            .andExpect(jsonPath("$.[*].contZPointId").value(hasItem(contZPointId.intValue())))
+            .andExpect(jsonPath("$.[*].contZPointId").value(hasItem(zPointStPlan.getContZPoint().getId().intValue())))
             .andExpect(jsonPath("$.[*].stPlanRole").value(hasItem("PLAN")))
             .andExpect(jsonPath("$.[*].subscrStPlanId").value(hasItem(savedPlan.getSubscrStPlan().getId().intValue())));
 
     }
+
+
+    @Test
+    @Transactional
+    public void createContZPointStPlan() throws Exception {
+
+        SubscrContZPointStPlan zPointStPlan = createSubscrContZpointStPlan();
+        SubscrContZPointStPlanDTO zPointStPlanDTO = mapper.toDto(zPointStPlan);
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(post("/api/subscr/cont-zpoint-st-plans")
+                                                                          .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                                                                          .content(TestUtil.convertObjectToJsonBytes(zPointStPlanDTO)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isCreated())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.subscriberId").value(portalUserIdsService.getCurrentIds().getSubscriberId().intValue()))
+            .andExpect(jsonPath("$.contZPointId").value(zPointStPlan.getContZPoint().getId().intValue()));
+
+    }
+
 
 }
