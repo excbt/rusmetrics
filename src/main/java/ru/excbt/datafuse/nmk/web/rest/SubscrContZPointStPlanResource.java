@@ -50,4 +50,19 @@ public class SubscrContZPointStPlanResource {
         return ApiResponse.responseCreate(action, () -> "/api/subscr/cont-zpoint-st-plans");
     }
 
+    /**
+     *
+     * @param planDTO
+     * @return
+     */
+    @PutMapping("")
+    public ResponseEntity<?> updateContZPointStPlan(@RequestBody SubscrContZPointStPlanDTO planDTO) {
+        if (planDTO.getId() == null) {
+            return createContZPointStPlan(planDTO);
+        }
+
+        ApiActionProcess<SubscrContZPointStPlanDTO> action = () -> subscrContZPointStPlanService.saveDTO(planDTO, portalUserIdsService.getCurrentIds());
+        return ApiResponse.responseOK(action);
+    }
+
 }

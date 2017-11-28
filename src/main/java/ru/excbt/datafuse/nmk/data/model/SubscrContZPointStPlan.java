@@ -4,19 +4,23 @@ import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_cont_zpoint_st_plan")
 public class SubscrContZPointStPlan extends AbstractAuditableModel implements DeletedMarker {
 
+    @NotNull
     @Column(name = "subscriber_id")
     private Long subscriberId;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "cont_zpoint_id")
     private ContZPoint contZPoint;
 
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "subscr_st_plan_id")
     private SubscrStPlan subscrStPlan;
@@ -30,6 +34,7 @@ public class SubscrContZPointStPlan extends AbstractAuditableModel implements De
     @Column(name = "st_plan_role")
     private String stPlanRole;
 
+    @NotNull
     @Column(name = "is_enabled")
     private Boolean isEnabled = false;
 
