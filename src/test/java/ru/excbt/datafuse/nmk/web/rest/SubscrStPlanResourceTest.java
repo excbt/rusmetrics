@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.data.model.SubscrStPlan;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrStPlanDTO;
+import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.StPlanTemplateService;
 import ru.excbt.datafuse.nmk.data.service.SubscrStPlanService;
@@ -30,9 +31,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -64,6 +63,9 @@ public class SubscrStPlanResourceTest {
     private SubscrStPlanMapper subscrStPlanMapper;
 
     private SubscrStPlanResource subscrStPlanResource;
+
+    @Autowired
+    private SubscrStPlanRepository subscrStPlanRepository;
 
     private final JsonResultViewer jsonResultViewer = new JsonResultViewer((i) -> log.info("Result Json:\n {}", i));
     private final ResultHandler objectBeatifyResultHandler = jsonResultViewer.objectBeatifyResultHandler;
@@ -146,6 +148,22 @@ public class SubscrStPlanResourceTest {
             .andExpect(jsonPath("$.subscriberId").value(portalUserIdsService.getCurrentIds().getSubscriberId().intValue()));
 
     }
+
+
+    @Test
+    @Transactional
+    public void deleteStPlan() throws Exception {
+
+        SubscrStPlan subscrStPlan = stPlanTemplateService.cloneFromTemplate("TEMP_CHART_001");
+        subscrStPlan.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+        SubscrStPlan savedStPlan = subscrStPlanRepository.saveAndFlush(subscrStPlan);
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(delete("/api/subscr/st-plans/{id}", savedStPlan.getId()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+
+    }
+
 
 
 }

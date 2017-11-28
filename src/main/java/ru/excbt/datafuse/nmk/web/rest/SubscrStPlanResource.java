@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -8,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.SubscrStPlanDTO;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrStPlanService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -68,5 +70,12 @@ public class SubscrStPlanResource {
         return ApiResponse.responseOK(() -> subscrStPlanService.saveStPlanDTO(stPlanDTO, portalUserIdsService.getCurrentIds()));
     }
 
+    @DeleteMapping("/{id}")
+    @ApiOperation("Delete StPlan of subscriber")
+    public ResponseEntity<?>  deleteStPlan(@PathVariable("id") @ApiParam("id of SubscrStPlan") Long id) {
+        ApiActionVoidProcess action = () -> subscrStPlanService.delete(id, portalUserIdsService.getCurrentIds());
+        return ApiResponse.responseOK(action);
+
+    }
 
 }

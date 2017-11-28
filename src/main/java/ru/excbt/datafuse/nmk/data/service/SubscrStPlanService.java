@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,6 +94,15 @@ public class SubscrStPlanService {
         subscrStPlan.setSubscriberId(portalUserIds.getSubscriberId());
         subscrStPlan.getPlanCharts().forEach(i -> i.setSubscrStPlan(subscrStPlan));
         return subscrStPlanMapper.toDto(subscrStPlanRepository.saveAndFlush(subscrStPlan));
+    }
+
+    @Transactional
+    public void delete (Long id, PortalUserIds portalUserIds) {
+        SubscrStPlan stPlan = subscrStPlanRepository.findOne(id);
+        Preconditions.checkNotNull(stPlan);
+        Preconditions.checkArgument(stPlan.getSubscriberId().equals(portalUserIds.getSubscriberId()));
+        stPlan.setDeleted(1);
+        subscrStPlanRepository.saveAndFlush(stPlan);
     }
 
 
