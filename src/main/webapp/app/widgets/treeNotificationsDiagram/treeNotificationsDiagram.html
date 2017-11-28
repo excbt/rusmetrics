@@ -75,7 +75,7 @@
 <!--                </div>-->
                 <div ng-show = "widgetVm.presentDataFlag === true">
 <!--                  style = "position: relative"-->
-                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; text-align: center; transform: translateY(-50%); color: lightblue; font-size: xx-large; width: 300px;">{{widgetVm.data.eventsCount}}</label>
+<!--                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; text-align: center; transform: translateY(-50%); color: lightblue; font-size: xx-large; width: 300px;">{{widgetVm.data.eventsCount}}</label>-->
                     <canvas id="doughnut"
                            style = "height: 150px;  width: 300px;"                           
                             class="chart chart-doughnut" 
@@ -83,6 +83,7 @@
                             chart-labels="widgetVm.barChart.labels"                              
                             chart-options="widgetVm.barChart.options"
                             chart-click = "widgetVm.chartClick"
+                            chart-colors = "widgetVm.barChart.colors"
                             >
                     </canvas>
                 </div>

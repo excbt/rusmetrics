@@ -3,6 +3,37 @@
 (function () {
     'use strict';
     
+    
+    Chart.pluginService.register({
+        beforeDraw: function (chart) {
+            if (chart.config.type != "doughnut") {
+                return;
+            }
+            var width = chart.chart.width,
+                height = chart.chart.height,
+                ctx = chart.chart.ctx,
+                data = chart.config.data.datasets[0].data;
+            
+            ctx.restore();
+            var fontSize = (height / 114).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "#337ab7";
+            var sumValues = 0;
+            data.forEach(function (elm) {
+                sumValues += elm;
+            });
+            var text = sumValues,
+                textX = Math.round((width - ctx.measureText(text).width) / 2),
+                textY = height / 2;
+            
+            ctx.fillText(text, textX, textY);
+            ctx.save();
+            
+        }
+    });
+    
+    
     function chartJsProviderConfig(ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
@@ -157,12 +188,12 @@
             vm.barChart.options = {                
                 responsive: false,
                 cutoutPercentage: 80,
-                legend: {
-                    display: false,
-                    position: 'right',
-                    fullWidth: false,
-                    labels: {
-                        boxWidth: 10,
+//                legend: {
+//                    display: false,
+//                    position: 'right',
+//                    fullWidth: false,
+//                    labels: {
+//                        boxWidth: 10,
 //                        generateLabels: function (chart) {
 //                            var data = chart.data;
 //                            if (data.labels.length && data.datasets.length) {
@@ -192,8 +223,8 @@
 //                            return [];
 //                        }
                         
-                    }
-                },
+//                    }
+//                },
                 legendCallback: function (chart) {
 //                    console.log(chart);
                     var text = [], i;
@@ -402,7 +433,7 @@
             });
 
             vm.data.contObjectList = [];
-            vm.data.eventsCount = 0;
+//            vm.data.eventsCount = 0;
 
             thisdata.contEventCriticals = {
                 YELLOW: {
@@ -494,7 +525,7 @@
                             chartObj.labels.push(resultCategories[contEventCategoriesIndex].caption);
                             chartObj.data.push(resultCategories[contEventCategoriesIndex].count);
                             
-                            vm.data.eventsCount += resultCategories[contEventCategoriesIndex].count;
+//                            vm.data.eventsCount += resultCategories[contEventCategoriesIndex].count;
                         }
                     }
                 }
@@ -506,6 +537,7 @@
                 }
                 chartObj.labels = [];
                 chartObj.data = [];
+                chartObj.colors = ['#ef473a', '#FDB45C'];
                 var criticalCount = 0,
                     noCriticalCount = 0;
                 inputData.forEach(function (event) {
@@ -522,7 +554,7 @@
                 chartObj.labels.push(thisdata.contEventCriticals.YELLOW.caption);
                 chartObj.data.push(noCriticalCount);
                 
-                vm.data.eventsCount = noCriticalCount + criticalCount;
+//                vm.data.eventsCount = noCriticalCount + criticalCount;
             }
 
             function prepareChartDataWithTypes(chartObj, inputData) {
@@ -555,7 +587,7 @@
                             chartObj.labels.push(resultTypes[contEventTypeIndex].name);
                             chartObj.data.push(resultTypes[contEventTypeIndex].count);
                             
-                            vm.data.eventsCount += resultTypes[contEventTypeIndex].count;
+//                            vm.data.eventsCount += resultTypes[contEventTypeIndex].count;
                         }
                     }
                 }
@@ -605,23 +637,27 @@
             function successLoadPTreeNodeStatsCallback(resp) {
                 console.log(resp);
                 var tmpData = resp.data;
-                if ((angular.isDefined(vm.widgetOptions.previewMode) && vm.widgetOptions.previewMode === true)) {
+//                if ((angular.isDefined(vm.widgetOptions.previewMode) && vm.widgetOptions.previewMode === true)) {
 //                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
-                }
-                if (!angular.isArray(tmpData) || tmpData.length === 0) {
-                    vm.presentDataFlag = false;
+//                }
+//                if (!angular.isArray(tmpData) || tmpData.length === 0) {
+//                    vm.presentDataFlag = false;
     //                console.log("zpointCwWidget: response data is empty!");
-                    return false;
-                }
+//                    return false;
+//                }
 
                 thisdata.contEventPTreeNodeData = tmpData;
 
                 vm.presentDataFlag = true;
-                vm.barChart.labels = [];
-                vm.barChart.data = [];
-
+                vm.barChart.labels = ["Все ОК"];
+                vm.barChart.data = [1];
+                vm.barChart.colors = ["#46BFBD"]; //green color
+//                tmpData = [];
+                if (angular.isArray(tmpData) && tmpData.length > 0) {
     //            prepareChartDataWithCritical($scope.barChart, tmpData);
-                executeChartModeFunction(vm.data.currentChartMode);
+                    vm.barChart.colors = [];
+                    executeChartModeFunction(vm.data.currentChartMode);
+                }
     //            if ($scope.data.currentChartMode.hasOwnProperty("prepareFunction") && angular.isFunction($scope.data.currentChartMode.prepareFunction)) {
     //                $scope.data.currentChartMode.prepareFunction($scope.barChart, tmpData);
     //            } else {
