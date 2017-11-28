@@ -703,6 +703,7 @@
             vm.chartClick = function (ev) {
                 console.log(ev);
                 vm.data.contObjectList = angular.copy(thisdata.contEventPTreeNodeData);
+                // for test
                 for (var i = 0; i < 3; i++) {
                     vm.data.contObjectList = vm.data.contObjectList.concat(vm.data.contObjectList);
                 }                
@@ -711,7 +712,7 @@
                 vm.data.contObjectList = vm.data.contObjectList.concat(angular.copy(thisdata.contEventPTreeNodeData));
                 
                 console.log(vm.data.contObjectList.length);
-                
+                //end 'for test'
                 vm.data.contObjectList.forEach(function (coe) {
                     coe.isLoaded = false;
                     treeNotificationsDiagramService.loadContObject(coe.contObjectId)

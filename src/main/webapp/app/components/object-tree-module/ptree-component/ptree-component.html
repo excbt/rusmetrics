@@ -2,6 +2,9 @@
 <div>
    <div ui-tree = "options" data-drag-enabled = "false">
         <ol ui-tree-nodes ng-model = "$ctrl.filtredTree" >
+            <li ng-show = "$ctrl.filtredTree.loading">
+                <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
+            </li>
             <li ng-repeat = "item in $ctrl.filtredTree.childNodes"
               ui-tree-node
               ng-include = "'p_tree_component_items_renderer.html'">
@@ -12,10 +15,17 @@
                 ng-include = "'p_tree_component_items_renderer.html'">
             </li>      
         </ol>
+<!--
+        <div>
+            <pre>
+            {{$ctrl.filtredTree | json}}
+            </pre>
+        </div>
+-->
     </div>   
 
     <script type = "text/ng-template" id = "p_tree_component_items_renderer.html">
-        <div ui-tree-handle ng-click = "selectPNode(item, $event, collapsed)"
+        <div ui-tree-handle ng-click = "$ctrl.selectPNode(item, $event, collapsed)"
              ng-mouseover = "item.isHover = true"
              ng-mouseleave = "item.isHover = false"
              ng-class = "{'nmc-bg-distinguish': item.isSelected}">
@@ -28,7 +38,7 @@
     -->
 
           <i class="btn btn-xs glyphicon"
-             ng-class="{'glyphicon-chevron-right': isChevronRight(collapsed, item), 'glyphicon-chevron-down': isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': isChevronDisabled(collapsed, item)}"
+             ng-class="{'glyphicon-chevron-right': $ctrl.isChevronRight(collapsed, item), 'glyphicon-chevron-down': $ctrl.isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': $ctrl.isChevronDisabled(collapsed, item)}"
              data-nodrag ng-click="toggle(this)">
             </i>
             <span ng-if = "item.type == 'root'">

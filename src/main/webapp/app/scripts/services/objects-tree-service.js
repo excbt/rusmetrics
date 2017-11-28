@@ -121,12 +121,12 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
                     return true;
                 } else {
                     result = findNodeInPTree(node, curNode);
-                    return result != null;
+                    return result !== null;
                 }
             });
         }
 //        console.log("Serching tree - linkedNodeObjects: " + tree.hasOwnProperty('linkedNodeObjects'));
-        if (angular.isArray(tree.linkedNodeObjects) && result == null) {
+        if (angular.isArray(tree.linkedNodeObjects) && result === null) {
             tree.linkedNodeObjects.some(function (curLinkedNode) {
 //                console.log("curLinked node: " + curLinkedNode.nodeType + "; " + curLinkedNode.nodeName + "; " + curLinkedNode._id);
                 if (node.nodeType == 'CONT_OBJECT' && node.nodeType === curLinkedNode.nodeType && node.nodeObject.id == curLinkedNode.nodeObject.id) {
@@ -134,7 +134,7 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
                     return true;
                 } else {
                     result = findNodeInPTree(node, curLinkedNode);
-                    return result != null;
+                    return result !== null;
                 }
             });
         }
@@ -176,7 +176,7 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
         }
         
 //console.log("logSvc:requestSessionsLoading");   
-        if (interval != null) {
+        if (interval !== null) {
             $interval.cancel(interval);
             interval = null;
         }
@@ -193,7 +193,7 @@ app.service('objectsTreeSvc', ['$http', 'mainSvc', '$interval', '$rootScope', '$
     
     $rootScope.$on(BROADCASTS.cancelInterval, function () {
 //console.log("Interval cancel");        
-        if (interval != null) {
+        if (interval !== null) {
             $interval.cancel(interval);
             interval = null;
         }

@@ -147,7 +147,7 @@
               <div class = "container-fluid">
                 <div class = "row-fluid">
                     <div ng-if = "widgetVm.data.contObjectList.length <= widgetVm.CONT_OBJECT_LIST_LENGTH" 
-                      class = "noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list">
+                      class = "noPaddingBottom marginBottom10 nmc-object-list-a">
                        <table class = "table table-lighter table-striped table-condensed table-hover nmc-main-table noMarginBottom">
                            <tr class = "nmc-main-table-header">
                                <th>
@@ -170,7 +170,8 @@
                            </tr>
                         </table>
                     </div>
-                    <div ng-if = "widgetVm.data.contObjectList.length > widgetVm.CONT_OBJECT_LIST_LENGTH">
+                    <div ng-if = "widgetVm.data.contObjectList.length > widgetVm.CONT_OBJECT_LIST_LENGTH"
+                        class = "noPaddingBottom marginBottom10 nmc-object-list-a">
 <!--                        Тут должно быть дерево объектов...-->
                         <ptree-component 
                             

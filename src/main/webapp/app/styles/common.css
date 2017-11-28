@@ -2160,6 +2160,11 @@ tr.nmc-inactive-price > td {
     height: 520px;
 }
 
+.nmc-object-list-a {
+    overflow-y: auto;
+    max-height: 520px;
+}
+
 /* Настройки таблицы температурного графика в модальном окне*/
 .nmc-temp-sch-schedules-modal {
     overflow-y: auto;
