@@ -56,4 +56,13 @@ public class SubscrContZPointStPlanService {
         return mapper.toDto(repository.saveAndFlush(stPlan));
     }
 
+    @Transactional
+    public void delete (Long id, PortalUserIds portalUserIds) {
+        SubscrContZPointStPlan zPointStPlan = repository.findOne(id);
+        Preconditions.checkNotNull(zPointStPlan);
+        Preconditions.checkArgument(zPointStPlan.getSubscriberId().equals(portalUserIds.getSubscriberId()));
+        zPointStPlan.setDeleted(1);
+        repository.saveAndFlush(zPointStPlan);
+    }
+
 }

@@ -26,6 +26,9 @@ public class SubscrContZPointStPlanDTO implements ModelIdable {
 
     private Boolean isEnabled;
 
+    @NotNull
+    private Integer version = 0;
+
     public Long getId() {
         return id;
     }
@@ -88,5 +91,13 @@ public class SubscrContZPointStPlanDTO implements ModelIdable {
 
     public void setEnabled(Boolean enabled) {
         isEnabled = enabled;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 }

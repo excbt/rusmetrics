@@ -34,9 +34,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -206,6 +204,45 @@ public class SubscrContZPointStPlanResourceTest {
             .andExpect(jsonPath("$.contZPointId").value(zPointStPlan.getContZPoint().getId().intValue()))
             .andExpect(jsonPath("$.stPlanRole").value("NORM"))
             .andExpect(jsonPath("$.enabled").value("true"));
+
+    }
+
+    @Test
+    @Transactional
+    public void postInsteadUpdateContZPointStPlan() throws Exception {
+
+        SubscrContZPointStPlan zPointStPlan = createSubscrContZpointStPlan();
+        SubscrContZPointStPlanDTO zPointStPlanDTO = mapper.toDto(zPointStPlan);
+
+        zPointStPlanDTO.setStPlanRole("NORM");
+        zPointStPlanDTO.setEnabled(true);
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/subscr/cont-zpoint-st-plans")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(zPointStPlanDTO)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isCreated())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
+            .andExpect(jsonPath("$.id").exists())
+            .andExpect(jsonPath("$.subscriberId").value(portalUserIdsService.getCurrentIds().getSubscriberId().intValue()))
+            .andExpect(jsonPath("$.contZPointId").value(zPointStPlan.getContZPoint().getId().intValue()))
+            .andExpect(jsonPath("$.stPlanRole").value("NORM"))
+            .andExpect(jsonPath("$.enabled").value("true"));
+
+    }
+
+
+    @Test
+    @Transactional
+    public void deleteContZPointStPlan() throws Exception {
+        SubscrContZPointStPlan zPointStPlan = createSubscrContZpointStPlan();
+        zPointStPlan.setStPlanRole("PLAN");
+        zPointStPlan.setEnabled(false);
+        SubscrContZPointStPlan savedPlan = subscrContZPointStPlanRepository.saveAndFlush(zPointStPlan);
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(delete("/api/subscr/cont-zpoint-st-plans/{id}", savedPlan.getId()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
 
     }
 

@@ -7,7 +7,9 @@ import ru.excbt.datafuse.nmk.data.model.dto.SubscrContZPointStPlanDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrStPlanDTO;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContZPointStPlanService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
+import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.validation.Valid;
@@ -45,7 +47,7 @@ public class SubscrContZPointStPlanResource {
      */
     @PostMapping("")
     public ResponseEntity<?> createContZPointStPlan(@RequestBody SubscrContZPointStPlanDTO planDTO) {
-        planDTO.setEnabled(false);
+        if (planDTO.getEnabled() == null) planDTO.setEnabled(false);
         ApiActionProcess<SubscrContZPointStPlanDTO> action = () -> subscrContZPointStPlanService.saveDTO(planDTO, portalUserIdsService.getCurrentIds());
         return ApiResponse.responseCreate(action, () -> "/api/subscr/cont-zpoint-st-plans");
     }
@@ -62,6 +64,18 @@ public class SubscrContZPointStPlanResource {
         }
 
         ApiActionProcess<SubscrContZPointStPlanDTO> action = () -> subscrContZPointStPlanService.saveDTO(planDTO, portalUserIdsService.getCurrentIds());
+        return ApiResponse.responseOK(action);
+    }
+
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteContZPointStPlan(@PathVariable("id") Long id) {
+        ApiActionVoidProcess action = () -> subscrContZPointStPlanService.delete(id, portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(action);
     }
 
