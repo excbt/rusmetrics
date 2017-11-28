@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +37,9 @@ public class SubscrContZPointStPlanResource {
      * @return
      */
     @GetMapping("/cont-zpoints/{contZPointId}")
-    public ResponseEntity<?> getContZPointStPlans(@PathVariable("contZPointId") @Valid Long contZPointId) {
+    @ApiOperation("Get list of SubscrContZPointStPlan")
+    @Timed
+    public ResponseEntity<?> getContZPointStPlans(@PathVariable("contZPointId") @Valid @ApiParam("id of contZPoint") Long contZPointId) {
         return ApiResponse.responseOK(() -> subscrContZPointStPlanService
             .findContZPointStPlans(contZPointId, portalUserIdsService.getCurrentIds()));
     }
@@ -46,6 +51,8 @@ public class SubscrContZPointStPlanResource {
      * @return
      */
     @PostMapping("")
+    @ApiOperation("Creates new SubscrContZPointStPlan")
+    @Timed
     public ResponseEntity<?> createContZPointStPlan(@RequestBody SubscrContZPointStPlanDTO planDTO) {
         if (planDTO.getEnabled() == null) planDTO.setEnabled(false);
         ApiActionProcess<SubscrContZPointStPlanDTO> action = () -> subscrContZPointStPlanService.saveDTO(planDTO, portalUserIdsService.getCurrentIds());
@@ -58,6 +65,8 @@ public class SubscrContZPointStPlanResource {
      * @return
      */
     @PutMapping("")
+    @ApiOperation("Updates SubscrContZPointStPlan, creates new if id not set")
+    @Timed
     public ResponseEntity<?> updateContZPointStPlan(@RequestBody SubscrContZPointStPlanDTO planDTO) {
         if (planDTO.getId() == null) {
             return createContZPointStPlan(planDTO);
@@ -74,7 +83,9 @@ public class SubscrContZPointStPlanResource {
      * @return
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteContZPointStPlan(@PathVariable("id") Long id) {
+    @ApiOperation("Delete SubscrContZPointStPlan")
+    @Timed
+    public ResponseEntity<?> deleteContZPointStPlan(@PathVariable("id") @ApiParam("id of SubscrContZPointStPlan") Long id) {
         ApiActionVoidProcess action = () -> subscrContZPointStPlanService.delete(id, portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(action);
     }
