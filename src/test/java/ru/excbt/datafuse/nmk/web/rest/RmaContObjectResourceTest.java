@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -43,7 +44,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	 */
 	@Before
 	public void initTestSubscriberId() {
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(EXCBT_RMA_SUBSCRIBER_ID);
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(subscribers.size() > 0);
 		testSubscriberId = subscribers.get(0).getId();
 	}
@@ -103,7 +104,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Test
 	@Transactional
 	public void testSubscrContObjectsUpdate() throws Exception {
-		List<ContObject> availableContObjects = objectAccessService.findRmaAvailableContObjects(testSubscriberId, EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContObject> availableContObjects = objectAccessService.findRmaAvailableContObjects(testSubscriberId, TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		List<Long> addContObjects = new ArrayList<>();
 		List<Long> currContObjects = objectAccessService.findContObjectIds(testSubscriberId);
 		for (int i = 0; i < availableContObjects.size(); i++) {

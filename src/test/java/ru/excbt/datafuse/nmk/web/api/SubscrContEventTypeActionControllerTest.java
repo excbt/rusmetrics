@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.SubscrControllerTest;
 
 @Transactional
-public class SubscrContEventTypeActionControllerTest extends SubscrControllerTest implements TestExcbtRmaIds {
+public class SubscrContEventTypeActionControllerTest extends SubscrControllerTest {
 
 	@Autowired
 	private SubscrContEventTypeActionService subscrContEventTypeActionService;
@@ -38,7 +38,7 @@ public class SubscrContEventTypeActionControllerTest extends SubscrControllerTes
 		assertTrue(availList.size() > 0);
 		Long contEventTypeId = availList.get(0).getId();
 
-		List<SubscrActionUser> actionUsers = subscrActionUserService.findAll(EXCBT_RMA_SUBSCRIBER_ID);
+		List<SubscrActionUser> actionUsers = subscrActionUserService.findAll(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 
 		assertTrue(actionUsers.size() > 1);
 

@@ -20,6 +20,9 @@ public class DBSessionService {
         return session;
     }
 
+    public EntityManager em() {
+        return em;
+    }
 
 
 }

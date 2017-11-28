@@ -1,149 +1,89 @@
 package ru.excbt.datafuse.nmk.data.domain;
 
-import java.io.Serializable;
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.joda.time.DateTime;
-import org.springframework.data.domain.Auditable;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.io.Serializable;
+import java.time.Instant;
 
 /**
  * Базовый абстрактный класс сущности с аудитом
- * 
- * 
+ *
+ *
  * @version 1.0
  * @since 12.03.2015
- * 
- * @param <U>
+ *
  * @param <PK>
  */
 @MappedSuperclass
-public abstract class AbstractAuditableEntity<U, PK extends Serializable> extends AbstractPersistableEntity<PK>
-		implements Auditable<U, PK> {
+public abstract class AbstractAuditableEntity<PK extends Serializable> extends AbstractPersistableEntity<PK> {
 
 	private static final long serialVersionUID = -4282498146105728631L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "created_by", updatable = false)
+    @CreatedBy
+	@Column(name = "created_by", updatable = false, nullable = false)
 	@JsonIgnore
-	private U createdBy;
+	private Long createdBy;
 
-	@Column(name = "created_date", insertable = false, updatable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+	@Column(name = "created_date", updatable = false, nullable = false)
 	@JsonIgnore
-	private Date createdDate;
+	private Instant createdDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "last_modified_by")
+    @LastModifiedBy
+	@Column(name = "last_modified_by")
 	@JsonIgnore
-	private U lastModifiedBy;
+	private Long lastModifiedBy;
 
-	@Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
 	@Column(name = "last_modified_date")
 	@JsonIgnore
-	private Date lastModifiedDate;
+	private Instant lastModifiedDate;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.data.domain.Auditable#getCreatedBy()
-	 */
-	@Override
-	public U getCreatedBy() {
+    public Long getCreatedBy() {
+        return createdBy;
+    }
 
-		return createdBy;
-	}
+    public void setCreatedBy(Long createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.data.domain.Auditable#setCreatedBy(java.lang.Object)
-	 */
-	@Override
-	public void setCreatedBy(final U createdBy) {
+    public Instant getCreatedDate() {
+        return createdDate;
+    }
 
-		this.createdBy = createdBy;
-	}
+    public void setCreatedDate(Instant createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.data.domain.Auditable#getCreatedDate()
-	 */
-	@Override
-	public DateTime getCreatedDate() {
+    public Long getLastModifiedBy() {
+        return lastModifiedBy;
+    }
 
-		return null == createdDate ? null : new DateTime(createdDate);
-	}
+    public void setLastModifiedBy(Long lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.data.domain.Auditable#setCreatedDate(org.joda.time
-	 * .DateTime)
-	 */
-	@Override
-	public void setCreatedDate(final DateTime createdDate) {
-		this.createdDate = null == createdDate ? null : createdDate.toDate();
-	}
+    public Instant getLastModifiedDate() {
+        return lastModifiedDate;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.data.domain.Auditable#getLastModifiedBy()
-	 */
-	@Override
-	public U getLastModifiedBy() {
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
 
-		return lastModifiedBy;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.data.domain.Auditable#setLastModifiedBy(java.lang
-	 * .Object)
-	 */
-	@Override
-	public void setLastModifiedBy(final U lastModifiedBy) {
-
-		this.lastModifiedBy = lastModifiedBy;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.springframework.data.domain.Auditable#getLastModifiedDate()
-	 */
-	@Override
-	public DateTime getLastModifiedDate() {
-
-		return null == lastModifiedDate ? null : new DateTime(lastModifiedDate);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.data.domain.Auditable#setLastModifiedDate(org.joda
-	 * .time.DateTime)
-	 */
-	@Override
-	public void setLastModifiedDate(final DateTime lastModifiedDate) {
-
-		this.lastModifiedDate = null == lastModifiedDate ? null : lastModifiedDate.toDate();
-	}
-
+    @Override
+    public String toString() {
+        return "AbstractAuditableEntity{" +
+            "createdBy=" + createdBy +
+            ", createdDate=" + createdDate +
+            ", lastModifiedBy=" + lastModifiedBy +
+            ", lastModifiedDate=" + lastModifiedDate +
+            "} " + super.toString();
+    }
 }
