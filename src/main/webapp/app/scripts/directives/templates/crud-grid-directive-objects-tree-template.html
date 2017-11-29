@@ -108,13 +108,19 @@
                       ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
                       >
                       <div ui-tree="options" data-drag-enabled="false">
-                        <ol ui-tree-nodes ng-model="data.currentPTree" >
-                          <li ng-repeat="item in data.currentPTree.childNodes"
+                        <ol ui-tree-nodes ng-model="data.currentPTreeWrapper">
+<!--                         <li ng-repeat="item in data.currentPTree.childNodes"-->
+                          <li ng-repeat="item in data.currentPTreeWrapper"
                               ui-tree-node
                               ng-include="'subscr_object_p_tree_items_renderer.html'"></li>
                         </ol>
                       </div>
                  </div>
+<!--
+                 <div>
+                     <pre>{{data.currentPTreeWrapper | json}}</pre>
+                 </div>
+-->
             </div>
           </div>
        </div>

@@ -2842,6 +2842,10 @@
                     $scope.data.selectedPNode = null; // текущий выбранный узел дерева, виджет которого отображается в инфо панели
                     $scope.data.currentPTreeMonitor = {}; // monitor statuses for current tree;
                     $scope.data.currentPTreeMonitorDefault = IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT;
+                    
+//                    $scope.data.currentPTree = null;
+//                    $scope.data.currentPTreeWrapper = [$scope.data.currentPTree];
+                    
                     var selectedPNodes = []; // массив выбранных через ctrl/shift узлов дерева
                     
                     $scope.data.chartModes = ['CRITICALS', 'CATEGORIES', 'TYPES'];
@@ -2860,6 +2864,7 @@
                         console.log(resp.data);
 
                         $scope.data.currentPTree = resp.data;
+                        $scope.data.currentPTreeWrapper = [$scope.data.currentPTree];
                         objectsTreeSvc.setPTree($scope.data.currentPTree);
                         $cookies.loadedPTreeId = $scope.data.currentPTree._id;
 
@@ -2930,6 +2935,7 @@
                     function getPTree() {
     //                    console.log("getPTree");
                         $scope.data.currentPTree = objectsTreeSvc.getPTree();
+                        $scope.data.currentPTreeWrapper = [$scope.data.currentPTree];
                         $scope.messages.treeMenuHeader = $scope.data.currentPTree.nodeName || $scope.data.currentPTree._id;
                         $scope.loading = false;
                         $scope.treeLoading = false;
