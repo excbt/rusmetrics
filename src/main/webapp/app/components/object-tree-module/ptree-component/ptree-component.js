@@ -18,32 +18,13 @@
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.filtredTree = {};
+        ctrl.filtredTreeWrapper = [ctrl.filtredTree];
         ctrl.hashFilterTable = {};
         
-        ctrl.isElementNode = function (item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'ELEMENT';
-        };
-        ctrl.isContObjectNode = function (item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'CONT_OBJECT';
-        };
-        ctrl.isContZpointNode = function (item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'CONT_ZPOINT';
-        };
-        ctrl.isDeviceNode = function (item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'DEVICE_OBJECT';
-        };
+        ctrl.isContObjectNode = ptreeComponentService.isContObjectNode;
+        ctrl.isContZpointNode = ptreeComponentService.isContZpointNode;
+        ctrl.isDeviceNode = ptreeComponentService.isDeviceNode;
+        ctrl.isElementNode = ptreeComponentService.isElementNode;
         
         function convertArrayToHash(arr) {
             if (!angular.isArray(arr)) {
@@ -133,6 +114,12 @@
             if (!ptreeComponentService.checkUndefinedNull(resp.data.childNodes)) {
                 PTnode.childNodes = resp.data.childNodes;
             }
+            if (!ptreeComponentService.checkUndefinedNull(resp.data.nodeName)) {
+                PTnode.nodeName = resp.data.nodeName;
+            }
+            if (!ptreeComponentService.checkUndefinedNull(resp.data.nodeType)) {
+                PTnode.nodeType = resp.data.nodeType;
+            }
             // console.log(PTnode);
             // console.log($scope.data.selectedPNode);
         }
@@ -146,7 +133,7 @@
 //                    ptNode = ctrl.filterTree(ptNode, ctrl.filterArray);
                     ptNode.loading = false;
                     ptNode.lazyNode = false;
-console.log(ptNode);                
+//console.log(ptNode);                
 console.log(ctrl.filtredTree);                
                 }, function (err) {
                     ptNode.loading = false;
@@ -154,12 +141,28 @@ console.log(ctrl.filtredTree);
                 });            
         }
         
+        function equalFiltredTree() {
+            if (ctrl.filtredTree === ctrl.filtredTreeWrapper[0]) {
+                console.log("Equal");
+            } else {
+                console.log("NOT Equal");
+            }
+        }
+        
         ctrl.$onInit = function () {
-//console.log(ctrl.ptreeNode);
+console.log(ctrl.ptreeNode);
+equalFiltredTree();            
+ctrl.filtredTree = {};            
+equalFiltredTree();
             ctrl.hashFilterTable = convertArrayToHash(ctrl.filterArray);
             if (isLazyNode(ctrl.ptreeNode)) {
                 ctrl.filtredTree._id = ctrl.ptreeNode._id; //angular.copy(ctrl.ptreeNode);
+//                ctrl.filtredTreeWrapper = [ctrl.filtredTree];
                 loadPTreeNode(ctrl.filtredTree);
+            } else {
+                ctrl.filtredTree = angular.copy(ctrl.ptreeNode);
+equalFiltredTree();
+                ctrl.filtredTreeWrapper = [ctrl.filtredTree];
             }                       
         };
         

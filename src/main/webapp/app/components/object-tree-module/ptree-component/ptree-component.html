@@ -1,10 +1,18 @@
 
 <div>
    <div ui-tree = "options" data-drag-enabled = "false">
-        <ol ui-tree-nodes ng-model = "$ctrl.filtredTree" >
+        <ol ui-tree-nodes ng-model = "$ctrl.filtredTreeWrapper" >
+<!--
             <li ng-show = "$ctrl.filtredTree.loading">
                 <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
             </li>
+-->
+            <li ng-repeat = "item in $ctrl.filtredTreeWrapper"
+              ui-tree-node
+              ng-include = "'p_tree_component_items_renderer.html'">
+
+            </li>
+<!--
             <li ng-repeat = "item in $ctrl.filtredTree.childNodes"
               ui-tree-node
               ng-include = "'p_tree_component_items_renderer.html'">
@@ -14,11 +22,12 @@
                 ui-tree-node 
                 ng-include = "'p_tree_component_items_renderer.html'">
             </li>      
+-->
         </ol>
 <!--
         <div>
             <pre>
-            {{$ctrl.filtredTree | json}}
+            {{$ctrl.filtredTreeWrapper | json}}
             </pre>
         </div>
 -->

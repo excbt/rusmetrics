@@ -52,6 +52,31 @@
             return !((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
         }
         
+        function isContObjectNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'CONT_OBJECT';
+        }
+        function isContZpointNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'CONT_ZPOINT';
+        }
+        function isDeviceNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'DEVICE_OBJECT';
+        }
+        function isElementNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'ELEMENT';
+        }
+        
         function loadPTreeNode(subscrObjectTreeId, childLevel) {
             console.log("objectsTreeService.loadPTreeNode");
             console.log("subscrObjectTreeId = " + subscrObjectTreeId);
@@ -86,6 +111,12 @@
         service.isChevronDisabled = isChevronDisabled;
         service.isChevronDown = isChevronDown;
         service.isChevronRight = isChevronRight;
+        
+        service.isContObjectNode = isContObjectNode;
+        service.isContZpointNode = isContZpointNode;
+        service.isDeviceNode = isDeviceNode;
+        service.isElementNode = isElementNode;
+        
         service.loadPTreeNode = loadPTreeNode;
         
         return service;
