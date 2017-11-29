@@ -138,6 +138,21 @@
                 });
             }, tDelay);
         };
+        
+        function convertArrayToHash(arr) {
+            if (!angular.isArray(arr)) {
+                return {};
+            }
+            var result = {};
+            arr.forEach(function (elm) {
+                result[elm.contObjectId] = angular.copy(elm);
+            });
+            return result;
+        }
+        
+        function getObjectKeys(obj) {
+            return Object.keys(obj);
+        }
 
         function initSvc() {
             loadContEventCategories();
@@ -147,9 +162,11 @@
         initSvc();
 
         service.EVENTS = EVENTS;
-        service.checkEmptyObject = checkEmptyObject;        
+        service.checkEmptyObject = checkEmptyObject;
+        service.convertArrayToHash = convertArrayToHash;
         service.getContEventCategories = getContEventCategories;
         service.getContEventTypes = getContEventTypes;
+        service.getObjectKeys = getObjectKeys;
         service.loadContObject = loadContObject;
         service.loadPTreeNodeStats = loadPTreeNodeStats;
         service.setToolTip = setToolTip;

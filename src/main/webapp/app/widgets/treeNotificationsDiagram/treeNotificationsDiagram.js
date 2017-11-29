@@ -110,7 +110,7 @@
             
             /*jshint validthis: true*/
             var vm = this;
-            vm.CONT_OBJECT_LIST_LENGTH = 20;
+            vm.CONT_OBJECT_LIST_LENGTH = 2;
             vm.widgetPath = "widgets/zpointCw_v1";
             var DATA_URL = "../api/subscr/widgets/cw",/*//chart/HwTemp";*/
                 ZPOINT_STATUS_TEMPLATE = vm.widgetPath + "/zpoint-state-",
@@ -433,6 +433,7 @@
             });
 
             vm.data.contObjectList = [];
+            vm.data.contObjectHashTable = {};
 //            vm.data.eventsCount = 0;
 
             thisdata.contEventCriticals = {
@@ -698,7 +699,21 @@
                 $timeout(function () {
                     $('#objectListModal').modal();
                 });
-            }            
+            }
+        
+            function loadContObject(coe) {
+                coe.isLoaded = false;
+                treeNotificationsDiagramService.loadContObject(coe.contObjectId)
+                    .then(function (resp) {                        
+                    coe.fullName = resp.data.fullName;
+                    coe.fullAddress = resp.data.fullAddress;
+                    coe.isLoaded = true;
+                }, function (err) {
+                    coe.isLoaded = true;
+                });
+            }
+        
+            vm.getObjectKeys = treeNotificationsDiagramService.getObjectKeys;
 
             vm.chartClick = function (ev) {
                 console.log(ev);
@@ -713,18 +728,29 @@
                 
                 console.log(vm.data.contObjectList.length);
                 //end 'for test'
+                vm.data.contObjectHashTable = treeNotificationsDiagramService.convertArrayToHash(vm.data.contObjectList);
+
+                for (var hkey in vm.data.contObjectHashTable) {
+                    if (vm.data.contObjectHashTable.hasOwnProperty(hkey)) {
+                        loadContObject(vm.data.contObjectHashTable[hkey]);
+                    }
+                }
                 vm.data.contObjectList.forEach(function (coe) {
-                    coe.isLoaded = false;
-                    treeNotificationsDiagramService.loadContObject(coe.contObjectId)
-                        .then(function (resp) {                        
-                        coe.fullName = resp.data.fullName;
-                        coe.fullAddress = resp.data.fullAddress;
-                        coe.isLoaded = true;
-                    }, function (err) {
-                        coe.isLoaded = true;
-                    });
+                    loadContObject(coe);
+//                    coe.isLoaded = false;
+//                    treeNotificationsDiagramService.loadContObject(coe.contObjectId)
+//                        .then(function (resp) {                        
+//                        coe.fullName = resp.data.fullName;
+//                        coe.fullAddress = resp.data.fullAddress;
+//                        coe.isLoaded = true;
+//                    }, function (err) {
+//                        coe.isLoaded = true;
+//                    });
                 });
-    // console.log($scope.data.contObjectList);
+//console.log(vm.data.contObjectHashTable);
+//console.log(Object.keys(vm.data.contObjectHashTable));
+//console.log(Object.keys(vm.data.contObjectHashTable).length);                
+//console.log(vm.data.contObjectList);
                 openObjectListModalWindow();
             };
 

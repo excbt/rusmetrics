@@ -5,7 +5,8 @@
     var ptreeComponentOpt = {
         bindings: {
             ptreeNode: '<',
-            filterArray: '<'
+            filterArray: '<',
+            filterHashTable: '<'
         },
         templateUrl: 'components/object-tree-module/ptree-component/ptree-component.html',
         controller: ptreeComponentController
@@ -20,6 +21,8 @@
         ctrl.filtredTree = {};
         ctrl.filtredTreeWrapper = [ctrl.filtredTree];
         ctrl.hashFilterTable = {};
+        
+        ctrl.checkUndefinedNull = ptreeComponentService.checkUndefinedNull;
         
         ctrl.isContObjectNode = ptreeComponentService.isContObjectNode;
         ctrl.isContZpointNode = ptreeComponentService.isContZpointNode;
@@ -103,21 +106,21 @@
         }
         
        function successLoadPTreeNodeCallback(resp, PTnode) {
-            if (ptreeComponentService.checkUndefinedNull(resp) || ptreeComponentService.checkUndefinedNull(resp.data)) {
+            if (ctrl.checkUndefinedNull(resp) || ctrl.checkUndefinedNull(resp.data)) {
                 return false;
             }
             // console.log(resp);
 //                    PTnode = resp.data;
-            if (!ptreeComponentService.checkUndefinedNull(resp.data.linkedNodeObjects)) {
+            if (!ctrl.checkUndefinedNull(resp.data.linkedNodeObjects)) {
                 PTnode.linkedNodeObjects = filterLinkedObjects(resp.data.linkedNodeObjects, ctrl.hashFilterTable);
             }
-            if (!ptreeComponentService.checkUndefinedNull(resp.data.childNodes)) {
+            if (!ctrl.checkUndefinedNull(resp.data.childNodes)) {
                 PTnode.childNodes = resp.data.childNodes;
             }
-            if (!ptreeComponentService.checkUndefinedNull(resp.data.nodeName)) {
+            if (!ctrl.checkUndefinedNull(resp.data.nodeName)) {
                 PTnode.nodeName = resp.data.nodeName;
             }
-            if (!ptreeComponentService.checkUndefinedNull(resp.data.nodeType)) {
+            if (!ctrl.checkUndefinedNull(resp.data.nodeType)) {
                 PTnode.nodeType = resp.data.nodeType;
             }
             // console.log(PTnode);
@@ -147,14 +150,20 @@ console.log(ctrl.filtredTree);
             } else {
                 console.log("NOT Equal");
             }
-        }
+        }        
         
         ctrl.$onInit = function () {
 console.log(ctrl.ptreeNode);
 equalFiltredTree();            
 ctrl.filtredTree = {};            
 equalFiltredTree();
-            ctrl.hashFilterTable = convertArrayToHash(ctrl.filterArray);
+            if (ctrl.checkUndefinedNull(ctrl.filterArray) && !ctrl.checkUndefinedNull(ctrl.filterHashTable)) {
+                ctrl.hashFilterTable = ctrl.filterHashTable;
+            } else if (!ctrl.checkUndefinedNull(ctrl.filterArray)) {
+                ctrl.hashFilterTable = convertArrayToHash(ctrl.filterArray);
+            } else {
+                console.warn("Check expression !!!");
+            }
             if (isLazyNode(ctrl.ptreeNode)) {
                 ctrl.filtredTree._id = ctrl.ptreeNode._id; //angular.copy(ctrl.ptreeNode);
 //                ctrl.filtredTreeWrapper = [ctrl.filtredTree];

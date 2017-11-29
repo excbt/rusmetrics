@@ -146,7 +146,7 @@
             <div class="modal-body nmc-modal-body normal-font">
               <div class = "container-fluid">
                 <div class = "row-fluid">
-                    <div ng-if = "widgetVm.data.contObjectList.length <= widgetVm.CONT_OBJECT_LIST_LENGTH" 
+                    <div ng-if = "widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length <= widgetVm.CONT_OBJECT_LIST_LENGTH" 
                       class = "noPaddingBottom marginBottom10 nmc-object-list-a">
                        <table class = "table table-lighter table-striped table-condensed table-hover nmc-main-table noMarginBottom">
                            <tr class = "nmc-main-table-header">
@@ -157,7 +157,8 @@
                                    Адрес
                                </th>
                            </tr>
-                           <tr ng-repeat = "contObject in widgetVm.data.contObjectList track by $index">
+<!--                           <tr ng-repeat = "contObject in widgetVm.data.contObjectList track by $index"> -->
+                            <tr ng-repeat = "(key, contObject) in widgetVm.data.contObjectHashTable">
                                <td ng-show = "!contObject.isLoaded" colspan = "2">
                                    <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
                                </td>
@@ -170,16 +171,23 @@
                            </tr>
                         </table>
                     </div>
-                    <div ng-if = "widgetVm.data.contObjectList.length > widgetVm.CONT_OBJECT_LIST_LENGTH"
+                    <div ng-if = "widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length > widgetVm.CONT_OBJECT_LIST_LENGTH"
                         class = "noPaddingBottom marginBottom10 nmc-object-list-a">
 <!--                        Тут должно быть дерево объектов...-->
+<!--                       filter-array = "widgetVm.data.contObjectList"-->
                         <ptree-component 
                             
                         ptree-node = "widgetVm.widgetOptions.ptreeNode" 
-                           filter-array = "widgetVm.data.contObjectList">
+                           
+                           filter-hash-table = "widgetVm.data.contObjectHashTable">
                             
                         </ptree-component>
                     </div>
+<!--
+                    <div>
+                        {{widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length}}
+                    </div>
+-->
                   </div>                
                 </div>
             </div>
