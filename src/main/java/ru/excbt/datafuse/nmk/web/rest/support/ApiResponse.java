@@ -142,6 +142,20 @@ public class ApiResponse {
 	}
 
     /**
+     *
+     * @param body
+     * @return
+     */
+    public static ResponseEntity<?> responseCreated(Object body) {
+        ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(HttpStatus.CREATED);
+        if (body != null) {
+            return bodyBuilder.body(body);
+        }
+        return bodyBuilder.build();
+    }
+
+
+    /**
 	 *
 	 * @return
 	 */

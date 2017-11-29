@@ -25,7 +25,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
-public class SubscrPriceListServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+public class SubscrPriceListServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrPriceListServiceTest.class);
 
@@ -46,14 +46,14 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 		assertNotNull(nmcPriceList);
 
 		SubscrPriceList rmaSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSubscriberPriceList);
 
 		SubscrPriceList rmaSpecialSubscriberPriceList = subscrPriceListService.createRmaPriceList(nmcPriceList.getId(),
-				subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID));
 		assertNotNull(rmaSpecialSubscriberPriceList);
 
-		List<SubscrPriceList> rmaPrices = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPrices = subscrPriceListService.selectRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(rmaPrices.size() > 0);
 
 		// subscrPriceListService.deleteSubscrPriceList(rmaSubscriberPriceList);
@@ -67,7 +67,7 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testCreateRmaDraft() throws Exception {
-		List<SubscrPriceList> srcPriceList = subscrPriceListService.selectActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID,
+		List<SubscrPriceList> srcPriceList = subscrPriceListService.selectActiveRmaPriceList(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
 				null);
 		assertTrue(srcPriceList.size() > 0);
 		logger.info("Found scrPriceList (id={}): {}. master:{}", srcPriceList.get(0).getId(),
@@ -82,8 +82,8 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testCreateRmaDraftPriceList() throws Exception {
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
+            TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 
 		assertTrue(rmaPriceLists.size() > 0);
 		SubscrPriceList priceList = rmaPriceLists.get(0);
@@ -98,19 +98,19 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testCreateSubscriberPriceList() throws Exception {
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
+            TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 		if (rmaPriceLists.size() == 0) {
-			rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID, null);
+			rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, null);
 		}
 
 		assertTrue(rmaPriceLists.size() > 0);
 		SubscrPriceList srcPriceList = rmaPriceLists.get(0);
 		subscrPriceListService.createSubscrPriceList(srcPriceList.getId(),
-				subscriberService.selectSubscriber(EXCBT_SUBSCRIBER_ID));
+				subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID));
 
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListService
-				.selectSubscriberPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);
+				.selectSubscriberPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 		logger.info("Size of price lists : {}", subscrPriceLists.size());
 
 	}
@@ -122,22 +122,22 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testFindRmaSubscrPriceLists() throws Exception {
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
+            TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 		assertTrue(rmaPriceLists.size() > 0);
 		logger.info("Result count: {}", rmaPriceLists.size());
 	}
 
 	@Test
 	public void testFindSubscrPriceLists() throws Exception {
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(rmaPriceLists.size() > 0);
 		logger.info("Result count: {}", rmaPriceLists.size());
 	}
 
 	@Test
 	public void testFindActiveRmaPriceList() throws Exception {
-		List<SubscrPriceList> rmaPriceList = subscrPriceListService.selectActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID,
+		List<SubscrPriceList> rmaPriceList = subscrPriceListService.selectActiveRmaPriceList(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
 				null);
 		//assertTrue(rmaPriceList.size() > 0);
 	}
@@ -149,16 +149,16 @@ public class SubscrPriceListServiceTest extends JpaSupportTest implements TestEx
 	@Test
 	@Ignore
 	public void testFindRmaDraftSubscrPriceLists() throws Exception {
-		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		List<SubscrPriceList> rmaPriceLists = subscrPriceListService.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
+            TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 		assertTrue(rmaPriceLists.size() > 0);
 		logger.info("Result count: {}", rmaPriceLists.size());
 	}
 
 	@Test
 	public void testSetInactiveSubscrPriceList() throws Exception {
-		int setInactiveResult = subscrPriceListService.deactiveOtherSubscrPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
-				EXCBT_SUBSCRIBER_ID);
+		int setInactiveResult = subscrPriceListService.deactiveOtherSubscrPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
+            TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 		logger.info("Inactive Result: {}", setInactiveResult);
 		// assertTrue(setInactiveResult == 1);
 	}

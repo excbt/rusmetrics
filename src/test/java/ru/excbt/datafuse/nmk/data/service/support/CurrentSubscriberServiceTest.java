@@ -18,7 +18,6 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
-import ru.excbt.datafuse.nmk.data.model.V_AuditUser;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 
@@ -61,10 +60,5 @@ public class CurrentSubscriberServiceTest extends JpaSupportTest {
 		logger.info("Subscriber Current Time: {}", subscriberTime);
 	}
 
-	@Test
-	public void testCurrentAuditUser() {
-		V_AuditUser au = currentSubscriberService.getCurrentAuditor();
-		assertNotNull(au);
-	}
 
 }

@@ -31,7 +31,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
-public class SubscrServiceAccessServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessServiceTest.class);
 
@@ -142,7 +142,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest implements Te
 	@Ignore
 	public void testUpdateAllRmaSubscriberAccess() throws Exception {
 		// Long rmaSubscriberId = 37176875L;
-		Long rmaSubscriberId = EXCBT_RMA_SUBSCRIBER_ID;
+		Long rmaSubscriberId = TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
 
 		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList(getSubscriberParam());
 

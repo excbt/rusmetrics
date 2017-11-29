@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class  })
-public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo, TestExcbtRmaIds {
+public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo{
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;

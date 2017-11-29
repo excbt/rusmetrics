@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
-public class SubscrContEventTypeActionServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+public class SubscrContEventTypeActionServiceTest extends JpaSupportTest {
 
 	@Autowired
 	private SubscrContEventTypeActionService subscrContEventTypeActionService;
@@ -42,12 +42,12 @@ public class SubscrContEventTypeActionServiceTest extends JpaSupportTest impleme
 	@Test
 	public void testCreateAction() throws Exception {
 
-		Subscriber subscriber = subscriberService.selectSubscriber(EXCBT_RMA_SUBSCRIBER_ID);
+		Subscriber subscriber = subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		List<ContEventType> availTypes = subscrContEventTypeActionService.selectAvailableContEventTypes();
 		assertTrue(availTypes.size() > 0);
 		ContEventType contEventType = availTypes.get(0);
 
-		List<SubscrActionUser> actionUsers = subscrActionUserService.findAll(EXCBT_RMA_SUBSCRIBER_ID);
+		List<SubscrActionUser> actionUsers = subscrActionUserService.findAll(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 
 		assertTrue(actionUsers.size() > 0);
 

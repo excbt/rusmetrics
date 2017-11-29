@@ -4,6 +4,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -64,14 +65,14 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 
     @JsonProperty
     public Date getInsertDate() {
-        DateTime dateTime = super.getCreatedDate();
-        return dateTime != null ? dateTime.toDate() : null;
+        Instant dateTime = super.getCreatedDate();
+        return dateTime != null ? Date.from(dateTime) : null;
     }
 
     @JsonProperty
     public String getInsertDateStr() {
-        DateTime dateTime = super.getCreatedDate();
-        return dateTime != null ? DateFormatUtils.formatDateTime(dateTime.toDate(), DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
+        Instant dateTime = super.getCreatedDate();
+        return dateTime != null ? DateFormatUtils.formatDateTime(Date.from(dateTime), DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
     }
 
 

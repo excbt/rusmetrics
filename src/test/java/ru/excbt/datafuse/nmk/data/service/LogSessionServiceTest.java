@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.vo.LogSessionVO;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
@@ -42,7 +43,7 @@ public class LogSessionServiceTest extends JpaSupportTest {
     @Transactional
     @Ignore
 	public void testLogSettionSelect() throws Exception {
-		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(EXCBT_RMA_SUBSCRIBER_ID);
+		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 
 		logger.info("DataSourceIds: {}", ids.toString());
 
@@ -58,7 +59,7 @@ public class LogSessionServiceTest extends JpaSupportTest {
 	@Test
     @Transactional
 	public void testLogSessionObjectsSelect() throws Exception {
-		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(EXCBT_RMA_SUBSCRIBER_ID);
+		List<Long> ids = subscrDataSourceService.selectDataSourceIdsBySubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		List<LogSessionVO> logSessions = logSessionService.selectLogSessions(ids, LocalDatePeriod.lastWeek(),
 				Arrays.asList(127858526L));
 		assertFalse(logSessions.isEmpty());

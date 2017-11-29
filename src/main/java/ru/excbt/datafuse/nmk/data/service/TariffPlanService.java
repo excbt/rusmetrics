@@ -17,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant;
-import ru.excbt.datafuse.nmk.data.domain.AuditableTools;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
@@ -154,7 +153,7 @@ public class TariffPlanService implements SecuredRoles {
 
 		TariffPlan currentRec = tariffPlanRepository.findOne(tariffPlan.getId());
 
-		AuditableTools.copyAuditableProps(currentRec, tariffPlan);
+		//AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
 		tariffPlan.setSubscriberId(currentRec.getSubscriberId());
 
