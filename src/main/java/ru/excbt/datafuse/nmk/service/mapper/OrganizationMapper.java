@@ -12,4 +12,6 @@ public interface OrganizationMapper {
 
     OrganizationDTO otganizationToDTO(Organization organization);
 
+    Organization.OrganizationInfo toShortInfo(Organization organization);
+
 }

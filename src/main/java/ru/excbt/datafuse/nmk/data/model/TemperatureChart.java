@@ -61,8 +61,8 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "chart_comment")
 	private String chartComment;
 
-	@Column(name = "chart_deviation_value")
-	private BigDecimal chartDeviationValue;
+	@Column(name = "chart_deviation_value", columnDefinition = "numeric")
+	private Double chartDeviationValue;
 
 	@Column(name = "is_default")
 	private Boolean isDefault;
