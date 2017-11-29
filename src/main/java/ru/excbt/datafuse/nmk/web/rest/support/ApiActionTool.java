@@ -61,7 +61,14 @@ public final class ApiActionTool {
 		private ResponseEntity<?> buildErrorResponse() {
 			checkNotNull(apiErrorResult.getHttpStatus());
 			//TODO add toErrorVM
-			return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
+            //
+            // See integration tests ru.excbt.datafuse.nmk.web.rest.errors.ApiResultIntTest
+            //
+            // Old version
+			//return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
+            // New version
+            return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult.toErrorVM());
+
 		}
 	}
 
