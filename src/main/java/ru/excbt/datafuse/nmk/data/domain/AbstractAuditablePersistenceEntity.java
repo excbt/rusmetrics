@@ -21,7 +21,7 @@ import java.time.Instant;
  * @param <PK>
  */
 @MappedSuperclass
-public abstract class AbstractAuditableEntity<PK extends Serializable> extends AbstractPersistableEntity<PK> {
+public abstract class AbstractAuditablePersistenceEntity<PK extends Serializable> extends AbstractPersistableEntity<PK> {
 
 	private static final long serialVersionUID = -4282498146105728631L;
 

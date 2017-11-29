@@ -17,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @MappedSuperclass
 @Audited
 @EntityListeners({ AuditingEntityListener.class })
-public abstract class AbstractAuditableModel extends AbstractAuditableEntity<Long> {
+public abstract class AbstractAuditableModel extends AbstractAuditablePersistenceEntity<Long> {
 
 	/**
 	 *
