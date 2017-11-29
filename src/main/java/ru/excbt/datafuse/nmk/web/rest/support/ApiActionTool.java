@@ -65,9 +65,9 @@ public final class ApiActionTool {
             // See integration tests ru.excbt.datafuse.nmk.web.rest.errors.ApiResultIntTest
             //
             // Old version
-			//return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
+			return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
             // New version
-            return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult.toErrorVM());
+            //return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult.toErrorVM());
 
 		}
 	}
