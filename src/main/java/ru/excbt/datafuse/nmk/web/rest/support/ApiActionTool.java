@@ -34,28 +34,9 @@ import static com.google.common.base.Preconditions.*;
  * @since 07.05.2015
  *
  */
-public class ApiActionTool {
+public final class ApiActionTool {
 
 	private static final Logger logger = LoggerFactory.getLogger(ApiActionTool.class);
-
-	public static class ProcessResponseHelper<T> {
-		private final ResponseEntity<T> response;
-		private final T entity;
-
-		private ProcessResponseHelper(T entity, ResponseEntity<T> response) {
-			this.entity = entity;
-			this.response = response;
-		}
-
-		public ResponseEntity<T> getResponse() {
-			return response;
-		}
-
-		public T getEntity() {
-			return entity;
-		}
-
-	}
 
 	private ApiActionTool() {
 
@@ -79,6 +60,7 @@ public class ApiActionTool {
 
 		private ResponseEntity<?> buildErrorResponse() {
 			checkNotNull(apiErrorResult.getHttpStatus());
+			//TODO add toErrorVM
 			return ResponseEntity.status(apiErrorResult.getHttpStatus()).body(apiErrorResult);
 		}
 	}
@@ -193,31 +175,6 @@ public class ApiActionTool {
 	}
 
     /**
-     *
-     * @param action
-     * @param successStatus
-     * @return
-     */
-	@Deprecated
-	private static ResponseEntity<?> _processResponceApiActionBody(ApiAction action, HttpStatus successStatus) {
-
-		checkNotNull(action);
-		checkArgument(successStatus != HttpStatus.CREATED, "HttpStatus.CREATED is not supported");
-
-		ApiProcessResult processResult = _internalProcess(action);
-
-		if (processResult.isError()) {
-			return processResult.buildErrorResponse();
-		}
-
-		if (action.getResult() == null || action.getResult() == ApiActionAdapter.EMPTY_RESULT) {
-			return ResponseEntity.status(successStatus).build();
-		} else {
-			return ResponseEntity.status(successStatus).body(action.getResult());
-		}
-
-	}
-
     /**
      *
      * @param action
@@ -277,54 +234,6 @@ public class ApiActionTool {
 	}
 
 	/**
-	 *
-	 * @param action
-	 * @param uriLocation
-	 * @return
-	 */
-	//	public static <T extends Persistable<Long>> ResponseEntity<?> processResponceApiActionCreateIdLong(
-	//			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
-	//
-	//		checkNotNull(actionProcess);
-	//
-	//		ApiActionLocationProcessWrapper<T, ?> action = new ApiActionLocationProcessWrapper<T, Long>() {
-	//
-	//			@Override
-	//			public T processAndReturnResult() {
-	//				return actionProcess.processAndReturnResult();
-	//			}
-	//
-	//			@Override
-	//			public URI getLocation() {
-	//				checkNotNull(uriLocationSupplier);
-	//				checkNotNull(uriLocationSupplier.get(), "request is NULL");
-	//
-	//				URI location = null;
-	//				if (getResult() != null && getLocationId() != null) {
-	//					location = URI.create(uriLocationSupplier.get() + '/' + getLocationId());
-	//				} else {
-	//					location = URI.create(uriLocationSupplier.get());
-	//				}
-	//
-	//				return location;
-	//			}
-	//
-	//		};
-	//
-	//		ApiProcessResult processResult = _internalProcess(action);
-	//
-	//		if (processResult.isError()) {
-	//			return processResult.buildErrorResponse();
-	//		}
-	//
-	//		if (action.getResult() == null) {
-	//			return ResponseEntity.created(action.getLocation()).build();
-	//		} else {
-	//			return ResponseEntity.created(action.getLocation()).body(action.getResult());
-	//		}
-	//
-	//	}
-
 	/**
 	 *
 	 * @param actionProcess
@@ -372,16 +281,6 @@ public class ApiActionTool {
 			return ResponseEntity.created(action.getLocation()).body(action.getResult());
 		}
 
-	}
-
-    /**
-     *
-     * @param action
-     * @return
-     */
-	@Deprecated
-	protected static ResponseEntity<?> processResponceApiActionOkBody(ApiAction action) {
-		return _processResponceApiAction(action, HttpStatus.OK);
 	}
 
 	/**

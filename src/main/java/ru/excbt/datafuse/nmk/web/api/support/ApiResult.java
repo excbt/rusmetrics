@@ -2,20 +2,23 @@ package ru.excbt.datafuse.nmk.web.api.support;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import ru.excbt.datafuse.nmk.web.rest.errors.ErrorVM;
+import ru.excbt.datafuse.nmk.web.rest.errors.FieldErrorVM;
 
 /**
  * Результат REST запроса
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.05.2015
  *
  */
-public class ApiResult {
+public class ApiResult implements Serializable {
 
 	private final ApiResultCode resultCode;
 	private final String description;
@@ -63,7 +66,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param code
 	 * @return
 	 */
@@ -73,7 +76,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param code
 	 * @param description
 	 * @return
@@ -84,7 +87,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param code
 	 * @param description
 	 * @param httpStatus
@@ -96,7 +99,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -105,7 +108,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public static ApiResult ok() {
@@ -113,7 +116,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -122,7 +125,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -131,7 +134,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -140,7 +143,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -149,7 +152,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @param args
 	 * @return
@@ -159,7 +162,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 * @return
 	 */
@@ -168,7 +171,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 * @param httpStatus
 	 * @return
@@ -178,7 +181,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @param httpStatus
 	 * @return
@@ -188,7 +191,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param e
 	 * @param description
 	 * @return
@@ -198,8 +201,8 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
-	 * @param e
+	 *
+	 * @param
 	 * @return
 	 */
 	public static ApiResult internalError(String description) {
@@ -207,7 +210,7 @@ public class ApiResult {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param description
 	 * @return
 	 */
@@ -222,5 +225,19 @@ public class ApiResult {
 	public List<String> getDescriptionLines() {
 		return descriptionLines;
 	}
+
+
+	public ErrorVM toErrorVM() {
+	    if (descriptionLines == null) {
+            return new ErrorVM(this.resultCode.name(), this.description);
+        }
+
+        List<FieldErrorVM> fieldErrors = new ArrayList<>();
+        for (String s: descriptionLines) {
+            fieldErrors.add(new FieldErrorVM("n/a", "n/a", s));
+        }
+
+        return new ErrorVM(this.resultCode.name(), this.description, fieldErrors);
+    }
 
 }
