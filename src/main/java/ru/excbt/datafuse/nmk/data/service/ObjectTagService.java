@@ -26,20 +26,33 @@ public class ObjectTagService {
     }
 
     @Transactional (readOnly = true)
-    public List<ObjectTagDTO> findObjectTags (String objectKeyname, PortalUserIds portalUserIds) {
+    public List<ObjectTagDTO> findTags(String objectKeyname, PortalUserIds portalUserIds) {
         return objectTagRepository.findBySubscriberAndObjectTagKeyname(portalUserIds.getSubscriberId(), objectKeyname)
             .stream().map(i -> objectTagMapper.toDto(i)).collect(Collectors.toList());
     }
 
     @Transactional
-    public ObjectTagDTO saveDTO(ObjectTagDTO dto, PortalUserIds portalUserIds) {
+    public ObjectTagDTO saveTag(ObjectTagDTO dto, PortalUserIds portalUserIds) {
         ObjectTag.PK tagPK = objectTagMapper.toEntityPK(dto);
         tagPK.setSubscriberId(portalUserIds.getSubscriberId());
         ObjectTag tag = objectTagRepository.findOne(tagPK);
         if (tag == null) {
+            tag = objectTagMapper.toEntity(dto);
+            tag.setSubscriberId(portalUserIds.getSubscriberId());
             tag = objectTagRepository.save(tag);
         }
         return objectTagMapper.toDto(tag);
+    }
+
+    @Transactional
+    public boolean deleteTag(ObjectTagDTO dto, PortalUserIds portalUserIds) {
+        ObjectTag.PK tagPK = objectTagMapper.toEntityPK(dto);
+        tagPK.setSubscriberId(portalUserIds.getSubscriberId());
+        ObjectTag tag = objectTagRepository.findOne(tagPK);
+        if (tag == null) {
+            return false;
+        }
+        return true;
     }
 
 }
