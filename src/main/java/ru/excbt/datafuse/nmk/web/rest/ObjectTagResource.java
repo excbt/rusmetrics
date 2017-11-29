@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,7 @@ public class ObjectTagResource {
      *
      * @return
      */
+    @ApiOperation("Get all tags for cont-object")
     @GetMapping("/cont-objects")
     public ResponseEntity<?> findContObjectsTags() {
         return ApiResponse.responseOK(() ->
@@ -38,6 +41,7 @@ public class ObjectTagResource {
      * @return
      */
     @PostMapping("/cont-objects")
+    @ApiOperation("Creates tag for cont-object")
     public ResponseEntity<?> createContObjectTag(@RequestBody ObjectTagDTO objectTagDTO) {
         objectTagDTO.setObjectTagKeyname("cont-object");
         ObjectTagDTO savedDTO = objectTagService.saveTag(objectTagDTO, portalUserIdsService.getCurrentIds());
@@ -50,8 +54,10 @@ public class ObjectTagResource {
      * @return
      */
     @PutMapping("/cont-objects")
+    @ApiOperation("Creates or deletes tag for cont-object")
     public ResponseEntity<?> createOrDeleteContObjectTag(@RequestBody ObjectTagDTO objectTagDTO,
-                                                  @RequestParam( name = "delete", required = false, defaultValue = "false") Boolean delete) {
+                                                  @RequestParam( name = "delete", required = false, defaultValue = "false")
+                                                  @ApiParam ("delete flag") Boolean delete) {
         objectTagDTO.setObjectTagKeyname("cont-object");
         if (Boolean.TRUE.equals(delete)) {
             boolean result = objectTagService.deleteTag(objectTagDTO, portalUserIdsService.getCurrentIds());
