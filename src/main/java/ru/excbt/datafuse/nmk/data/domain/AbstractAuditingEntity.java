@@ -1,49 +1,48 @@
 package ru.excbt.datafuse.nmk.data.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.Column;
+import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
-import java.io.Serializable;
 import java.time.Instant;
 
-/**
- * Базовый абстрактный класс сущности с аудитом
- *
- *
- * @version 1.0
- * @since 12.03.2015
- *
- * @param <PK>
- */
 @MappedSuperclass
-public abstract class AbstractAuditableEntity<PK extends Serializable> extends AbstractPersistableEntity<PK> {
+@Audited
+@EntityListeners(AuditingEntityListener.class)
+public class AbstractAuditingEntity {
 
-	private static final long serialVersionUID = -4282498146105728631L;
+    private static final long serialVersionUID = 1L;
 
     @CreatedBy
-	@Column(name = "created_by", updatable = false, nullable = false)
-	@JsonIgnore
-	private Long createdBy;
+    @Column(name = "created_by", nullable = false, length = 50, updatable = false)
+    @JsonIgnore
+    private Long createdBy;
 
     @CreatedDate
-	@Column(name = "created_date", updatable = false, nullable = false)
-	@JsonIgnore
-	private Instant createdDate;
+    @Column(name = "created_date", nullable = false)
+    @JsonIgnore
+    private Instant createdDate = Instant.now();
 
     @LastModifiedBy
-	@Column(name = "last_modified_by")
-	@JsonIgnore
-	private Long lastModifiedBy;
+    @Column(name = "last_modified_by", length = 50)
+    @JsonIgnore
+    private Long lastModifiedBy;
 
     @LastModifiedDate
-	@Column(name = "last_modified_date")
-	@JsonIgnore
-	private Instant lastModifiedDate;
+    @Column(name = "last_modified_date")
+    @JsonIgnore
+    private Instant lastModifiedDate = Instant.now();
+
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
+    }
 
     public Long getCreatedBy() {
         return createdBy;
@@ -75,15 +74,5 @@ public abstract class AbstractAuditableEntity<PK extends Serializable> extends A
 
     public void setLastModifiedDate(Instant lastModifiedDate) {
         this.lastModifiedDate = lastModifiedDate;
-    }
-
-    @Override
-    public String toString() {
-        return "AbstractAuditableEntity{" +
-            "createdBy=" + createdBy +
-            ", createdDate=" + createdDate +
-            ", lastModifiedBy=" + lastModifiedBy +
-            ", lastModifiedDate=" + lastModifiedDate +
-            "} " + super.toString();
     }
 }
