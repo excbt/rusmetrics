@@ -179,7 +179,7 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
     private void addDeviceObject (PTreeContZPointNode pTreeContZPointNode, ContZPoint contZPoint) {
         for (DeviceObject deviceObject : contZPoint.getDeviceObjects()) {
             if (deviceObject.getDeleted() != 0) continue;
-            DeviceObjectDTO deviceObjectDTO = deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
+            DeviceObjectDTO deviceObjectDTO = deviceObjectMapper.toDto(deviceObject);
             if (contZPoint.get_activeDeviceObject() == deviceObject) {
                 deviceObjectDTO.setActiveDeviceObject(true);
             }

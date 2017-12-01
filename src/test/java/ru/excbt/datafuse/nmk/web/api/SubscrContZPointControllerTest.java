@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 
@@ -25,6 +27,9 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 
 	@Autowired
 	private ContZPointService contZPointService;
+
+    @Autowired
+	private ObjectAccessService objectAccessService;
 
 	@Test
 	public void testGetZPointEx() throws Exception {
@@ -55,9 +60,16 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	//@Ignore
 	@Test
 	public void testGetElConsZPointEx() throws Exception {
-		String url = "/api/subscr/contObjects/77921790/contZPointsEx";
+        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
+		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", ids.get(0));
 		_testGetJson(url);
+	}
 
+	@Test
+	public void testGetElConsZPointVo() throws Exception {
+        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
+		String url = String.format("/api/subscr/contObjects/%d/contZPoints/vo", ids.get(0));
+		_testGetJson(url);
 	}
 
 	@Test
@@ -67,9 +79,12 @@ public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest 
 	}
 
 	@Test
-    @Ignore
+    //@Ignore
 	public void testGetZPointsVO() throws Exception {
-		_testGetJson("/api/subscr/contObjects/20118678/contZPoints/vo ");
+        Long contObjectId = getFirstContObjectId();
+        String url = String.format("/api/subscr/contObjects/%d/contZPoints/vo", contObjectId);
+
+		_testGetJson(url);
 	}
 
 	@Test

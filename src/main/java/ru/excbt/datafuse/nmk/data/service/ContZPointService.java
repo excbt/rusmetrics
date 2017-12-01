@@ -11,7 +11,10 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
@@ -21,16 +24,18 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
+import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
+import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 import javax.persistence.PersistenceException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -90,6 +95,12 @@ public class ContZPointService implements SecuredRoles {
 
     @Autowired
     private SubscriberAccessService subscriberAccessService;
+
+    @Autowired
+    private ContZPointMapper contZPointMapper;
+
+    @Autowired
+    private DeviceObjectMapper deviceObjectMapper;
 
 	/**
 	 * Краткая информация по точке учета
@@ -243,6 +254,52 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContZPointStatsVM> selectContObjectZPointsStatsVM(PortalUserIds portalUserIds, long contObjectId) {
+		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(portalUserIds, contObjectId)
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
+//            contZPointRepository.findByContObjectId(contObjectId).stream()
+//                .map(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
+		List<ContZPointStatsVM> result = new ArrayList<>();
+
+        Map<Long, List<ContZPoint>> zPointzMap = GroupUtil.makeIdMap(zPoints, (z) -> z.getId());
+
+
+		List<ContZPointStatsVM> resultHWater = makeContZPointStatsVM_Hwater(zPoints);
+		List<ContZPointStatsVM> resultEl = makeContZPointStatsVM_El(zPoints);
+
+		result.addAll(resultHWater);
+		result.addAll(resultEl);
+
+		result.forEach(i -> {
+
+            List<ContZPoint> z = zPointzMap.get(i.getId());
+            if (z == null || z.size() == 0) return;
+
+
+            for (DeviceObject deviceObject : z.get(0).getDeviceObjects()) {
+                i.getDeviceObjects().add(deviceObjectMapper.toDto(deviceObject));
+                i.set_activeDeviceObjectId(deviceObject.getDeviceModelId());
+            }
+//
+//			i.getDeviceObjects().forEach(j -> {
+//				j.loadLazyProps();
+//			});
+//
+//			if (i.getModel().getTemperatureChart() != null) {
+//				i.getModel().getTemperatureChart().getId();
+//				i.getModel().getTemperatureChart().getChartComment();
+//			}
+
+			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
+					.selectDeviceObjsetTimeOffset(i.get_activeDeviceObjectId());
+
+			//i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
+		});
+
+		return result;
+	}
+
 	/**
 	 *
 	 * @param zpointList
@@ -280,6 +337,7 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+    @Deprecated
 	private List<ContZPointVO> makeContZPointVO_Hwater(List<ContZPoint> zpointList) {
 		List<ContZPointVO> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -296,6 +354,28 @@ public class ContZPointService implements SecuredRoles {
 
 			minCheck.check(startDay);
 			result.add(new ContZPointVO(zp, zPointLastDate));
+
+		}
+		return result;
+	}
+
+	private List<ContZPointStatsVM> makeContZPointStatsVM_Hwater(List<ContZPoint> zpointList) {
+		List<ContZPointStatsVM> result = new ArrayList<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
+
+		for (ContZPoint zp : zpointList) {
+
+			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
+
+			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+
+			minCheck.check(startDay);
+			//result.add(new ContZPointVO(zp, zPointLastDate));
+			result.add(contZPointMapper.toStatsVM(zp));
 
 		}
 		return result;
@@ -343,6 +423,7 @@ public class ContZPointService implements SecuredRoles {
 	 * @param zpointList
 	 * @return
 	 */
+	@Deprecated
 	private List<ContZPointVO> makeContZPointVO_El(List<ContZPoint> zpointList) {
 		List<ContZPointVO> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -359,6 +440,28 @@ public class ContZPointService implements SecuredRoles {
 
 			minCheck.check(startDay);
 			result.add(new ContZPointVO(zp, zPointLastDate));
+
+		}
+		return result;
+	}
+
+	private List<ContZPointStatsVM> makeContZPointStatsVM_El(List<ContZPoint> zpointList) {
+		List<ContZPointStatsVM> result = new ArrayList<>();
+		MinCheck<Date> minCheck = new MinCheck<>();
+
+		for (ContZPoint zp : zpointList) {
+
+			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
+				continue;
+			}
+
+			Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+
+			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+
+			minCheck.check(startDay);
+			//result.add(new ContZPointVO(zp, zPointLastDate));
+            result.add(contZPointMapper.toStatsVM(zp));
 
 		}
 		return result;
@@ -604,7 +707,7 @@ public class ContZPointService implements SecuredRoles {
 	}
 
 	/**
-	 *
+	 * TODO remove device object
 	 * @param contZPoint
 	 */
 	private void initDeviceObject(ContZPoint contZPoint) {

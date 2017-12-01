@@ -9,7 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointShortInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -288,16 +288,27 @@ public class ObjectAccessService {
         return ObjectFilters.deletedFilter(result);
     }
 
-    public List<ContZPoint> findAllContZPoints(SubscriberParam subscriberParam, Long contObjectId) {
+    /**
+     *
+     * @param portalUserIds
+     * @param contObjectId
+     * @return
+     */
+    public List<ContZPoint> findAllContZPoints(PortalUserIds portalUserIds, Long contObjectId) {
         List<ContZPoint> result;
         if (NEW_ACCESS) {
-            result = contZPointAccessRepository.findAllContZPointsBySubscriberId(subscriberParam.getSubscriberId(), contObjectId);
+            result = contZPointAccessRepository.findAllContZPointsBySubscriberId(portalUserIds.getSubscriberId(), contObjectId);
         } else {
-            result = subscrContObjectRepository.selectContZPoints(subscriberParam.getSubscriberId());
+            result = subscrContObjectRepository.selectContZPoints(portalUserIds.getSubscriberId());
         }
         return ObjectFilters.deletedFilter(result);
     }
 
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
     public List<Long> findAllContZPointIds(Long subscriberId) {
         List<Long> result;
         if (NEW_ACCESS) {
@@ -332,7 +343,7 @@ public class ObjectAccessService {
 
             Long contZPointId = columnHelper.getResultAsClass(row, "id", Long.class);
             Long contObjectId = columnHelper.getResultAsClass(row, "contObjectId", Long.class);
-            ContZPointShortInfo shortInfo = ContZPointDTO.ShortInfo.builder()
+            ContZPointShortInfo shortInfo = ContZPointShortInfoDTO.builder()
                 .contZPointId(contZPointId)
                 .contObjectId(contObjectId)
                 .build();
@@ -371,7 +382,7 @@ public class ObjectAccessService {
             String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
             String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
 
-            ContZPointShortInfo shortInfo = ContZPointDTO.ShortInfo.builder()
+            ContZPointShortInfo shortInfo = ContZPointShortInfoDTO.builder()
                 .contZPointId(contZPointId)
                 .contObjectId(contObjectId)
                 .customServiceName(customServiceName)
@@ -401,7 +412,7 @@ public class ObjectAccessService {
             String customServiceName = columnHelper.getResultAsClass(row, "customServiceName", String.class);
             String contServiceType = columnHelper.getResultAsClass(row, "contServiceTypeKeyname", String.class);
             String contServiceTypeCaption = columnHelper.getResultAsClass(row, "caption", String.class);
-            ContZPointShortInfo shortInfo = ContZPointDTO.ShortInfo.builder()
+            ContZPointShortInfo shortInfo = ContZPointShortInfoDTO.builder()
                 .contZPointId(contZPointId)
                 .contObjectId(contObjectId)
                 .customServiceName(customServiceName)

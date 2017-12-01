@@ -102,7 +102,7 @@ public class SubscriberService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
-		return Optional.ofNullable(subscriberMapper.subscriberToDTO(subscriberRepository.findOne(subscriberId)));
+		return Optional.ofNullable(subscriberMapper.toDto(subscriberRepository.findOne(subscriberId)));
 	}
 
 	/**
@@ -124,7 +124,7 @@ public class SubscriberService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public Subscriber saveSubscriberDTO(SubscriberDTO subscriberDTO) {
-		return subscriberRepository.saveAndFlush(subscriberMapper.DTOToSubscriber(subscriberDTO));
+		return subscriberRepository.saveAndFlush(subscriberMapper.toEntity(subscriberDTO));
 	}
 
 	/**

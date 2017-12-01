@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.support.*;
@@ -99,8 +100,8 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointVO> zpList = contZPointService.selectContObjectZPointsVO(getSubscriberParam(),contObjectId);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
+		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(getSubscriberParam(),contObjectId);
+		return ApiResponse.responseOK(zpList);
 	}
 
 	/**

@@ -1,15 +1,16 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by kovtonyk on 07.07.2017.
  */
-public class ContZPointDTO {
+public class ContZPointStatsVM {
 
     private Long id;
 
@@ -56,10 +57,9 @@ public class ContZPointDTO {
     private Long temperatureChartId;
 
     @Deprecated
-    private TemperatureChartDTO temperatureChart;
-
-    @Deprecated
     private List<DeviceObjectDTO> deviceObjects;
+
+    private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
     @Deprecated
     private Long _activeDeviceObjectId;
@@ -80,12 +80,10 @@ public class ContZPointDTO {
         this.contObjectId = contObjectId;
     }
 
-    @Deprecated
     public ContServiceTypeDTO getContServiceType() {
         return contServiceType;
     }
 
-    @Deprecated
     public void setContServiceType(ContServiceTypeDTO contServiceType) {
         this.contServiceType = contServiceType;
     }
@@ -94,7 +92,7 @@ public class ContZPointDTO {
         return contServiceTypeKey;
     }
 
-    public void setContServiceTypeKeyname(String contServiceTypeKey) {
+    public void setContServiceTypeKey(String contServiceTypeKey) {
         this.contServiceTypeKey = contServiceTypeKey;
     }
 
@@ -106,12 +104,10 @@ public class ContZPointDTO {
         this.customServiceName = customServiceName;
     }
 
-    @Deprecated
     public OrganizationDTO getRso() {
         return rso;
     }
 
-    @Deprecated
     public void setRso(OrganizationDTO rso) {
         this.rso = rso;
     }
@@ -236,33 +232,31 @@ public class ContZPointDTO {
         this.temperatureChartId = temperatureChartId;
     }
 
-    @Deprecated
-    public TemperatureChartDTO getTemperatureChart() {
-        return temperatureChart;
+    public Date getLastDataDate() {
+        if (timeDetailLastDates.size() > 0) {
+            final MaxCheck<Date> maxCheck = new MaxCheck<>();
+
+            timeDetailLastDates.forEach(i -> maxCheck.check(i.getDataDate()));
+
+            return maxCheck.getObject();
+        }
+
+        //return lastDataDate != null ? lastDataDate.toDate() : null;
+        return null;
     }
 
-    @Deprecated
-    public void setTemperatureChart(TemperatureChartDTO temperatureChart) {
-        this.temperatureChart = temperatureChart;
-    }
-
-
-    @Deprecated
     public List<DeviceObjectDTO> getDeviceObjects() {
         return deviceObjects;
     }
 
-    @Deprecated
     public void setDeviceObjects(List<DeviceObjectDTO> deviceObjects) {
         this.deviceObjects = deviceObjects;
     }
 
-    @Deprecated
     public Long get_activeDeviceObjectId() {
         return _activeDeviceObjectId;
     }
 
-    @Deprecated
     public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
         this._activeDeviceObjectId = _activeDeviceObjectId;
     }

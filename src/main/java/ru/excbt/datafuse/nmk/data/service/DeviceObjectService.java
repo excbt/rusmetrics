@@ -280,7 +280,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
 		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
 	}
@@ -499,7 +499,7 @@ public class DeviceObjectService implements SecuredRoles {
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObjectDTO findDeviceObjectDTO(Long id) {
         DeviceObject deviceObject = selectDeviceObject(id);
-        return deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
+        return deviceObjectMapper.toDto(deviceObject);
     }
 
 //    public DeviceObjectDMO convert (DeviceObjectDTO deviceObjectDTO) {
