@@ -1,27 +1,39 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
+import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by kovtonyk on 07.07.2017.
  */
-public class ContZPointDTO implements ModelIdable {
+public class ContZPointFullVM implements ModelIdable {
 
     private Long id;
 
+    @NotNull
     private Long contObjectId;
 
+    @Deprecated
+    private ContServiceTypeDTO contServiceType;
+
+    @NotNull
     private String contServiceTypeKeyname;
 
     private String customServiceName;
 
+    @Deprecated
+    private OrganizationDTO rso;
+
+    @NotNull
     private Long rsoId;
 
+    @NotNull
     private Date startDate;
 
     private Date endDate;
@@ -50,9 +62,11 @@ public class ContZPointDTO implements ModelIdable {
 
     private Long temperatureChartId;
 
-    private Long deviceObjectId;
+    @Deprecated
+    private List<DeviceObjectDTO> deviceObjects;
 
-    //TODO temporary added
+    private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
+
     @Deprecated
     private Long _activeDeviceObjectId;
 
@@ -72,6 +86,15 @@ public class ContZPointDTO implements ModelIdable {
         this.contObjectId = contObjectId;
     }
 
+    public ContServiceTypeDTO getContServiceType() {
+        return contServiceType;
+    }
+
+    public void setContServiceType(ContServiceTypeDTO contServiceType) {
+        this.contServiceType = contServiceType;
+    }
+
+
     public String getContServiceTypeKeyname() {
         return contServiceTypeKeyname;
     }
@@ -86,6 +109,14 @@ public class ContZPointDTO implements ModelIdable {
 
     public void setCustomServiceName(String customServiceName) {
         this.customServiceName = customServiceName;
+    }
+
+    public OrganizationDTO getRso() {
+        return rso;
+    }
+
+    public void setRso(OrganizationDTO rso) {
+        this.rso = rso;
     }
 
     public Long getRsoId() {
@@ -208,12 +239,25 @@ public class ContZPointDTO implements ModelIdable {
         this.temperatureChartId = temperatureChartId;
     }
 
-    public Long getDeviceObjectId() {
-        return deviceObjectId;
+    public Date getLastDataDate() {
+        if (timeDetailLastDates.size() > 0) {
+            final MaxCheck<Date> maxCheck = new MaxCheck<>();
+
+            timeDetailLastDates.forEach(i -> maxCheck.check(i.getDataDate()));
+
+            return maxCheck.getObject();
+        }
+
+        //return lastDataDate != null ? lastDataDate.toDate() : null;
+        return null;
     }
 
-    public void setDeviceObjectId(Long deviceObjectId) {
-        this.deviceObjectId = deviceObjectId;
+    public List<DeviceObjectDTO> getDeviceObjects() {
+        return deviceObjects;
+    }
+
+    public void setDeviceObjects(List<DeviceObjectDTO> deviceObjects) {
+        this.deviceObjects = deviceObjects;
     }
 
     public Long get_activeDeviceObjectId() {

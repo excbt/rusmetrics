@@ -38,6 +38,7 @@ import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
@@ -56,7 +57,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 @Entity
 @Table(name = "device_object")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
-public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId {
+public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId, PersistableBuilder<DeviceObject, Long> {
 
     /**
 	 *

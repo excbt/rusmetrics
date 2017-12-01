@@ -11,9 +11,9 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
  * Created by kovtonyk on 23.05.2017.
  */
 @Mapper(componentModel = "spring")
-public interface DeviceObjectMapper {
+public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, DeviceObject> {
 
-    DeviceObjectDTO deviceObjectToDeviceObjectDTO(DeviceObject deviceObject);
+//    DeviceObjectDTO deviceObjectToDeviceObjectDTO(DeviceObject deviceObject);
 
     DeviceObjectDTO.DeviceLoginInfoDTO deviceLoginInfoToDTO(DeviceObject.DeviceLoginInfo loginInfo);
 
