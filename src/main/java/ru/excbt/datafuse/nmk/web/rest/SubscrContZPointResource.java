@@ -108,7 +108,8 @@ public class SubscrContZPointResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(portalUserIdsService.getCurrentIds(),contObjectId);
+		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(contObjectId,
+            portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(zpList);
 	}
 

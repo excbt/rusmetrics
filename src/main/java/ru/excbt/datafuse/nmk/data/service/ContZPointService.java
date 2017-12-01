@@ -255,13 +255,11 @@ public class ContZPointService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointStatsVM> selectContObjectZPointsStatsVM(PortalUserIds portalUserIds, long contObjectId) {
+	public List<ContZPointStatsVM> selectContObjectZPointsStatsVM(Long contObjectId, PortalUserIds portalUserIds) {
 		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, portalUserIds)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
 
 		List<ContZPointStatsVM> result = new ArrayList<>();
-
-        Map<Long, List<ContZPoint>> zPointzMap = GroupUtil.makeIdMap(zPoints, (z) -> z.getId());
 
 		List<ContZPointStatsVM> resultHWater = makeContZPointStatsVM_Hwater(zPoints);
 		List<ContZPointStatsVM> resultEl = makeContZPointStatsVM_El(zPoints);
@@ -270,12 +268,8 @@ public class ContZPointService implements SecuredRoles {
 		result.addAll(resultEl);
 
 		result.forEach(i -> {
-
-            List<ContZPoint> z = zPointzMap.get(i.getId());
-            if (z == null || z.size() == 0) return;
-
-            if (z.get(0).getDeviceObjects().size() > 0) {
-                i.set_activeDeviceObjectId(z.get(0).getDeviceObjects().get(0).getId());
+            if (i.getDeviceObjects().size() > 0) {
+                i.set_activeDeviceObjectId(i.getDeviceObjects().get(0).getId());
             }
 
 //
@@ -356,11 +350,11 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
-	private List<ContZPointStatsVM> makeContZPointStatsVM_Hwater(List<ContZPoint> zpointList) {
+	private List<ContZPointStatsVM> makeContZPointStatsVM_Hwater(List<ContZPoint> contZPointList) {
 		List<ContZPointStatsVM> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
 
-		for (ContZPoint zp : zpointList) {
+		for (ContZPoint zp : contZPointList) {
 
 			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
 				continue;
