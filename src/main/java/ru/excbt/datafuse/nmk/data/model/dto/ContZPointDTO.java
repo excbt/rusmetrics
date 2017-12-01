@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 
 import java.util.Date;
 import java.util.List;
@@ -9,7 +10,7 @@ import java.util.List;
 /**
  * Created by kovtonyk on 07.07.2017.
  */
-public class ContZPointDTO {
+public class ContZPointDTO implements ModelIdable {
 
     private Long id;
 
@@ -48,6 +49,12 @@ public class ContZPointDTO {
     private Boolean isDroolsDisable;
 
     private Long temperatureChartId;
+
+    private Long deviceObjectId;
+
+    //TODO temporary added
+    @Deprecated
+    private Long _activeDeviceObjectId;
 
     public Long getId() {
         return id;
@@ -199,5 +206,21 @@ public class ContZPointDTO {
 
     public void setTemperatureChartId(Long temperatureChartId) {
         this.temperatureChartId = temperatureChartId;
+    }
+
+    public Long getDeviceObjectId() {
+        return deviceObjectId;
+    }
+
+    public void setDeviceObjectId(Long deviceObjectId) {
+        this.deviceObjectId = deviceObjectId;
+    }
+
+    public Long get_activeDeviceObjectId() {
+        return _activeDeviceObjectId;
+    }
+
+    public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
+        this._activeDeviceObjectId = _activeDeviceObjectId;
     }
 }

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
@@ -11,7 +12,7 @@ import java.util.List;
 /**
  * Created by kovtonyk on 07.07.2017.
  */
-public class ContZPointFullVM {
+public class ContZPointFullVM implements ModelIdable {
 
     private Long id;
 

@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -362,7 +363,7 @@ public class ContZPointService implements SecuredRoles {
 
 			minCheck.check(startDay);
 			//result.add(new ContZPointVO(zp, zPointLastDate));
-			result.add(contZPointMapper.toStatsVM(zp));
+			result.add(contZPointMapper.toFullVM(zp));
 
 		}
 		return result;
@@ -448,7 +449,7 @@ public class ContZPointService implements SecuredRoles {
 
 			minCheck.check(startDay);
 			//result.add(new ContZPointVO(zp, zPointLastDate));
-            result.add(contZPointMapper.toStatsVM(zp));
+            result.add(contZPointMapper.toFullVM(zp));
 
 		}
 		return result;
@@ -618,6 +619,34 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+    public ContZPointFullVM createZPoint_DTO2FULL(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
+        checkNotNull(contZPointDTO);
+        checkNotNull(contZPointDTO.getContObjectId());
+        checkNotNull(contZPointDTO.getStartDate());
+        checkNotNull(contZPointDTO.getContServiceTypeKeyname());
+        checkNotNull(contZPointDTO.get_activeDeviceObjectId());
+        checkNotNull(contZPointDTO.getRsoId());
+
+        ContZPoint contZPoint = contZPointMapper.toEntity(contZPointDTO);
+
+        //contZPointDTO.setContObjectId(contObjectId);
+        //linkToContObject(contZPointDTO);
+        //initDeviceObject(contZPointDTO);
+        contZPoint.getDeviceObjects().clear();
+        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointDTO.get_activeDeviceObjectId()));
+
+//        initContServiceType(contZPointDTO);
+//        initRso(contZPointDTO);
+        contZPoint.setIsManual(true);
+
+        ContZPoint savedContZPoint = contZPointRepository.save(contZPoint);
+        contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
+
+        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), savedContZPoint);
+
+        return contZPointMapper.toFullVM(savedContZPoint);
+    }
+
 	/**
 	 *
 	 * @param contZpointId
@@ -700,7 +729,7 @@ public class ContZPointService implements SecuredRoles {
 		ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
 		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
 
-		return contZPointMapper.toStatsVM(savedContZPoint);
+		return contZPointMapper.toFullVM(savedContZPoint);
 	}
 
     /**
@@ -720,7 +749,7 @@ public class ContZPointService implements SecuredRoles {
 
         ContZPoint savedContZPoint = contZPointRepository.save(currentContZPoint);
 
-		return contZPointMapper.toStatsVM(savedContZPoint);
+		return contZPointMapper.toFullVM(savedContZPoint);
 	}
 
 	/**

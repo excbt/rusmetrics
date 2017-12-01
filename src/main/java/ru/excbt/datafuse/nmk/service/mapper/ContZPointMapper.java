@@ -18,6 +18,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Override
     @Mapping(target = "contObject", source = "contObjectId")
     @Mapping(target = "deviceObjects", ignore = true)
+    @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
     @Mapping(target = "_activeDeviceObjectId", ignore = true)
     @Mapping(target = "rso", source = "rsoId")
     @Mapping(target = "createdDate", ignore = true)
@@ -32,7 +33,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     ContZPointDTO toDto (ContZPoint contZPoint);
 
     @Mapping(target = "rsoId", source = "rso.id")
-    ContZPointFullVM toStatsVM (ContZPoint contZPoint);
+    ContZPointFullVM toFullVM(ContZPoint contZPoint);
 
     @Mapping(target = "contObject", source = "contObjectId")
     @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")

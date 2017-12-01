@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -46,7 +47,7 @@ public class RmaContZPointResource extends SubscrContZPointResource {
     }
 
     /**
-	 *
+	 * // TODO change ContZPointFullVM to ContZPointDTO
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
@@ -57,6 +58,8 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 		checkNotNull(contZPointFullVM);
+
+		contZPointFullVM.setContObjectId(contObjectId);
 
         if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
             ApiResponse.responseForbidden();
@@ -69,20 +72,19 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	/**
 	 *
 	 * @param contObjectId
-	 * @param contZPoint
+	 * @param contZPointDTO
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.POST,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContZPoint(@PathVariable("contObjectId") Long contObjectId,
-			@RequestBody ContZPoint contZPoint, HttpServletRequest request) {
+                                              @RequestBody ContZPointDTO contZPointDTO, HttpServletRequest request) {
 
 		checkNotNull(contObjectId);
-		checkNotNull(contZPoint);
+		checkNotNull(contZPointDTO);
+        contZPointDTO.setContObjectId(contObjectId);
 
-		ApiActionProcess<ContZPoint> actionProcess = () -> contZPointService.createOne(portalUserIdsService.getCurrentIds(), contObjectId, contZPoint);
-
-		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
+		return ApiResponse.responseCreate(() -> contZPointService.createZPoint_DTO2FULL(contZPointDTO, portalUserIdsService.getCurrentIds()), () -> request.getRequestURI());
 
 	}
 

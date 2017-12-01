@@ -17,6 +17,7 @@ public interface SubscrContZPointStPlanMapper extends EntityMapper<SubscrContZPo
     @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     SubscrContZPointStPlan toEntity(SubscrContZPointStPlanDTO dto);
 
     @Mapping(target = "contZPointId", source = "contZPoint.id")
