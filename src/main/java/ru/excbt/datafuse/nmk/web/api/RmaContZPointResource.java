@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
@@ -53,17 +52,17 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointStatsVM contZPoint) {
+			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
-		checkNotNull(contZPoint);
+		checkNotNull(contZPointFullVM);
 
         if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
             ApiResponse.responseForbidden();
         }
 
-		return ApiResponse.responseUpdate(() -> contZPointService.updateVM(contZPoint));
+		return ApiResponse.responseUpdate(() -> contZPointService.updateVM(contZPointFullVM));
 
 	}
 

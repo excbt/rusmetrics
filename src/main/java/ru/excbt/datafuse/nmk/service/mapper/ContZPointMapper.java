@@ -7,7 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 @Mapper(componentModel = "spring", uses = {ContServiceTypeMapper.class,
@@ -32,7 +32,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     ContZPointDTO toDto (ContZPoint contZPoint);
 
     @Mapping(target = "rsoId", source = "rso.id")
-    ContZPointStatsVM toStatsVM (ContZPoint contZPoint);
+    ContZPointFullVM toStatsVM (ContZPoint contZPoint);
 
     @Mapping(target = "contObject", source = "contObjectId")
     @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
@@ -45,7 +45,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "deleted", ignore = true)
-    ContZPoint toEntity (ContZPointStatsVM contZPointVM);
+    ContZPoint toEntity (ContZPointFullVM contZPointFullVM);
 
 
     default ContObject contObjectFromId(Long id) {

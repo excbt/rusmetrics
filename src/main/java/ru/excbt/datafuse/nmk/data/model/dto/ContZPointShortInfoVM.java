@@ -9,7 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 @Getter
 @Builder
 @AllArgsConstructor
-public class ContZPointShortInfoDTO implements ContZPointShortInfo {
+public class ContZPointShortInfoVM implements ContZPointShortInfo {
 
     private final Long contZPointId;
     private final Long contObjectId;
@@ -18,7 +18,7 @@ public class ContZPointShortInfoDTO implements ContZPointShortInfo {
     private final String contServiceTypeCaption;
 
 
-    public ContZPointShortInfoDTO(ContZPoint contZPoint) {
+    public ContZPointShortInfoVM(ContZPoint contZPoint) {
         contZPointId = contZPoint.getId();
         contObjectId = contZPoint.getContObjectId();
         customServiceName = contZPoint.getCustomServiceName();

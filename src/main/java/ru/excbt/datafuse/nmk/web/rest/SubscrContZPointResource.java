@@ -12,18 +12,13 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
-import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -108,9 +103,9 @@ public class SubscrContZPointResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(contObjectId,
+		List<ContZPointFullVM> vmList = contZPointService.selectContObjectZPointsStatsVM(contObjectId,
             portalUserIdsService.getCurrentIds());
-		return ApiResponse.responseOK(zpList);
+		return ApiResponse.responseOK(vmList);
 	}
 
 	/**
@@ -129,16 +124,16 @@ public class SubscrContZPointResource {
      *
      * @param contObjectId
      * @param contZPointId
-     * @param contZPoint
+     * @param contZPointFullVM
      * @return
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointStatsVM contZPoint) {
+			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
 
-		return ApiActionTool.processResponceApiActionUpdate(() -> contZPointService.updateDTO_safe(contZPoint));
+		return ApiActionTool.processResponceApiActionUpdate(() -> contZPointService.updateDTO_safe(contZPointFullVM));
 
 	}
 

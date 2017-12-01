@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by kovtonyk on 07.07.2017.
  */
-public class ContZPointStatsVM {
+public class ContZPointFullVM {
 
     private Long id;
 
