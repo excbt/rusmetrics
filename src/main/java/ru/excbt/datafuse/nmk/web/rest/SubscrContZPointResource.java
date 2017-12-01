@@ -1,9 +1,10 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +16,9 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
 import ru.excbt.datafuse.nmk.data.model.support.*;
-import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
@@ -40,9 +42,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointController extends AbstractSubscrApiResource {
+public class SubscrContZPointResource {
 
-	private static final Logger log = LoggerFactory.getLogger(SubscrContZPointController.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrContZPointResource.class);
 
 	protected final ContZPointService contZPointService;
 
@@ -58,7 +60,11 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 
 	protected final ObjectAccessService objectAccessService;
 
-    public SubscrContZPointController(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService) {
+    protected final PortalUserIdsService portalUserIdsService;
+
+
+    @Autowired
+    public SubscrContZPointResource(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.contZPointService = contZPointService;
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contServiceDataElService = contServiceDataElService;
@@ -66,6 +72,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
         this.measureUnitService = measureUnitService;
         this.organizationService = organizationService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -76,7 +83,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(getSubscriberParam(), contObjectId);
+		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId, portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
 
@@ -100,7 +107,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
-		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(getSubscriberParam(),contObjectId);
+		List<ContZPointStatsVM> zpList = contZPointService.selectContObjectZPointsStatsVM(portalUserIdsService.getCurrentIds(),contObjectId);
 		return ApiResponse.responseOK(zpList);
 	}
 
@@ -182,7 +189,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPoints() {
 
-		List<ContZPoint> contZPoints = objectAccessService.findAllContZPoints(getCurrentSubscriberId());
+		List<ContZPoint> contZPoints = objectAccessService.findAllContZPoints(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		return ApiResponse.responseOK(contZPoints);
 	}
@@ -195,7 +202,7 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContZPointsInfo() {
 
-		List<ContZPointShortInfo> contZPoints = objectAccessService.findContZPointShortInfo(getCurrentSubscriberId());
+		List<ContZPointShortInfo> contZPoints = objectAccessService.findContZPointShortInfo(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		return ApiResponse.responseOK(contZPoints);
 	}
@@ -269,8 +276,9 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
 	public ResponseEntity<?> getRsoOrganizations(
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
-		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
-		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
+		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
+
+		List<Organization> resultList = SecurityUtils.isSystemUser() ? rsOrganizations
 				: ObjectFilters.devModeFilter(rsOrganizations);
 
 		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
@@ -292,7 +300,8 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
+
+		if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 
@@ -342,9 +351,9 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
-			ApiResponse.responseForbidden();
-		}
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
@@ -367,9 +376,9 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 
 		List<ContZPointMetadata> metadataList = contZPointMetadataService.selectNewMetadata(contZPointId, false);
 
@@ -392,9 +401,9 @@ public class SubscrContZPointController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 
 		List<EntityColumn> result = contZPointMetadataService.selectContZPointDestDB(contZPointId);
 

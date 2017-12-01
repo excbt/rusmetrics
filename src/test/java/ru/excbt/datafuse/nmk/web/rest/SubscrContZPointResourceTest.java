@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 
 @Transactional
-public class SubscrContZPointControllerTest extends AnyControllerSubscriberTest {
+public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 
 	private final static long MANUAL_HW_CONT_ZPOINT_ID = 49492462;
 	private final static long MANUAL_CONT_OBJECT_ID = 733;

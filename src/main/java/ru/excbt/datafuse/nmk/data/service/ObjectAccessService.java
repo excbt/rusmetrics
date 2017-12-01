@@ -194,6 +194,14 @@ public class ObjectAccessService {
         }
     }
 
+    public boolean checkContObjectId (Long contObjectId, PortalUserIds portalUserIds) {
+        if (NEW_ACCESS) {
+            return contObjectAccessRepository.findByPK(portalUserIds.getSubscriberId(), contObjectId).isPresent();
+        } else {
+            return subscrContObjectRepository.selectContObjectId(portalUserIds.getSubscriberId(), contObjectId).size() > 0;
+        }
+    }
+
     public boolean checkContObjectIds(Long subscriberId, List<Long> contObjectIds) {
         if (contObjectIds == null || contObjectIds.isEmpty()) {
             return false;
@@ -288,13 +296,14 @@ public class ObjectAccessService {
         return ObjectFilters.deletedFilter(result);
     }
 
+
     /**
      *
+      * @param contObjectId
      * @param portalUserIds
-     * @param contObjectId
      * @return
      */
-    public List<ContZPoint> findAllContZPoints(PortalUserIds portalUserIds, Long contObjectId) {
+    public List<ContZPoint> findAllContZPoints(Long contObjectId, PortalUserIds portalUserIds) {
         List<ContZPoint> result;
         if (NEW_ACCESS) {
             result = contZPointAccessRepository.findAllContZPointsBySubscriberId(portalUserIds.getSubscriberId(), contObjectId);
@@ -432,6 +441,17 @@ public class ObjectAccessService {
         List<Long> subscrContObjectIds = findAllContZPointIds(subscriberId);
         return ObjectAccessUtil.checkIds(ContZPointIds, subscrContObjectIds);
     }
+
+    /**
+     *
+     * @param contZPointId
+     * @param portalUserIds
+     * @return
+     */
+    public boolean checkContZPointId (Long contZPointId, PortalUserIds portalUserIds) {
+        return checkContZPointIds(portalUserIds.getSubscriberId(), Arrays.asList(contZPointId));
+    }
+
 
 
     public List<DeviceObject> findAllContZPointDeviceObjects(Long subscriberId) {

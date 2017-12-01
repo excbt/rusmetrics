@@ -172,8 +172,8 @@ public class ContZPointService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPoint> findContObjectZPoints(SubscriberParam subscriberParam, Long contObjectId) {
-		List<ContZPoint> result = objectAccessService.findAllContZPoints(subscriberParam, contObjectId);
+	public List<ContZPoint> findContObjectZPoints(Long contObjectId, PortalUserIds portalUserIds) {
+		List<ContZPoint> result = objectAccessService.findAllContZPoints(contObjectId, portalUserIds);
 
 //            contZPointRepository.findByContObjectId(contObjectId);
 
@@ -225,7 +225,7 @@ public class ContZPointService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointVO> selectContObjectZPointsVO(SubscriberParam subscriberParam, long contObjectId) {
-		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(subscriberParam, contObjectId);
+		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, subscriberParam);
             contZPointRepository.findByContObjectId(contObjectId);
 		List<ContZPointVO> result = new ArrayList<>();
 
@@ -256,7 +256,7 @@ public class ContZPointService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointStatsVM> selectContObjectZPointsStatsVM(PortalUserIds portalUserIds, long contObjectId) {
-		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(portalUserIds, contObjectId)
+		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, portalUserIds)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
 //            contZPointRepository.findByContObjectId(contObjectId).stream()
 //                .map(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());

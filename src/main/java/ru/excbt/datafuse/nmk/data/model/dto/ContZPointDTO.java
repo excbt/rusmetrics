@@ -15,15 +15,9 @@ public class ContZPointDTO {
 
     private Long contObjectId;
 
-    @Deprecated
-    private ContServiceTypeDTO contServiceType;
-
-    private String contServiceTypeKey;
+    private String contServiceTypeKeyname;
 
     private String customServiceName;
-
-    @Deprecated
-    private OrganizationDTO rso;
 
     private Long rsoId;
 
@@ -55,15 +49,6 @@ public class ContZPointDTO {
 
     private Long temperatureChartId;
 
-    @Deprecated
-    private TemperatureChartDTO temperatureChart;
-
-    @Deprecated
-    private List<DeviceObjectDTO> deviceObjects;
-
-    @Deprecated
-    private Long _activeDeviceObjectId;
-
     public Long getId() {
         return id;
     }
@@ -80,22 +65,12 @@ public class ContZPointDTO {
         this.contObjectId = contObjectId;
     }
 
-    @Deprecated
-    public ContServiceTypeDTO getContServiceType() {
-        return contServiceType;
+    public String getContServiceTypeKeyname() {
+        return contServiceTypeKeyname;
     }
 
-    @Deprecated
-    public void setContServiceType(ContServiceTypeDTO contServiceType) {
-        this.contServiceType = contServiceType;
-    }
-
-    public String getContServiceTypeKey() {
-        return contServiceTypeKey;
-    }
-
-    public void setContServiceTypeKeyname(String contServiceTypeKey) {
-        this.contServiceTypeKey = contServiceTypeKey;
+    public void setContServiceTypeKeyname(String contServiceTypeKeyname) {
+        this.contServiceTypeKeyname = contServiceTypeKeyname;
     }
 
     public String getCustomServiceName() {
@@ -104,16 +79,6 @@ public class ContZPointDTO {
 
     public void setCustomServiceName(String customServiceName) {
         this.customServiceName = customServiceName;
-    }
-
-    @Deprecated
-    public OrganizationDTO getRso() {
-        return rso;
-    }
-
-    @Deprecated
-    public void setRso(OrganizationDTO rso) {
-        this.rso = rso;
     }
 
     public Long getRsoId() {
@@ -234,36 +199,5 @@ public class ContZPointDTO {
 
     public void setTemperatureChartId(Long temperatureChartId) {
         this.temperatureChartId = temperatureChartId;
-    }
-
-    @Deprecated
-    public TemperatureChartDTO getTemperatureChart() {
-        return temperatureChart;
-    }
-
-    @Deprecated
-    public void setTemperatureChart(TemperatureChartDTO temperatureChart) {
-        this.temperatureChart = temperatureChart;
-    }
-
-
-    @Deprecated
-    public List<DeviceObjectDTO> getDeviceObjects() {
-        return deviceObjects;
-    }
-
-    @Deprecated
-    public void setDeviceObjects(List<DeviceObjectDTO> deviceObjects) {
-        this.deviceObjects = deviceObjects;
-    }
-
-    @Deprecated
-    public Long get_activeDeviceObjectId() {
-        return _activeDeviceObjectId;
-    }
-
-    @Deprecated
-    public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
-        this._activeDeviceObjectId = _activeDeviceObjectId;
     }
 }

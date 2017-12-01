@@ -17,7 +17,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "contObject", source = "contObjectId")
     @Mapping(target = "deviceObjects", ignore = true)
     @Mapping(target = "_activeDeviceObjectId", ignore = true)
-    @Mapping(target = "rso", ignore = true)
+    @Mapping(target = "rso", source = "rsoId")
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedDate", ignore = true)
     @Mapping(target = "createdBy", ignore = true)

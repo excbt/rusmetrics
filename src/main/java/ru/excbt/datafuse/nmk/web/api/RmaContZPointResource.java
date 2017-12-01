@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
+import ru.excbt.datafuse.nmk.web.rest.SubscrContZPointResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
@@ -34,14 +35,14 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  */
 @Controller
 @RequestMapping(value = "/api/rma")
-public class RmaContZPointController extends SubscrContZPointController {
+public class RmaContZPointResource extends SubscrContZPointResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointResource.class);
 
-    public RmaContZPointController(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService) {
-        super(contZPointService, contServiceDataHWaterService, contServiceDataElService, contZPointMetadataService, measureUnitService, organizationService, objectAccessService);
+
+    public RmaContZPointResource(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+        super(contZPointService, contServiceDataHWaterService, contServiceDataElService, contZPointMetadataService, measureUnitService, organizationService, objectAccessService, portalUserIdsService);
     }
-
 
     /**
 	 *
@@ -56,23 +57,12 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contZPointId);
 		checkNotNull(contZPoint);
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 
-		ApiActionObjectProcess actionProcess = () -> {
-			return contZPointService.updateOne(contZPoint);
-		};
-		return ApiResponse.responseUpdate(actionProcess);
+		return ApiResponse.responseUpdate(() -> contZPointService.updateOne(contZPoint));
 
-		//		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(contZPoint) {
-		//			@Override
-		//			public ContZPoint processAndReturnResult() {
-		//				return contZPointService.updateOne(entity);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 	/**
@@ -89,25 +79,10 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPoint);
 
-		ApiActionProcess<ContZPoint> actionProcess = () -> contZPointService.createOne(getSubscriberParam().asPortalUserIds(), contObjectId, contZPoint);
+		ApiActionProcess<ContZPoint> actionProcess = () -> contZPointService.createOne(portalUserIdsService.getCurrentIds(), contObjectId, contZPoint);
 
 		return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 
-		//		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContZPoint, Long>(contZPoint, request) {
-		//
-		//			@Override
-		//			public ContZPoint processAndReturnResult() {
-		//				return contZPointService.createOne(contObjectId, entity);
-		//			}
-		//
-		//			@Override
-		//			protected Long getLocationId() {
-		//				return getResultEntity().getId();
-		//			}
-		//
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionCreate(action);
 	}
 
     /**
@@ -124,24 +99,13 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
-
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 		ApiActionVoidProcess actionProcess = () -> {
-			contZPointService.deleteOne(getSubscriberParam().asPortalUserIds(), contZPointId);
+			contZPointService.deleteOne(portalUserIdsService.getCurrentIds(), contZPointId);
 		};
 		return ApiResponse.responseDelete(actionProcess);
-
-		//		ApiAction action = new ApiActionAdapter() {
-		//
-		//			@Override
-		//			public void process() {
-		//				contZPointService.deleteOne(contZPointId);
-		//			}
-		//		};
-
-		//		return WebApiHelper.processResponceApiActionDelete(action);
 	}
 
 	/**
@@ -160,28 +124,18 @@ public class RmaContZPointController extends SubscrContZPointController {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		if (!canAccessContObject(contObjectId)) {
-			return ApiResponse.responseForbidden();
-		}
 
-		if (!canAccessContZPoint(contZPointId)) {
-			return ApiResponse.responseForbidden();
-		}
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
 
-		ApiActionObjectProcess actionProcess = () -> {
-			return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
-		};
+        if (!objectAccessService.checkContZPointId(contZPointId, portalUserIdsService.getCurrentIds())) {
+            ApiResponse.responseForbidden();
+        }
+
+		ApiActionObjectProcess actionProcess = () -> contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
 		return ApiResponse.responseUpdate(actionProcess);
 
-		//		ApiAction action = new ApiActionEntityAdapter<List<ContZPointMetadata>>(requestEntity) {
-		//
-		//			@Override
-		//			public List<ContZPointMetadata> processAndReturnResult() {
-		//				return contZPointMetadataService.saveContZPointMetadata(requestEntity, contZPointId);
-		//			}
-		//		};
-		//
-		//		return WebApiHelper.processResponceApiActionUpdate(action);
 	}
 
 }
