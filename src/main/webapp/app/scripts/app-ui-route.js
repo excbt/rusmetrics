@@ -21,7 +21,8 @@
                     }]
                 }
             },
-            {
+/* common version*/            
+/*            {
                 name: 'objectsPTree',
                 url: '/objects/newlist/',
                 templateUrl: 'views/objects-newlist.html',
@@ -32,6 +33,20 @@
                     }]
                 }
             },
+  */
+/* component version*/            
+            {
+                name: 'objectsPTree',
+                url: '/objects/newlist/',
+                component: 'treeComponent',
+                
+                resolve: {
+                    permissions: ['mainSvc', function (mainSvc) {
+                        return mainSvc.getLoadedServicePermission();
+                    }]
+                }
+            },
+            
             {
                 name: 'demoMap',
                 url: '/objects/demo-map/',

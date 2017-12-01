@@ -32,6 +32,8 @@
             'angularWidget',
             'chart.js',
             'ui.layout',
-            'ui.router'
+            'ui.router',
+            
+            'objectTreeModule'
         ]);
 }());
