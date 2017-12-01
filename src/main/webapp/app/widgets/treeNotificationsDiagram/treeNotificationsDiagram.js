@@ -3,110 +3,16 @@
 (function () {
     'use strict';
     
-    
-//    Chart.pluginService.register({
-//        beforeDraw: function (chart) {
-//            if (chart.config.type != "doughnut") {
-//                return;
-//            }
-//            var width = chart.chart.width,
-//                height = chart.chart.height,
-//                ctx = chart.chart.ctx,
-//                data = chart.config.data.datasets[0].data;
-//            
-//            ctx.restore();
-//            var fontSize = (height / 114).toFixed(2);
-//            ctx.font = fontSize + "em sans-serif";
-//            ctx.textBaseline = "middle";
-//            ctx.fillStyle = "#337ab7";
-//            var sumValues = 0;
-//            data.forEach(function (elm) {
-//                sumValues += elm;
-//            });
-//            var text = sumValues,
-//                textX = Math.round((width - ctx.measureText(text).width) / 2),
-//                textY = height / 2;
-//            
-//            ctx.fillText(text, textX, textY);
-//            ctx.save();
-//            
-//        }
-//    });
-    
-    
     function chartJsProviderConfig(ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
             chartColors: ['#ef473a', '#FDB45C', '#46BFBD', '#803690', '#337ab7'],
             responsive: true
         });
-        // Configure all line charts
-//        ChartJsProvider.setOptions('line', {
-//            showLines: false
-//        });
     }    
     chartJsProviderConfig.$inject = ['ChartJsProvider'];
     
     function treeNotificationsDiagramWidgetCtrl($scope, $http, $rootScope, widgetConfig, treeNotificationsDiagramService, $timeout) {
-        //data generator
-//            var timeDetailTypes = {
-//                month: {
-//                    timeDetailType: "24h",
-//                    count: 30,
-//                    dateFormatter: function (param) {
-//                        return (param >= 10 ? param : "0" + param) + "-" + moment().format("MM-YYYY");
-//                    }
-//                },
-//                day: {
-//                    timeDetailType: "1h",
-//                    count: 24,
-//                    dateFormatter: function (param) {
-//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-//                    }
-//                },
-//                week: {
-//                    timeDetailType: "24h",
-//                    count: 7,
-//                    dateFormatter: function (param) {
-//                        return moment().subtract(7 - param, "days").format("DD-MM-YYYY HH:ss");
-//                    }
-//                },
-//                today: {
-//                    timeDetailType: "1h",
-//                    count: 24,
-//                    dateFormatter: function (param) {
-//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-//                    }
-//                },
-//                yesterday: {
-//                    timeDetailType: "1h",
-//                    count: 24,
-//                    dateFormatter: function (param) {
-//                        return moment().subtract(param, "hours").format("DD-MM-YYYY HH:ss");
-//                    }
-//                }
-//            };
-//            function generateTestData(timeDetailType) {
-//                var result = [],
-//                    i,
-//                    node;
-//                for (i = 1; i <= timeDetailType.count; i += 1) {
-//                    node = {};
-//                    node.timeDetailType = timeDetailType.timeDetailType;
-//                    node.v_in = Math.random() * 10 + 1;
-//                    var v_delta = Math.random();
-//                    node.v_out = node.v_in - v_delta;
-//                    node.dataDateString = timeDetailType.dateFormatter(i);
-//                    result.push(node);
-//                }
-//                //console.log(result);
-//                return result;
-//            }
-        //end data generator
-//            moment.locale('ru', {
-//                months : "январь_февраль_март_апрель_май_июнь_июль_август_сентябрь_октябрь_ноябрь_декабрь".split("_"),
-//                monthsShort : "янв._фев._март_апр._май_июнь_июль_авг._сен._окт._ноя._дек.".split("_")
-//            });
             
             /*jshint validthis: true*/
             var vm = this;
@@ -119,58 +25,10 @@
 
             vm.widgetOptions = widgetConfig.getOptions();            
             var contObjectId = vm.widgetOptions.contObjectId;
-//            if (angular.isDefined(contObjectId) && contObjectId !== null && contObjectId !== 'null') {
-//                ZPOINT_EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/" + contObjectId + "/monitorEventsV2/byContZPoint/" + vm.widgetOptions.contZpointId; /*/notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}*/
-//            }
 
             var thisdata = {};
 
             vm.data = {};
-//            $scope.data.currentCwTemp = null;
-//            $scope.data.MODES = [
-//                {
-//                    keyname: "TODAY",
-//                    caption: "Сегодня",
-//                    modeClass: "",
-//                    timeDetailType: "1h",
-//                    dateFormat: "HH:mm",
-//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-//                }, {
-//                    keyname: "DAY",
-//                    caption: "Сутки",
-//                    modeClass: "",
-//                    timeDetailType: "1h",
-//                    dateFormat: "HH:mm",
-//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-//                }, {
-//                    keyname: "YESTERDAY",
-//                    caption: "Вчера",
-//                    modeClass: "",
-//                    timeDetailType: "1h",
-//                    dateFormat: "HH:mm",
-//                    tooltipDateFormat: "DD.MM.YYYY HH:mm"
-//                }, {
-//                    keyname: "WEEK",
-//                    caption: "Неделя",
-//                    modeClass: "active",
-//                    timeDetailType: "24h",
-//                    dateFormat: "DD, MMM",
-//                    tooltipDateFormat: "DD.MM.YYYY"
-//                }, {
-//                    keyname: "MONTH",
-//                    caption: "Текущий месяц",
-//                    modeClass: "",
-//                    timeDetailType: "24h",
-//                    dateFormat: "DD",
-//                    tooltipDateFormat: "DD.MM.YYYY"
-//                }
-//            ];
-//            $scope.data.startModeIndex = 3;//default mode index; 3 - WEEK
-//            $scope.data.currentMode = $scope.data.MODES[$scope.data.startModeIndex];
-
-//            $scope.data.imgPath = vm.widgetPath + "/snowflake.png";
-//            $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + "green.png";//"widgets/zpointHw/zpoint-state-" + zpstatus + ".png";
-//            $scope.data.zpointStatusTitle = vm.widgetOptions.zpointStatusTitle;
             vm.data.contZpointId = vm.widgetOptions.contZpointId;
 
             vm.presentDataFlag = false;
@@ -262,161 +120,10 @@
                     console.log("BeforeDraw", chart);
                 }
             };
-//            function prepareEventMessage(inputData) {
-//                            //temp array
-//                var tmpMessage = "";
-//        //                var tmpMessageEx = "";
-//                //make the new array of the types wich formatted to display
-//                inputData.forEach(function (element) {
-//        //console.log(element);
-//                    var tmpEvent = "";
-//                    var contEventTime = new Date(element.contEventTimeDT);
-//                    var pstyle = "";
-//                    if (element.contEventLevelColorKeyname === "RED") {
-//                        pstyle = "color: red;";
-//                    }
-//                    tmpEvent = "<p style='" + pstyle + "'>" + contEventTime.toLocaleString() + ", " + element.contEventType.name + "</p>";
-//                    tmpMessage += tmpEvent;
-//                });
-//                return tmpMessage;
-//            }
-
-//            function getDataSuccessCallback(rsp) {
-//                console.log(rsp.data);
-//                var tmpData = rsp.data;
-//                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-//                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
-//                }
-//                if (!angular.isArray(tmpData) || tmpData.length === 0) {
-//                    $scope.presentDataFlag = false;
-//    //                console.log("zpointCwWidget: response data is empty!");
-//                    return false;
-//                }
-//                $scope.presentDataFlag = true;
-//                $scope.barChart.labels = [];
-//                $scope.barChart.data = [[]];
-//                $scope.barChart.dataTitle = [];
-//                var dataTitleElem = {};
-//                tmpData.forEach(function (elm) {
-//                    $scope.barChart.labels.push(moment(elm.dataDateString, SERVER_DATE_FORMAT).format($scope.data.currentMode.dateFormat));
-//                    $scope.barChart.data[0].push((elm.v_in - elm.v_out).toFixed(3));
-//                    dataTitleElem = {
-//                        dataDateString : elm.dataDateString
-//                    };
-//                    $scope.barChart.dataTitle.push(dataTitleElem);
-//                });
-//            }
 
             function errorCallback(e) {
                 console.log(e);
             }
-
-    //        function setEventsForZpoint(url, zpointId) {
-    //            var imgObj = "#zpStatusImg" + zpointId;
-    //            $(imgObj).qtip({
-    //                content: {
-    //                    text: function (event, api) {
-    //                        $http.get(url)
-    //                            .then(function (resp) {
-    //                                var message = "";
-    //                                if (angular.isDefined(resp) && angular.isDefined(resp.data) && angular.isArray(resp.data)) {
-    //                                    message = prepareEventMessage(resp.data);
-    //                                } else {
-    //                                    message = "Непонятный ответ от сервера. Смотри консоль браузера.";
-    //                                    console.log(resp);
-    //                                }
-    //                                api.set('content.text', message);
-    //                            },
-    //                                 function (error) {
-    //                                    var message = "";
-    //                                    switch (error.status) {
-    //                                    case 404:
-    //                                        message = "Для данной точки учета событий не найдено.";
-    //                                        break;
-    //                                    case 500:
-    //                                        message = "Ошибка сервера. Закройте виджет и повторите попытку. Если ситуация не исправится, то обратитесь к разработчику.";
-    //                                        break;
-    //                                    default:
-    //                                        message = "При загрузке событий произошла непредвиденная ситуация. Закройте виджет и повторите попытку. Если ситуация не исправится, то обратитесь к разработчику.";
-    //                                        break;
-    //                                    }
-    //                                    api.set('content.text', error.status + ': ' + message);
-    //                                });
-    //                        return "Загружаются сообытия...";
-    //                    }
-    //                },
-    //
-    //                style: {
-    //                    classes: 'qtip-bootstrap qtip-nmc-monitor-tooltip'
-    //                }
-    //            });
-    //        }
-
-//            function getStatusSuccessCallback(resp) {
-//                if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-//                    return true;
-//                }
-//                if (angular.isUndefined(resp) || resp === null) {
-//    //                console.log("zpointCwWidget: status response is empty.");
-//                    return false;
-//                }
-//                if (angular.isUndefined(resp.data) || resp.data === null) {
-//    //                console.log("zpointCwWidget: status response data is empty.");
-//                    return false;
-//                }
-//                if (angular.isDefined(resp.data.color) && resp.data.color !== null && angular.isString(resp.data.color)) {
-//                    $scope.data.zpointStatus = ZPOINT_STATUS_TEMPLATE + resp.data.color.toLowerCase() + ".png";
-//    //                if (resp.data.color.toLowerCase() !== 'green' && ZPOINT_EVENTS_URL !== null) {
-//                        //load zpoint events
-//    //                    setEventsForZpoint(ZPOINT_EVENTS_URL, $scope.data.contZpointId);
-//    //                }
-//                }/* else {
-//                    console.log("zpointCwWidget: zpoint status color is empty or not string.");
-//                }*/
-//            }
-
-//            $scope.modeChange = function () {
-//                var mode = $scope.data.currentMode;
-//                //set class
-//                $scope.data.MODES.forEach(function (mod) {
-//                    mod.modeClass = "";
-//                });
-//                mode.modeClass = "active";
-//                //get data
-//                if (angular.isUndefined($scope.data.contZpointId) || $scope.data.contZpointId === null || mode === null || mode.keyname === null) {
-//                    console.log("treeNotificationsDiagramWidget: contZpoint or mode is null!");
-//                    console.log("data:");
-//                    console.log($scope.data);
-//                    console.log("mode:");
-//                    console.log(mode);
-//                    return false;
-//                }
-//                var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/chart/data/" + encodeURIComponent(mode.keyname);
-//                $http.get(url).then(getDataSuccessCallback, errorCallback);
-//            };
-
-    //        function getZpointState() {
-    //            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-    //                return true;
-    //            }
-    //            var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
-    //            $http.get(url).then(getStatusSuccessCallback, errorCallback);
-    //        }
-                    // Показания точек учета
-    //        $scope.getIndicators = function () {
-    //            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-    //                return true;
-    //            }
-    //            widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, contZpointId: $scope.widgetOptions.contZpointId, action: "openIndicators"});
-    //            return true;
-    //        };
-    //
-    //        $scope.openNotices = function () {
-    //            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-    //                return true;
-    //            }
-    //            widgetConfig.exportProperties({contObjectId: $scope.widgetOptions.contObjectId, action: "openNotices"});
-    //        };
 
             $scope.$on('chart-create', function (event, chart) {
 //                console.log(event);
@@ -638,14 +345,6 @@
             function successLoadPTreeNodeStatsCallback(resp) {
                 console.log(resp);
                 var tmpData = resp.data;
-//                if ((angular.isDefined(vm.widgetOptions.previewMode) && vm.widgetOptions.previewMode === true)) {
-//                    tmpData = generateTestData(timeDetailTypes[$scope.data.currentMode.keyname.toLowerCase()]);
-//                }
-//                if (!angular.isArray(tmpData) || tmpData.length === 0) {
-//                    vm.presentDataFlag = false;
-    //                console.log("zpointCwWidget: response data is empty!");
-//                    return false;
-//                }
 
                 thisdata.contEventPTreeNodeData = tmpData;
 
@@ -659,11 +358,6 @@
                     vm.barChart.colors = [];
                     executeChartModeFunction(vm.data.currentChartMode);
                 }
-    //            if ($scope.data.currentChartMode.hasOwnProperty("prepareFunction") && angular.isFunction($scope.data.currentChartMode.prepareFunction)) {
-    //                $scope.data.currentChartMode.prepareFunction($scope.barChart, tmpData);
-    //            } else {
-    //                console.warn("Chart can't be create! Transform function is not defined!", $scope.data.currentChartMode);
-    //            }
 
                 console.log(vm.barChart);
             }
@@ -677,12 +371,6 @@
                     return false;
                 }
 
-    //            if ((angular.isDefined($scope.widgetOptions.previewMode) && $scope.widgetOptions.previewMode === true)) {
-    //                return true;
-    //            }
-
-                // var url = DATA_URL + "/" + encodeURIComponent($scope.data.contZpointId) + "/status";
-                // $http.get(url).then(getStatusSuccessCallback, errorCallback);
                 var ptreeNode = vm.widgetOptions.ptreeNode,
                     ptreeNodeId = isPTreeNodeElement(ptreeNode) ? ptreeNode._id : ptreeNode.nodeObject.id;
                 vm.data.ptreeNodeId = ptreeNodeId;
@@ -737,20 +425,7 @@
                 }
                 vm.data.contObjectList.forEach(function (coe) {
                     loadContObject(coe);
-//                    coe.isLoaded = false;
-//                    treeNotificationsDiagramService.loadContObject(coe.contObjectId)
-//                        .then(function (resp) {                        
-//                        coe.fullName = resp.data.fullName;
-//                        coe.fullAddress = resp.data.fullAddress;
-//                        coe.isLoaded = true;
-//                    }, function (err) {
-//                        coe.isLoaded = true;
-//                    });
                 });
-//console.log(vm.data.contObjectHashTable);
-//console.log(Object.keys(vm.data.contObjectHashTable));
-//console.log(Object.keys(vm.data.contObjectHashTable).length);                
-//console.log(vm.data.contObjectList);
                 openObjectListModalWindow();
             };
 
