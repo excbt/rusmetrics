@@ -5,11 +5,13 @@ import org.mapstruct.Mapping;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
-@Mapper(componentModel = "spring", uses = {ContServiceTypeMapper.class, TemperatureChartMapper.class})
+@Mapper(componentModel = "spring", uses = {ContServiceTypeMapper.class,
+    TemperatureChartMapper.class, DeviceObjectMapper.class})
 public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint> {
 
 
@@ -32,13 +34,39 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "rsoId", source = "rso.id")
     ContZPointStatsVM toStatsVM (ContZPoint contZPoint);
 
+    @Mapping(target = "contObject", source = "contObjectId")
+    @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
+    @Mapping(target = "deviceObjects", ignore = true)
+    @Mapping(target = "_activeDeviceObjectId", ignore = true)
+    @Mapping(target = "rso", source = "rsoId")
+    @Mapping(target = "temperatureChart", source = "temperatureChartId")
+    @Mapping(target = "createdDate", ignore = true)
+    @Mapping(target = "lastModifiedDate", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
+    @Mapping(target = "lastModifiedBy", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    ContZPoint toEntity (ContZPointStatsVM contZPointVM);
+
+
     default ContObject contObjectFromId(Long id) {
-        return new ContObject().id(id);
+        return id != null ? new ContObject().id(id) : null;
     }
 
     default Organization organizationFromId(Long id) {
-        return new Organization().id(id);
+        return id != null ? new Organization().id(id) : null;
     }
 
+    default TemperatureChart temperatureChartFromId(Long id) {
+        return id != null ? new TemperatureChart().id(id) : null;
+    }
+
+    default ContServiceType contServiceTypeFromKeyname(String keyname) {
+        if (keyname == null) {
+            return null;
+        }
+        ContServiceType result = new ContServiceType();
+        result.setKeyname(keyname);
+        return result;
+    }
 
 }

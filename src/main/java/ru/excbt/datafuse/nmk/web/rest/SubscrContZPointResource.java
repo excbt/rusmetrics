@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointStatsVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
@@ -133,30 +134,11 @@ public class SubscrContZPointResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPoint contZPoint) {
+			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointStatsVM contZPoint) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contZPointId);
-		checkNotNull(contZPoint);
 
-		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
+		return ApiActionTool.processResponceApiActionUpdate(() -> contZPointService.updateDTO_safe(contZPoint));
 
-		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
-			return ResponseEntity.badRequest().build();
-		}
-
-		currentContZPoint.setCustomServiceName(contZPoint.getCustomServiceName());
-
-		currentContZPoint.setIsManualLoading(contZPoint.getIsManualLoading());
-
-		ApiAction action = new ApiActionEntityAdapter<ContZPoint>(currentContZPoint) {
-			@Override
-			public ContZPoint processAndReturnResult() {
-				return contZPointService.updateContZPoint(entity);
-			}
-		};
-
-		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
 	/**

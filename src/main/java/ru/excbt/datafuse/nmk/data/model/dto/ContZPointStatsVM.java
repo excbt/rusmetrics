@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -14,20 +15,24 @@ public class ContZPointStatsVM {
 
     private Long id;
 
+    @NotNull
     private Long contObjectId;
 
     @Deprecated
     private ContServiceTypeDTO contServiceType;
 
-    private String contServiceTypeKey;
+    @NotNull
+    private String contServiceTypeKeyname;
 
     private String customServiceName;
 
     @Deprecated
     private OrganizationDTO rso;
 
+    @NotNull
     private Long rsoId;
 
+    @NotNull
     private Date startDate;
 
     private Date endDate;
@@ -88,12 +93,13 @@ public class ContZPointStatsVM {
         this.contServiceType = contServiceType;
     }
 
-    public String getContServiceTypeKey() {
-        return contServiceTypeKey;
+
+    public String getContServiceTypeKeyname() {
+        return contServiceTypeKeyname;
     }
 
-    public void setContServiceTypeKey(String contServiceTypeKey) {
-        this.contServiceTypeKey = contServiceTypeKey;
+    public void setContServiceTypeKeyname(String contServiceTypeKeyname) {
+        this.contServiceTypeKeyname = contServiceTypeKeyname;
     }
 
     public String getCustomServiceName() {

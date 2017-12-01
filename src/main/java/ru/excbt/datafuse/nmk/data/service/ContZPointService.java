@@ -258,12 +258,10 @@ public class ContZPointService implements SecuredRoles {
 	public List<ContZPointStatsVM> selectContObjectZPointsStatsVM(PortalUserIds portalUserIds, long contObjectId) {
 		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, portalUserIds)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
-//            contZPointRepository.findByContObjectId(contObjectId).stream()
-//                .map(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
+
 		List<ContZPointStatsVM> result = new ArrayList<>();
 
         Map<Long, List<ContZPoint>> zPointzMap = GroupUtil.makeIdMap(zPoints, (z) -> z.getId());
-
 
 		List<ContZPointStatsVM> resultHWater = makeContZPointStatsVM_Hwater(zPoints);
 		List<ContZPointStatsVM> resultEl = makeContZPointStatsVM_El(zPoints);
@@ -276,11 +274,10 @@ public class ContZPointService implements SecuredRoles {
             List<ContZPoint> z = zPointzMap.get(i.getId());
             if (z == null || z.size() == 0) return;
 
-
-            for (DeviceObject deviceObject : z.get(0).getDeviceObjects()) {
-                i.getDeviceObjects().add(deviceObjectMapper.toDto(deviceObject));
-                i.set_activeDeviceObjectId(deviceObject.getDeviceModelId());
+            if (z.get(0).getDeviceObjects().size() > 0) {
+                i.set_activeDeviceObjectId(z.get(0).getDeviceObjects().get(0).getId());
             }
+
 //
 //			i.getDeviceObjects().forEach(j -> {
 //				j.loadLazyProps();
@@ -697,10 +694,50 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+	public ContZPointStatsVM updateVM(ContZPointStatsVM contZPointVM) {
+		checkNotNull(contZPointVM);
+		checkNotNull(contZPointVM.get_activeDeviceObjectId());
+
+		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointVM);
+
+        contZPoint.getDeviceObjects().clear();
+        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointVM.get_activeDeviceObjectId()));
+
+		contZPoint.setIsManual(true);
+
+		ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
+		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
+
+		return contZPointMapper.toStatsVM(savedContZPoint);
+	}
+
+    /**
+     *
+     * @param contZPointDTO
+     * @return
+     */
+	@Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_ZPOINT_ADMIN })
+	public ContZPointStatsVM updateDTO_safe(ContZPointStatsVM contZPointDTO) {
+
+        ContZPoint currentContZPoint = contZPointRepository.findOne(contZPointDTO.getId());
+
+        currentContZPoint.setCustomServiceName(contZPointDTO.getCustomServiceName());
+
+        currentContZPoint.setIsManualLoading(contZPointDTO.getManualLoading());
+
+        ContZPoint savedContZPoint = contZPointRepository.save(currentContZPoint);
+
+		return contZPointMapper.toStatsVM(savedContZPoint);
+	}
+
 	/**
 	 *
 	 * @param contZPoint
 	 */
+	@Deprecated
 	private void linkToContObject(ContZPoint contZPoint) {
 		ContObject contObject = contObjectService.findContObjectChecked(contZPoint.getContObjectId());
 		contZPoint.setContObject(contObject);
@@ -710,6 +747,7 @@ public class ContZPointService implements SecuredRoles {
 	 * TODO remove device object
 	 * @param contZPoint
 	 */
+	@Deprecated
 	private void initDeviceObject(ContZPoint contZPoint) {
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(contZPoint.get_activeDeviceObjectId());
 
@@ -725,6 +763,7 @@ public class ContZPointService implements SecuredRoles {
 	 *
 	 * @param contZPoint
 	 */
+	@Deprecated
 	private void initContServiceType(ContZPoint contZPoint) {
 		ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPoint.getContServiceTypeKeyname());
 		checkNotNull(contServiceType);
