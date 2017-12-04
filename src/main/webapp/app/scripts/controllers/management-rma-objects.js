@@ -350,14 +350,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             result.doublePipe = (zpoint.doublePipe === null) ? false : zpoint.doublePipe;
             result.singlePipe = !result.doublePipe;
         }
-//console.log(zpoint);
-        if ((typeof zpoint.deviceObjects != 'undefined') && (zpoint.deviceObjects.length > 0)) {
-            if (zpoint.deviceObjects[0].hasOwnProperty('deviceModel')) {
-                result.zpointModel = zpoint.deviceObjects[0].deviceModel.modelName;
+        console.log(zpoint);
+        if (!mainSvc.checkUndefinedNull(zpoint.deviceObject)) {
+            if (!mainSvc.checkUndefinedNull(zpoint.deviceObject.deviceModel)) {
+                result.zpointModel = zpoint.deviceObject.deviceModel.modelName;
             } else {
                 result.zpointModel = "Не задано";
             }
-            result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObjects[0].number) ? "" : zpoint.deviceObjects[0].number;
+            // deviceObjects property changed to deviceObject. By AK
+            result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObject.number) ? "" : zpoint.deviceObject.number;
         }
         result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
         result.zpointLastDataDate  = zpoint.lastDataDate;

@@ -316,8 +316,8 @@ console.log($scope.zPointsByObject);
                             var zpoint = {};
                             zpoint.zpointType = $scope.zPointsByObject[i].contServiceType.keyname;
                             zpoint.zpointName = $scope.zPointsByObject[i].customServiceName;
-                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+                            zpoint.zpointModel = $scope.zPointsByObject[i].deviceObject.deviceModel.modelName;
+                            zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObject.number;
                             zpoint.zpointLastDataDate  = "27.02.2015";   
                             
                             $scope.oldObjects[i] = zpoint;
