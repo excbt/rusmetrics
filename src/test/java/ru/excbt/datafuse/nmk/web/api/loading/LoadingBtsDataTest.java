@@ -145,6 +145,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				contZPoint.setDoublePipe(false);
 				contZPoint.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
 				contZPoint.setRsoId(RSO_ORGANIZARION_ID);
+                //contZPoint.setDeviceObject();
 				Long contZpointId = _testCreateJson(String.format("/api/rma/contObjects/%d/zpoints", contObjectId),
 						contZPoint);
 				assertNotNull(contZpointId);

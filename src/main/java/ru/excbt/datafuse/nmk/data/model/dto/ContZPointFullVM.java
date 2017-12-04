@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
@@ -62,8 +63,10 @@ public class ContZPointFullVM implements ModelIdable {
 
     private Long temperatureChartId;
 
-    @Deprecated
-    private List<DeviceObjectDTO> deviceObjects;
+//    @Deprecated
+//    private List<DeviceObjectDTO> deviceObjects;
+
+    private DeviceObjectDTO deviceObject;
 
     private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
@@ -252,13 +255,6 @@ public class ContZPointFullVM implements ModelIdable {
         return null;
     }
 
-    public List<DeviceObjectDTO> getDeviceObjects() {
-        return deviceObjects;
-    }
-
-    public void setDeviceObjects(List<DeviceObjectDTO> deviceObjects) {
-        this.deviceObjects = deviceObjects;
-    }
 
     public Long get_activeDeviceObjectId() {
         return _activeDeviceObjectId;
@@ -266,5 +262,13 @@ public class ContZPointFullVM implements ModelIdable {
 
     public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
         this._activeDeviceObjectId = _activeDeviceObjectId;
+    }
+
+    public DeviceObjectDTO getDeviceObject() {
+        return deviceObject;
+    }
+
+    public void setDeviceObject(DeviceObjectDTO deviceObject) {
+        this.deviceObject = deviceObject;
     }
 }

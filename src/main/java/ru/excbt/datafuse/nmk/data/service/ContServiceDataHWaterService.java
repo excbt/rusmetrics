@@ -449,7 +449,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param localDateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private ContServiceDataHWater selectLastAbsData(long contZpointId, LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
@@ -567,19 +567,19 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		// Device Object Check And Save
 		DeviceObject deviceObject = null;
 
-		if (zpoint.getDeviceObjects().isEmpty()) {
+		if (zpoint.getDeviceObject() == null) {
 
 			logger.debug("Device Object is not found. Create new");
 
 			deviceObject = deviceObjectService.createManualDeviceObject();
 			logger.debug("Cont Object is saved. Id:{}", deviceObject.getId());
 
-			zpoint.getDeviceObjects().add(deviceObject);
+			zpoint.setDeviceObject(deviceObject);
 			contZPointService.updateContZPoint(zpoint);
 
 			logger.debug("ContZPoint is saved. Id:{}", zpoint.getId());
 		} else {
-			deviceObject = zpoint.getDeviceObjects().get(0);
+			deviceObject = zpoint.getDeviceObject();
 		}
 
 		Optional<ContServiceDataHWater> checkIsNewElements = inData.stream().filter((i) -> !i.isNew()).findAny();

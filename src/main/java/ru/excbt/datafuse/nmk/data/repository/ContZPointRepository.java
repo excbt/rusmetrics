@@ -42,7 +42,7 @@ public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, C
 	 * @param contZpointId
 	 * @return
 	 */
-	@Query("SELECT zp.deviceObjects FROM ContZPoint zp WHERE zp.id = :contZpointId ")
+	@Query("SELECT zp.deviceObject FROM ContZPoint zp WHERE zp.id = :contZpointId ")
 	List<DeviceObject> selectDeviceObjects(@Param("contZpointId") long contZpointId);
 
 	/**
@@ -50,7 +50,7 @@ public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, C
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Query("SELECT zp FROM ContZPoint zp INNER JOIN zp.deviceObjects d WHERE d.id = :deviceObjectId ")
+	@Query("SELECT zp FROM ContZPoint zp INNER JOIN zp.deviceObject d WHERE d.id = :deviceObjectId ")
 	List<ContZPoint> selectContZPointsByDeviceObjectId(@Param("deviceObjectId") long deviceObjectId);
 
 	/**
@@ -58,7 +58,7 @@ public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, C
 	 * @param contZpointId
 	 * @return
 	 */
-	@Query("SELECT do.id FROM ContZPoint zp INNER JOIN zp.deviceObjects do WHERE zp.id = :contZpointId ")
+	@Query("SELECT do.id FROM ContZPoint zp INNER JOIN zp.deviceObject do WHERE zp.id = :contZpointId ")
 	List<Long> selectDeviceObjectIds(@Param("contZpointId") long contZpointId);
 
 	/**

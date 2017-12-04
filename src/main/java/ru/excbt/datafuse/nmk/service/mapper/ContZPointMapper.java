@@ -2,10 +2,7 @@ package ru.excbt.datafuse.nmk.service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
@@ -17,7 +14,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
 
     @Override
     @Mapping(target = "contObject", source = "contObjectId")
-    @Mapping(target = "deviceObjects", ignore = true)
+    @Mapping(target = "deviceObject", ignore = true)
     @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
     @Mapping(target = "rso", source = "rsoId")
     @Mapping(target = "createdDate", ignore = true)
@@ -36,7 +33,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
 
     @Mapping(target = "contObject", source = "contObjectId")
     @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
-    @Mapping(target = "deviceObjects", ignore = true)
+    //@Mapping(target = "deviceObject", source = "deviceObjectId")
     @Mapping(target = "rso", source = "rsoId")
     @Mapping(target = "temperatureChart", source = "temperatureChartId")
     @Mapping(target = "createdDate", ignore = true)
@@ -66,6 +63,11 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
         ContServiceType result = new ContServiceType();
         result.setKeyname(keyname);
         return result;
+    }
+
+
+    default DeviceObject deviceObjectFromId(Long id) {
+        return new DeviceObject().id(id);
     }
 
 }

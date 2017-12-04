@@ -151,9 +151,9 @@ public class SubscrContZPointResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		ContZPoint currentContZPoint = contZPointService.findOne(contZPointId);
+		ContZPointFullVM currentContZPoint = contZPointService.findFullVM(contZPointId);
 
-		if (currentContZPoint == null || !currentContZPoint.getContObject().getId().equals(contObjectId)) {
+		if (currentContZPoint == null || !currentContZPoint.getContObjectId().equals(contObjectId)) {
 			return ApiResponse.responseBadRequest();
 		}
 

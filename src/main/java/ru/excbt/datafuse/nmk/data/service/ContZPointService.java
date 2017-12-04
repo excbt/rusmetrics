@@ -155,12 +155,19 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContZPoint findOne(long contZpointId) {
 		ContZPoint result = contZPointRepository.findOne(contZpointId);
-		if (result != null && result.getDeviceObjects() != null) {
-			result.getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
+		if (result != null && result.getDeviceObject() != null) {
+            result.getDeviceObject().getId();
+//			result.getDeviceObjects().forEach(j -> {
+//				j.loadLazyProps();
+//			});
 		}
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public ContZPointFullVM findFullVM(long contZpointId) {
+		ContZPoint contZPoint = contZPointRepository.findOne(contZpointId);
+		return contZPointMapper.toFullVM(contZPoint);
 	}
 
 	/**
@@ -175,9 +182,12 @@ public class ContZPointService implements SecuredRoles {
 //            contZPointRepository.findByContObjectId(contObjectId);
 
 		result.forEach(i -> {
-			i.getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
+		    if (i.getDeviceObject() != null) {
+                i.getDeviceObject().getId();
+            }
+//			i.getDeviceObjects().forEach(j -> {
+//				j.loadLazyProps();
+//			});
 
 			if (i.getTemperatureChart() != null) {
 				i.getTemperatureChart().getId();
@@ -206,9 +216,17 @@ public class ContZPointService implements SecuredRoles {
 		result.addAll(resultEl);
 
 		result.forEach(i -> {
-			i.getObject().getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
+            if (i.getObject().getDeviceObject() != null) {
+                i.getObject().getDeviceObject().getId();
+            }
+//
+//            if (i.getDeviceObject() != null) {
+//                i.getDeviceObject().getId();
+//            }
+//
+//			i.getObject().getDeviceObjects().forEach(j -> {
+//				j.loadLazyProps();
+//			});
 
 			if (i.getObject().getTemperatureChart() != null) {
 				i.getObject().getTemperatureChart().getId();
@@ -265,9 +283,10 @@ public class ContZPointService implements SecuredRoles {
 		result.addAll(resultEl);
 
 		result.forEach(i -> {
-            if (i.getDeviceObjects().size() > 0) {
-                i.set_activeDeviceObjectId(i.getDeviceObjects().get(0).getId());
-            }
+//            if (i.getDeviceObject()!= null) {
+//                i.setDeviceObject(new Dev i.getDeviceObjects().get(0).getId());
+//                i.set_activeDeviceObjectId(i.getDeviceObjects().get(0).getId());
+//            }
 
 //
 //			i.getDeviceObjects().forEach(j -> {
@@ -532,9 +551,13 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint);
 		checkArgument(!contZPoint.isNew());
 		ContZPoint result = contZPointRepository.save(contZPoint);
-		result.getDeviceObjects().forEach(j -> {
-			j.loadLazyProps();
-		});
+        if (result.getDeviceObject() != null) {
+            result.getDeviceObject().getId();
+        }
+
+//		result.getDeviceObjects().forEach(j -> {
+//			j.loadLazyProps();
+//		});
 		return result;
 	}
 
@@ -567,7 +590,8 @@ public class ContZPointService implements SecuredRoles {
 		result.setTsNumber(tsNumber);
 		result.setDoublePipe(isDoublePipe);
 		if (deviceObject != null) {
-			result.getDeviceObjects().add(deviceObject);
+			result.setDeviceObject(deviceObject);
+			//getDeviceObjects().add(deviceObject);
 		}
 		return contZPointRepository.save(result);
 	}
@@ -588,12 +612,6 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
-    /**
-     *
-     * @param contObjectId
-     * @param contZPoint
-     * @return
-     */
 //	@Transactional(value = TxConst.TX_DEFAULT)
 //	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 //	public ContZPoint createOne(PortalUserIds userIds, Long contObjectId, ContZPoint contZPoint) {
@@ -624,7 +642,7 @@ public class ContZPointService implements SecuredRoles {
         checkNotNull(contZPointDTO.getContObjectId());
         checkNotNull(contZPointDTO.getStartDate());
         checkNotNull(contZPointDTO.getContServiceTypeKeyname());
-        checkNotNull(contZPointDTO.get_activeDeviceObjectId());
+//        checkNotNull(contZPointDTO.get_activeDeviceObjectId());
         checkNotNull(contZPointDTO.getRsoId());
 
         ContZPoint contZPoint = contZPointMapper.toEntity(contZPointDTO);
@@ -632,8 +650,13 @@ public class ContZPointService implements SecuredRoles {
         //contZPointDTO.setContObjectId(contObjectId);
         //linkToContObject(contZPointDTO);
         //initDeviceObject(contZPointDTO);
-        contZPoint.getDeviceObjects().clear();
-        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointDTO.get_activeDeviceObjectId()));
+
+        if (contZPointDTO.getDeviceObjectId() != null) {
+            contZPoint.setDeviceObject(new DeviceObject().id(contZPointDTO.getDeviceObjectId()));
+        }
+
+//        contZPoint.getDeviceObjects().clear();
+//        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointDTO.get_activeDeviceObjectId()));
 
 //        initContServiceType(contZPointDTO);
 //        initRso(contZPointDTO);
@@ -644,7 +667,9 @@ public class ContZPointService implements SecuredRoles {
 
         subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), savedContZPoint);
 
-        return contZPointMapper.toFullVM(savedContZPoint);
+        ContZPointFullVM contZPointFullVM = contZPointMapper.toFullVM(savedContZPoint);
+
+        return contZPointFullVM;
     }
 
 	/**
@@ -676,11 +701,6 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
-	/**
-	 *
-	 * @param contZPoint
-	 * @return
-	 */
 //	@Transactional(value = TxConst.TX_DEFAULT)
 //	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 //	public ContZPoint updateOne(ContZPoint contZPoint) {
@@ -717,12 +737,15 @@ public class ContZPointService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
 		checkNotNull(contZPointFullVM);
-		checkNotNull(contZPointFullVM.get_activeDeviceObjectId());
+		//checkNotNull(contZPointFullVM.get_activeDeviceObjectId());
 
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
 
-        contZPoint.getDeviceObjects().clear();
-        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointFullVM.get_activeDeviceObjectId()));
+
+
+        //contZPoint.setDeviceObject(new DeviceObject().id(contZPointFullVM.get_activeDeviceObjectId()));
+//        contZPoint.getDeviceObjects().clear();
+//        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointFullVM.get_activeDeviceObjectId()));
 
 		contZPoint.setIsManual(true);
 

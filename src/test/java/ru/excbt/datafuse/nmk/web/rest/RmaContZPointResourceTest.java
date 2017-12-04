@@ -76,14 +76,15 @@ public class RmaContZPointResourceTest extends RmaControllerTest {
             contZPointFullVM = contZPointMapper.toFullVM(contZPoint);
         }
 
-		Long activeDeviceObjectId = contZPointFullVM.getDeviceObjects().get(0).getId();
-        contZPointFullVM.getDeviceObjects().clear();
+		Long activeDeviceObjectId = contZPointFullVM.getDeviceObject() != null ?
+            contZPointFullVM.getDeviceObject().getId() : null;
+//        contZPointFullVM.getDeviceObjects().clear();
         contZPointFullVM.setContZPointComment("Modified by TEST");
         contZPointFullVM.setRsoId(randomRsoOrganizationId());
         //contZPointFullVM.setContObject(null);
         contZPointFullVM.setContServiceType(null);
         contZPointFullVM.setRso(null);
-        contZPointFullVM.setDeviceObjects(null);
+        contZPointFullVM.setDeviceObject(null);
         contZPointFullVM.set_activeDeviceObjectId(activeDeviceObjectId);
         contZPointFullVM.setExCode("ex_code111");
 		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
