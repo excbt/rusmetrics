@@ -56,7 +56,7 @@ public class RmaContZPointResourceTest extends RmaControllerTest {
 	public void testZPointCRUD() throws Exception {
 
         ContZPointFullVM contZPointFullVM0 = new ContZPointFullVM();
-        contZPointFullVM0.set_activeDeviceObjectId(65836845L);
+        contZPointFullVM0.setDeviceObjectId(65836845L);
         contZPointFullVM0.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.getKeyname());
         contZPointFullVM0.setStartDate(new Date());
 
@@ -85,7 +85,7 @@ public class RmaContZPointResourceTest extends RmaControllerTest {
         contZPointFullVM.setContServiceType(null);
         contZPointFullVM.setRso(null);
         contZPointFullVM.setDeviceObject(null);
-        contZPointFullVM.set_activeDeviceObjectId(activeDeviceObjectId);
+        contZPointFullVM.setDeviceObjectId(activeDeviceObjectId);
         contZPointFullVM.setExCode("ex_code111");
 		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
             contZPointFullVM);

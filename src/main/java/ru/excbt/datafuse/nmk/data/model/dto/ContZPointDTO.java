@@ -216,11 +216,4 @@ public class ContZPointDTO implements ModelIdable {
         this.deviceObjectId = deviceObjectId;
     }
 
-    public Long get_activeDeviceObjectId() {
-        return deviceObjectId;
-    }
-
-    public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
-        this._activeDeviceObjectId = _activeDeviceObjectId;
-    }
 }

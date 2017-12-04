@@ -137,7 +137,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			// Make ContZPoint
 			for (int i = 1; i < 9; i++) {
 				ContZPointFullVM contZPoint = new ContZPointFullVM();
-				contZPoint.set_activeDeviceObjectId(deviceObjectIds[i - 1]);
+				contZPoint.setDeviceObjectId(deviceObjectIds[i - 1]);
 				contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.CW.getKeyname());
 				contZPoint.setContZPointComment(
 						"Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr() + " (" + info.getAptNr().toLowerCase() + ")");

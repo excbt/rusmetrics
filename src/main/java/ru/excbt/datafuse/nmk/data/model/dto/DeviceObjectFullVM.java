@@ -8,6 +8,8 @@ public class DeviceObjectFullVM {
 
     private DeviceModelDTO deviceModel;
 
+    private Long deviceModelId;
+
     private String number;
 
     private int version;
@@ -213,5 +215,13 @@ public class DeviceObjectFullVM {
 
     public void setDeviceObjectName(String deviceObjectName) {
         this.deviceObjectName = deviceObjectName;
+    }
+
+    public Long getDeviceModelId() {
+        return deviceModelId;
+    }
+
+    public void setDeviceModelId(Long deviceModelId) {
+        this.deviceModelId = deviceModelId;
     }
 }
