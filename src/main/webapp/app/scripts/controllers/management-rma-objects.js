@@ -327,7 +327,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         result.version = zpoint.version;
         result.contObjectId = zpoint.contObjectId;
         result.startDate = zpoint.startDate;
-        result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+        result.deviceObjectId = zpoint.deviceObjectId;
         result.rsoId = zpoint.rsoId;
         result.zpointType = zpoint.contServiceType.keyname;
         result.isManualLoading = zpoint.isManualLoading;
@@ -359,8 +359,10 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             }
             // deviceObjects property changed to deviceObject. By AK
             result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObject.number) ? "" : zpoint.deviceObject.number;
+        
+            result.deviceObjectId = zpoint.deviceObject.id;
         }
-        result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+        
         result.zpointLastDataDate  = zpoint.lastDataDate;
         result.isDroolsDisable = zpoint.isDroolsDisable;
         result.temperatureChartId = zpoint.temperatureChartId;
@@ -1048,7 +1050,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.version = object.version;
         zps.contObjectId = object.contObjectId;
         zps.startDate = object.startDate;
-        zps._activeDeviceObjectId = object._activeDeviceObjectId;
+        zps.deviceObjectId = object.deviceObjectId;
         zps.rsoId = object.rsoId;
         zps.isManualLoading = object.isManualLoading;
         zps.customServiceName = object.customServiceName;
@@ -1167,7 +1169,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
             result = false;
         }
-        if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)) {
+        if ($scope.checkUndefinedNull($scope.zpointSettings.deviceObjectId)) {
             notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
             result = false;
         }
@@ -1503,8 +1505,8 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 });
                 obj.devices = tmpArr;//response.data;
                 $scope.selectedItem(obj);
-                if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)) {
-                    $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
+                if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings.deviceObjectId)) {
+                    $scope.zpointSettings.deviceObjectId = obj.devices[0].id;
                 }
 //console.log(obj);                            
                 if (showFlag == true) {
