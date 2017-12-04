@@ -601,7 +601,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public V_DeviceObjectTimeOffset selectDeviceObjsetTimeOffset(Long deviceObjectId) {
-		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
+		return deviceObjectId != null ? deviceObjectTimeOffsetRepository.findOne(deviceObjectId) : null;
 	}
 
     /**

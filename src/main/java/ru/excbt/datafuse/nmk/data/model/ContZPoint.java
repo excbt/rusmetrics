@@ -86,7 +86,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	@OneToOne(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
 			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
 	private DeviceObject deviceObject;

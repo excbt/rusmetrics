@@ -6,6 +6,7 @@ import org.mapstruct.MappingTarget;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 
 /**
  * Created by kovtonyk on 23.05.2017.
@@ -35,6 +36,9 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
 
     void updateDeviceLoginInfoFromDto(DeviceObjectDTO.DeviceLoginInfoDTO dto,
                                       @MappingTarget DeviceObject.DeviceLoginInfo loginInfo);
+
+
+    DeviceObjectFullVM toFullVM(DeviceObject deviceObject);
 
 
     default DeviceModel deviceModelFromId(Long id) {

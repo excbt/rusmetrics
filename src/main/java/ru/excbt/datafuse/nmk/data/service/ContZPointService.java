@@ -298,10 +298,13 @@ public class ContZPointService implements SecuredRoles {
 //				i.getModel().getTemperatureChart().getChartComment();
 //			}
 
-			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
-					.selectDeviceObjsetTimeOffset(i.get_activeDeviceObjectId());
+            if (i.getDeviceObject() != null && i.getDeviceObject().getId() != null) {
+                V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
+                    .selectDeviceObjsetTimeOffset(i.getDeviceObject().getId());
+                //i.s setDeviceObjectTimeOffset(deviceObjectTimeOffset);
+            }
 
-			//i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
+			//
 		});
 
 		return result;

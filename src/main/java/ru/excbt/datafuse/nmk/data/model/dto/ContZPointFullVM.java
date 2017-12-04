@@ -66,7 +66,7 @@ public class ContZPointFullVM implements ModelIdable {
 //    @Deprecated
 //    private List<DeviceObjectDTO> deviceObjects;
 
-    private DeviceObjectDTO deviceObject;
+    private DeviceObjectFullVM deviceObject;
 
     private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
@@ -255,7 +255,6 @@ public class ContZPointFullVM implements ModelIdable {
         return null;
     }
 
-
     public Long get_activeDeviceObjectId() {
         return _activeDeviceObjectId;
     }
@@ -264,11 +263,11 @@ public class ContZPointFullVM implements ModelIdable {
         this._activeDeviceObjectId = _activeDeviceObjectId;
     }
 
-    public DeviceObjectDTO getDeviceObject() {
+    public DeviceObjectFullVM getDeviceObject() {
         return deviceObject;
     }
 
-    public void setDeviceObject(DeviceObjectDTO deviceObject) {
+    public void setDeviceObject(DeviceObjectFullVM deviceObject) {
         this.deviceObject = deviceObject;
     }
 }
