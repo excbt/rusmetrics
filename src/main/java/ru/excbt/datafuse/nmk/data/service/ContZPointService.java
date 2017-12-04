@@ -220,36 +220,36 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContZPointVO> selectContObjectZPointsVO(SubscriberParam subscriberParam, long contObjectId) {
-		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, subscriberParam);
-            contZPointRepository.findByContObjectId(contObjectId);
-		List<ContZPointVO> result = new ArrayList<>();
-
-		List<ContZPointVO> resultHWater = makeContZPointVO_Hwater(zPoints);
-		List<ContZPointVO> resultEl = makeContZPointVO_El(zPoints);
-
-		result.addAll(resultHWater);
-		result.addAll(resultEl);
-
-		result.forEach(i -> {
-			i.getModel().getDeviceObjects().forEach(j -> {
-				j.loadLazyProps();
-			});
-
-			if (i.getModel().getTemperatureChart() != null) {
-				i.getModel().getTemperatureChart().getId();
-				i.getModel().getTemperatureChart().getChartComment();
-			}
-
-			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
-					.selectDeviceObjsetTimeOffset(i.getModel().get_activeDeviceObjectId());
-
-			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
-		});
-
-		return result;
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<ContZPointVO> selectContObjectZPointsVO(SubscriberParam subscriberParam, long contObjectId) {
+//		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, subscriberParam);
+//            contZPointRepository.findByContObjectId(contObjectId);
+//		List<ContZPointVO> result = new ArrayList<>();
+//
+//		List<ContZPointVO> resultHWater = makeContZPointVO_Hwater(zPoints);
+//		List<ContZPointVO> resultEl = makeContZPointVO_El(zPoints);
+//
+//		result.addAll(resultHWater);
+//		result.addAll(resultEl);
+//
+//		result.forEach(i -> {
+//			i.getModel().getDeviceObjects().forEach(j -> {
+//				j.loadLazyProps();
+//			});
+//
+//			if (i.getModel().getTemperatureChart() != null) {
+//				i.getModel().getTemperatureChart().getId();
+//				i.getModel().getTemperatureChart().getChartComment();
+//			}
+//
+//			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
+//					.selectDeviceObjsetTimeOffset(i.getModel().get_activeDeviceObjectId());
+//
+//			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
+//		});
+//
+//		return result;
+//	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointFullVM> selectContObjectZPointsStatsVM(Long contObjectId, PortalUserIds portalUserIds) {
@@ -594,30 +594,30 @@ public class ContZPointService implements SecuredRoles {
      * @param contZPoint
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPoint createOne(PortalUserIds userIds, Long contObjectId, ContZPoint contZPoint) {
-		checkNotNull(contObjectId);
-		checkNotNull(contZPoint);
-		checkNotNull(contZPoint.getStartDate());
-		checkNotNull(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contZPoint.get_activeDeviceObjectId());
-		checkNotNull(contZPoint.getRsoId());
-
-		contZPoint.setContObjectId(contObjectId);
-		linkToContObject(contZPoint);
-		initDeviceObject(contZPoint);
-		initContServiceType(contZPoint);
-		initRso(contZPoint);
-		contZPoint.setIsManual(true);
-
-		ContZPoint result = contZPointRepository.save(contZPoint);
-		contZPointSettingModeService.initContZPointSettingMode(result.getId());
-
-        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), result);
-
-		return result;
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT)
+//	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+//	public ContZPoint createOne(PortalUserIds userIds, Long contObjectId, ContZPoint contZPoint) {
+//		checkNotNull(contObjectId);
+//		checkNotNull(contZPoint);
+//		checkNotNull(contZPoint.getStartDate());
+//		checkNotNull(contZPoint.getContServiceTypeKeyname());
+//		checkNotNull(contZPoint.get_activeDeviceObjectId());
+//		checkNotNull(contZPoint.getRsoId());
+//
+//		contZPoint.setContObjectId(contObjectId);
+//		linkToContObject(contZPoint);
+//		initDeviceObject(contZPoint);
+//		initContServiceType(contZPoint);
+//		initRso(contZPoint);
+//		contZPoint.setIsManual(true);
+//
+//		ContZPoint result = contZPointRepository.save(contZPoint);
+//		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+//
+//        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), result);
+//
+//		return result;
+//	}
 
     public ContZPointFullVM createZPoint_DTO2FULL(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
         checkNotNull(contZPointDTO);
@@ -681,37 +681,37 @@ public class ContZPointService implements SecuredRoles {
 	 * @param contZPoint
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPoint updateOne(ContZPoint contZPoint) {
-		checkNotNull(contZPoint);
-		checkNotNull(contZPoint.getContObjectId());
-		checkNotNull(contZPoint.getStartDate());
-		checkNotNull(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contZPoint.get_activeDeviceObjectId());
-		checkNotNull(contZPoint.getRsoId());
-
-		linkToContObject(contZPoint);
-		initDeviceObject(contZPoint);
-		initContServiceType(contZPoint);
-		initRso(contZPoint);
-
-		if (contZPoint.getTemperatureChartId() != null) {
-			TemperatureChart chart = temperatureChartService.selectTemperatureChart(contZPoint.getTemperatureChartId());
-			if (chart == null) {
-				throw new PersistenceException(
-						String.format("TemperatureChart (id=%d) is not found", contZPoint.getTemperatureChartId()));
-			}
-			contZPoint.setTemperatureChart(chart);
-		}
-
-		contZPoint.setIsManual(true);
-
-		ContZPoint result = contZPointRepository.save(contZPoint);
-		contZPointSettingModeService.initContZPointSettingMode(result.getId());
-
-		return result;
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT)
+//	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+//	public ContZPoint updateOne(ContZPoint contZPoint) {
+//		checkNotNull(contZPoint);
+//		checkNotNull(contZPoint.getContObjectId());
+//		checkNotNull(contZPoint.getStartDate());
+//		checkNotNull(contZPoint.getContServiceTypeKeyname());
+//		checkNotNull(contZPoint.get_activeDeviceObjectId());
+//		checkNotNull(contZPoint.getRsoId());
+//
+//		linkToContObject(contZPoint);
+//		initDeviceObject(contZPoint);
+//		initContServiceType(contZPoint);
+//		initRso(contZPoint);
+//
+//		if (contZPoint.getTemperatureChartId() != null) {
+//			TemperatureChart chart = temperatureChartService.selectTemperatureChart(contZPoint.getTemperatureChartId());
+//			if (chart == null) {
+//				throw new PersistenceException(
+//						String.format("TemperatureChart (id=%d) is not found", contZPoint.getTemperatureChartId()));
+//			}
+//			contZPoint.setTemperatureChart(chart);
+//		}
+//
+//		contZPoint.setIsManual(true);
+//
+//		ContZPoint result = contZPointRepository.save(contZPoint);
+//		contZPointSettingModeService.initContZPointSettingMode(result.getId());
+//
+//		return result;
+//	}
 
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
@@ -766,17 +766,17 @@ public class ContZPointService implements SecuredRoles {
 	 * TODO remove device object
 	 * @param contZPoint
 	 */
-	@Deprecated
-	private void initDeviceObject(ContZPoint contZPoint) {
-		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(contZPoint.get_activeDeviceObjectId());
-
-		if (deviceObject == null) {
-			throw new PersistenceException(
-					String.format("DeviceObject(id=%d) is not found", contZPoint.get_activeDeviceObjectId()));
-		}
-		contZPoint.getDeviceObjects().clear();
-		contZPoint.getDeviceObjects().add(deviceObject);
-	}
+//	@Deprecated
+//	private void initDeviceObject(ContZPoint contZPoint) {
+//		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(contZPoint.get_activeDeviceObjectId());
+//
+//		if (deviceObject == null) {
+//			throw new PersistenceException(
+//					String.format("DeviceObject(id=%d) is not found", contZPoint.get_activeDeviceObjectId()));
+//		}
+//		contZPoint.getDeviceObjects().clear();
+//		contZPoint.getDeviceObjects().add(deviceObject);
+//	}
 
 	/**
 	 *

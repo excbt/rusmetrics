@@ -18,11 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
@@ -44,38 +47,48 @@ public class RmaContZPointControllerTest extends RmaControllerTest {
 	@Autowired
 	private ContZPointService contZPointService;
 
+    @Autowired
+	private ContZPointMapper contZPointMapper;
+
+
 	@Test
 	//@Ignore
     @Transactional
 	public void testZPointCRUD() throws Exception {
 
-		ContZPoint contZPoint = new ContZPoint();
-		contZPoint.set_activeDeviceObjectId(65836845L);
-		contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.getKeyname());
-		contZPoint.setStartDate(new Date());
+        ContZPointFullVM contZPointFullVM0 = new ContZPointFullVM();
+        contZPointFullVM0.set_activeDeviceObjectId(65836845L);
+        contZPointFullVM0.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.getKeyname());
+        contZPointFullVM0.setStartDate(new Date());
 
-		contZPoint.setRsoId(randomRsoOrganizationId());
+        contZPointFullVM0.setRsoId(randomRsoOrganizationId());
 
 		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints", MANUAL_CONT_OBJECT_ID));
 
-		Long contZPointId = _testCreateJson(url, contZPoint);
+		Long contZPointId = _testCreateJson(url, contZPointFullVM0);
 
 		_testGetJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 
-		contZPoint = contZPointService.findOne(contZPointId);
+        ContZPointFullVM contZPointFullVM;
 
-		Long activeDeviceObjectId = contZPoint.get_activeDeviceObjectId();
-		contZPoint.getDeviceObjects().clear();
-		contZPoint.setContZPointComment("Modified by TEST");
-		contZPoint.setRsoId(randomRsoOrganizationId());
-		contZPoint.setContObject(null);
-		contZPoint.setContServiceType(null);
-		contZPoint.setRso(null);
-		contZPoint.setDeviceObjects(null);
-		contZPoint.set_activeDeviceObjectId(activeDeviceObjectId);
-		contZPoint.setExCode("ex_code111");
+        {
+            ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+
+            contZPointFullVM = contZPointMapper.toFullVM(contZPoint);
+        }
+
+		Long activeDeviceObjectId = contZPointFullVM.getDeviceObjects().get(0).getId();
+        contZPointFullVM.getDeviceObjects().clear();
+        contZPointFullVM.setContZPointComment("Modified by TEST");
+        contZPointFullVM.setRsoId(randomRsoOrganizationId());
+        //contZPointFullVM.setContObject(null);
+        contZPointFullVM.setContServiceType(null);
+        contZPointFullVM.setRso(null);
+        contZPointFullVM.setDeviceObjects(null);
+        contZPointFullVM.set_activeDeviceObjectId(activeDeviceObjectId);
+        contZPointFullVM.setExCode("ex_code111");
 		_testUpdateJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)),
-				contZPoint);
+            contZPointFullVM);
 
 		_testDeleteJson(UrlUtils.apiRmaUrl(String.format("/contObjects/%d/zpoints/%d", MANUAL_CONT_OBJECT_ID, contZPointId)));
 	}
