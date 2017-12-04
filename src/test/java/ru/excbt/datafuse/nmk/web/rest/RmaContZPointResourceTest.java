@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
@@ -32,9 +31,9 @@ import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
 
 @Transactional
-public class RmaContZPointControllerTest extends RmaControllerTest {
+public class RmaContZPointResourceTest extends RmaControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointResourceTest.class);
 
 	private final static long MANUAL_HW_CONT_ZPOINT_ID = 49492462;
 	private final static long MANUAL_CONT_OBJECT_ID = 733;
