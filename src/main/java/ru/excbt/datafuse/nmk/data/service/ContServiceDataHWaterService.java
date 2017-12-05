@@ -63,6 +63,8 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
     public static final TemporalAmount LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(30);
 
+    public static final TemporalAmount MAX_LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(365);
+
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
 	private static final Set<String> HWATER_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.CW.getKeyname(),
@@ -256,9 +258,10 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		List<Timestamp> resultList = contServiceDataHWaterRepository.selectLastDataDateByZPointMax(contZpointId,
             LocalDateUtils.asDate(actialFromDate));
 
-		if (resultList.get(0) == null) {
-			resultList = contServiceDataHWaterRepository.selectLastDataDateByZPointMax(contZpointId);
-		}
+//		if (resultList.get(0) == null) {
+//			resultList = contServiceDataHWaterRepository.selectLastDataDateByZPointMax(contZpointId,
+//                LocalDateUtils.asDate(actialFromDate.minus(MAX_LAST_DATA_DATE_DEPTH_DURATION)));
+//		}
 
 		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
 	}

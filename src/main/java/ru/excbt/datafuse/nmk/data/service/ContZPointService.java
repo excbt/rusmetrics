@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
+import ru.excbt.datafuse.nmk.data.repository.V_LastDataDateAggrRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
@@ -99,6 +100,9 @@ public class ContZPointService implements SecuredRoles {
 
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;
+
+    @Autowired
+    private V_LastDataDateAggrRepository v_lastDataDateAggrRepository;
 
 	/**
 	 * Краткая информация по точке учета
@@ -368,6 +372,12 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+	private Date getLastDataDateAggr(final Long contZPointId) {
+        V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findOne(contZPointId);
+        return lastDataDateAggr != null ? LocalDateUtils.asDate(lastDataDateAggr.getLastDataDate()) : null;
+    }
+
+
 	private List<ContZPointFullVM> makeContZPointStatsVM_Hwater(List<ContZPoint> contZPointList) {
 		List<ContZPointFullVM> result = new ArrayList<>();
 		MinCheck<Date> minCheck = new MinCheck<>();
@@ -379,6 +389,10 @@ public class ContZPointService implements SecuredRoles {
 			}
 
 			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+
+			if (zPointLastDate == null) {
+			    zPointLastDate = getLastDataDateAggr(zp.getId());
+            }
 
 			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
 
@@ -467,6 +481,10 @@ public class ContZPointService implements SecuredRoles {
 			}
 
 			Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+
+            if (zPointLastDate == null) {
+                zPointLastDate = getLastDataDateAggr(zp.getId());
+            }
 
 			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
 

@@ -56,6 +56,8 @@ public class ContServiceDataElService {
 
     public static final TemporalAmount LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(30);
 
+    public static final TemporalAmount MAX_LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(365);
+
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
 	private static final String[] CONS_COLUMNS = new String[] { "p_Ap1", "p_An1", "q_Rp1", "q_Rn1", "p_Ap2", "p_An2",
@@ -620,9 +622,10 @@ public class ContServiceDataElService {
 		List<Timestamp> resultList = contServiceDataElConsRepository.selectLastDataDateByZPointMax(contZPointId,
 				LocalDateUtils.asDate(actialFromDate));
 
-        if (resultList.get(0) == null) {
-			resultList = contServiceDataElConsRepository.selectLastDataDateByZPointMax(contZPointId);
-		}
+//        if (resultList.get(0) == null) {
+//			resultList = contServiceDataElConsRepository.selectLastDataDateByZPointMax(contZPointId,
+//                LocalDateUtils.asDate(actialFromDate.minus(MAX_LAST_DATA_DATE_DEPTH_DURATION)));
+//		}
 
 		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
 	}
