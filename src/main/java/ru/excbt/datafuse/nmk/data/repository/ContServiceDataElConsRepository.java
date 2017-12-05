@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -101,6 +103,11 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("fromDateTime") Date fromDateTime, Pageable pageable);
 
+	@Query("SELECT max(d.dataDate) FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND "
+			+ " d.dataDate >= :fromDateTime AND d.deleted = 0 ")
+	public List<Timestamp> selectLastDataDateByZPointMax(@Param("contZPointId") long contZPointId,
+                                                         @Param("fromDateTime") Date fromDateTime);
+
 	/**
 	 *
 	 * @param contZPointId
@@ -111,6 +118,9 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			+ " ORDER BY d.dataDate desc")
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			Pageable pageable);
+
+	@Query("SELECT max(d.dataDate) FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND d.deleted = 0 ")
+	public List<Timestamp> selectLastDataDateByZPointMax(@Param("contZPointId") long contZPointId);
 
     /**
      *

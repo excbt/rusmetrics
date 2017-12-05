@@ -25,7 +25,13 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +53,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class ContServiceDataElService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataElService.class);
+
+    public static final TemporalAmount LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(30);
 
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
@@ -602,22 +610,21 @@ public class ContServiceDataElService {
 	public Date selectLastConsDataDate(long contZPointId, Date fromDateTime) {
 		checkArgument(contZPointId > 0);
 
-		Date actialFromDate = fromDateTime;
+		LocalDateTime actialFromDate = LocalDateUtils.asLocalDateTime(fromDateTime);
 		if (actialFromDate == null) {
-			actialFromDate = JodaTimeUtils.startOfDay(DateTime.now().minusDays(3)).toDate();
+            actialFromDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minus(LAST_DATA_DATE_DEPTH_DURATION);
 		} else {
 			logger.debug("MinCheck: {}", actialFromDate);
 		}
 
-		List<ContServiceDataElCons> resultList = contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId,
-				actialFromDate, LIMIT1_PAGE_REQUEST);
+		List<Timestamp> resultList = contServiceDataElConsRepository.selectLastDataDateByZPointMax(contZPointId,
+				LocalDateUtils.asDate(actialFromDate));
 
-		if (resultList.size() == 0) {
-			resultList = contServiceDataElConsRepository.selectLastDataByZPoint(contZPointId, LIMIT1_PAGE_REQUEST);
+        if (resultList.get(0) == null) {
+			resultList = contServiceDataElConsRepository.selectLastDataDateByZPointMax(contZPointId);
 		}
 
-		checkNotNull(resultList);
-		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
 	}
 
 	/**

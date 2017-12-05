@@ -1,27 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-
+import com.google.common.collect.ImmutableSet;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +12,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.ImmutableSet;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -44,12 +23,30 @@ import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
+import javax.persistence.Query;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.Timestamp;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAmount;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис по работе с данными по горячей воде
@@ -63,6 +60,8 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
+
+    public static final TemporalAmount LAST_DATA_DATE_DEPTH_DURATION = Duration.ofDays(30);
 
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
@@ -151,7 +150,8 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
-			LocalDateTime beginDate, LocalDateTime endDate) {
+                                                          org.joda.time.LocalDateTime beginDate,
+                                                          org.joda.time.LocalDateTime endDate) {
 		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate, "beginDate is null");
@@ -245,22 +245,22 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	public Date selectLastDataDate(long contZpointId, Date fromDateTime) {
 		checkArgument(contZpointId > 0);
 
-		Date actialFromDate = fromDateTime;
+		LocalDateTime actialFromDate = LocalDateUtils.asLocalDateTime(fromDateTime);
+
 		if (actialFromDate == null) {
-			actialFromDate = JodaTimeUtils.startOfDay(DateTime.now().minusDays(3)).toDate();
+			actialFromDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minus(LAST_DATA_DATE_DEPTH_DURATION);
 		} else {
 			logger.debug("MinCheck: {}", actialFromDate);
 		}
 
-		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
-				actialFromDate, LIMIT1_PAGE_REQUEST);
+		List<Timestamp> resultList = contServiceDataHWaterRepository.selectLastDataDateByZPointMax(contZpointId,
+            LocalDateUtils.asDate(actialFromDate));
 
-		if (resultList.size() == 0) {
-			resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId, LIMIT1_PAGE_REQUEST);
+		if (resultList.get(0) == null) {
+			resultList = contServiceDataHWaterRepository.selectLastDataDateByZPointMax(contZpointId);
 		}
 
-		checkNotNull(resultList);
-		return resultList.size() > 0 ? resultList.get(0).getDataDate() : null;
+		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
 	}
 
 	/**
@@ -330,7 +330,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataHWaterTotals selectContZPoint_Totals(long contZpointId, TimeDetailKey timeDetail,
-			LocalDateTime beginDate, LocalDateTime endDate) {
+                                                               org.joda.time.LocalDateTime beginDate, org.joda.time.LocalDateTime endDate) {
 
 		checkNotNull(timeDetail);
 		checkNotNull(beginDate);
@@ -446,7 +446,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private ContServiceDataHWater selectLastAbsData(long contZpointId, LocalDateTime localDateTime) {
+	private ContServiceDataHWater selectLastAbsData(long contZpointId, org.joda.time.LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
 
@@ -467,7 +467,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContServiceDataHWater selectLastAbsData(long contZpointId, TimeDetailKey timeDetail,
-			LocalDateTime localDateTime, boolean isEndDate) {
+                                                   org.joda.time.LocalDateTime localDateTime, boolean isEndDate) {
 
 		checkNotNull(localDateTime);
 		checkNotNull(timeDetail);
@@ -486,7 +486,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 			dataDateLimit = dataList.get(0).getDataDate();
 			// Truncate dataDateLimit
-			LocalDateTime ldt = new LocalDateTime(dataDateLimit);
+            org.joda.time.LocalDateTime ldt = new org.joda.time.LocalDateTime(dataDateLimit);
 			dataDateLimit = JodaTimeUtils.startOfDay(ldt.plusDays(1)).toDate();
 		} else {
 			dataDateLimit = localDateTime.toDate();
@@ -527,7 +527,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 				ContServiceDataHWaterAbs_Csv cvsData;
 				cvsData = ContServiceDataHWaterAbs_Csv.newInstance(data);
 				ContServiceDataHWater abs = selectLastAbsData(data.getContZPointId(), timeDetail,
-						new LocalDateTime(data.getDataDate()), false);
+						new org.joda.time.LocalDateTime(data.getDataDate()), false);
 				cvsData.copyAbsData(abs);
 				cvsDataList.add(cvsData);
 			}
