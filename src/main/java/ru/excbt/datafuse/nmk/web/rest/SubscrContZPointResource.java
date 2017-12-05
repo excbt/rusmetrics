@@ -232,9 +232,9 @@ public class SubscrContZPointResource {
 	public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
-		List<Pair<String, Long>> idPairAllList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
+		List<Pair<String, Long>> serviceTypeContZPointIdList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
-		List<Pair<String, Long>> idPairList = idPairAllList.stream().filter(i -> i.getRight().equals(contZPointId))
+		List<Pair<String, Long>> idPairList = serviceTypeContZPointIdList.stream().filter(i -> i.getRight().equals(contZPointId))
 				.collect(Collectors.toList());
 
 		HashMap<Long, List<TimeDetailLastDate>> resultHWater = contServiceDataHWaterService

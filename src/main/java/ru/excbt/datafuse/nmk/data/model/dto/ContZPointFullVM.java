@@ -15,38 +15,59 @@ import java.util.List;
  */
 public class ContZPointFullVM implements ModelIdable {
 
-    private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
     private Long id;
+
     @NotNull
     private Long contObjectId;
+
     @Deprecated
     private ContServiceTypeDTO contServiceType;
+
     @NotNull
     private String contServiceTypeKeyname;
+
     private String customServiceName;
+
     @Deprecated
     private OrganizationDTO rso;
+
     @NotNull
     private Long rsoId;
+
     @NotNull
     private Date startDate;
+
     private Date endDate;
+
     private int version;
+
     private String checkoutTime;
+
     private Integer checkoutDay;
+
     private Boolean doublePipe;
+
     private Boolean isManualLoading;
+
     private String exSystemKeyname;
+
     private String exCode;
+
     private Integer tsNumber;
+
     private Boolean isManual;
+
     private String contZPointComment;
+
     private Boolean isDroolsDisable;
+
     private Long temperatureChartId;
+
     private DeviceObjectFullVM deviceObject;
+
     private Long deviceObjectId;
-    @Deprecated
-    private Long _activeDeviceObjectId;
+
+    private List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -244,4 +265,10 @@ public class ContZPointFullVM implements ModelIdable {
     public void setDeviceObjectId(Long deviceObjectId) {
         this.deviceObjectId = deviceObjectId;
     }
+
+
+    public List<TimeDetailLastDate> getTimeDetailLastDates() {
+        return timeDetailLastDates;
+    }
+
 }

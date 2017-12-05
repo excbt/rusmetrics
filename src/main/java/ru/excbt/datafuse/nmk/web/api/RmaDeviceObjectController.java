@@ -227,20 +227,20 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new DeviceObjectVO(i))
 					.collect(Collectors.toList());
 
-			List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
-					.collect(Collectors.toList());
+//			List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
+//					.collect(Collectors.toList());
 
-			List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService
-					.selectDeviceObjsetTimeOffset(deviceObjectIds);
+//			List<V_DeviceObjectTimeOffset> offsetList = deviceObjectService
+//					.selectDeviceObjsetTimeOffset(deviceObjectIds);
 
-			Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
-					.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObjectId, Function.identity()));
+//			Map<Long, V_DeviceObjectTimeOffset> offsetMap = offsetList.stream()
+//					.collect(Collectors.toMap(V_DeviceObjectTimeOffset::getDeviceObject, Function.identity()));
 
-			deviceObjectVOs.forEach(i -> {
-
-				V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
-				i.setDeviceObjectTimeOffset(timeOffset);
-			});
+//			deviceObjectVOs.forEach(i -> {
+//
+//				V_DeviceObjectTimeOffset timeOffset = offsetMap.get(i.getModel().getId());
+//				i.setDeviceObjectTimeOffset(timeOffset);
+//			});
 
 			return deviceObjectVOs;
 		};

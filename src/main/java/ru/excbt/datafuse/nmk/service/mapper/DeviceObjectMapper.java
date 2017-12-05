@@ -11,7 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 /**
  * Created by kovtonyk on 23.05.2017.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DeviceObjectTimeOffsetMapper.class})
 public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, DeviceObject> {
 
 //    DeviceObjectDTO deviceObjectToDeviceObjectDTO(DeviceObject deviceObject);

@@ -9,12 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
@@ -50,6 +46,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -205,14 +202,14 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 				endDate.toDate(), pageRequest);
 	}
 
-	/**
-	 *
-	 * @param contZpointId
-	 * @param timeDetail
-	 * @param datePeriod
-	 * @param pageable
-	 * @return
-	 */
+    /**
+     *
+     * @param contZpointId
+     * @param timeDetail
+     * @param datePeriod
+     * @param pageRequest
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod, PageRequest pageRequest) {
@@ -286,12 +283,11 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param contZpointId
-	 * @param fromDateTime
-	 * @return
-	 */
+    /**
+     *
+     * @param contZpointId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date selectLastDataDate(long contZpointId) {
 		return selectLastDataDate(contZpointId, null);
@@ -656,11 +652,14 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 			logger.info("Data Type: {}", row[1].getClass());
 
-			String timeDetail = (String) row[0];
-			Timestamp lastDate = (Timestamp) row[1];
+            String timeDetailKeyname = DBRowUtil.asString(row[0]);
+            Timestamp lastDateTimestamp = DBRowUtil.asTimestamp(row[1]);
 
-			TimeDetailLastDate item = new TimeDetailLastDate(timeDetail, lastDate);
-			resultList.add(item);
+			if (lastDateTimestamp != null) {
+                TimeDetailLastDate item = new TimeDetailLastDate(timeDetailKeyname,
+                    lastDateTimestamp != null ? lastDateTimestamp.toLocalDateTime() : null);
+                resultList.add(item);
+            }
 		}
 
 		return resultList;
@@ -695,12 +694,14 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 			List<Pair<String, Long>> idServiceTypePairs) {
 		checkArgument(idServiceTypePairs != null);
 
-		List<Long> contZpointIds = idServiceTypePairs.stream()
+		List<Long> contZPointIds = idServiceTypePairs.stream()
 				.filter(i -> HWATER_SERVICE_TYPE_SET.contains(i.getLeft())).map(i -> i.getRight())
 				.collect(Collectors.toList());
 
-		return selectTimeDetailLastDateMap(contZpointIds);
-
-	}
+		if (contZPointIds.isEmpty()) {
+		    return new HashMap<>();
+        } else
+    		return selectTimeDetailLastDateMap(contZPointIds);
+}
 
 }

@@ -633,13 +633,12 @@ public class ContServiceDataElService {
 		List<Long> contZPointIds = idServiceTypePairs.stream().filter(i -> EL_SERVICE_TYPE_SET.contains(i.getLeft()))
 				.map(i -> i.getRight()).collect(Collectors.toList());
 
-		HashMap<Long, List<TimeDetailLastDate>> resultMap = !contZPointIds.isEmpty()
-				? ContServiceDataUtil.collectContZPointTimeDetailTypes(
-						contServiceDataElConsRepository.selectTimeDetailLastDataByZPoint(contZPointIds))
-				: new HashMap<>();
-
-		return resultMap;
-
+		if (contZPointIds.isEmpty()) {
+		    return new HashMap<>();
+        } else
+            return
+                ContServiceDataUtil.collectContZPointTimeDetailTypes(
+                    contServiceDataElConsRepository.selectTimeDetailLastDataByZPoint(contZPointIds));
 	}
 
 }

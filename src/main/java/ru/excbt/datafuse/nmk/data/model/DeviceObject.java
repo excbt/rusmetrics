@@ -247,8 +247,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@Transient
 	private DeviceLoginInfo deviceLoginInfo;
 
-	@OneToOne(mappedBy = "deviceObject")
-	private DeviceObjectLastInfo deviceObjectLastInfo;
 
     @Getter
     @Setter
@@ -307,6 +305,12 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Getter
     @Setter
     private String deviceObjectName;
+
+    @OneToOne(mappedBy = "deviceObject")
+    private V_DeviceObjectTimeOffset timeOffset;
+
+    @OneToOne(mappedBy = "deviceObject")
+    private DeviceObjectLastInfo deviceObjectLastInfo;
 
 	public boolean isMetaVzletExpected() {
 		return ExSystemKey.VZLET.isEquals(exSystemKeyname);
@@ -373,6 +377,14 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
 		this.deviceObjectLastInfo = deviceObjectLastInfo;
 	}
+
+    public V_DeviceObjectTimeOffset getTimeOffset() {
+        return timeOffset;
+    }
+
+    public void setTimeOffset(V_DeviceObjectTimeOffset timeOffset) {
+        this.timeOffset = timeOffset;
+    }
 
     @Override
     public String toString() {

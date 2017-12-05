@@ -48,6 +48,7 @@ public class DeviceObjectFullVM {
 
     private String deviceObjectName;
 
+    private DeviceObjectTimeOffsetDTO timeOffset;
 
     public Long getId() {
         return id;
@@ -223,5 +224,13 @@ public class DeviceObjectFullVM {
 
     public void setDeviceModelId(Long deviceModelId) {
         this.deviceModelId = deviceModelId;
+    }
+
+    public DeviceObjectTimeOffsetDTO getTimeOffset() {
+        return timeOffset;
+    }
+
+    public void setTimeOffset(DeviceObjectTimeOffsetDTO timeOffset) {
+        this.timeOffset = timeOffset;
     }
 }

@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 
 /**
  * Repository для ContServiceDataElCons
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 public interface ContServiceDataElConsRepository extends Repository<ContServiceDataElCons, Long> {
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param beginDate
@@ -37,7 +37,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("endDate") Date endDate);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param beginDate
@@ -66,7 +66,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param dataDate
@@ -80,7 +80,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param pageable
 	 * @return
@@ -90,7 +90,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 
 	/**
 	 * No needed change order by.
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param fromDateTime
 	 * @param pageable
@@ -102,7 +102,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("fromDateTime") Date fromDateTime, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param pageable
 	 * @return
@@ -112,11 +112,11 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			Pageable pageable);
 
-	/**
-	 * 
-	 * @param contZPointId
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointIds
+     * @return
+     */
 	@Query("SELECT d.contZPointId, d.timeDetailType, max(d.dataDate) FROM ContServiceDataElCons d "
 			+ " WHERE d.contZPointId in (:contZPointIds) AND d.deleted = 0 "
 			+ " GROUP BY d.contZPointId, d.timeDetailType")
