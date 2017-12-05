@@ -72,10 +72,6 @@ public class ContZPointService implements SecuredRoles {
 
 	private final ContZPointRepository contZPointRepository;
 
-	private final ContServiceDataElService contServiceDataElService;
-
-	private final DeviceObjectService deviceObjectService;
-
 	private final ContObjectService contObjectService;
 
 	private final ContServiceTypeRepository contServiceTypeRepository;
@@ -92,11 +88,30 @@ public class ContZPointService implements SecuredRoles {
 
 	private final ContServiceDataElConsRepository contServiceDataElConsRepository;
 
-	@Autowired
-    public ContZPointService(ContZPointRepository contZPointRepository, ContServiceDataElService contServiceDataElService, DeviceObjectService deviceObjectService, ContObjectService contObjectService, ContServiceTypeRepository contServiceTypeRepository, OrganizationService organizationService, ContZPointSettingModeService contZPointSettingModeService, TemperatureChartService temperatureChartService, ObjectAccessService objectAccessService, ContServiceDataHWaterRepository contServiceDataHWaterRepository, ContServiceDataElConsRepository contServiceDataElConsRepository, SubscriberAccessService subscriberAccessService, ContZPointMapper contZPointMapper, DeviceObjectMapper deviceObjectMapper, V_LastDataDateAggrRepository v_lastDataDateAggrRepository) {
+    private final SubscriberAccessService subscriberAccessService;
+
+    private final ContZPointMapper contZPointMapper;
+
+    private final DeviceObjectMapper deviceObjectMapper;
+
+    private final V_LastDataDateAggrRepository v_lastDataDateAggrRepository;
+
+
+    @Autowired
+    public ContZPointService(ContZPointRepository contZPointRepository,
+                             ContObjectService contObjectService,
+                             ContServiceTypeRepository contServiceTypeRepository,
+                             OrganizationService organizationService,
+                             ContZPointSettingModeService contZPointSettingModeService,
+                             TemperatureChartService temperatureChartService,
+                             ObjectAccessService objectAccessService,
+                             ContServiceDataHWaterRepository contServiceDataHWaterRepository,
+                             ContServiceDataElConsRepository contServiceDataElConsRepository,
+                             SubscriberAccessService subscriberAccessService,
+                             ContZPointMapper contZPointMapper,
+                             DeviceObjectMapper deviceObjectMapper,
+                             V_LastDataDateAggrRepository v_lastDataDateAggrRepository) {
         this.contZPointRepository = contZPointRepository;
-        this.contServiceDataElService = contServiceDataElService;
-        this.deviceObjectService = deviceObjectService;
         this.contObjectService = contObjectService;
         this.contServiceTypeRepository = contServiceTypeRepository;
         this.organizationService = organizationService;
@@ -110,17 +125,6 @@ public class ContZPointService implements SecuredRoles {
         this.deviceObjectMapper = deviceObjectMapper;
         this.v_lastDataDateAggrRepository = v_lastDataDateAggrRepository;
     }
-
-    private SubscriberAccessService subscriberAccessService;
-
-
-    private ContZPointMapper contZPointMapper;
-
-
-    private DeviceObjectMapper deviceObjectMapper;
-
-
-    private V_LastDataDateAggrRepository v_lastDataDateAggrRepository;
 
 
 
@@ -224,76 +228,6 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
-//	/**
-//	 *
-//	 * @param contObjectId
-//	 * @return
-//	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-//	public List<ContZPointEx> findContObjectZPointsEx(long contObjectId) {
-//		List<ContZPoint> zPoints = contZPointRepository.findByContObjectId(contObjectId);
-//		List<ContZPointEx> result = new ArrayList<>();
-//
-//		List<ContZPointEx> resultHWater = processContZPointHwater(zPoints);
-//		List<ContZPointEx> resultEl = processContZPointEl(zPoints);
-//
-//		result.addAll(resultHWater);
-//		result.addAll(resultEl);
-//
-//		result.forEach(i -> {
-//            if (i.getObject().getDeviceObject() != null) {
-//                i.getObject().getDeviceObject().getId();
-//            }
-////
-////            if (i.getDeviceObject() != null) {
-////                i.getDeviceObject().getId();
-////            }
-////
-////			i.getObject().getDeviceObjects().forEach(j -> {
-////				j.loadLazyProps();
-////			});
-//
-//			if (i.getObject().getTemperatureChart() != null) {
-//				i.getObject().getTemperatureChart().getId();
-//				i.getObject().getTemperatureChart().getChartComment();
-//			}
-//
-//		});
-//
-//		return result;
-//	}
-
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-//	public List<ContZPointVO> selectContObjectZPointsVO(SubscriberParam subscriberParam, long contObjectId) {
-//		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, subscriberParam);
-//            contZPointRepository.findByContObjectId(contObjectId);
-//		List<ContZPointVO> result = new ArrayList<>();
-//
-//		List<ContZPointVO> resultHWater = makeContZPointVO_Hwater(zPoints);
-//		List<ContZPointVO> resultEl = makeContZPointVO_El(zPoints);
-//
-//		result.addAll(resultHWater);
-//		result.addAll(resultEl);
-//
-//		result.forEach(i -> {
-//			i.getModel().getDeviceObjects().forEach(j -> {
-//				j.loadLazyProps();
-//			});
-//
-//			if (i.getModel().getTemperatureChart() != null) {
-//				i.getModel().getTemperatureChart().getId();
-//				i.getModel().getTemperatureChart().getChartComment();
-//			}
-//
-//			V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
-//					.selectDeviceObjsetTimeOffset(i.getModel().get_activeDeviceObjectId());
-//
-//			i.setDeviceObjectTimeOffset(deviceObjectTimeOffset);
-//		});
-//
-//		return result;
-//	}
-
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPointFullVM> selectContObjectZPointsStatsVM(Long contObjectId, PortalUserIds portalUserIds) {
 		List<ContZPoint> zPoints = objectAccessService.findAllContZPoints(contObjectId, portalUserIds)
@@ -307,92 +241,8 @@ public class ContZPointService implements SecuredRoles {
 		result.addAll(resultHWater);
 		result.addAll(resultEl);
 
-//		result.forEach(i -> {
-//            if (i.getDeviceObject()!= null) {
-//                i.setDeviceObject(new Dev i.getDeviceObjects().get(0).getId());
-//                i.set_activeDeviceObjectId(i.getDeviceObjects().get(0).getId());
-//            }
-
-//
-//			i.getDeviceObjects().forEach(j -> {
-//				j.loadLazyProps();
-//			});
-//
-//			if (i.getModel().getTemperatureChart() != null) {
-//				i.getModel().getTemperatureChart().getId();
-//				i.getModel().getTemperatureChart().getChartComment();
-//			}
-//            if (i.getDeviceObject() != null && i.getDeviceObject().getId() != null) {
-//                V_DeviceObjectTimeOffset deviceObjectTimeOffset = deviceObjectService
-//                    .selectDeviceObjsetTimeOffset(i.getDeviceObject().getId());
-//                //i.s setDeviceObjectTimeOffset(deviceObjectTimeOffset);
-//            }
-			//
-//		});
-
 		return result;
 	}
-
-//	/**
-//	 *
-//	 * @param zpointList
-//	 * @return
-//	 */
-//	@Deprecated
-//	private List<ContZPointEx> processContZPointHwater(List<ContZPoint> zpointList) {
-//		List<ContZPointEx> result = new ArrayList<>();
-//		MinCheck<Date> minCheck = new MinCheck<>();
-//
-//		for (ContZPoint zp : zpointList) {
-//
-//			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
-//				continue;
-//			}
-//
-//			if (CONT_ZPOINT_EX_OPTIMIZE) {
-//
-//				Boolean existsData = null;
-//				existsData = contServiceDataHWaterService.selectExistsAnyData(zp.getId());
-//
-//				result.add(new ContZPointEx(zp, existsData));
-//
-//			} else {
-//
-//				LocalDateTime zPointLastDate = contServiceDataHWaterService.lastDataDateHelper(zp.getId(),
-//                    LocalDateUtils.asLocalDateTime(minCheck.getValue()));
-//
-//				LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
-//
-//				minCheck.check(LocalDateUtils.asDate(startDay));
-//				result.add(new ContZPointEx(zp, LocalDateUtils.asDate(zPointLastDate)));
-//			}
-//
-//		}
-//		return result;
-//	}
-
-//    @Deprecated
-//	private List<ContZPointVO> makeContZPointVO_Hwater(List<ContZPoint> zpointList) {
-//		List<ContZPointVO> result = new ArrayList<>();
-//		MinCheck<Date> minCheck = new MinCheck<>();
-//
-//		for (ContZPoint zp : zpointList) {
-//
-//			if (!CONT_SERVICE_HWATER_LIST.contains(zp.getContServiceTypeKeyname())) {
-//				continue;
-//			}
-//
-//			LocalDateTime zPointLastDate = contServiceDataHWaterService.lastDataDateHelper(zp.getId(),
-//                LocalDateUtils.asLocalDateTime(minCheck.getValue()));
-//
-//			LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
-//
-//			minCheck.check(LocalDateUtils.asDate(startDay));
-//			result.add(new ContZPointVO(zp, LocalDateUtils.asDate(zPointLastDate)));
-//
-//		}
-//		return result;
-//	}
 
 	private LocalDateTime getLastDataDateAggr(final Long contZPointId) {
         V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findOne(contZPointId);
@@ -432,71 +282,6 @@ public class ContZPointService implements SecuredRoles {
             ContZPointFullVM fullVM = contZPointMapper.toFullVM(zp);
             fullVM.getTimeDetailLastDates().add(new TimeDetailLastDate(TimeDetailLastDate.ALL, zPointLastDate));
 			result.add(fullVM);
-
-		}
-		return result;
-	}
-
-	/**
-	 *
-	 * @param zpointList
-	 * @return
-	 */
-	@Deprecated
-	private List<ContZPointEx> processContZPointEl(List<ContZPoint> zpointList) {
-		List<ContZPointEx> result = new ArrayList<>();
-		MinCheck<Date> minCheck = new MinCheck<>();
-
-		for (ContZPoint zp : zpointList) {
-
-			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
-				continue;
-			}
-
-			if (CONT_ZPOINT_EX_OPTIMIZE) {
-
-				Boolean existsData = null;
-				existsData = contServiceDataElService.selectExistsAnyConsData(zp.getId());
-
-				result.add(new ContZPointEx(zp, existsData));
-
-			} else {
-
-				LocalDateTime zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(),
-                    LocalDateUtils.asLocalDateTime(minCheck.getValue()));
-
-				LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
-
-				minCheck.check(LocalDateUtils.asDate(startDay));
-				result.add(new ContZPointEx(zp, LocalDateUtils.asDate(zPointLastDate)));
-			}
-
-		}
-		return result;
-	}
-
-	/**
-	 *
-	 * @param zpointList
-	 * @return
-	 */
-	@Deprecated
-	private List<ContZPointVO> makeContZPointVO_El(List<ContZPoint> zpointList) {
-		List<ContZPointVO> result = new ArrayList<>();
-		MinCheck<Date> minCheck = new MinCheck<>();
-
-		for (ContZPoint zp : zpointList) {
-
-			if (!CONT_SERVICE_EL_LIST.contains(zp.getContServiceTypeKeyname())) {
-				continue;
-			}
-
-			LocalDateTime zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), LocalDateUtils.asLocalDateTime(minCheck.getValue()));
-
-            LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
-
-			minCheck.check(LocalDateUtils.asDate(startDay));
-			result.add(new ContZPointVO(zp, LocalDateUtils.asDate(zPointLastDate)));
 
 		}
 		return result;
@@ -696,31 +481,6 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
-//	@Transactional(value = TxConst.TX_DEFAULT)
-//	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-//	public ContZPoint createOne(PortalUserIds userIds, Long contObjectId, ContZPoint contZPoint) {
-//		checkNotNull(contObjectId);
-//		checkNotNull(contZPoint);
-//		checkNotNull(contZPoint.getStartDate());
-//		checkNotNull(contZPoint.getContServiceTypeKeyname());
-//		checkNotNull(contZPoint.get_activeDeviceObjectId());
-//		checkNotNull(contZPoint.getRsoId());
-//
-//		contZPoint.setContObjectId(contObjectId);
-//		linkToContObject(contZPoint);
-//		initDeviceObject(contZPoint);
-//		initContServiceType(contZPoint);
-//		initRso(contZPoint);
-//		contZPoint.setIsManual(true);
-//
-//		ContZPoint result = contZPointRepository.save(contZPoint);
-//		contZPointSettingModeService.initContZPointSettingMode(result.getId());
-//
-//        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), result);
-//
-//		return result;
-//	}
-
     public ContZPointFullVM createZPoint_DTO2FULL(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
         checkNotNull(contZPointDTO);
         checkNotNull(contZPointDTO.getContObjectId());
@@ -785,38 +545,6 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
-//	@Transactional(value = TxConst.TX_DEFAULT)
-//	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-//	public ContZPoint updateOne(ContZPoint contZPoint) {
-//		checkNotNull(contZPoint);
-//		checkNotNull(contZPoint.getContObjectId());
-//		checkNotNull(contZPoint.getStartDate());
-//		checkNotNull(contZPoint.getContServiceTypeKeyname());
-//		checkNotNull(contZPoint.get_activeDeviceObjectId());
-//		checkNotNull(contZPoint.getRsoId());
-//
-//		linkToContObject(contZPoint);
-//		initDeviceObject(contZPoint);
-//		initContServiceType(contZPoint);
-//		initRso(contZPoint);
-//
-//		if (contZPoint.getTemperatureChartId() != null) {
-//			TemperatureChart chart = temperatureChartService.selectTemperatureChart(contZPoint.getTemperatureChartId());
-//			if (chart == null) {
-//				throw new PersistenceException(
-//						String.format("TemperatureChart (id=%d) is not found", contZPoint.getTemperatureChartId()));
-//			}
-//			contZPoint.setTemperatureChart(chart);
-//		}
-//
-//		contZPoint.setIsManual(true);
-//
-//		ContZPoint result = contZPointRepository.save(contZPoint);
-//		contZPointSettingModeService.initContZPointSettingMode(result.getId());
-//
-//		return result;
-//	}
-
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
@@ -867,50 +595,6 @@ public class ContZPointService implements SecuredRoles {
 	private void linkToContObject(ContZPoint contZPoint) {
 		ContObject contObject = contObjectService.findContObjectChecked(contZPoint.getContObjectId());
 		contZPoint.setContObject(contObject);
-	}
-
-	/**
-	 * TODO remove device object
-	 * @param contZPoint
-	 */
-//	@Deprecated
-//	private void initDeviceObject(ContZPoint contZPoint) {
-//		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(contZPoint.get_activeDeviceObjectId());
-//
-//		if (deviceObject == null) {
-//			throw new PersistenceException(
-//					String.format("DeviceObject(id=%d) is not found", contZPoint.get_activeDeviceObjectId()));
-//		}
-//		contZPoint.getDeviceObjects().clear();
-//		contZPoint.getDeviceObjects().add(deviceObject);
-//	}
-
-	/**
-	 *
-	 * @param contZPoint
-	 */
-	@Deprecated
-	private void initContServiceType(ContZPoint contZPoint) {
-		ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPoint.getContServiceTypeKeyname());
-		checkNotNull(contServiceType);
-		contZPoint.setContServiceType(contServiceType);
-	}
-
-	/**
-	 *
-	 * @param contZPoint
-	 */
-	private void initRso(ContZPoint contZPoint) {
-
-        Organization org = organizationService.findOneOrganization(contZPoint.getRsoId())
-            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, contZPoint.getRsoId()));
-
-
-		if (!Boolean.TRUE.equals(org.getFlagRso())) {
-			throw new PersistenceException(String.format("Organization (id=%d) is not RSO", contZPoint.getRsoId()));
-		}
-
-		contZPoint.setRso(org);
 	}
 
 	/**

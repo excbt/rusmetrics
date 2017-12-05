@@ -15,23 +15,28 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceRepository;
+import ru.excbt.datafuse.nmk.data.repository.WeatherPlaceRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
 public class LocalPlaceService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceService.class);
+	private static final Logger log = LoggerFactory.getLogger(LocalPlaceService.class);
+
+	private final LocalPlaceRepository localPlaceRepository;
+
+	private final FiasService fiasService;
+
+	private final WeatherPlaceRepository weatherPlaceRepository;
 
 	@Autowired
-	private LocalPlaceRepository localPlaceRepository;
+    public LocalPlaceService(LocalPlaceRepository localPlaceRepository, FiasService fiasService, WeatherPlaceRepository weatherPlaceRepository) {
+        this.localPlaceRepository = localPlaceRepository;
+        this.fiasService = fiasService;
+        this.weatherPlaceRepository = weatherPlaceRepository;
+    }
 
-	@Autowired
-	private FiasService fiasService;
-
-	@Autowired
-	private WeatherPlaceService weatherPlaceService;
-
-	/**
+    /**
 	 *
 	 * @return
 	 */
@@ -89,7 +94,7 @@ public class LocalPlaceService implements SecuredRoles {
 		LocalPlace localPlace = selectLocalPlaceByFias(fiasUuid);
 		if (localPlace == null) {
 
-			List<WeatherPlace> weatherPlaces = weatherPlaceService.selectWeatherPlaceByFias(fiasUuid);
+			List<WeatherPlace> weatherPlaces = weatherPlaceRepository.selectWeatherPlacesByFias(fiasUuid);
 			if (weatherPlaces.size() != 1) {
 				return null;
 			}
