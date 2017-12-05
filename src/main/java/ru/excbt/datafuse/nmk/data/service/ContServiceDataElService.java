@@ -609,10 +609,10 @@ public class ContServiceDataElService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectLastConsDataDate(long contZPointId, Date fromDateTime) {
+	public LocalDateTime selectLastConsDataDate(long contZPointId, LocalDateTime fromDateTime) {
 		checkArgument(contZPointId > 0);
 
-		LocalDateTime actialFromDate = LocalDateUtils.asLocalDateTime(fromDateTime);
+		LocalDateTime actialFromDate = fromDateTime;
 		if (actialFromDate == null) {
             actialFromDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minus(LAST_DATA_DATE_DEPTH_DURATION);
 		} else {
@@ -627,7 +627,7 @@ public class ContServiceDataElService {
 //                LocalDateUtils.asDate(actialFromDate.minus(MAX_LAST_DATA_DATE_DEPTH_DURATION)));
 //		}
 
-		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
+		return resultList.get(0) != null ? resultList.get(0).toLocalDateTime() : null;
 	}
 
 	/**

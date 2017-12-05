@@ -244,10 +244,10 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectLastDataDate(long contZpointId, Date fromDateTime) {
+	public LocalDateTime selectLastDataDate(long contZpointId, LocalDateTime fromDateTime) {
 		checkArgument(contZpointId > 0);
 
-		LocalDateTime actialFromDate = LocalDateUtils.asLocalDateTime(fromDateTime);
+		LocalDateTime actialFromDate = fromDateTime;
 
 		if (actialFromDate == null) {
 			actialFromDate = LocalDateTime.now().truncatedTo(ChronoUnit.DAYS).minus(LAST_DATA_DATE_DEPTH_DURATION);
@@ -263,7 +263,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 //                LocalDateUtils.asDate(actialFromDate.minus(MAX_LAST_DATA_DATE_DEPTH_DURATION)));
 //		}
 
-		return resultList.get(0) != null ? LocalDateUtils.asDate(resultList.get(0).toLocalDateTime()) : null;
+		return resultList.get(0) != null ? resultList.get(0).toLocalDateTime() : null;
 	}
 
 	/**
@@ -292,7 +292,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date selectLastDataDate(long contZpointId) {
+	public LocalDateTime selectLastDataDate(long contZpointId) {
 		return selectLastDataDate(contZpointId, null);
 	}
 

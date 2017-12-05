@@ -34,6 +34,8 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -338,12 +340,13 @@ public class ContZPointService implements SecuredRoles {
 
 			} else {
 
-				Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+				LocalDateTime zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(),
+                    LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
-				Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+				LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-				minCheck.check(startDay);
-				result.add(new ContZPointEx(zp, zPointLastDate));
+				minCheck.check(LocalDateUtils.asDate(startDay));
+				result.add(new ContZPointEx(zp, LocalDateUtils.asDate(zPointLastDate)));
 			}
 
 		}
@@ -361,20 +364,21 @@ public class ContZPointService implements SecuredRoles {
 				continue;
 			}
 
-			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+			LocalDateTime zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(),
+                LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+			LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-			minCheck.check(startDay);
-			result.add(new ContZPointVO(zp, zPointLastDate));
+			minCheck.check(LocalDateUtils.asDate(startDay));
+			result.add(new ContZPointVO(zp, LocalDateUtils.asDate(zPointLastDate)));
 
 		}
 		return result;
 	}
 
-	private Date getLastDataDateAggr(final Long contZPointId) {
+	private LocalDateTime getLastDataDateAggr(final Long contZPointId) {
         V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findOne(contZPointId);
-        return lastDataDateAggr != null ? LocalDateUtils.asDate(lastDataDateAggr.getLastDataDate()) : null;
+        return lastDataDateAggr != null ? lastDataDateAggr.getLastDataDate() : null;
     }
 
 
@@ -388,18 +392,19 @@ public class ContZPointService implements SecuredRoles {
 				continue;
 			}
 
-			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(), minCheck.getObject());
+			LocalDateTime zPointLastDate = contServiceDataHWaterService.selectLastDataDate(zp.getId(),
+                LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
 			if (zPointLastDate == null) {
 			    zPointLastDate = getLastDataDateAggr(zp.getId());
             }
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+			LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-			minCheck.check(startDay);
+			minCheck.check(LocalDateUtils.asDate(startDay));
 			//result.add(new ContZPointVO(zp, zPointLastDate));
             ContZPointFullVM fullVM = contZPointMapper.toFullVM(zp);
-            fullVM.getTimeDetailLastDates().add(new TimeDetailLastDate(TimeDetailLastDate.ALL, LocalDateUtils.asLocalDateTime(zPointLastDate)));
+            fullVM.getTimeDetailLastDates().add(new TimeDetailLastDate(TimeDetailLastDate.ALL, zPointLastDate));
 			result.add(fullVM);
 
 		}
@@ -431,12 +436,13 @@ public class ContZPointService implements SecuredRoles {
 
 			} else {
 
-				Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+				LocalDateTime zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(),
+                    LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
-				Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+				LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-				minCheck.check(startDay);
-				result.add(new ContZPointEx(zp, zPointLastDate));
+				minCheck.check(LocalDateUtils.asDate(startDay));
+				result.add(new ContZPointEx(zp, LocalDateUtils.asDate(zPointLastDate)));
 			}
 
 		}
@@ -459,12 +465,12 @@ public class ContZPointService implements SecuredRoles {
 				continue;
 			}
 
-			Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+			LocalDateTime zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+            LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-			minCheck.check(startDay);
-			result.add(new ContZPointVO(zp, zPointLastDate));
+			minCheck.check(LocalDateUtils.asDate(startDay));
+			result.add(new ContZPointVO(zp, LocalDateUtils.asDate(zPointLastDate)));
 
 		}
 		return result;
@@ -480,18 +486,18 @@ public class ContZPointService implements SecuredRoles {
 				continue;
 			}
 
-			Date zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), minCheck.getObject());
+			LocalDateTime zPointLastDate = contServiceDataElService.selectLastConsDataDate(zp.getId(), LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
             if (zPointLastDate == null) {
                 zPointLastDate = getLastDataDateAggr(zp.getId());
             }
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+            LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-			minCheck.check(startDay);
+			minCheck.check(LocalDateUtils.asDate(startDay));
 
             ContZPointFullVM fullVM = contZPointMapper.toFullVM(zp);
-            fullVM.getTimeDetailLastDates().add(new TimeDetailLastDate(TimeDetailLastDate.ALL, LocalDateUtils.asLocalDateTime(zPointLastDate)));
+            fullVM.getTimeDetailLastDates().add(new TimeDetailLastDate(TimeDetailLastDate.ALL, zPointLastDate));
             result.add(fullVM);
 			//result.add(new ContZPointVO(zp, zPointLastDate));
             //result.add(contZPointMapper.toFullVM(zp));
@@ -555,13 +561,14 @@ public class ContZPointService implements SecuredRoles {
 		MinCheck<Date> minCheck = new MinCheck<>();
 
 		for (Long id : contZPointIds) {
-			Date zPointLastDate = contServiceDataHWaterService.selectLastDataDate(id, minCheck.getObject());
+			LocalDateTime zPointLastDate = contServiceDataHWaterService.selectLastDataDate(id,
+                minCheck.getValue().map(i -> LocalDateUtils.asLocalDateTime(i)).orElse(null));
 
-			Date startDay = zPointLastDate == null ? null : JodaTimeUtils.startOfDay(zPointLastDate).toDate();
+			LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
 
-			minCheck.check(startDay);
+			minCheck.check(LocalDateUtils.asDate(startDay));
 
-			ContZPointStatInfo item = new ContZPointStatInfo(id, zPointLastDate);
+			ContZPointStatInfo item = new ContZPointStatInfo(id, LocalDateUtils.asDate(zPointLastDate));
 			resultList.add(item);
 		}
 		return resultList;

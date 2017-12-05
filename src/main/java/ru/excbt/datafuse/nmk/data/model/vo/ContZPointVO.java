@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.vo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -21,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMarker {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3139573316888700353L;
 
@@ -35,7 +36,7 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	private V_DeviceObjectTimeOffset deviceObjectTimeOffset;
 
 	/**
-	 * 
+	 *
 	 * @param srcObject
 	 */
 	public ContZPointVO(ContZPoint srcObject) {
@@ -45,7 +46,7 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcObject
 	 * @param lastDataDate
 	 */
@@ -62,7 +63,7 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcObject
 	 * @param timeDetailLastDates
 	 */
@@ -74,7 +75,7 @@ public class ContZPointVO extends ModelWrapper<ContZPoint> implements DeletedMar
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public Date getLastDataDate() {
