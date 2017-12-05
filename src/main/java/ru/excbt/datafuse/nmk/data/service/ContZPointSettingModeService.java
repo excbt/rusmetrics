@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -33,16 +34,17 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	private final static boolean ZPOINT_SETTING_AUTO_INIT = true;
 	private final static int ZPOINT_SETTING_AUTO_INIT_CNT = 2;
 
-	@Autowired
-	private ContZPointSettingModeRepository settingModeRepository;
+	private final ContZPointSettingModeRepository settingModeRepository;
 
-	@Autowired
-	private ContObjectService contObjectService;
+    private final ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository;
 
-	@Autowired
-	private ContZPointService contZPointService;
+    @Autowired
+    public ContZPointSettingModeService(ContZPointSettingModeRepository settingModeRepository, ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository) {
+        this.settingModeRepository = settingModeRepository;
+        this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
+    }
 
-	/**
+    /**
 	 *
 	 * @param contZPointId
 	 * @return
@@ -136,20 +138,20 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void initContZPointSettingMode(long contZPointId) {
 
-		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+//		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
+//
+//		if (contZPoint == null) {
+//			throw new PersistenceException(String.format("ContZPoint(id:{}) not found", contZPointId));
+//		}
 
-		if (contZPoint == null) {
-			throw new PersistenceException(String.format("ContZPoint(id:{}) not found", contZPointId));
-		}
-
-		List<ContObjectSettingModeType> settingModeCheckList = contObjectService.selectContObjectSettingModeType();
+		List<ContObjectSettingModeType> settingModeCheckList = contObjectSettingModeTypeRepository.findAll();
 
 		for (ContObjectSettingModeType check : settingModeCheckList) {
 			List<ContZPointSettingMode> mode = settingModeRepository.findByContZPointIdAndSettingMode(contZPointId,
 					check.getKeyname());
 			if (mode.size() == 0) {
 				ContZPointSettingMode newMode = new ContZPointSettingMode();
-				newMode.setContZPoint(contZPoint);
+				newMode.setContZPoint(new ContZPoint().id(contZPointId));
 				newMode.setSettingMode(check.getKeyname());
 				settingModeRepository.save(newMode);
 			}
