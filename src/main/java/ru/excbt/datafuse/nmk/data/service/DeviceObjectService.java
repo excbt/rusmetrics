@@ -6,6 +6,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -59,7 +60,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
-	private final V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
+	//private final V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
 
 	private final DeviceObjectMapper deviceObjectMapper;
 
@@ -76,7 +77,7 @@ public class DeviceObjectService implements SecuredRoles {
                                DeviceObjectMetadataService deviceObjectMetadataService,
                                DeviceMetadataService deviceMetadataService,
                                DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
-                               V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
+                               //V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
                                DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService) {
         this.deviceObjectRepository = deviceObjectRepository;
         this.deviceModelService = deviceModelService;
@@ -86,7 +87,7 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceObjectMetadataService = deviceObjectMetadataService;
         this.deviceMetadataService = deviceMetadataService;
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
-        this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
+        //this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
         this.deviceObjectMapper = deviceObjectMapper;
         this.subscrDataSourceRepository = subscrDataSourceRepository;
         this.objectAccessService = objectAccessService;
@@ -601,7 +602,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public V_DeviceObjectTimeOffset selectDeviceObjsetTimeOffset(Long deviceObjectId) {
-		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
+		return deviceObjectId != null ? deviceObjectRepository.findOne(deviceObjectId).getTimeOffset() : null;
 	}
 
     /**
@@ -612,7 +613,7 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<V_DeviceObjectTimeOffset> selectDeviceObjsetTimeOffset(List<Long> deviceObjectIds) {
 		return deviceObjectIds.isEmpty() ? new ArrayList<>()
-				: deviceObjectTimeOffsetRepository.selectDeviceObjectTimeOffsetList(deviceObjectIds);
+				: deviceObjectRepository.selectDeviceObjectsByIds(deviceObjectIds).stream().map(i -> i.getTimeOffset()).collect(Collectors.toList());
 	}
 
 

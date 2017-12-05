@@ -86,11 +86,10 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
 			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<DeviceObject> deviceObjects = new ArrayList<>();
+	private DeviceObject deviceObject;
 
 	@Version
 	private int version;
@@ -143,21 +142,21 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "temperature_chart_id", insertable = false, updatable = false)
 	private Long temperatureChartId;
 
-	@Transient
-	private Long _activeDeviceObjectId;
+//	@Transient
+//	private Long _activeDeviceObjectId;
 
 
-	@JsonIgnore
-	public DeviceObject get_activeDeviceObject() {
-		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
-	}
-
-	public Long get_activeDeviceObjectId() {
-		if (_activeDeviceObjectId == null) {
-			DeviceObject d = get_activeDeviceObject();
-			_activeDeviceObjectId = d != null ? d.getId() : null;
-		}
-		return _activeDeviceObjectId;
-	}
+//	@JsonIgnore
+//	public DeviceObject get_activeDeviceObject() {
+//		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
+//	}
+//
+//	public Long get_activeDeviceObjectId() {
+//		if (_activeDeviceObjectId == null) {
+//			DeviceObject d = get_activeDeviceObject();
+//			_activeDeviceObjectId = d != null ? d.getId() : null;
+//		}
+//		return _activeDeviceObjectId;
+//	}
 
 }

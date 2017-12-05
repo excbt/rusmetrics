@@ -336,7 +336,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                             elem.deviceDatasourceCaption = elem.activeDataSource.subscrDataSource['dataSourceName' || 'id'];
                         }
                     }
-                    elem.deviceTimeOffsetString = mainSvc.prepareTimeOffset(elem.deviceObjectTimeOffset);
+                    elem.deviceTimeOffsetString = mainSvc.prepareTimeOffset(elem.timeOffset);
                     if (!mainSvc.checkUndefinedNull(elem.deviceTimeOffsetString)) {
                         if (elem.deviceTimeOffsetString.indexOf("+") === 0) {
                             elem.deviceTimeOffsetStringTitle = "Часы прибора спешат";

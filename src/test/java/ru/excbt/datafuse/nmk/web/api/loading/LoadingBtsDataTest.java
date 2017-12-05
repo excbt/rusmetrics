@@ -6,6 +6,7 @@ package ru.excbt.datafuse.nmk.web.api.loading;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.utils.LoadingBtsData;
@@ -135,8 +136,8 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 
 			// Make ContZPoint
 			for (int i = 1; i < 9; i++) {
-				ContZPoint contZPoint = new ContZPoint();
-				contZPoint.set_activeDeviceObjectId(deviceObjectIds[i - 1]);
+				ContZPointFullVM contZPoint = new ContZPointFullVM();
+				contZPoint.setDeviceObjectId(deviceObjectIds[i - 1]);
 				contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.CW.getKeyname());
 				contZPoint.setContZPointComment(
 						"Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr() + " (" + info.getAptNr().toLowerCase() + ")");
@@ -144,6 +145,7 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				contZPoint.setDoublePipe(false);
 				contZPoint.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
 				contZPoint.setRsoId(RSO_ORGANIZARION_ID);
+                //contZPoint.setDeviceObject();
 				Long contZpointId = _testCreateJson(String.format("/api/rma/contObjects/%d/zpoints", contObjectId),
 						contZPoint);
 				assertNotNull(contZpointId);
@@ -220,11 +222,11 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 						lr = new LoadingResult();
 						lr.contObjectId = contObjectId;
 					}
-					if (type.equals("B")) {
+					if (type.equals("B") && lr != null) {
 						contZpointId = Long.parseLong(data[1]);
 						lr.contZPointIds.add(contZpointId);
 					}
-					if (type.equals("C")) {
+					if (type.equals("C") && lr != null) {
 						deviceObjectId = Long.parseLong(data[1]);
 						lr.deviceObjectIds.add(deviceObjectId);
 					}

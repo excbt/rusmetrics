@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
@@ -62,13 +63,11 @@ public class ContZPointFullVM implements ModelIdable {
 
     private Long temperatureChartId;
 
-    @Deprecated
-    private List<DeviceObjectDTO> deviceObjects;
+    private DeviceObjectFullVM deviceObject;
 
-    private final List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
+    private Long deviceObjectId;
 
-    @Deprecated
-    private Long _activeDeviceObjectId;
+    private List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -248,23 +247,28 @@ public class ContZPointFullVM implements ModelIdable {
             return maxCheck.getObject();
         }
 
-        //return lastDataDate != null ? lastDataDate.toDate() : null;
         return null;
     }
 
-    public List<DeviceObjectDTO> getDeviceObjects() {
-        return deviceObjects;
+    public DeviceObjectFullVM getDeviceObject() {
+        return deviceObject;
     }
 
-    public void setDeviceObjects(List<DeviceObjectDTO> deviceObjects) {
-        this.deviceObjects = deviceObjects;
+    public void setDeviceObject(DeviceObjectFullVM deviceObject) {
+        this.deviceObject = deviceObject;
     }
 
-    public Long get_activeDeviceObjectId() {
-        return _activeDeviceObjectId;
+    public Long getDeviceObjectId() {
+        return deviceObjectId;
     }
 
-    public void set_activeDeviceObjectId(Long _activeDeviceObjectId) {
-        this._activeDeviceObjectId = _activeDeviceObjectId;
+    public void setDeviceObjectId(Long deviceObjectId) {
+        this.deviceObjectId = deviceObjectId;
     }
+
+
+    public List<TimeDetailLastDate> getTimeDetailLastDates() {
+        return timeDetailLastDates;
+    }
+
 }

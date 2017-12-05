@@ -194,7 +194,7 @@ public interface SubscrContObjectRepository
 	 */
 	@Query(value = "SELECT sco.subscriberId as subscriberId, sco.contObjectId as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, "
 			+ " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSourceId as subscrDataSourceId"
-			+ " FROM SubscrContObject sco, ContZPoint zp INNER JOIN zp.deviceObjects d LEFT JOIN d.deviceObjectDataSources ds"
+			+ " FROM SubscrContObject sco, ContZPoint zp INNER JOIN zp.deviceObject d LEFT JOIN d.deviceObjectDataSources ds"
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND zp.contObjectId= "
 			+ " sco.contObjectId AND d.number IN (:deviceObjectNumbers) AND ds.isActive = true")
 	List<Tuple> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,

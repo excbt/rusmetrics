@@ -1061,18 +1061,18 @@ console.log(headers);
                                     zpoint.singlePipe = !zpoint.doublePipe;
                                 }
 //console.log(zpoint);
-                                if ((typeof zPointsByObject[i].deviceObjects != 'undefined') && (zPointsByObject[i].deviceObjects.length > 0)) {
-                                    if (zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')) {
-                                        zpoint.zpointModel = zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
-                                        zpoint.isImpulse = zPointsByObject[i].deviceObjects[0].isImpulse;
-                                        zpoint.isSpreader = zPointsByObject[i].deviceObjects[0].deviceModel.deviceType === objectSvc.HEAT_DISTRIBUTOR;
+                                if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObject)) {
+                                    if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObject.deviceModel)) {
+                                        zpoint.zpointModel = zPointsByObject[i].deviceObject.deviceModel.modelName;
+                                        zpoint.isImpulse = zPointsByObject[i].deviceObject.isImpulse;
+                                        zpoint.isSpreader = zPointsByObject[i].deviceObject.deviceModel.deviceType === objectSvc.HEAT_DISTRIBUTOR;
                                         if (zpoint.isSpreader === true) {
                                             zpoint.measureUnitCaption = "Гкал";
                                         }
                                         if (zpoint.isImpulse === true) {
                                             if (!mainSvc.checkUndefinedNull(measureUnits)) {
                                                 measureUnits.all.some(function (mu) {
-                                                    if (mu.keyname === zPointsByObject[i].deviceObjects[0].impulseMu) {
+                                                    if (mu.keyname === zPointsByObject[i].deviceObject.impulseMu) {
                                                         zpoint.measureUnitCaption = mu.caption;
                                                     }
                                                 });
@@ -1081,7 +1081,7 @@ console.log(headers);
                                     } else {
                                         zpoint.zpointModel = "Не задано";
                                     }
-                                    zpoint.zpointNumber = zPointsByObject[i].deviceObjects[0].number;
+                                    zpoint.zpointNumber = zPointsByObject[i].deviceObject.number;
                                 }
                                 zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
                                 // Получаем эталонный интервал для точки учета

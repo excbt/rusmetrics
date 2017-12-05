@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
 
@@ -31,17 +33,20 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
     @Autowired
 	private ObjectAccessService objectAccessService;
 
-	@Test
-	public void testGetZPointEx() throws Exception {
-		ContObject co = getFirstContObject();
-		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co.getId());
-		assertTrue(result.size() > 0);
-		// assertNotNull(result.get(0).getLastDataDate());
+    @Autowired
+    private ContZPointMapper contZPointMapper;
 
-		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", co.getId());
-		_testGetJson(url);
-
-	}
+//	@Test
+//	public void testGetZPointEx() throws Exception {
+//		ContObject co = getFirstContObject();
+//		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co.getId());
+//		assertTrue(result.size() > 0);
+//		// assertNotNull(result.get(0).getLastDataDate());
+//
+//		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", co.getId());
+//		_testGetJson(url);
+//
+//	}
 
 	@Test
 	public void testGetZPointsTimeDetailLastDateMap() throws Exception {
@@ -58,12 +63,12 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 	}
 
 	//@Ignore
-	@Test
-	public void testGetElConsZPointEx() throws Exception {
-        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
-		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", ids.get(0));
-		_testGetJson(url);
-	}
+//	@Test
+//	public void testGetElConsZPointEx() throws Exception {
+//        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
+//		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", ids.get(0));
+//		_testGetJson(url);
+//	}
 
 	@Test
 	public void testGetElConsZPointVo() throws Exception {
@@ -115,7 +120,9 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 
 		contZPoint.setIsManualLoading(true);
 
-		_testUpdateJson(url, contZPoint);
+        ContZPointDTO contZPointDTO = contZPointMapper.toDto(contZPoint);
+
+		_testUpdateJson(url, contZPointDTO);
 	}
 
 	/**

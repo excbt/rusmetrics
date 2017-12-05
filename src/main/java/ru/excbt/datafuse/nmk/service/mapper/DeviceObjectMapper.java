@@ -6,11 +6,12 @@ import org.mapstruct.MappingTarget;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 
 /**
  * Created by kovtonyk on 23.05.2017.
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DeviceObjectTimeOffsetMapper.class})
 public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, DeviceObject> {
 
 //    DeviceObjectDTO deviceObjectToDeviceObjectDTO(DeviceObject deviceObject);
@@ -35,6 +36,10 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
 
     void updateDeviceLoginInfoFromDto(DeviceObjectDTO.DeviceLoginInfoDTO dto,
                                       @MappingTarget DeviceObject.DeviceLoginInfo loginInfo);
+
+
+    @Mapping(target = "deviceModelId", source = "deviceModel.id")
+    DeviceObjectFullVM toFullVM(DeviceObject deviceObject);
 
 
     default DeviceModel deviceModelFromId(Long id) {

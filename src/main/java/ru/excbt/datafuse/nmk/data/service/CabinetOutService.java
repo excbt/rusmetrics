@@ -89,13 +89,12 @@ public class CabinetOutService {
                     continue;
                 }
 
-                if (destZP.get().getDeviceObjects().size() == 0) {
-                    log.error("deviceObject size check failed");
+                if (destZP.get().getDeviceObject() == null) {
+                    log.error("deviceObject is null");
                     continue;
                 }
 
-                Optional<DeviceObject> deviceObject = destZP.get().getDeviceObjects().stream()
-                    .filter((d) -> d.getId().equals(meterData.getDeviceObjectId())).findFirst();
+                Optional<DeviceObject> deviceObject = Optional.of(destZP.get().getDeviceObject());
 
                 if (!deviceObject.isPresent()) {
                     log.error("deviceObject presence check failed");

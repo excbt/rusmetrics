@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointShortInfoVM;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectAccessDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
@@ -18,11 +19,14 @@ import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 
 import javax.persistence.Tuple;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -45,17 +49,22 @@ public class ObjectAccessService {
 
     private final SubscrServiceAccessService subscrServiceAccessService;
 
+    private final ContObjectMapper contObjectMapper;
+
+    private final ContZPointMapper contZPointMapper;
 
     public ObjectAccessService(SubscrContObjectRepository subscrContObjectRepository,
                                ContObjectAccessRepository contObjectAccessRepository,
                                ContZPointAccessRepository contZPointAccessRepository,
                                ContGroupService contGroupService,
-                               SubscrServiceAccessService subscrServiceAccessService) {
+                               SubscrServiceAccessService subscrServiceAccessService, ContObjectMapper contObjectMapper, ContZPointMapper contZPointMapper) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.contZPointAccessRepository = contZPointAccessRepository;
         this.contGroupService = contGroupService;
         this.subscrServiceAccessService = subscrServiceAccessService;
+        this.contObjectMapper = contObjectMapper;
+        this.contZPointMapper = contZPointMapper;
     }
 
 
@@ -286,15 +295,17 @@ public class ObjectAccessService {
 
     /// ContZPoints
 
-    public List<ContZPoint> findAllContZPoints(Long subscriberId) {
+    public List<ContZPointDTO> findAllContZPoints(Long subscriberId) {
         List<ContZPoint> result;
         if (NEW_ACCESS) {
             result = contZPointAccessRepository.findAllContZPointsBySubscriberId(subscriberId);
         } else {
             result = subscrContObjectRepository.selectContZPoints(subscriberId);
         }
-        return ObjectFilters.deletedFilter(result);
+        return result.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(p -> contZPointMapper.toDto(p)).collect(Collectors.toList());
     }
+
 
 
     /**
