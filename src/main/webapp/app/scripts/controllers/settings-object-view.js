@@ -918,8 +918,8 @@ angular.module('portalNMC')
                                 zpoint.devCaption += zPointsByObject[i].deviceObject.number ? ", №" + zPointsByObject[i].deviceObject.number : "";
                                 }
                             zpoint.zpointLastDataDate  = zPointsByObject[i].lastDataDate;
-                            if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObjectTimeOffset)) {
-                                zpoint.zpointTimeOffsetString = prepareTimeOffset(zPointsByObject[i].deviceObjectTimeOffset);
+                            if (!mainSvc.checkUndefinedNull(zPointsByObject[i].deviceObject.timeOffset)) {
+                                zpoint.zpointTimeOffsetString = prepareTimeOffset(zPointsByObject[i].deviceObject.timeOffset);
                             }
 //                                if (!mainSvc.checkUndefinedNull(zpoint.zpointLastDataDate)){
 //                                    loadZpointDetail
