@@ -121,6 +121,8 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 		contZPoint.setIsManualLoading(true);
 
         ContZPointDTO contZPointDTO = contZPointMapper.toDto(contZPoint);
+        contZPointDTO.getTagNames().add("MY-TAG-1");
+        contZPointDTO.getTagNames().add("MY-TAG-2");
 
 		_testUpdateJson(url, contZPointDTO);
 	}

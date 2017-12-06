@@ -12,6 +12,10 @@ import java.io.Serializable;
 @IdClass(ObjectTag.PK.class)
 public class ObjectTag extends AbstractAuditingEntity implements Serializable {
 
+    public static final String contObjectTagKeyname = "cont-object";
+    public static final String contZPointTagKeyname = "cont-zpoint";
+    public static final String deviceObjectTagKeyname = "device-object";
+
 
     public static final class PK implements Serializable {
 

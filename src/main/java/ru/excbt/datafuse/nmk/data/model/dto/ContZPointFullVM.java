@@ -6,9 +6,7 @@ import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by kovtonyk on 07.07.2017.
@@ -68,6 +66,8 @@ public class ContZPointFullVM implements ModelIdable {
     private Long deviceObjectId;
 
     private List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
+
+    private Set<String> tagNames = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -266,9 +266,15 @@ public class ContZPointFullVM implements ModelIdable {
         this.deviceObjectId = deviceObjectId;
     }
 
-
     public List<TimeDetailLastDate> getTimeDetailLastDates() {
         return timeDetailLastDates;
     }
 
+    public Set<String> getTagNames() {
+        return tagNames;
+    }
+
+    public void setTagNames(Set<String> tagNames) {
+        this.tagNames = tagNames;
+    }
 }

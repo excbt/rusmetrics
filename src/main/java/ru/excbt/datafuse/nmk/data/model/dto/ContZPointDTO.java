@@ -4,8 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by kovtonyk on 07.07.2017.
@@ -52,9 +51,7 @@ public class ContZPointDTO implements ModelIdable {
 
     private Long deviceObjectId;
 
-    //TODO temporary added
-    @Deprecated
-    private Long _activeDeviceObjectId;
+    private Set<String> tagNames = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -215,5 +212,14 @@ public class ContZPointDTO implements ModelIdable {
     public void setDeviceObjectId(Long deviceObjectId) {
         this.deviceObjectId = deviceObjectId;
     }
+
+    public Set<String> getTagNames() {
+        return tagNames;
+    }
+
+    public void setTagNames(Set<String> tagNames) {
+        this.tagNames = tagNames;
+    }
+
 
 }

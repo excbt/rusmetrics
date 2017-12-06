@@ -22,14 +22,30 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+
+    @Mapping(target = "isManualLoading", source = "manualLoading")
+    @Mapping(target = "isManual", source = "manual")
+    @Mapping(target = "isDroolsDisable", source = "droolsDisable")
+    @Mapping(target = "temperatureChart", source = "temperatureChartId")
     ContZPoint toEntity (ContZPointDTO dto);
 
     @Override
     @Mapping(target = "rsoId", source = "rso.id")
+    @Mapping(target = "manualLoading", source = "isManualLoading")
+    @Mapping(target = "manual", source = "isManual")
+    @Mapping(target = "droolsDisable", source = "isDroolsDisable")
+    @Mapping(target = "temperatureChartId", source = "temperatureChart.id")
+    @Mapping(target = "tagNames", ignore = true)
+    @Mapping(target = "deviceObjectId", source = "deviceObject.id")
     ContZPointDTO toDto (ContZPoint contZPoint);
 
     @Mapping(target = "rsoId", source = "rso.id")
     @Mapping(target = "deviceObjectId", source = "deviceObject.id")
+    @Mapping(target = "manualLoading", source = "isManualLoading")
+    @Mapping(target = "manual", source = "isManual")
+    @Mapping(target = "droolsDisable", source = "isDroolsDisable")
+    @Mapping(target = "tagNames", ignore = true)
+    @Mapping(target = "timeDetailLastDates", ignore = true)
     ContZPointFullVM toFullVM(ContZPoint contZPoint);
 
 
@@ -43,6 +59,10 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "deleted", ignore = true)
+
+    @Mapping(target = "isManualLoading", source = "manualLoading")
+    @Mapping(target = "isManual", source = "manual")
+    @Mapping(target = "isDroolsDisable", source = "droolsDisable")
     ContZPoint toEntity (ContZPointFullVM contZPointFullVM);
 
 
