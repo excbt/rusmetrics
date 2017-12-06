@@ -1,18 +1,65 @@
 <div>
 <!--    Tree navigate component-->
+    <div class = "container-fluid noPadding">
         <div class = "row">
-          <div class = "noPadding paddingRight10 paddingLeft20" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
-                <div ng-show="treeLoading" class="nmc-loading"
+            <div class="noPadding paddingRight10 paddingLeft20" ng-show="$ctrl.objectCtrlSettings.isTreeView == true">
+                <div class="row nmc-main-workspace-header marginBottom5"
+                     ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}"
+                     style = "padding-left: 33px;"
+                     >
+                    <div class="col-xs-6">
+                        <div class="btn-group">
+                              <button
+                                     title="Иерархии объектов"
+                                     type="button"
+                                     class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees"
+                                     data-toggle="dropdown"
+                                     aria-haspopup="true"
+                                     aria-expanded="false"
+                                     ng-disabled="!($ctrl.data.trees.length > 0)"
+                                 >
+                                  {{$ctrl.messages.treeMenuHeader}} <span class="caret"></span>
+                              </button>
+<!--
+                              <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
+                                  <li class="menu-item" role="presentation">
+                                      <a href="" class=""
+                                         ng-click="$ctrl.viewFullObjectList()">
+                                          Полный список объектов
+                                      </a>
+                                  </li>
+                            </ul>
+-->
+                            <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
+            <!--                          <li class="divider" role="presentation"></li>-->
+                                  <li class="menu-item" role="presentation" ng-repeat="tree in $ctrl.data.trees track by $index">
+                                      <a href="" class=""
+                                         ng-click="$ctrl.loadTree(tree); $ctrl.objectCtrlSettings.isFullObjectView = false">
+                                          {{tree.objectName}}
+                                      </a>
+                                  </li>
+                              </ul>
+                            </div>
+
+                    </div>
+                    <div class="input-group col-xs-6 filter pull-left nmc-search-form">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "row">
+          <div class = "noPadding paddingRight10 paddingLeft20" ng-show="$ctrl.objectCtrlSettings.isTreeView == true && $ctrl.objectCtrlSettings.isFullObjectView == false">
+                <div ng-show="$ctrl.treeLoading" class="nmc-loading"
                    style = "padding-left: 33px;">
                     <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
                 </div>
 
              <div class="row nmc-tree-with-fixed-header marginRight10"
-                  ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+                  ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}"
                   >
                   <div ui-tree="options" data-drag-enabled="false">
-                    <ol ui-tree-nodes ng-model="data.currentPTreeWrapper">
-                      <li ng-repeat="item in data.currentPTreeWrapper"
+                    <ol ui-tree-nodes ng-model="$ctrl.data.currentPTreeWrapper">
+                      <li ng-repeat="item in $ctrl.data.currentPTreeWrapper"
                           ui-tree-node
                           ng-include="'subscr_object_p_tree_items_renderer.html'"></li>
                     </ol>
@@ -20,42 +67,43 @@
              </div>
         </div>
       </div>
+    </div>
             
       <script type="text/ng-template" id="subscr_object_p_tree_items_renderer.html">
-        <div ui-tree-handle ng-click="selectPNode(item, $event, collapsed)"
+        <div ui-tree-handle ng-click="$ctrl.selectPNode(item, $event, collapsed)"
              ng-mouseover = "item.isHover = true"
              ng-mouseleave = "item.isHover = false"
              ng-class="{'nmc-bg-distinguish': item.isSelected}">
 
             <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
                  class = "marginRight2 nmc-p-tree-status-img"
-                  ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}"
+                  ng-src = "{{$ctrl.data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || $ctrl.data.currentPTreeMonitorDefault}}"
                   >
 
           <i class="btn btn-xs glyphicon"
-             ng-class="{'glyphicon-chevron-right': isChevronRight(collapsed, item), 'glyphicon-chevron-down': isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': isChevronDisabled(collapsed, item)}"
+             ng-class="{'glyphicon-chevron-right': $ctrl.isChevronRight(collapsed, item), 'glyphicon-chevron-down': $ctrl.isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': $ctrl.isChevronDisabled(collapsed, item)}"
              data-nodrag ng-click="toggle(this)">
             </i>
             <span ng-if = "item.type == 'root'">
                   <strong>\</strong>
             </span>
-            <span ng-if = "isElementNode(item)" class="nmc-valign-middle">
+            <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
             </span>
-            <span ng-if = "isContObjectNode(item)" class="nmc-valign-middle">
+            <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-file text-success"></i>
                 {{item.nodeObject.fullName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
-            <span ng-if = "isContZpointNode(item)" class="nmc-valign-middle">
+            <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
                <i class = "glyphicon glyphicon-map-marker text-info"></i>
                 {{item.nodeObject.customServiceName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
-            <span ng-if = "isDeviceNode(item)" class="nmc-valign-middle">
+            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-scale text-warning"></i>
                <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
                <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
                <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
-               <span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+               <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
         </div>
         <div ng-show = "item.loading">
