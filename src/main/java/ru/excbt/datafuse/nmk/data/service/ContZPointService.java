@@ -21,7 +21,6 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
-import ru.excbt.datafuse.nmk.data.model.vo.ContZPointVO;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
@@ -30,7 +29,6 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -96,6 +94,7 @@ public class ContZPointService implements SecuredRoles {
 
     private final V_LastDataDateAggrRepository v_lastDataDateAggrRepository;
 
+    private final ContZPointDeviceHistoryService contZPointDeviceHistoryService;
 
     @Autowired
     public ContZPointService(ContZPointRepository contZPointRepository,
@@ -110,7 +109,8 @@ public class ContZPointService implements SecuredRoles {
                              SubscriberAccessService subscriberAccessService,
                              ContZPointMapper contZPointMapper,
                              DeviceObjectMapper deviceObjectMapper,
-                             V_LastDataDateAggrRepository v_lastDataDateAggrRepository) {
+                             V_LastDataDateAggrRepository v_lastDataDateAggrRepository,
+                             ContZPointDeviceHistoryService contZPointDeviceHistoryService) {
         this.contZPointRepository = contZPointRepository;
         this.contObjectService = contObjectService;
         this.contServiceTypeRepository = contServiceTypeRepository;
@@ -124,6 +124,7 @@ public class ContZPointService implements SecuredRoles {
         this.contZPointMapper = contZPointMapper;
         this.deviceObjectMapper = deviceObjectMapper;
         this.v_lastDataDateAggrRepository = v_lastDataDateAggrRepository;
+        this.contZPointDeviceHistoryService = contZPointDeviceHistoryService;
     }
 
 
@@ -420,6 +421,7 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZPoint);
 		checkArgument(!contZPoint.isNew());
 		ContZPoint result = contZPointRepository.save(contZPoint);
+		contZPointDeviceHistoryService.saveHistory(result);
         if (result.getDeviceObject() != null) {
             result.getDeviceObject().getId();
         }
@@ -462,7 +464,9 @@ public class ContZPointService implements SecuredRoles {
 			result.setDeviceObject(deviceObject);
 			//getDeviceObjects().add(deviceObject);
 		}
-		return contZPointRepository.save(result);
+        ContZPoint savedContZPoint = contZPointRepository.save(result);
+        contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+		return savedContZPoint;
 	}
 
 	/**
@@ -478,9 +482,16 @@ public class ContZPointService implements SecuredRoles {
 			throw new PersistenceException(String.format("Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
 					contZpointId, contZPoint.getExSystemKeyname()));
 		}
+		contZPointDeviceHistoryService.clearHistory(contZPoint);
 		contZPointRepository.delete(contZPoint);
 	}
 
+    /**
+     *
+     * @param contZPointDTO
+     * @param userIds
+     * @return
+     */
     public ContZPointFullVM createZPoint_DTO2FULL(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
         checkNotNull(contZPointDTO);
         checkNotNull(contZPointDTO.getContObjectId());
@@ -511,6 +522,8 @@ public class ContZPointService implements SecuredRoles {
 
         subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), savedContZPoint);
 
+        contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+
         ContZPointFullVM contZPointFullVM = contZPointMapper.toFullVM(savedContZPoint);
 
         return contZPointFullVM;
@@ -525,8 +538,8 @@ public class ContZPointService implements SecuredRoles {
 	public void deleteOne(PortalUserIds userIds, Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
+        contZPointDeviceHistoryService.finishHistory(contZPoint);
 		contZPointRepository.save(EntityActions.softDelete(contZPoint));
-
         subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
 
 	}
@@ -541,6 +554,7 @@ public class ContZPointService implements SecuredRoles {
 		checkNotNull(contZpointId);
 		ContZPoint contZPoint = findOne(contZpointId);
 		checkNotNull(contZPoint);
+		contZPointDeviceHistoryService.clearHistory(contZPoint);
 		contZPointSettingModeService.deleteByContZPoint(contZpointId);
 		contZPointRepository.delete(contZPoint);
 	}
@@ -553,8 +567,6 @@ public class ContZPointService implements SecuredRoles {
 
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
 
-
-
         //contZPoint.setDeviceObject(new DeviceObject().id(contZPointFullVM.get_activeDeviceObjectId()));
 //        contZPoint.getDeviceObjects().clear();
 //        contZPoint.getDeviceObjects().add(new DeviceObject().id(contZPointFullVM.get_activeDeviceObjectId()));
@@ -563,6 +575,8 @@ public class ContZPointService implements SecuredRoles {
 
 		ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
 		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
+
+        contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 
 		return contZPointMapper.toFullVM(savedContZPoint);
 	}

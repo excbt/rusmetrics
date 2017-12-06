@@ -97,4 +97,17 @@ public class ContZPointDeviceHistoryService {
         );
     }
 
+    /**
+     *
+     * @param contZPoint
+     */
+    public void clearHistory(ContZPoint contZPoint) {
+
+        List<ContZPointDeviceHistory> actualHistory = repository.findAllByContZPoint(contZPoint);
+        actualHistory.forEach(i -> {
+                repository.delete(i);
+            }
+        );
+    }
+
 }
