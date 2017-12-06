@@ -1,25 +1,21 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
-import ru.excbt.datafuse.nmk.data.model.support.ContZPointEx;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerSubscriberTest;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 
 @Transactional
 public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
@@ -121,8 +117,7 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 		contZPoint.setIsManualLoading(true);
 
         ContZPointDTO contZPointDTO = contZPointMapper.toDto(contZPoint);
-        contZPointDTO.getTagNames().add("MY-TAG-1");
-        contZPointDTO.getTagNames().add("MY-TAG-2");
+        contZPointDTO.setTagNames(new HashSet<>(Arrays.asList("MY-TAG-1", "MY-TAG-2")));
 
 		_testUpdateJson(url, contZPointDTO);
 	}

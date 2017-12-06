@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
@@ -51,7 +52,8 @@ public class ContZPointDTO implements ModelIdable {
 
     private Long deviceObjectId;
 
-    private Set<String> tagNames = new HashSet<>();
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Set<String> tagNames;
 
     public Long getId() {
         return id;

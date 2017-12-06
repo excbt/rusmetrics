@@ -675,15 +675,29 @@ public class ContZPointService implements SecuredRoles {
 	    Objects.requireNonNull(contZPointFullVM);
 
         if (tagNames != null) {
-            contZPointFullVM.getTagNames().clear();
-            tagNames.forEach(tagStr -> {
-                ObjectTagDTO tag = new ObjectTagDTO();
-                tag.setObjectId(contZPointFullVM.getId());
-                tag.setObjectTagKeyname(ObjectTag.contZPointTagKeyname);
-                tag.setTagName(tagStr);
-                objectTagService.saveTag(tag, portalUserIds);
-                contZPointFullVM.getTagNames().add(tagStr);
-            });
+
+            List<ObjectTagDTO> dtos =
+                tagNames.stream().distinct().map(s -> {
+                ObjectTagDTO dto = new ObjectTagDTO();
+                dto.setTagName(s);
+                dto.setObjectTagKeyname(ObjectTag.contZPointTagKeyname);
+                dto.setObjectId(contZPointFullVM.getId());
+                return dto;
+            }).collect(Collectors.toList());
+
+            List<ObjectTagDTO> resultTags = objectTagService.saveTags(dtos,portalUserIds);
+
+//
+//            contZPointFullVM.getTagNames().clear();
+//            tagNames.forEach(tagStr -> {
+//                ObjectTagDTO tag = new ObjectTagDTO();
+//                tag.setObjectId(contZPointFullVM.getId());
+//                tag.setObjectTagKeyname(ObjectTag.contZPointTagKeyname);
+//                tag.setTagName(tagStr);
+//                objectTagService.saveTag(tag, portalUserIds);
+//                contZPointFullVM.getTagNames().add(tagStr);
+//            });
+            contZPointFullVM.setTagNames(resultTags.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet()));
         }
         return contZPointFullVM;
     }

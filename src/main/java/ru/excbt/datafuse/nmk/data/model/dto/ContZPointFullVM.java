@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
@@ -67,7 +68,8 @@ public class ContZPointFullVM implements ModelIdable {
 
     private List<TimeDetailLastDate> timeDetailLastDates = new ArrayList<>();
 
-    private Set<String> tagNames = new HashSet<>();
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Set<String> tagNames;
 
     public Long getId() {
         return id;
