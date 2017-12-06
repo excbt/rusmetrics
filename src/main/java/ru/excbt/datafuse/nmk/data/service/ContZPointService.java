@@ -1,7 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import com.google.common.base.Function;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.LocalDate;
@@ -39,10 +37,9 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с точками учета
@@ -418,8 +415,9 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint updateContZPoint(ContZPoint contZPoint) {
-		checkNotNull(contZPoint);
-		checkArgument(!contZPoint.isNew());
+		Objects.requireNonNull(contZPoint);
+		Objects.requireNonNull(contZPoint.getId());
+
 		ContZPoint result = contZPointRepository.save(contZPoint);
 		contZPointDeviceHistoryService.saveHistory(result);
         if (result.getDeviceObject() != null) {
@@ -442,12 +440,12 @@ public class ContZPointService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPoint createManualZPoint(Long contObjectId, ContServiceTypeKey contServiceTypeKey, LocalDate startDate,
 			Integer tsNumber, Boolean isDoublePipe, DeviceObject deviceObject) {
-		checkNotNull(contObjectId);
-		checkNotNull(contServiceTypeKey);
-		checkNotNull(startDate);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(contServiceTypeKey);
+        Objects.requireNonNull(startDate);
 
 		ContServiceType contServiceType = contServiceTypeRepository.findOne(contServiceTypeKey.getKeyname());
-		checkNotNull(contServiceType);
+        Objects.requireNonNull(contServiceType);
 
 		ContZPoint result = new ContZPoint();
 
@@ -477,7 +475,7 @@ public class ContZPointService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN })
 	public void deleteManualZPoint(Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
-		checkNotNull(contZPoint);
+        Objects.requireNonNull(contZPoint);
 		if (ExSystemKey.MANUAL.isNotEquals(contZPoint.getExSystemKeyname())) {
 			throw new PersistenceException(String.format("Delete ContZPoint(id=%d) with exSystem=%s is not supported ",
 					contZpointId, contZPoint.getExSystemKeyname()));
@@ -493,12 +491,12 @@ public class ContZPointService implements SecuredRoles {
      * @return
      */
     public ContZPointFullVM createZPoint_DTO2FULL(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
-        checkNotNull(contZPointDTO);
-        checkNotNull(contZPointDTO.getContObjectId());
-        checkNotNull(contZPointDTO.getStartDate());
-        checkNotNull(contZPointDTO.getContServiceTypeKeyname());
+        Objects.requireNonNull(contZPointDTO);
+        Objects.requireNonNull(contZPointDTO.getContObjectId());
+        Objects.requireNonNull(contZPointDTO.getStartDate());
+        Objects.requireNonNull(contZPointDTO.getContServiceTypeKeyname());
 //        checkNotNull(contZPointDTO.get_activeDeviceObjectId());
-        checkNotNull(contZPointDTO.getRsoId());
+        Objects.requireNonNull(contZPointDTO.getRsoId());
 
         ContZPoint contZPoint = contZPointMapper.toEntity(contZPointDTO);
 
@@ -537,7 +535,7 @@ public class ContZPointService implements SecuredRoles {
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOne(PortalUserIds userIds, Long contZpointId) {
 		ContZPoint contZPoint = findOne(contZpointId);
-		checkNotNull(contZPoint);
+        Objects.requireNonNull(contZPoint);
         contZPointDeviceHistoryService.finishHistory(contZPoint);
 		contZPointRepository.save(EntityActions.softDelete(contZPoint));
         subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
@@ -551,9 +549,9 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public void deleteOnePermanent(Long contZpointId) {
-		checkNotNull(contZpointId);
+        Objects.requireNonNull(contZpointId);
 		ContZPoint contZPoint = findOne(contZpointId);
-		checkNotNull(contZPoint);
+        Objects.requireNonNull(contZPoint);
 		contZPointDeviceHistoryService.clearHistory(contZPoint);
 		contZPointSettingModeService.deleteByContZPoint(contZpointId);
 		contZPointRepository.delete(contZPoint);
@@ -562,7 +560,7 @@ public class ContZPointService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
 	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
-		checkNotNull(contZPointFullVM);
+        Objects.requireNonNull(contZPointFullVM);
 		//checkNotNull(contZPointFullVM.get_activeDeviceObjectId());
 
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
@@ -658,7 +656,7 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContZPoint> selectContPointsByDeviceObject(Long deviceObjectId) {
-		return Lists.newArrayList(contZPointRepository.selectContZPointsByDeviceObjectId(deviceObjectId));
+		return contZPointRepository.selectContZPointsByDeviceObjectId(deviceObjectId);
 	}
 
 }
