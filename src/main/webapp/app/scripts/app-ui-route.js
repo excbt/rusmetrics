@@ -46,7 +46,21 @@
                     }]
                 }
             },
-            
+            {
+                name: 'objectsPTree.info',
+                url: '/treeInfo',
+                component: 'treeElementNodeComponent',
+                params: {
+                    node: null
+                }
+                /*template: '<div><h1>objectsPTree.info state Full (norm variant =) )</h1></div>'*/
+                /*views: {
+                    'treeInfoView@objectsPTree': {
+                        template: '<div><h1>objectsPTree.info state (good variant)</h1></div>'
+                    }
+                }*/
+            },
+/*end 'component version'*/            
             {
                 name: 'demoMap',
                 url: '/objects/demo-map/',

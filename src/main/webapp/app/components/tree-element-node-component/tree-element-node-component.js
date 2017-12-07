@@ -10,9 +10,9 @@
         controller: treeElementNodeController
     };
     
-    treeElementNodeController.$inject = ['$scope', '$element', '$attrs', 'treeElementNodeComponentService'];
+    treeElementNodeController.$inject = ['$scope', '$element', '$attrs', 'treeElementNodeComponentService', '$stateParams'];
     
-    function treeElementNodeController($scope, $element, $attrs, treeElementNodeComponentService) {
+    function treeElementNodeController($scope, $element, $attrs, treeElementNodeComponentService, $stateParams) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.data = {};
@@ -122,11 +122,15 @@
         }
         
         function initCtrl() {
+            if ((angular.isUndefined(ctrl.spnode) || ctrl.spnode ===  null) && angular.isDefined($stateParams.node) && $stateParams.node !== null) {
+                ctrl.spnode = $stateParams.node;
+            }
             loadContEventTypes();
         }
         
         ctrl.$onInit = function () {
             initCtrl();
+            console.log($stateParams);
         };
     }
     
