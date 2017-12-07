@@ -133,8 +133,11 @@ public class SubscrContZPointResource {
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
-
-		return ApiActionTool.processResponceApiActionUpdate(() -> contZPointService.updateDTO_safe(contZPointFullVM));
+		return ApiActionTool.processResponceApiActionUpdate(() -> {
+            ContZPointFullVM result = contZPointService.updateDTO_safe(contZPointFullVM);
+            result = contZPointService.saveContZPointTags(result, contZPointFullVM.getTagNames(), portalUserIdsService.getCurrentIds());
+            return result;
+        });
 
 	}
 

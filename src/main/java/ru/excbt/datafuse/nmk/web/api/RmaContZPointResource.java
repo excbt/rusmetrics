@@ -1,8 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,14 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
 import ru.excbt.datafuse.nmk.web.rest.SubscrContZPointResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -55,9 +52,9 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contZPointId);
-		checkNotNull(contZPointFullVM);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(contZPointId);
+        Objects.requireNonNull(contZPointFullVM);
 
 		contZPointFullVM.setContObjectId(contObjectId);
 
@@ -65,7 +62,11 @@ public class RmaContZPointResource extends SubscrContZPointResource {
             ApiResponse.responseForbidden();
         }
 
-		return ApiResponse.responseUpdate(() -> contZPointService.updateVM(contZPointFullVM));
+		return ApiResponse.responseUpdate(() -> {
+            ContZPointFullVM result = contZPointService.updateVM(contZPointFullVM);
+            contZPointService.saveContZPointTags(result, contZPointFullVM.getTagNames(), portalUserIdsService.getCurrentIds());
+            return result;
+        });
 
 	}
 
@@ -80,11 +81,14 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	public ResponseEntity<?> createContZPoint(@PathVariable("contObjectId") Long contObjectId,
                                               @RequestBody ContZPointDTO contZPointDTO, HttpServletRequest request) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contZPointDTO);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(contZPointDTO);
         contZPointDTO.setContObjectId(contObjectId);
 
-		return ApiResponse.responseCreate(() -> contZPointService.createZPoint_DTO2FULL(contZPointDTO, portalUserIdsService.getCurrentIds()), () -> request.getRequestURI());
+		return ApiResponse.responseCreate(() ->
+            contZPointService.createZPointDTO2FullVM(contZPointDTO, portalUserIdsService.getCurrentIds()),
+            () -> request.getRequestURI());
+
 
 	}
 
@@ -99,8 +103,8 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	public ResponseEntity<?> deleteContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contZPointId);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(contZPointId);
 
         if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
             ApiResponse.responseForbidden();
@@ -124,8 +128,8 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 	public ResponseEntity<?> putContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody List<ContZPointMetadata> requestEntity) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contZPointId);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(contZPointId);
 
 
         if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {

@@ -77,6 +77,9 @@ public abstract class AbstractAuditablePersistenceEntity<PK extends Serializable
         this.lastModifiedDate = lastModifiedDate;
     }
 
+
+
+
     @Override
     public String toString() {
         return "AbstractAuditableEntity{" +

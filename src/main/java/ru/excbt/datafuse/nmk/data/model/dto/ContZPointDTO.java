@@ -1,11 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
+import ru.excbt.datafuse.nmk.data.util.FlexDataToString;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by kovtonyk on 07.07.2017.
@@ -52,9 +54,15 @@ public class ContZPointDTO implements ModelIdable {
 
     private Long deviceObjectId;
 
-    //TODO temporary added
-    @Deprecated
-    private Long _activeDeviceObjectId;
+    @JsonInclude(JsonInclude.Include.USE_DEFAULTS)
+    private Set<String> tagNames;
+
+    @JsonRawValue
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(value = "flexData")
+    @JsonDeserialize(using = FlexDataToString.class)
+    private String flexData;
+
 
     public Long getId() {
         return id;
@@ -216,4 +224,20 @@ public class ContZPointDTO implements ModelIdable {
         this.deviceObjectId = deviceObjectId;
     }
 
+    public Set<String> getTagNames() {
+        return tagNames;
+    }
+
+    public void setTagNames(Set<String> tagNames) {
+        this.tagNames = tagNames;
+    }
+
+
+    public String getFlexData() {
+        return flexData;
+    }
+
+    public void setFlexData(String flexData) {
+        this.flexData = flexData;
+    }
 }
