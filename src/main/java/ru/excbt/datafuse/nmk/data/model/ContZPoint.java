@@ -20,10 +20,7 @@ import javax.persistence.Version;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -142,21 +139,8 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "temperature_chart_id", insertable = false, updatable = false)
 	private Long temperatureChartId;
 
-//	@Transient
-//	private Long _activeDeviceObjectId;
-
-
-//	@JsonIgnore
-//	public DeviceObject get_activeDeviceObject() {
-//		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
-//	}
-//
-//	public Long get_activeDeviceObjectId() {
-//		if (_activeDeviceObjectId == null) {
-//			DeviceObject d = get_activeDeviceObject();
-//			_activeDeviceObjectId = d != null ? d.getId() : null;
-//		}
-//		return _activeDeviceObjectId;
-//	}
+    @Column(name = "flex_data")
+    @Type(type = "JsonbAsString")
+	private String flexData;
 
 }

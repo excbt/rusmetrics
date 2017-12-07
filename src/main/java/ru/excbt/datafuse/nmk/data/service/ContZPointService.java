@@ -670,6 +670,13 @@ public class ContZPointService implements SecuredRoles {
 	}
 
 
+    /**
+     *
+     * @param contZPointFullVM
+     * @param tagNames
+     * @param portalUserIds
+     * @return
+     */
 	@Transactional
 	public ContZPointFullVM saveContZPointTags (ContZPointFullVM contZPointFullVM, Collection<String> tagNames, PortalUserIds portalUserIds) {
 	    Objects.requireNonNull(contZPointFullVM);
@@ -686,17 +693,6 @@ public class ContZPointService implements SecuredRoles {
             }).collect(Collectors.toList());
 
             List<ObjectTagDTO> resultTags = objectTagService.saveTags(dtos,portalUserIds);
-
-//
-//            contZPointFullVM.getTagNames().clear();
-//            tagNames.forEach(tagStr -> {
-//                ObjectTagDTO tag = new ObjectTagDTO();
-//                tag.setObjectId(contZPointFullVM.getId());
-//                tag.setObjectTagKeyname(ObjectTag.contZPointTagKeyname);
-//                tag.setTagName(tagStr);
-//                objectTagService.saveTag(tag, portalUserIds);
-//                contZPointFullVM.getTagNames().add(tagStr);
-//            });
             contZPointFullVM.setTagNames(resultTags.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet()));
         }
         return contZPointFullVM;
