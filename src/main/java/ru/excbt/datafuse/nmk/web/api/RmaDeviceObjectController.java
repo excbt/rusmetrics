@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,7 +31,9 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
+import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -51,6 +54,9 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectController.class);
+
+	@Autowired
+	private DeviceObjectMapper deviceObjectMapper;
 
 	/**
 	 *
@@ -223,8 +229,14 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 				deviceObject.shareDeviceLoginInfo();
 			}
 
-			List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream()
-					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new DeviceObjectVO(i))
+
+//            deviceObjectMapper.toFullVM(de)
+
+//			List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream()
+//					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new DeviceObjectVO(i))
+//					.collect(Collectors.toList());
+			List<DeviceObjectFullVM> deviceObjectVOs = deviceObjects.stream()
+					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i))
 					.collect(Collectors.toList());
 
 //			List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()

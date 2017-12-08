@@ -50,6 +50,10 @@ public class DeviceObjectFullVM {
 
     private DeviceObjectTimeOffsetDTO timeOffset;
 
+    private String ContObjectFullName;
+
+    private String ContObjectId;
+
     public Long getId() {
         return id;
     }
@@ -232,5 +236,21 @@ public class DeviceObjectFullVM {
 
     public void setTimeOffset(DeviceObjectTimeOffsetDTO timeOffset) {
         this.timeOffset = timeOffset;
+    }
+
+    public String getContObjectFullName() {
+        return ContObjectFullName;
+    }
+
+    public void setContObjectFullName(String contObjectFullName) {
+        ContObjectFullName = contObjectFullName;
+    }
+
+    public String getContObjectId() {
+        return ContObjectId;
+    }
+
+    public void setContObjectId(String contObjectId) {
+        ContObjectId = contObjectId;
     }
 }

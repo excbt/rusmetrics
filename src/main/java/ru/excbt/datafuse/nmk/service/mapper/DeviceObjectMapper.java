@@ -39,6 +39,8 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
 
 
     @Mapping(target = "deviceModelId", source = "deviceModel.id")
+    @Mapping(target = "contObjectFullName", source = "contObject.fullName")
+    @Mapping(target = "contObjectId", source = "contObject.id")
     DeviceObjectFullVM toFullVM(DeviceObject deviceObject);
 
 
