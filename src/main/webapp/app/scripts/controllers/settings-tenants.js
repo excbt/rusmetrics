@@ -145,7 +145,7 @@ angular.module('portalNMC')
                 if (angular.isArray(controlObjectsCopy) && controlObjectsCopy.length > 0) {
                     tempArr.forEach(function (elem, index) {
                         controlObjectsCopy.some(function (oldElem) {
-                            if (oldElem.contObjectInfo.contObjectId == elem.contObjectInfo.contObjectId) {
+                            if (oldElem.contObjectId == elem.contObjectId) {
                                 if (!mainSvc.checkUndefinedNull(oldElem.selected)) {
                                     elem.selected = oldElem.selected;
                                 }
@@ -284,7 +284,7 @@ angular.module('portalNMC')
                 var tmp = [];
                 $scope.objects.forEach(function (elem) {
                     if (elem.selected == true) {
-                        tmp.push(elem.contObjectInfo.contObjectId);
+                        tmp.push(elem.contObjectId);
                     }
                 });
 //                    if ($scope.objectCtrlSettings.allSelected == true){
@@ -342,7 +342,7 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull(obj)) {
                     objectIds = prepareObjectsIdsArray();
                 } else {
-                    objectIds.push(obj.contObjectInfo.contObjectId);
+                    objectIds.push(obj.contObjectId);
                 }
                 if (objectIds.length == 0) {
                     return "Cabinet array is empty.";
@@ -813,7 +813,7 @@ angular.module('portalNMC')
 //                        $scope.objectsOnPage = $scope.objects;
                     tempArr = [];
                     $scope.objects.forEach(function (elem) {
-                        if (angular.isDefined(elem.contObjectInfo.fullName) && elem.contObjectInfo.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
+                        if (angular.isDefined(elem.contObjectFullName) && elem.contObjectFullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
                             tempArr.push(elem);
                         }
                     });
@@ -1539,7 +1539,7 @@ angular.module('portalNMC')
                 
             function findObjectByIdAndSetPeriod(objArr, omp) {
                 objArr.some(function (obj) {
-                    if (obj.contObjectInfo.contObjectId === omp.contObjectId && !mainSvc.checkUndefinedNull(omp.meterPeriodSettings)) {
+                    if (obj.contObjectId === omp.contObjectId && !mainSvc.checkUndefinedNull(omp.meterPeriodSettings)) {
                         obj.meterPeriodSettings = omp.meterPeriodSettings;
                         return true;
                     }
@@ -1600,7 +1600,7 @@ angular.module('portalNMC')
                 $scope.data.currentObjectData = objectData;
                 openMeterPeriodsModalFlag = true;
                 multiPeriodSettingFlag = false;
-                getMeterPeriodByObject(objectData.contObjectInfo.contObjectId);
+                getMeterPeriodByObject(objectData.contObjectId);
             };
                 
             $scope.setMeterPeriodsInit = function () {
@@ -1656,7 +1656,8 @@ angular.module('portalNMC')
                 //console.log("Input data:");
 //console.log(inputData);
                 var result = {};
-                if (mainSvc.checkUndefinedNull($scope.data.currentObjectData) || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo) || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo.contObjectId)) {
+                if (mainSvc.checkUndefinedNull($scope.data.currentObjectData) //|| mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo) 
+                || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectId)) {
                     console.log("Current object data is incorrect.");
                     return false;
                 }

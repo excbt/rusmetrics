@@ -203,20 +203,20 @@ angular.module('portalNMC')
                 return false;
             }
             array.sort(function (a, b) {
-                if ((checkUndefinedNull(a.contObjectInfo) || checkUndefinedNull(a.contObjectInfo.fullName)) &&
-                        (checkUndefinedNull(b.contObjectInfo) || checkUndefinedNull(b.contObjectInfo.fullName))) {
+                if (( checkUndefinedNull(a.contObjectFullName)) &&
+                        ( checkUndefinedNull(b.contObjectFullName))) {
                     return 0;
                 }
-                if (checkUndefinedNull(a.contObjectInfo) || checkUndefinedNull(a.contObjectInfo.fullName)) {
+                if (checkUndefinedNull(a.contObjectFullName)) {
                     return -1;
                 }
-                if (checkUndefinedNull(b.contObjectInfo) || checkUndefinedNull(b.contObjectInfo.fullName)) {
+                if (checkUndefinedNull(b.contObjectFullName)) {
                     return 1;
                 }
-                if (a.contObjectInfo.fullName.toUpperCase() > b.contObjectInfo.fullName.toUpperCase()) {
+                if (a.contObjectFullName.toUpperCase() > b.contObjectFullName.toUpperCase()) {
                     return 1;
                 }
-                if (a.contObjectInfo.fullName.toUpperCase() < b.contObjectInfo.fullName.toUpperCase()) {
+                if (a.contObjectFullName.toUpperCase() < b.contObjectFullName.toUpperCase()) {
                     return -1;
                 }
                 return 0;

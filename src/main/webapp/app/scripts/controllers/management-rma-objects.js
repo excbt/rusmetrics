@@ -1484,9 +1484,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 //select only vzlet devices
                 var tmpArr = response.data;
                 tmpArr.forEach(function (elem) {
-                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)) {
-                        elem.contObjectId = elem.contObjectInfo.contObjectId;
-                    }
+                    // if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)) {
+                    //     elem.contObjectId = elem.contObjectInfo.contObjectId;
+                    // }
                     if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)) {
                         elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
@@ -1711,7 +1711,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.deleteDevice = function (device) {
 //console.log(device);        
         var targetUrl = objectSvc.getRmaObjectsUrl();
-        targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
+        targetUrl = targetUrl + "/" + device.contObjectId + "/deviceObjects/" + device.id;
         $http.delete(targetUrl).then(successDeviceCallback, errorCallback);
     };
 // **************************************************************************************************
