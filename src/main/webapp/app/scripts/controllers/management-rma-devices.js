@@ -266,10 +266,10 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             return false;
         }
         array.sort(function (a, b) {
-            if (a.contObjectInfo.fullName.toUpperCase() > b.contObjectInfo.fullName.toUpperCase()) {
+            if (a.contObjectFullName.toUpperCase() > b.contObjectFullName.toUpperCase()) {
                 return 1;
             }
-            if (a.contObjectInfo.fullName.toUpperCase() < b.contObjectInfo.fullName.toUpperCase()) {
+            if (a.contObjectFullName.toUpperCase() < b.contObjectFullName.toUpperCase()) {
                 return -1;
             }
             return 0;
@@ -307,9 +307,9 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             function (response) {
                 var tmp = response.data;
                 tmp.forEach(function (elem) {
-                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo !== null)) {
-                        elem.contObjectId = elem.contObjectInfo.contObjectId;
-                    }
+                    // if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo !== null)) {
+                    //     elem.contObjectId = elem.contObjectInfo.contObjectId;
+                    // }
                     if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource !== null)) {
                         elem.subscrDataSourceId = Number(elem.activeDataSource.subscrDataSource.id);
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
@@ -320,7 +320,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                     if (!mainSvc.checkUndefinedNull(elem.verificationDate)) {
                         elem.verificationDateString = mainSvc.dateFormating(elem.verificationDate, $scope.ctrlSettings.userDateFormat);
                     }
-                    elem.deviceContObjectCaption = elem.contObjectInfo.fullName;
+                    elem.deviceContObjectCaption = elem.contObjectFullName;
                     elem.deviceModelCaption = elem.deviceModel.caption || elem.deviceModel.modelName;
                     if ($scope.isDeviceDisabled(elem) === true) {
                         switch (elem.exSystemKeyname) {
@@ -792,7 +792,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     
     $scope.deleteObject = function (device) {
         var targetUrl = objectSvc.getRmaObjectsUrl();
-        targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
+        targetUrl = targetUrl + "/" + device.contObjectId + "/deviceObjects/" + device.id;
         $http.delete(targetUrl).then(successCallback, errorCallback);
     };
     
@@ -845,7 +845,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
             console.log(errorMsg);
             return errorMsg;
         }
-        objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectInfo.contObjectId, device).then(
+        objectSvc.getRmaDeviceMetaDataVzlet(device.contObjectId, device).then(
             function (response) {
                 device.metaData = response.data;
             },
