@@ -19,4 +19,8 @@ public interface ContObjectMapper {
     ContObjectMonitorDTO contObjectToMonitorDto (ContObject contObject);
 
 
+    default ContObject contObjectFromId(Long id) {
+        return id == null ? null : new ContObject().id(id);
+    }
+
 }

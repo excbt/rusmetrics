@@ -14,10 +14,12 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
+import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -27,6 +29,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -80,8 +83,12 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
     @Autowired
     protected DeviceDataTypeService deviceDataTypeService;
 
+
     @Autowired
-    private ModelMapper modelMapper;
+    protected DeviceObjectMapper deviceObjectMapper;
+
+//    @Autowired
+//    private ModelMapper modelMapper;
 
 	/**
 	 *
@@ -117,21 +124,23 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
             return ApiResponse.responseForbidden();
         }
 
-        ApiActionProcess<DeviceObject> actionProcess = () -> {
+        ApiActionProcess<DeviceObjectFullVM> actionProcess = () -> {
 
             DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
 
+            DeviceObjectFullVM fullVM = deviceObjectMapper.toFullVM(deviceObject);
             if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-                deviceObject.shareDeviceLoginInfo();
+                fullVM.shareDeviceLoginInfo(deviceObject);
             }
-            return deviceObject;
+
+            return fullVM;
         };
 
-        Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
+        Function<DeviceObjectFullVM, ResponseEntity<?>> extraCheck = (x) -> {
             if (x == null) {
                 return ApiResponse.responseNoContent();
             }
-            if (x.getContObject() == null || !x.getContObject().getId().equals(contObjectId)) {
+            if (x.getContObjectId() == null || !x.getContObjectId().equals(contObjectId)) {
                 return ApiResponse.responseBadRequest();
             }
             return null;
@@ -144,12 +153,12 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
     @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
         produces = ApiConst.APPLICATION_JSON_UTF8)
     public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
-                                              @PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
+                                              @PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObjectDTO) {
 
-        checkNotNull(deviceObject);
-        checkArgument(!deviceObject.isNew());
-        checkNotNull(deviceObject.getDeviceModelId());
-        checkArgument(deviceObject.getId().equals(deviceObjectId));
+        Objects.requireNonNull(deviceObjectDTO);
+        Objects.requireNonNull(deviceObjectDTO.getId());
+        Objects.requireNonNull(deviceObjectDTO.getDeviceModelId());
+        //checkArgument(deviceObject.getId().equals(deviceObjectId));
 
         if (!canAccessContObject(contObjectId)) {
             return ApiResponse.responseForbidden();
@@ -157,7 +166,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 
         /////////////////////////////////////////////
         ApiActionObjectProcess actionProcess = () -> {
-            final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
+            //final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
             DeviceObject result =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
 
             return result;

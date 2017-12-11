@@ -17,6 +17,10 @@ public interface DeviceModelMapper {
     DeviceModelDTO deviceModelToDto (DeviceModel deviceModel);
 
 
+    default DeviceModel deviceModelFromId(Long id) {
+        return id == null ? null : new DeviceModel().id(id);
+    }
+
     default Map<Long, Double> stringsFromAuthorities (Map<HeatRadiatorType,Double> heatRadiatorTypeDoubleMap) {
         //return authorities.stream().map(Authority::getName)
         //    .collect(Collectors.toSet());

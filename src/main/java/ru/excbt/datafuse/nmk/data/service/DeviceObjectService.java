@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.*;
@@ -139,7 +140,30 @@ public class DeviceObjectService implements SecuredRoles {
         deviceObject.saveDeviceObjectCredentials();
 
         DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
-        result.shareDeviceLoginInfo();
+        //result.shareDeviceLoginInfo();
+        return result;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationUpdate(Long contObjectId, DeviceObjectDTO deviceObjectDTO) {
+
+        DeviceObject deviceObject = deviceObjectMapper.toEntity(deviceObjectDTO);
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource();
+
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
+
+        deviceObjectDataSourceService.saveDeviceDataSource(deviceObjectDataSource);
+
+        //result.shareDeviceLoginInfo();
         return result;
     }
 
@@ -219,9 +243,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsByContObjectId(Long contObjectId) {
 		List<DeviceObject> resultList = deviceObjectRepository.selectDeviceObjectsByContObjectId(contObjectId);
-		resultList.forEach(i -> {
-			i.loadLazyProps();
-		});
+//		resultList.forEach(i -> {
+//			i.loadLazyProps();
+//		});
 		return resultList;
 	}
 
@@ -294,10 +318,22 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObject selectDeviceObject(long id) {
 		DeviceObject result = deviceObjectRepository.findOne(id);
-		if (result != null) {
-			result.loadLazyProps();
-		}
+//		if (result != null) {
+//			result.loadLazyProps();
+//		}
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectFullVM selectDeviceObjectFullVM(long id) {
+		DeviceObject result = deviceObjectRepository.findOne(id);
+		return deviceObjectMapper.toFullVM(result);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectFullVM selectDeviceObjectFullVM_Rma(long id) {
+		DeviceObject result = deviceObjectRepository.findOne(id);
+		return deviceObjectMapper.toFullVM(result).shareDeviceLoginInfo(result);
 	}
 
 	/**
@@ -445,9 +481,9 @@ public class DeviceObjectService implements SecuredRoles {
 
         DeviceObject result = selectDeviceObject(deviceObject.getId());
 
-        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-            result.shareDeviceLoginInfo();
-        }
+//        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+//            result.shareDeviceLoginInfo();
+//        }
 
 
         return result;
@@ -490,9 +526,9 @@ public class DeviceObjectService implements SecuredRoles {
 
         DeviceObject result = selectDeviceObject(deviceObject.getId());
 
-        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-            result.shareDeviceLoginInfo();
-        }
+//        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+//            result.shareDeviceLoginInfo();
+//        }
 
         return result;
 	}
@@ -551,9 +587,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
 		List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
-		result.forEach(i -> {
-			i.loadLazyProps();
-		});
+//		result.forEach(i -> {
+//			i.loadLazyProps();
+//		});
 		return result;
 	}
 

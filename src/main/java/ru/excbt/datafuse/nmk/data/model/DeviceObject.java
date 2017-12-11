@@ -1,40 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -43,8 +16,16 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
+
+import javax.persistence.*;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * Прибор
@@ -66,32 +47,33 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 	private static final Logger log = LoggerFactory.getLogger(DeviceObject.class);
 
-	@JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
-	public class ContObjectInfo implements Serializable, ContObjectShortInfo {
-		/**
-		 *
-		 */
-		private static final long serialVersionUID = 1872748374864397365L;
 
-		public ContObjectInfo() {
-
-		}
-
-		@Override
-		public String getFullName() {
-			return contObject == null ? null : contObject.getFullName();
-		}
-
-		@Override
-		public String getName() {
-			return contObject == null ? null : contObject.getName();
-		}
-
-		@Override
-		public Long getContObjectId() {
-			return contObject == null ? null : contObject.getId();
-		}
-	}
+//    @JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
+//	public class ContObjectInfo implements Serializable, ContObjectShortInfo {
+//		/**
+//		 *
+//		 */
+//		private static final long serialVersionUID = 1872748374864397365L;
+//
+//		public ContObjectInfo() {
+//
+//		}
+//
+//		@Override
+//		public String getFullName() {
+//			return contObject == null ? null : contObject.getFullName();
+//		}
+//
+//		@Override
+//		public String getName() {
+//			return contObject == null ? null : contObject.getName();
+//		}
+//
+//		@Override
+//		public Long getContObjectId() {
+//			return contObject == null ? null : contObject.getId();
+//		}
+//	}
 
 	/**
 	 *
@@ -129,9 +111,9 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 	}
 
-	@Transient
-    @Getter
-	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
+//	@Transient
+//    @Getter
+//	private final ContObjectInfo contObjectInfo = new ContObjectInfo();
 
 	@Transient
 	private ActiveDataSourceInfoDTO editDataSourceInfo = new ActiveDataSourceInfoDTO();
@@ -307,9 +289,13 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     private String deviceObjectName;
 
     @OneToOne(mappedBy = "deviceObject")
+    @Getter
+    @Setter
     private V_DeviceObjectTimeOffset timeOffset;
 
     @OneToOne(mappedBy = "deviceObject")
+    @Getter
+    @Setter
     private DeviceObjectLastInfo deviceObjectLastInfo;
 
 	public boolean isMetaVzletExpected() {
@@ -324,19 +310,22 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		return result;
 	}
 
-	/**
-	 *
-	 */
-	public void loadLazyProps() {
-		getActiveDataSource();
-		if (getContObjectInfo() != null) {
-			getContObjectInfo().getContObjectId();
-		}
-	}
+//	/**
+//	 *
+//	 */
+//	public void loadLazyProps() {
+//		getActiveDataSource();
+//		if (getContObjectInfo() != null) {
+//			getContObjectInfo().getContObjectId();
+//		}
+//	}
 
 	public ActiveDataSourceInfoDTO getEditDataSourceInfo() {
 		if (editDataSourceInfo == null || editDataSourceInfo.getSubscrDataSourceId() == null) {
 			DeviceObjectDataSource activeDS = getActiveDataSource();
+
+			//editDataSourceInfo = subscrDataSourceMapper.toDto(activeDS);
+
 			editDataSourceInfo = activeDS != null ? new ActiveDataSourceInfoDTO(activeDS) : new ActiveDataSourceInfoDTO();
 		}
 		return editDataSourceInfo;
@@ -350,10 +339,10 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	/**
 	 *
 	 */
-	@JsonIgnore
-	public void shareDeviceLoginInfo() {
-		this.deviceLoginInfo = new DeviceLoginInfo(this);
-	}
+//	@JsonIgnore
+//	public void shareDeviceLoginInfo() {
+//		this.deviceLoginInfo = new DeviceLoginInfo(this);
+//	}
 
 	/**
 	 *
@@ -368,23 +357,23 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		}
 	}
 
-	@JsonProperty
-	public DeviceObjectLastInfo getDeviceObjectLastInfo() {
-		return deviceObjectLastInfo;
-	}
+//	@JsonProperty
+//	public DeviceObjectLastInfo getDeviceObjectLastInfo() {
+//		return deviceObjectLastInfo;
+//	}
 
-	@JsonIgnore
-	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
-		this.deviceObjectLastInfo = deviceObjectLastInfo;
-	}
+//	@JsonIgnore
+//	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
+//		this.deviceObjectLastInfo = deviceObjectLastInfo;
+//	}
 
-    public V_DeviceObjectTimeOffset getTimeOffset() {
-        return timeOffset;
-    }
+//    public V_DeviceObjectTimeOffset getTimeOffset() {
+//        return timeOffset;
+//    }
 
-    public void setTimeOffset(V_DeviceObjectTimeOffset timeOffset) {
-        this.timeOffset = timeOffset;
-    }
+//    public void setTimeOffset(V_DeviceObjectTimeOffset timeOffset) {
+//        this.timeOffset = timeOffset;
+//    }
 
     @Override
     public String toString() {

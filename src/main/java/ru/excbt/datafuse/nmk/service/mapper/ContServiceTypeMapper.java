@@ -9,4 +9,18 @@ public interface ContServiceTypeMapper  {
 
     ContServiceTypeDTO toDto(ContServiceType entity);
 
+    /**
+     *
+     * @param keyname
+     * @return
+     */
+    default ContServiceType contServiceTypeFromKeyname(String keyname) {
+        if (keyname == null) {
+            return null;
+        }
+        ContServiceType result = new ContServiceType();
+        result.setKeyname(keyname);
+        return result;
+    }
+
 }
