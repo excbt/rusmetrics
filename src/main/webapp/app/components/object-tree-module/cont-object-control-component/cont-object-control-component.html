@@ -1,84 +1,90 @@
 <div>
-    Cont object controller view
+<!--    Cont object controller view-->
     
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
             <tr class="nmc-main-table-header">
-                <th>
+                <th class = "col-xs-1">
 <!--                    Режим-->
                 </th>
-                <th>
+                <th class = "col-xs-6">
                     Объект
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     Связь с ПУ
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     СО
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     ГВС
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     ХВС
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     Эл-во
                 </th>
             </tr>
     </table>
     <div id="divWithDeviceTable" class="nmc-data-sources-main-div">
-        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin">
             
             <tr class = "nmc-main-table-header nmc-hide">
-                <th>
+                <th class = "col-xs-1">
 <!--                        Режим-->
                 </th>
-                <th>
+                <th class = "col-xs-6">
                     Объект
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     Связь с ПУ
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     СО
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     ГВС
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     ХВС
                 </th>
-                <th>
+                <th class = "col-xs-1">
                     Эл-во
                 </th>
             </tr>
             
 
             <tr ng-repeat = "object in $ctrl.objects track by $index">
-                <td>
-
+                <td class = "col-xs-1">
+                   <i class = "btn glyphicon glyphicon-menu-hamburger pull-right"></i>
+                    <img class = "marginRight2 pull-right" 
+                    height = "12"
+                    width = "12"
+                    ng-src = "{{object.modepath}}"
+                    style = "margin-top: 10px;">
+                   
                 </td>
-                <td>
+                <td class = "col-xs-6">
                     {{object.nodeType}} - {{object.monitorObjectId}}
                 </td>
-                <td>
+                <td class = "col-xs-1">
                    <img class = "marginRight2 nmc-p-tree-status-img" 
                    ng-src = "{{object.imgpath}}"> 
                 </td>
-                <td>
+                <td class = "col-xs-1">
                    <img class = "marginRight2 nmc-p-tree-status-img" 
                    ng-src = "{{object.imgpath}}"> 
                 </td>
-                <td>
+                <td class = "col-xs-1">
                    <img class = "marginRight2 nmc-p-tree-status-img" 
                    ng-src = "{{object.imgpath}}"> 
                 </td>
-                <td>
+                <td class = "col-xs-1">
                    <img class = "marginRight2 nmc-p-tree-status-img" 
                    ng-src = "{{object.imgpath}}"> 
                 </td>
-                <td>
+                <td class = "col-xs-1">
                    <img class = "marginRight2 nmc-p-tree-status-img" 
                    ng-src = "{{object.imgpath}}"> 
                 </td>

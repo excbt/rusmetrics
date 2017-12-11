@@ -21,6 +21,7 @@
         var ctrl = this;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
+            IMG_PATH_MODE_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-mode-winter",
             IMG_EXT = ".png";
         
         var contObjectCtrlSvc = contObjectControlComponentService;
@@ -33,9 +34,13 @@
         function successLoadObjectsCallback(resp) {
             console.log(resp);
             var tmpBuf = angular.copy(resp.data);
+            var testElm = angular.copy(resp.data[0]);
+            testElm.colorKey = "YELLOW";
+            tmpBuf.push(testElm);
             tmpBuf.forEach(function (elm) {
                 elm.imgpath = IMG_PATH_MONITOR_TEMPLATE + elm.colorKey.toLowerCase() + IMG_EXT;
-            });
+                elm.modepath = IMG_PATH_MODE_TEMPLATE + IMG_EXT;
+            });            
             ctrl.objects = tmpBuf;
         }
         
