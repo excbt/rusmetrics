@@ -47,34 +47,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 
 	private static final Logger log = LoggerFactory.getLogger(DeviceObject.class);
 
-
-//    @JsonIgnoreProperties(ignoreUnknown = true, allowSetters = false)
-//	public class ContObjectInfo implements Serializable, ContObjectShortInfo {
-//		/**
-//		 *
-//		 */
-//		private static final long serialVersionUID = 1872748374864397365L;
-//
-//		public ContObjectInfo() {
-//
-//		}
-//
-//		@Override
-//		public String getFullName() {
-//			return contObject == null ? null : contObject.getFullName();
-//		}
-//
-//		@Override
-//		public String getName() {
-//			return contObject == null ? null : contObject.getName();
-//		}
-//
-//		@Override
-//		public Long getContObjectId() {
-//			return contObject == null ? null : contObject.getId();
-//		}
-//	}
-
 	/**
 	 *
 	 *
@@ -310,16 +282,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		return result;
 	}
 
-//	/**
-//	 *
-//	 */
-//	public void loadLazyProps() {
-//		getActiveDataSource();
-//		if (getContObjectInfo() != null) {
-//			getContObjectInfo().getContObjectId();
-//		}
-//	}
-
 	public ActiveDataSourceInfoDTO getEditDataSourceInfo() {
 		if (editDataSourceInfo == null || editDataSourceInfo.getSubscrDataSourceId() == null) {
 			DeviceObjectDataSource activeDS = getActiveDataSource();
@@ -336,13 +298,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	}
 
 
-	/**
-	 *
-	 */
-//	@JsonIgnore
-//	public void shareDeviceLoginInfo() {
-//		this.deviceLoginInfo = new DeviceLoginInfo(this);
-//	}
 
 	/**
 	 *
@@ -357,23 +312,6 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 		}
 	}
 
-//	@JsonProperty
-//	public DeviceObjectLastInfo getDeviceObjectLastInfo() {
-//		return deviceObjectLastInfo;
-//	}
-
-//	@JsonIgnore
-//	public void setDeviceObjectLastInfo(DeviceObjectLastInfo deviceObjectLastInfo) {
-//		this.deviceObjectLastInfo = deviceObjectLastInfo;
-//	}
-
-//    public V_DeviceObjectTimeOffset getTimeOffset() {
-//        return timeOffset;
-//    }
-
-//    public void setTimeOffset(V_DeviceObjectTimeOffset timeOffset) {
-//        this.timeOffset = timeOffset;
-//    }
 
     @Override
     public String toString() {
