@@ -9,6 +9,7 @@ import org.hibernate.annotations.Subselect;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 import javax.persistence.*;
 
@@ -140,5 +141,19 @@ public class V_DeviceObjectTimeOffset implements Serializable {
 
     public void setSs(Integer ss) {
         this.ss = ss;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        V_DeviceObjectTimeOffset that = (V_DeviceObjectTimeOffset) o;
+        return Objects.equals(deviceObject, that.deviceObject);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(deviceObject);
     }
 }
