@@ -8,6 +8,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -131,5 +132,9 @@ public class SubscrDataSource extends JsonAbstractAuditableModel implements Dele
 
 	@Column(name = "raw_modem_dial_tel")
 	private String rawModemDialTel;
+
+	@NotNull
+    @Column(name = "is_enabled")
+	private Boolean enabled = false;
 
 }
