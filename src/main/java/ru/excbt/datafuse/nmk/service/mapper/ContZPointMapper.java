@@ -8,7 +8,8 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 
 @Mapper(componentModel = "spring", uses = {ContServiceTypeMapper.class,
-    TemperatureChartMapper.class, DeviceObjectMapper.class})
+    TemperatureChartMapper.class, DeviceObjectMapper.class, ContObjectMapper.class, ContServiceTypeMapper.class,
+    OrganizationMapper.class})
 public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint> {
 
 
@@ -22,7 +23,6 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)
     @Mapping(target = "deleted", ignore = true)
-
     @Mapping(target = "isManualLoading", source = "manualLoading")
     @Mapping(target = "isManual", source = "manual")
     @Mapping(target = "isDroolsDisable", source = "droolsDisable")
@@ -66,30 +66,5 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     ContZPoint toEntity (ContZPointFullVM contZPointFullVM);
 
 
-    default ContObject contObjectFromId(Long id) {
-        return id != null ? new ContObject().id(id) : null;
-    }
-
-    default Organization organizationFromId(Long id) {
-        return id != null ? new Organization().id(id) : null;
-    }
-
-    default TemperatureChart temperatureChartFromId(Long id) {
-        return id != null ? new TemperatureChart().id(id) : null;
-    }
-
-    default ContServiceType contServiceTypeFromKeyname(String keyname) {
-        if (keyname == null) {
-            return null;
-        }
-        ContServiceType result = new ContServiceType();
-        result.setKeyname(keyname);
-        return result;
-    }
-
-
-    default DeviceObject deviceObjectFromId(Long id) {
-        return new DeviceObject().id(id);
-    }
 
 }

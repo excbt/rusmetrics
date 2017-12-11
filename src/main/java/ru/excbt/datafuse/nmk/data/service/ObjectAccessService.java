@@ -474,9 +474,9 @@ public class ObjectAccessService {
             result = subscrContObjectRepository.selectDeviceObjects(subscriberId);
         }
 
-        result.forEach(i -> {
-            i.loadLazyProps();
-        });
+//        result.forEach(i -> {
+//            i.loadLazyProps();
+//        });
 
         return result;
     }

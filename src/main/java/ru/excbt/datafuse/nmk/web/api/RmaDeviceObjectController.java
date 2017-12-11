@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
 import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
 import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
@@ -55,8 +57,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectController.class);
 
-	@Autowired
-	private DeviceObjectMapper deviceObjectMapper;
 
 	/**
 	 *
@@ -74,10 +74,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
-			for (DeviceObject deviceObject : deviceObjects) {
-				deviceObject.shareDeviceLoginInfo();
-			}
-			return ObjectFilters.deletedFilter(deviceObjects);
+			return deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i).shareDeviceLoginInfo(i)).collect(Collectors.toList());
 		};
 		return ApiResponse.responseOK(actionProcess);
 
@@ -96,19 +93,18 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			return ApiResponse.responseForbidden();
 		}
 
-		ApiActionProcess<DeviceObject> actionProcess = () -> {
+		ApiActionProcess<DeviceObjectFullVM> actionProcess = () -> {
 
-			DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
+			DeviceObjectFullVM deviceObject = deviceObjectService.selectDeviceObjectFullVM_Rma(deviceObjectId);
 
-			deviceObject.shareDeviceLoginInfo();
 			return deviceObject;
 		};
 
-		Function<DeviceObject, ResponseEntity<?>> extraCheck = (x) -> {
+		Function<DeviceObjectFullVM, ResponseEntity<?>> extraCheck = (x) -> {
 			if (x == null) {
 				return ApiResponse.responseNoContent();
 			}
-			if (x.getContObject() == null || !contObjectId.equals(x.getContObject().getId())) {
+			if (x.getContObjectId() == null || !contObjectId.equals(x.getContObjectId())) {
 				return ApiResponse.responseBadRequest();
 			}
 			return null;
@@ -125,15 +121,21 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
      * @param deviceObject
      * @return
      */
+    @Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObject deviceObject) {
+			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObject) {
 
-		checkNotNull(deviceObject);
-		checkArgument(!deviceObject.isNew());
-		checkNotNull(deviceObject.getDeviceModelId());
-		checkArgument(deviceObject.getId().equals(deviceObjectId));
+        Objects.requireNonNull(deviceObject);
+        Objects.requireNonNull(deviceObject.getId());
+        Objects.requireNonNull(deviceObject.getDeviceModelId());
+
+        deviceObject.setContObjectId(contObjectId);
+
+        if (!deviceObjectId.equals(deviceObject.getId())) {
+            return ApiResponse.responseBadRequest();
+        }
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
@@ -225,9 +227,9 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			List<DeviceObject> deviceObjects = deviceObjectService
 					.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
 
-			for (DeviceObject deviceObject : deviceObjects) {
-				deviceObject.shareDeviceLoginInfo();
-			}
+//			for (DeviceObject deviceObject : deviceObjects) {
+//				deviceObject.shareDeviceLoginInfo();
+//			}
 
 
 //            deviceObjectMapper.toFullVM(de)
@@ -235,8 +237,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 //			List<DeviceObjectVO> deviceObjectVOs = deviceObjects.stream()
 //					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> new DeviceObjectVO(i))
 //					.collect(Collectors.toList());
-			List<DeviceObjectFullVM> deviceObjectVOs = deviceObjects.stream()
-					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i))
+			List<DeviceObjectFullVM> deviceObjectVMs = deviceObjects.stream()
+					.filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i).shareDeviceLoginInfo(i))
 					.collect(Collectors.toList());
 
 //			List<Long> deviceObjectIds = deviceObjects.stream().map(DeviceObject::getId).distinct()
@@ -254,7 +256,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 //				i.setDeviceObjectTimeOffset(timeOffset);
 //			});
 
-			return deviceObjectVOs;
+			return deviceObjectVMs;
 		};
 
 		return ApiResponse.responseOK(actionProcess);

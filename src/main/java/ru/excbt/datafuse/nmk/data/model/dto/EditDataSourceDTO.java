@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,13 +14,11 @@ import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 @Setter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ActiveDataSourceInfoDTO {
+public class EditDataSourceDTO {
 
     private Long id;
 
 	private Long subscrDataSourceId;
-
-	private SubscrDataSourceDTO subscrDataSource;
 
 	private String subscrDataSourceAddr;
 
@@ -33,11 +30,11 @@ public class ActiveDataSourceInfoDTO {
 
 	private String dataSourceName;
 
-	public ActiveDataSourceInfoDTO() {
+	public EditDataSourceDTO() {
 
 	}
 
-	public ActiveDataSourceInfoDTO(DeviceObjectDataSource deviceObjectDataSource) {
+	public EditDataSourceDTO(DeviceObjectDataSource deviceObjectDataSource) {
 		this.id = deviceObjectDataSource.getId();
 		this.subscrDataSourceId = deviceObjectDataSource.getSubscrDataSourceId();
 		this.subscrDataSourceAddr = deviceObjectDataSource.getSubscrDataSourceAddr();

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,6 +24,16 @@ public class DeviceObjectDTO {
     public static class DeviceLoginInfoDTO  {
         private String deviceLogin;
         private String devicePassword;
+
+        public DeviceLoginInfoDTO() {
+
+        }
+
+        public DeviceLoginInfoDTO (DeviceObject deviceObject) {
+            this.deviceLogin = deviceObject.getDeviceLogin();
+            this.devicePassword = deviceObject.getDevicePassword();
+        }
+
     }
 
 
@@ -30,6 +41,10 @@ public class DeviceObjectDTO {
     @Getter
     @Setter
     private Long id;
+
+    @Getter
+    @Setter
+    private Long contObjectId;
 
     @Getter
     @Setter
@@ -113,7 +128,11 @@ public class DeviceObjectDTO {
 
     @Getter
     @Setter
-    private ActiveDataSourceInfoDTO editDataSourceInfo;
+    private EditDataSourceDTO editDataSourceInfo;
+
+    @Getter
+    @Setter
+    private ActiveDataSourceInfoDTO activeDataSource;
 
     @Getter
     @Setter
@@ -136,5 +155,16 @@ public class DeviceObjectDTO {
     @Setter
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean activeDeviceObject;
+
+    @Getter
+    @Setter
+    private Long heatRadiatorTypeId;
+
+    @Getter
+    @Setter
+    private Double heatRadiatorPower;
+
+
+
 
 }

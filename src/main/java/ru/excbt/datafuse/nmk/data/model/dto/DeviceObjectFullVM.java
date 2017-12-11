@@ -1,7 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+
 import java.util.Date;
 
+@Getter
+@Setter
 public class DeviceObjectFullVM {
 
     private Long id;
@@ -42,7 +48,7 @@ public class DeviceObjectFullVM {
 
     private DeviceObjectDTO.DeviceLoginInfoDTO deviceLoginInfo;
 
-    private ActiveDataSourceInfoDTO editDataSourceInfo;
+    private EditDataSourceDTO editDataSourceInfo;
 
     private String instType;
 
@@ -50,218 +56,35 @@ public class DeviceObjectFullVM {
 
     private DeviceObjectTimeOffsetDTO timeOffset;
 
-    private String ContObjectId;
+    private Long ContObjectId;
 
     private String ContObjectFullName;
 
     private String ContObjectName;
 
-    public Long getId() {
-        return id;
+    private Long heatRadiatorTypeId;
+
+    private Double heatRadiatorPower;
+
+    private Long subscrDataSourceId;
+
+    private String exSystemKeyname;
+
+    private ActiveDataSourceInfoDTO activeDataSource;
+
+    public DeviceObjectFullVM shareDeviceLoginInfo(DeviceObject deviceObject) {
+        this.deviceLoginInfo = new DeviceObjectDTO.DeviceLoginInfoDTO(deviceObject);
+        return this;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void saveDeviceObjectCredentials(DeviceObject deviceObject) {
+        if (deviceLoginInfo != null
+            && deviceLoginInfo.getDeviceLogin() != null && deviceLoginInfo.getDevicePassword() != null
+            ) {
+            deviceObject.setDeviceLogin(deviceLoginInfo.getDeviceLogin() != null ? deviceLoginInfo.getDeviceLogin() : "");
+            deviceObject.setDevicePassword(deviceLoginInfo.getDevicePassword() != null ? deviceLoginInfo.getDevicePassword() : "");
+        }
     }
 
-    public DeviceModelDTO getDeviceModel() {
-        return deviceModel;
-    }
-
-    public void setDeviceModel(DeviceModelDTO deviceModel) {
-        this.deviceModel = deviceModel;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public Boolean getDeviceObjectMetadata() {
-        return isDeviceObjectMetadata;
-    }
-
-    public void setDeviceObjectMetadata(Boolean deviceObjectMetadata) {
-        isDeviceObjectMetadata = deviceObjectMetadata;
-    }
-
-    public Boolean getManual() {
-        return isManual;
-    }
-
-    public void setManual(Boolean manual) {
-        isManual = manual;
-    }
-
-    public Double getVerificationInterval() {
-        return verificationInterval;
-    }
-
-    public void setVerificationInterval(Double verificationInterval) {
-        this.verificationInterval = verificationInterval;
-    }
-
-    public Date getVerificationDate() {
-        return verificationDate;
-    }
-
-    public void setVerificationDate(Date verificationDate) {
-        this.verificationDate = verificationDate;
-    }
-
-    public Integer getMetaVersion() {
-        return metaVersion;
-    }
-
-    public void setMetaVersion(Integer metaVersion) {
-        this.metaVersion = metaVersion;
-    }
-
-    public Boolean getHexPassword() {
-        return isHexPassword;
-    }
-
-    public void setHexPassword(Boolean hexPassword) {
-        isHexPassword = hexPassword;
-    }
-
-    public Boolean getTimeSyncEnabled() {
-        return isTimeSyncEnabled;
-    }
-
-    public void setTimeSyncEnabled(Boolean timeSyncEnabled) {
-        isTimeSyncEnabled = timeSyncEnabled;
-    }
-
-    public Boolean getImpulse() {
-        return isImpulse;
-    }
-
-    public void setImpulse(Boolean impulse) {
-        isImpulse = impulse;
-    }
-
-    public Double getImpulseK() {
-        return impulseK;
-    }
-
-    public void setImpulseK(Double impulseK) {
-        this.impulseK = impulseK;
-    }
-
-    public String getImpulseMu() {
-        return impulseMu;
-    }
-
-    public void setImpulseMu(String impulseMu) {
-        this.impulseMu = impulseMu;
-    }
-
-    public String getImpulseCounterAddr() {
-        return impulseCounterAddr;
-    }
-
-    public void setImpulseCounterAddr(String impulseCounterAddr) {
-        this.impulseCounterAddr = impulseCounterAddr;
-    }
-
-    public String getImpulseCounterSlotAddr() {
-        return impulseCounterSlotAddr;
-    }
-
-    public void setImpulseCounterSlotAddr(String impulseCounterSlotAddr) {
-        this.impulseCounterSlotAddr = impulseCounterSlotAddr;
-    }
-
-    public String getImpulseCounterType() {
-        return impulseCounterType;
-    }
-
-    public void setImpulseCounterType(String impulseCounterType) {
-        this.impulseCounterType = impulseCounterType;
-    }
-
-    public DeviceObjectDTO.DeviceLoginInfoDTO getDeviceLoginInfo() {
-        return deviceLoginInfo;
-    }
-
-    public void setDeviceLoginInfo(DeviceObjectDTO.DeviceLoginInfoDTO deviceLoginInfo) {
-        this.deviceLoginInfo = deviceLoginInfo;
-    }
-
-    public ActiveDataSourceInfoDTO getEditDataSourceInfo() {
-        return editDataSourceInfo;
-    }
-
-    public void setEditDataSourceInfo(ActiveDataSourceInfoDTO editDataSourceInfo) {
-        this.editDataSourceInfo = editDataSourceInfo;
-    }
-
-    public String getInstType() {
-        return instType;
-    }
-
-    public void setInstType(String instType) {
-        this.instType = instType;
-    }
-
-    public String getDeviceObjectName() {
-        return deviceObjectName;
-    }
-
-    public void setDeviceObjectName(String deviceObjectName) {
-        this.deviceObjectName = deviceObjectName;
-    }
-
-    public Long getDeviceModelId() {
-        return deviceModelId;
-    }
-
-    public void setDeviceModelId(Long deviceModelId) {
-        this.deviceModelId = deviceModelId;
-    }
-
-    public DeviceObjectTimeOffsetDTO getTimeOffset() {
-        return timeOffset;
-    }
-
-    public void setTimeOffset(DeviceObjectTimeOffsetDTO timeOffset) {
-        this.timeOffset = timeOffset;
-    }
-
-    public String getContObjectId() {
-        return ContObjectId;
-    }
-
-    public void setContObjectId(String contObjectId) {
-        ContObjectId = contObjectId;
-    }
-
-    public String getContObjectName() {
-        return ContObjectName;
-    }
-
-    public void setContObjectName(String contObjectName) {
-        ContObjectName = contObjectName;
-    }
-
-    public String getContObjectFullName() {
-        return ContObjectFullName;
-    }
-
-    public void setContObjectFullName(String contObjectFullName) {
-        ContObjectFullName = contObjectFullName;
-    }
 
 }
