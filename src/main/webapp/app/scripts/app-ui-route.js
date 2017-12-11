@@ -48,17 +48,19 @@
             },
             {
                 name: 'objectsPTree.info',
-                url: '/treeInfo',
+                url: 'tree-info',
                 component: 'treeElementNodeComponent',
                 params: {
                     node: null
                 }
-                /*template: '<div><h1>objectsPTree.info state Full (norm variant =) )</h1></div>'*/
-                /*views: {
-                    'treeInfoView@objectsPTree': {
-                        template: '<div><h1>objectsPTree.info state (good variant)</h1></div>'
-                    }
-                }*/
+            },
+            {
+                name: 'objectsPTree.contObjectControl',
+                url: 'cont-object-control',
+                component: 'contObjectControlComponent',
+                params: {
+                    node: null
+                }
             },
 /*end 'component version'*/            
             {

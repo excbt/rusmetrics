@@ -105,7 +105,8 @@
                <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
                <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
-            <a ui-sref = "objectsPTree.info({node: item})"> Ссылка</a>
+            <a ui-sref = "objectsPTree.info({node: item})"> Уведомления</a>
+            <a ui-sref = "objectsPTree.contObjectControl({node: item})"> Контроль</a>
         </div>
         <div ng-show = "item.loading">
             <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...

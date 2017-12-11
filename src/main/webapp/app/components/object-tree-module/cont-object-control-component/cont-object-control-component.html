@@ -1,0 +1,89 @@
+<div>
+    Cont object controller view
+    
+    <!--    Непрокручиваямая шапка -->
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+            <tr class="nmc-main-table-header">
+                <th>
+<!--                    Режим-->
+                </th>
+                <th>
+                    Объект
+                </th>
+                <th>
+                    Связь с ПУ
+                </th>
+                <th>
+                    СО
+                </th>
+                <th>
+                    ГВС
+                </th>
+                <th>
+                    ХВС
+                </th>
+                <th>
+                    Эл-во
+                </th>
+            </tr>
+    </table>
+    <div id="divWithDeviceTable" class="nmc-data-sources-main-div">
+        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+            
+            <tr class = "nmc-main-table-header nmc-hide">
+                <th>
+<!--                        Режим-->
+                </th>
+                <th>
+                    Объект
+                </th>
+                <th>
+                    Связь с ПУ
+                </th>
+                <th>
+                    СО
+                </th>
+                <th>
+                    ГВС
+                </th>
+                <th>
+                    ХВС
+                </th>
+                <th>
+                    Эл-во
+                </th>
+            </tr>
+            
+
+            <tr ng-repeat = "object in $ctrl.objects track by $index">
+                <td>
+
+                </td>
+                <td>
+                    {{object.nodeType}} - {{object.monitorObjectId}}
+                </td>
+                <td>
+                   <img class = "marginRight2 nmc-p-tree-status-img" 
+                   ng-src = "{{object.imgpath}}"> 
+                </td>
+                <td>
+                   <img class = "marginRight2 nmc-p-tree-status-img" 
+                   ng-src = "{{object.imgpath}}"> 
+                </td>
+                <td>
+                   <img class = "marginRight2 nmc-p-tree-status-img" 
+                   ng-src = "{{object.imgpath}}"> 
+                </td>
+                <td>
+                   <img class = "marginRight2 nmc-p-tree-status-img" 
+                   ng-src = "{{object.imgpath}}"> 
+                </td>
+                <td>
+                   <img class = "marginRight2 nmc-p-tree-status-img" 
+                   ng-src = "{{object.imgpath}}"> 
+                </td>
+            </tr>
+            
+        </table>
+    </div>
+</div>
