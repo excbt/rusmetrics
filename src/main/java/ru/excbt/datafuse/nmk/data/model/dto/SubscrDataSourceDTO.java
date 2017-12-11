@@ -67,4 +67,6 @@ public class SubscrDataSourceDTO {
 
     private String rawModemDialTel;
 
+    private Boolean enabled = false;
+
 }
