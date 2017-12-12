@@ -64,7 +64,9 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
     public SubscrContObjectResource(ContObjectService contObjectService,
                                     ContGroupService contGroupService,
                                     OrganizationService organizationService,
-                                    ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService) {
+                                    ContObjectFiasService contObjectFiasService,
+                                    MeterPeriodSettingService meterPeriodSettingService,
+                                    ObjectAccessService objectAccessService) {
         this.contObjectService = contObjectService;
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;

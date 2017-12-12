@@ -263,6 +263,7 @@ public class ContObject extends AbstractAuditableModel
         setBuildingType(contObjectDTO.getBuildingType());
         setBuildingTypeCategory(contObjectDTO.getBuildingTypeCategory());
         setNumOfStories(contObjectDTO.getNumOfStories());
+        setFlexData(contObjectDTO.getFlexData());
     }
 
     public boolean haveDaData() {
