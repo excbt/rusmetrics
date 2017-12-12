@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -55,17 +56,17 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
     /**
 	 *
-	 * @param contObject
+	 * @param contObjectDTO
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createContObject(
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			final @RequestBody ContObject contObject, HttpServletRequest request) {
+			final @RequestBody ContObjectDTO contObjectDTO, HttpServletRequest request) {
 
-		checkNotNull(contObject);
+        Objects.requireNonNull(contObjectDTO);
 
-		if (!contObject.isNew()) {
+		if (contObjectDTO.getId() != null) {
 			return ResponseEntity.badRequest().build();
 		}
 
@@ -75,7 +76,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
-				ContObject result = contObjectService.automationCreate(contObject, getCurrentSubscriberId(),
+				ContObject result = contObjectService.automationCreate(contObjectDTO, getCurrentSubscriberId(),
                         LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 

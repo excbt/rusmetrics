@@ -1,10 +1,14 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.support.ObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.support.ObjectAccessInitializer;
+import ru.excbt.datafuse.nmk.data.util.FlexDataToString;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -87,6 +91,12 @@ public class ContObjectMonitorDTO implements ObjectAccessInitializer {
     private ObjectAccess access;
 
     private ContObjectStats contObjectStats = new ContObjectStats();
+
+    @JsonRawValue
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(value = "flexData")
+    @JsonDeserialize(using = FlexDataToString.class)
+    private String flexData;
 
     @Override
     public void objectAccess(ObjectAccess.AccessType accessType, LocalDate date) {

@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -175,22 +176,22 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	/**
 	 *
 	 * @param contObjectId
-	 * @param contObject
+	 * @param contObjectDTO
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			final @RequestBody ContObject contObject) {
+			final @RequestBody ContObjectDTO contObjectDTO) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contObject);
+        Objects.requireNonNull(contObjectDTO);
+        Objects.requireNonNull(contObjectId);
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
-		if (contObject.isNew()) {
+		if (contObjectDTO.getId() == null) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -200,7 +201,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			public ContObjectMonitorDTO processAndReturnResult() {
 
 				//ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
-				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
+				ContObject result = contObjectService.automationUpdate(contObjectDTO, cmOrganizationId);
 
 				objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 
