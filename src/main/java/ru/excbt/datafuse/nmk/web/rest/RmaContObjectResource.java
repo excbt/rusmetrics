@@ -8,10 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.*;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -148,13 +145,13 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ApiActionEntityAdapter() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
                 List<ContObject> resultList = findContObjectsByAccess(contGroupId, true, false,meterPeriodSettingIds);
                     //selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
-
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
+                List<ContObjectMonitorDTO> contObjectMonitorDTOS = contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
+                return contObjectMonitorDTOS;
             }
         };
 
@@ -170,9 +167,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ContObjectMonitorDTOResponse() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findContObjectsNoTtl(subscriberId);
 
                 return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
@@ -191,9 +188,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ContObjectMonitorDTOResponse() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(subscriberId, getCurrentSubscriberId());
 
                 return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);

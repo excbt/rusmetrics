@@ -167,6 +167,10 @@ public class ContObject extends AbstractAuditableModel
     private Map<String, MeterPeriodSetting> meterPeriodSettings = new HashMap<>();
 
 
+    @Column(name = "flex_data")
+    @Type(type = "JsonbAsString")
+    private String flexData;
+
 	/**
 	 *
 	 * @return

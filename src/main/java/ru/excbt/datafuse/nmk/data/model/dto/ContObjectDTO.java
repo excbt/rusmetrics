@@ -1,11 +1,13 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.support.ObjectAccess;
+import ru.excbt.datafuse.nmk.data.model.support.ObjectAccessInitializer;
+import ru.excbt.datafuse.nmk.data.util.FlexDataToString;
 
 import java.time.LocalDate;
 import java.util.*;
@@ -15,7 +17,7 @@ import java.util.*;
  */
 @Getter
 @Setter
-public class ContObjectDTO implements ObjectAccessDTO.ObjectAccessInitializer {
+public class ContObjectDTO implements ObjectAccessInitializer {
 
     private Long id;
 
@@ -36,6 +38,8 @@ public class ContObjectDTO implements ObjectAccessDTO.ObjectAccessInitializer {
     private Date settingModeMDate;
 
     private String description;
+
+    private String comment;
 
     private Double cwTemp;
 
@@ -68,11 +72,17 @@ public class ContObjectDTO implements ObjectAccessDTO.ObjectAccessInitializer {
     private ContManagementDTO _activeContManagement;
 
     @JsonInclude(value = JsonInclude.Include.NON_NULL)
-    private ObjectAccessDTO access;
+    private ObjectAccess access;
+
+    @JsonRawValue
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonProperty(value = "flexData")
+    @JsonDeserialize(using = FlexDataToString.class)
+    private String flexData;
 
     @Override
-    public void objectAccess(ObjectAccessDTO.AccessType accessType, LocalDate date) {
-        ObjectAccessDTO access = new ObjectAccessDTO();
+    public void objectAccess(ObjectAccess.AccessType accessType, LocalDate date) {
+        ObjectAccess access = new ObjectAccess();
         access.setAccessTTL(date);
         access.setAccessType(accessType);
         this.access = access;

@@ -150,7 +150,7 @@ public class ContObjectService implements SecuredRoles {
      */
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectDTO findContObjectDTO(Long contObjectId) {
-		return contObjectMapper.contObjectToDto(findContObjectChecked(contObjectId));
+		return contObjectMapper.toDto(findContObjectChecked(contObjectId));
 	}
 
 
@@ -159,6 +159,7 @@ public class ContObjectService implements SecuredRoles {
 		ContObject contObject = findContObjectChecked(contObjectId);
         contObjectDaDataService.findOneByContObjectId(contObjectId).ifPresent((i) -> contObject.set_daDataSraw(i.getSraw()));
 		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
+        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOList);
         return monitorDTOList.get(0);
 	}
 
@@ -646,7 +647,9 @@ public class ContObjectService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects) {
-        return wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
+	    List<ContObjectMonitorDTO> monitorDTOS = wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
+        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOS);
+	    return monitorDTOS;
 	}
 
 
@@ -714,6 +717,7 @@ public class ContObjectService implements SecuredRoles {
      */
     public ContObjectMonitorDTO wrapContObjectMonitorDTO(SubscriberParam subscriberParam, ContObject contObject, final boolean contEventStats) {
         List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
+        if (list != null) objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), list);
         return list.isEmpty() ? null : list.get(0);
     }
 
@@ -877,12 +881,12 @@ public class ContObjectService implements SecuredRoles {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<ContObjectDTO> mapToDTO(List<ContObject> contObjects) {
-        return contObjects.stream().map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
+        return contObjects.stream().map((i) -> contObjectMapper.toDto(i)).collect(Collectors.toList());
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public ContObjectDTO mapToDTO(ContObject contObjects) {
-        return contObjectMapper.contObjectToDto(contObjects);
+        return contObjectMapper.toDto(contObjects);
     }
 
 }

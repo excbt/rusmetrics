@@ -107,7 +107,7 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
 
         for (ContObject contObject : contObjects) {
-            PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
+            PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.toDto(contObject));
             pTreeElement.addLinkedObject(pTreeContObjectNode);
             addContZPointsMap(pTreeContObjectNode, contObject, contZPointMap);
         }
@@ -140,7 +140,7 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
         for (ContObject contObject : contObjects) {
             if (contObject.getDeleted() != 0) continue;
-            PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.contObjectToDto(contObject));
+            PTreeContObjectNode pTreeContObjectNode = new PTreeContObjectNode(contObjectMapper.toDto(contObject));
             pTreeElement.addLinkedObject(pTreeContObjectNode);
             addContZPoints(pTreeContObjectNode, contObject);
         }
