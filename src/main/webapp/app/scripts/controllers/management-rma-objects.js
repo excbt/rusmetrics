@@ -367,6 +367,10 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         result.isDroolsDisable = zpoint.isDroolsDisable;
         result.temperatureChartId = zpoint.temperatureChartId;
 //                    result.tempSchedules = zpoint.tempSchedules;
+        //perform flexData
+        if (!mainSvc.checkUndefinedNull(zpoint.flexData)) {
+            result.flexData = zpoint.flexData;           
+        }
         return result;
     };
                                 
@@ -1080,6 +1084,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.checkoutDay = object.checkoutDay;
         zps.isDroolsDisable = object.isDroolsDisable;
         zps.temperatureChartId = object.temperatureChartId;
+        if (!mainSvc.checkUndefinedNull(object.flexData)) {
+            zps.flexData = object.flexData;
+        }
         zps.winter = {};
         zps.summer = {};
         $scope.zpointSettings = angular.copy(zps);
