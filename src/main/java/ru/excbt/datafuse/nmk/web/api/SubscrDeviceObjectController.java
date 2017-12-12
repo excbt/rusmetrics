@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
@@ -32,9 +30,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с приборами для абонента
@@ -46,51 +41,63 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
+public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
+{
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectController.class);
 
-	@Autowired
-	protected DeviceObjectService deviceObjectService;
+	protected final DeviceObjectService deviceObjectService;
 
-	@Autowired
-	protected DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
+	protected final DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
-	@Autowired
-	protected DeviceObjectLoadingLogService deviceObjectLoadingLogService;
+	protected final DeviceObjectLoadingLogService deviceObjectLoadingLogService;
 
-	@Autowired
-	protected VzletSystemRepository vzletSystemRepository;
+	protected final VzletSystemRepository vzletSystemRepository;
 
-	@Autowired
-	protected DeviceModelService deviceModelService;
+	protected final DeviceModelService deviceModelService;
 
-	@Autowired
-	protected ContObjectService contObjectService;
+	protected final ContObjectService contObjectService;
 
-	@Autowired
-	protected SubscrDataSourceService subscrDataSourceService;
+	protected final SubscrDataSourceService subscrDataSourceService;
 
-	@Autowired
-	protected DeviceMetadataService deviceMetadataService;
+	protected final DeviceMetadataService deviceMetadataService;
 
-	@Autowired
-	protected SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
+	protected final SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService;
 
-    @Autowired
-	protected HeatRadiatorTypeService heatRadiatorTypeService;
+	protected final HeatRadiatorTypeService heatRadiatorTypeService;
+
+    protected final DeviceDataTypeService deviceDataTypeService;
+
+    protected final DeviceObjectMapper deviceObjectMapper;
+
+    protected final ObjectAccessService objectAccessService;
+
+    protected final PortalUserIdsService portalUserIdsService;
 
     @Autowired
-    protected DeviceDataTypeService deviceDataTypeService;
+    public SubscrDeviceObjectController(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+        this.deviceObjectService = deviceObjectService;
+        this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
+        this.deviceObjectLoadingLogService = deviceObjectLoadingLogService;
+        this.vzletSystemRepository = vzletSystemRepository;
+        this.deviceModelService = deviceModelService;
+        this.contObjectService = contObjectService;
+        this.subscrDataSourceService = subscrDataSourceService;
+        this.deviceMetadataService = deviceMetadataService;
+        this.subscrDataSourceLoadingSettingsService = subscrDataSourceLoadingSettingsService;
+        this.heatRadiatorTypeService = heatRadiatorTypeService;
+        this.deviceDataTypeService = deviceDataTypeService;
+        this.deviceObjectMapper = deviceObjectMapper;
+        this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    protected boolean canAccessContObject(Long contObjectId) {
+        return objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds());
+    }
 
 
-    @Autowired
-    protected DeviceObjectMapper deviceObjectMapper;
-
-//    @Autowired
-//    private ModelMapper modelMapper;
-
-	/**
+    /**
 	 *
 	 * @param contObjectId
 	 * @return
@@ -336,7 +343,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getDeviceModels() {
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceModelDTO> deviceModels = deviceModelService.findDeviceModelDTOs();
-			if (!currentSubscriberService.isSystemUser()) {
+			if (!portalUserIdsService.isSystemUser()) {
 				deviceModels = ObjectFilters.devModeFilter(deviceModels);
 			}
 			return deviceModels;
@@ -520,7 +527,7 @@ public class SubscrDeviceObjectController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(getCurrentSubscriberId());
+		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 		if (deviceObject.getActiveDataSource() != null && !result.stream()
 				.anyMatch(i -> i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSourceId()))) {
 			Long subscrDataSourceId = deviceObject.getActiveDataSource().getSubscrDataSourceId();

@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import org.hibernate.annotations.*;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
@@ -167,6 +168,10 @@ public class ContObject extends AbstractAuditableModel
     private Map<String, MeterPeriodSetting> meterPeriodSettings = new HashMap<>();
 
 
+    @Column(name = "flex_data")
+    @Type(type = "JsonbAsString")
+    private String flexData;
+
 	/**
 	 *
 	 * @return
@@ -235,6 +240,30 @@ public class ContObject extends AbstractAuditableModel
         setBuildingType(contObject.getBuildingType());
         setBuildingTypeCategory(contObject.getBuildingTypeCategory());
         setNumOfStories(contObject.getNumOfStories());
+    }
+
+    /**
+     *
+     * @param contObjectDTO
+     */
+	public void updateFromContObjectDTO (ContObjectDTO contObjectDTO) {
+        setVersion(contObjectDTO.getVersion());
+        setName(contObjectDTO.getName());
+        setFullName(contObjectDTO.getFullName());
+        setFullAddress(contObjectDTO.getFullAddress());
+        setNumber(contObjectDTO.getNumber());
+        setDescription(contObjectDTO.getDescription());
+        setCurrentSettingMode(contObjectDTO.getCurrentSettingMode());
+        setComment(contObjectDTO.getComment());
+        setOwner(contObjectDTO.getOwner());
+        setOwnerContacts(contObjectDTO.getOwnerContacts());
+        setCwTemp(contObjectDTO.getCwTemp());
+        setHeatArea(contObjectDTO.getHeatArea());
+        setTimezoneDefKeyname(contObjectDTO.getTimezoneDefKeyname());
+        setBuildingType(contObjectDTO.getBuildingType());
+        setBuildingTypeCategory(contObjectDTO.getBuildingTypeCategory());
+        setNumOfStories(contObjectDTO.getNumOfStories());
+        setFlexData(contObjectDTO.getFlexData());
     }
 
     public boolean haveDaData() {

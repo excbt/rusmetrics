@@ -12,18 +12,17 @@ import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
@@ -32,8 +31,7 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+//import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  * Сервис по работе с объектом учета
@@ -150,7 +148,7 @@ public class ContObjectService implements SecuredRoles {
      */
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ContObjectDTO findContObjectDTO(Long contObjectId) {
-		return contObjectMapper.contObjectToDto(findContObjectChecked(contObjectId));
+		return contObjectMapper.toDto(findContObjectChecked(contObjectId));
 	}
 
 
@@ -159,6 +157,7 @@ public class ContObjectService implements SecuredRoles {
 		ContObject contObject = findContObjectChecked(contObjectId);
         contObjectDaDataService.findOneByContObjectId(contObjectId).ifPresent((i) -> contObject.set_daDataSraw(i.getSraw()));
 		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
+        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOList);
         return monitorDTOList.get(0);
 	}
 
@@ -181,8 +180,9 @@ public class ContObjectService implements SecuredRoles {
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
     @Deprecated
 	private ContObject updateContObject(ContObject contObject, Long cmOrganizationId) {
-		checkNotNull(contObject);
-		checkArgument(!contObject.isNew());
+		Objects.requireNonNull(contObject);
+        Objects.requireNonNull(contObject.getId());
+
 
 		ContObject currContObject = contObjectRepository.findOne(contObject.getId());
 		if (currContObject == null) {
@@ -193,7 +193,7 @@ public class ContObjectService implements SecuredRoles {
 
 		// Process ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(currContObject);
-		checkNotNull(contObjectDaData);
+        Objects.requireNonNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
 			contObjectDaData.setIsValid(true);
@@ -284,12 +284,11 @@ public class ContObjectService implements SecuredRoles {
 	}
 
 
-
     @Transactional(value = TxConst.TX_DEFAULT)
     @Secured({ ROLE_CONT_OBJECT_ADMIN })
     public ContObject automationUpdate(ContObject contObject, Long cmOrganizationId) {
-        checkNotNull(contObject);
-        checkArgument(!contObject.isNew());
+        Objects.requireNonNull(contObject);
+        Objects.requireNonNull(contObject.getId());
         //checkArgument(contObject.getTimezoneDefKeyname() != null);
 
         // Load existing contObject
@@ -303,7 +302,7 @@ public class ContObjectService implements SecuredRoles {
 
         // Process ContObjectDaData
         ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
-        checkNotNull(contObjectDaData);
+        Objects.requireNonNull(contObjectDaData);
 
         if (contObject.haveDaData()) {
             contObjectDaData.setSraw(contObject.get_daDataSraw());
@@ -371,6 +370,93 @@ public class ContObjectService implements SecuredRoles {
         return resultContObject;
     }
 
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_CONT_OBJECT_ADMIN })
+    public ContObject automationUpdate(ContObjectDTO contObjectDTO, Long cmOrganizationId) {
+	    Objects.requireNonNull(contObjectDTO);
+	    if (contObjectDTO.getId() == null) {
+            throw new IllegalArgumentException("ContObjectDTO must be new");
+        }
+
+        // Load existing contObject
+        Long contObjectId = contObjectDTO.getId();
+        ContObject currContObject = contObjectRepository.findOne(contObjectId);
+        if (currContObject == null) {
+            throw DBExceptionUtil.newEntityNotFoundException(ContObject.class, contObjectId);
+        }
+        currContObject.updateFromContObjectDTO(contObjectDTO);
+
+
+        // Process ContObjectDaData
+        ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(currContObject);
+        Objects.requireNonNull(contObjectDaData);
+
+        if (contObjectDTO.get_daDataSraw() != null && !contObjectDTO.get_daDataSraw().isEmpty()) {
+            contObjectDaData.setSraw(contObjectDTO.get_daDataSraw());
+            contObjectDaData.setIsValid(true);
+            contObjectDTO.setIsAddressAuto(true);
+        } else {
+            if (contObjectDTO.getFullAddress() == null
+                || !contObjectDTO.getFullAddress().equals(contObjectDaData.getSvalue())) {
+                contObjectDaData.clearInValid();
+            }
+
+        }
+
+        contObjectDaData = contObjectDaDataService.parseIfValid(contObjectDaData);
+
+
+        //contObject.setIsAddressAuto(contObjectDaData != null && Boolean.TRUE.equals(contObjectDaData.getIsValid()));
+
+        // Process ContObjectFias
+
+        Optional<ContObjectFias> contObjectFiasOptional = contObjectFiasRepository.findOneByContObjectId(contObjectId);
+
+        ContObjectFias contObjectFias;
+
+        if (!contObjectFiasOptional.isPresent()) {
+            contObjectFias = contObjectFiasService.createConfObjectFias(currContObject);
+        } else {
+            contObjectFias = contObjectFiasOptional.get();
+            contObjectFias.setFiasFullAddress(contObjectDTO.getFullAddress());
+            contObjectFias.setGeoFullAddress(contObjectDTO.getFullAddress());
+        }
+
+        if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+            contObjectFias.copyFormDaData(contObjectDaData);
+            contObjectDTO.setFullAddress(contObjectDaData.getSvalue());
+        } else {
+            contObjectFias.clearCodes();
+        }
+
+        // fias & contObject initialization
+        contObjectFiasService.initCityUUID(contObjectFias);
+        localPlaceService.saveCityToLocalPlace(contObjectFias);
+
+        currContObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
+        currContObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
+        currContObject.setIsAddressAuto(contObjectDaData.isAddressAuto());
+        ////
+
+        ContObject resultContObject = contObjectRepository.saveAndFlush(currContObject);
+
+        contObjectDaDataService.saveContObjectDaData(contObjectDaData);
+        contObjectFiasService.saveContObjectFias(currContObject.getId(), contObjectFias);
+
+        //contObjectFiasSetRefreshFlag(currContObject);
+
+        // Cont Management
+        ContManagement cm = currContObject.get_activeContManagement();
+        if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
+            ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+                LocalDate.now());
+            currContObject.getContManagements().clear();
+            currContObject.getContManagements().add(newCm);
+        }
+
+        return resultContObject;
+    }
+
 
 	/**
 	 *
@@ -383,9 +469,11 @@ public class ContObjectService implements SecuredRoles {
 	private ContObject createContObject(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
 
-		checkNotNull(contObject);
-		checkArgument(contObject.isNew());
-		checkArgument(contObject.getTimezoneDefKeyname() != null);
+        Objects.requireNonNull(contObject);
+        if (contObject.getId() == null) {
+            throw new IllegalArgumentException();
+        }
+        Objects.requireNonNull(contObject.getTimezoneDefKeyname());
 
 		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 		if (subscriber == null) {
@@ -396,7 +484,7 @@ public class ContObjectService implements SecuredRoles {
 
 		// Processing ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
-		checkNotNull(contObjectDaData);
+        Objects.requireNonNull(contObjectDaData);
 		if (contObject.get_daDataSraw() != null) {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
 			contObjectDaData.setIsValid(true);
@@ -466,15 +554,17 @@ public class ContObjectService implements SecuredRoles {
 	public ContObject automationCreate(ContObject contObject, Long subscriberId, java.time.LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
 
-		checkNotNull(contObject);
-		checkArgument(contObject.isNew());
-		checkArgument(contObject.getTimezoneDefKeyname() != null);
+        Objects.requireNonNull(contObject);
+		if (contObject.getId() != null) {
+		    throw new IllegalArgumentException();
+        }
+		Objects.requireNonNull (contObject.getTimezoneDefKeyname());
 
 		contObject.setIsManual(true);
 
 		// Processing ContObjectDaData
 		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
-		checkNotNull(contObjectDaData);
+        Objects.requireNonNull(contObjectDaData);
 
 		if (contObject.haveDaData()) {
 			contObjectDaData.setSraw(contObject.get_daDataSraw());
@@ -526,6 +616,86 @@ public class ContObjectService implements SecuredRoles {
 		return resultContObject;
 	}
 
+    /**
+     *
+     * @param contObjectDTO
+     * @param subscriberId
+     * @param subscrBeginDate
+     * @param cmOrganizationId
+     * @return
+     */
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
+	public ContObject automationCreate(ContObjectDTO contObjectDTO, Long subscriberId, java.time.LocalDate subscrBeginDate,
+			Long cmOrganizationId) {
+
+	    Objects.requireNonNull(contObjectDTO);
+	    if (contObjectDTO.getId() != null) {
+	        throw new IllegalArgumentException("ContObject must be not new");
+        }
+	    if (contObjectDTO.getTimezoneDefKeyname() == null) {
+	        throw new IllegalArgumentException("ContObjectDTO TimeZoneDefKeyname is not set ");
+        }
+
+
+        ContObject contObject = contObjectMapper.toEntity(contObjectDTO);
+
+		contObject.setIsManual(true);
+
+		// Processing ContObjectDaData
+		ContObjectDaData contObjectDaData = contObjectDaDataService.getOrInitDaData(contObject);
+		Objects.requireNonNull(contObjectDaData);
+
+        if (contObjectDTO.get_daDataSraw() != null && !contObjectDTO.get_daDataSraw().isEmpty()) {
+			contObjectDaData.setSraw(contObjectDTO.get_daDataSraw());
+			contObjectDaData.setIsValid(true);
+            contObject.setIsAddressAuto(true);
+		} else {
+			if (contObjectDTO.getFullAddress() == null
+					|| !contObjectDTO.getFullAddress().equals(contObjectDaData.getSvalue())) {
+			    contObjectDaData.clearInValid();
+			}
+		}
+		contObjectDaData = contObjectDaDataService.parseIfValid(contObjectDaData);
+
+		// Inserting ContObjectFias
+		ContObjectFias contObjectFias = contObjectFiasService.createConfObjectFias(contObject);
+
+		if (Boolean.TRUE.equals(contObjectDaData.getIsValid())) {
+		    contObjectFias.copyFormDaData(contObjectDaData);
+			contObject.setFullAddress(contObjectDaData.getSvalue());
+		} else {
+            contObjectFias.clearCodes();
+        }
+
+        // fias & contObject initialization
+		contObjectFiasService.initCityUUID(contObjectFias);
+		localPlaceService.saveCityToLocalPlace(contObjectFias);
+
+		contObject.setIsValidGeoPos(contObjectFias.getGeoJson() != null || contObjectFias.getGeoJson2() != null);
+		contObject.setIsValidFiasUUID(contObjectFias.getFiasUUID() != null);
+		contObject.setIsAddressAuto(contObjectDaData.isAddressAuto());
+        ////
+
+		ContObject resultContObject = contObjectRepository.save(contObject);
+
+		contObjectDaDataService.saveContObjectDaData(contObjectDaData);
+
+        contObjectFiasService.saveContObjectFias(resultContObject.getId(), contObjectFias);
+
+		// Cont Management
+		if (cmOrganizationId != null) {
+			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
+					LocalDate.now());
+			resultContObject.getContManagements().clear();
+			resultContObject.getContManagements().add(newCm);
+		}
+
+        subscriberAccessService.grantContObjectAccess(new Subscriber().id(subscriberId), resultContObject, subscrBeginDate.atStartOfDay());
+
+		return resultContObject;
+	}
+
 	/**
 	 *
 	 * @param contObjectId
@@ -534,7 +704,7 @@ public class ContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteContObject(Long contObjectId, java.time.LocalDate subscrEndDate) {
-		checkNotNull(contObjectId);
+        Objects.requireNonNull(contObjectId);
 
 		ContObject contObject = findContObjectChecked(contObjectId);
 
@@ -561,7 +731,7 @@ public class ContObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteManyContObjects(Long[] contObjects, java.time.LocalDate subscrEndDate) {
-		checkNotNull(contObjects);
+        Objects.requireNonNull(contObjects);
 		for (Long i : contObjects) {
 			deleteContObject(i, subscrEndDate);
 		}
@@ -585,10 +755,12 @@ public class ContObjectService implements SecuredRoles {
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public List<Long> updateContObjectCurrentSettingModeType(Long[] contObjectIds, String currentSettingMode,
 			Long subscriberId) {
-		checkNotNull(contObjectIds);
-		checkArgument(contObjectIds.length > 0);
-		checkNotNull(subscriberId);
-		checkNotNull(currentSettingMode);
+        Objects.requireNonNull(contObjectIds);
+        if (contObjectIds.length <= 0) {
+            throw new IllegalArgumentException();
+        }
+        Objects.requireNonNull(subscriberId);
+        Objects.requireNonNull(currentSettingMode);
 
 		List<Long> updatedIds = new ArrayList<>();
 
@@ -646,7 +818,9 @@ public class ContObjectService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects) {
-        return wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
+	    List<ContObjectMonitorDTO> monitorDTOS = wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
+        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOS);
+	    return monitorDTOS;
 	}
 
 
@@ -657,7 +831,7 @@ public class ContObjectService implements SecuredRoles {
      * @return
      */
     public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects, final boolean contEventStats) {
-        checkNotNull(contObjects);
+        Objects.requireNonNull(contObjects);
 
         List<ContObjectMonitorDTO> contObjectMonitorDTOList= contObjects.stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> contObjectMapper.contObjectToMonitorDto(i))
@@ -681,7 +855,7 @@ public class ContObjectService implements SecuredRoles {
                 l = new ArrayList<>();
                 contEventMonitorMapList.put(i.getContObjectId(), l);
             }
-            checkNotNull(l);
+            Objects.requireNonNull(l);
             l.add(i);
         });
 
@@ -714,6 +888,7 @@ public class ContObjectService implements SecuredRoles {
      */
     public ContObjectMonitorDTO wrapContObjectMonitorDTO(SubscriberParam subscriberParam, ContObject contObject, final boolean contEventStats) {
         List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
+        if (list != null) objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), list);
         return list.isEmpty() ? null : list.get(0);
     }
 
@@ -877,12 +1052,12 @@ public class ContObjectService implements SecuredRoles {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<ContObjectDTO> mapToDTO(List<ContObject> contObjects) {
-        return contObjects.stream().map((i) -> contObjectMapper.contObjectToDto(i)).collect(Collectors.toList());
+        return contObjects.stream().map((i) -> contObjectMapper.toDto(i)).collect(Collectors.toList());
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public ContObjectDTO mapToDTO(ContObject contObjects) {
-        return contObjectMapper.contObjectToDto(contObjects);
+        return contObjectMapper.toDto(contObjects);
     }
 
 }

@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,10 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -36,6 +41,9 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 
     @Autowired
 	private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private ContObjectMapper contObjectMapper;
 
 	private Long testSubscriberId;
 
@@ -73,20 +81,51 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Test
 	@Transactional
 	public void testContObjectCRUD() throws Exception {
-		ContObject contObject = new ContObject();
-		contObject.setComment("Created by Test");
-		contObject.setTimezoneDefKeyname("MSK");
-		contObject.setName("Cont Object TEST");
+		ContObjectDTO contObjectDTO = new ContObjectDTO();
+        contObjectDTO.setComment("Created by Test");
+        contObjectDTO.setTimezoneDefKeyname("MSK");
+        contObjectDTO.setName("Cont Object TEST");
 
-		Long contObjectId = _testCreateJson(UrlUtils.apiRmaUrl("/contObjects"), contObject);
+		Long contObjectId = _testCreateJson(UrlUtils.apiRmaUrl("/contObjects"), contObjectDTO);
 
 		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
 
-		contObject = contObjectService.findContObjectChecked(contObjectId);
-		contObject.setCurrentSettingMode("summer");
-		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId), contObject);
+        {
+            ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
 
-		_testDeleteJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
+            contObjectDTO = contObjectMapper.toDto(contObject);
+        }
+
+
+        JSONObject object = new JSONObject();
+
+        try {
+            object.put("firstName", "John")
+                .put("lastName", "Smith")
+                .put("age", 25)
+                .put("address", new JSONObject()
+                    .put("streetAddress", "21 2nd Street")
+                    .put("city", "New York")
+                    .put("state", "NY")
+                    .put("postalCode", "10021"))
+                .put("phoneNumber",  new JSONArray()
+                    .put(new JSONObject()
+                        .put("type", "home")
+                        .put("number", "212 555-1234"))
+                    .put(new JSONObject()
+                        .put("type", "fax")
+                        .put("number", "646 555-4567")));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        contObjectDTO.setFlexData(object.toString());
+
+
+        contObjectDTO.setCurrentSettingMode("summer");
+		_testUpdateJson("/api/rma/contObjects/" + contObjectId, contObjectDTO);
+
+		_testDeleteJson("/api/rma/contObjects/" + contObjectId);
 	}
 
 	@Test
