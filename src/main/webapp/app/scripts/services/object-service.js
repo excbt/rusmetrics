@@ -51,7 +51,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
-            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix,
+            urlZpointDeviceArchive = 'resource/deviceArchive.json'; //'../api/subscr/contObjects';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -962,6 +963,14 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             }
             recentHeaterTypes.push(heaterType);
         }
+                 
+    /**
+        Device archive
+    **/
+        function loadZpointDeviceArchive(zpId) {
+            var url = urlZpointDeviceArchive ;//+ '/' + zpId;
+            return $http.get(url);
+        }
         
         //service initialization
         var initSvc = function () {
@@ -1057,6 +1066,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadSubscrTree: loadSubscrTree,
             
             loadSubscrTrees: loadSubscrTrees,
+            loadZpointDeviceArchive: loadZpointDeviceArchive,
             performBuildingCategoryListForUiSelect: performBuildingCategoryListForUiSelect,
             promise: promise,
             putDeviceMetaDataVzlet: putDeviceMetaDataVzlet,

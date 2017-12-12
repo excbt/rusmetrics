@@ -2444,6 +2444,31 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $("#metaDataEditorModal").on('shown.bs.modal', function () {
         setMetaToolTips();
     });
+    
+    $scope.viewDeviceArchive = function (zpSettings) {
+        if (!mainSvc.checkUndefinedNull(zpSettings.showDeviceArchive)) {
+            zpSettings.showDeviceArchive = !zpSettings.showDeviceArchive;
+        } else {
+            zpSettings.showDeviceArchive = true;
+        }
+        zpSettings.deviceArchiveLoading = true;
+        objectSvc.loadZpointDeviceArchive(zpSettings.id)
+            .then(function (resp) {
+                   zpSettings.deviceArchive = resp.data;
+                    //test
+                    zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+                //end test
+                    zpSettings.deviceArchiveLoading = false;
+                    $('#deviceArchiveModal').modal();
+                }, 
+                  function (e) {
+                    zpSettings.deviceArchiveLoading = false;
+                    errorCallback(e);
+                });
+    }
 
     //controller initialization
     var initCtrl = function () {
