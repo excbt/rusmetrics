@@ -4,10 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -27,7 +24,6 @@ import javax.persistence.Tuple;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by kovtonyk on 04.07.2017.
@@ -194,11 +190,14 @@ public class ObjectAccessService {
     }
 
 
-    public boolean checkContObjectId (Long subscriberId, Long contObjectId) {
+    public boolean checkContObjectId (Long contObjectId, Subscriber subscriber) {
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscriber.getId());
         if (NEW_ACCESS) {
-            return contObjectAccessRepository.findByPK(subscriberId, contObjectId).isPresent();
+            return contObjectAccessRepository.findByPK(subscriber.getId(), contObjectId).isPresent();
         } else {
-            return subscrContObjectRepository.selectContObjectId(subscriberId, contObjectId).size() > 0;
+            return subscrContObjectRepository.selectContObjectId(subscriber.getId(), contObjectId).size() > 0;
         }
     }
 
@@ -210,11 +209,14 @@ public class ObjectAccessService {
         }
     }
 
-    public boolean checkContObjectIds(Long subscriberId, List<Long> contObjectIds) {
+    public boolean checkContObjectIds(List<Long> contObjectIds, Subscriber subscriber) {
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscriber.getId());
+
         if (contObjectIds == null || contObjectIds.isEmpty()) {
             return false;
         }
-        List<Long> subscrContObjectIds = findContObjectIds(subscriberId);
+        List<Long> subscrContObjectIds = findContObjectIds(subscriber.getId());
         return ObjectAccessUtil.checkIds(contObjectIds, subscrContObjectIds);
     }
 
@@ -257,8 +259,8 @@ public class ObjectAccessService {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public void setupRmaHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
-        checkNotNull(subscriberParam);
-        checkNotNull(contObjects);
+        Objects.requireNonNull(subscriberParam);
+        Objects.requireNonNull(contObjects);
 
         if (!subscriberParam.isRma()) {
             return;
@@ -275,8 +277,8 @@ public class ObjectAccessService {
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public void setupRmaHaveSubscrDTO(final SubscriberParam subscriberParam, final List<ContObjectDTO> contObjects) {
-        checkNotNull(subscriberParam);
-        checkNotNull(contObjects);
+        Objects.requireNonNull(subscriberParam);
+        Objects.requireNonNull(contObjects);
 
         if (!subscriberParam.isRma()) {
             return;
@@ -351,7 +353,7 @@ public class ObjectAccessService {
 
     public List<ContZPointIdPair> findAllContZPointPairIds(PortalUserIds portalUserIds) {
 
-        checkNotNull(portalUserIds);
+        Objects.requireNonNull(portalUserIds);
         List<ContZPointIdPair> result = new ArrayList<>();
 
         ColumnHelper columnHelper = new ColumnHelper("id", "contObjectId");
@@ -385,7 +387,7 @@ public class ObjectAccessService {
 
 
     private List<ContZPointShortInfo> findContZPointsShortInfoNew(Long subscriberId) {
-        checkNotNull(subscriberId);
+        Objects.requireNonNull(subscriberId);
         List<ContZPointShortInfo> result = new ArrayList<>();
 
         ColumnHelper columnHelper = new ColumnHelper("id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
@@ -414,7 +416,7 @@ public class ObjectAccessService {
     }
 
     private List<ContZPointShortInfo> findContZPointsShortInfoOld(Long subscriberId) {
-        checkNotNull(subscriberId);
+        Objects.requireNonNull(subscriberId);
         List<ContZPointShortInfo> result = new ArrayList<>();
 
         String[] QUERY_COLUMNS = new String[] { "id", "contObjectId", "customServiceName", "contServiceTypeKeyname",
@@ -444,11 +446,12 @@ public class ObjectAccessService {
     }
 
 
-    public boolean checkContZPointIds(Long subscriberId, List<Long> ContZPointIds) {
+    public boolean checkContZPointIds(List<Long> ContZPointIds, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(portalUserIds);
         if (ContZPointIds == null || ContZPointIds.isEmpty()) {
             return false;
         }
-        List<Long> subscrContObjectIds = findAllContZPointIds(subscriberId);
+        List<Long> subscrContObjectIds = findAllContZPointIds(portalUserIds.getSubscriberId());
         return ObjectAccessUtil.checkIds(ContZPointIds, subscrContObjectIds);
     }
 
@@ -459,7 +462,7 @@ public class ObjectAccessService {
      * @return
      */
     public boolean checkContZPointId (Long contZPointId, PortalUserIds portalUserIds) {
-        return checkContZPointIds(portalUserIds.getSubscriberId(), Arrays.asList(contZPointId));
+        return checkContZPointIds(Arrays.asList(contZPointId), portalUserIds);
     }
 
 

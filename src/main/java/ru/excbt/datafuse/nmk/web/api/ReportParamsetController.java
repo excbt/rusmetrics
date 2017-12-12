@@ -13,10 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
-import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -58,11 +55,14 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
     private final ObjectAccessService objectAccessService;
 
-    public ReportParamsetController(ReportParamsetService reportParamsetService, ReportTemplateService reportTemplateService, ReportTypeService reportTypeService, ObjectAccessService objectAccessService) {
+    private final PortalUserIdsService portalUserIdsService;
+
+    public ReportParamsetController(ReportParamsetService reportParamsetService, ReportTemplateService reportTemplateService, ReportTypeService reportTypeService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.reportParamsetService = reportParamsetService;
         this.reportTemplateService = reportTemplateService;
         this.reportTypeService = reportTypeService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
 	/**
@@ -386,7 +386,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(reportParamsetId);
 		checkNotNull(contObjectId);
 
-		if (!objectAccessService.checkContObjectId(getSubscriberId(),contObjectId)
+		if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())
         ) {
 			return ResponseEntity.badRequest().build();
 		}
@@ -464,7 +464,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(contObjectIds);
 
 		for (Long id : contObjectIds) {
-			if (!objectAccessService.checkContObjectId(getSubscriberId(), id)
+			if (!objectAccessService.checkContObjectId(id, portalUserIdsService.getCurrentIds())
                 ) {
 				return ResponseEntity.badRequest().build();
 			}
