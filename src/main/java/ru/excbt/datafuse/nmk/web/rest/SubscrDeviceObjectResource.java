@@ -4,13 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDeviceHistoryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -71,8 +72,12 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 
     protected final PortalUserIdsService portalUserIdsService;
 
+    protected final ContZPointDeviceHistoryService contZPointDeviceHistoryService;
+
+
+
     @Autowired
-    public SubscrDeviceObjectResource(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    public SubscrDeviceObjectResource(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, ContZPointDeviceHistoryService contZPointDeviceHistoryService) {
         this.deviceObjectService = deviceObjectService;
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
         this.deviceObjectLoadingLogService = deviceObjectLoadingLogService;
@@ -87,8 +92,14 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
         this.deviceObjectMapper = deviceObjectMapper;
         this.objectAccessService = objectAccessService;
         this.portalUserIdsService = portalUserIdsService;
+        this.contZPointDeviceHistoryService = contZPointDeviceHistoryService;
     }
 
+    /**
+     *
+     * @param contObjectId
+     * @return
+     */
     protected boolean canAccessContObject(Long contObjectId) {
         return objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds());
     }
@@ -538,4 +549,10 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
+
+    @GetMapping ("/device-objects/cont-zpoints/{contZPointId}/history")
+	public ResponseEntity<?> deviceObjectsHistory (@PathVariable("contZPointId") Long contZPointId) {
+	    List<ContZPointDeviceHistoryDTO> historyList = contZPointDeviceHistoryService.findHistory(new ContZPoint().id(contZPointId));
+	    return ApiResponse.responseOK(historyList);
+    }
 }

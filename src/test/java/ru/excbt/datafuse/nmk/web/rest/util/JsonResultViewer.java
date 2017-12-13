@@ -73,6 +73,10 @@ public final class JsonResultViewer {
     public static final String arrayBeatifyResult(MvcResult result) throws UnsupportedEncodingException, JSONException {
         String resultJson = result.getResponse().getContentAsString();
 
+        if (resultJson == null || resultJson .isEmpty()) {
+            return null;
+        }
+
         JSONArray resultJsonObject = new JSONArray(resultJson);
         return resultJsonObject.toString(4);
     }

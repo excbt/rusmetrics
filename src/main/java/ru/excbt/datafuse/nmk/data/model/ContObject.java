@@ -270,4 +270,39 @@ public class ContObject extends AbstractAuditableModel
 	    return _daDataSraw != null && _daDataSraw != "";
     }
 
+
+    @Override
+    public String toString() {
+        return "ContObject{" +
+            "name='" + name + '\'' +
+            ", fullName='" + fullName + '\'' +
+            ", fullAddress='" + fullAddress + '\'' +
+            ", number='" + number + '\'' +
+            ", owner='" + owner + '\'' +
+            ", ownerContacts='" + ownerContacts + '\'' +
+            ", currentSettingMode='" + currentSettingMode + '\'' +
+            ", settingModeMDate=" + settingModeMDate +
+            ", description='" + description + '\'' +
+            ", comment='" + comment + '\'' +
+            ", cwTemp=" + cwTemp +
+            ", heatArea=" + heatArea +
+            ", version=" + version +
+            ", contManagements=" + contManagements +
+            ", timezoneDefKeyname='" + timezoneDefKeyname + '\'' +
+            ", exSystemKeyname='" + exSystemKeyname + '\'' +
+            ", exCode='" + exCode + '\'' +
+            ", deleted=" + deleted +
+            ", isManual=" + isManual +
+            ", _haveSubscr=" + _haveSubscr +
+            ", _daDataSraw='" + _daDataSraw + '\'' +
+            ", isAddressAuto=" + isAddressAuto +
+            ", isValidFiasUUID=" + isValidFiasUUID +
+            ", isValidGeoPos=" + isValidGeoPos +
+            ", buildingType='" + buildingType + '\'' +
+            ", buildingTypeCategory='" + buildingTypeCategory + '\'' +
+            ", numOfStories=" + numOfStories +
+            ", meterPeriodSettings=" + meterPeriodSettings +
+            ", flexData='" + flexData + '\'' +
+            "} " + super.toString();
+    }
 }

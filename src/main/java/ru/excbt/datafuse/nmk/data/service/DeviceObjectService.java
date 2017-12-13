@@ -121,6 +121,29 @@ public class DeviceObjectService implements SecuredRoles {
         return saveDeviceObject(deviceObject, deviceObjectDataSource);
     }
 
+    /**
+     *
+     * @param deviceObjectDTO
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationCreate (DeviceObjectDTO deviceObjectDTO) {
+
+        DeviceObject deviceObject = deviceObjectMapper.toEntity(deviceObjectDTO);
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource();
+
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        return saveDeviceObject(deviceObject, deviceObjectDataSource);
+    }
+
     /*
 
      */
@@ -378,7 +401,8 @@ public class DeviceObjectService implements SecuredRoles {
 		    deviceObject.setHeatRadiatorType(new HeatRadiatorType().id(deviceObject.getHeatRadiatorTypeId()));
         }
 
-		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
+		DeviceObject savedDeviceObject = deviceObjectRepository.saveAndFlush(deviceObject);
+
 		if (deviceObjectDataSource != null) {
 			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
 			deviceObjectDataSource.setDeviceObjectId(savedDeviceObject.getId());
@@ -466,7 +490,7 @@ public class DeviceObjectService implements SecuredRoles {
 		    deviceObject.setDeviceLogin(deviceObjectDTO.getDeviceLoginInfo().getDeviceLogin());
         }
 
-		deviceObjectRepository.save(deviceObject);
+		DeviceObject savedDeviceObject = deviceObjectRepository.saveAndFlush(deviceObject);
 
 		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
 
@@ -479,14 +503,14 @@ public class DeviceObjectService implements SecuredRoles {
         }
 
 
-        DeviceObject result = selectDeviceObject(deviceObject.getId());
+        //DeviceObject result = selectDeviceObject(deviceObject.getId());
 
 //        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
 //            result.shareDeviceLoginInfo();
 //        }
 
 
-        return result;
+        return savedDeviceObject;
 	}
 
 
