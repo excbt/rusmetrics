@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
@@ -24,9 +24,9 @@ import static org.junit.Assert.assertNotNull;
 
 
 @Transactional
-public class RmaDeviceObjectControllerTest extends RmaControllerTest {
+public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectResourceTest.class);
 
 //	private final static Long DEV_CONT_OBJECT = 733L;
 //	private final static Long DEV_DEVICE_OBJECT = 54209288L;

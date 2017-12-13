@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
@@ -20,9 +20,9 @@ import java.util.List;
 import static org.junit.Assert.assertTrue;
 
 @Transactional
-public class SubscrDeviceObjectControllerTest extends AnyControllerTest {
+public class SubscrDeviceObjectResourceTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectResourceTest.class);
 
 	private final static Long DEV_CONT_OBJECT = 733L;
 	private final static Long DEV_DEVICE_OBJECT = 54209288L;

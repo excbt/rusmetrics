@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -15,11 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
@@ -47,14 +43,14 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  * @since 12.10.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/rma")
-public class RmaDeviceObjectController extends SubscrDeviceObjectController {
+public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 
-	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectResource.class);
 
 	@Autowired
-    public RmaDeviceObjectController(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    public RmaDeviceObjectResource(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         super(deviceObjectService, deviceObjectLoadingSettingsService, deviceObjectLoadingLogService, vzletSystemRepository, deviceModelService, contObjectService, subscrDataSourceService, deviceMetadataService, subscrDataSourceLoadingSettingsService, heatRadiatorTypeService, deviceDataTypeService, deviceObjectMapper, objectAccessService, portalUserIdsService);
     }
 
@@ -411,5 +407,8 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		return ApiResponse.responseDelete(actionProcess);
 
 	}
+
+
+
 
 }
