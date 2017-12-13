@@ -245,6 +245,19 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             }
             return $http.get(table, httpOptions);
         };
+        
+        function loadZpointById(contObjectId, contZpointId) {
+            if (checkUndefinedNull(contObjectId) || checkUndefinedNull(contZpointId)) {
+                var defer = $q.defer();
+                defer.reject("ContObjectId or contZpointId are undefined or null!");
+                return defer.promise;
+            }
+            var url = urlSubscrContObjects + "/" + contObjectId + "/zpoints/" + contZpointId;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
                  
         function loadDeviceById(objId, devId) {
             var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId;
@@ -1066,6 +1079,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadSubscrTree: loadSubscrTree,
             
             loadSubscrTrees: loadSubscrTrees,
+            loadZpointById: loadZpointById,
             loadZpointDeviceArchive: loadZpointDeviceArchive,
             performBuildingCategoryListForUiSelect: performBuildingCategoryListForUiSelect,
             promise: promise,

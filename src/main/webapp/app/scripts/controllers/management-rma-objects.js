@@ -208,13 +208,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             });
     };
 
-    var getServiceTypes = function () {
-        objectSvc.getServiceTypes()
-            .then(function (response) {
-                $scope.data.serviceTypes = response.data;
-    //console.log(response.data);                        
-            });
-    };
 
     var getTimezones = function () {
         objectSvc.getTimezones()
@@ -1028,15 +1021,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
-        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
-            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
-            $scope.changeServiceType($scope.zpointSettings);
-        }
-        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
-            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
-        }
-        $scope.getDevices(object, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+//        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
+//            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
+//            $scope.changeServiceType($scope.zpointSettings);
+//        }
+//        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
+//            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
+//        }
+//        $scope.getDevices(object, false);
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
     };
                 
     $scope.getZpointSettings = function (objId, zpointId) {
@@ -1273,26 +1266,26 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //console.log($scope.objectsOnPage);                    
     };
                 
-    $scope.changeServiceType = function (zpSettings) {
-        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
-            $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
-        }
-        if ($scope.emptyString(zpSettings.customServiceName)) {
-            switch (zpSettings.contServiceTypeKeyname) {
-            case "heat":
-                zpSettings.customServiceName = "Система отопления";
-                break;
-            default:
-                $scope.data.serviceTypes.some(function (svType) {
-                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
-                        zpSettings.customServiceName = svType.caption;
-                        return true;
-                    }
-                });
-
-            }
-        }
-    };
+//    $scope.changeServiceType = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
+//            $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
+//        }
+//        if ($scope.emptyString(zpSettings.customServiceName)) {
+//            switch (zpSettings.contServiceTypeKeyname) {
+//            case "heat":
+//                zpSettings.customServiceName = "Система отопления";
+//                break;
+//            default:
+//                $scope.data.serviceTypes.some(function (svType) {
+//                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
+//                        zpSettings.customServiceName = svType.caption;
+//                        return true;
+//                    }
+//                });
+//
+//            }
+//        }
+//    };
                 
     $scope.changeRso = function (zpSettings) {
         if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)) {
@@ -2445,36 +2438,36 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         setMetaToolTips();
     });
     
-    $scope.viewDeviceArchive = function (zpSettings) {
-        if (!mainSvc.checkUndefinedNull(zpSettings.showDeviceArchive)) {
-            zpSettings.showDeviceArchive = !zpSettings.showDeviceArchive;
-        } else {
-            zpSettings.showDeviceArchive = true;
-        }
-        zpSettings.deviceArchiveLoading = true;
-        objectSvc.loadZpointDeviceArchive(zpSettings.id)
-            .then(function (resp) {
-                   zpSettings.deviceArchive = resp.data;
-                    //test
-                    zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
-            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
-            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
-            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
-                //end test
-                    zpSettings.deviceArchiveLoading = false;
-                    $('#deviceArchiveModal').modal();
-                }, 
-                  function (e) {
-                    zpSettings.deviceArchiveLoading = false;
-                    errorCallback(e);
-                });
-    }
+//    $scope.viewDeviceArchive = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.showDeviceArchive)) {
+//            zpSettings.showDeviceArchive = !zpSettings.showDeviceArchive;
+//        } else {
+//            zpSettings.showDeviceArchive = true;
+//        }
+//        zpSettings.deviceArchiveLoading = true;
+//        objectSvc.loadZpointDeviceArchive(zpSettings.id)
+//            .then(function (resp) {
+//                   zpSettings.deviceArchive = resp.data;
+//                    //test
+//                    zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//                //end test
+//                    zpSettings.deviceArchiveLoading = false;
+//                    $('#deviceArchiveModal').modal();
+//                }, 
+//                  function (e) {
+//                    zpSettings.deviceArchiveLoading = false;
+//                    errorCallback(e);
+//                });
+//    }
 
     //controller initialization
     var initCtrl = function () {
         getRsoOrganizations();
         getCmOrganizations();
-        getServiceTypes();
+//        getServiceTypes();
         getTimezones();
         getClients();
         //if tree is off
