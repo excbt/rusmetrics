@@ -46,10 +46,12 @@ spring:
         database: POSTGRESQL
         properties:
             hibernate.hbm2ddl.auto: validate
-            hibernate.format_sql: true
+            hibernate.format_sql: false
             hibernate.show_sql: true
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
             hibernate.generate_statistics: false
+            hibernate.cache.use_query_cache: false
+            hibernate.cache.use_second_level_cache: false
             #hibernate.cache.use_structured_entries: true
 
 #            naming:
@@ -95,6 +97,7 @@ portal:
 
     cache: # Cache configuration
         ehcache: # Ehcache configuration
+            type: none
             time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
             max-entries: 100 # Number of objects in each cache entry
 
