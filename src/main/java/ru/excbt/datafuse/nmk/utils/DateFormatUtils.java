@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.utils;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -65,5 +66,33 @@ public class DateFormatUtils {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString);
 		return LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).format(formatter);
 	}
+
+    /**
+     *
+     * @param localDateTime
+     * @param formatString
+     * @return
+     */
+	public static String formatLocalDateTime(LocalDateTime localDateTime, String formatString) {
+		if (localDateTime == null) {
+			return null;
+		}
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString);
+		return localDateTime.format(formatter);
+	}
+
+    public static String formatLocalDateTime(LocalDateTime localDateTime) {
+	    if (localDateTime == null) {
+	        return null;
+        }
+        return localDateTime.format(DATE_FORMAT_STR_FULL2);
+    }
+
+    public static String formatLocalDate(LocalDate localDate) {
+	    if (localDate == null) {
+	        return null;
+        }
+        return localDate.format(DATE_FORMAT_STR_FULL2);
+    }
 
 }

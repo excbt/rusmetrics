@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
@@ -27,6 +26,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Tuple;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -275,7 +275,7 @@ public class ContObjectService implements SecuredRoles {
 		ContManagement cm = currContObject.get_activeContManagement();
 		if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-					LocalDate.now());
+                org.joda.time.LocalDate.now());
 			currContObject.getContManagements().clear();
 			currContObject.getContManagements().add(newCm);
 		}
@@ -362,7 +362,7 @@ public class ContObjectService implements SecuredRoles {
         ContManagement cm = currContObject.get_activeContManagement();
         if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
             ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-                LocalDate.now());
+                org.joda.time.LocalDate.now());
             currContObject.getContManagements().clear();
             currContObject.getContManagements().add(newCm);
         }
@@ -449,7 +449,7 @@ public class ContObjectService implements SecuredRoles {
         ContManagement cm = currContObject.get_activeContManagement();
         if (cmOrganizationId != null && (cm == null || !cmOrganizationId.equals(cm.getOrganizationId()))) {
             ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-                LocalDate.now());
+                org.joda.time.LocalDate.now());
             currContObject.getContManagements().clear();
             currContObject.getContManagements().add(newCm);
         }
@@ -466,7 +466,7 @@ public class ContObjectService implements SecuredRoles {
 	//@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
     @Deprecated
-	private ContObject createContObject(ContObject contObject, Long subscriberId, LocalDate subscrBeginDate,
+	private ContObject createContObject(ContObject contObject, Long subscriberId, org.joda.time.LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
 
         Objects.requireNonNull(contObject);
@@ -541,7 +541,7 @@ public class ContObjectService implements SecuredRoles {
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-					LocalDate.now());
+                org.joda.time.LocalDate.now());
 			resultContObject.getContManagements().clear();
 			resultContObject.getContManagements().add(newCm);
 		}
@@ -606,7 +606,7 @@ public class ContObjectService implements SecuredRoles {
 		// Cont Management
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-					LocalDate.now());
+                org.joda.time.LocalDate.now());
 			resultContObject.getContManagements().clear();
 			resultContObject.getContManagements().add(newCm);
 		}
@@ -686,7 +686,7 @@ public class ContObjectService implements SecuredRoles {
 		// Cont Management
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
-					LocalDate.now());
+                org.joda.time.LocalDate.now());
 			resultContObject.getContManagements().clear();
 			resultContObject.getContManagements().add(newCm);
 		}
@@ -703,7 +703,7 @@ public class ContObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
-	public void deleteContObject(Long contObjectId, java.time.LocalDate subscrEndDate) {
+	public void deleteContObject(Long contObjectId, LocalDate subscrEndDate) {
         Objects.requireNonNull(contObjectId);
 
 		ContObject contObject = findContObjectChecked(contObjectId);

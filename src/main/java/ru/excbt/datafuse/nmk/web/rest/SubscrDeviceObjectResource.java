@@ -1,19 +1,17 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDeviceHistoryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -39,12 +37,12 @@ import java.util.stream.Collectors;
  * @since 20.07.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
+public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrDeviceObjectResource.class);
 
 	protected final DeviceObjectService deviceObjectService;
 
@@ -74,8 +72,12 @@ public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
 
     protected final PortalUserIdsService portalUserIdsService;
 
+    protected final ContZPointDeviceHistoryService contZPointDeviceHistoryService;
+
+
+
     @Autowired
-    public SubscrDeviceObjectController(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    public SubscrDeviceObjectResource(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, ContZPointDeviceHistoryService contZPointDeviceHistoryService) {
         this.deviceObjectService = deviceObjectService;
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
         this.deviceObjectLoadingLogService = deviceObjectLoadingLogService;
@@ -90,8 +92,14 @@ public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
         this.deviceObjectMapper = deviceObjectMapper;
         this.objectAccessService = objectAccessService;
         this.portalUserIdsService = portalUserIdsService;
+        this.contZPointDeviceHistoryService = contZPointDeviceHistoryService;
     }
 
+    /**
+     *
+     * @param contObjectId
+     * @return
+     */
     protected boolean canAccessContObject(Long contObjectId) {
         return objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds());
     }
@@ -174,9 +182,10 @@ public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
         /////////////////////////////////////////////
         ApiActionObjectProcess actionProcess = () -> {
             //final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
-            DeviceObject result =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
-
-            return result;
+            DeviceObject deviceObject =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
+            DeviceObjectFullVM fullVM = deviceObjectMapper.toFullVM(deviceObject);
+            fullVM.shareDeviceLoginInfo(deviceObject);
+            return fullVM;
         };
         return ApiResponse.responseUpdate(actionProcess);
 
@@ -541,4 +550,10 @@ public class SubscrDeviceObjectController //extends AbstractSubscrApiResource
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
+
+    @GetMapping ("/device-objects/cont-zpoints/{contZPointId}/history")
+	public ResponseEntity<?> deviceObjectsHistory (@PathVariable("contZPointId") Long contZPointId) {
+	    List<ContZPointDeviceHistoryDTO> historyList = contZPointDeviceHistoryService.findHistory(new ContZPoint().id(contZPointId));
+	    return ApiResponse.responseOK(historyList);
+    }
 }

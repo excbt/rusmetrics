@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -37,7 +37,8 @@ import java.util.Optional;
  */
 @Entity
 @Table(name = "device_object")
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONE)
+
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId, PersistableBuilder<DeviceObject, Long> {
 
     /**
@@ -129,6 +130,7 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	@JsonIgnore
     @Getter
     @Setter
+    @NotNull
 	private ContObject contObject;
 
 	@ManyToMany(mappedBy = "deviceObject", fetch = FetchType.LAZY)
