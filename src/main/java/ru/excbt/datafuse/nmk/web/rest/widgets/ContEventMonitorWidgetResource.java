@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
-import ru.excbt.datafuse.nmk.data.service.widget.ContEventMonitorWidgetService;
+import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Collections;

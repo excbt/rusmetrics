@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.widget;
+package ru.excbt.datafuse.nmk.service.widget;
 
 import org.junit.Test;
 import org.slf4j.Logger;

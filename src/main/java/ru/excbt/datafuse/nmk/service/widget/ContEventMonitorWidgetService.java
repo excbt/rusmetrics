@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service.widget;
+package ru.excbt.datafuse.nmk.service.widget;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -154,6 +154,11 @@ public class ContEventMonitorWidgetService {
     public List<ContEventCategoryDTO> findMonitorContEventCategories() {
         return contEventCategoryRepository.findAll().stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
             .sorted(sortCategory).map(c -> contEventCategoryMapper.toDto(c)).collect(Collectors.toList());
+    }
+
+
+    public void findContObjectMonitor () {
+
     }
 
 }

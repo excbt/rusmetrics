@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorRepository;
 
 /**
  * Сервис для работы с монитором событий
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 30.06.2015
@@ -55,11 +55,11 @@ public class ContEventMonitorService {
 	private ContEventMonitorRepository contEventMonitorRepository;
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
-	protected List<ContEventMonitor> findByContObject(Long contObjectId) {
+	public List<ContEventMonitor> findByContObject(Long contObjectId) {
 		checkNotNull(contObjectId);
 
 		List<ContEventMonitor> contEventMonitor = contEventMonitorRepository
@@ -72,7 +72,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -86,7 +86,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -98,7 +98,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectId
 	 * @return
 	 */
@@ -107,7 +107,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -119,7 +119,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -128,7 +128,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -141,7 +141,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventMonitor
 	 * @return
 	 */
@@ -165,7 +165,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keynameObject
 	 * @return
 	 */
@@ -180,7 +180,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObjectIds
 	 * @return
 	 */
@@ -205,7 +205,7 @@ public class ContEventMonitorService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
