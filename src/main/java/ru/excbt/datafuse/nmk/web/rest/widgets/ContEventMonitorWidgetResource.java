@@ -3,16 +3,14 @@ package ru.excbt.datafuse.nmk.web.rest.widgets;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
@@ -25,22 +23,17 @@ public class ContEventMonitorWidgetResource {
 
     private final static List<Long> EMPTY_LIST = Collections.unmodifiableList(Collections.EMPTY_LIST);
 
-    private final CurrentSubscriberService currentSubscriberService;
-
-    private final ObjectAccessService objectAccessService;
+    private final PortalUserIdsService portalUserIdsService;
 
     private final ContEventMonitorWidgetService monitorWidgetService;
 
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-    private final ContEventTypeService contEventTypeService;
-
-    public ContEventMonitorWidgetResource(CurrentSubscriberService currentSubscriberService, ObjectAccessService objectAccessService, ContEventMonitorWidgetService monitorWidgetService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, ContEventTypeService contEventTypeService) {
-        this.currentSubscriberService = currentSubscriberService;
-        this.objectAccessService = objectAccessService;
+    @Autowired
+    public ContEventMonitorWidgetResource(PortalUserIdsService portalUserIdsService, ContEventMonitorWidgetService monitorWidgetService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService) {
+        this.portalUserIdsService = portalUserIdsService;
         this.monitorWidgetService = monitorWidgetService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
-        this.contEventTypeService = contEventTypeService;
     }
 
     /**
@@ -55,7 +48,7 @@ public class ContEventMonitorWidgetResource {
     public ResponseEntity<?> getStats(@ApiParam("nodeId of requested PTreeNode") @RequestParam(value = "nodeId", required = false) Long nodeId,
                                       @ApiParam("option for including ContEventType in widget") @RequestParam(value = "nestedTypes", required = false) Boolean nestedTypes) {
 
-        PortalUserIds portalUserIds = currentSubscriberService.getSubscriberParam();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contObjectIds = nodeId != null ? subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId) : EMPTY_LIST;
         return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes)));
     }

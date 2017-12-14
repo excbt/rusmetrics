@@ -1,21 +1,32 @@
 package ru.excbt.datafuse.nmk.service.widget;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.dto.ContEventCategoryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContEventTypeDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContObjectRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventCategoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.widget.ContEventMonitorWidgetRepository;
 import ru.excbt.datafuse.nmk.data.service.ContEventLevelColorV2Service;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.service.dto.ContObjectMonitorStateDTO;
+import ru.excbt.datafuse.nmk.service.dto.ContZPointMonitorStateDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContEventCategoryMapper;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,37 +49,47 @@ public class ContEventMonitorWidgetService {
 
     private final ContEventCategoryMapper contEventCategoryMapper;
 
+    private final ContObjectRepository contObjectRepository;
+
+    private final ContZPointRepository contZPointRepository;
+
+    private final ObjectAccessService objectAccessService;
+
+    private final ContObjectMapper contObjectMapper;
+
+    private final ContZPointMapper contZPointMapper;
+
     @Autowired
-    public ContEventMonitorWidgetService(ContEventMonitorWidgetRepository monitorWidgetRepository, ContEventTypeRepository contEventTypeRepository, ContEventLevelColorV2Service contEventLevelColorV2Service, ContEventCategoryRepository contEventCategoryRepository, ContEventCategoryMapper contEventCategoryMapper) {
+    public ContEventMonitorWidgetService(ContEventMonitorWidgetRepository monitorWidgetRepository, ContEventTypeRepository contEventTypeRepository, ContEventLevelColorV2Service contEventLevelColorV2Service, ContEventCategoryRepository contEventCategoryRepository, ContEventCategoryMapper contEventCategoryMapper, ContObjectRepository contObjectRepository, ContZPointRepository contZPointRepository, ObjectAccessService objectAccessService, ContObjectMapper contObjectMapper, ContZPointMapper contZPointMapper) {
         this.monitorWidgetRepository = monitorWidgetRepository;
         this.contEventTypeRepository = contEventTypeRepository;
         this.contEventLevelColorV2Service = contEventLevelColorV2Service;
         this.contEventCategoryRepository = contEventCategoryRepository;
         this.contEventCategoryMapper = contEventCategoryMapper;
+        this.contObjectRepository = contObjectRepository;
+        this.contZPointRepository = contZPointRepository;
+        this.objectAccessService = objectAccessService;
+        this.contObjectMapper = contObjectMapper;
+        this.contZPointMapper = contZPointMapper;
     }
 
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ContObjectStats {
+
+    public static class MonitorStats {
 
         private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        private final Long contObjectId;
         private final Long contEventTypeId;
         private final LocalDateTime lastContEventTime;
         private final Integer count;
         private ContEventTypeDTO contEventType;
 
-        private ContObjectStats(Object[] qryRow) {
-            this.contObjectId = DBRowUtil.asLong(qryRow[0]);
+        private MonitorStats(Object[] qryRow) {
             this.contEventTypeId = DBRowUtil.asLong(qryRow[1]);
             this.lastContEventTime = (LocalDateTime) qryRow[2];
             this.count = DBRowUtil.asInteger(qryRow[3]);
         }
 
-        public Long getContObjectId() {
-            return contObjectId;
-        }
 
         public Long getContEventTypeId() {
             return contEventTypeId;
@@ -94,12 +115,57 @@ public class ContEventMonitorWidgetService {
 
         @Override
         public String toString() {
-            return "ContObjectStats{" +
-                "contObjectId=" + contObjectId +
-                ", contEventTypeId=" + contEventTypeId +
+            return "MonitorStats{" +
+                "contEventTypeId=" + contEventTypeId +
                 ", lastContEventTime=" + lastContEventTime +
                 ", count=" + count +
                 '}';
+        }
+    }
+
+
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ContObjectStats extends MonitorStats {
+
+        private final Long contObjectId;
+
+        private ContObjectStats(Object[] qryRow) {
+            super(qryRow);
+            this.contObjectId = DBRowUtil.asLong(qryRow[0]);
+        }
+
+        public Long getContObjectId() {
+            return contObjectId;
+        }
+
+        @Override
+        public String toString() {
+            return "ContObjectStats{" +
+                "contObjectId=" + contObjectId +
+                "} " + super.toString();
+        }
+    }
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class ContZPointStats extends MonitorStats {
+
+        private final Long contZPointId;
+
+        private ContZPointStats(Object[] qryRow) {
+            super(qryRow);
+            this.contZPointId = DBRowUtil.asLong(qryRow[0]);
+        }
+
+        public Long getContZPointId() {
+            return contZPointId;
+        }
+
+        @Override
+        public String toString() {
+            return "ContZPointStats{" +
+                "contZPointId=" + contZPointId +
+                "} " + super.toString();
         }
     }
 
@@ -157,8 +223,60 @@ public class ContEventMonitorWidgetService {
     }
 
 
-    public void findContObjectMonitor () {
+    /**
+     *
+     * @param contObjectId
+     * @param portalUserIds
+     * @return
+     */
+    public List<ContObjectMonitorStateDTO> findContObjectMonitorState (Long contObjectId, PortalUserIds portalUserIds) {
 
+        ContObject contObject = contObjectRepository.findOne(contObjectId);
+        if (contObject == null) {
+            DBExceptionUtil.entityNotFoundException(ContObject.class, contObjectId);
+        }
+
+        Predicate<ContZPoint> checkAccess = objectAccessService.objectAccessUtil().checkContZPoint(portalUserIds);
+        Predicate<Long> contZPointIdAccess = objectAccessService.objectAccessUtil().checkContZPointId(portalUserIds);
+
+        List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObjectId)
+            .stream().filter(i -> checkAccess.test(i)).collect(Collectors.toList());
+
+        List<ContZPointStats> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
+            .stream().map(ContZPointStats::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
+
+
+        List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointStats::getContEventTypeId).distinct().collect(Collectors.toList());
+
+        Map<Long, ContEventType> contEventTypeMap = contEventTypeRepository.selectContEventTypes(contEventTypeIds)
+            .stream().filter(i -> i.getContEventLevel() != null)
+            .collect(Collectors.toMap(ContEventType::getId, Function.identity()));
+
+        Comparator<ContEventType> CMP_BY_COLOR_LEVEL = Comparator.comparingInt(ContEventType::getContEventLevel);
+
+
+        ContObjectMonitorStateDTO monitorStateDTO = new ContObjectMonitorStateDTO();
+
+        Objects.requireNonNull(monitorStateDTO.getContZPointMonitorState());
+
+        for (ContZPoint zPoint: contZPoints) {
+
+            Optional<ContEventType> worseContEventType = statsObjList.stream()
+                .filter(i -> i.getContZPointId().equals(zPoint.getId()))
+                .map(i -> contEventTypeMap.get(i.getContEventTypeId())).filter(Objects::nonNull)
+                .sorted(CMP_BY_COLOR_LEVEL).findFirst();
+
+            ContZPointMonitorStateDTO zPointMonitorState = contZPointMapper.toMonitorStateDTO(zPoint);
+            zPointMonitorState.setStateColor(worseContEventType
+                .map(i -> contEventLevelColorV2Service.getColorName(i.getContEventLevel()))
+                .orElse(ContEventLevelColorKeyV2.GREEN.getKeyname()));
+
+            monitorStateDTO.getContZPointMonitorState().add(zPointMonitorState);
+        }
+
+        monitorStateDTO.setContObjectShortInfo(contObjectMapper.toShortInfoVM(contObject));
+
+        return null;
     }
 
 }
