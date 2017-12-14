@@ -13,6 +13,8 @@ import java.util.function.Consumer;
 public final class JsonResultViewer {
 
 
+    private static int INDENT = 4;
+
     private Consumer<String> printer;
 
     public JsonResultViewer(Consumer<String> printer) {
@@ -30,7 +32,7 @@ public final class JsonResultViewer {
         String resultJson = resultActions.andReturn().getResponse().getContentAsString();
 
         JSONArray resultJsonArray = new JSONArray(resultJson);
-        return resultJsonArray.toString(4);
+        return resultJsonArray.toString(INDENT);
     }
 
     /**
@@ -44,7 +46,7 @@ public final class JsonResultViewer {
         String resultJson = resultActions.andReturn().getResponse().getContentAsString();
 
         JSONObject resultJsonObject = new JSONObject(resultJson);
-        return resultJsonObject.toString(4);
+        return resultJsonObject.toString(INDENT);
     }
 
     /**
@@ -63,6 +65,29 @@ public final class JsonResultViewer {
         JSONObject resultJsonObject = new JSONObject(resultJson);
         return resultJsonObject.toString(4);
     }
+
+
+    /**
+     *
+     * @param result
+     * @return
+     * @throws UnsupportedEncodingException
+     * @throws JSONException
+     */
+    public static final String anyJsonBeatifyResult(MvcResult result) throws UnsupportedEncodingException, JSONException {
+        String resultJson = result.getResponse().getContentAsString();
+        if ( resultJson == null || resultJson.isEmpty()) {
+            return null;
+        }
+
+        if (resultJson.indexOf("[") == 0) {
+            return new JSONArray(resultJson).toString(INDENT);
+        } else if (resultJson.indexOf("{") == 0) {
+            return new JSONObject(resultJson).toString(INDENT);
+        } else
+            return resultJson;
+    }
+
 
     /**
      * @param result

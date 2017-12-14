@@ -182,9 +182,10 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
         /////////////////////////////////////////////
         ApiActionObjectProcess actionProcess = () -> {
             //final DeviceObjectDTO deviceObjectDTO = modelMapper.map(deviceObject, DeviceObjectDTO.class);
-            DeviceObject result =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
-
-            return result;
+            DeviceObject deviceObject =  deviceObjectService.saveDeviceObjectDTO_lvlS1(deviceObjectDTO);
+            DeviceObjectFullVM fullVM = deviceObjectMapper.toFullVM(deviceObject);
+            fullVM.shareDeviceLoginInfo(deviceObject);
+            return fullVM;
         };
         return ApiResponse.responseUpdate(actionProcess);
 
