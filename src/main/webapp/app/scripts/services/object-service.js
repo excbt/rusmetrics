@@ -20,6 +20,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
         BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
+        BROADCASTS.ZPOINT_SAVED = "objectSvc:zpointSaved";
+                 
         var loading = true,
             urlApi = '../api',
             urlSubscr = urlApi + '/subscr',
@@ -52,7 +54,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
             urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix,
-            urlZpointDeviceArchive = 'resource/deviceArchive.json'; //'../api/subscr/contObjects';
+            urlZpointDeviceArchive = '../api/rma/device-objects/cont-zpoints/',//'resource/deviceArchive.json', //'../api/subscr/contObjects';
+            urlTempSchBase = '../api/rma/temperatureCharts/byContObject';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -981,8 +984,15 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
         Device archive
     **/
         function loadZpointDeviceArchive(zpId) {
-            var url = urlZpointDeviceArchive ;//+ '/' + zpId;
+            var url = urlZpointDeviceArchive + zpId + '/history';//+ '/' + zpId;
             return $http.get(url);
+        }
+                 
+    /** 
+        Temperature schedules
+    */
+        function loadTemperatureSchedulesByObject(objId) {
+            return $http.get(urlTempSchBase + "/" + objId);
         }
         
         //service initialization
@@ -1070,6 +1080,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadObjectsByTreeNode: loadObjectsByTreeNode,
             loading: loading,
             loadObjectMeterPeriods: loadObjectMeterPeriods,
+            loadTemperatureSchedulesByObject: loadTemperatureSchedulesByObject,
             loadTree: loadTree,
             loadTrees: loadTrees,
             loadTreeTemplateItems: loadTreeTemplateItems,

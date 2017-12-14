@@ -53,7 +53,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.objectCtrlSettings.rmaUrl = "../api/rma";
     $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
     $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
-    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
+//    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
     var setVisibles = function () {
         var tmp = mainSvc.getContextIds();
@@ -555,6 +555,11 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         }
         //$scope.zpointSettings = {};
     };
+    
+    $rootScope.$on(objectSvc.BROADCASTS.ZPOINT_SAVED, function (ev, args) {
+        console.log(args);
+        successCallbackOnZpointUpdate(args.response);
+    })
                 
     var successCallbackOnSetMode = function (e) {
         notificationFactory.success();
@@ -1084,7 +1089,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.summer = {};
         $scope.zpointSettings = angular.copy(zps);
         $scope.getDevices($scope.currentObject, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);         
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);         
     };
                 
     function testRsoOrganizationAtList() {
@@ -1179,47 +1184,47 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         return result;
     };
                 
-    $scope.updateZpointCommonSettings = function () {
-        $scope.zpointSettings.isSaving = true;
-//console.log($scope.zpointSettings);
-        if (!checkZpointCommonSettings()) {
-            //zpoint settings saving flag reset
-            $scope.zpointSettings.isSaving = false;
-            return false;
-        }
-        //prepare piped info
-//                    if ($scope.zpointSettings.singlePipe){
-//                        $scope.zpointSettings.doublePipe = false;
-//                    };
-            //perform temperature schedule
-        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
-            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
-            $scope.zpointSettings.tChart = null;
-        } else {
-            $scope.zpointSettings.temperatureChartId = null;
-        }
-        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
-        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
-            url = url + "/" + $scope.zpointSettings.id;
-
-            $http({
-                url: url,
-                method: 'PUT',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        } else {
-            $scope.zpointSettings.startDate = Date.now();
-            $http({
-                url: url,
-                method: 'POST',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        }
-
-//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
-    };
+//    $scope.updateZpointCommonSettings = function () {
+//        $scope.zpointSettings.isSaving = true;
+////console.log($scope.zpointSettings);
+//        if (!checkZpointCommonSettings()) {
+//            //zpoint settings saving flag reset
+//            $scope.zpointSettings.isSaving = false;
+//            return false;
+//        }
+//        //prepare piped info
+////                    if ($scope.zpointSettings.singlePipe){
+////                        $scope.zpointSettings.doublePipe = false;
+////                    };
+//            //perform temperature schedule
+//        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
+//            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
+//            $scope.zpointSettings.tChart = null;
+//        } else {
+//            $scope.zpointSettings.temperatureChartId = null;
+//        }
+//        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
+//        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
+//            url = url + "/" + $scope.zpointSettings.id;
+//
+//            $http({
+//                url: url,
+//                method: 'PUT',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        } else {
+//            $scope.zpointSettings.startDate = Date.now();
+//            $http({
+//                url: url,
+//                method: 'POST',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        }
+//
+////                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
+//    };
                 
                 //Update the zpoint settings, which set the mode for Summer or Winter season
     $scope.updateZpointModeSettings = function () {
