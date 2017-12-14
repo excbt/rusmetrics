@@ -23,6 +23,8 @@ public class DeviceObjectShortInfoDTO {
 
     private LocalDateTime verificationDate;
 
+    private String deviceObjectName;
+
 //    public String getVerificationDateStr() {
 //        return verificationDate == null ? null : DateFormatUtils.formatLocalDateTime(verificationDate);
 //    }
