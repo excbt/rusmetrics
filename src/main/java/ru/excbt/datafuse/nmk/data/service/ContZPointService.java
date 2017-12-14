@@ -20,14 +20,12 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
-import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
-import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
-import ru.excbt.datafuse.nmk.data.repository.V_LastDataDateAggrRepository;
+import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -96,6 +94,8 @@ public class ContZPointService implements SecuredRoles {
 
     private final ObjectTagService objectTagService;
 
+    private final DeviceObjectRepository deviceObjectRepository;
+
     @Autowired
     public ContZPointService(ContZPointRepository contZPointRepository,
                              ContObjectService contObjectService,
@@ -110,7 +110,7 @@ public class ContZPointService implements SecuredRoles {
                              ContZPointMapper contZPointMapper,
                              DeviceObjectMapper deviceObjectMapper,
                              V_LastDataDateAggrRepository v_lastDataDateAggrRepository,
-                             ContZPointDeviceHistoryService contZPointDeviceHistoryService, ObjectTagService objectTagService) {
+                             ContZPointDeviceHistoryService contZPointDeviceHistoryService, ObjectTagService objectTagService, DeviceObjectRepository deviceObjectRepository) {
         this.contZPointRepository = contZPointRepository;
         this.contObjectService = contObjectService;
         this.contServiceTypeRepository = contServiceTypeRepository;
@@ -126,56 +126,9 @@ public class ContZPointService implements SecuredRoles {
         this.v_lastDataDateAggrRepository = v_lastDataDateAggrRepository;
         this.contZPointDeviceHistoryService = contZPointDeviceHistoryService;
         this.objectTagService = objectTagService;
+        this.deviceObjectRepository = deviceObjectRepository;
     }
 
-
-
-	/**
-	 * Краткая информация по точке учета
-	 *
-	 * @author A.Kovtonyuk
-	 * @version 1.0
-	 * @since 17.03.2016
-	 *
-	 */
-	public static class ShortInfo implements ContZPointShortInfo{
-		private final Long contZPointId;
-		private final Long contObjectId;
-		private final String customServiceName;
-		private final String contServiceType;
-		private final String contServiceTypeCaption;
-
-		public ShortInfo(Long contZPointId, Long contObjectId, String customServiceName,
-				String contServiceType, String contServiceTypeCaption)
-
-        {
-			this.contZPointId = contZPointId;
-			this.contObjectId = contObjectId;
-			this.customServiceName = customServiceName;
-			this.contServiceType = contServiceType;
-			this.contServiceTypeCaption = contServiceTypeCaption;
-		}
-
-		public Long getContZPointId() {
-			return contZPointId;
-		}
-
-		public Long getContObjectId() {
-			return contObjectId;
-		}
-
-		public String getCustomServiceName() {
-			return customServiceName;
-		}
-
-		public String getContServiceType() {
-			return contServiceType;
-		}
-
-		public String getContServiceTypeCaption() {
-			return contServiceTypeCaption;
-		}
-	}
 
 	/**
 	 * /**
@@ -246,6 +199,11 @@ public class ContZPointService implements SecuredRoles {
 		return result;
 	}
 
+    /**
+     *
+     * @param contZPointId
+     * @return
+     */
 	private LocalDateTime getLastDataDateAggr(final Long contZPointId) {
         V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findOne(contZPointId);
         return lastDataDateAggr != null ? lastDataDateAggr.getLastDataDate() : null;
@@ -481,6 +439,38 @@ public class ContZPointService implements SecuredRoles {
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 		return savedContZPoint;
 	}
+
+
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN })
+    public ContZPoint createZPoint(ContZPointDTO contZPointDTO) {
+        Objects.requireNonNull(contZPointDTO);
+        Objects.requireNonNull(contZPointDTO.getContObjectId());
+        Objects.requireNonNull(contZPointDTO.getContServiceTypeKeyname());
+        Objects.requireNonNull(contZPointDTO.getStartDate());
+        Objects.requireNonNull(contZPointDTO.getDeviceObjectId());
+
+
+        if (contZPointDTO.getId() != null) {
+            throw new IllegalArgumentException("ContZPointDTO must new");
+        }
+
+        ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPointDTO.getContServiceTypeKeyname());
+        Objects.requireNonNull(contServiceType);
+
+        DeviceObject deviceObject = deviceObjectRepository.findOne(contZPointDTO.getDeviceObjectId());
+        if (deviceObject == null) {
+            throw DBExceptionUtil.newEntityNotFoundException(DeviceObject.class, contZPointDTO.getDeviceObjectId());
+        }
+
+        ContZPoint contZPoint = contZPointMapper.toEntity(contZPointDTO);
+        contZPoint.setDeviceObject(deviceObject);
+
+        ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
+        contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+        return savedContZPoint;
+    }
+
 
 	/**
 	 *

@@ -6,7 +6,10 @@ package ru.excbt.datafuse.nmk.web.api.loading;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
+import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.EditDataSourceDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.utils.LoadingBtsData;
@@ -92,20 +95,20 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			LoadingResult res = new LoadingResult();
 			res.info = info;
 
-			ContObject co = new ContObject();
-			co.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
-			co.setDescription("Ромашкино БТС");
-			co.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
-			co.setOwner("РОМАШКОВО");
-			co.setTimezoneDefKeyname(TimezoneDefKey.MSK.getKeyname());
-			co.setCurrentSettingMode("summer");
+			ContObjectDTO contObjectDTO = new ContObjectDTO();
+			contObjectDTO.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
+			contObjectDTO.setDescription("Ромашкино БТС");
+			contObjectDTO.setFullName("Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr());
+			contObjectDTO.setOwner("РОМАШКОВО");
+			contObjectDTO.setTimezoneDefKeyname(TimezoneDefKey.MSK.getKeyname());
+			contObjectDTO.setCurrentSettingMode("summer");
 
 			RequestExtraInitializer params = (builder) -> {
 				builder.param("cmOrganizationId", String.valueOf(CM_ORGANIZARION_ID));
 			};
 
 			// Make ContObject
-			Long contObjectId = _testCreateJson("/api/rma/contObjects", co, params);
+			Long contObjectId = _testCreateJson("/api/rma/contObjects", contObjectDTO, params);
 			assertNotNull(contObjectId);
 			res.contObjectId = contObjectId;
 
@@ -114,19 +117,20 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			Long[] deviceObjectIds = new Long[8];
 
 			for (int i = 1; i < 9; i++) {
-				DeviceObject deviceObject = new DeviceObject();
-				deviceObject.setDeviceModelId(DEVICE_MODEL_ID);
-				deviceObject.setIsImpulse(true);
-				deviceObject.setImpulseK(0.01);
-				deviceObject.setImpulseMu("V_M3");
-				deviceObject.setImpulseCounterAddr(info.getBtsNr());
-				deviceObject.setImpulseCounterSlotAddr(String.valueOf(i));
-				deviceObject.setImpulseCounterType("BTS_2");
-				deviceObject.getEditDataSourceInfo().setSubscrDataSourceId(BTS_DATA_SOURCE_ID);
-				deviceObject.setNumber(info.getBtsNr() + "#" + i);
+				DeviceObjectDTO deviceObjectDTO = new DeviceObjectDTO();
+				deviceObjectDTO.setDeviceModelId(DEVICE_MODEL_ID);
+				deviceObjectDTO.setIsImpulse(true);
+				deviceObjectDTO.setImpulseK(0.01);
+				deviceObjectDTO.setImpulseMu("V_M3");
+				deviceObjectDTO.setImpulseCounterAddr(info.getBtsNr());
+				deviceObjectDTO.setImpulseCounterSlotAddr(String.valueOf(i));
+				deviceObjectDTO.setImpulseCounterType("BTS_2");
+				deviceObjectDTO.setEditDataSourceInfo(new EditDataSourceDTO());
+				deviceObjectDTO.getEditDataSourceInfo().setSubscrDataSourceId(BTS_DATA_SOURCE_ID);
+				deviceObjectDTO.setNumber(info.getBtsNr() + "#" + i);
 
 				Long deviceObjectId = _testCreateJson(
-						String.format("/api/rma/contObjects/%d/deviceObjects", contObjectId), deviceObject);
+						String.format("/api/rma/contObjects/%d/deviceObjects", contObjectId), deviceObjectDTO);
 				assertNotNull(deviceObjectId);
 				deviceObjectIds[i - 1] = deviceObjectId;
 				res.deviceObjectIds.add(deviceObjectId);
@@ -136,18 +140,18 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 
 			// Make ContZPoint
 			for (int i = 1; i < 9; i++) {
-				ContZPointFullVM contZPoint = new ContZPointFullVM();
-				contZPoint.setDeviceObjectId(deviceObjectIds[i - 1]);
-				contZPoint.setContServiceTypeKeyname(ContServiceTypeKey.CW.getKeyname());
-				contZPoint.setContZPointComment(
+				ContZPointFullVM contZPointVM = new ContZPointFullVM();
+				contZPointVM.setDeviceObjectId(deviceObjectIds[i - 1]);
+				contZPointVM.setContServiceTypeKeyname(ContServiceTypeKey.CW.getKeyname());
+				contZPointVM.setContZPointComment(
 						"Ромашково, корпус 1, " + info.getRiserNr().toLowerCase() + ", БТС " + info.getBtsNr() + " (" + info.getAptNr().toLowerCase() + ")");
-				contZPoint.setCustomServiceName("Водоснабжение: Имульсный Счетчик, "+ " (" + info.getAptNr().toLowerCase() + ")");
-				contZPoint.setDoublePipe(false);
-				contZPoint.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
-				contZPoint.setRsoId(RSO_ORGANIZARION_ID);
+				contZPointVM.setCustomServiceName("Водоснабжение: Имульсный Счетчик, "+ " (" + info.getAptNr().toLowerCase() + ")");
+				contZPointVM.setDoublePipe(false);
+				contZPointVM.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
+				contZPointVM.setRsoId(RSO_ORGANIZARION_ID);
                 //contZPoint.setDeviceObject();
 				Long contZpointId = _testCreateJson(String.format("/api/rma/contObjects/%d/zpoints", contObjectId),
-						contZPoint);
+						contZPointVM);
 				assertNotNull(contZpointId);
 				res.contZPointIds.add(contZpointId);
 			}

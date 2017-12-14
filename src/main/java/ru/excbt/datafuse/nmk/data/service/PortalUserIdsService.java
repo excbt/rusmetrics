@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 
 @Service
 public class PortalUserIdsService {
@@ -19,4 +20,8 @@ public class PortalUserIdsService {
         return currentSubscriberService.getSubscriberParam();
     }
 
+
+    public boolean isSystemUser() {
+        return SecurityUtils.isSystemUser();
+    }
 }

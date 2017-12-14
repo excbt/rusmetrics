@@ -15,7 +15,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
 
     @Override
     @Mapping(target = "contObject", source = "contObjectId")
-    @Mapping(target = "deviceObject", ignore = true)
+    @Mapping(target = "deviceObject", source = "deviceObjectId")
     @Mapping(target = "contServiceType", source = "contServiceTypeKeyname")
     @Mapping(target = "rso", source = "rsoId")
     @Mapping(target = "createdDate", ignore = true)

@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model.dto;
+package ru.excbt.datafuse.nmk.data.model.support;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -10,11 +10,7 @@ import java.time.LocalDate;
  */
 @Getter
 @Setter
-public class ObjectAccessDTO {
-
-    public interface ObjectAccessInitializer {
-        void objectAccess(ObjectAccessDTO.AccessType accessType, LocalDate date);
-    }
+public class ObjectAccess {
 
     public enum  AccessType {TRIAL, POST_SUBSCRIPTION};
 

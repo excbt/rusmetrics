@@ -144,7 +144,7 @@ public class SubscrCabinetService implements SecuredRoles {
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length >= 1);
 
-		if (!objectAccessService.checkContObjectIds(parentSubscriber.getId(), Arrays.asList(contObjectIds))) {
+		if (!objectAccessService.checkContObjectIds(Arrays.asList(contObjectIds), parentSubscriber)) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) can't access contObjects (%s)",
 					parentSubscriber.getId(), contObjectIds.toString()));
 		}

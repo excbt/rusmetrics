@@ -1,26 +1,33 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 
-import org.hibernate.annotations.Check;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Cache;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_zpoint_device_history")
+@Getter
+@Setter
 public class ContZPointDeviceHistory extends AbstractAuditableModel {
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cont_zpoint_id", updatable = false)
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "cont_zpoint_id", updatable = false)
     private ContZPoint contZPoint;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "device_object_id", updatable = false)
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "device_object_id", updatable = false)
     private DeviceObject deviceObject;
 
     @Column(name = "start_date", updatable = false)
@@ -40,63 +47,6 @@ public class ContZPointDeviceHistory extends AbstractAuditableModel {
 
     @Column(name = "deleted")
     private int deleted;
-
-    public ContZPoint getContZPoint() {
-        return contZPoint;
-    }
-
-    public void setContZPoint(ContZPoint contZPoint) {
-        this.contZPoint = contZPoint;
-    }
-
-    public DeviceObject getDeviceObject() {
-        return deviceObject;
-    }
-
-    public void setDeviceObject(DeviceObject deviceObject) {
-        this.deviceObject = deviceObject;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public Integer getRevision() {
-        return revision;
-    }
-
-    public void setRevision(Integer revision) {
-        this.revision = revision;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public int getDeleted() {
-        return deleted;
-    }
-
-    public void setDeleted(int deleted) {
-        this.deleted = deleted;
-    }
-
 
     @Override
     public String toString() {

@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
@@ -19,12 +18,8 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с привязкой абонентов и объекта учета
@@ -35,6 +30,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Service
+@Transactional
 public class SubscrContObjectService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectService.class);
@@ -76,11 +72,11 @@ public class SubscrContObjectService implements SecuredRoles {
 	public class Access {
         public void linkSubscrContObject(Subscriber subscriber, ContObject contObject,
                                          java.time.LocalDate fromDate) {
-            checkNotNull(contObject);
-            checkNotNull(subscriber);
-            checkNotNull(fromDate);
+            Objects.requireNonNull(contObject);
+            Objects.requireNonNull(subscriber);
+            Objects.requireNonNull(fromDate);
 
-            if (!objectAccessService.checkContObjectId(subscriber.getId(), contObject.getId())
+            if (!objectAccessService.checkContObjectId(contObject.getId(), subscriber)
             ) {
                 createSubscrContObjectLink(contObject, subscriber, fromDate);
             }
@@ -107,8 +103,8 @@ public class SubscrContObjectService implements SecuredRoles {
 	 * @param objects
 	 */
 	private void deleteSubscrContObject(List<SubscrContObject> objects, java.time.LocalDate subscrEndDate) {
-		checkNotNull(objects);
-		checkNotNull(subscrEndDate);
+        Objects.requireNonNull(objects);
+        Objects.requireNonNull(subscrEndDate);
 		Date endDate = LocalDateUtils.asDate(subscrEndDate);
 
 		List<SubscrContObject> updateCandidate = new ArrayList<>();
@@ -125,9 +121,9 @@ public class SubscrContObjectService implements SecuredRoles {
 
     private SubscrContObject createSubscrContObjectLink(ContObject contObject, Subscriber subscriber,
                                                         java.time.LocalDate fromDate) {
-        checkNotNull(contObject);
-        checkNotNull(subscriber);
-        checkNotNull(fromDate);
+        Objects.requireNonNull(contObject);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(fromDate);
 
         SubscrContObject subscrContObject = new SubscrContObject();
         subscrContObject.setContObject(contObject);
@@ -149,9 +145,9 @@ public class SubscrContObjectService implements SecuredRoles {
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
     private SubscrContObject createSubscrContObjectLink(Long contObjectId, Subscriber subscriber,
                                                         LocalDate subscrBeginDate) {
-        checkNotNull(contObjectId);
-        checkNotNull(subscriber);
-        checkNotNull(subscrBeginDate);
+        Objects.requireNonNull(contObjectId);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscrBeginDate);
 
 
         SubscrContObject subscrContObject = new SubscrContObject();
@@ -223,7 +219,7 @@ public class SubscrContObjectService implements SecuredRoles {
 	@Deprecated
 	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo22(Long subscriberId) {
-		checkNotNull(subscriberId);
+        Objects.requireNonNull(subscriberId);
 
 		List<ContObjectShortInfo> result = new ArrayList<>();
 

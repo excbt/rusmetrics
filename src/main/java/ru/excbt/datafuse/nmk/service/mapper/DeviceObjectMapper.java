@@ -5,10 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
-import ru.excbt.datafuse.nmk.data.model.dto.EditDataSourceDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,6 +60,19 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
     DeviceObject toEntity(DeviceObjectDTO dto);
 
 
+    @Mapping(target = "contObjectId", source = "contObject.id")
+    @Mapping(target = "deviceModelId", source = "deviceModel.id")
+    @Mapping(target = "deviceModelName", source = "deviceModel.modelName")
+    @Mapping(target = "verificationDate", source = "verificationDate")
+    @Mapping(target = "number", source = "number")
+    DeviceObjectShortInfoDTO toShortInfoDTO(DeviceObject deviceObject);
+
+
+    @Mapping(target = "contObjectId", source = "contObject.id")
+    @Mapping(target = "deviceModelId", source = "deviceModel.id")
+    DeviceObjectDTO toDto (DeviceObject deviceObject);
+
+
     /**
      *
      * @param deviceObjectDataSources
@@ -100,7 +110,7 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
      * @return
      */
     default DeviceObject deviceObjectFromId(Long id) {
-        return new DeviceObject().id(id);
+        return id == null ? null : new DeviceObject().id(id);
     }
 
 

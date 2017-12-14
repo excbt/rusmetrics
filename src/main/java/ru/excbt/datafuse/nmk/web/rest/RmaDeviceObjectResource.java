@@ -1,10 +1,9 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,26 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
-import ru.excbt.datafuse.nmk.data.model.V_DeviceObjectTimeOffset;
-import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
-import ru.excbt.datafuse.nmk.data.model.vo.DeviceObjectVO;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
+import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
@@ -51,14 +43,19 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  * @since 12.10.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/rma")
-public class RmaDeviceObjectController extends SubscrDeviceObjectController {
+public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 
-	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectController.class);
+	private static final Logger log = LoggerFactory.getLogger(RmaDeviceObjectResource.class);
+
+    @Autowired
+    public RmaDeviceObjectResource(DeviceObjectService deviceObjectService, DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService, DeviceObjectLoadingLogService deviceObjectLoadingLogService, VzletSystemRepository vzletSystemRepository, DeviceModelService deviceModelService, ContObjectService contObjectService, SubscrDataSourceService subscrDataSourceService, DeviceMetadataService deviceMetadataService, SubscrDataSourceLoadingSettingsService subscrDataSourceLoadingSettingsService, HeatRadiatorTypeService heatRadiatorTypeService, DeviceDataTypeService deviceDataTypeService, DeviceObjectMapper deviceObjectMapper, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, ContZPointDeviceHistoryService contZPointDeviceHistoryService) {
+        super(deviceObjectService, deviceObjectLoadingSettingsService, deviceObjectLoadingLogService, vzletSystemRepository, deviceModelService, contObjectService, subscrDataSourceService, deviceMetadataService, subscrDataSourceLoadingSettingsService, heatRadiatorTypeService, deviceDataTypeService, deviceObjectMapper, objectAccessService, portalUserIdsService, contZPointDeviceHistoryService);
+    }
 
 
-	/**
+    /**
 	 *
 	 * @param contObjectId
 	 * @return
@@ -225,7 +222,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceObject> deviceObjects = deviceObjectService
-					.selectDeviceObjectsBySubscriber(getCurrentSubscriberId());
+					.selectDeviceObjectsBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 //			for (DeviceObject deviceObject : deviceObjects) {
 //				deviceObject.shareDeviceLoginInfo();
@@ -352,7 +349,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 	public ResponseEntity<?> updateDeviceModel(@PathVariable("id") Long deviceModelId,
 			@RequestBody DeviceModel requestEntity) {
 
-		if (!isSystemUser()) {
+		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -376,7 +373,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
 
-		if (!isSystemUser()) {
+		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -396,7 +393,7 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
 
-		if (!isSystemUser()) {
+		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -409,5 +406,6 @@ public class RmaDeviceObjectController extends SubscrDeviceObjectController {
 		return ApiResponse.responseDelete(actionProcess);
 
 	}
+
 
 }
