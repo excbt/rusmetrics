@@ -20,6 +20,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
         var BROADCASTS = {};
         BROADCASTS.BUILDING_TYPES_LOADED = "objectSvc:buildingTypesLoaded";
         BROADCASTS.BUILDING_CATEGORIES_LOADED = "objectSvc:buildingCategoriesLoaded";
+        BROADCASTS.ZPOINT_SAVED = "objectSvc:zpointSaved";
+                 
         var loading = true,
             urlApi = '../api',
             urlSubscr = urlApi + '/subscr',
@@ -51,7 +53,9 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             urlBuildingCategories = urlSubscr + '/service/buildingType/category/list',
         //meter periods urls
             meterPeriodSuffix = '/meterPeriodSettings',
-            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix;
+            urlSubscrMeterPeriod = urlSubscrContObjects + meterPeriodSuffix,
+            urlZpointDeviceArchive = '../api/rma/device-objects/cont-zpoints/',//'resource/deviceArchive.json', //'../api/subscr/contObjects';
+            urlTempSchBase = '../api/rma/temperatureCharts/byContObject';
                  
         var defaultTreeUrl = urlSubscr + '/subscrPrefValue?subscrPrefKeyname=' + SUBSCR_OBJECT_TREE_CONT_OBJECTS;
         
@@ -244,6 +248,19 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             }
             return $http.get(table, httpOptions);
         };
+        
+        function loadZpointById(contObjectId, contZpointId) {
+            if (checkUndefinedNull(contObjectId) || checkUndefinedNull(contZpointId)) {
+                var defer = $q.defer();
+                defer.reject("ContObjectId or contZpointId are undefined or null!");
+                return defer.promise;
+            }
+            var url = urlSubscrContObjects + "/" + contObjectId + "/zpoints/" + contZpointId;
+            if (isCancelParamsIncorrect() === true) {
+                return null;
+            }
+            return $http.get(url, httpOptions);
+        }
                  
         function loadDeviceById(objId, devId) {
             var url = urlSubscrContObjects + "/" + objId + urlDeviceObjects + "/" + devId;
@@ -962,6 +979,21 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             }
             recentHeaterTypes.push(heaterType);
         }
+                 
+    /**
+        Device archive
+    **/
+        function loadZpointDeviceArchive(zpId) {
+            var url = urlZpointDeviceArchive + zpId + '/history';//+ '/' + zpId;
+            return $http.get(url);
+        }
+                 
+    /** 
+        Temperature schedules
+    */
+        function loadTemperatureSchedulesByObject(objId) {
+            return $http.get(urlTempSchBase + "/" + objId);
+        }
         
         //service initialization
         var initSvc = function () {
@@ -1048,6 +1080,7 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadObjectsByTreeNode: loadObjectsByTreeNode,
             loading: loading,
             loadObjectMeterPeriods: loadObjectMeterPeriods,
+            loadTemperatureSchedulesByObject: loadTemperatureSchedulesByObject,
             loadTree: loadTree,
             loadTrees: loadTrees,
             loadTreeTemplateItems: loadTreeTemplateItems,
@@ -1057,6 +1090,8 @@ app.service('objectSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', 
             loadSubscrTree: loadSubscrTree,
             
             loadSubscrTrees: loadSubscrTrees,
+            loadZpointById: loadZpointById,
+            loadZpointDeviceArchive: loadZpointDeviceArchive,
             performBuildingCategoryListForUiSelect: performBuildingCategoryListForUiSelect,
             promise: promise,
             putDeviceMetaDataVzlet: putDeviceMetaDataVzlet,

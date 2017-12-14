@@ -2139,6 +2139,12 @@ tr.nmc-inactive-price > td {
     height: 520px;
 }
 
+/* высота списка архивных приборов в модальном окне точки учета*/
+.nmc-arch-device-list-modal {
+    overflow-y: auto;
+    max-height: 150px;
+}
+
 /* Настройки таблицы температурного графика в модальном окне*/
 .nmc-temp-sch-schedules-modal {
     overflow-y: auto;

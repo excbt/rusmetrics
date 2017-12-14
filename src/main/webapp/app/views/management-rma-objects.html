@@ -386,8 +386,15 @@
 
 <!--********************* ZPoint section *************-->
 <!--**************************************************-->
+
+<div show-zpoint-options-modal 
+  cont-object-id = "{{currentObject.id}}" 
+   cont-zpoint-id = "{{zpointSettings.id}}">
+    
+</div>
+
 <!--Show Zpoint options-->
-<div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
+<div id="showZpointOptionModal1" class="modal fade nmc-modal-window" role="dialog"
 	aria-labelledby="showZpointOptionLabel" tabindex="-1" data-backdrop="static">
 	<div class="modal-dialog modal-content nmc-modal-dialog">
 		<div class="modal-header nmc-modal-header">
@@ -471,14 +478,72 @@
                                             <label for="inputDevice">Прибор учета</label>
                                         </td>
                                         <td class="col-sm-9 nmc-text-align-left ">
-                                            <div class="form-group noMarginBottom" 
+                                            <div class="input-group noMarginBottom" 
                                                  ng-class="{'has-error': checkUndefinedNull(zpointSettings.deviceObjectId)}">
                                                 <select ng-if = "currentObject.devicesLoading == false"
                                                         class="form-control nmc-select-form" 
                                                         ng-model="zpointSettings.deviceObjectId" 
                                                         ng-options="device.id as device.devCaption for device in currentObject.devices">
                                                 </select>
+                                                <span class = "input-group-addon nmc-input-form-suffix">
+                                                    <i title = "Архив приборов"
+                                                       class = "btn btn-xs nmc-button-clear-filter glyphicon glyphicon-list-alt"
+                                                       ng-click = "viewDeviceArchive(zpointSettings)">
+
+                                                    </i>
+                                                </span>
                                             </div>
+                                           
+                                        </td>
+                                    </tr>
+                                    <tr ng-show = "zpointSettings.showDeviceArchive">
+                                        <td colspan = "2">
+                                            <div class="container-fluid">
+                                               <div ng-show = "zpointSettings.deviceArchiveLoading" class = "row">
+                                                  <div class = "col-xs-12">
+                                                      <i class = "fa fa-spinner fa-spin"></i> Загрузка ... 
+                                                  </div>
+
+                                               </div>
+                                                <div ng-show = "zpointSettings.deviceArchiveLoading == false" class="row">
+                                                    <div class = "nmc-arch-device-list-modal">
+                                                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                                                           <thead>
+                                                               <tr>
+                                                                   <th>
+                                                                       S/N
+                                                                   </th>
+                                                                   <th>
+                                                                       Модель
+                                                                   </th>
+                                                                   <th>
+                                                                       Дата установки
+                                                                   </th>
+                                                                   <th>
+                                                                       Дата замены
+                                                                   </th>
+                                                               </tr>
+                                                           </thead>
+                                                            <tbody>
+                                                                <tr ng-repeat="device in zpointSettings.deviceArchive track by $index" ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                                                    <td>
+                                                                        {{device.sn}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{device.model}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{device.startDate}}
+                                                                    </td>
+                                                                    <td>
+                                                                        {{device.endDate}}
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>    
+                                                        </table>
+                                                    </div>
+                                                </div>  
+                                            </div> 
                                         </td>
                                     </tr>
                                     <tr>
@@ -2103,3 +2168,72 @@
 
 <!-- window: upload file-->
 <upload-files-modal></upload-files-modal>
+
+
+<!-- window: set subscribers for objects-->
+<div id="deviceArchiveModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="setClientLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deviceArchiveLabel" class="nmc-h3">
+				Архив приборов <span ng-if="zpointSettings.id"> для </span>{{zpointSettings.customServiceName || zpointSettings.contServiceTypeKeyname || zpointSettings.id}}
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+               <div ng-show = "zpointSettings.deviceArchiveLoading" class = "row">
+                  <div class = "col-xs-12">
+                      <i class = "fa fa-spinner fa-spin"></i> Загрузка ... 
+                  </div>
+                   
+               </div>
+                <div class="row">
+                    <div id="divWithObjectTable" class="nmc-modal-panel-with-table nmc-object-list" ng-hide="loading">
+                        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                           <thead>
+                               <tr>
+                                   <th>
+                                       S/N
+                                   </th>
+                                   <th>
+                                       Модель
+                                   </th>
+                                   <th>
+                                       Дата установки
+                                   </th>
+                                   <th>
+                                       Дата замены
+                                   </th>
+                               </tr>
+                           </thead>
+                            <tbody>
+                                <tr ng-repeat="device in zpointSettings.deviceArchive track by $index" ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                    <td>
+                                        {{device.sn}}
+                                    </td>
+                                    <td>
+                                        {{device.model}}
+                                    </td>
+                                    <td>
+                                        {{device.startDate}}
+                                    </td>
+                                    <td>
+                                        {{device.endDate}}
+                                    </td>
+                                </tr>
+                            </tbody>    
+                        </table>
+                    </div>
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <button class="btn btn-default btn-block btn-xs nmc-cancel-button pull-right" 
+                    data-dismiss="modal"
+                ng-click="exit()">
+                Ок
+            </button>				
+		</div>
+	</div>
+</div>

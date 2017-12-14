@@ -53,7 +53,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.objectCtrlSettings.rmaUrl = "../api/rma";
     $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
     $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
-    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
+//    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
     var setVisibles = function () {
         var tmp = mainSvc.getContextIds();
@@ -208,13 +208,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             });
     };
 
-    var getServiceTypes = function () {
-        objectSvc.getServiceTypes()
-            .then(function (response) {
-                $scope.data.serviceTypes = response.data;
-    //console.log(response.data);                        
-            });
-    };
 
     var getTimezones = function () {
         objectSvc.getTimezones()
@@ -562,6 +555,11 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         }
         //$scope.zpointSettings = {};
     };
+    
+    $rootScope.$on(objectSvc.BROADCASTS.ZPOINT_SAVED, function (ev, args) {
+        console.log(args);
+        successCallbackOnZpointUpdate(args.response);
+    })
                 
     var successCallbackOnSetMode = function (e) {
         notificationFactory.success();
@@ -1028,15 +1026,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
-        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
-            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
-            $scope.changeServiceType($scope.zpointSettings);
-        }
-        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
-            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
-        }
-        $scope.getDevices(object, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+//        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
+//            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
+//            $scope.changeServiceType($scope.zpointSettings);
+//        }
+//        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
+//            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
+//        }
+//        $scope.getDevices(object, false);
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
     };
                 
     $scope.getZpointSettings = function (objId, zpointId) {
@@ -1091,7 +1089,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.summer = {};
         $scope.zpointSettings = angular.copy(zps);
         $scope.getDevices($scope.currentObject, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);         
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);         
     };
                 
     function testRsoOrganizationAtList() {
@@ -1186,47 +1184,47 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         return result;
     };
                 
-    $scope.updateZpointCommonSettings = function () {
-        $scope.zpointSettings.isSaving = true;
-//console.log($scope.zpointSettings);
-        if (!checkZpointCommonSettings()) {
-            //zpoint settings saving flag reset
-            $scope.zpointSettings.isSaving = false;
-            return false;
-        }
-        //prepare piped info
-//                    if ($scope.zpointSettings.singlePipe){
-//                        $scope.zpointSettings.doublePipe = false;
-//                    };
-            //perform temperature schedule
-        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
-            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
-            $scope.zpointSettings.tChart = null;
-        } else {
-            $scope.zpointSettings.temperatureChartId = null;
-        }
-        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
-        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
-            url = url + "/" + $scope.zpointSettings.id;
-
-            $http({
-                url: url,
-                method: 'PUT',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        } else {
-            $scope.zpointSettings.startDate = Date.now();
-            $http({
-                url: url,
-                method: 'POST',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        }
-
-//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
-    };
+//    $scope.updateZpointCommonSettings = function () {
+//        $scope.zpointSettings.isSaving = true;
+////console.log($scope.zpointSettings);
+//        if (!checkZpointCommonSettings()) {
+//            //zpoint settings saving flag reset
+//            $scope.zpointSettings.isSaving = false;
+//            return false;
+//        }
+//        //prepare piped info
+////                    if ($scope.zpointSettings.singlePipe){
+////                        $scope.zpointSettings.doublePipe = false;
+////                    };
+//            //perform temperature schedule
+//        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
+//            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
+//            $scope.zpointSettings.tChart = null;
+//        } else {
+//            $scope.zpointSettings.temperatureChartId = null;
+//        }
+//        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
+//        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
+//            url = url + "/" + $scope.zpointSettings.id;
+//
+//            $http({
+//                url: url,
+//                method: 'PUT',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        } else {
+//            $scope.zpointSettings.startDate = Date.now();
+//            $http({
+//                url: url,
+//                method: 'POST',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        }
+//
+////                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
+//    };
                 
                 //Update the zpoint settings, which set the mode for Summer or Winter season
     $scope.updateZpointModeSettings = function () {
@@ -1273,26 +1271,26 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //console.log($scope.objectsOnPage);                    
     };
                 
-    $scope.changeServiceType = function (zpSettings) {
-        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
-            $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
-        }
-        if ($scope.emptyString(zpSettings.customServiceName)) {
-            switch (zpSettings.contServiceTypeKeyname) {
-            case "heat":
-                zpSettings.customServiceName = "Система отопления";
-                break;
-            default:
-                $scope.data.serviceTypes.some(function (svType) {
-                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
-                        zpSettings.customServiceName = svType.caption;
-                        return true;
-                    }
-                });
-
-            }
-        }
-    };
+//    $scope.changeServiceType = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
+//            $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
+//        }
+//        if ($scope.emptyString(zpSettings.customServiceName)) {
+//            switch (zpSettings.contServiceTypeKeyname) {
+//            case "heat":
+//                zpSettings.customServiceName = "Система отопления";
+//                break;
+//            default:
+//                $scope.data.serviceTypes.some(function (svType) {
+//                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
+//                        zpSettings.customServiceName = svType.caption;
+//                        return true;
+//                    }
+//                });
+//
+//            }
+//        }
+//    };
                 
     $scope.changeRso = function (zpSettings) {
         if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)) {
@@ -2444,12 +2442,37 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $("#metaDataEditorModal").on('shown.bs.modal', function () {
         setMetaToolTips();
     });
+    
+//    $scope.viewDeviceArchive = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.showDeviceArchive)) {
+//            zpSettings.showDeviceArchive = !zpSettings.showDeviceArchive;
+//        } else {
+//            zpSettings.showDeviceArchive = true;
+//        }
+//        zpSettings.deviceArchiveLoading = true;
+//        objectSvc.loadZpointDeviceArchive(zpSettings.id)
+//            .then(function (resp) {
+//                   zpSettings.deviceArchive = resp.data;
+//                    //test
+//                    zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//                //end test
+//                    zpSettings.deviceArchiveLoading = false;
+//                    $('#deviceArchiveModal').modal();
+//                }, 
+//                  function (e) {
+//                    zpSettings.deviceArchiveLoading = false;
+//                    errorCallback(e);
+//                });
+//    }
 
     //controller initialization
     var initCtrl = function () {
         getRsoOrganizations();
         getCmOrganizations();
-        getServiceTypes();
+//        getServiceTypes();
         getTimezones();
         getClients();
         //if tree is off
