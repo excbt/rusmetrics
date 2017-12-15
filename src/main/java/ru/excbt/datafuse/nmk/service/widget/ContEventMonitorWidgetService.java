@@ -242,7 +242,7 @@ public class ContEventMonitorWidgetService {
         Predicate<Long> contZPointIdAccess = objectAccessService.objectAccessUtil().checkContZPointId(portalUserIds);
 
         List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObjectId)
-            .stream().filter(i -> contZPointIdAccess.test(i.getId())).collect(Collectors.toList());
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).filter(i -> contZPointIdAccess.test(i.getId())).collect(Collectors.toList());
 
         List<ContZPointEventInfo> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
             .stream().map(ContZPointEventInfo::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
