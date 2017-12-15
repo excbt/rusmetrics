@@ -20,15 +20,26 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.service.util.EntityAutomation;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-import static org.junit.Assert.*;
+import java.util.List;
+import java.util.function.Predicate;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -61,12 +72,29 @@ public class ContEventMonitorWidgetResourceTest {
     @Autowired
     private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
+    @Autowired
+    private ContObjectService contObjectService;
+
+    @Autowired
+    private DeviceObjectService deviceObjectService;
+
+    @Autowired
+    private ContZPointService contZPointService;
+
+    @Autowired
+    private ContZPointRepository contZPointRepository;
+
+    @Autowired
+    private ObjectAccessService objectAccessService;
+
+    @Autowired
+    private SubscriberAccessService subscriberAccessService;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        PortalUserIdsMock.initMockService(portalUserIdsService,
-            PortalUserIdsMock.rmaMockUserIds(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID));
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
         contEventMonitorWidgetResource = new ContEventMonitorWidgetResource(
             portalUserIdsService,
@@ -153,18 +181,50 @@ public class ContEventMonitorWidgetResourceTest {
     }
 
 
-    public long getSubscriberId() {
-        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
+    @Test
+    @Transactional
+    public void getContObjectMonitorState() throws Exception {
+
+        ContObject contObject = EntityAutomation.createContObject((co) -> {
+            co.setName("MyName");
+            co.setFullName("My Full Name");
+        }, contObjectService, portalUserIdsService.getCurrentIds());
+
+
+        DeviceObject deviceObject = EntityAutomation.createDeviceObject(
+            d -> {
+                d.setContObjectId(contObject.getId());
+                d.setNumber("12345");
+            }, deviceObjectService
+        );
+
+        ContZPoint contZPoint = EntityAutomation.createContZPoint(zp -> {
+            zp.setContObjectId(contObject.getId());
+            zp.setDeviceObjectId(deviceObject.getId());
+            zp.setContServiceTypeKeyname(ContServiceTypeKey.HEAT.keyName());
+        } , contZPointService);
+
+
+        subscriberAccessService.grantContZPointAccess(
+            new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()),
+            contZPoint);
+
+        List<ContZPoint> checkedContZPoints = contZPointRepository.findByContObjectId(contObject.getId());
+        assertThat(checkedContZPoints).hasSize(1);
+
+
+        Predicate<Long> checkContZPoints = objectAccessService.objectAccessUtil().checkContZPointId(portalUserIdsService.getCurrentIds());
+
+        assertThat(checkContZPoints.test(contZPoint.getId())).isTrue();
+
+        restPortalContObjectMockMvc.perform(
+            get("/api/widgets/cont-event-monitor/cont-objects/{contObjectId}/monitor-state", contObject.getId()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(jsonPath("$.contZPointMonitorState.[*].contServiceTypeKeyname").value(hasItem(contZPoint.getContServiceTypeKeyname())))
+            .andExpect(jsonPath("$.contZPointMonitorState.[*].contZPointId").value(hasItem(contZPoint.getId().intValue())));
+
+
     }
-
-    /**
-     *
-     * @return
-     */
-    public long getSubscrUserId() {
-        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
-    }
-
-
-
 }

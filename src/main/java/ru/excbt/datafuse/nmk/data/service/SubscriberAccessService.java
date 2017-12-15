@@ -380,7 +380,7 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Scheduled(cron = "0 */2 * * * ?")
     @Transactional
-    public void cleanupAccessByTtl() {
+    public void sheduleCleanupAccessByTtl() {
         processContObjectRevoke();
         processContZPointRevoke();
         cleanupContObjectAccess();
@@ -390,9 +390,9 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Transactional
     public void cleanupContObjectAccess() {
-        log.debug("\nCONT_OBJECT END OF ACCESS");
+        log.trace("CONT_OBJECT END OF ACCESS");
         contObjectAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
-                log.info("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getAccessTtl());
+                log.trace("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getAccessTtl());
                 contObjectAccessRepository.delete(a);
             }
         );
@@ -400,9 +400,9 @@ public class SubscriberAccessService implements SecuredRoles {
 
     @Transactional
     public void cleanupContZPointAccess() {
-        log.debug("\nCONT_ZPOINT END OF ACCESS");
+        log.trace("CONT_ZPOINT END OF ACCESS");
         contZPointAccessRepository.findAllAccessTtlTZ(ZonedDateTime.now()).forEach( a -> {
-                log.info("Subscriber {}, ContZPoint {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getAccessTtl());
+                log.trace("Subscriber {}, ContZPoint {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getAccessTtl());
                 contZPointAccessRepository.delete(a);
             }
         );
@@ -410,10 +410,10 @@ public class SubscriberAccessService implements SecuredRoles {
 
 
     private void processContObjectRevoke() {
-        log.debug("\nCONT_OBJECT PROCESS REVOKE");
+        log.debug("CONT_OBJECT PROCESS REVOKE");
         contObjectAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).stream().filter(a -> a.getAccessTtl() == null)
             .forEach( a -> {
-                log.debug("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getRevokeTz());
+                log.trace("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContObjectId(), a.getRevokeTz());
                 if (TRIAL_ACCESS.equals(a.getAccessType())) {
                     contObjectAccessRepository.delete(a);
                 } else {
@@ -426,10 +426,10 @@ public class SubscriberAccessService implements SecuredRoles {
     }
 
     private void processContZPointRevoke() {
-        log.debug("\nCONT_ZPOINT PROCESS REVOKE");
+        log.trace("CONT_ZPOINT PROCESS REVOKE");
         contZPointAccessRepository.findAllRevokeTZ(ZonedDateTime.now()).stream().filter(a -> a.getAccessTtl() == null)
             .forEach( a -> {
-                log.debug("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getRevokeTz());
+                log.trace("Subscriber {}, ContObjectId {}, AccessTTL: {}", a.getSubscriberId(), a.getContZPointId(), a.getRevokeTz());
                 if (TRIAL_ACCESS.equals(a.getAccessType())) {
                     contZPointAccessRepository.delete(a);
                 } else {

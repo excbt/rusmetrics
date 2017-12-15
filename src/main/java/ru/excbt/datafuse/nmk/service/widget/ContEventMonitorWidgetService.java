@@ -229,7 +229,7 @@ public class ContEventMonitorWidgetService {
      * @param portalUserIds
      * @return
      */
-    public List<ContObjectMonitorStateDTO> findContObjectMonitorState (Long contObjectId, PortalUserIds portalUserIds) {
+    public ContObjectMonitorStateDTO findContObjectMonitorState (Long contObjectId, PortalUserIds portalUserIds) {
 
         ContObject contObject = contObjectRepository.findOne(contObjectId);
         if (contObject == null) {
@@ -240,7 +240,7 @@ public class ContEventMonitorWidgetService {
         Predicate<Long> contZPointIdAccess = objectAccessService.objectAccessUtil().checkContZPointId(portalUserIds);
 
         List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObjectId)
-            .stream().filter(i -> checkAccess.test(i)).collect(Collectors.toList());
+            .stream().filter(i -> contZPointIdAccess.test(i.getId())).collect(Collectors.toList());
 
         List<ContZPointStats> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
             .stream().map(ContZPointStats::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
@@ -248,7 +248,8 @@ public class ContEventMonitorWidgetService {
 
         List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointStats::getContEventTypeId).distinct().collect(Collectors.toList());
 
-        Map<Long, ContEventType> contEventTypeMap = contEventTypeRepository.selectContEventTypes(contEventTypeIds)
+        Map<Long, ContEventType> contEventTypeMap = contEventTypeIds.isEmpty() ? Collections.emptyMap() :
+            contEventTypeRepository.selectContEventTypes(contEventTypeIds)
             .stream().filter(i -> i.getContEventLevel() != null)
             .collect(Collectors.toMap(ContEventType::getId, Function.identity()));
 
@@ -276,7 +277,7 @@ public class ContEventMonitorWidgetService {
 
         monitorStateDTO.setContObjectShortInfo(contObjectMapper.toShortInfoVM(contObject));
 
-        return null;
+        return monitorStateDTO;
     }
 
 }

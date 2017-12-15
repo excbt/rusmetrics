@@ -5,13 +5,14 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventCategoryDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventTypeDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.dto.ContObjectMonitorStateDTO;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Collections;
@@ -47,10 +48,10 @@ public class ContEventMonitorWidgetResource {
     @GetMapping("/p-tree-node/stats")
     public ResponseEntity<?> getStats(@ApiParam("nodeId of requested PTreeNode") @RequestParam(value = "nodeId", required = false) Long nodeId,
                                       @ApiParam("option for including ContEventType in widget") @RequestParam(value = "nestedTypes", required = false) Boolean nestedTypes) {
-
         PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contObjectIds = nodeId != null ? subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId) : EMPTY_LIST;
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes)));
+        List<ContEventMonitorWidgetService.ContObjectStats> contObjectStatsList = monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes));
+        return ResponseEntity.ok(contObjectStatsList);
     }
 
     /**
@@ -61,7 +62,8 @@ public class ContEventMonitorWidgetResource {
     @ApiOperation(value = "Get cont event types")
     @GetMapping("/cont-event-types")
     public ResponseEntity<?> getContEventTypes() {
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventTypes());
+        List<ContEventTypeDTO> contEventTypeDTOS = monitorWidgetService.findMonitorContEventTypes();
+        return ResponseEntity.ok(contEventTypeDTOS);
     }
 
     /**
@@ -72,7 +74,17 @@ public class ContEventMonitorWidgetResource {
     @ApiOperation(value = "Get cont event categories")
     @GetMapping("/cont-event-categories")
     public ResponseEntity<?> getContEventCategories() {
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventCategories());
+        List<ContEventCategoryDTO> contEventCategoryDTOS = monitorWidgetService.findMonitorContEventCategories();
+        return ResponseEntity.ok(contEventCategoryDTOS);
+    }
+
+
+    @Timed
+    @ApiOperation(value = "Get cont object monitor state")
+    @GetMapping("/cont-objects/{contObjectId}/monitor-state")
+    public ResponseEntity<?> getContObjectMonitorState(@PathVariable("contObjectId") @ApiParam("contObject id") Long contObjectId) {
+        ContObjectMonitorStateDTO monitorStateDTO = monitorWidgetService.findContObjectMonitorState(contObjectId, portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok(monitorStateDTO);
     }
 
 
