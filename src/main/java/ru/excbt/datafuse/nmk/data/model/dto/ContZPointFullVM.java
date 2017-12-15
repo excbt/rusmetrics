@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import lombok.Getter;
+import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.util.FlexDataToString;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
@@ -16,6 +18,8 @@ import java.util.*;
 /**
  * Created by kovtonyk on 07.07.2017.
  */
+@Getter
+@Setter
 public class ContZPointFullVM implements ModelIdable {
 
     private Long id;
@@ -81,175 +85,6 @@ public class ContZPointFullVM implements ModelIdable {
     @JsonDeserialize(using = FlexDataToString.class)
     private String flexData;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getContObjectId() {
-        return contObjectId;
-    }
-
-    public void setContObjectId(Long contObjectId) {
-        this.contObjectId = contObjectId;
-    }
-
-    public ContServiceTypeDTO getContServiceType() {
-        return contServiceType;
-    }
-
-    public void setContServiceType(ContServiceTypeDTO contServiceType) {
-        this.contServiceType = contServiceType;
-    }
-
-
-    public String getContServiceTypeKeyname() {
-        return contServiceTypeKeyname;
-    }
-
-    public void setContServiceTypeKeyname(String contServiceTypeKeyname) {
-        this.contServiceTypeKeyname = contServiceTypeKeyname;
-    }
-
-    public String getCustomServiceName() {
-        return customServiceName;
-    }
-
-    public void setCustomServiceName(String customServiceName) {
-        this.customServiceName = customServiceName;
-    }
-
-    public OrganizationDTO getRso() {
-        return rso;
-    }
-
-    public void setRso(OrganizationDTO rso) {
-        this.rso = rso;
-    }
-
-    public Long getRsoId() {
-        return rsoId;
-    }
-
-    public void setRsoId(Long rsoId) {
-        this.rsoId = rsoId;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public int getVersion() {
-        return version;
-    }
-
-    public void setVersion(int version) {
-        this.version = version;
-    }
-
-    public String getCheckoutTime() {
-        return checkoutTime;
-    }
-
-    public void setCheckoutTime(String checkoutTime) {
-        this.checkoutTime = checkoutTime;
-    }
-
-    public Integer getCheckoutDay() {
-        return checkoutDay;
-    }
-
-    public void setCheckoutDay(Integer checkoutDay) {
-        this.checkoutDay = checkoutDay;
-    }
-
-    public Boolean getDoublePipe() {
-        return doublePipe;
-    }
-
-    public void setDoublePipe(Boolean doublePipe) {
-        this.doublePipe = doublePipe;
-    }
-
-    public Boolean getManualLoading() {
-        return isManualLoading;
-    }
-
-    public void setManualLoading(Boolean manualLoading) {
-        isManualLoading = manualLoading;
-    }
-
-    public String getExSystemKeyname() {
-        return exSystemKeyname;
-    }
-
-    public void setExSystemKeyname(String exSystemKeyname) {
-        this.exSystemKeyname = exSystemKeyname;
-    }
-
-    public String getExCode() {
-        return exCode;
-    }
-
-    public void setExCode(String exCode) {
-        this.exCode = exCode;
-    }
-
-    public Integer getTsNumber() {
-        return tsNumber;
-    }
-
-    public void setTsNumber(Integer tsNumber) {
-        this.tsNumber = tsNumber;
-    }
-
-    public Boolean getManual() {
-        return isManual;
-    }
-
-    public void setManual(Boolean manual) {
-        isManual = manual;
-    }
-
-    public String getContZPointComment() {
-        return contZPointComment;
-    }
-
-    public void setContZPointComment(String contZPointComment) {
-        this.contZPointComment = contZPointComment;
-    }
-
-    public Boolean getDroolsDisable() {
-        return isDroolsDisable;
-    }
-
-    public void setDroolsDisable(Boolean droolsDisable) {
-        isDroolsDisable = droolsDisable;
-    }
-
-    public Long getTemperatureChartId() {
-        return temperatureChartId;
-    }
-
-    public void setTemperatureChartId(Long temperatureChartId) {
-        this.temperatureChartId = temperatureChartId;
-    }
-
     public Date getLastDataDate() {
         if (timeDetailLastDates.size() > 0) {
             final MaxCheck<Date> maxCheck = new MaxCheck<>();
@@ -262,44 +97,9 @@ public class ContZPointFullVM implements ModelIdable {
         return null;
     }
 
-    public DeviceObjectFullVM getDeviceObject() {
-        return deviceObject;
-    }
-
-    public void setDeviceObject(DeviceObjectFullVM deviceObject) {
-        this.deviceObject = deviceObject;
-    }
-
-    public Long getDeviceObjectId() {
-        return deviceObjectId;
-    }
-
-    public void setDeviceObjectId(Long deviceObjectId) {
-        this.deviceObjectId = deviceObjectId;
-    }
-
-    public List<TimeDetailLastDate> getTimeDetailLastDates() {
-        return timeDetailLastDates;
-    }
-
     public void setTimeDetailLastDates(List<TimeDetailLastDate> timeDetailLastDates) {
         Objects.requireNonNull(timeDetailLastDates);
         this.timeDetailLastDates = timeDetailLastDates;
     }
 
-    public Set<String> getTagNames() {
-        return tagNames;
-    }
-
-    public void setTagNames(Set<String> tagNames) {
-        this.tagNames = tagNames;
-    }
-
-    public String getFlexData() {
-        return flexData;
-    }
-
-    public void setFlexData(String flexData) {
-        this.flexData = flexData;
-    }
 }

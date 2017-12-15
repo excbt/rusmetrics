@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Consumer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -14,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContZPointFullVM;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -38,9 +42,11 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaContZPointResource.class);
 
+	private final SubscriberAccessService subscriberAccessService;
 
-    public RmaContZPointResource(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    public RmaContZPointResource(ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataElService contServiceDataElService, ContZPointMetadataService contZPointMetadataService, MeasureUnitService measureUnitService, OrganizationService organizationService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberAccessService subscriberAccessService) {
         super(contZPointService, contServiceDataHWaterService, contServiceDataElService, contZPointMetadataService, measureUnitService, organizationService, objectAccessService, portalUserIdsService);
+        this.subscriberAccessService = subscriberAccessService;
     }
 
     /**
@@ -70,6 +76,8 @@ public class RmaContZPointResource extends SubscrContZPointResource {
 
 	}
 
+
+
 	/**
 	 *
 	 * @param contObjectId
@@ -85,11 +93,26 @@ public class RmaContZPointResource extends SubscrContZPointResource {
         Objects.requireNonNull(contZPointDTO);
         contZPointDTO.setContObjectId(contObjectId);
 
-		return ApiResponse.responseCreate(() ->
-            contZPointService.createZPointDTO2FullVM(contZPointDTO, portalUserIdsService.getCurrentIds()),
+
+        Consumer<ContZPointFullVM> contZPointGrantor = (vm) -> subscriberAccessService.grantContZPointAccess(
+            new ContZPoint().id(vm.getId()),
+            new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
+
+        Consumer<ContZPointFullVM> contZPointTagSaver = (vm) -> {
+            Set<String> tagNames = contZPointService.saveContZPointTags(
+                new ContZPoint().id(vm.getId()),
+                contZPointDTO.getTagNames(),
+                portalUserIdsService.getCurrentIds());
+            vm.setTagNames(tagNames);
+            };
+
+
+        return ApiResponse.responseCreate(() -> {
+                ContZPointFullVM contZPointFullVM = contZPointService.createZPointDTO2FullVM(contZPointDTO,
+                    contZPointGrantor.andThen(contZPointTagSaver));
+                return contZPointFullVM;
+            },
             () -> request.getRequestURI());
-
-
 	}
 
     /**
