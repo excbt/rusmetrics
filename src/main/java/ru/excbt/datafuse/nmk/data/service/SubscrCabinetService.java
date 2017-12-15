@@ -197,7 +197,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-        subscriberAccessService.updateContObjectIdsAccess(newSubscriber , Arrays.asList(contObjectIds), null);
+        subscriberAccessService.updateContObjectIdsAccess(Arrays.asList(contObjectIds), null, newSubscriber);
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
@@ -252,7 +252,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Collections.emptyList(), LocalDateTime.now());
+		subscriberAccessService.updateContObjectIdsAccess(Collections.emptyList(), LocalDateTime.now(), cabinetSubscriber);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 

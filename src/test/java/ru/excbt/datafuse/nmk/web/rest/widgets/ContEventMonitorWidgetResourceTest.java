@@ -206,8 +206,8 @@ public class ContEventMonitorWidgetResourceTest {
 
 
         subscriberAccessService.grantContZPointAccess(
-            new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()),
-            contZPoint);
+            contZPoint,
+            new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
         List<ContZPoint> checkedContZPoints = contZPointRepository.findByContObjectId(contObject.getId());
         assertThat(checkedContZPoints).hasSize(1);

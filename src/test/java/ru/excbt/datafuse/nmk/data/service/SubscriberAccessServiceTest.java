@@ -41,11 +41,17 @@ public class SubscriberAccessServiceTest extends JpaSupportTest {
 
         log.info("Test subscriber:{} contZPointId:{}", testSubscriberId.get(), contZPointId.get());
 
-        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(testSubscriberId.get()), new ContZPoint().id(contZPointId.get()));
+        subscriberAccessService.revokeContZPointAccess(
+            new ContZPoint().id(contZPointId.get()),
+            new Subscriber().id(testSubscriberId.get()));
 
-        subscriberAccessService.grantContZPointAccess(new Subscriber().id(testSubscriberId.get()), new ContZPoint().id(contZPointId.get()));
+        subscriberAccessService.grantContZPointAccess(
+            new ContZPoint().id(contZPointId.get()),
+            new Subscriber().id(testSubscriberId.get()));
 
-        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(testSubscriberId.get()), new ContZPoint().id(contZPointId.get()));
+        subscriberAccessService.revokeContZPointAccess(
+            new ContZPoint().id(contZPointId.get()),
+            new Subscriber().id(testSubscriberId.get()));
 
     }
 
@@ -58,11 +64,17 @@ public class SubscriberAccessServiceTest extends JpaSupportTest {
 
         log.info("Test subscriber:{} contObjectId:{}", testSubscriberId.get(), contObjectId.get());
 
-        subscriberAccessService.revokeContObjectAccess(new Subscriber().id(testSubscriberId.get()), new ContObject().id(contObjectId.get()));
+        subscriberAccessService.revokeContObjectAccess(
+            new ContObject().id(contObjectId.get()),
+            new Subscriber().id(testSubscriberId.get()));
 
-        subscriberAccessService.grantContObjectAccess(new Subscriber().id(testSubscriberId.get()), new ContObject().id(contObjectId.get()));
+        subscriberAccessService.grantContObjectAccess(
+            new ContObject().id(contObjectId.get()),
+            new Subscriber().id(testSubscriberId.get()));
 
-        subscriberAccessService.revokeContObjectAccess(new Subscriber().id(testSubscriberId.get()), new ContObject().id(contObjectId.get()));
+        subscriberAccessService.revokeContObjectAccess(
+            new ContObject().id(contObjectId.get()),
+            new Subscriber().id(testSubscriberId.get()));
         subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId.get()));
         Assert.assertFalse(subscriberAccessService.findContObjectIds(testSubscriberId.get()).isEmpty());
 

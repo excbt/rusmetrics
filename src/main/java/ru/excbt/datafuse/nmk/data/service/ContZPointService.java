@@ -525,7 +525,9 @@ public class ContZPointService implements SecuredRoles {
         ContZPoint savedContZPoint = contZPointRepository.save(contZPoint);
         contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
 
-        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), savedContZPoint);
+        subscriberAccessService.grantContZPointAccess(
+            savedContZPoint,
+            new Subscriber().id(userIds.getSubscriberId()));
 
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 
@@ -547,7 +549,9 @@ public class ContZPointService implements SecuredRoles {
         Objects.requireNonNull(contZPoint);
         contZPointDeviceHistoryService.finishHistory(contZPoint);
 		contZPointRepository.save(EntityActions.softDelete(contZPoint));
-        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
+        subscriberAccessService.revokeContZPointAccess(
+            contZPoint,
+            new Subscriber().id(userIds.getSubscriberId()));
 
 	}
 
