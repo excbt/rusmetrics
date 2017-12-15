@@ -437,6 +437,7 @@ public class ContZPointService implements SecuredRoles {
 		}
         ContZPoint savedContZPoint = contZPointRepository.save(result);
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+        //subscriberAccessService.grantContZPointAccess();
 		return savedContZPoint;
 	}
 
