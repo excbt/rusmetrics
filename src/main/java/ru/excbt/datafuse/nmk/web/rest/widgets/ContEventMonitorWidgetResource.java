@@ -12,8 +12,6 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.dto.ContObjectMonitorStateDTO;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +48,7 @@ public class ContEventMonitorWidgetResource {
                                       @ApiParam("option for including ContEventType in widget") @RequestParam(value = "nestedTypes", required = false) Boolean nestedTypes) {
         PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contObjectIds = nodeId != null ? subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId) : EMPTY_LIST;
-        List<ContEventMonitorWidgetService.ContObjectStats> contObjectStatsList = monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes));
+        List<ContEventMonitorWidgetService.ContObjectEventInfo> contObjectStatsList = monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes));
         return ResponseEntity.ok(contObjectStatsList);
     }
 

@@ -75,7 +75,7 @@ public class ContEventMonitorWidgetService {
 
 
 
-    public static class MonitorStats {
+    public static class MonitorEventInfo {
 
         private final static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -84,7 +84,9 @@ public class ContEventMonitorWidgetService {
         private final Integer count;
         private ContEventTypeDTO contEventType;
 
-        private MonitorStats(Object[] qryRow) {
+        private MonitorEventInfo(Object[] qryRow) {
+            Objects.requireNonNull(qryRow);
+
             this.contEventTypeId = DBRowUtil.asLong(qryRow[1]);
             this.lastContEventTime = (LocalDateTime) qryRow[2];
             this.count = DBRowUtil.asInteger(qryRow[3]);
@@ -126,11 +128,11 @@ public class ContEventMonitorWidgetService {
 
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ContObjectStats extends MonitorStats {
+    public static class ContObjectEventInfo extends MonitorEventInfo {
 
         private final Long contObjectId;
 
-        private ContObjectStats(Object[] qryRow) {
+        private ContObjectEventInfo(Object[] qryRow) {
             super(qryRow);
             this.contObjectId = DBRowUtil.asLong(qryRow[0]);
         }
@@ -148,11 +150,11 @@ public class ContEventMonitorWidgetService {
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    public static class ContZPointStats extends MonitorStats {
+    public static class ContZPointEventInfo extends MonitorEventInfo {
 
         private final Long contZPointId;
 
-        private ContZPointStats(Object[] qryRow) {
+        private ContZPointEventInfo(Object[] qryRow) {
             super(qryRow);
             this.contZPointId = DBRowUtil.asLong(qryRow[0]);
         }
@@ -174,12 +176,12 @@ public class ContEventMonitorWidgetService {
      *
      * @return
      */
-    public List<ContObjectStats> loadMonitorData(Predicate<Long> contObjectFilter, boolean nestedTypes) {
-        List<ContObjectStats> statsObjList = monitorWidgetRepository.findContObjectStats()
-            .stream().map(ContObjectStats::new).filter(i -> contObjectFilter.test(i.contObjectId)).collect(Collectors.toList());
+    public List<ContObjectEventInfo> loadMonitorData(Predicate<Long> contObjectFilter, boolean nestedTypes) {
+        List<ContObjectEventInfo> statsObjList = monitorWidgetRepository.findContObjectStats()
+            .stream().map(ContObjectEventInfo::new).filter(i -> contObjectFilter.test(i.contObjectId)).collect(Collectors.toList());
 
         if (nestedTypes) {
-            List<Long> contEventTypeIds = statsObjList.stream().map(ContObjectStats::getContEventTypeId).distinct().collect(Collectors.toList());
+            List<Long> contEventTypeIds = statsObjList.stream().map(ContObjectEventInfo::getContEventTypeId).distinct().collect(Collectors.toList());
             List<ContEventTypeDTO> types = contEventTypeRepository.selectContEventTypes(contEventTypeIds).stream().map(ContEventTypeDTO.MAPPER::toDto).collect(Collectors.toList());
             types.forEach(i -> i.setLevelColor(contEventLevelColorV2Service.getColorName(i.getContEventLevel())));
             Map<Long, ContEventTypeDTO> typeMap = types.stream().collect(Collectors.toMap(ContEventTypeDTO::getId, Function.identity()));
@@ -193,7 +195,7 @@ public class ContEventMonitorWidgetService {
      *
      * @return
      */
-    public List<ContObjectStats> loadMonitorData(boolean nestedTypes) {
+    public List<ContObjectEventInfo> loadMonitorData(boolean nestedTypes) {
         return loadMonitorData(i -> true, nestedTypes);
     }
 
@@ -242,11 +244,11 @@ public class ContEventMonitorWidgetService {
         List<ContZPoint> contZPoints = contZPointRepository.findByContObjectId(contObjectId)
             .stream().filter(i -> contZPointIdAccess.test(i.getId())).collect(Collectors.toList());
 
-        List<ContZPointStats> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
-            .stream().map(ContZPointStats::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
+        List<ContZPointEventInfo> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
+            .stream().map(ContZPointEventInfo::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
 
 
-        List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointStats::getContEventTypeId).distinct().collect(Collectors.toList());
+        List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointEventInfo::getContEventTypeId).distinct().collect(Collectors.toList());
 
         Map<Long, ContEventType> contEventTypeMap = contEventTypeIds.isEmpty() ? Collections.emptyMap() :
             contEventTypeRepository.selectContEventTypes(contEventTypeIds)
