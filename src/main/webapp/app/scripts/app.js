@@ -29,7 +29,8 @@ var app = angular
         'ui.select',
         'ui.mask',
         'angularWidget',
-        'chart.js'
+        'chart.js',
+        'ngTagsInput'
     ]);
 
 //routing config
