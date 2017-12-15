@@ -69,13 +69,11 @@ public class RmaContZPointResource extends SubscrContZPointResource {
         }
 
 		return ApiResponse.responseUpdate(() -> {
-            ContZPointFullVM result = contZPointService.updateVM(contZPointFullVM);
-            contZPointService.saveContZPointTags(result, contZPointFullVM.getTagNames(), portalUserIdsService.getCurrentIds());
+            ContZPointFullVM result = contZPointService.updateVM(contZPointFullVM, contZPointTagSaver(contZPointFullVM.getTagNames()));
             return result;
         });
 
 	}
-
 
 
 	/**
@@ -93,23 +91,22 @@ public class RmaContZPointResource extends SubscrContZPointResource {
         Objects.requireNonNull(contZPointDTO);
         contZPointDTO.setContObjectId(contObjectId);
 
-
         Consumer<ContZPointFullVM> contZPointGrantor = (vm) -> subscriberAccessService.grantContZPointAccess(
             new ContZPoint().id(vm.getId()),
             new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
-        Consumer<ContZPointFullVM> contZPointTagSaver = (vm) -> {
-            Set<String> tagNames = contZPointService.saveContZPointTags(
-                new ContZPoint().id(vm.getId()),
-                contZPointDTO.getTagNames(),
-                portalUserIdsService.getCurrentIds());
-            vm.setTagNames(tagNames);
-            };
+//        Consumer<ContZPointFullVM> contZPointTagSaver = (vm) -> {
+//            Set<String> tagNames = contZPointService.saveContZPointTags(
+//                new ContZPoint().id(vm.getId()),
+//                contZPointDTO.getTagNames(),
+//                portalUserIdsService.getCurrentIds());
+//            vm.setTagNames(tagNames);
+//            };
 
 
         return ApiResponse.responseCreate(() -> {
                 ContZPointFullVM contZPointFullVM = contZPointService.createZPointDTO2FullVM(contZPointDTO,
-                    contZPointGrantor.andThen(contZPointTagSaver));
+                    contZPointGrantor.andThen(contZPointTagSaver(contZPointDTO.getTagNames())));
                 return contZPointFullVM;
             },
             () -> request.getRequestURI());

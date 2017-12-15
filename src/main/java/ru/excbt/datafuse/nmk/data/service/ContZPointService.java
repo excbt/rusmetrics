@@ -592,9 +592,17 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
+
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+    public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
+	    return updateVM(contZPointFullVM, null);
+    }
+
+
 	@Transactional
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
+	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM, Consumer<ContZPointFullVM> afterUpdateAction) {
         Objects.requireNonNull(contZPointFullVM);
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
 		contZPoint.setIsManual(true);
@@ -603,8 +611,22 @@ public class ContZPointService implements SecuredRoles {
 		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 
-		return contZPointMapper.toFullVM(savedContZPoint);
+        ContZPointFullVM resultVM = contZPointMapper.toFullVM(savedContZPoint);
+
+        if (afterUpdateAction != null) {
+            afterUpdateAction.accept(resultVM);
+        }
+
+		return resultVM;
 	}
+
+
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN })
+    public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM) {
+	    return updateDTO_safe(contZPointFullVM, null);
+    }
+
 
     /**
      *
@@ -613,7 +635,7 @@ public class ContZPointService implements SecuredRoles {
      */
 	@Transactional
     @Secured({ ROLE_ZPOINT_ADMIN })
-	public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM) {
+	public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM, Consumer<ContZPointFullVM> afterUpdateAction) {
 
         ContZPoint currentContZPoint = contZPointRepository.findOne(contZPointFullVM.getId());
 
@@ -625,6 +647,9 @@ public class ContZPointService implements SecuredRoles {
 
         ContZPointFullVM resultVM = contZPointMapper.toFullVM(savedContZPoint);
 
+        if (afterUpdateAction != null) {
+            afterUpdateAction.accept(resultVM);
+        }
 
 		return resultVM;
 	}
