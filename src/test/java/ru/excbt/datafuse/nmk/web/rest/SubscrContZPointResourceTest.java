@@ -120,6 +120,8 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
         contZPointDTO.setTagNames(new HashSet<>(Arrays.asList("MY-TAG-1", "MY-TAG-2")));
 
 		_testUpdateJson(url, contZPointDTO);
+
+		_testGetJson(url);
 	}
 
 	/**

@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.web.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectTagDTO;
@@ -32,7 +31,7 @@ public class ObjectTagResource {
     @GetMapping("/cont-objects")
     public ResponseEntity<?> findContObjectsTags() {
         return ApiResponse.responseOK(() ->
-            objectTagService.findTags("cont-object", portalUserIdsService.getCurrentIds()));
+            objectTagService.findAllObjectsTags("cont-object", portalUserIdsService.getCurrentIds()));
     }
 
 

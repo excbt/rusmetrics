@@ -689,4 +689,23 @@ public class ContZPointService implements SecuredRoles {
         return contZPointFullVM;
     }
 
+
+    /**
+     *
+     * @param contZPointFullVM
+     * @param portalUserIds
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public ContZPointFullVM readContZPointTags (ContZPointFullVM contZPointFullVM, PortalUserIds portalUserIds) {
+
+        List<ObjectTagDTO> objectTagDTOS = objectTagService.findObjectTags(ObjectTag.contZPointTagKeyname, contZPointFullVM.getId(), portalUserIds);
+
+        Set<String> tagNames = objectTagDTOS.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet());
+
+        contZPointFullVM.setTagNames(tagNames);
+
+	    return contZPointFullVM;
+    }
+
 }

@@ -30,10 +30,17 @@ public class ObjectTagService {
     }
 
     @Transactional (readOnly = true)
-    public List<ObjectTagDTO> findTags(String objectKeyname, PortalUserIds portalUserIds) {
-        return objectTagRepository.findBySubscriberAndObjectTagKeyname(portalUserIds.getSubscriberId(), objectKeyname)
+    public List<ObjectTagDTO> findAllObjectsTags(String objectKeyname, PortalUserIds portalUserIds) {
+        return objectTagRepository.findAllObjectsTags(portalUserIds.getSubscriberId(), objectKeyname)
             .stream().map(i -> objectTagMapper.toDto(i)).collect(Collectors.toList());
     }
+
+    @Transactional (readOnly = true)
+    public List<ObjectTagDTO> findObjectTags(String objectKeyname, Long objectId, PortalUserIds portalUserIds) {
+        return objectTagRepository.findObjectTags(portalUserIds.getSubscriberId(), objectKeyname, objectId)
+            .stream().map(i -> objectTagMapper.toDto(i)).collect(Collectors.toList());
+    }
+
 
     @Transactional
     public ObjectTagDTO saveTag(ObjectTagDTO dto, PortalUserIds portalUserIds) {
@@ -103,7 +110,7 @@ public class ObjectTagService {
 
         String objectTagKeyname = objectTagKeynames.iterator().next();
 
-        Set<ObjectTag> existingTags = new HashSet<>(objectTagRepository.findBySubscriberAndObjectTagKeyname(portalUserIds.getSubscriberId(), objectTagKeyname));
+        Set<ObjectTag> existingTags = new HashSet<>(objectTagRepository.findAllObjectsTags(portalUserIds.getSubscriberId(), objectTagKeyname));
         Set<ObjectTag> savedTags = new HashSet<>(resultTags);
 
         existingTags.removeAll(savedTags);
