@@ -13,7 +13,6 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,7 +28,6 @@ import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import static org.hamcrest.Matchers.hasItem;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -78,6 +76,11 @@ public class ObjectTagResourceTest {
     }
 
 
+    /**
+     *
+     * @param objectTagKeyname
+     * @return
+     */
     private ObjectTag createObjectTag(String objectTagKeyname) {
         ObjectTag tag = new ObjectTag();
         tag.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
@@ -85,78 +88,213 @@ public class ObjectTagResourceTest {
         return tag;
     }
 
-    @Test
-    @Transactional
-    public void findContObjectsTags() throws Exception {
 
-        String objectTagKeyname = "cont-object";
+    /**
+     *
+     * @param url
+     * @param objectTagKeyname
+     * @throws Exception
+     */
+    private void testFindObjectsTag(final String url, final String objectTagKeyname) throws Exception {
         ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         objectTagRepository.save(tag);
 
         restPortalContObjectMockMvc.perform(
-            get("/api/object-tags/cont-objects"))
+            get(url))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.arrayBeatifyResult(i)))
             .andExpect(jsonPath("$.[*].objectId").value(hasItem(TEST_OBJECT_ID)))
             .andExpect(jsonPath("$.[*].objectTagKeyname").value(hasItem(objectTagKeyname)))
-            .andExpect(jsonPath("$.[*].tagName").value(TEST_TAG_NAME));
-
+            .andExpect(jsonPath("$.[*].tagName").value(hasItem(TEST_TAG_NAME)));
     }
 
+    /**
+     *
+     * @throws Exception
+     */
+    private void _testCreatePutObjectTag(final String url, final String objectTagKeyname) throws Exception {
 
-    @Test
-    @Transactional
-    public void createContObjectTag() throws Exception {
-
-        String objectTagKeyname = "cont-object";
         ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         ObjectTagDTO dto = objectTagMapper.toDto(tag);
 
-        restPortalContObjectMockMvc.perform(post("/api/object-tags/cont-objects")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(dto)))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isCreated())
-            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)));
-    }
-
-
-    @Test
-    @Transactional
-    public void createOrDeleteContObjectTag() throws Exception {
-
-        String objectTagKeyname = "cont-object";
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
-        ObjectTagDTO dto = objectTagMapper.toDto(tag);
-
-        restPortalContObjectMockMvc.perform(put("/api/object-tags/cont-objects")
+        restPortalContObjectMockMvc.perform(put(url)
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
-            .andExpect(jsonPath("$..objectId").value(hasItem(TEST_OBJECT_ID)))
-            .andExpect(jsonPath("$..objectTagKeyname").value(hasItem(objectTagKeyname)))
+            .andExpect(jsonPath("$.objectId").value(TEST_OBJECT_ID))
+            .andExpect(jsonPath("$.objectTagKeyname").value(objectTagKeyname))
             .andExpect(jsonPath("$.tagName").value(TEST_TAG_NAME));
 
+    }
+
+    /**
+     *
+     * @param url
+     * @param objectTagKeyname
+     * @throws Exception
+     */
+    private void _testCreatePostObjectTag(final String url, final String objectTagKeyname) throws Exception {
+
+        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        ObjectTagDTO dto = objectTagMapper.toDto(tag);
+
+        restPortalContObjectMockMvc.perform(post(url)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dto)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isCreated())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
+            .andExpect(jsonPath("$.objectId").value(TEST_OBJECT_ID))
+            .andExpect(jsonPath("$.objectTagKeyname").value(objectTagKeyname))
+            .andExpect(jsonPath("$.tagName").value(TEST_TAG_NAME));
+
+    }
+
+    /**
+     *
+     * @param url
+     * @param objectTagKeyname
+     * @throws Exception
+     */
+    private void _testDeleteObjectTag(final String url, final String objectTagKeyname) throws Exception {
+
+        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        ObjectTagDTO dto = objectTagMapper.toDto(tag);
+
+        restPortalContObjectMockMvc.perform(put(url)
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dto))
+            .param("delete", "true"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isNoContent())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)));
+
+    }
+
+    // ContObject-tag
+
+    @Test
+    @Transactional
+    public void findContObjectsTags() throws Exception {
+        testFindObjectsTag(
+            "/api/object-tags/cont-objects",
+            ObjectTag.contObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPostContObjectTag() throws Exception {
+        _testCreatePostObjectTag(
+            "/api/object-tags/cont-objects",
+            ObjectTag.contObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPutContObjectTag() throws Exception {
+        _testCreatePutObjectTag(
+            "/api/object-tags/cont-objects",
+            ObjectTag.contObjectTagKeyname);
     }
 
 
     @Test
     @Transactional
     public void deleteContObjectTag() throws Exception {
+        _testDeleteObjectTag(
+            "/api/object-tags/cont-objects",
+            ObjectTag.contObjectTagKeyname);
+    }
 
-        String objectTagKeyname = "cont-object";
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
-        ObjectTagDTO dto = objectTagMapper.toDto(tag);
 
-        restPortalContObjectMockMvc.perform(put("/api/object-tags/cont-objects")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(dto))
-            .param("delete", "true"))
+    // ContZPoint - tag
+
+    @Test
+    @Transactional
+    public void findContZPointTags() throws Exception {
+        testFindObjectsTag(
+            "/api/object-tags/cont-zpoints",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPostContZPointTag() throws Exception {
+        _testCreatePostObjectTag(
+            "/api/object-tags/cont-zpoints",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPutContZPointTag() throws Exception {
+        _testCreatePutObjectTag(
+            "/api/object-tags/cont-zpoints",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void deleteContZPointTag() throws Exception {
+        _testDeleteObjectTag(
+            "/api/object-tags/cont-zpoints",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+    // DeviceObject - tag
+
+    @Test
+    @Transactional
+    public void findDeviceObjectTags() throws Exception {
+        testFindObjectsTag(
+            "/api/object-tags/device-objects",
+            ObjectTag.deviceObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPostDeviceObjectTag() throws Exception {
+        _testCreatePostObjectTag(
+            "/api/object-tags/device-objects",
+            ObjectTag.deviceObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void createPutDeviceObjectTag() throws Exception {
+        _testCreatePutObjectTag(
+            "/api/object-tags/device-objects",
+            ObjectTag.deviceObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
+    public void deleteDeviceObjectTag() throws Exception {
+        _testDeleteObjectTag(
+            "/api/object-tags/device-objects",
+            ObjectTag.deviceObjectTagKeyname);
+    }
+
+
+    // Unsupported tag
+    @Test
+    @Transactional
+    public void unsupportedTag() throws Exception {
+
+        restPortalContObjectMockMvc.perform(get("/api/object-tags/unsupported-tag-123"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isNoContent())
+            .andExpect(status().isBadRequest())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)));
 
     }
