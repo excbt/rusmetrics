@@ -111,6 +111,26 @@ public class ObjectTagResourceTest {
 
     /**
      *
+     * @param url
+     * @param objectTagKeyname
+     * @throws Exception
+     */
+    private void testFindOneObjectTag(final String url, final String objectTagKeyname) throws Exception {
+        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        objectTagRepository.save(tag);
+
+        restPortalContObjectMockMvc.perform(
+            get(url, TEST_OBJECT_ID))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.arrayBeatifyResult(i)))
+            .andExpect(jsonPath("$.[*].objectId").value(hasItem(TEST_OBJECT_ID)))
+            .andExpect(jsonPath("$.[*].objectTagKeyname").value(hasItem(objectTagKeyname)))
+            .andExpect(jsonPath("$.[*].tagName").value(hasItem(TEST_TAG_NAME)));
+    }
+
+    /**
+     *
      * @throws Exception
      */
     private void _testCreatePutObjectTag(final String url, final String objectTagKeyname) throws Exception {
@@ -187,6 +207,15 @@ public class ObjectTagResourceTest {
 
     @Test
     @Transactional
+    public void findOneContObjectTags() throws Exception {
+        testFindOneObjectTag(
+            "/api/object-tags/cont-objects/{objectId}",
+            ObjectTag.contObjectTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
     public void createPostContObjectTag() throws Exception {
         _testCreatePostObjectTag(
             "/api/object-tags/cont-objects",
@@ -225,6 +254,15 @@ public class ObjectTagResourceTest {
 
     @Test
     @Transactional
+    public void findOneContZPointTags() throws Exception {
+        testFindOneObjectTag(
+            "/api/object-tags/cont-zpoints/{objectId}",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+
+    @Test
+    @Transactional
     public void createPostContZPointTag() throws Exception {
         _testCreatePostObjectTag(
             "/api/object-tags/cont-zpoints",
@@ -256,6 +294,14 @@ public class ObjectTagResourceTest {
     public void findDeviceObjectTags() throws Exception {
         testFindObjectsTag(
             "/api/object-tags/device-objects",
+            ObjectTag.deviceObjectTagKeyname);
+    }
+
+    @Test
+    @Transactional
+    public void findOneDeviceObjectTags() throws Exception {
+        testFindOneObjectTag(
+            "/api/object-tags/device-objects/{objectId}",
             ObjectTag.deviceObjectTagKeyname);
     }
 

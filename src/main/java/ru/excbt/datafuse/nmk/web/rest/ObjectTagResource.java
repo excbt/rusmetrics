@@ -61,6 +61,30 @@ public class ObjectTagResource {
 
     }
 
+   /**
+     *
+     * @return
+     */
+    @ApiOperation("Get all tags for cont-object")
+    @GetMapping("/{objectTagKeynameUrl}/{objectId}")
+    public ResponseEntity<?> findContObjectTagsByObject(@PathVariable("objectTagKeynameUrl")
+                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                         String objectTagKeynameUrl,
+                                                        @PathVariable("objectId") Long objectId) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        List<ObjectTagDTO> resultTags = objectTagService.findObjectTags(
+            supportedObjectTagMap.get(objectTagKeynameUrl),
+            objectId,
+            portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK(resultTags);
+
+    }
+
 
     /**
      *
