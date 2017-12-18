@@ -20,6 +20,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -49,6 +51,45 @@ public class EntityAutomation {
         deviceObjectDTO.getEditDataSourceInfo().setSubscrDataSourceId(DEFAULT_SUBSCR_DATASOURCE_ID);
         deviceObjectDTO.setNumber(deviceSerial);
         deviceObjectDTO.setVerificationDate(LocalDateUtils.asDate(LocalDate.now().plusYears(DEVICE_OBJECT_VERIFICATION_PLUS_YEARS)));
+        DeviceObject deviceObject = deviceObjectService.automationCreate(deviceObjectDTO);
+
+        assertThat(deviceObject).isNotNull();
+        assertThat(deviceObject.getContObject()).isNotNull();
+        assertThat(deviceObject.getContObject().getId()).isNotNull();
+        return deviceObject;
+    }
+
+
+    public static Consumer<DeviceObjectDTO> defaultDeviceObjectInitializer = (d) -> {
+        d.setDeviceModelId(DEFAULT_MODEL_ID);
+        if (d.getEditDataSourceInfo() == null) {
+            d.setEditDataSourceInfo(new EditDataSourceDTO());
+        }
+        d.getEditDataSourceInfo().setSubscrDataSourceId(DEFAULT_SUBSCR_DATASOURCE_ID);
+        d.setVerificationDate(LocalDateUtils.asDate(LocalDate.now().plusYears(DEVICE_OBJECT_VERIFICATION_PLUS_YEARS)));
+    };
+
+
+    /**
+     *
+     * @param initializer
+     * @param deviceObjectService
+     * @return
+     */
+    public static DeviceObject createDeviceObject(Consumer<DeviceObjectDTO> initializer, DeviceObjectService deviceObjectService) {
+        assertThat(initializer).isNotNull();
+        assertThat(deviceObjectService).isNotNull();
+        DeviceObjectDTO deviceObjectDTO = new DeviceObjectDTO();
+
+        defaultDeviceObjectInitializer.accept(deviceObjectDTO);
+        initializer.accept(deviceObjectDTO);
+
+        assertThat(deviceObjectDTO.getContObjectId()).isNotNull();
+        assertThat(deviceObjectDTO.getDeviceModelId()).isNotNull();
+        assertThat(deviceObjectDTO.getEditDataSourceInfo()).isNotNull();
+        assertThat(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId()).isNotNull();
+        assertThat(deviceObjectDTO.getVerificationDate()).isNotNull();
+
         DeviceObject deviceObject = deviceObjectService.automationCreate(deviceObjectDTO);
 
         assertThat(deviceObject).isNotNull();
@@ -95,10 +136,36 @@ public class EntityAutomation {
      * @return
      */
     public static ContObject createContObject(String contObjectName, ContObjectService contObjectService, PortalUserIds portalUserIds) {
+        return createContObject((co) -> {
+            co.setName(contObjectName);
+            co.setFullName(contObjectName);
+        }, contObjectService, portalUserIds);
+    }
+
+
+    private static Consumer<ContObjectDTO> defaultContObjectInitializer = (co) -> {
+        co.setComment("Created by Test");
+        co.setTimezoneDefKeyname("MSK");
+    };
+
+
+    /**
+     *
+     * @param initializer
+     * @param contObjectService
+     * @param portalUserIds
+     * @return
+     */
+    public static ContObject createContObject(Consumer<ContObjectDTO> initializer, ContObjectService contObjectService, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(initializer);
+
         ContObjectDTO contObjectDTO = new ContObjectDTO();
-        contObjectDTO.setComment("Created by Test");
-        contObjectDTO.setTimezoneDefKeyname("MSK");
-        contObjectDTO.setName(contObjectName);
+
+        defaultContObjectInitializer.accept(contObjectDTO);
+        initializer.accept(contObjectDTO);
+
+        assertThat(contObjectDTO.getId()).isNull();
+        assertThat(contObjectDTO.getName()).isNotBlank();
         ContObject contObject = contObjectService.automationCreate(contObjectDTO, portalUserIds.getSubscriberId(), LocalDate.now(), null);
 
         assertThat(contObject).isNotNull();
@@ -122,6 +189,34 @@ public class EntityAutomation {
         contZPointDTO.setContServiceTypeKeyname(contServiceTypeKey.getKeyname());
         contZPointDTO.setStartDate(new Date());
         contZPointDTO.setDeviceObjectId(deviceObject.getId());
+
+        ContZPoint contZPoint = contZPointService.createZPoint(contZPointDTO);
+
+        assertThat(contZPoint).isNotNull();
+        assertThat(contZPoint.getId()).isNotNull();
+        return contZPoint;
+    }
+
+    private static Consumer<ContZPointDTO> defaultContZPointInitializer = (zp) -> {
+        zp.setContServiceTypeKeyname(ContServiceTypeKey.CW.keyName());
+        zp.setStartDate(new Date());
+    };
+
+
+    /**
+     *
+     * @param initializer
+     * @param contZPointService
+     * @return
+     */
+    public static ContZPoint createContZPoint (Consumer<ContZPointDTO> initializer, ContZPointService contZPointService) {
+        ContZPointDTO contZPointDTO = new ContZPointDTO();
+
+        defaultContZPointInitializer.accept(contZPointDTO);
+        initializer.accept(contZPointDTO);
+        assertThat(contZPointDTO.getContObjectId()).isNotNull();
+        assertThat(contZPointDTO.getContServiceTypeKeyname()).isNotNull();
+        assertThat(contZPointDTO.getDeviceObjectId()).isNotNull();
 
         ContZPoint contZPoint = contZPointService.createZPoint(contZPointDTO);
 

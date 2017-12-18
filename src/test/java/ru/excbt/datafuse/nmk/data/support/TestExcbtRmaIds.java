@@ -10,7 +10,7 @@ public final class TestExcbtRmaIds {
 	public static final long EXCBT_ORGANIZATION_ID = 726;
 	public static final long EXCBT_SUBSCR_ID = 64166468; // РМА-EXCBT
 
-    public static final PortalUserIds ExcbtRmaPortalUserIds = PortalUserIdsMock.mockUserIds(
+    public static final PortalUserIds ExcbtRmaPortalUserIds = PortalUserIdsMock.rmaMockUserIds(
         EXCBT_RMA_SUBSCRIBER_ID,
         EXCBT_RMA_SUBSCRIBER_USER_ID);
 

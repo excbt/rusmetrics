@@ -23,8 +23,11 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -71,6 +74,23 @@ public class SubscrContZPointResource {
         this.objectAccessService = objectAccessService;
         this.portalUserIdsService = portalUserIdsService;
     }
+
+
+    /**
+     *
+     * @param newTagNames
+     * @return
+     */
+    protected Consumer<ContZPointFullVM> contZPointTagSaver (final Collection<String> newTagNames){
+        return (vm) -> {
+            Set<String> resultTagNames = contZPointService.saveContZPointTags(
+                new ContZPoint().id(vm.getId()),
+                newTagNames,
+                portalUserIdsService.getCurrentIds());
+            vm.setTagNames(resultTagNames);
+        };
+    };
+
 
     /**
 	 *
@@ -134,8 +154,7 @@ public class SubscrContZPointResource {
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
 		return ApiActionTool.processResponceApiActionUpdate(() -> {
-            ContZPointFullVM result = contZPointService.updateDTO_safe(contZPointFullVM);
-            result = contZPointService.saveContZPointTags(result, contZPointFullVM.getTagNames(), portalUserIdsService.getCurrentIds());
+            ContZPointFullVM result = contZPointService.updateDTO_safe(contZPointFullVM, contZPointTagSaver(contZPointFullVM.getTagNames()));
             return result;
         });
 
@@ -155,7 +174,9 @@ public class SubscrContZPointResource {
 		checkNotNull(contObjectId);
 		checkNotNull(contZPointId);
 
-		ContZPointFullVM currentContZPoint = contZPointService.findFullVM(contZPointId);
+		ContZPointFullVM currentContZPoint = contZPointService.readContZPointTags(
+		    contZPointService.findFullVM(contZPointId),
+            portalUserIdsService.getCurrentIds());
 
 		if (currentContZPoint == null || !currentContZPoint.getContObjectId().equals(contObjectId)) {
 			return ApiResponse.responseBadRequest();

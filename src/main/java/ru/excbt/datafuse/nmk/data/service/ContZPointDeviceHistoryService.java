@@ -78,11 +78,11 @@ public class ContZPointDeviceHistoryService {
             newRecord.setDeviceObject(deviceObject);
             newRecord.setStartDate(LocalDateTime.now());
             newRecord.setRevision(revision);
-            log.info("Insert contZPointId:{}, deviceObjectId:{}", contZPoint.getId(), contZPoint.getDeviceObject().getId());
+            //log.info("Insert contZPointId:{}, deviceObjectId:{}", contZPoint.getId(), contZPoint.getDeviceObject().getId());
             ContZPointDeviceHistory savedHistory = historyRepository.saveAndFlush(newRecord);
-            log.info("Insert contZPointId:{}, deviceObjectId:{}",
-                savedHistory.getContZPoint().getId(),
-                savedHistory.getDeviceObject().getId());
+//            log.info("Insert contZPointId:{}, deviceObjectId:{}",
+//                savedHistory.getContZPoint().getId(),
+//                savedHistory.getDeviceObject().getId());
         }
 
         return doInsert;

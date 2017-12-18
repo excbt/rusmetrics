@@ -10,7 +10,15 @@ import java.util.List;
 public interface ObjectTagRepository extends JpaRepository<ObjectTag, ObjectTag.PK> {
 
     @Query("SELECT t FROM ObjectTag t WHERE t.subscriberId = :subscriberId AND t.objectTagKeyname = :objectTagKeyname")
-    List<ObjectTag> findBySubscriberAndObjectTagKeyname(@Param("subscriberId") Long subscriberId,
-                                                     @Param("objectTagKeyname") String objectTagKeyname);
+    List<ObjectTag> findAllObjectsTags(@Param("subscriberId") Long subscriberId,
+                                       @Param("objectTagKeyname") String objectTagKeyname);
+
+
+    @Query("SELECT t FROM ObjectTag t WHERE t.subscriberId = :subscriberId AND t.objectTagKeyname = :objectTagKeyname " +
+        "AND t.objectId = :objectId ")
+    List<ObjectTag> findObjectTags(@Param("subscriberId") Long subscriberId,
+                                                        @Param("objectTagKeyname") String objectTagKeyname,
+                                                        @Param("objectId") Long objectId);
+
 
 }

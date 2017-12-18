@@ -1,10 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrContEventNotificationMapper;
 
 /**

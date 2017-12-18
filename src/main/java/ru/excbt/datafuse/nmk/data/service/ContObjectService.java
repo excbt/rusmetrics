@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
@@ -537,7 +538,7 @@ public class ContObjectService implements SecuredRoles {
 
         contObjectFiasService.saveContObjectFias(resultContObject.getId(), contObjectFias);
 
-		subscriberAccessService.grantContObjectAccess(subscriber, resultContObject, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
+		subscriberAccessService.grantContObjectAccess(resultContObject, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()), subscriber);
 
 		if (cmOrganizationId != null) {
 			ContManagement newCm = contManagementService.createManagement(resultContObject, cmOrganizationId,
@@ -611,7 +612,10 @@ public class ContObjectService implements SecuredRoles {
 			resultContObject.getContManagements().add(newCm);
 		}
 
-        subscriberAccessService.grantContObjectAccess(new Subscriber().id(subscriberId), resultContObject, subscrBeginDate.atStartOfDay());
+        subscriberAccessService.grantContObjectAccess(
+            resultContObject,
+            subscrBeginDate.atStartOfDay(),
+            new Subscriber().id(subscriberId));
 
 		return resultContObject;
 	}
@@ -691,7 +695,10 @@ public class ContObjectService implements SecuredRoles {
 			resultContObject.getContManagements().add(newCm);
 		}
 
-        subscriberAccessService.grantContObjectAccess(new Subscriber().id(subscriberId), resultContObject, subscrBeginDate.atStartOfDay());
+        subscriberAccessService.grantContObjectAccess(
+            resultContObject,
+            subscrBeginDate.atStartOfDay(),
+            new Subscriber().id(subscriberId));
 
 		return resultContObject;
 	}

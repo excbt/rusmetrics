@@ -36,6 +36,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -437,6 +438,7 @@ public class ContZPointService implements SecuredRoles {
 		}
         ContZPoint savedContZPoint = contZPointRepository.save(result);
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+        //subscriberAccessService.grantContZPointAccess();
 		return savedContZPoint;
 	}
 
@@ -444,6 +446,19 @@ public class ContZPointService implements SecuredRoles {
     @Transactional
     @Secured({ ROLE_ZPOINT_ADMIN })
     public ContZPoint createZPoint(ContZPointDTO contZPointDTO) {
+        return createZPoint(contZPointDTO, null);
+    }
+
+
+    /**
+     *
+     * @param contZPointDTO
+     * @param afterCreateAction
+     * @return
+     */
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN })
+    public ContZPoint createZPoint(ContZPointDTO contZPointDTO, Consumer<ContZPoint> afterCreateAction) {
         Objects.requireNonNull(contZPointDTO);
         Objects.requireNonNull(contZPointDTO.getContObjectId());
         Objects.requireNonNull(contZPointDTO.getContServiceTypeKeyname());
@@ -468,6 +483,11 @@ public class ContZPointService implements SecuredRoles {
 
         ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
+
+        if (afterCreateAction != null) {
+            afterCreateAction.accept(savedContZPoint);
+        }
+
         return savedContZPoint;
     }
 
@@ -492,11 +512,12 @@ public class ContZPointService implements SecuredRoles {
     /**
      *
      * @param contZPointDTO
-     * @param userIds
+     * @param afterCreateAction
      * @return
      */
     @Transactional
-    public ContZPointFullVM createZPointDTO2FullVM(ContZPointDTO contZPointDTO, PortalUserIds userIds) {
+    @Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+    public ContZPointFullVM createZPointDTO2FullVM(ContZPointDTO contZPointDTO, Consumer<ContZPointFullVM> afterCreateAction) {
         Objects.requireNonNull(contZPointDTO);
         Objects.requireNonNull(contZPointDTO.getContObjectId());
         Objects.requireNonNull(contZPointDTO.getStartDate());
@@ -524,13 +545,17 @@ public class ContZPointService implements SecuredRoles {
         ContZPoint savedContZPoint = contZPointRepository.save(contZPoint);
         contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
 
-        subscriberAccessService.grantContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), savedContZPoint);
-
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 
         ContZPointFullVM contZPointFullVM = contZPointMapper.toFullVM(savedContZPoint);
 
-        contZPointFullVM = saveContZPointTags(contZPointFullVM, contZPointDTO.getTagNames(), userIds);
+        if (afterCreateAction != null) {
+            afterCreateAction.accept(contZPointFullVM);
+        }
+
+//        subscriberAccessService.grantContZPointAccess(
+//            savedContZPoint,
+//            new Subscriber().id(userIds.getSubscriberId()));
 
         return contZPointFullVM;
     }
@@ -546,7 +571,9 @@ public class ContZPointService implements SecuredRoles {
         Objects.requireNonNull(contZPoint);
         contZPointDeviceHistoryService.finishHistory(contZPoint);
 		contZPointRepository.save(EntityActions.softDelete(contZPoint));
-        subscriberAccessService.revokeContZPointAccess(new Subscriber().id(userIds.getSubscriberId()), contZPoint);
+        subscriberAccessService.revokeContZPointAccess(
+            contZPoint,
+            new Subscriber().id(userIds.getSubscriberId()));
 
 	}
 
@@ -565,9 +592,17 @@ public class ContZPointService implements SecuredRoles {
 		contZPointRepository.delete(contZPoint);
 	}
 
+
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
+    public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
+	    return updateVM(contZPointFullVM, null);
+    }
+
+
 	@Transactional
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM) {
+	public ContZPointFullVM updateVM(ContZPointFullVM contZPointFullVM, Consumer<ContZPointFullVM> afterUpdateAction) {
         Objects.requireNonNull(contZPointFullVM);
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
 		contZPoint.setIsManual(true);
@@ -576,8 +611,22 @@ public class ContZPointService implements SecuredRoles {
 		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());
         contZPointDeviceHistoryService.saveHistory(savedContZPoint);
 
-		return contZPointMapper.toFullVM(savedContZPoint);
+        ContZPointFullVM resultVM = contZPointMapper.toFullVM(savedContZPoint);
+
+        if (afterUpdateAction != null) {
+            afterUpdateAction.accept(resultVM);
+        }
+
+		return resultVM;
 	}
+
+
+    @Transactional
+    @Secured({ ROLE_ZPOINT_ADMIN })
+    public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM) {
+	    return updateDTO_safe(contZPointFullVM, null);
+    }
+
 
     /**
      *
@@ -586,17 +635,23 @@ public class ContZPointService implements SecuredRoles {
      */
 	@Transactional
     @Secured({ ROLE_ZPOINT_ADMIN })
-	public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM) {
+	public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM, Consumer<ContZPointFullVM> afterUpdateAction) {
 
         ContZPoint currentContZPoint = contZPointRepository.findOne(contZPointFullVM.getId());
 
         currentContZPoint.setCustomServiceName(contZPointFullVM.getCustomServiceName());
 
-        currentContZPoint.setIsManualLoading(contZPointFullVM.getManualLoading());
+        currentContZPoint.setIsManualLoading(contZPointFullVM.getIsManualLoading());
 
         ContZPoint savedContZPoint = contZPointRepository.save(currentContZPoint);
 
-		return contZPointMapper.toFullVM(savedContZPoint);
+        ContZPointFullVM resultVM = contZPointMapper.toFullVM(savedContZPoint);
+
+        if (afterUpdateAction != null) {
+            afterUpdateAction.accept(resultVM);
+        }
+
+		return resultVM;
 	}
 
 	/**
@@ -686,6 +741,49 @@ public class ContZPointService implements SecuredRoles {
             contZPointFullVM.setTagNames(resultTags.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet()));
         }
         return contZPointFullVM;
+    }
+
+	@Transactional
+	public Set<String> saveContZPointTags (ContZPoint contZPoint, Collection<String> tagNames, PortalUserIds portalUserIds) {
+	    Objects.requireNonNull(contZPoint);
+	    Objects.requireNonNull(contZPoint.getId());
+
+	    Set<String> objectTags = null;
+
+        if (tagNames != null) {
+
+            List<ObjectTagDTO> dtos =
+                tagNames.stream().distinct().map(s -> {
+                ObjectTagDTO dto = new ObjectTagDTO();
+                dto.setTagName(s);
+                dto.setObjectTagKeyname(ObjectTag.contZPointTagKeyname);
+                dto.setObjectId(contZPoint.getId());
+                return dto;
+            }).collect(Collectors.toList());
+
+            List<ObjectTagDTO> resultTags = objectTagService.saveTags(dtos,portalUserIds);
+            objectTags = resultTags.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet());
+        }
+        return objectTags;
+    }
+
+
+    /**
+     *
+     * @param contZPointFullVM
+     * @param portalUserIds
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public ContZPointFullVM readContZPointTags (ContZPointFullVM contZPointFullVM, PortalUserIds portalUserIds) {
+
+        List<ObjectTagDTO> objectTagDTOS = objectTagService.findObjectTags(ObjectTag.contZPointTagKeyname, contZPointFullVM.getId(), portalUserIds);
+
+        Set<String> tagNames = objectTagDTOS.stream().map(ObjectTagDTO::getTagName).collect(Collectors.toSet());
+
+        contZPointFullVM.setTagNames(tagNames);
+
+	    return contZPointFullVM;
     }
 
 }

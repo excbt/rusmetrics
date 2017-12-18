@@ -221,7 +221,10 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			@Override
 			public List<ContObjectDTO> processAndReturnResult() {
 
-                subscriberAccessService.updateContObjectIdsAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
+                subscriberAccessService.updateContObjectIdsAccess(
+                    contObjectIds,
+                    LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()),
+                    new Subscriber().id(subscriberId));
                 List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
                 List<ContObjectDTO> result = contObjectService.mapToDTO(contObjects);
                 objectAccessService.setupRmaHaveSubscrDTO(getSubscriberParam(), result);

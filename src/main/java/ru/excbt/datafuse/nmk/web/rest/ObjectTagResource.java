@@ -2,13 +2,16 @@ package ru.excbt.datafuse.nmk.web.rest;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.ObjectTag;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.service.ObjectTagService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/object-tags")
@@ -17,6 +20,18 @@ public class ObjectTagResource {
     private final ObjectTagService objectTagService;
 
     private final PortalUserIdsService portalUserIdsService;
+
+    private final static Map<String, String> supportedObjectTagMap;
+
+    static {
+        char s = 's';
+        Map<String,String> preparationMap = new HashMap<>();
+        preparationMap.put(ObjectTag.contObjectTagKeyname + s, ObjectTag.contObjectTagKeyname);
+        preparationMap.put(ObjectTag.contZPointTagKeyname + s, ObjectTag.contZPointTagKeyname);
+        preparationMap.put(ObjectTag.deviceObjectTagKeyname + s, ObjectTag.deviceObjectTagKeyname);
+        supportedObjectTagMap = Collections.unmodifiableMap(preparationMap);
+
+    }
 
 
     public ObjectTagResource(ObjectTagService objectTagService, PortalUserIdsService portalUserIdsService) {
@@ -29,10 +44,21 @@ public class ObjectTagResource {
      * @return
      */
     @ApiOperation("Get all tags for cont-object")
-    @GetMapping("/cont-objects")
-    public ResponseEntity<?> findContObjectsTags() {
-        return ApiResponse.responseOK(() ->
-            objectTagService.findTags("cont-object", portalUserIdsService.getCurrentIds()));
+    @GetMapping("/{objectTagKeynameUrl}")
+    public ResponseEntity<?> findContObjectsTags(@PathVariable("objectTagKeynameUrl")
+                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                         String objectTagKeynameUrl) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        List<ObjectTagDTO> resultTags = objectTagService.findAllObjectsTags(
+            supportedObjectTagMap.get(objectTagKeynameUrl),
+            portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK(resultTags);
+
     }
 
 
@@ -40,11 +66,21 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @PostMapping("/cont-objects")
     @ApiOperation("Creates tag for cont-object")
-    public ResponseEntity<?> createContObjectTag(@RequestBody ObjectTagDTO objectTagDTO) {
-        objectTagDTO.setObjectTagKeyname("cont-object");
-        ObjectTagDTO savedDTO = objectTagService.saveTag(objectTagDTO, portalUserIdsService.getCurrentIds());
+    @PostMapping("/{objectTagKeynameUrl}")
+    public ResponseEntity<?> createContObjectTag(@PathVariable("objectTagKeynameUrl")
+                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                         String objectTagKeynameUrl,
+                                                 @RequestBody ObjectTagDTO objectTagDTO) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        objectTagDTO.setObjectTagKeyname(supportedObjectTagMap.get(objectTagKeynameUrl));
+        ObjectTagDTO savedDTO = objectTagService.saveTag(
+            objectTagDTO,
+            portalUserIdsService.getCurrentIds());
         return ApiResponse.responseCreated(savedDTO);
     }
 
@@ -53,18 +89,32 @@ public class ObjectTagResource {
      * @param objectTagDTO
      * @return
      */
-    @PutMapping("/cont-objects")
+    @PutMapping("/{objectTagKeynameUrl}")
     @ApiOperation("Creates or deletes tag for cont-object")
-    public ResponseEntity<?> createOrDeleteContObjectTag(@RequestBody ObjectTagDTO objectTagDTO,
-                                                  @RequestParam( name = "delete", required = false, defaultValue = "false")
-                                                  @ApiParam ("delete flag") Boolean delete) {
-        objectTagDTO.setObjectTagKeyname("cont-object");
+    public ResponseEntity<?> createOrDeleteContObjectTag(
+                                                    @PathVariable("objectTagKeynameUrl")
+                                                    @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                        String objectTagKeynameUrl,
+                                                    @RequestBody ObjectTagDTO objectTagDTO,
+                                                    @RequestParam( name = "delete", required = false, defaultValue = "false")
+                                                    @ApiParam ("delete flag") Boolean delete) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        objectTagDTO.setObjectTagKeyname(supportedObjectTagMap.get(objectTagKeynameUrl));
+
         if (Boolean.TRUE.equals(delete)) {
-            boolean result = objectTagService.deleteTag(objectTagDTO, portalUserIdsService.getCurrentIds());
+            boolean result = objectTagService.deleteTag(
+                objectTagDTO,
+                portalUserIdsService.getCurrentIds());
 
             return result ? ApiResponse.responseOK() : ApiResponse.responseNoContent();
         }
-        ObjectTagDTO savedDTO = objectTagService.saveTag(objectTagDTO, portalUserIdsService.getCurrentIds());
+        ObjectTagDTO savedDTO = objectTagService.saveTag(
+                objectTagDTO,
+                portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(savedDTO);
     }
 

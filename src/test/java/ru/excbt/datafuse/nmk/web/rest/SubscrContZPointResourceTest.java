@@ -32,17 +32,6 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
     @Autowired
     private ContZPointMapper contZPointMapper;
 
-//	@Test
-//	public void testGetZPointEx() throws Exception {
-//		ContObject co = getFirstContObject();
-//		List<ContZPointEx> result = contZPointService.findContObjectZPointsEx(co.getId());
-//		assertTrue(result.size() > 0);
-//		// assertNotNull(result.get(0).getLastDataDate());
-//
-//		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", co.getId());
-//		_testGetJson(url);
-//
-//	}
 
 	@Test
 	public void testGetZPointsTimeDetailLastDateMap() throws Exception {
@@ -57,14 +46,6 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
 		String url = String.format("/api/subscr/contObjects/%d/contZPoints/%d/timeDetailLastDate", coId, 20118714);
 		_testGetJson(url);
 	}
-
-	//@Ignore
-//	@Test
-//	public void testGetElConsZPointEx() throws Exception {
-//        List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
-//		String url = String.format("/api/subscr/contObjects/%d/contZPointsEx", ids.get(0));
-//		_testGetJson(url);
-//	}
 
 	@Test
 	public void testGetElConsZPointVo() throws Exception {
@@ -120,6 +101,8 @@ public class SubscrContZPointResourceTest extends AnyControllerSubscriberTest {
         contZPointDTO.setTagNames(new HashSet<>(Arrays.asList("MY-TAG-1", "MY-TAG-2")));
 
 		_testUpdateJson(url, contZPointDTO);
+
+		_testGetJson(url);
 	}
 
 	/**
