@@ -8,6 +8,8 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ObjectTag;
 import ru.excbt.datafuse.nmk.data.model.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.repository.ObjectTagGlobalRepository;
+import ru.excbt.datafuse.nmk.data.repository.ObjectTagInfoRepository;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagRepository;
 import ru.excbt.datafuse.nmk.service.mapper.ObjectTagMapper;
 
@@ -21,11 +23,17 @@ public class ObjectTagService {
 
     private final ObjectTagRepository objectTagRepository;
 
+    private final ObjectTagInfoRepository objectTagInfoRepository;
+
+    private final ObjectTagGlobalRepository tagGlobalRepository;
+
     private final ObjectTagMapper objectTagMapper;
 
     @Autowired
-    public ObjectTagService(ObjectTagRepository objectTagRepository, ObjectTagMapper objectTagMapper) {
+    public ObjectTagService(ObjectTagRepository objectTagRepository, ObjectTagInfoRepository objectTagInfoRepository, ObjectTagGlobalRepository tagGlobalRepository, ObjectTagMapper objectTagMapper) {
         this.objectTagRepository = objectTagRepository;
+        this.objectTagInfoRepository = objectTagInfoRepository;
+        this.tagGlobalRepository = tagGlobalRepository;
         this.objectTagMapper = objectTagMapper;
     }
 
@@ -137,6 +145,16 @@ public class ObjectTagService {
             return false;
         }
         return true;
+    }
+
+
+    @Transactional
+    public void findObjectTagInfo (PortalUserIds portalUserIds) {
+
+        Objects.requireNonNull(portalUserIds);
+
+        objectTagInfoRepository.findBySubscriberId(portalUserIds.getSubscriberId());
+
     }
 
 }
