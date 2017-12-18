@@ -45,7 +45,7 @@ public class ObjectTagResource {
      */
     @ApiOperation("Get all tags for cont-object")
     @GetMapping("/{objectTagKeynameUrl}")
-    public ResponseEntity<?> findContObjectsTags(@PathVariable("objectTagKeynameUrl")
+    public ResponseEntity<?> getContObjectsTags(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl) {
 
@@ -67,7 +67,7 @@ public class ObjectTagResource {
      */
     @ApiOperation("Get all tags for cont-object")
     @GetMapping("/{objectTagKeynameUrl}/{objectId}")
-    public ResponseEntity<?> findContObjectTagsByObject(@PathVariable("objectTagKeynameUrl")
+    public ResponseEntity<?> getContObjectTagsByObject(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl,
                                                         @PathVariable("objectId") Long objectId) {
@@ -84,6 +84,30 @@ public class ObjectTagResource {
         return ApiResponse.responseOK(resultTags);
 
     }
+
+
+    @ApiOperation("Get all tags for cont-object")
+    @GetMapping("/{objectTagKeynameUrl}/tag-names")
+    public ResponseEntity<?> getContObjectsTagNames(@PathVariable("objectTagKeynameUrl")
+                                                @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                    String objectTagKeynameUrl) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        List<String> resultTagNames = objectTagService.findAllObjectsTagNames(
+            supportedObjectTagMap.get(objectTagKeynameUrl),
+            portalUserIdsService.getCurrentIds());
+
+        Map<String,Object> result = new HashMap<>();
+        result.put("tagNames", resultTagNames);
+        result.put("objectTagKeyname", supportedObjectTagMap.get(objectTagKeynameUrl));
+
+        return ApiResponse.responseOK(result);
+
+    }
+
 
 
     /**

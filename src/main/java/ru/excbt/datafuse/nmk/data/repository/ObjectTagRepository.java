@@ -21,4 +21,12 @@ public interface ObjectTagRepository extends JpaRepository<ObjectTag, ObjectTag.
                                                         @Param("objectId") Long objectId);
 
 
+    @Query("SELECT DISTINCT t.tagName FROM ObjectTag t " +
+        " WHERE t.subscriberId = :subscriberId AND t.objectTagKeyname = :objectTagKeyname" +
+        " ORDER BY t.tagName ")
+    List<String> findAllObjectTagNames(@Param("subscriberId") Long subscriberId,
+                                       @Param("objectTagKeyname") String objectTagKeyname);
+
+
+
 }

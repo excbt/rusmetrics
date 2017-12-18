@@ -42,6 +42,12 @@ public class ObjectTagService {
     }
 
 
+    @Transactional (readOnly = true)
+    public List<String> findAllObjectsTagNames(String objectKeyname, PortalUserIds portalUserIds) {
+        return objectTagRepository.findAllObjectTagNames(portalUserIds.getSubscriberId(), objectKeyname);
+    }
+
+
     @Transactional
     public ObjectTagDTO saveTag(ObjectTagDTO dto, PortalUserIds portalUserIds) {
         Objects.requireNonNull(dto);

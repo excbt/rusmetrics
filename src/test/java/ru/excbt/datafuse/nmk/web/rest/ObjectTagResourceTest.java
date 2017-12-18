@@ -27,7 +27,11 @@ import ru.excbt.datafuse.nmk.service.mapper.ObjectTagMapper;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -194,6 +198,28 @@ public class ObjectTagResourceTest {
 
     }
 
+
+    private void _testGetObjectTagNames(final String url, final String objectTagKeyname) throws Exception {
+
+
+        List<String> tagNames = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME + " #" + i ).objectId(TEST_OBJECT_ID);
+            tagNames.add(tag.getTagName());
+            objectTagRepository.saveAndFlush(tag);
+        }
+
+        restPortalContObjectMockMvc.perform(get(url))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
+            .andExpect(jsonPath("$.objectTagKeyname").value(objectTagKeyname))
+            .andExpect(jsonPath("$.tagNames[*]").value(hasItem(tagNames.get(0))));
+    }
+
+
+
     // ContObject-tag
 
     @Test
@@ -345,6 +371,24 @@ public class ObjectTagResourceTest {
 
     }
 
+    @Test
+    public void getContObjectsTagNames() throws Exception {
+        _testGetObjectTagNames("/api/object-tags/cont-objects/tag-names",
+            ObjectTag.contObjectTagKeyname);
+    }
+
+
+    @Test
+    public void getContZPointsTagNames() throws Exception {
+        _testGetObjectTagNames("/api/object-tags/cont-zpoints/tag-names",
+            ObjectTag.contZPointTagKeyname);
+    }
+
+    @Test
+    public void getDeviceObjectsTagNames() throws Exception {
+        _testGetObjectTagNames("/api/object-tags/device-objects/tag-names",
+            ObjectTag.deviceObjectTagKeyname);
+    }
 
 
 }
