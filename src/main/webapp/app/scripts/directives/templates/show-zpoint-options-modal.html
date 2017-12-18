@@ -256,7 +256,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class = "col-sm-12">
-                                    <tags-input ng-model = "vm.contZpoint.tagNames" use-strings = "true" placeholder = "Добавьте тег"></tags-input>
+                                    <tags-input ng-model = "vm.contZpoint.tagNames" use-strings = "true" replace-spaces-with-dashes = "false" placeholder = "Добавьте тег"></tags-input>
                                 </td>
                             </tr>
                             <tr>
@@ -267,12 +267,7 @@
                             <tr><td></td><td></td></tr>
                          </table>
                        </div>
-                 </div>
-                 <div class = "row">
-                     <div class = "col-xs-12">
-                         <pre>{{vm.contZpoint | json}}</pre>
-                     </div>
-                 </div>
+                 </div>                 
         	</div>
 		</div>
 		<div class="modal-footer nmc-modal-footer">
