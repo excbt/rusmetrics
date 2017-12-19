@@ -12,7 +12,7 @@
 		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
             <div class="container-fluid"><!--  nmc-modal-panel"> -->
                 <div class="row-fluid">
-                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel">
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3">
@@ -236,7 +236,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="col-sm-3">
+                                <td class="col-sm-3 noPaddingRightI">
                                    <input type="checkbox" 
                                           class="nmc-checkbox-form" 
                                           ng-model="vm.contZpoint.flexData.techAccountingEnabled"> Технический учет
@@ -256,7 +256,14 @@
                             </tr>
                             <tr>
                                 <td colspan="2" class = "col-sm-12">
-                                    <tags-input ng-model = "vm.contZpoint.tagNames" use-strings = "true" replace-spaces-with-dashes = "false" placeholder = "Добавьте тег"></tags-input>
+                                   <div class = "noPadding nmc-arch-device-list-modal">
+                                        <tags-input ng-model = "vm.contZpoint.tagNames"
+                                        use-strings = "true"
+                                        replace-spaces-with-dashes = "true"
+                                        placeholder = "Добавьте тег">
+                                            
+                                        </tags-input>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
