@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.util.FlexDataFactory;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
@@ -96,31 +97,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
             contObjectDTO = contObjectMapper.toDto(contObject);
         }
 
-
-        JSONObject object = new JSONObject();
-
-        try {
-            object.put("firstName", "John")
-                .put("lastName", "Smith")
-                .put("age", 25)
-                .put("address", new JSONObject()
-                    .put("streetAddress", "21 2nd Street")
-                    .put("city", "New York")
-                    .put("state", "NY")
-                    .put("postalCode", "10021"))
-                .put("phoneNumber",  new JSONArray()
-                    .put(new JSONObject()
-                        .put("type", "home")
-                        .put("number", "212 555-1234"))
-                    .put(new JSONObject()
-                        .put("type", "fax")
-                        .put("number", "646 555-4567")));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        contObjectDTO.setFlexData(object.toString());
-
+        contObjectDTO.setFlexData(FlexDataFactory.createFlexData1().toString());
 
         contObjectDTO.setCurrentSettingMode("summer");
 		_testUpdateJson("/api/rma/contObjects/" + contObjectId, contObjectDTO);
