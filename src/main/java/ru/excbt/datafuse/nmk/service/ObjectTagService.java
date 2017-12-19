@@ -1,14 +1,22 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ObjectTag;
-import ru.excbt.datafuse.nmk.data.model.dto.ObjectTagDTO;
+import ru.excbt.datafuse.nmk.data.model.ObjectTagInfo;
+import ru.excbt.datafuse.nmk.data.util.GroupUtil;
+import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.repository.ObjectTagGlobalRepository;
+import ru.excbt.datafuse.nmk.data.repository.ObjectTagInfoRepository;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagRepository;
+import ru.excbt.datafuse.nmk.service.dto.ObjectTagInfoDTO;
+import ru.excbt.datafuse.nmk.service.mapper.ObjectTagGlobalMapper;
+import ru.excbt.datafuse.nmk.service.mapper.ObjectTagInfoMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ObjectTagMapper;
 
 import java.util.*;
@@ -21,12 +29,24 @@ public class ObjectTagService {
 
     private final ObjectTagRepository objectTagRepository;
 
+    private final ObjectTagInfoRepository objectTagInfoRepository;
+
+    private final ObjectTagGlobalRepository tagGlobalRepository;
+
     private final ObjectTagMapper objectTagMapper;
 
+    private final ObjectTagInfoMapper objectTagInfoMapper;
+
+    private final ObjectTagGlobalMapper objectTagGlobalMapper;
+
     @Autowired
-    public ObjectTagService(ObjectTagRepository objectTagRepository, ObjectTagMapper objectTagMapper) {
+    public ObjectTagService(ObjectTagRepository objectTagRepository, ObjectTagInfoRepository objectTagInfoRepository, ObjectTagGlobalRepository tagGlobalRepository, ObjectTagMapper objectTagMapper, ObjectTagInfoMapper objectTagInfoMapper, ObjectTagGlobalMapper objectTagGlobalMapper) {
         this.objectTagRepository = objectTagRepository;
+        this.objectTagInfoRepository = objectTagInfoRepository;
+        this.tagGlobalRepository = tagGlobalRepository;
         this.objectTagMapper = objectTagMapper;
+        this.objectTagInfoMapper = objectTagInfoMapper;
+        this.objectTagGlobalMapper = objectTagGlobalMapper;
     }
 
     @Transactional (readOnly = true)
@@ -65,13 +85,13 @@ public class ObjectTagService {
     }
 
     @Transactional
-    public List<ObjectTagDTO> saveTags(List<ObjectTagDTO> dtos, PortalUserIds portalUserIds) {
-        Objects.requireNonNull(dtos);
+    public List<ObjectTagDTO> saveTags(List<ObjectTagDTO> objectTagDTOS, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(objectTagDTOS);
         Objects.requireNonNull(portalUserIds);
 
         //List<ObjectTagDTO> resultTags = new ArrayList<>();
 
-        Set<String> objectTagKeynames = dtos.stream()
+        Set<String> objectTagKeynames = objectTagDTOS.stream()
             .filter(i -> i.getObjectTagKeyname() != null && !i.getObjectTagKeyname().isEmpty())
             .map(t -> t.getObjectTagKeyname()).collect(Collectors.toSet());
 
@@ -86,7 +106,7 @@ public class ObjectTagService {
 
         List<ObjectTag> resultTags;
 
-        resultTags = dtos.stream()
+        resultTags = objectTagDTOS.stream()
             .filter(i -> i.getObjectTagKeyname() != null && !i.getObjectTagKeyname().isEmpty() &&
                 i.getTagName() != null && !i.getTagName().isEmpty())
             .map(dto -> {
@@ -138,5 +158,78 @@ public class ObjectTagService {
         }
         return true;
     }
+
+
+    @Transactional(readOnly = true)
+    public List<ObjectTagInfoDTO> findAllObjectTagInfo(PortalUserIds portalUserIds) {
+
+        Objects.requireNonNull(portalUserIds);
+
+        return objectTagInfoRepository.findBySubscriberId(portalUserIds.getSubscriberId())
+            .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> objectTagInfoMapper.toDto(i)).collect(Collectors.toList());
+
+    }
+
+    @Transactional(readOnly = true)
+    public ObjectTagInfoDTO findOneObjectTagInfo(ObjectTagInfoDTO objectTagInfoDTO, PortalUserIds portalUserIds) {
+
+        Objects.requireNonNull(portalUserIds);
+
+        ObjectTagInfo.PK pk = objectTagInfoMapper.toPK(objectTagInfoDTO);
+        pk.setSubscriberId(portalUserIds.getSubscriberId());
+
+        return Optional.ofNullable(objectTagInfoRepository.findOne(pk)).map(i -> objectTagInfoMapper.toDto(i)).orElse(null);
+
+    }
+
+    @Transactional
+    public List<ObjectTagInfoDTO> saveObjectTagInfo(List<ObjectTagInfoDTO> tagInfoDTOS, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(tagInfoDTOS);
+        Objects.requireNonNull(portalUserIds);
+
+        List<ObjectTagInfo> newTagInfos = new ArrayList<>();
+        for (ObjectTagInfoDTO dto : tagInfoDTOS) {
+            ObjectTagInfo newObjectTagInfo = objectTagInfoMapper.toEntity(dto);
+            newObjectTagInfo.setSubscriberId(portalUserIds.getSubscriberId());
+            newTagInfos.add(newObjectTagInfo);
+        }
+
+        objectTagInfoRepository.save(newTagInfos);
+        objectTagInfoRepository.flush();
+
+        List<ObjectTagInfoDTO> resultTagInfo = objectTagInfoMapper.toDto(newTagInfos);
+
+        return resultTagInfo;
+    }
+
+    @Transactional
+    public void deleteObjectTagInfo(ObjectTagInfoDTO tagInfoDTO, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(tagInfoDTO);
+        Objects.requireNonNull(portalUserIds);
+
+        ObjectTagInfo.PK pk = objectTagInfoMapper.toPK(tagInfoDTO);
+        pk.setSubscriberId(portalUserIds.getSubscriberId());
+
+        ObjectTagInfo tagInfo = objectTagInfoRepository.findOne(pk);
+        if (tagInfo != null) {
+            tagInfo.setDeleted(1);
+            objectTagInfoRepository.saveAndFlush(tagInfo);
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public ObjectTagInfoDTO saveOneObjectTagInfo(ObjectTagInfoDTO objectTagInfoDTO, PortalUserIds portalUserIds) {
+
+        Objects.requireNonNull(portalUserIds);
+
+        ObjectTagInfo tagInfo = objectTagInfoMapper.toEntity(objectTagInfoDTO);
+        tagInfo.setSubscriberId(portalUserIds.getSubscriberId());
+
+        ObjectTagInfo savedTagInfo = objectTagInfoRepository.saveAndFlush(tagInfo);
+
+        return objectTagInfoMapper.toDto(savedTagInfo);
+
+    }
+
 
 }
