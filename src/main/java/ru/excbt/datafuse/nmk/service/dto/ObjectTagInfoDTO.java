@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Getter;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@JsonPropertyOrder({"objectTagKeyname", "tagName"})
 public class ObjectTagInfoDTO {
 
     @NotNull

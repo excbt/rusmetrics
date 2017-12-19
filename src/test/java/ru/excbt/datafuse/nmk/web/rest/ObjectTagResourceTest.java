@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.data.model.ObjectTag;
 import ru.excbt.datafuse.nmk.data.model.ObjectTagInfo;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagInfoRepository;
+import ru.excbt.datafuse.nmk.data.service.util.FlexDataFactory;
 import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagRepository;
 import ru.excbt.datafuse.nmk.service.ObjectTagService;
@@ -456,6 +457,7 @@ public class ObjectTagResourceTest {
 
         ObjectTagInfo tagInfo = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME).tagColor("GREEN");
         ObjectTagInfoDTO tagInfoDTO = objectTagInfoMapper.toDto(tagInfo);
+        tagInfoDTO.setFlexData(FlexDataFactory.createFlexData1().toString());
 
         restPortalContObjectMockMvc.perform(put("/api/object-tags/cont-objects/tag-info")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)

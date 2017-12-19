@@ -1,5 +1,12 @@
 package ru.excbt.datafuse.nmk.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@JsonPropertyOrder({"objectTagKeyname", "tagName"})
 public class ObjectTagDTO {
 
     private String objectTagKeyname;
@@ -8,27 +15,4 @@ public class ObjectTagDTO {
 
     private String tagName;
 
-    public String getObjectTagKeyname() {
-        return objectTagKeyname;
-    }
-
-    public void setObjectTagKeyname(String objectTagKeyname) {
-        this.objectTagKeyname = objectTagKeyname;
-    }
-
-    public Long getObjectId() {
-        return objectId;
-    }
-
-    public void setObjectId(Long objectId) {
-        this.objectId = objectId;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
 }
