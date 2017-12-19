@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.model.dto;
+package ru.excbt.datafuse.nmk.service.dto;
 
 public class ObjectTagDTO {
 
