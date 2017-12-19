@@ -1,41 +1,24 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.Version;
-
-import lombok.Getter;
-import lombok.Setter;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 /**
  * Подписка контейнера на ресурсные системы
@@ -86,11 +69,11 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date endDate;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@NotNull
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
 			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
-	@Fetch(value = FetchMode.SUBSELECT)
-	private List<DeviceObject> deviceObjects = new ArrayList<>();
+	private DeviceObject deviceObject;
 
 	@Version
 	private int version;
@@ -143,21 +126,38 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "temperature_chart_id", insertable = false, updatable = false)
 	private Long temperatureChartId;
 
-	@Transient
-	private Long _activeDeviceObjectId;
+    @Column(name = "flex_data")
+    @Type(type = "JsonbAsString")
+	private String flexData;
 
 
-	@JsonIgnore
-	public DeviceObject get_activeDeviceObject() {
-		return deviceObjects != null && deviceObjects.size() > 0 ? deviceObjects.get(0) : null;
-	}
-
-	public Long get_activeDeviceObjectId() {
-		if (_activeDeviceObjectId == null) {
-			DeviceObject d = get_activeDeviceObject();
-			_activeDeviceObjectId = d != null ? d.getId() : null;
-		}
-		return _activeDeviceObjectId;
-	}
-
+    @Override
+    public String toString() {
+        return "ContZPoint{" +
+            "contObjectId=" + contObjectId +
+            ", contServiceType=" + contServiceType +
+            ", contServiceTypeKeyname='" + contServiceTypeKeyname + '\'' +
+            ", customServiceName='" + customServiceName + '\'' +
+            ", startDate=" + startDate +
+            ", endDate=" + endDate +
+            ", deviceObject=" + deviceObject +
+            ", version=" + version +
+            ", rso=" + rso +
+            ", rsoId=" + rsoId +
+            ", checkoutTime='" + checkoutTime + '\'' +
+            ", checkoutDay=" + checkoutDay +
+            ", doublePipe=" + doublePipe +
+            ", isManualLoading=" + isManualLoading +
+            ", exSystemKeyname='" + exSystemKeyname + '\'' +
+            ", exCode='" + exCode + '\'' +
+            ", tsNumber=" + tsNumber +
+            ", deleted=" + deleted +
+            ", isManual=" + isManual +
+            ", contZPointComment='" + contZPointComment + '\'' +
+            ", isDroolsDisable=" + isDroolsDisable +
+            ", temperatureChart=" + temperatureChart +
+            ", temperatureChartId=" + temperatureChartId +
+            ", flexData='" + flexData + '\'' +
+            "} " + super.toString();
+    }
 }

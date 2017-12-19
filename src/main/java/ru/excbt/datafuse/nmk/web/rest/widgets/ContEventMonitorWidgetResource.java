@@ -3,18 +3,15 @@ package ru.excbt.datafuse.nmk.web.rest.widgets;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventCategoryDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventTypeDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.service.ContEventTypeService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
-import ru.excbt.datafuse.nmk.data.service.widget.ContEventMonitorWidgetService;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.dto.ContObjectMonitorStateDTO;
+import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,22 +22,17 @@ public class ContEventMonitorWidgetResource {
 
     private final static List<Long> EMPTY_LIST = Collections.unmodifiableList(Collections.EMPTY_LIST);
 
-    private final CurrentSubscriberService currentSubscriberService;
-
-    private final ObjectAccessService objectAccessService;
+    private final PortalUserIdsService portalUserIdsService;
 
     private final ContEventMonitorWidgetService monitorWidgetService;
 
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-    private final ContEventTypeService contEventTypeService;
-
-    public ContEventMonitorWidgetResource(CurrentSubscriberService currentSubscriberService, ObjectAccessService objectAccessService, ContEventMonitorWidgetService monitorWidgetService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, ContEventTypeService contEventTypeService) {
-        this.currentSubscriberService = currentSubscriberService;
-        this.objectAccessService = objectAccessService;
+    @Autowired
+    public ContEventMonitorWidgetResource(PortalUserIdsService portalUserIdsService, ContEventMonitorWidgetService monitorWidgetService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService) {
+        this.portalUserIdsService = portalUserIdsService;
         this.monitorWidgetService = monitorWidgetService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
-        this.contEventTypeService = contEventTypeService;
     }
 
     /**
@@ -54,10 +46,10 @@ public class ContEventMonitorWidgetResource {
     @GetMapping("/p-tree-node/stats")
     public ResponseEntity<?> getStats(@ApiParam("nodeId of requested PTreeNode") @RequestParam(value = "nodeId", required = false) Long nodeId,
                                       @ApiParam("option for including ContEventType in widget") @RequestParam(value = "nestedTypes", required = false) Boolean nestedTypes) {
-
-        PortalUserIds portalUserIds = currentSubscriberService.getSubscriberParam();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contObjectIds = nodeId != null ? subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(portalUserIds, nodeId) : EMPTY_LIST;
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes)));
+        List<ContEventMonitorWidgetService.ContObjectEventInfo> contObjectStatsList = monitorWidgetService.loadMonitorData(i -> contObjectIds.isEmpty() || contObjectIds.contains(i), Boolean.TRUE.equals(nestedTypes));
+        return ResponseEntity.ok(contObjectStatsList);
     }
 
     /**
@@ -68,7 +60,8 @@ public class ContEventMonitorWidgetResource {
     @ApiOperation(value = "Get cont event types")
     @GetMapping("/cont-event-types")
     public ResponseEntity<?> getContEventTypes() {
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventTypes());
+        List<ContEventTypeDTO> contEventTypeDTOS = monitorWidgetService.findMonitorContEventTypes();
+        return ResponseEntity.ok(contEventTypeDTOS);
     }
 
     /**
@@ -79,7 +72,17 @@ public class ContEventMonitorWidgetResource {
     @ApiOperation(value = "Get cont event categories")
     @GetMapping("/cont-event-categories")
     public ResponseEntity<?> getContEventCategories() {
-        return ApiActionTool.processResponceApiActionOk(() -> monitorWidgetService.findMonitorContEventCategories());
+        List<ContEventCategoryDTO> contEventCategoryDTOS = monitorWidgetService.findMonitorContEventCategories();
+        return ResponseEntity.ok(contEventCategoryDTOS);
+    }
+
+
+    @Timed
+    @ApiOperation(value = "Get cont object monitor state")
+    @GetMapping("/cont-objects/{contObjectId}/monitor-state")
+    public ResponseEntity<?> getContObjectMonitorState(@PathVariable("contObjectId") @ApiParam("contObject id") Long contObjectId) {
+        ContObjectMonitorStateDTO monitorStateDTO = monitorWidgetService.findContObjectMonitorState(contObjectId, portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok(monitorStateDTO);
     }
 
 

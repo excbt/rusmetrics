@@ -33,7 +33,8 @@
             'chart.js',
             'ui.layout',
             'ui.router',
+            'ngTagsInput',
             
-            'objectTreeModule'
+            'objectTreeModule'            
         ]);
 }());

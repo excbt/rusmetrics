@@ -84,4 +84,10 @@ public final class SecurityUtils {
         return userDetails;
     }
 
+
+    public static boolean isSystemUser() {
+        SubscriberUserDetails subscriberUserDetails = getPortalUserDetails();
+        return subscriberUserDetails != null && subscriberUserDetails.getIsSystem() ? true : false;
+    }
+
 }

@@ -27,13 +27,17 @@ import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 public class LocalPlace extends AbstractAuditableModel implements PersistableBuilder<LocalPlace, Long> {
 
     @Getter
+    @Setter
 	public static class LocalPlaceInfo {
-		private final Long id;
-		private final String localPlaceName;
-		private final Long weatherPlaceId;
-		private final String weatherPlaceName;
+		private Long id;
+		private String localPlaceName;
+		private Long weatherPlaceId;
+		private String weatherPlaceName;
 
-		public LocalPlaceInfo(LocalPlace localPlace) {
+        public LocalPlaceInfo() {
+        }
+
+        public LocalPlaceInfo(LocalPlace localPlace) {
 			this.id = localPlace.getId();
 			this.localPlaceName = localPlace.getLocalPlaceName();
 			this.weatherPlaceId = localPlace.getWeatherPlaceId();

@@ -19,6 +19,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace.LocalPlaceInfo;
 import ru.excbt.datafuse.nmk.data.model.Organization.OrganizationInfo;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
@@ -29,7 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @Getter
 @Setter
-public class TemperatureChart extends AbstractAuditableModel implements DeletableObjectId {
+public class TemperatureChart extends AbstractAuditableModel implements DeletableObjectId, PersistableBuilder<TemperatureChart, Long> {
 
 	/**
 	 *
@@ -61,8 +62,8 @@ public class TemperatureChart extends AbstractAuditableModel implements Deletabl
 	@Column(name = "chart_comment")
 	private String chartComment;
 
-	@Column(name = "chart_deviation_value")
-	private BigDecimal chartDeviationValue;
+	@Column(name = "chart_deviation_value", columnDefinition = "numeric")
+	private Double chartDeviationValue;
 
 	@Column(name = "is_default")
 	private Boolean isDefault;

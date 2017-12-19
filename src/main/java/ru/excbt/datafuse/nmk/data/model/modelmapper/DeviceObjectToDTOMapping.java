@@ -14,16 +14,17 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
  */
 @Component
 @Slf4j
-public class DeviceObjectToDTOMapping extends PropertyMapConfigurerSupport<DeviceObject, DeviceObjectDTO> {
+public class DeviceObjectToDTOMapping //extends PropertyMapConfigurerSupport<DeviceObject, DeviceObjectDTO>
+{
 
-    @Override
-    public PropertyMap<DeviceObject, DeviceObjectDTO> mapping() {
-        return new PropertyMap<DeviceObject, DeviceObjectDTO>() {
-            @Override
-            protected void configure() {
-                map().setDeviceModelId(source.getDeviceModelId());
-                map().setEditDataSourceInfo(source.getEditDataSourceInfo());
-            }
-        };
-    }
+//    @Override
+//    public PropertyMap<DeviceObject, DeviceObjectDTO> mapping() {
+//        return new PropertyMap<DeviceObject, DeviceObjectDTO>() {
+//            @Override
+//            protected void configure() {
+//                map().setDeviceModelId(source.getDeviceModelId());
+//                map().setEditDataSourceInfo(source.getEditDataSourceInfo());
+//            }
+//        };
+//    }
 }

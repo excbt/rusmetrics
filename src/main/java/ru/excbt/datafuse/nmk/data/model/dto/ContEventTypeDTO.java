@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.mapstruct.factory.Mappers;
 import ru.excbt.datafuse.nmk.service.mapper.ContEventTypeMapper;
 

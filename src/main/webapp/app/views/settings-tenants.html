@@ -432,7 +432,7 @@
 <!--                                    </td>-->
 
                                     <td class="col-xs-3">                                        
-                                        {{object.contObjectInfo.fullName || object.contObjectInfo.name}}
+                                        {{object.contObjectFullName || object.contObjectName}}
 <!--                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>-->
                                     </td>
                                     <td class="col-xs-2">
@@ -564,7 +564,7 @@
 
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                    <input class="form-control nmc-text-input-form" type="text" id="viewTenantAddress" placeholder="Адрес" ng-model="data.selectedCabinet.contObjectInfo.fullName" disabled>
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewTenantAddress" placeholder="Адрес" ng-model="data.selectedCabinet.contObjectFullName" disabled>
 <!--
                                     <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
                                         <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
@@ -1049,7 +1049,7 @@
 </script>
 
 <div nmc-view-meter-periods-modal 
-     cont-object-name = "{{data.currentObjectData.contObjectInfo.fullName}}"
+     cont-object-name = "{{data.currentObjectData.contObjectFullName}}"
      meter-period-list="data.meterPeriods"
      resource-system-list = "data.resourceSystems"
      btn-click="saveMeterPeriodSettings(data.resourceSystems)"

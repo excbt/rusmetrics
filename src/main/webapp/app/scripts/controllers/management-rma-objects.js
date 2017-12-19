@@ -53,7 +53,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.objectCtrlSettings.rmaUrl = "../api/rma";
     $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
     $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
-    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
+//    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
                 
     var setVisibles = function () {
         var tmp = mainSvc.getContextIds();
@@ -208,13 +208,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             });
     };
 
-    var getServiceTypes = function () {
-        objectSvc.getServiceTypes()
-            .then(function (response) {
-                $scope.data.serviceTypes = response.data;
-    //console.log(response.data);                        
-            });
-    };
 
     var getTimezones = function () {
         objectSvc.getTimezones()
@@ -327,7 +320,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         result.version = zpoint.version;
         result.contObjectId = zpoint.contObjectId;
         result.startDate = zpoint.startDate;
-        result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+        result.deviceObjectId = zpoint.deviceObjectId;
         result.rsoId = zpoint.rsoId;
         result.zpointType = zpoint.contServiceType.keyname;
         result.isManualLoading = zpoint.isManualLoading;
@@ -350,20 +343,27 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             result.doublePipe = (zpoint.doublePipe === null) ? false : zpoint.doublePipe;
             result.singlePipe = !result.doublePipe;
         }
-//console.log(zpoint);
-        if ((typeof zpoint.deviceObjects != 'undefined') && (zpoint.deviceObjects.length > 0)) {
-            if (zpoint.deviceObjects[0].hasOwnProperty('deviceModel')) {
-                result.zpointModel = zpoint.deviceObjects[0].deviceModel.modelName;
+        console.log(zpoint);
+        if (!mainSvc.checkUndefinedNull(zpoint.deviceObject)) {
+            if (!mainSvc.checkUndefinedNull(zpoint.deviceObject.deviceModel)) {
+                result.zpointModel = zpoint.deviceObject.deviceModel.modelName;
             } else {
                 result.zpointModel = "Не задано";
             }
-            result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObjects[0].number) ? "" : zpoint.deviceObjects[0].number;
+            // deviceObjects property changed to deviceObject. By AK
+            result.zpointNumber = mainSvc.checkUndefinedNull(zpoint.deviceObject.number) ? "" : zpoint.deviceObject.number;
+        
+            result.deviceObjectId = zpoint.deviceObject.id;
         }
-        result._activeDeviceObjectId = zpoint._activeDeviceObjectId;
+        
         result.zpointLastDataDate  = zpoint.lastDataDate;
         result.isDroolsDisable = zpoint.isDroolsDisable;
         result.temperatureChartId = zpoint.temperatureChartId;
 //                    result.tempSchedules = zpoint.tempSchedules;
+        //perform flexData
+        if (!mainSvc.checkUndefinedNull(zpoint.flexData)) {
+            result.flexData = zpoint.flexData;           
+        }
         return result;
     };
                                 
@@ -555,6 +555,11 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         }
         //$scope.zpointSettings = {};
     };
+    
+    $rootScope.$on(objectSvc.BROADCASTS.ZPOINT_SAVED, function (ev, args) {
+        console.log(args);
+        successCallbackOnZpointUpdate(args.response);
+    })
                 
     var successCallbackOnSetMode = function (e) {
         notificationFactory.success();
@@ -1021,15 +1026,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
-        if (!mainSvc.checkUndefinedNull($cookies.get('recentContServiceTypeKeyname'))) {
-            $scope.zpointSettings.contServiceTypeKeyname = $cookies.get('recentContServiceTypeKeyname');
-            $scope.changeServiceType($scope.zpointSettings);
-        }
-        if (!mainSvc.checkUndefinedNull($cookies.get('recentRsoId'))) {
-            $scope.zpointSettings.rsoId = Number($cookies.get('recentRsoId'));
-        }
-        $scope.getDevices(object, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+//        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
+//            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
+//            $scope.changeServiceType($scope.zpointSettings);
+//        }
+//        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
+//            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
+//        }
+//        $scope.getDevices(object, false);
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
     };
                 
     $scope.getZpointSettings = function (objId, zpointId) {
@@ -1037,7 +1042,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         if (mainSvc.checkUndefinedNull($scope.currentZpoint)) {
             return "currentZpoint is undefined or null.";
         }
-//console.log($scope.currentZpoint); 
+        
         var object = angular.copy($scope.currentZpoint);
         var zps = {};
         zps.id = object.id;
@@ -1045,9 +1050,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.tsNumber = object.tsNumber;
         zps.exCode = object.exCode;
         zps.version = object.version;
-        zps.contObjectId = object.contObjectId;
+        zps.contObjectId = object.contObjectId;        
         zps.startDate = object.startDate;
-        zps._activeDeviceObjectId = object._activeDeviceObjectId;
+        zps.deviceObjectId = object.deviceObjectId;       
         zps.rsoId = object.rsoId;
         zps.isManualLoading = object.isManualLoading;
         zps.customServiceName = object.customServiceName;
@@ -1077,12 +1082,14 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         zps.checkoutDay = object.checkoutDay;
         zps.isDroolsDisable = object.isDroolsDisable;
         zps.temperatureChartId = object.temperatureChartId;
+        if (!mainSvc.checkUndefinedNull(object.flexData)) {
+            zps.flexData = object.flexData;
+        }
         zps.winter = {};
         zps.summer = {};
-        $scope.zpointSettings = zps;
-//console.log($scope.zpointSettings);                    
+        $scope.zpointSettings = angular.copy(zps);
         $scope.getDevices($scope.currentObject, false);
-        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);         
     };
                 
     function testRsoOrganizationAtList() {
@@ -1166,7 +1173,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             notificationFactory.errorInfo("Ошибка", "Не задан тип точки учета!");
             result = false;
         }
-        if ($scope.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)) {
+        if ($scope.checkUndefinedNull($scope.zpointSettings.deviceObjectId)) {
             notificationFactory.errorInfo("Ошибка", "Не задан прибор для точки учета!");
             result = false;
         }
@@ -1177,47 +1184,47 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         return result;
     };
                 
-    $scope.updateZpointCommonSettings = function () {
-        $scope.zpointSettings.isSaving = true;
-//console.log($scope.zpointSettings);
-        if (!checkZpointCommonSettings()) {
-            //zpoint settings saving flag reset
-            $scope.zpointSettings.isSaving = false;
-            return false;
-        }
-        //prepare piped info
-//                    if ($scope.zpointSettings.singlePipe){
-//                        $scope.zpointSettings.doublePipe = false;
-//                    };
-            //perform temperature schedule
-        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
-            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
-            $scope.zpointSettings.tChart = null;
-        } else {
-            $scope.zpointSettings.temperatureChartId = null;
-        }
-        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
-        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
-            url = url + "/" + $scope.zpointSettings.id;
-
-            $http({
-                url: url,
-                method: 'PUT',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        } else {
-            $scope.zpointSettings.startDate = Date.now();
-            $http({
-                url: url,
-                method: 'POST',
-                data: $scope.zpointSettings
-            })
-                .then(successCallbackOnZpointUpdate, errorCallback);
-        }
-
-//                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
-    };
+//    $scope.updateZpointCommonSettings = function () {
+//        $scope.zpointSettings.isSaving = true;
+////console.log($scope.zpointSettings);
+//        if (!checkZpointCommonSettings()) {
+//            //zpoint settings saving flag reset
+//            $scope.zpointSettings.isSaving = false;
+//            return false;
+//        }
+//        //prepare piped info
+////                    if ($scope.zpointSettings.singlePipe){
+////                        $scope.zpointSettings.doublePipe = false;
+////                    };
+//            //perform temperature schedule
+//        if (!mainSvc.checkUndefinedNull($scope.zpointSettings.tChart)) {
+//            $scope.zpointSettings.temperatureChartId = $scope.zpointSettings.tChart.id;
+//            $scope.zpointSettings.tChart = null;
+//        } else {
+//            $scope.zpointSettings.temperatureChartId = null;
+//        }
+//        var url = objectSvc.getRmaObjectsUrl() + "/" + $scope.currentObject.id + "/zpoints";
+//        if (angular.isDefined($scope.zpointSettings.id) && ($scope.zpointSettings.id != null)) {
+//            url = url + "/" + $scope.zpointSettings.id;
+//
+//            $http({
+//                url: url,
+//                method: 'PUT',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        } else {
+//            $scope.zpointSettings.startDate = Date.now();
+//            $http({
+//                url: url,
+//                method: 'POST',
+//                data: $scope.zpointSettings
+//            })
+//                .then(successCallbackOnZpointUpdate, errorCallback);
+//        }
+//
+////                    crudGridDataFactory(url).update({}, $scope.zpointSettings, successCallback, errorCallback);
+//    };
                 
                 //Update the zpoint settings, which set the mode for Summer or Winter season
     $scope.updateZpointModeSettings = function () {
@@ -1264,26 +1271,26 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //console.log($scope.objectsOnPage);                    
     };
                 
-    $scope.changeServiceType = function (zpSettings) {
-        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
-            $cookies.put('recentContServiceTypeKeyname', zpSettings.contServiceTypeKeyname);
-        }
-        if ($scope.emptyString(zpSettings.customServiceName)) {
-            switch (zpSettings.contServiceTypeKeyname) {
-            case "heat":
-                zpSettings.customServiceName = "Система отопления";
-                break;
-            default:
-                $scope.data.serviceTypes.some(function (svType) {
-                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
-                        zpSettings.customServiceName = svType.caption;
-                        return true;
-                    }
-                });
-
-            }
-        }
-    };
+//    $scope.changeServiceType = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
+//            $cookies.recentContServiceTypeKeyname = zpSettings.contServiceTypeKeyname;
+//        }
+//        if ($scope.emptyString(zpSettings.customServiceName)) {
+//            switch (zpSettings.contServiceTypeKeyname) {
+//            case "heat":
+//                zpSettings.customServiceName = "Система отопления";
+//                break;
+//            default:
+//                $scope.data.serviceTypes.some(function (svType) {
+//                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
+//                        zpSettings.customServiceName = svType.caption;
+//                        return true;
+//                    }
+//                });
+//
+//            }
+//        }
+//    };
                 
     $scope.changeRso = function (zpSettings) {
         if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)) {
@@ -1476,14 +1483,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //                $scope.getVzletSystemList();
                     //get devices
     $scope.getDevices = function (obj, showFlag) {
+        obj.devicesLoading = true;
         objectSvc.getDevicesByObject(obj).then(
             function (response) {
                 //select only vzlet devices
                 var tmpArr = response.data;
                 tmpArr.forEach(function (elem) {
-                    if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)) {
-                        elem.contObjectId = elem.contObjectInfo.contObjectId;
-                    }
+                    // if (angular.isDefined(elem.contObjectInfo) && (elem.contObjectInfo != null)) {
+                    //     elem.contObjectId = elem.contObjectInfo.contObjectId;
+                    // }
                     if (angular.isDefined(elem.activeDataSource) && (elem.activeDataSource != null)) {
                         elem.subscrDataSourceId = elem.activeDataSource.subscrDataSource.id;
                         elem.curDatasource = elem.activeDataSource.subscrDataSource;
@@ -1500,20 +1508,23 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //                                    elem.deviceCaption = tmpDevCaption + ", №" + elem.number;
 //                                }
                 });
-                obj.devices = tmpArr;//response.data;
-                $scope.selectedItem(obj);
-                if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings._activeDeviceObjectId)) {
-                    $scope.zpointSettings._activeDeviceObjectId = obj.devices[0].id;
+                obj.devices = tmpArr;//response.data;                    
+                if (!mainSvc.checkUndefinedNull(obj.devices) && obj.devices.length > 0 && mainSvc.checkUndefinedNull($scope.zpointSettings.deviceObjectId)) {
+                    $scope.zpointSettings.deviceObjectId = obj.devices[0].id;                    
                 }
 //console.log(obj);                            
                 if (showFlag == true) {
                     $('#contObjectDevicesModal').modal();
                 }
+                obj.devicesLoading = false;
+                $scope.selectedItem(obj);
 //                            if (showFlag == false){
 //                                $('#contObjectDevicesModal').modal();
 //                            };
-            },
-            errorCallback/*function(error){
+            }, function (e) {
+                errorCallback(e); 
+                obj.devicesLoading = false;
+            }/*function(error){
                 notificationFactory.errorInfo(error.statusText,error.description);
             }*/
         );
@@ -1708,7 +1719,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.deleteDevice = function (device) {
 //console.log(device);        
         var targetUrl = objectSvc.getRmaObjectsUrl();
-        targetUrl = targetUrl + "/" + device.contObjectInfo.contObjectId + "/deviceObjects/" + device.id;
+        targetUrl = targetUrl + "/" + device.contObjectId + "/deviceObjects/" + device.id;
         $http.delete(targetUrl).then(successDeviceCallback, errorCallback);
     };
 // **************************************************************************************************
@@ -2396,7 +2407,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
     });
 
-    $('#showZpointOptionModal').on('shown.bs.modal', function () {
+    $('#showZpointOptionModal').on('shown.bs.modal', function () {        
         $('#inputZpointName').focus();
     });
 
@@ -2431,12 +2442,37 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $("#metaDataEditorModal").on('shown.bs.modal', function () {
         setMetaToolTips();
     });
+    
+//    $scope.viewDeviceArchive = function (zpSettings) {
+//        if (!mainSvc.checkUndefinedNull(zpSettings.showDeviceArchive)) {
+//            zpSettings.showDeviceArchive = !zpSettings.showDeviceArchive;
+//        } else {
+//            zpSettings.showDeviceArchive = true;
+//        }
+//        zpSettings.deviceArchiveLoading = true;
+//        objectSvc.loadZpointDeviceArchive(zpSettings.id)
+//            .then(function (resp) {
+//                   zpSettings.deviceArchive = resp.data;
+//                    //test
+//                    zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//            zpSettings.deviceArchive = zpSettings.deviceArchive.concat(resp.data);
+//                //end test
+//                    zpSettings.deviceArchiveLoading = false;
+//                    $('#deviceArchiveModal').modal();
+//                }, 
+//                  function (e) {
+//                    zpSettings.deviceArchiveLoading = false;
+//                    errorCallback(e);
+//                });
+//    }
 
     //controller initialization
     var initCtrl = function () {
         getRsoOrganizations();
         getCmOrganizations();
-        getServiceTypes();
+//        getServiceTypes();
         getTimezones();
         getClients();
         //if tree is off

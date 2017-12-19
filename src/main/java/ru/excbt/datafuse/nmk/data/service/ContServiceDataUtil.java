@@ -35,8 +35,8 @@ public final class ContServiceDataUtil {
 		for (Object[] row : rowList) {
 
 			Long id = DBRowUtil.asLong(row[0]);
-			String timeDetail = DBRowUtil.asString(row[1]);
-			Timestamp lastDate = DBRowUtil.asTimestamp(row[2]);
+			String timeDetailKeyname = DBRowUtil.asString(row[1]);
+			Timestamp lastDateTimestamp = DBRowUtil.asTimestamp(row[2]);
 
 			List<TimeDetailLastDate> list = resultMap.get(id);
 			if (list == null) {
@@ -44,8 +44,10 @@ public final class ContServiceDataUtil {
 				resultMap.put(id, list);
 			}
 
-			TimeDetailLastDate item = new TimeDetailLastDate(timeDetail, lastDate);
-			list.add(item);
+			if (lastDateTimestamp != null) {
+                TimeDetailLastDate item = new TimeDetailLastDate(timeDetailKeyname, lastDateTimestamp.toLocalDateTime());
+                list.add(item);
+            }
 		}
 
 		return resultMap;

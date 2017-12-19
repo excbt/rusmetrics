@@ -17,12 +17,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Базовый класс для контроллера с абонентом
@@ -54,8 +50,8 @@ public abstract class AbstractSubscrApiResource {
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long contObjectId) {
-		checkNotNull(contObjectId);
-		return objectAccessService.checkContObjectId(getSubscriberId(), contObjectId);
+        Objects.requireNonNull(contObjectId);
+		return objectAccessService.checkContObjectId(contObjectId, getSubscriberParam());
 	}
 
 	/**
@@ -64,8 +60,8 @@ public abstract class AbstractSubscrApiResource {
 	 * @return
 	 */
 	protected boolean canAccessContObject(Long[] contObjectIds) {
-	    checkNotNull(contObjectIds);
-	    return objectAccessService.checkContObjectIds(currentSubscriberService.getSubscriberId(), Arrays.asList(contObjectIds));
+        Objects.requireNonNull(contObjectIds);
+	    return objectAccessService.checkContObjectIds(Arrays.asList(contObjectIds), currentSubscriberService.getSubscriber());
 	}
 
     /**
@@ -74,7 +70,7 @@ public abstract class AbstractSubscrApiResource {
      * @return
      */
 	protected boolean canAccessContObject(List<Long> contObjectIds) {
-        return objectAccessService.checkContObjectIds(currentSubscriberService.getSubscriberId(), contObjectIds);
+        return objectAccessService.checkContObjectIds(contObjectIds, currentSubscriberService.getSubscriber());
 	}
 
 	/**
@@ -86,7 +82,7 @@ public abstract class AbstractSubscrApiResource {
 		if (currentSubscriberService.isSystemUser()) {
 			return true;
 		}
-		return objectAccessService.checkContZPointIds(getCurrentSubscriberId(), Arrays.asList(contZPointIds));
+		return objectAccessService.checkContZPointIds(Arrays.asList(contZPointIds), currentSubscriberService.getSubscriberParam());
 	}
 
     /**
@@ -95,7 +91,7 @@ public abstract class AbstractSubscrApiResource {
      * @return
      */
 	protected boolean canAccessContZPoint(Long contZPointId) {
-		checkNotNull(contZPointId);
+        Objects.requireNonNull(contZPointId);
 		Long[] contObjectIds = new Long[] { contZPointId };
 		return canAccessContZPoint(contObjectIds);
 	}
@@ -217,7 +213,7 @@ public abstract class AbstractSubscrApiResource {
      * @return
      */
 	protected <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam) {
-		checkNotNull(objectList);
+        Objects.requireNonNull(objectList);
 
 		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberParam,
 				getSubscriberLocalDate(subscriberParam.getSubscriberId()));

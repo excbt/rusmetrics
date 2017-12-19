@@ -15,7 +15,7 @@ public interface ObjectTagMapper extends EntityMapper<ObjectTagDTO, ObjectTag> {
     @Mapping(target = "lastModifiedBy", ignore = true)
     ObjectTag toEntity(ObjectTagDTO dto);
 
-
+    @Mapping(target = "subscriberId", ignore = true)
     ObjectTag.PK toEntityPK(ObjectTagDTO dto);
 
 }

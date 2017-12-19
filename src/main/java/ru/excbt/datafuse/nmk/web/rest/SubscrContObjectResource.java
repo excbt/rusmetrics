@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.model.types.ContObjectCurrentSettingTypeKey;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -24,6 +25,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -62,7 +64,9 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
     public SubscrContObjectResource(ContObjectService contObjectService,
                                     ContGroupService contGroupService,
                                     OrganizationService organizationService,
-                                    ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService) {
+                                    ContObjectFiasService contObjectFiasService,
+                                    MeterPeriodSettingService meterPeriodSettingService,
+                                    ObjectAccessService objectAccessService) {
         this.contObjectService = contObjectService;
         this.contGroupService = contGroupService;
         this.organizationService = organizationService;
@@ -74,6 +78,12 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
     protected abstract class ContObjectDTOResponse extends ApiActionEntityAdapter<List<? extends ContObjectDTO>> {
 
     }
+
+
+    protected abstract class ContObjectMonitorDTOResponse extends ApiActionEntityAdapter<List<ContObjectMonitorDTO>> {
+
+    }
+
 
     /**
      *
@@ -108,19 +118,22 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
-        ApiAction action = new ContObjectDTOResponse() {
-            @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
-                boolean isRma = currentSubscriberService.isRma();
-                List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
+//        ApiAction action = new ApiActionEntityAdapter<List<ContObjectMonitorDTO>> () {
+//            @Override
+//            public List<ContObjectMonitorDTO> processAndReturnResult() {
+//                boolean isRma = currentSubscriberService.isRma();
+//                List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
+//                List<ContObjectMonitorDTO> result = contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
+//                return result;
+//            }
+//        };
 
-                List<? extends ContObjectDTO> result = contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
-                objectAccessService.readContObjectAccess(getSubscriberId(), result);
-                return result;
-            }
-        };
-
-		return ApiActionTool.processResponceApiActionOk(action);
+		return ApiActionTool.processResponceApiActionOk(() -> {
+            boolean isRma = currentSubscriberService.isRma();
+            List<ContObject> resultList = findContObjectsByAccess(contGroupId, isRma, true, meterPeriodSettingIds);
+            List<ContObjectMonitorDTO> result = contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
+            return result;
+        });
 
 	}
 
@@ -136,9 +149,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		ContObjectMonitorDTO result = contObjectService.findContObjectMonitorDTO(getSubscriberParam(), contObjectId);
-
-		return ApiResponse.responseOK(result);
+		return ApiResponse.responseOK(() -> contObjectService.findContObjectMonitorDTO(getSubscriberParam(), contObjectId));
 	}
 
 
@@ -167,22 +178,22 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	/**
 	 *
 	 * @param contObjectId
-	 * @param contObject
+	 * @param contObjectDTO
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			final @RequestBody ContObject contObject) {
+			final @RequestBody ContObjectDTO contObjectDTO) {
 
-		checkNotNull(contObjectId);
-		checkNotNull(contObject);
+        Objects.requireNonNull(contObjectDTO);
+        Objects.requireNonNull(contObjectId);
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
-		if (contObject.isNew()) {
+		if (contObjectDTO.getId() == null) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -192,7 +203,7 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 			public ContObjectMonitorDTO processAndReturnResult() {
 
 				//ContObject result = contObjectService.updateContObject(contObject, cmOrganizationId);
-				ContObject result = contObjectService.automationUpdate(contObject, cmOrganizationId);
+				ContObject result = contObjectService.automationUpdate(contObjectDTO, cmOrganizationId);
 
 				objectAccessService.setupRmaHaveSubscr(getSubscriberParam(), Arrays.asList(result));
 

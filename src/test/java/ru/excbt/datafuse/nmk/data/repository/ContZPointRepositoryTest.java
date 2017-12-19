@@ -41,11 +41,8 @@ public class ContZPointRepositoryTest extends JpaSupportTest {
 
 		ContZPoint zp = zpList.get(0);
 
-		logger.debug("Found {} deviceObjects", zp.getDeviceObjects().size());
 
-		for (DeviceObject d : zp.getDeviceObjects()) {
-			logger.debug("deviceObject number {}", d.getNumber());
-		}
+		logger.debug("deviceObject number {}", zp.getDeviceObject().getNumber());
 
 	}
 

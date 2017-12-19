@@ -1,12 +1,15 @@
 package ru.excbt.datafuse.nmk.utils;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
-
-import org.joda.time.LocalDateTime;
 
 /**
  * Утилиты для работы с датой
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.07.2015
@@ -15,28 +18,29 @@ import org.joda.time.LocalDateTime;
 public class DateFormatUtils {
 
 	public static final String DATE_FORMAT_STR_FULL = "dd-MM-yyyy HH:mm";
+	public static final DateTimeFormatter DATE_FORMAT_STR_FULL2 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+
 	public static final String DATE_FORMAT_STR_FULL_SEC = "dd-MM-yyyy HH:mm:ss";
-	public static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
+    public static final DateTimeFormatter DATE_FORMAT_STR_FULL_SEC2 = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+    public static final String DATE_FORMAT_STR_TRUNC = "dd-MM-yyyy";
+    public static final DateTimeFormatter DATE_FORMAT_STR_TRUNC2 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
 	private DateFormatUtils() {
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param date
 	 * @return
 	 */
 	public static String formatDateTime(Date date) {
-		if (date == null) {
-			return null;
-		}
-		LocalDateTime ldt = new LocalDateTime(date);
-		return ldt.toString("yyyy-MM-dd HH:mm");
+		return formatDateTime(date, "yyyy-MM-dd HH:mm");
 	}
 
 	/**
-	 * 
+	 *
 	 * @param date
 	 * @param formatString
 	 * @return
@@ -45,7 +49,50 @@ public class DateFormatUtils {
 		if (date == null) {
 			return null;
 		}
-		LocalDateTime ldt = new LocalDateTime(date);
-		return ldt.toString(formatString);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString);
+		return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault()).format(formatter);
 	}
+
+    /**
+     *
+     * @param instant
+     * @param formatString
+     * @return
+     */
+	public static String formatDateTime(Instant instant, String formatString) {
+		if (instant == null) {
+			return null;
+		}
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString);
+		return LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).format(formatter);
+	}
+
+    /**
+     *
+     * @param localDateTime
+     * @param formatString
+     * @return
+     */
+	public static String formatLocalDateTime(LocalDateTime localDateTime, String formatString) {
+		if (localDateTime == null) {
+			return null;
+		}
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatString);
+		return localDateTime.format(formatter);
+	}
+
+    public static String formatLocalDateTime(LocalDateTime localDateTime) {
+	    if (localDateTime == null) {
+	        return null;
+        }
+        return localDateTime.format(DATE_FORMAT_STR_FULL2);
+    }
+
+    public static String formatLocalDate(LocalDate localDate) {
+	    if (localDate == null) {
+	        return null;
+        }
+        return localDate.format(DATE_FORMAT_STR_FULL2);
+    }
+
 }

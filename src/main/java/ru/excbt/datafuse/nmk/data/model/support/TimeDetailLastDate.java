@@ -1,28 +1,34 @@
 package ru.excbt.datafuse.nmk.data.model.support;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 public class TimeDetailLastDate implements Serializable, DataDateFormatter {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5090791752051900144L;
 
-	public final String timeDetailType;
-	public final Date dataDate;
+	public static final String ALL = "ALL";
 
-	public TimeDetailLastDate(String timeDetailType, Date dataDate) {
+	public final String timeDetailType;
+
+	public final LocalDateTime dataDateTime;
+
+	public TimeDetailLastDate(String timeDetailType, LocalDateTime dataDateTime) {
 		this.timeDetailType = timeDetailType;
-		this.dataDate = dataDate;
+		this.dataDateTime = dataDateTime;
 	}
 
 	@Override
 	public Date getDataDate() {
-		return dataDate;
+		return LocalDateUtils.asDate(dataDateTime);
 	}
 
 	@Override
@@ -32,7 +38,7 @@ public class TimeDetailLastDate implements Serializable, DataDateFormatter {
 
 	@Override
 	public String toString() {
-		return String.format("TimeDetailLastDate [timeDetailType=%s, dataDate=%s]", timeDetailType, dataDate);
+		return String.format("TimeDetailLastDate [timeDetailType=%s, dataDateTime=%s]", timeDetailType, dataDateTime);
 	}
 
 }

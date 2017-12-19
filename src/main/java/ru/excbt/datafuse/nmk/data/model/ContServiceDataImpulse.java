@@ -72,7 +72,7 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
     @JsonProperty
     public String getInsertDateStr() {
         Instant dateTime = super.getCreatedDate();
-        return dateTime != null ? DateFormatUtils.formatDateTime(Date.from(dateTime), DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
+        return dateTime != null ? DateFormatUtils.formatDateTime(dateTime, DateFormatUtils.DATE_FORMAT_STR_FULL) : null;
     }
 
 

@@ -31,7 +31,8 @@ var app = angular
         'angularWidget',
         'chart.js',
         'ui.layout',
-        'ui.router'
+        'ui.router',
+        'ngTagsInput'
     ]);
 
 app.constant("APP_LABEL", "Русметрикс");

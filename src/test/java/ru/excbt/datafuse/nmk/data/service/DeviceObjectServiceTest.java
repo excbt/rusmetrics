@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.modelmapper.DeviceObjectToDTOMapping;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
@@ -39,6 +40,9 @@ public class DeviceObjectServiceTest extends JpaSupportTest {
 
     @Autowired
 	private DeviceObjectToDTOMapping deviceObjectDTOMapping;
+
+    @Autowired
+    private DeviceObjectRepository deviceObjectRepository;
 
 	@Test
     @Transactional
@@ -81,5 +85,15 @@ public class DeviceObjectServiceTest extends JpaSupportTest {
 
         log.info("BEFORE: {}",deviceObjectDTO);
         log.info("AFTER : {}",deviceObjectDTO2);
+    }
+
+
+    @Test
+    public void testSubscrDataSource() {
+	    DeviceObject deviceObject = deviceObjectRepository.findOne(486L);
+	    log.info("ActiveDataSource, {}", deviceObject.getActiveDataSource());
+	    log.info("EditDataSourceInfo, {}", deviceObject.getEditDataSourceInfo());
+
+
     }
 }

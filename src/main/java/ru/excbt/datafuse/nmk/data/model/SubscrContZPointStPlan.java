@@ -109,6 +109,14 @@ public class SubscrContZPointStPlan extends AbstractAuditableModel implements De
         this.deleted = deleted;
     }
 
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "SubscrStPlanZPoint{" +

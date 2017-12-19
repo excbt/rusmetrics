@@ -8,6 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 
 public class LocalDateUtils {
 
@@ -45,5 +46,14 @@ public class LocalDateUtils {
 	 */
 	public static LocalDateTime asLocalDateTime(Date date) {
 		return date == null ? null :  Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
+	}
+
+    /**
+     *
+     * @param date
+     * @return
+     */
+	public static LocalDateTime asLocalDateTime(Optional<Date> date) {
+	    return date.map(i -> LocalDateUtils.asLocalDateTime(i)).orElse(null);
 	}
 }

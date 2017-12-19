@@ -30,7 +30,8 @@ public class LoggingAspect {
     /**
      * Pointcut that matches all repositories, services and Web REST endpoints.
      */
-    @Pointcut("within(ru.excbt.datafuse.nmk.data.repository..*) || within(ru.excbt.datafuse.nmk.data.service..*) || within(ru.excbt.datafuse.nmk.web.api..*) " +
+    @Pointcut("within(ru.excbt.datafuse.nmk.data.repository.*) || within(ru.excbt.datafuse.nmk.data.service.*) || within(ru.excbt.datafuse.nmk.web.api.*) " +
+        "|| within(ru.excbt.datafuse.nmk.service.*) " +
         "|| within(ru.excbt.datafuse.nmk.data.energypassport.*)")
     public void loggingPointcut() {
         // Method is empty as this is just a Poincut, the implementations are in the advices.

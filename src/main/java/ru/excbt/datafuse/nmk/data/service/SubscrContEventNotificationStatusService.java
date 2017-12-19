@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorReposito
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorService;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;

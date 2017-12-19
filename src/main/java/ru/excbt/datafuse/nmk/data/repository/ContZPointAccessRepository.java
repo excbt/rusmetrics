@@ -74,7 +74,7 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
     List<Object[]> findAllContZPointIdPairs(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT zp.deviceObjects FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
+    @Query("SELECT zp.deviceObject FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
         " WHERE a.subscriberId = :subscriberId " +
         " AND a.accessTtl IS NULL" +
         " AND a.contZPoint.deleted = 0 ")
@@ -83,7 +83,7 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
 
     @Query(value = "SELECT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, " +
         " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSourceId as subscrDataSourceId" +
-        " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObjects d LEFT JOIN d.deviceObjectDataSources ds" +
+        " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObject d LEFT JOIN d.deviceObjectDataSources ds" +
         " WHERE a.subscriberId = :subscriberId AND zp.id = a.contZPointId AND d.number IN (:deviceObjectNumbers) AND ds.isActive = true " +
         " AND a.accessTtl IS NULL " +
         " AND zp.deleted = 0")
