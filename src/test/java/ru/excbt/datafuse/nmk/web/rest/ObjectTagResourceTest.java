@@ -18,23 +18,26 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.data.model.ObjectTag;
+import ru.excbt.datafuse.nmk.data.model.ObjectTagInfo;
+import ru.excbt.datafuse.nmk.data.repository.ObjectTagInfoRepository;
 import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagRepository;
 import ru.excbt.datafuse.nmk.service.ObjectTagService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.dto.ObjectTagInfoDTO;
+import ru.excbt.datafuse.nmk.service.mapper.ObjectTagInfoMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ObjectTagMapper;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -67,7 +70,13 @@ public class ObjectTagResourceTest {
     private ObjectTagRepository objectTagRepository;
 
     @Autowired
+    private ObjectTagInfoRepository objectTagInfoRepository;
+
+    @Autowired
     private ObjectTagMapper objectTagMapper;
+
+    @Autowired
+    private ObjectTagInfoMapper objectTagInfoMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -85,11 +94,18 @@ public class ObjectTagResourceTest {
      * @param objectTagKeyname
      * @return
      */
-    private ObjectTag createObjectTag(String objectTagKeyname) {
+    private ObjectTag _createObjectTag(String objectTagKeyname) {
         ObjectTag tag = new ObjectTag();
         tag.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
         tag.setObjectTagKeyname(objectTagKeyname);
         return tag;
+    }
+
+    private ObjectTagInfo _createObjectTagInfo(String objectTagKeyname) {
+        ObjectTagInfo tagInfo = new ObjectTagInfo();
+        tagInfo.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+        tagInfo.setObjectTagKeyname(objectTagKeyname);
+        return tagInfo;
     }
 
 
@@ -99,8 +115,8 @@ public class ObjectTagResourceTest {
      * @param objectTagKeyname
      * @throws Exception
      */
-    private void testFindObjectsTag(final String url, final String objectTagKeyname) throws Exception {
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+    private void _testFindObjectsTag(final String url, final String objectTagKeyname) throws Exception {
+        ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         objectTagRepository.save(tag);
 
         restPortalContObjectMockMvc.perform(
@@ -119,8 +135,8 @@ public class ObjectTagResourceTest {
      * @param objectTagKeyname
      * @throws Exception
      */
-    private void testFindOneObjectTag(final String url, final String objectTagKeyname) throws Exception {
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+    private void _testFindOneObjectTag(final String url, final String objectTagKeyname) throws Exception {
+        ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         objectTagRepository.save(tag);
 
         restPortalContObjectMockMvc.perform(
@@ -139,7 +155,7 @@ public class ObjectTagResourceTest {
      */
     private void _testCreatePutObjectTag(final String url, final String objectTagKeyname) throws Exception {
 
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         ObjectTagDTO dto = objectTagMapper.toDto(tag);
 
         restPortalContObjectMockMvc.perform(put(url)
@@ -162,7 +178,7 @@ public class ObjectTagResourceTest {
      */
     private void _testCreatePostObjectTag(final String url, final String objectTagKeyname) throws Exception {
 
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         ObjectTagDTO dto = objectTagMapper.toDto(tag);
 
         restPortalContObjectMockMvc.perform(post(url)
@@ -185,7 +201,7 @@ public class ObjectTagResourceTest {
      */
     private void _testDeleteObjectTag(final String url, final String objectTagKeyname) throws Exception {
 
-        ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
+        ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME).objectId(TEST_OBJECT_ID);
         ObjectTagDTO dto = objectTagMapper.toDto(tag);
 
         restPortalContObjectMockMvc.perform(put(url)
@@ -205,7 +221,7 @@ public class ObjectTagResourceTest {
         List<String> tagNames = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
-            ObjectTag tag = createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME + " #" + i ).objectId(TEST_OBJECT_ID);
+            ObjectTag tag = _createObjectTag(objectTagKeyname).tagName(TEST_TAG_NAME + " #" + i ).objectId(TEST_OBJECT_ID);
             tagNames.add(tag.getTagName());
             objectTagRepository.saveAndFlush(tag);
         }
@@ -225,7 +241,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findContObjectsTags() throws Exception {
-        testFindObjectsTag(
+        _testFindObjectsTag(
             "/api/object-tags/cont-objects",
             ObjectTag.contObjectTagKeyname);
     }
@@ -234,7 +250,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findOneContObjectTags() throws Exception {
-        testFindOneObjectTag(
+        _testFindOneObjectTag(
             "/api/object-tags/cont-objects/{objectId}",
             ObjectTag.contObjectTagKeyname);
     }
@@ -272,7 +288,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findContZPointTags() throws Exception {
-        testFindObjectsTag(
+        _testFindObjectsTag(
             "/api/object-tags/cont-zpoints",
             ObjectTag.contZPointTagKeyname);
     }
@@ -281,7 +297,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findOneContZPointTags() throws Exception {
-        testFindOneObjectTag(
+        _testFindOneObjectTag(
             "/api/object-tags/cont-zpoints/{objectId}",
             ObjectTag.contZPointTagKeyname);
     }
@@ -318,7 +334,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findDeviceObjectTags() throws Exception {
-        testFindObjectsTag(
+        _testFindObjectsTag(
             "/api/object-tags/device-objects",
             ObjectTag.deviceObjectTagKeyname);
     }
@@ -326,7 +342,7 @@ public class ObjectTagResourceTest {
     @Test
     @Transactional
     public void findOneDeviceObjectTags() throws Exception {
-        testFindOneObjectTag(
+        _testFindOneObjectTag(
             "/api/object-tags/device-objects/{objectId}",
             ObjectTag.deviceObjectTagKeyname);
     }
@@ -372,6 +388,7 @@ public class ObjectTagResourceTest {
     }
 
     @Test
+    @Transactional
     public void getContObjectsTagNames() throws Exception {
         _testGetObjectTagNames("/api/object-tags/cont-objects/tag-names",
             ObjectTag.contObjectTagKeyname);
@@ -379,16 +396,94 @@ public class ObjectTagResourceTest {
 
 
     @Test
+    @Transactional
     public void getContZPointsTagNames() throws Exception {
         _testGetObjectTagNames("/api/object-tags/cont-zpoints/tag-names",
             ObjectTag.contZPointTagKeyname);
     }
 
     @Test
+    @Transactional
     public void getDeviceObjectsTagNames() throws Exception {
         _testGetObjectTagNames("/api/object-tags/device-objects/tag-names",
             ObjectTag.deviceObjectTagKeyname);
     }
+
+
+    @Test
+    @Transactional
+    public void getContObjectsTagInfo() throws Exception {
+
+        ObjectTagInfo tagInfo = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME).tagColor("GREEN");
+        objectTagInfoRepository.saveAndFlush(tagInfo);
+
+        ObjectTagInfo tagInfo2 = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME + "-#2");
+        objectTagInfoRepository.saveAndFlush(tagInfo2);
+
+        restPortalContObjectMockMvc.perform(
+            get("/api/object-tags/cont-objects/tag-info"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.arrayBeatifyResult(i)))
+            .andExpect(jsonPath("$.[*].objectTagKeyname").value(hasItem(ObjectTag.contObjectTagKeyname)))
+            .andExpect(jsonPath("$.[*].tagName").value(hasItem(TEST_TAG_NAME)))
+            .andExpect(jsonPath("$.[*].tagColor").value(hasItem("GREEN")));
+
+    }
+
+    @Test
+    @Transactional
+    public void putObjectTagInfoList() throws Exception {
+
+        ObjectTagInfo tagInfo = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME).tagColor("GREEN");
+        List<ObjectTagInfoDTO> tagInfoDTOS = objectTagInfoMapper.toDto(Arrays.asList(tagInfo));
+
+        restPortalContObjectMockMvc.perform(put("/api/object-tags/cont-objects/tag-info-list")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tagInfoDTOS)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(jsonPath("$.[*].objectTagKeyname").value(hasItem(ObjectTag.contObjectTagKeyname)))
+            .andExpect(jsonPath("$.[*].tagName").value(hasItem(TEST_TAG_NAME)))
+            .andExpect(jsonPath("$.[*].tagColor").value(hasItem("GREEN")));
+
+    }
+
+    @Test
+    @Transactional
+    public void putOneObjectTagInfo() throws Exception {
+
+        ObjectTagInfo tagInfo = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME).tagColor("GREEN");
+        ObjectTagInfoDTO tagInfoDTO = objectTagInfoMapper.toDto(tagInfo);
+
+        restPortalContObjectMockMvc.perform(put("/api/object-tags/cont-objects/tag-info")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tagInfoDTO)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(jsonPath("$.objectTagKeyname").value(ObjectTag.contObjectTagKeyname))
+            .andExpect(jsonPath("$.tagName").value(TEST_TAG_NAME))
+            .andExpect(jsonPath("$.tagColor").value("GREEN"));
+
+    }
+
+
+    @Test
+    @Transactional
+    public void deleteContObjectsTagInfo() throws Exception {
+
+        ObjectTagInfo tagInfo = _createObjectTagInfo(ObjectTag.contObjectTagKeyname).tagName(TEST_TAG_NAME).tagColor("GREEN");
+        objectTagInfoRepository.saveAndFlush(tagInfo);
+
+        restPortalContObjectMockMvc.perform(
+            delete("/api/object-tags/cont-objects/tag-info/{tagName}", TEST_TAG_NAME))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+
+    }
+
 
 
 }

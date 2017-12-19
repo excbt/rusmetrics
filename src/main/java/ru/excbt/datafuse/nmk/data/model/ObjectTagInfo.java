@@ -4,6 +4,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,9 @@ import java.util.Objects;
 @Getter
 @Setter
 @IdClass(ObjectTagInfo.PK.class)
-public class ObjectTagInfo implements Serializable {
+public class ObjectTagInfo implements Serializable, DeletedMarker {
+
+    public static final String DEFAULT_COLOR = "DEFAULT";
 
     @Getter
     @Setter
@@ -30,35 +33,9 @@ public class ObjectTagInfo implements Serializable {
         @NotNull
         private String objectTagKeyname;
 
-
         @Column(name = "tag_name")
         @NotNull
         private String tagName;
-
-
-        public Long getSubscriberId() {
-            return subscriberId;
-        }
-
-        public void setSubscriberId(Long subscriberId) {
-            this.subscriberId = subscriberId;
-        }
-
-        public String getObjectTagKeyname() {
-            return objectTagKeyname;
-        }
-
-        public void setObjectTagKeyname(String objectTagKeyname) {
-            this.objectTagKeyname = objectTagKeyname;
-        }
-
-        public String getTagName() {
-            return tagName;
-        }
-
-        public void setTagName(String tagName) {
-            this.tagName = tagName;
-        }
 
         @Override
         public boolean equals(Object o) {
@@ -79,18 +56,21 @@ public class ObjectTagInfo implements Serializable {
 
     @Id
     @Column(name = "subscriber_id")
+    @NotNull
     private Long subscriberId;
 
     @Id
     @Column(name = "object_tag_keyname")
+    @NotNull
     private String objectTagKeyname;
 
     @Id
     @Column(name = "tag_name")
+    @NotNull
     private String tagName;
 
     @Column(name = "tag_color")
-    private String tagColor;
+    private String tagColor = DEFAULT_COLOR;
 
     @Column(name = "tag_description")
     private String tagDescription;
@@ -99,7 +79,8 @@ public class ObjectTagInfo implements Serializable {
     private String tagComment;
 
     @Column(name = "is_enabled")
-    private Boolean isEnabled;
+    @NotNull
+    private Boolean isEnabled = true;
 
     @Column(name = "flex_data")
     @Type(type = "JsonbAsString")
@@ -110,6 +91,18 @@ public class ObjectTagInfo implements Serializable {
 
     @Column(name = "deleted")
     private int deleted;
+
+
+    public ObjectTagInfo tagName(String tagName) {
+        this.tagName = tagName;
+        return this;
+    }
+
+    public ObjectTagInfo tagColor(String tagColor) {
+        this.tagColor = tagColor;
+        return this;
+    }
+
 
     @Override
     public boolean equals(Object o) {

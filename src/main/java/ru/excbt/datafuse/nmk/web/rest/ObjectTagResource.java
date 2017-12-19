@@ -8,10 +8,12 @@ import ru.excbt.datafuse.nmk.data.model.ObjectTag;
 import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.service.ObjectTagService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.service.dto.ObjectTagInfoDTO;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/object-tags")
@@ -65,7 +67,7 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @ApiOperation("Get all tags for cont-object")
+    @ApiOperation("Get all tags for objectTagKeyname")
     @GetMapping("/{objectTagKeynameUrl}/{objectId}")
     public ResponseEntity<?> getContObjectTagsByObject(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
@@ -114,9 +116,9 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @ApiOperation("Creates tag for cont-object")
+    @ApiOperation("Creates tag for objectTagKeyname")
     @PostMapping("/{objectTagKeynameUrl}")
-    public ResponseEntity<?> createContObjectTag(@PathVariable("objectTagKeynameUrl")
+    public ResponseEntity<?> postContObjectTag(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl,
                                                  @RequestBody ObjectTagDTO objectTagDTO) {
@@ -139,7 +141,7 @@ public class ObjectTagResource {
      */
     @PutMapping("/{objectTagKeynameUrl}")
     @ApiOperation("Creates or deletes tag for cont-object")
-    public ResponseEntity<?> createOrDeleteContObjectTag(
+    public ResponseEntity<?> putContObjectTag(
                                                     @PathVariable("objectTagKeynameUrl")
                                                     @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                         String objectTagKeynameUrl,
@@ -165,5 +167,109 @@ public class ObjectTagResource {
                 portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(savedDTO);
     }
+
+
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @GetMapping("/{objectTagKeynameUrl}/tag-info")
+    public ResponseEntity<?> getAllObjectTagInfo(@PathVariable("objectTagKeynameUrl")
+                                                    @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                        String objectTagKeynameUrl) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        List<ObjectTagInfoDTO> tagInfoDTOS = objectTagService.findAllObjectTagInfo(portalUserIdsService.getCurrentIds());
+
+        String objectTagKeyname = supportedObjectTagMap.get(objectTagKeynameUrl);
+
+        List<ObjectTagInfoDTO> filteredTagInfoDTOS = tagInfoDTOS.stream().filter(i ->  objectTagKeyname.equalsIgnoreCase(i.getObjectTagKeyname())).collect(Collectors.toList());
+
+        return ApiResponse.responseOK(filteredTagInfoDTOS);
+    }
+
+
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @GetMapping("/{objectTagKeynameUrl}/tag-info/{tagName}")
+    public ResponseEntity<?> getOneObjectTagInfo(@PathVariable("objectTagKeynameUrl")
+                                                @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                  String objectTagKeynameUrl,
+                                                 @PathVariable("tagName") String tagName) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        ObjectTagInfoDTO tagInfoDTO = new ObjectTagInfoDTO();
+        String objectTagKeyname = supportedObjectTagMap.get(objectTagKeynameUrl);
+        tagInfoDTO.setObjectTagKeyname(objectTagKeyname);
+        tagInfoDTO.setTagName(tagName);
+
+        ObjectTagInfoDTO resultTagInfoDTO = objectTagService.findOneObjectTagInfo(tagInfoDTO, portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK(resultTagInfoDTO);
+    }
+
+
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @PutMapping("/{objectTagKeynameUrl}/tag-info")
+    public ResponseEntity<?> putOneObjectTagInfo(@PathVariable("objectTagKeynameUrl")
+                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                     String objectTagKeynameUrl,
+                                                 @RequestBody ObjectTagInfoDTO objectTagInfoDTO) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        ObjectTagInfoDTO resultTagInfoDTO = objectTagService.saveOneObjectTagInfo(objectTagInfoDTO, portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK(resultTagInfoDTO);
+    }
+
+
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @PutMapping("/{objectTagKeynameUrl}/tag-info-list")
+    public ResponseEntity<?> putObjectTagInfoList(@PathVariable("objectTagKeynameUrl")
+                                                   @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                       String objectTagKeynameUrl,
+                                                   @RequestBody List<ObjectTagInfoDTO> objectTagInfoDTOs) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        List<ObjectTagInfoDTO> tagInfoDTOS = objectTagService.saveObjectTagInfo(objectTagInfoDTOs, portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK(tagInfoDTOS);
+    }
+
+    /**
+     *
+     * @param objectTagKeynameUrl
+     * @return
+     */
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @DeleteMapping("/{objectTagKeynameUrl}/tag-info/{tagName}")
+    public ResponseEntity<?> deleteObjectTagInfo(@PathVariable("objectTagKeynameUrl")
+                                                   @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
+                                                       String objectTagKeynameUrl,
+                                                 @PathVariable("tagName") String tagName) {
+
+        if (! supportedObjectTagMap.containsKey(objectTagKeynameUrl)) {
+            return ApiResponse.responseBadRequest(ApiResult.badRequest("Unsupported tag"));
+        }
+
+        ObjectTagInfoDTO tagInfoDTO = new ObjectTagInfoDTO();
+        String objectTagKeyname = supportedObjectTagMap.get(objectTagKeynameUrl);
+        tagInfoDTO.setObjectTagKeyname(objectTagKeyname);
+        tagInfoDTO.setTagName(tagName);
+
+        objectTagService.deleteObjectTagInfo(tagInfoDTO, portalUserIdsService.getCurrentIds());
+
+        return ApiResponse.responseOK();
+    }
+
+
 
 }
