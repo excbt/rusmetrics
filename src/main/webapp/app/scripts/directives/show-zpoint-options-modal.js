@@ -312,7 +312,7 @@
         };
         
         $('#showZpointOptionModal').on('shown.bs.modal', function () {
-
+            $('#inputZpointName').focus();
             vmc.loading = true;
             getRsoOrganizations();
             loadServiceTypes();

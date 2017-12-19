@@ -2407,10 +2407,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         $('#inputNumOfStories').inputmask('integer', {min: 1, max: 200});
     });
 
-    $('#showZpointOptionModal').on('shown.bs.modal', function () {        
-        $('#inputZpointName').focus();
-    });
-
     //set tooltips for meta device fields
     function setMetaToolTips() {
         $scope.currentZpoint.metaData.metaData.forEach(function (metaField) {
