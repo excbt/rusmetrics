@@ -2652,27 +2652,31 @@ tr.nmc-bg-distinguish > td {
 }
 
 .noMargin {
-    margin : 0;
+    margin: 0;
 }
 
 .noMarginI {
-    margin : 0 !important;
+    margin: 0 !important;
 }
 
 .noPadding {
-    padding : 0;
+    padding: 0;
 }
 
 .noPaddingI {
-    padding : 0 !important;
+    padding: 0 !important;
 }
 
 .noPaddingBottom {
-    padding-bottom : 0;
+    padding-bottom: 0;
 }
 
 .noPaddingRight {
-    padding-right : 0;
+    padding-right: 0;
+}
+
+.noPaddingRightI {
+    padding-right: 0 !important;
 }
 
 .padding5{
