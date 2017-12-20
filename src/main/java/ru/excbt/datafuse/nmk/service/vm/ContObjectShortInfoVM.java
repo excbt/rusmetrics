@@ -13,4 +13,6 @@ public class ContObjectShortInfoVM {
 
     private String contObjectFullName;
 
+    private String currentSettingMode;
+
 }

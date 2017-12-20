@@ -188,6 +188,7 @@ public class ContEventMonitorWidgetResourceTest {
         ContObject contObject = EntityAutomation.createContObject((co) -> {
             co.setName("MyName");
             co.setFullName("My Full Name");
+            co.setCurrentSettingMode("summer");
         }, contObjectService, portalUserIdsService.getCurrentIds());
 
 
