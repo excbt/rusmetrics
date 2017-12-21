@@ -43,10 +43,15 @@
                                   ng-click = "$ctrl.showObjectWidget(object)">
                                    
                                </i>
+<!--
                                 <img class = "marginRight2 pull-right" 
                                 height = "12"
                                 width = "12"
-                                ng-src = "{{object['heat']}}"
+                                ng-src = "{{object.modeImgSrc}}"
+                                style = "margin-top: 10px;">
+-->
+                                <img class = "marginRight2 nmc-p-tree-status-img pull-right" 
+                                ng-src = "{{object.modeImgSrc}}"
                                 style = "margin-top: 10px;">
 
                             </td>

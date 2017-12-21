@@ -22,7 +22,7 @@
         ctrl.objects = [];
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
-            IMG_PATH_MODE_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-mode-winter",
+            IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png";
         
         var contObjectCtrlSvc = contObjectControlComponentService;
@@ -71,7 +71,10 @@
             }
             var inpData = resp.data, //angular.copy(resp.data);
                 tmpObjInfo = {};
-            tmpObjInfo.caption = inpData.contObjectShortInfo.contObjectName || inpData.contObjectShortInfo.contObjectFullName || inpData.contObjectShortInfo.contObjectId;
+            if (!ctrl.checkUndefinedNull(inpData.contObjectShortInfo)) {
+                tmpObjInfo.caption = inpData.contObjectShortInfo.contObjectName || inpData.contObjectShortInfo.contObjectFullName || inpData.contObjectShortInfo.contObjectId;
+                tmpObjInfo.modeImgSrc = IMG_PATH_MODE_TEMPLATE + inpData.contObjectShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
+            }
             if (angular.isArray(inpData.contZPointMonitorState)) {
                 inpData.contZPointMonitorState.forEach(function (zpoint) {
                     tmpObjInfo[zpoint.contServiceTypeKeyname] = IMG_PATH_MONITOR_TEMPLATE + zpoint.stateColor.toLowerCase() + IMG_EXT;                    
@@ -191,7 +194,9 @@
             }
             
             //load cont object zpoints
-            ctrl.loadZpointsByObjectId(obj.id);
+            if (obj.showWidgetFlag) {
+                ctrl.loadZpointsByObjectId(obj.id);
+            }
         };
         
         function successLoadZpointWidgetListCallback(resp) {
