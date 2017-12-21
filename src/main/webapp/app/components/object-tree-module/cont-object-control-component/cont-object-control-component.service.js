@@ -27,6 +27,10 @@
             NODE_ID_FIELD_NAME = "_id",
             SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
         
+        var EVENTS = {};
+        EVENTS.OBJECT_CLICK = 'contObjectControlComponentService:objectClick';
+        
+        this.EVENTS = EVENTS;
         this.checkUndefinedNull = checkUndefinedNull;
         this.loadContObjectMonitorState = loadContObjectMonitorState;
         this.loadNodeObjects = loadNodeObjects;

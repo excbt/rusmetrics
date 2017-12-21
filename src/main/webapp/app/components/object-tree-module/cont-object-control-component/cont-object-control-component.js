@@ -60,6 +60,7 @@
         ctrl.zpointWidgetList = {};
         
         ctrl.checkUndefinedNull = contObjectCtrlSvc.checkUndefinedNull;
+        ctrl.EVENTS = contObjectCtrlSvc.EVENTS;
         
         function errorCallback(e) {
             console.error(e);
@@ -89,19 +90,12 @@
                     return true;
                 }
             });
-//            ctrl.objects.push(tmpObjInfo);
             
         }
         
         
         function successLoadObjectsCallback(resp) {
-//            console.log(resp);
             var tmpBuf = angular.copy(resp.data);
-            //test
-//            var testElm = angular.copy(resp.data[0]);
-//            testElm.colorKey = "YELLOW";
-//            tmpBuf.push(testElm);
-            //end test
             tmpBuf.forEach(function (elm) {
                 if (elm.nodeType !== "CONT_OBJECT") {
                     return false;
@@ -113,10 +107,7 @@
                 ctrl.objects.push(obj);
                 contObjectCtrlSvc.loadContObjectMonitorState(obj.id)
                     .then(successLoadObjectMonitorStateCallback, errorCallback);
-//                elm.imgpath = IMG_PATH_MONITOR_TEMPLATE + elm.colorKey.toLowerCase() + IMG_EXT;
-//                elm.modepath = IMG_PATH_MODE_TEMPLATE + IMG_EXT;
             });            
-//            ctrl.objects = tmpBuf;
         }
         
         //get objects with statuses
@@ -124,18 +115,6 @@
             contObjectCtrlSvc.loadNodeObjects(nodeId).then(successLoadObjectsCallback, errorCallback);
         };
         
-        
-//        "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName +
-//
-//        "', 'contZpointId': '" + zpoint.id +
-//        "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +
-//        "', 'zpointNumber': '" + zpoint.zpointNumber +
-//        "', 'zpointType': '" + zpoint.zpointType +
-//        "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
-//        "', 'contObjectId': '" + object.id +
-//        "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
-//        "', 'isImpulse': '" + zpoint.isImpulse +
-//        "', 'isManualLoading': '" + zpoint.isManualLoading +
         function performZpointData(inputZpoints) {
             if (!angular.isArray(inputZpoints)) {
                 return null;
@@ -178,15 +157,18 @@
                     obj.zpoints = performZpointData(resp.data);
                     return true;
                 }
-            });
+            });            
         }
         
         ctrl.loadZpointsByObjectId = function (objId) {
             contObjectCtrlSvc.loadZpointsByObjectId(objId).then(successLoadZpointsCallback, errorCallback);
         };
         
-        ctrl.showObjectWidget = function (obj) {
-            console.log('showObjectWidget', obj);
+        function scrollTableElementToTop(index) {
+            $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
+        }
+        
+        ctrl.showObjectWidget = function (obj, index) {            
             if (obj.hasOwnProperty('showWidgetFlag')) {
                 obj.showWidgetFlag = !obj.showWidgetFlag;
             } else {
@@ -196,6 +178,13 @@
             //load cont object zpoints
             if (obj.showWidgetFlag) {
                 ctrl.loadZpointsByObjectId(obj.id);
+                // close all objects besides current
+                ctrl.objects.forEach(function (elmObj) {
+                    if (elmObj.id != obj.id) {
+                        elmObj.showWidgetFlag = false;
+                    }
+                });
+                scrollTableElementToTop(index);
             }
         };
         
@@ -214,12 +203,6 @@
             for (wkey in widgetList) {
                 if (widgetList[wkey].length > 0) {
                     defaultWidgets[wkey] = widgetList[wkey][0].widgetName;
-//                    widgetList[wkey].some(function (elm) {
-//                        if (elm.isDefault === true) {
-//                            defaultWidgets[wkey] = elm.widgetName;
-//                            return true;
-//                        }
-//                    });
                     for (var j = 0; j < widgetList[wkey].length; j++) {
                         var elm = widgetList[wkey][j];
                         if (elm.isDefault === true) {

@@ -12,8 +12,9 @@
                 </th>
             </tr>
     </table>
-    <div id="divWithDeviceTable" class="nmc-data-sources-main-div">
-        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin">
+    <div id="divWithContObjectControlTable" class="nmc-data-sources-main-div">
+        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
+            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}">
             
             <tr class = "nmc-main-table-header nmc-hide">
                
@@ -40,7 +41,7 @@
                
                             <td class = "col-xs-1 nmc-td-for-button-object-control">                  
                                <i class = "btn glyphicon glyphicon-chevron-right pull-right"
-                                  ng-click = "$ctrl.showObjectWidget(object)">
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)">
                                    
                                </i>
 <!--
