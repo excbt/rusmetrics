@@ -57,6 +57,10 @@
 
         ];
         
+        ctrl.zpointWidgetList = {};
+        
+        ctrl.checkUndefinedNull = contObjectCtrlSvc.checkUndefinedNull;
+        
         function errorCallback(e) {
             console.error(e);
         }
@@ -117,12 +121,124 @@
             contObjectCtrlSvc.loadNodeObjects(nodeId).then(successLoadObjectsCallback, errorCallback);
         };
         
+        
+//        "'\" options=\"{'zpointName' : '" + zpointWidget.zpointName +
+//
+//        "', 'contZpointId': '" + zpoint.id +
+//        "', 'zpointModel': '" + encodeURIComponent(zpoint.zpointModel) +
+//        "', 'zpointNumber': '" + zpoint.zpointNumber +
+//        "', 'zpointType': '" + zpoint.zpointType +
+//        "', 'measureUnitCaption': '" + zpoint.measureUnitCaption +
+//        "', 'contObjectId': '" + object.id +
+//        "', 'contObjectFullName': '" + encodeURIComponent(object.fullName) +
+//        "', 'isImpulse': '" + zpoint.isImpulse +
+//        "', 'isManualLoading': '" + zpoint.isManualLoading +
+        function performZpointData(inputZpoints) {
+            if (!angular.isArray(inputZpoints)) {
+                return null;
+            }
+            var zpWidgetOptions;
+            var preparedZpoints = angular.copy(inputZpoints);
+            preparedZpoints.forEach(function (zp) {
+                zpWidgetOptions = {};
+                zpWidgetOptions.type = ctrl.zpointWidgetList[zp.contServiceTypeKeyname];
+                zpWidgetOptions.zpointName = zp.customServiceName;
+                zpWidgetOptions.contZpointId = zp.id;
+                if (!ctrl.checkUndefinedNull(zp.deviceObject)) { 
+                    zpWidgetOptions.contObjectFullName = zp.deviceObject.contObjectFullName;
+                    zpWidgetOptions.isImpulse = zp.deviceObject.isImpulse;
+                    zpWidgetOptions.zpointNumber = zp.deviceObject.number;
+                    if (!ctrl.checkUndefinedNull(zp.deviceObject.deviceModel)) { 
+                        zpWidgetOptions.zpointModel = zp.deviceObject.deviceModel.modelName;
+                    } else {
+                        zpWidgetOptions.zpointModel = "Не задано";
+                    }
+                }
+                zpWidgetOptions.contObjectId = zp.contObjectId;
+                zpWidgetOptions.isManualLoading = zp.isManualLoading;                
+                
+                zp.widgetOptions = zpWidgetOptions;
+            });
+            
+            return preparedZpoints;
+        }
+        
+        function successLoadZpointsCallback(resp) {
+            console.log(resp);
+            if (angular.isUndefined(resp) || resp === null || !angular.isArray(resp.data) || resp.data.length === 0) {
+                return false;
+            }
+            //find object
+            var contObjectId = resp.data[0].contObjectId;
+            ctrl.objects.some(function (obj) {
+                if (obj.id === contObjectId) {                    
+                    obj.zpoints = performZpointData(resp.data);
+                    return true;
+                }
+            });
+        }
+        
+        ctrl.loadZpointsByObjectId = function (objId) {
+            contObjectCtrlSvc.loadZpointsByObjectId(objId).then(successLoadZpointsCallback, errorCallback);
+        };
+        
+        ctrl.showObjectWidget = function (obj) {
+            console.log('showObjectWidget', obj);
+            if (obj.hasOwnProperty('showWidgetFlag')) {
+                obj.showWidgetFlag = !obj.showWidgetFlag;
+            } else {
+                obj.showWidgetFlag = true;
+            }
+            
+            //load cont object zpoints
+            ctrl.loadZpointsByObjectId(obj.id);
+        };
+        
+        function successLoadZpointWidgetListCallback(resp) {
+            var widgetList = [], wkey, defaultWidgets = {};
+            if (!angular.isArray(resp.data)) {
+                return false;
+            }
+            resp.data.forEach(function (elm) {
+                if (!angular.isArray(widgetList[elm.contServiceType])) {
+                    widgetList[elm.contServiceType] = [];
+                }
+                widgetList[elm.contServiceType].push(elm);
+            });
+
+            for (wkey in widgetList) {
+                if (widgetList[wkey].length > 0) {
+                    defaultWidgets[wkey] = widgetList[wkey][0].widgetName;
+//                    widgetList[wkey].some(function (elm) {
+//                        if (elm.isDefault === true) {
+//                            defaultWidgets[wkey] = elm.widgetName;
+//                            return true;
+//                        }
+//                    });
+                    for (var j = 0; j < widgetList[wkey].length; j++) {
+                        var elm = widgetList[wkey][j];
+                        if (elm.isDefault === true) {
+                            defaultWidgets[wkey] = elm.widgetName;
+                            break;
+                        }
+                    }
+                }
+            }
+            ctrl.zpointWidgetList = defaultWidgets;
+        }
+        
+        ctrl.loadZpointWidgetList = function () {
+            contObjectCtrlSvc.loadZpointWidgetList()
+                .then(successLoadZpointWidgetListCallback, errorCallback);
+        };
+        
         ctrl.$onInit = function () {
 //            console.log($stateParams);
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
                 ctrl.loadObjects(node.id || node._id);
             }
+            ctrl.loadZpointWidgetList();
         };
     }
     

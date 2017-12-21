@@ -4,7 +4,7 @@
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
             <tr class="nmc-main-table-header">
-                <th class = "col-xs-1">
+                <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                    Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
@@ -17,7 +17,7 @@
             
             <tr class = "nmc-main-table-header nmc-hide">
                
-                <th class = "col-xs-1">
+                <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                        Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
@@ -27,33 +27,70 @@
             
 
             <tr ng-repeat = "object in $ctrl.objects track by $index">
+<!--
                <td ng-if = "object.loading" class = "col-xs-1">
-                   <div class="nmc-loading">
+                   <div ng-show = "object.loading" class="nmc-loading">
                         <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
                     </div>
                </td>
-                <td class = "col-xs-1">
-                   <i class = "btn glyphicon glyphicon-chevron-right pull-right"></i>
-<!--
-                    <img class = "marginRight2 pull-right" 
-                    height = "12"
-                    width = "12"
-                    ng-src = "{{object.modepath}}"
-                    style = "margin-top: 10px;">
 -->
-                   
-                </td>
-                <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
-                   <div ng-switch on = "column.type">
-                        <div ng-switch-when = "img">
-                            <img class = "marginRight2 nmc-p-tree-status-img" 
-                            ng-src = "{{object[column.name]}}"
-                            />
-                        </div>
-                       <div ng-switch-default>
-                        {{object[column.name]}}
-                       </div>
-                    </div>
+               <td>
+                   <table>
+                       <tr>
+               
+                            <td class = "col-xs-1 nmc-td-for-button-object-control">                  
+                               <i class = "btn glyphicon glyphicon-chevron-right pull-right"
+                                  ng-click = "$ctrl.showObjectWidget(object)">
+                                   
+                               </i>
+                                <img class = "marginRight2 pull-right" 
+                                height = "12"
+                                width = "12"
+                                ng-src = "{{object['heat']}}"
+                                style = "margin-top: 10px;">
+
+                            </td>
+                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+                               <div ng-switch on = "column.type">
+                                    <div ng-switch-when = "img">
+                                        <img class = "marginRight2 nmc-p-tree-status-img" 
+                                        ng-src = "{{object[column.name]}}"
+                                        />
+                                    </div>
+                                   <div ng-switch-default>
+                                       <div ng-show = "object.loading" class="nmc-loading">
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
+                                       </div>
+                                        {{object[column.name]}}
+                                   </div>
+                                </div>
+                            </td>
+                       </tr>
+                       <tr ng-if = "object.showWidgetFlag">
+                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
+                              <div ng-repeat = "zpoint in object.zpoints track by $index"
+                                class = "col-xs-6">
+<!--
+                                 <pre>
+                                      {{zpoint | json}}
+                                  </pre>
+-->
+                                   <div ng-controller='zpointWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                                       <span ng-show='title' ng-bind='title'></span>
+                                       <div ng-show='isLoading'>Загрузка...</div>
+                                       <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                                       <ng-widget ng-show = "!isLoading && !isError"
+                                           src = "zpoint.widgetOptions.type"
+                                           options = "zpoint.widgetOptions">
+
+                                        </ng-widget>
+                                   </div>
+
+                                 </div>
+                          </td>
+                           
+                       </tr>
+                   </table>
                 </td>
             </tr>
             
