@@ -139,6 +139,13 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @Setter
 	private List<DeviceObjectDataSource> deviceObjectDataSources = new ArrayList<>();
 
+	@OneToOne(fetch = FetchType.LAZY, mappedBy = "deviceObject")
+    //@JoinColumn(name = "id", referencedColumnName = "device_object_id", insertable = false, updatable = false)
+	@Getter
+    @Setter
+    @JsonIgnore
+	private DeviceObjectDataSource2 deviceObjectDataSource;
+
 	@Version
     @Getter
     @Setter
