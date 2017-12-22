@@ -60,13 +60,20 @@ public class DeviceObjectDataSource2 implements Serializable {
     @Column(name = "data_source_table_24h")
     private String dataSourceTable24h;
 
-    @Version
-    @Column(name = "version")
-    private int version;
+//    @Version
+//    @Column(name = "version")
+//    private int version;
 
     @Column(name = "flex_data")
     @Type(type = "JsonbAsString")
     private String flexData;
+
+
+    public DeviceObjectDataSource2 deviceObjectId(Long arg) {
+        this.deviceObjectId = arg;
+        return this;
+    }
+
 
     @Override
     public boolean equals(Object o) {

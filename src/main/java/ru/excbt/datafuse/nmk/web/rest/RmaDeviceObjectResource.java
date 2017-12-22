@@ -71,7 +71,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
-			return deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i).shareDeviceLoginInfo(i)).collect(Collectors.toList());
+			List<DeviceObjectFullVM> resultList = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i).shareDeviceLoginInfo(i)).collect(Collectors.toList());
+			return resultList;
 		};
 		return ApiResponse.responseOK(actionProcess);
 
@@ -115,22 +116,22 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
      *
      * @param contObjectId
      * @param deviceObjectId
-     * @param deviceObject
+     * @param deviceObjectDTO
      * @return
      */
     @Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
-			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObject) {
+			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObjectDTO) {
 
-        Objects.requireNonNull(deviceObject);
-        Objects.requireNonNull(deviceObject.getId());
-        Objects.requireNonNull(deviceObject.getDeviceModelId());
+        Objects.requireNonNull(deviceObjectDTO);
+        Objects.requireNonNull(deviceObjectDTO.getId());
+        Objects.requireNonNull(deviceObjectDTO.getDeviceModelId());
 
-        deviceObject.setContObjectId(contObjectId);
+        deviceObjectDTO.setContObjectId(contObjectId);
 
-        if (!deviceObjectId.equals(deviceObject.getId())) {
+        if (!deviceObjectId.equals(deviceObjectDTO.getId())) {
             return ApiResponse.responseBadRequest();
         }
 
@@ -139,7 +140,12 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 		}
 
 		/////////////////////////////////////////////
-		ApiActionObjectProcess actionProcess = () -> deviceObjectService.automationUpdate(contObjectId, deviceObject);
+		ApiActionObjectProcess actionProcess = () -> {
+            DeviceObject savedDeviceObject = deviceObjectService.automationUpdate(contObjectId, deviceObjectDTO);
+            DeviceObjectFullVM deviceObjectFullVM = deviceObjectMapper.toFullVM(savedDeviceObject);
+            return deviceObjectFullVM;
+        };
+
 		return ApiResponse.responseUpdate(actionProcess);
 
 	}
@@ -180,8 +186,13 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
             return ApiResponse.responseForbidden();
         }
 
-        ApiActionProcess<DeviceObject> actionProcess = () ->
-            deviceObjectService.automationCreate(contObjectId, deviceObject);
+        ApiActionProcess<DeviceObjectFullVM> actionProcess = () ->
+        {
+            DeviceObject createdDeviceObject = deviceObjectService.automationCreate(contObjectId, deviceObject);
+            DeviceObjectFullVM deviceObjectFullVM = deviceObjectMapper.toFullVM(createdDeviceObject);
+            return deviceObjectFullVM;
+        };
+
 
         return ApiResponse.responseCreate(actionProcess, () -> request.getRequestURI());
 	}
@@ -264,14 +275,14 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 *
 	 * @param contObjectId
 	 * @param deviceObjectId
-	 * @param requestEntity
+	 * @param deviceObjectLoadingSettings
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
 			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
-			@RequestBody DeviceObjectLoadingSettings requestEntity) {
+			@RequestBody DeviceObjectLoadingSettings deviceObjectLoadingSettings) {
 
 		checkNotNull(contObjectId);
 		checkNotNull(deviceObjectId);
@@ -285,14 +296,14 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("deviceObject (id=%d) is not found", deviceObjectId));
 		}
 
-		if (!requestEntity.isNew() && !deviceObjectId.equals(requestEntity.getDeviceObjectId())) {
+		if (!deviceObjectLoadingSettings.isNew() && !deviceObjectId.equals(deviceObjectLoadingSettings.getDeviceObjectId())) {
 			return ApiResponse.responseBadRequest(
 					ApiResult.badRequest("Wrong deviceObjectId (%d) in deviceObjectLoadingSettings ", deviceObjectId));
 		}
 
-		requestEntity.setDeviceObject(deviceObject);
+		deviceObjectLoadingSettings.setDeviceObject(deviceObject);
 
-		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(requestEntity);
+		ApiActionObjectProcess actionProcess = () -> deviceObjectLoadingSettingsService.saveOne(deviceObjectLoadingSettings);
 		return ApiResponse.responseUpdate(actionProcess);
 
 	}

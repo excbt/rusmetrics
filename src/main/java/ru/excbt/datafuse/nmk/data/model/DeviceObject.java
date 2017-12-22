@@ -132,13 +132,13 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @NotNull
 	private ContObject contObject;
 
-	@ManyToMany(mappedBy = "deviceObject", fetch = FetchType.LAZY)
-	@JsonIgnore
-    @Getter
-    @Setter
-	private List<DeviceObjectDataSource> deviceObjectDataSources = new ArrayList<>();
+//	@ManyToMany(mappedBy = "deviceObject", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//    @Getter
+//    @Setter
+//	private List<DeviceObjectDataSource> deviceObjectDataSources = new ArrayList<>();
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.LAZY, cascade = {})
     @JoinColumn(name = "id", referencedColumnName = "device_object_id", insertable = false, updatable = false)
 	@Getter
     @Setter

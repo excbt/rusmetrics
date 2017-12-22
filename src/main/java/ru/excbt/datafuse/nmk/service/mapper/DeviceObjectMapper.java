@@ -34,7 +34,6 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
     @Mapping(target = "deviceLogin", ignore = true)
     @Mapping(target = "devicePassword", ignore = true)
     @Mapping(target = "contObject", ignore = true)
-    @Mapping(target = "deviceObjectDataSources", ignore = true)
     @Mapping(target = "deviceModel", source = "deviceModelId")
     @Mapping(target = "deviceObjectName", source = "deviceObjectName")
     void updateDeviceObjectFromDto(DeviceObjectDTO dto,
@@ -49,9 +48,9 @@ public interface DeviceObjectMapper extends EntityMapper<DeviceObjectDTO, Device
     @Mapping(target = "contObjectName", source = "contObject.name")
     @Mapping(target = "contObjectId", source = "contObject.id")
     @Mapping(target = "heatRadiatorTypeId", source = "heatRadiatorType.id")
-    @Mapping(target = "editDataSourceInfo", source = "deviceObjectDataSources")
+    @Mapping(target = "editDataSourceInfo", source = "deviceObjectDataSource")
     @Mapping(target = "subscrDataSourceId", source = "editDataSourceInfo.subscrDataSourceId")
-    @Mapping(target = "activeDataSource", source = "deviceObjectDataSources")
+    @Mapping(target = "activeDataSource", source = "deviceObjectDataSource")
     DeviceObjectFullVM toFullVM(DeviceObject deviceObject);
 
     @Mapping(target = "deviceModel", source = "deviceModelId")
