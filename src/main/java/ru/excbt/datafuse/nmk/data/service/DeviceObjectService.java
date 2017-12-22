@@ -3,9 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -21,12 +19,11 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
+import ru.excbt.datafuse.nmk.data.model.dto.*;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.*;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
@@ -53,7 +50,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
 
-	private final DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
+	private final DeviceObjectDataSource2Repository deviceObjectDataSource2Repository;
 
 	private final DeviceObjectMetadataService deviceObjectMetadataService;
 
@@ -69,22 +66,24 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final ObjectAccessService objectAccessService;
 
+    private final SubscrDataSourceMapper subscrDataSourceMapper;
+
     @Autowired
     public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
                                DeviceModelService deviceModelService,
                                DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository,
                                DeviceObjectDataSourceService deviceObjectDataSourceService,
-                               DeviceObjectDataSourceRepository deviceObjectDataSourceRepository,
+                               DeviceObjectDataSource2Repository deviceObjectDataSource2Repository,
                                DeviceObjectMetadataService deviceObjectMetadataService,
                                DeviceMetadataService deviceMetadataService,
                                DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
                                //V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
-                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService) {
+                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService, SubscrDataSourceMapper subscrDataSourceMapper) {
         this.deviceObjectRepository = deviceObjectRepository;
         this.deviceModelService = deviceModelService;
         this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
         this.deviceObjectDataSourceService = deviceObjectDataSourceService;
-        this.deviceObjectDataSourceRepository = deviceObjectDataSourceRepository;
+        this.deviceObjectDataSource2Repository = deviceObjectDataSource2Repository;
         this.deviceObjectMetadataService = deviceObjectMetadataService;
         this.deviceMetadataService = deviceMetadataService;
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
@@ -92,6 +91,7 @@ public class DeviceObjectService implements SecuredRoles {
         this.deviceObjectMapper = deviceObjectMapper;
         this.subscrDataSourceRepository = subscrDataSourceRepository;
         this.objectAccessService = objectAccessService;
+        this.subscrDataSourceMapper = subscrDataSourceMapper;
     }
 
 
@@ -492,15 +492,34 @@ public class DeviceObjectService implements SecuredRoles {
 
 		DeviceObject savedDeviceObject = deviceObjectRepository.saveAndFlush(deviceObject);
 
-		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+		DeviceObjectDataSource2 deviceObjectDataSource = deviceObject.getActiveDataSource();
 
-        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
-            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
-                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
 
-            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
-        }
+
+		//Optional<EditDataSourceDTO> optionalDataSource =
+        Optional.ofNullable(deviceObjectDTO.getEditDataSourceInfo())
+                .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
+                .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
+                .filter(i -> Objects.nonNull(deviceObjectDataSource))
+                .filter(id -> deviceObjectDataSource != null &&
+                            id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+            .ifPresent(i -> {
+                deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
+                deviceObjectDataSource2Repository.save(deviceObjectDataSource);
+            });
+
+        //Optional<DeviceObjectDataSource2> optionalDataSource =
+
+//        if (deviceObjectDataSource != null &&
+//            deviceObjectDTO.getEditDataSourceInfo() != null &&
+//            deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId() != null &&
+//                deviceObjectDataSource.getSubscrDataSource().getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+//
+//            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+//                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+//
+//            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+//        }
 
 
         //DeviceObject result = selectDeviceObject(deviceObject.getId());
@@ -537,15 +556,28 @@ public class DeviceObjectService implements SecuredRoles {
 
 		deviceObjectRepository.save(deviceObject);
 
-		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+		DeviceObjectDataSource2 deviceObjectDataSource = deviceObject.getActiveDataSource();
 
-        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getId())) {
-            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
-                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
-
-            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
-        }
+		Optional.ofNullable(deviceObjectDTO).map(DeviceObjectDTO::getEditDataSourceInfo)
+            .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
+            .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
+            .filter(i -> Objects.nonNull(deviceObjectDataSource))
+            .filter(id -> deviceObjectDataSource != null &&
+                id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+            .ifPresent(i -> {
+                deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
+                deviceObjectDataSource2Repository.save(deviceObjectDataSource);
+            });
+//
+//
+//
+//        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
+//                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getId())) {
+//            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+//                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+//
+//            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+//        }
 
 
         DeviceObject result = selectDeviceObject(deviceObject.getId());
@@ -596,9 +628,16 @@ public class DeviceObjectService implements SecuredRoles {
 			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", deviceObjectId));
 		}
 
-		deviceObject.getDeviceObjectDataSources().forEach(i -> {
-			deviceObjectDataSourceRepository.delete(i);
-		});
+		Optional.ofNullable(deviceObject)
+            .map(DeviceObject::getDeviceObjectDataSource)
+            .ifPresent( i -> deviceObjectDataSource2Repository.delete(i));
+//
+//		if (deviceObject.getDeviceObjectDataSource() != null) {
+//            deviceObjectDataSource2Repository.delete(deviceObject.getDeviceObjectDataSource());
+//        }
+//		deviceObject.getDeviceObjectDataSource().forEach(i -> {
+//			deviceObjectDataSourceRepository.delete(i);
+//		});
 
 		deviceObjectRepository.delete(deviceObject);
 	}
@@ -675,6 +714,16 @@ public class DeviceObjectService implements SecuredRoles {
 		return deviceObjectIds.isEmpty() ? new ArrayList<>()
 				: deviceObjectRepository.selectDeviceObjectsByIds(deviceObjectIds).stream().map(i -> i.getTimeOffset()).collect(Collectors.toList());
 	}
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public SubscrDataSourceDTO selectDeviceObjectSubscrDataSource(long deviceObjectId) {
+        DeviceObject result = deviceObjectRepository.findOne(deviceObjectId);
+        return Optional.ofNullable(result)
+            .map(DeviceObject::getDeviceObjectDataSource)
+            .map(DeviceObjectDataSource2::getSubscrDataSource)
+            .map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
+    }
 
 
 

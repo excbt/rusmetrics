@@ -7,10 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDeviceHistoryDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectFullVM;
+import ru.excbt.datafuse.nmk.data.model.dto.*;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -26,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -531,23 +529,30 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 			ApiResponse.responseForbidden();
 		}
 
-		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(deviceObjectId);
-		if (deviceObject == null) {
-			return ApiResponse.responseBadRequest();
-		}
 
-		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
-		if (deviceObject.getActiveDataSource() != null && !result.stream()
-				.anyMatch(i -> i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSourceId()))) {
-			Long subscrDataSourceId = deviceObject.getActiveDataSource().getSubscrDataSourceId();
-			SubscrDataSource extraDataSurce = subscrDataSourceService.findOne(subscrDataSourceId);
-			if (extraDataSurce != null) {
-				extraDataSurce.set_isAnotherSubscriber(true);
-				result.add(0, extraDataSurce);
-			}
-		}
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+
+		SubscrDataSourceDTO subscrDataSourceDTO = deviceObjectService.selectDeviceObjectSubscrDataSource(deviceObjectId);
+
+        return ApiResponse.responseOK(subscrDataSourceDTO);
+
+//		if (deviceObject == null) {
+//			return ApiResponse.responseBadRequest();
+//		}
+//
+//		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
+//		if (deviceObject.getActiveDataSource() != null && !result.stream()
+//				.anyMatch(i -> (deviceObject.getActiveDataSource().getSubscrDataSource() != null &&
+//                    i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSource().getId())))) {
+//			Long subscrDataSourceId = deviceObject.getActiveDataSource().getSubscrDataSource().getId();
+//			SubscrDataSource extraDataSurce = subscrDataSourceService.findOne(subscrDataSourceId);
+//			if (extraDataSurce != null) {
+//				extraDataSurce.set_isAnotherSubscriber(true);
+//				result.add(0, extraDataSurce);
+//			}
+//		}
+//
+//		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
 
