@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.PersistenceException;
 
@@ -132,11 +133,11 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
-		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
-		return ObjectFilters.deletedFilter(list);
-	}
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
+//		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
+//		return ObjectFilters.deletedFilter(list);
+//	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrDataSourceDTO> selectDataSourceDTOBySubscriber(Long subscriberId) {
@@ -191,8 +192,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrDataSource findOne(Long dataSourceId) {
-		return subscrDataSourceRepository.findOne(dataSourceId);
+	public SubscrDataSourceDTO findOne(Long dataSourceId) {
+        return Stream.of(subscrDataSourceRepository.findOne(dataSourceId))
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).findFirst().map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
 	}
 
 
