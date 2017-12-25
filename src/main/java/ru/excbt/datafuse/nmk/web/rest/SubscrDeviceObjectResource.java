@@ -530,10 +530,10 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 
         Optional<SubscrDataSourceDTO> findDataSource = subscrDataSources.stream()
             .filter(i -> Objects.nonNull(i.getId()))
-            .filter(i -> i.getId().equals(deviceSubscrDataSourceDTO.getId()))
+            .filter(i -> deviceSubscrDataSourceDTO != null && i.getId().equals(deviceSubscrDataSourceDTO.getId()))
             .findAny();
 
-        if (!findDataSource.isPresent()) {
+        if (!findDataSource.isPresent() && deviceSubscrDataSourceDTO != null) {
             subscrDataSources.add(0, deviceSubscrDataSourceDTO);
         }
 
