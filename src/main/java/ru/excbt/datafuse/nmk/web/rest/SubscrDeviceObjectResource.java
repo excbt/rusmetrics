@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.*;
-import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -16,14 +15,11 @@ import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -529,18 +525,24 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 			ApiResponse.responseForbidden();
 		}
 
+        SubscrDataSourceDTO deviceSubscrDataSourceDTO = deviceObjectService.selectDeviceObjectSubscrDataSource(deviceObjectId);
+		List<SubscrDataSourceDTO> subscrDataSources = subscrDataSourceService.selectDataSourceDTOBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 
+        Optional<SubscrDataSourceDTO> findDataSource = subscrDataSources.stream()
+            .filter(i -> Objects.nonNull(i.getId()))
+            .filter(i -> i.getId().equals(deviceSubscrDataSourceDTO.getId()))
+            .findAny();
 
+        if (!findDataSource.isPresent()) {
+            subscrDataSources.add(0, deviceSubscrDataSourceDTO);
+        }
 
-		SubscrDataSourceDTO subscrDataSourceDTO = deviceObjectService.selectDeviceObjectSubscrDataSource(deviceObjectId);
-
-        return ApiResponse.responseOK(subscrDataSourceDTO);
+        return ApiResponse.responseOK(subscrDataSources);
 
 //		if (deviceObject == null) {
 //			return ApiResponse.responseBadRequest();
 //		}
 //
-//		List<SubscrDataSource> result = subscrDataSourceService.selectDataSourceBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 //		if (deviceObject.getActiveDataSource() != null && !result.stream()
 //				.anyMatch(i -> (deviceObject.getActiveDataSource().getSubscrDataSource() != null &&
 //                    i.getId().equals(deviceObject.getActiveDataSource().getSubscrDataSource().getId())))) {

@@ -20,10 +20,12 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscrDataSourceDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 
 /**
  * Сервис для работы с источниками данных абонента
@@ -44,6 +46,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+    @Autowired
+	private SubscrDataSourceMapper subscrDataSourceMapper;
 
 	/**
 	 *
@@ -126,6 +131,12 @@ public class SubscrDataSourceService implements SecuredRoles {
 	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 		return ObjectFilters.deletedFilter(list);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscrDataSourceDTO> selectDataSourceDTOBySubscriber(Long subscriberId) {
+		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
+		return list.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> subscrDataSourceMapper.toDto(i)).collect(Collectors.toList());
 	}
 
 	/**
