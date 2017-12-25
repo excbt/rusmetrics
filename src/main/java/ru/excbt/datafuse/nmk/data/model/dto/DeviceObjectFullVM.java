@@ -2,13 +2,14 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 
 import java.util.Date;
 
 @Getter
 @Setter
-public class DeviceObjectFullVM {
+public class DeviceObjectFullVM implements ModelIdable {
 
     private Long id;
 

@@ -138,7 +138,6 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		deviceObject.setNumber("Nr:" + System.currentTimeMillis());
 
 		deviceObject.setDeviceModel(null);
-		deviceObject.getDeviceObjectDataSources().clear();
 
 		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
 		RequestExtraInitializer paramInit = (builder) -> {

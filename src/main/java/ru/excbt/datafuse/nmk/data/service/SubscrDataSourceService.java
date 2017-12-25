@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.persistence.PersistenceException;
 
@@ -20,10 +21,12 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscrDataSourceDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 
 /**
  * Сервис для работы с источниками данных абонента
@@ -36,14 +39,22 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class SubscrDataSourceService implements SecuredRoles {
 
-	@Autowired
-	private SubscrDataSourceRepository subscrDataSourceRepository;
+    private final SubscrDataSourceRepository subscrDataSourceRepository;
+
+	private final DataSourceTypeRepository dataSourceTypeRepository;
+
+	private final SubscriberService subscriberService;
+
+	private final SubscrDataSourceMapper subscrDataSourceMapper;
 
 	@Autowired
-	private DataSourceTypeRepository dataSourceTypeRepository;
+    public SubscrDataSourceService(SubscrDataSourceRepository subscrDataSourceRepository, DataSourceTypeRepository dataSourceTypeRepository, SubscriberService subscriberService, SubscrDataSourceMapper subscrDataSourceMapper) {
+        this.subscrDataSourceRepository = subscrDataSourceRepository;
+        this.dataSourceTypeRepository = dataSourceTypeRepository;
+        this.subscriberService = subscriberService;
+        this.subscrDataSourceMapper = subscrDataSourceMapper;
+    }
 
-	@Autowired
-	private SubscriberService subscriberService;
 
 	/**
 	 *
@@ -122,10 +133,16 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 *
 	 * @return
 	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
+//		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
+//		return ObjectFilters.deletedFilter(list);
+//	}
+
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
+	public List<SubscrDataSourceDTO> selectDataSourceDTOBySubscriber(Long subscriberId) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
-		return ObjectFilters.deletedFilter(list);
+		return list.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> subscrDataSourceMapper.toDto(i)).collect(Collectors.toList());
 	}
 
 	/**
@@ -175,8 +192,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public SubscrDataSource findOne(Long dataSourceId) {
-		return subscrDataSourceRepository.findOne(dataSourceId);
+	public SubscrDataSourceDTO findOne(Long dataSourceId) {
+        return Stream.of(subscrDataSourceRepository.findOne(dataSourceId))
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).findFirst().map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
 	}
 
 
