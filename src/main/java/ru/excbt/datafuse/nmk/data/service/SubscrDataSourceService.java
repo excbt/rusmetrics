@@ -38,17 +38,22 @@ import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 @Service
 public class SubscrDataSourceService implements SecuredRoles {
 
-	@Autowired
-	private SubscrDataSourceRepository subscrDataSourceRepository;
+    private final SubscrDataSourceRepository subscrDataSourceRepository;
+
+	private final DataSourceTypeRepository dataSourceTypeRepository;
+
+	private final SubscriberService subscriberService;
+
+	private final SubscrDataSourceMapper subscrDataSourceMapper;
 
 	@Autowired
-	private DataSourceTypeRepository dataSourceTypeRepository;
+    public SubscrDataSourceService(SubscrDataSourceRepository subscrDataSourceRepository, DataSourceTypeRepository dataSourceTypeRepository, SubscriberService subscriberService, SubscrDataSourceMapper subscrDataSourceMapper) {
+        this.subscrDataSourceRepository = subscrDataSourceRepository;
+        this.dataSourceTypeRepository = dataSourceTypeRepository;
+        this.subscriberService = subscriberService;
+        this.subscrDataSourceMapper = subscrDataSourceMapper;
+    }
 
-	@Autowired
-	private SubscriberService subscriberService;
-
-    @Autowired
-	private SubscrDataSourceMapper subscrDataSourceMapper;
 
 	/**
 	 *
