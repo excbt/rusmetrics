@@ -107,10 +107,10 @@
         }
 
         function loadPTreeNode(subscrObjectTreeId, childLevel) {
-            console.log("objectsTreeService.loadPTreeNode");
-            console.log("subscrObjectTreeId = " + subscrObjectTreeId);
-            console.log("requestParams: ", requestParams);
-            console.log("childLevel: ", childLevel);
+//            console.log("objectsTreeService.loadPTreeNode");
+//            console.log("subscrObjectTreeId = " + subscrObjectTreeId);
+//            console.log("requestParams: ", requestParams);
+//            console.log("childLevel: ", childLevel);
             if (checkUndefinedNull(subscrObjectTreeId)) {
                 console.warn("Incorrect input param: ", subscrObjectTreeId);
                 return null;
@@ -118,7 +118,7 @@
             var url = P_TREE_NODE_URL + "/" + subscrObjectTreeId; // "";
             url = addParamToURL(url, "childLevel", childLevel);
 
-            console.log("url: " + url);
+//            console.log("url: " + url);
 
             return $http.get(url, requestParams);
     //        return $http({
@@ -229,9 +229,11 @@
         function loadMonitorEventsForObject(objId) {
     console.log("loadMonitorEventsForObject: " + objId);        
             var url = OBJECT_URL + "/" + objId + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
-            if (isCancelParamsIncorrect() === true) {
-                return null;
-            }
+//            if (isCancelParamsIncorrect() === true) {
+//                var deffer = $q.defer();
+//                deffer.reject('loadMonitorEventsForObject: isCancelParamsIncorrect');
+//                return deffer.promise;
+//            }
             return $http.get(url, httpOptions);
         }
         
@@ -404,6 +406,10 @@
                 return 0;
             });
         }
+        
+        function checkEmptyObject(obj) {
+                return Object.keys(obj).length === 0 && obj.constructor === Object;
+        }
 
         function initSvc() {            
             requestCanceler = $q.defer();
@@ -416,10 +422,20 @@
         service.BROADCASTS = BROADCASTS;
         service.HEAT_DISTRIBUTOR = HEAT_DISTRIBUTOR;
         service.checkUndefinedNull = checkUndefinedNull;
+        service.checkEmptyObject = checkEmptyObject;
         service.findItemBy = findItemBy;
         service.findNodeInPTree = findNodeInPTree;
         service.getPTreeMonitor = getPTreeMonitor;
         service.getRequestCanceler = getRequestCanceler;
+        
+        service.isChevronDisabled = isChevronDisabled;
+        service.isChevronDown = isChevronDown;
+        service.isChevronRight = isChevronRight;
+        service.isContObjectNode = isContObjectNode;
+        service.isContZpointNode = isContZpointNode;
+        service.isDeviceNode = isDeviceNode;
+        service.isElementNode = isElementNode;        
+        
         service.loadDefaultTreeSetting = loadDefaultTreeSetting;
         service.loadPTreeNode = loadPTreeNode;
         service.loadSubscrTrees = loadSubscrTrees;

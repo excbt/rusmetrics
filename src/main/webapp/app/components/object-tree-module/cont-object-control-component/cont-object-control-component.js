@@ -96,6 +96,9 @@
         
         function successLoadObjectsCallback(resp) {
             var tmpBuf = angular.copy(resp.data);
+            if (!angular.isArray(tmpBuf)) {
+                return false;
+            }
             tmpBuf.forEach(function (elm) {
                 if (elm.nodeType !== "CONT_OBJECT") {
                     return false;

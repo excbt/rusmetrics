@@ -14,7 +14,7 @@
         /*jshint validthis: true*/
         var ctrl = this;
         
-        var IMG_PATH_MONITOR_TEMPLATE = "images/object-state-",
+        var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/tree-navigate-component/images/object-state-",
             IMG_EXT = ".png",
             PTREE_DEPTH_LEVEL = 0,
             VCOOKIE_URL = "../api/subscr/vcookie",
@@ -25,7 +25,9 @@
         var treeNavSvc = treeNavigateComponentService;
         
 //        var mainSvc = {};
-        var checkUndefinedNull = treeNavSvc.checkUndefinedNull;        
+        var checkUndefinedNull = treeNavSvc.checkUndefinedNull;
+        
+        var checkEmptyObject = treeNavSvc.checkEmptyObject;
         
         ctrl.data = {};
         ctrl.objectCtrlSettings = {};
@@ -157,10 +159,11 @@
         }
 
         function successLoadPTreeCallback(resp) {
-            console.log(resp);
-            console.log(resp.data);
+console.log(resp);
+console.log(resp.data);
 
             ctrl.data.currentPTree = resp.data;
+            setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
             ctrl.data.currentPTreeWrapper = [ctrl.data.currentPTree];
             treeNavSvc.setPTree(ctrl.data.currentPTree);
             $cookies.loadedPTreeId = ctrl.data.currentPTree._id;
@@ -181,6 +184,7 @@
             $timeout(function () {
                 setEventsForCurrentPTree(ctrl.data.currentPTree);
             }, 1000);
+console.log(ctrl.data.currentPTree);
         }
 
         function loadPTreeMonitorWithStartRefresh(treeId, depthLvl) {
@@ -213,15 +217,48 @@
             }
             return true;
         }
+        
+        function setMonitorToPTree(monitor, ptree) {
+//console.log('setMonitorToPTree');            
+console.log(monitor);      
+console.log(ptree);            
+            if (checkUndefinedNull(monitor) || checkUndefinedNull(ptree) || checkEmptyObject(monitor)) {
+                return false;
+            }
+//console.log(ptree);
+            ptree.monitorStatusPath = monitor[ptree.nodeType + ptree._id];
+            if (ptree.hasOwnProperty('linkedNodeObjects') && angular.isArray(ptree.linkedNodeObjects)) {
+//console.log(ptree.linkedNodeObjects);                
+                ptree.linkedNodeObjects.forEach(function (lno) {
+//console.log(lno);                    
+                    lno.monitorStatusPath = monitor[lno.nodeType + lno.nodeObject.id];
+                    if (lno.hasOwnProperty('childNodes') && angular.isArray(lno.childNodes)) {
+                        lno.childNodes.forEach(function (cn) {
+                            cn.monitorStatusPath = monitor[cn.nodeType + cn.nodeObject.id];
+                        });
+                    }
+                });
+            }
+//console.log(ptree);            
+            if (ptree.hasOwnProperty('childNodes') && angular.isArray(ptree.childNodes)) {
+//console.log(ptree.childNodes);                                
+                ptree.childNodes.forEach(function (child) {                    
+                    setMonitorToPTree(monitor, child);
+                });
+            }
+//console.log(ptree);            
+        }
 
         function getPTree() {
 //                    console.log("getPTree");
             ctrl.data.currentPTree = treeNavSvc.getPTree();
+            setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
             ctrl.data.currentPTreeWrapper = [ctrl.data.currentPTree];
             ctrl.messages.treeMenuHeader = ctrl.data.currentPTree.nodeName || ctrl.data.currentPTree._id;
             ctrl.loading = false;
             ctrl.treeLoading = false;
             setEventsForCurrentPTree(ctrl.data.currentPTree);
+            console.log(ctrl.data.currentPTree);
         }
 
         $scope.$on(treeNavSvc.BROADCASTS.pTreeLoaded, function () {
@@ -240,6 +277,7 @@
             });
 
             ctrl.data.currentPTreeMonitor = monitor;
+            setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
 
         }
 
@@ -264,6 +302,11 @@
             if (!checkUndefinedNull(resp.data.childNodes)) {
                 PTnode.childNodes = resp.data.childNodes;
             }
+            
+            //set lazyNode = false because node is loaded
+            PTnode.lazyNode = false;
+            //set monitor
+            setMonitorToPTree(ctrl.data.currentPTreeMonitor, PTnode);
         }
 
         function loadPTreeNode(pTreeNode, depthLvl) {
@@ -285,50 +328,33 @@
             return item.lazyNode;
         }
 
-        ctrl.isElementNode = function (item) {
-            if (checkUndefinedNull(item)) {
-                return false;
-            }
-            return item.nodeType === 'ELEMENT';
-        };
-        ctrl.isContObjectNode = function (item) {
-            if (checkUndefinedNull(item)) {
-                return false;
-            }
-            return item.nodeType === 'CONT_OBJECT';
-        };
-        ctrl.isContZpointNode = function (item) {
-            if (checkUndefinedNull(item)) {
-                return false;
-            }
-            return item.nodeType === 'CONT_ZPOINT';
-        };
-        ctrl.isDeviceNode = function (item) {
-            if (checkUndefinedNull(item)) {
-                return false;
-            }
-            return item.nodeType === 'DEVICE_OBJECT';
-        };
+        ctrl.isElementNode = treeNavSvc.isElementNode; 
+        ctrl.isContObjectNode = treeNavSvc.isContObjectNode;
+        ctrl.isContZpointNode = treeNavSvc.isContZpointNode;
+        ctrl.isDeviceNode = treeNavSvc.isDeviceNode;
 
-        ctrl.isChevronRight = function (collapsed, item) {
-            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-                return false;
-            }
-            return collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-        };
-        ctrl.isChevronDown = function (collapsed, item) {
-            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-                return false;
-            }
-            return !collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-        };
+        ctrl.isChevronRight = treeNavSvc.isChevronRight;
+//        function (collapsed, item) {
+//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
+//                return false;
+//            }
+//            return collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
+//        };
+        ctrl.isChevronDown = treeNavSvc.isChevronDown;
+//        function (collapsed, item) {
+//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
+//                return false;
+//            }
+//            return !collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
+//        };
 
-        ctrl.isChevronDisabled = function (collapsed, item) {
-            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-                return true;
-            }
-            return !((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-        };
+        ctrl.isChevronDisabled = treeNavSvc.isChevronDisabled;
+//        function (collapsed, item) {
+//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
+//                return true;
+//            }
+//            return !((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
+//        };
 
         function findNodeInPTree(node, tree) {
             return treeNavSvc.findNodeInPTree(node, tree);
