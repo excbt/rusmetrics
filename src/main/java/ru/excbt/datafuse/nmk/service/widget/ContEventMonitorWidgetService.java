@@ -247,16 +247,20 @@ public class ContEventMonitorWidgetService {
         List<ContZPointEventInfo> statsObjList = monitorWidgetRepository.findContZPointStats(contObjectId)
             .stream().map(ContZPointEventInfo::new).filter(i -> contZPointIdAccess.test(i.getContZPointId())).collect(Collectors.toList());
 
+//        List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointEventInfo::getContEventTypeId).distinct().collect(Collectors.toList());
 
-        List<Long> contEventTypeIds = statsObjList.stream().map(ContZPointEventInfo::getContEventTypeId).distinct().collect(Collectors.toList());
-
-        Map<Long, ContEventType> contEventTypeMap = contEventTypeIds.isEmpty() ? Collections.emptyMap() :
-            contEventTypeRepository.selectContEventTypes(contEventTypeIds)
-            .stream().filter(i -> i.getContEventLevel() != null)
+        Map<Long, ContEventType> contEventTypeMap =
+        contEventTypeRepository.findAll().stream().filter(i -> i.getContEventLevel() != null)
+            .filter(i -> i.getContEventLevel() != null)
+            .filter(i -> !Boolean.TRUE.equals(i.getIsDisabled()))
             .collect(Collectors.toMap(ContEventType::getId, Function.identity()));
 
-        Comparator<ContEventType> CMP_BY_COLOR_LEVEL = Comparator.comparingInt(ContEventType::getContEventLevel);
+//        Map<Long, ContEventType> contEventTypeMap_2 = contEventTypeIds.isEmpty() ? Collections.emptyMap() :
+//            contEventTypeRepository.selectContEventTypes(contEventTypeIds)
+//            .stream().filter(i -> i.getContEventLevel() != null)
+//            .collect(Collectors.toMap(ContEventType::getId, Function.identity()));
 
+        Comparator<ContEventType> CMP_BY_COLOR_LEVEL = Comparator.comparingInt(ContEventType::getContEventLevel);
 
         ContObjectMonitorStateDTO monitorStateDTO = new ContObjectMonitorStateDTO();
 

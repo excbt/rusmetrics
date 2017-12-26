@@ -42,11 +42,14 @@ public class CacheConfiguration {
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
 
+
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ExSystem.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamCategory.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamDirectory.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportMetaParamSpecialType.class.getName());
-
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportPeriod.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportSheduleType.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ReportType.class.getName());
@@ -65,9 +68,12 @@ public class CacheConfiguration {
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObject.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource.class.getName());
 
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContEventType.class.getName());
 
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeContObject.class.getName());
+
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectAccess.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointAccess.class.getName());
 
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem.class.getName());

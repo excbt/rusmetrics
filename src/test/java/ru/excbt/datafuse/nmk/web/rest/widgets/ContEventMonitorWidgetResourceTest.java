@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.util.EntityAutomation;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.CacheService;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -89,6 +90,9 @@ public class ContEventMonitorWidgetResourceTest {
 
     @Autowired
     private SubscriberAccessService subscriberAccessService;
+
+    @Autowired
+    private CacheService cacheService;
 
     @Before
     public void setUp() throws Exception {
@@ -218,6 +222,8 @@ public class ContEventMonitorWidgetResourceTest {
 
         assertThat(checkContZPoints.test(contZPoint.getId())).isTrue();
 
+        log.info("\n===================================================");
+        log.info("Cache Enabled: {}", cacheService.isCacheEnabled());
         restPortalContObjectMockMvc.perform(
             get("/api/widgets/cont-event-monitor/cont-objects/{contObjectId}/monitor-state", contObject.getId()))
             .andDo(MockMvcResultHandlers.print())
@@ -226,6 +232,7 @@ public class ContEventMonitorWidgetResourceTest {
             .andExpect(jsonPath("$.contZPointMonitorState.[*].contServiceTypeKeyname").value(hasItem(contZPoint.getContServiceTypeKeyname())))
             .andExpect(jsonPath("$.contZPointMonitorState.[*].contZPointId").value(hasItem(contZPoint.getId().intValue())));
 
+        log.info("\n===================================================");
 
     }
 }

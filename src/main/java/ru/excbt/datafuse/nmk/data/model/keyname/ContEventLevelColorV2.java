@@ -16,7 +16,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_level_color_v2")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
