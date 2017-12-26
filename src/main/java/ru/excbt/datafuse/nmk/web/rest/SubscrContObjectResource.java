@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,7 +116,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
+    @Timed
+    public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
 //        ApiAction action = new ApiActionEntityAdapter<List<ContObjectMonitorDTO>> () {
@@ -143,7 +145,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObject(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
@@ -160,7 +163,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/fias", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectFias(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContObjectFias(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
@@ -182,7 +186,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> updateContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
 			final @RequestBody ContObjectDTO contObjectDTO) {
 
@@ -222,7 +227,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectSettingModeType() {
+    @Timed
+    public ResponseEntity<?> getContObjectSettingModeType() {
 
 		List<ContObjectSettingModeType> resultList = contObjectService.selectContObjectSettingModeType();
 		return ApiResponse.responseOK(resultList);
@@ -235,7 +241,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/settingModeType", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContObjectSettingModeType(
+    @Timed
+    public ResponseEntity<?> updateContObjectSettingModeType(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestParam(value = "currentSettingMode") final String currentSettingMode,
 			final @RequestBody(required = false) List<Long> ids) {
@@ -280,7 +287,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/cmOrganizations", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getCmOrganizations(
+    @Timed
+    public ResponseEntity<?> getCmOrganizations(
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectCmOrganizations(getSubscriberParam());
 		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
@@ -293,7 +301,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOrganizations(
+    @Timed
+    public ResponseEntity<?> getOrganizations(
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> organizations = organizationService.selectOrganizations(getSubscriberParam());
 		organizationService.checkAndEnhanceOrganizations(organizations, organizationId);
@@ -307,7 +316,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
@@ -326,7 +336,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/meterPeriodSettings", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> updateContObjectMeterPeriodSetting(@PathVariable("contObjectId") Long contObjectId,
 			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
 
 		if (settings.isSingle() == false) {
@@ -355,7 +366,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectMeterPeriodSetting() {
+    @Timed
+    public ResponseEntity<?> getContObjectMeterPeriodSetting() {
 		List<Long> ids = objectAccessService.findContObjectIds(getSubscriberId());
 		List<ContObjectMeterPeriodSettingsDTO> result = contObjectService.findMeterPeriodSettings(ids);
 		return ApiResponse.responseOK(result);
@@ -367,7 +379,8 @@ public class SubscrContObjectResource extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/meterPeriodSettings", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContObjectMeterPeriodSetting(
+    @Timed
+    public ResponseEntity<?> updateContObjectMeterPeriodSetting(
 			final @RequestBody ContObjectMeterPeriodSettingsDTO settings) {
 		if (settings.isMulti() == false) {
 			return ApiResponse.responseBadRequest();

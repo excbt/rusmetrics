@@ -7,6 +7,8 @@ import javax.persistence.Version;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
@@ -14,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_object_tree_cont_object")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class SubscrObjectTreeContObject extends JsonAbstractAuditableModel implements DeletableObjectId {
 
 	/**

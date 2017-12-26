@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ public class SubscrObjectPTreeNodeResource extends AbstractSubscrApiResource {
 
     @GetMapping("/{subscrObjectTreeId}")
     @ApiOperation("Get PTreeNode view of subscrObjectTree")
+    @Timed
     public ResponseEntity<?> getPTreeNode(@ApiParam("id of subscrObjectTree") @PathVariable("subscrObjectTreeId") Long subscrObjectTreeId,
                                           @ApiParam(name = "Level of request tree. It affects only for ELEMENT nodes.")
                                           @RequestParam(name = "childLevel", required = false) Integer childLevel) {

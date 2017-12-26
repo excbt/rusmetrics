@@ -6,12 +6,15 @@ import javax.persistence.Table;
 import javax.persistence.Version;
 
 import lombok.Getter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "ex_system")
 @Getter
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ExSystem extends AbstractKeynameEntity {
 
 

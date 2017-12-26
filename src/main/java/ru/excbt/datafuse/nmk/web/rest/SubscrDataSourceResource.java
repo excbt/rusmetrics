@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +63,7 @@ public class SubscrDataSourceResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDataSources() {
 		List<SubscrDataSourceDTO> result = subscrDataSourceService.selectDataSourceDTOBySubscriber((portalUserIdsService.getCurrentIds().getSubscriberId()));
 		return ApiResponse.responseOK(result);
@@ -73,6 +75,7 @@ public class SubscrDataSourceResource {
      * @return
      */
 	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDataSource(@PathVariable("dataSourceId") Long dataSourceId) {
 		SubscrDataSourceDTO result = subscrDataSourceService.findOne(dataSourceId);
 		return ApiResponse.responseOK(result);
@@ -84,6 +87,7 @@ public class SubscrDataSourceResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> createDataSource(@RequestBody SubscrDataSource subscrDataSource,
 			HttpServletRequest request) {
 		checkNotNull(subscrDataSource);
@@ -121,7 +125,8 @@ public class SubscrDataSourceResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId,
+    @Timed
+    public ResponseEntity<?> updateDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId,
 			@RequestBody SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSourceId);
 		checkNotNull(subscrDataSource);
@@ -148,7 +153,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/{dataSourceId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId) {
+    @Timed
+    public ResponseEntity<?> deleteDataSource(@PathVariable("dataSourceId") Long subscrDataSourceId) {
 
 		checkNotNull(subscrDataSourceId);
 
@@ -162,7 +168,8 @@ public class SubscrDataSourceResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSourceTypes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDataSourceTypes() {
+    @Timed
+    public ResponseEntity<?> getDataSourceTypes() {
 		List<DataSourceType> result = dataSourceTypeRepository.findAll();
 		result.sort(Comparator.comparingInt(DataSourceType::getTypeOrder));
 		return ApiResponse.responseOK(result);
@@ -174,7 +181,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRawModemModel() {
+    @Timed
+    public ResponseEntity<?> getRawModemModel() {
 		List<RawModemModel> resultList = rawModemService.selectRawModels();
 		return ApiResponse.responseOK(resultList);
 	}
@@ -186,7 +194,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
+    @Timed
+    public ResponseEntity<?> getRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
 		RawModemModel resultList = rawModemService.selectRawModel(rawModemModelId);
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
@@ -199,7 +208,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> putRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId,
+    @Timed
+    public ResponseEntity<?> putRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId,
 			@RequestBody RawModemModel requestEntity) {
 
 		if (!SecurityUtils.isSystemUser()) {
@@ -225,7 +235,8 @@ public class SubscrDataSourceResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels", method = RequestMethod.POST)
-	public ResponseEntity<?> postRawModemModel(
+    @Timed
+    public ResponseEntity<?> postRawModemModel(
 			@RequestBody RawModemModel requestEntity, HttpServletRequest request) {
 
 		if (!SecurityUtils.isSystemUser()) {
@@ -260,7 +271,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/{rawModemModelId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
+    @Timed
+    public ResponseEntity<?> deleteRawModemModel(@PathVariable("rawModemModelId") Long rawModemModelId) {
 
 		if (!SecurityUtils.isSystemUser()) {
 			return ApiResponse.responseForbidden();
@@ -277,7 +289,8 @@ public class SubscrDataSourceResource {
 	 */
 	@RequestMapping(value = "/dataSources/rawModemModels/rawModemModelIdentity", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getRawModemIdentity() {
+    @Timed
+    public ResponseEntity<?> getRawModemIdentity() {
 
 		class RawModemIdentity {
 			private final String keyname;

@@ -6,6 +6,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.uuid.Generators;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
@@ -81,7 +82,8 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 	 */
 	@RequestMapping(value = "/{contObjectId}/serviceImpulse/{timeDetailType}/{contZPointId}/paged",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDataImpulsePaged(@PathVariable("contObjectId") long contObjectId,
+    @Timed
+    public ResponseEntity<?> getDataImpulsePaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
 			@RequestParam(value = "dataDateSort", required = false, defaultValue = "desc") String dataDateSort,
@@ -113,6 +115,7 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
      */
     @RequestMapping(value = "/service/serviceImpulse/contObjects/importData-cl", method = RequestMethod.POST,
         produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<?> importDataImpulseMultipleFilesCl(@RequestParam("files") MultipartFile[] multipartFiles) {
 
         checkNotNull(multipartFiles);

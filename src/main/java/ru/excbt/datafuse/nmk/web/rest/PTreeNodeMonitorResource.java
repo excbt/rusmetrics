@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,7 @@ public class PTreeNodeMonitorResource {
 
     @GetMapping("/all-linked-objects")
     @ApiOperation("Get all monitor status of cont objects")
+    @Timed
     public ResponseEntity<?> getLinkedObjectsMonitor(@ApiParam("nodeId of requested objectMonitor") @RequestParam(value = "nodeId", required = false) Long nodeId) {
 
         if (nodeId == null) {

@@ -10,11 +10,14 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "cont_service_type")
 @JsonInclude(Include.NON_NULL)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 public class ContServiceType extends AbstractKeynameEntity {
 
 	/**

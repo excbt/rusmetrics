@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.pentaho.reporting.libraries.repository.zipwriter.ZipEntryOutputStream;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @IdClass(ContZPointAccess.PK.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContZPointAccess {
 
     @Getter
