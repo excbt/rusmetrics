@@ -91,7 +91,7 @@ public class ContEventMonitorWidgetResourceTest {
     @Autowired
     private SubscriberAccessService subscriberAccessService;
 
-    @Autowired
+    @Autowired(required = false)
     private CacheService cacheService;
 
     @Before
@@ -223,7 +223,10 @@ public class ContEventMonitorWidgetResourceTest {
         assertThat(checkContZPoints.test(contZPoint.getId())).isTrue();
 
         log.info("\n===================================================");
-        log.info("Cache Enabled: {}", cacheService.isCacheEnabled());
+        if (cacheService != null) {
+            log.info("Cache Enabled: {}", cacheService.isCacheEnabled());
+        }
+
         restPortalContObjectMockMvc.perform(
             get("/api/widgets/cont-event-monitor/cont-objects/{contObjectId}/monitor-state", contObject.getId()))
             .andDo(MockMvcResultHandlers.print())
