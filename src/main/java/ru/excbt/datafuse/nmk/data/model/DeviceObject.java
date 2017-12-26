@@ -38,7 +38,6 @@ import java.util.Optional;
 @Entity
 @Table(name = "device_object")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONE)
-
 public class DeviceObject extends JsonAbstractAuditableModel implements ExSystemObject, DeletableObjectId, PersistableBuilder<DeviceObject, Long> {
 
     /**
@@ -133,11 +132,18 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
     @NotNull
 	private ContObject contObject;
 
-	@ManyToMany(mappedBy = "deviceObject", fetch = FetchType.LAZY)
-	@JsonIgnore
-    @Getter
+//	@ManyToMany(mappedBy = "deviceObject", fetch = FetchType.LAZY)
+//	@JsonIgnore
+//    @Getter
+//    @Setter
+//	private List<DeviceObjectDataSource> deviceObjectDataSources = new ArrayList<>();
+
+	@OneToOne(fetch = FetchType.LAZY, cascade = {})
+    @JoinColumn(name = "id", referencedColumnName = "device_object_id", insertable = false, updatable = false)
+	@Getter
     @Setter
-	private List<DeviceObjectDataSource> deviceObjectDataSources = new ArrayList<>();
+    @JsonIgnore
+	private DeviceObjectDataSource2 deviceObjectDataSource;
 
 	@Version
     @Getter
@@ -277,19 +283,17 @@ public class DeviceObject extends JsonAbstractAuditableModel implements ExSystem
 	}
 
 
-	public DeviceObjectDataSource getActiveDataSource() {
-		Optional<DeviceObjectDataSource> dataSource = ObjectFilters.activeFilter(deviceObjectDataSources.stream())
-				.findFirst();
-		DeviceObjectDataSource result = dataSource.isPresent() ? dataSource.get() : null;
-		return result;
+	public DeviceObjectDataSource2 getActiveDataSource() {
+
+//		Optional<DeviceObjectDataSource> dataSource = ObjectFilters.activeFilter(deviceObjectDataSources.stream())
+//				.findFirst();
+//		DeviceObjectDataSource result = dataSource.isPresent() ? dataSource.get() : null;
+		return this.deviceObjectDataSource;
 	}
 
 	public ActiveDataSourceInfoDTO getEditDataSourceInfo() {
 		if (editDataSourceInfo == null || editDataSourceInfo.getSubscrDataSourceId() == null) {
-			DeviceObjectDataSource activeDS = getActiveDataSource();
-
-			//editDataSourceInfo = subscrDataSourceMapper.toDto(activeDS);
-
+			DeviceObjectDataSource2 activeDS = getActiveDataSource();
 			editDataSourceInfo = activeDS != null ? new ActiveDataSourceInfoDTO(activeDS) : new ActiveDataSourceInfoDTO();
 		}
 		return editDataSourceInfo;

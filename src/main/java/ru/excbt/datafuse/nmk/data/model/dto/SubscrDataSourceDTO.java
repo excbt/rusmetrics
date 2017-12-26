@@ -1,11 +1,15 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.keyname.DataSourceType;
 
 @Getter
 @Setter
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SubscrDataSourceDTO {
 
     private Long id;
