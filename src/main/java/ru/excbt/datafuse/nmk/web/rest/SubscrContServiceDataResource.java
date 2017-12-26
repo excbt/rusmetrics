@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,6 +92,7 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
      */
     @RequestMapping(value = "/service-data/cont-objects/import", method = RequestMethod.POST,
         produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<?> importDataMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -60,7 +61,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createContObject(
+    @Timed
+    public ResponseEntity<?> createContObject(
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
 			final @RequestBody ContObjectDTO contObjectDTO, HttpServletRequest request) {
 
@@ -100,7 +102,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		checkNotNull(contObjectId);
 
@@ -122,7 +125,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
      * @return
      */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
+    @Timed
+    public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
 
 		checkNotNull(contObjectIds);
 
@@ -143,7 +147,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
+    @Timed
+    public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
         ApiAction action = new ApiActionEntityAdapter() {
@@ -166,7 +171,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+    @Timed
+    public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
         ApiAction action = new ContObjectMonitorDTOResponse() {
             @Override
@@ -186,7 +192,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+    @Timed
+    public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 
         ApiAction action = new ContObjectMonitorDTOResponse() {
@@ -208,7 +215,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
+    @Timed
+    public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
 			@RequestBody List<Long> contObjectIds) {
 
 		checkNotNull(subscriberId);
@@ -242,7 +250,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/subscribers", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
 		List<Long> resultList = objectAccessService.findSubscriberIdsByRma(getRmaSubscriberId(), contObjectId);
 		return ApiResponse.responseOK(resultList);
 	}

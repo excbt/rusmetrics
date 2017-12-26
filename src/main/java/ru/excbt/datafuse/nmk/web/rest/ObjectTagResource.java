@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,9 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @ApiOperation("Get all tags for cont-object")
     @GetMapping("/{objectTagKeynameUrl}")
+    @ApiOperation("Get all tags for cont-object")
+    @Timed
     public ResponseEntity<?> getContObjectsTags(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl) {
@@ -67,8 +69,9 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @ApiOperation("Get all tags for objectTagKeyname")
     @GetMapping("/{objectTagKeynameUrl}/{objectId}")
+    @ApiOperation("Get all tags for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> getContObjectTagsByObject(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl,
@@ -88,8 +91,9 @@ public class ObjectTagResource {
     }
 
 
-    @ApiOperation("Get all tags for cont-object")
     @GetMapping("/{objectTagKeynameUrl}/tag-names")
+    @ApiOperation("Get all tags for cont-object")
+    @Timed
     public ResponseEntity<?> getContObjectsTagNames(@PathVariable("objectTagKeynameUrl")
                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                     String objectTagKeynameUrl) {
@@ -116,8 +120,9 @@ public class ObjectTagResource {
      *
      * @return
      */
-    @ApiOperation("Creates tag for objectTagKeyname")
     @PostMapping("/{objectTagKeynameUrl}")
+    @ApiOperation("Creates tag for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> postContObjectTag(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                          String objectTagKeynameUrl,
@@ -141,6 +146,7 @@ public class ObjectTagResource {
      */
     @PutMapping("/{objectTagKeynameUrl}")
     @ApiOperation("Creates or deletes tag for cont-object")
+    @Timed
     public ResponseEntity<?> putContObjectTag(
                                                     @PathVariable("objectTagKeynameUrl")
                                                     @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
@@ -169,8 +175,9 @@ public class ObjectTagResource {
     }
 
 
-    @ApiOperation("Get all tags info for objectTagKeyname")
     @GetMapping("/{objectTagKeynameUrl}/tag-info")
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> getAllObjectTagInfo(@PathVariable("objectTagKeynameUrl")
                                                     @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                         String objectTagKeynameUrl) {
@@ -189,8 +196,9 @@ public class ObjectTagResource {
     }
 
 
-    @ApiOperation("Get all tags info for objectTagKeyname")
     @GetMapping("/{objectTagKeynameUrl}/tag-info/{tagName}")
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> getOneObjectTagInfo(@PathVariable("objectTagKeynameUrl")
                                                 @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                   String objectTagKeynameUrl,
@@ -211,8 +219,9 @@ public class ObjectTagResource {
     }
 
 
-    @ApiOperation("Get all tags info for objectTagKeyname")
     @PutMapping("/{objectTagKeynameUrl}/tag-info")
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> putOneObjectTagInfo(@PathVariable("objectTagKeynameUrl")
                                                  @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                      String objectTagKeynameUrl,
@@ -228,8 +237,9 @@ public class ObjectTagResource {
     }
 
 
-    @ApiOperation("Get all tags info for objectTagKeyname")
     @PutMapping("/{objectTagKeynameUrl}/tag-info-list")
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> putObjectTagInfoList(@PathVariable("objectTagKeynameUrl")
                                                    @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                        String objectTagKeynameUrl,
@@ -249,8 +259,9 @@ public class ObjectTagResource {
      * @param objectTagKeynameUrl
      * @return
      */
-    @ApiOperation("Get all tags info for objectTagKeyname")
     @DeleteMapping("/{objectTagKeynameUrl}/tag-info/{tagName}")
+    @ApiOperation("Get all tags info for objectTagKeyname")
+    @Timed
     public ResponseEntity<?> deleteObjectTagInfo(@PathVariable("objectTagKeynameUrl")
                                                    @ApiParam("supported urls: cont-objects, cont-zpoints, device-objects")
                                                        String objectTagKeynameUrl,

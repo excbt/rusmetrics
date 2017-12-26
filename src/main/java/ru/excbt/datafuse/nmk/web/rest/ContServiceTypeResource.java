@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +27,9 @@ public class ContServiceTypeResource {
         this.contServiceTypeMapper = contServiceTypeMapper;
     }
 
-    @ApiOperation("Get list of supported service types")
     @GetMapping("/contServiceTypes")
+    @ApiOperation("Get list of supported service types")
+    @Timed
     public ResponseEntity<List<ContServiceTypeDTO>> getServiceTypes() {
         List<ContServiceTypeDTO> list = contServiceTypeRepository
             .selectAll().stream().map(i -> contServiceTypeMapper.toDto(i)).collect(Collectors.toList());
