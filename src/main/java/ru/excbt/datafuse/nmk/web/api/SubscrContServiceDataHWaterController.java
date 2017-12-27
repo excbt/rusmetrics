@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -39,9 +39,8 @@ import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import javax.persistence.Tuple;
@@ -50,6 +49,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -64,7 +64,7 @@ import static com.google.common.base.Preconditions.*;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataHWaterController extends AbstractSubscrApiResource {
+public class SubscrContServiceDataHWaterController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
 
@@ -96,6 +96,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ObjectAccessService objectAccessService;
 
+	protected final PortalUserIdsService portalUserIdsService;
+
 	@Autowired
     public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
                                                  HWatersCsvService hWatersCsvService,
@@ -104,7 +106,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
                                                  ContServiceDataHWaterService contServiceDataHWaterService,
                                                  ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
                                                  ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService) {
+                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
         this.webAppPropsService = webAppPropsService;
@@ -114,6 +116,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
         this.subscrDataSourceService = subscrDataSourceService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -448,7 +451,11 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
-		if (!canAccessContObject(contObjectId)) {
+
+
+	    ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+		if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -505,7 +512,9 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("file") MultipartFile multipartFile) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -598,7 +607,9 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	public ResponseEntity<?> uploadManualDataHWaterUniversal(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -675,7 +686,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			return ApiResponse.responseBadRequest();
 		}
 
-		SubscriberParam subscriberParam = getSubscriberParam();
+        PortalUserIds userIds = getCurrentPortalUserIds();
 
         List<CsvUtil.CheckFileResult> checkFileResults = CsvUtil.checkCsvFiles(multipartFiles);
         List<CsvUtil.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
@@ -720,10 +731,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		// HWaterImport
 
-		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
+		logger.debug("Looking for subscriberId: {}, serials: {}", userIds.getSubscriberId(),
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
-		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
+		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(userIds.getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
@@ -772,12 +783,20 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
 				.map(i -> DBRowUtil.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
 
-		if (!checkContZPoints.isEmpty() && !canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
+
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContZPointId = accessUtil.checkContObjectId (userIds);
+
+
+        boolean denyAccess =
+        checkContZPoints.stream().filter(i -> !checkContZPointId.test(i)).findAny().map(i -> true).orElse(false);
+
+		if (!checkContZPoints.isEmpty() && denyAccess) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
 		}
 
 		List<Long> availableDataSourceIds = subscrDataSourceService
-				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
+				.selectDataSourceIdsBySubscriber(userIds.getSubscriberId());
 
 		if (!checkDataSourceIds.isEmpty() && !ObjectAccessUtil.checkIds(checkDataSourceIds, availableDataSourceIds)) {
 			fileNameErrorDesc.add("Нет доступа к источнику данных");
@@ -799,8 +818,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
 
-			String internalFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
+			String internalFilename = webAppPropsService.getSubscriberCsvPath(userIds.getSubscriberId(),
+					userIds.getUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
 
 			File inFile = new File(internalFilename);
 
@@ -816,7 +835,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			checkState(row != null);
 
-			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
+			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(userIds.getSubscriberId(),
 					DBRowUtil.asLong(row.get("contObjectId")), DBRowUtil.asLong(row.get("contZPointId")),
 					DBRowUtil.asLong(row.get("deviceObjectId")), DBRowUtil.asLong(row.get("subscrDataSourceId")),
                 fileName, internalFilename);
@@ -825,7 +844,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		}
 
-		contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
+		contServiceDataHWaterImportService.submitImportTask(userIds.getUserId(), serviceDataImportInfos);
 
 		return ApiResponse.responseOK();
 
@@ -889,7 +908,9 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String dateFromStr, @RequestParam("endDate") String dateToStr) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -976,7 +997,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getAllCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ApiResponse.responseOK(resultList);
@@ -996,7 +1017,11 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		checkNotNull(dateFromStr);
 		checkNotNull(dateToStr);
 
-		if (!canAccessContObject(contObjectId)) {
+
+
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -1010,7 +1035,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfo(getCurrentSubscriberId(),
+				.getContObjectServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
 		return ApiResponse.responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
@@ -1048,10 +1073,17 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getOneCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
+				.getOneCityMapContObjectsServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
 		return ApiResponse.responseOK(resultList);
 	}
+
+    protected PortalUserIds getCurrentPortalUserIds() {
+
+        return portalUserIdsService.getCurrentIds();
+    }
+
+
 
 }

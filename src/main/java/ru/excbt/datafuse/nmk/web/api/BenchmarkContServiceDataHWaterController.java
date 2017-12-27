@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
@@ -22,20 +23,15 @@ public class BenchmarkContServiceDataHWaterController extends SubscrContServiceD
 
 	private final BenchmarkService benchmarkService;
 
-    public BenchmarkContServiceDataHWaterController(ContZPointService contZPointService, HWatersCsvService hWatersCsvService, WebAppPropsService webAppPropsService, CurrentSubscriberService currentSubscriberService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataHWaterDeltaService contObjectHWaterDeltaService, ContServiceDataHWaterImportService contServiceDataHWaterImportService, SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, BenchmarkService benchmarkService) {
-        super(contZPointService, hWatersCsvService, webAppPropsService, currentSubscriberService, contServiceDataHWaterService, contObjectHWaterDeltaService, contServiceDataHWaterImportService, subscrDataSourceService, objectAccessService);
+    public BenchmarkContServiceDataHWaterController(ContZPointService contZPointService, HWatersCsvService hWatersCsvService, WebAppPropsService webAppPropsService, CurrentSubscriberService currentSubscriberService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataHWaterDeltaService contObjectHWaterDeltaService, ContServiceDataHWaterImportService contServiceDataHWaterImportService, SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, BenchmarkService benchmarkService) {
+        super(contZPointService, hWatersCsvService, webAppPropsService, currentSubscriberService, contServiceDataHWaterService, contObjectHWaterDeltaService, contServiceDataHWaterImportService, subscrDataSourceService, objectAccessService, portalUserIdsService);
         this.benchmarkService = benchmarkService;
     }
 
-
-    /**
-	 *
-	 * @return
-	 */
 	@Override
-	protected long getCurrentSubscriberId() {
-		Long subscriberId = benchmarkService.getBenchmarkSubscriberId();
-		return subscriberId == null ? 0 : subscriberId;
-	}
+    protected PortalUserIds getCurrentPortalUserIds() {
+        return portalUserIdsService.getCurrentIds();
+    }
+
 
 }
