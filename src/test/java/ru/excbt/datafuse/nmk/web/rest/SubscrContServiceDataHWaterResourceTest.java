@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
@@ -52,7 +53,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterResourceTest.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataHWaterResourceTest.class);
 
 	public final static String API_SERVICE_URL = "/api/subscr";
 	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL + "/%d/service/24h/%d";
@@ -138,7 +139,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
             .param("beginDate", "2013-10-01")
             .param("endDate", "2013-10-31"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 	}
 
 	/**
@@ -156,7 +158,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
             .param("endDate", "2013-10-31")
             .param("dataDateSort", "asc"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
 
 	}
@@ -174,7 +177,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
                 .param("beginDate", "2015-05-19")
                 .param("endDate", "2015-05-25"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
 	}
 
@@ -211,7 +215,7 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 		resultActions.andExpect(status().is2xxSuccessful());
 		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
 
-		logger.info("Uploaded FileInfoMD5:{}", resultContent);
+		log.info("Uploaded FileInfoMD5:{}", resultContent);
 
 	}
 
@@ -225,7 +229,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
         ResultActions resultActions = restPortalContObjectMockMvc.perform(get(url))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk());
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 	}
 
 	/**
@@ -269,7 +274,7 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 		String url = UrlUtils.apiSubscrUrl(String.format("/contObjects/%d/contZPoints/%d/service/24h/csv", MANUAL_CONT_OBJECT_ID,
 				MANUAL_HW_CONT_ZPOINT_ID));
 
-		logger.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(), datePeriod.getDateToStr());
+		log.info("beginDate={}, endDate={}", datePeriod.getDateFromStr(), datePeriod.getDateToStr());
 
 		ResultActions resultAction = restPortalContObjectMockMvc.perform(
 				delete(url).contentType(MediaType.APPLICATION_JSON).param("beginDate", datePeriod.getDateFromStr())
@@ -295,10 +300,11 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 //		};
 
         ResultActions resultActions = restPortalContObjectMockMvc.perform(get(urlStr)
-            .param("dateFrom", "2015-07-01").param("dateTo",
-                "2015-07-31"))
+                .param("dateFrom", "2015-07-01")
+                .param("dateTo","2015-07-31"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is2xxSuccessful());
+            .andExpect(status().is2xxSuccessful())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
 	}
 
@@ -317,9 +323,11 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 //		};
 //
         ResultActions resultActions = restPortalContObjectMockMvc.perform(get(urlStr).param("dateFrom", "2015-07-01")
-            .param("dateTo", "2015-07-31").param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f"))
+                .param("dateTo", "2015-07-31")
+                .param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is2xxSuccessful());
+            .andExpect(status().is2xxSuccessful())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
 //
 //		_testGet(urlStr, requestExtraInitializer);
@@ -344,10 +352,11 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 //		};
 
         ResultActions resultActions = restPortalContObjectMockMvc.perform(get(urlStr)
-            .param("dateFrom", "2015-07-01").param("dateTo",
-                "2015-07-31"))
+                .param("dateFrom", "2015-07-01")
+                .param("dateTo", "2015-07-31"))
             .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().is2xxSuccessful());
+            .andExpect(status().is2xxSuccessful())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
 	}
 
@@ -395,7 +404,7 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 		resultActions.andExpect(status().is2xxSuccessful());
 		String resultContent = resultActions.andReturn().getResponse().getContentAsString();
 
-		logger.info("Uploaded FileInfoMD5:{}", resultContent);
+		log.info("Uploaded FileInfoMD5:{}", resultContent);
 
 	}
 

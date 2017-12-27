@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContServiceDataHWaterMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
@@ -179,6 +180,20 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<ContServiceDataHWaterDTO> selectDTOByContZPoint(long contZpointId, TimeDetailKey timeDetail,
+			LocalDatePeriod datePeriod) {
+		List<ContServiceDataHWater> dataHWaterList = selectByContZPoint(contZpointId, timeDetail, datePeriod);
+		return dataHWaterMapper.toDto(dataHWaterList);
+	}
+
+    /**
+     *
+     * @param contZpointId
+     * @param timeDetail
+     * @param datePeriod
+     * @return
+     */
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod) {
 		checkArgument(contZpointId > 0);
@@ -186,8 +201,10 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(datePeriod, "beginDate is null");
 		checkArgument(datePeriod.isValid());
 
-		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(),
-				datePeriod.getDateFrom(), datePeriod.getDateTo());
+		List<ContServiceDataHWater> dataHWaterList = contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(),
+            datePeriod.getDateFrom(), datePeriod.getDateTo());
+
+		return dataHWaterList;
 	}
 
 	/**
@@ -220,8 +237,8 @@ public class ContServiceDataHWaterService implements SecuredRoles {
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
-			LocalDatePeriod datePeriod, PageRequest pageRequest) {
+	public Page<ContServiceDataHWaterDTO> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
+                                                             LocalDatePeriod datePeriod, PageRequest pageRequest) {
 		checkArgument(contZpointId > 0);
 		checkNotNull(timeDetail);
 		checkNotNull(datePeriod, "beginDate is null");
@@ -229,7 +246,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(pageRequest);
 
 		return contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetail.getKeyname(),
-				datePeriod.getDateFrom(), datePeriod.getDateTo(), pageRequest);
+				datePeriod.getDateFrom(), datePeriod.getDateTo(), pageRequest).map(i -> dataHWaterMapper.toDto(i));
 	}
 
 	/**
@@ -628,7 +645,8 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkState(BooleanUtils.isTrue(zpoint.getIsManualLoading()),
 				String.format("Manual Loading and Deleting for ContZPoint with id:%d is not allowed", contZpointId));
 
-		List<ContServiceDataHWater> deleteCandidate = selectByContZPoint(contZpointId, timeDetailKey, localDatePeriod);
+		List<ContServiceDataHWater> deleteCandidate = contServiceDataHWaterRepository.selectByZPoint(contZpointId, timeDetailKey.getKeyname(),
+            localDatePeriod.getDateFrom(), localDatePeriod.getDateTo());
 
 		try {
 			ByteArrayInputStream is = new ByteArrayInputStream(hWatersCsvService.writeDataHWaterToCsv(deleteCandidate));

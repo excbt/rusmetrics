@@ -2,12 +2,15 @@ package ru.excbt.datafuse.nmk.service.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.data.model.markers.DataDateFormatter;
 
 import java.util.Date;
 
 @Getter
 @Setter
-public class ContServiceDataHWaterDTO {
+public class ContServiceDataHWaterDTO implements DataDateFormatter {
+
+    private Long id;
 
     private Date dataDate;
 

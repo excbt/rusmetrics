@@ -21,7 +21,6 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
@@ -30,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
@@ -180,7 +180,7 @@ public class SubscrContServiceDataHWaterResource {
 					.body(String.format("Invalid parameters timeDetailType:{}", timeDetailType));
 		}
 
-		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
+		List<ContServiceDataHWaterDTO> result = contServiceDataHWaterService.selectDTOByContZPoint(contZPointId, timeDetail,
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(result);
@@ -252,7 +252,7 @@ public class SubscrContServiceDataHWaterResource {
 
 		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
+		Page<ContServiceDataHWaterDTO> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<>(result));
