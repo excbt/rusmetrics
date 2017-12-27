@@ -371,7 +371,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
             + " sum(h_in) as h_in, sum(h_out) as h_out, sum(h_delta) as h_delta, "
             + " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
             + " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
-            + " AND hw.contZPoint.id = :contZpointId " + " AND hw.dataDate >= :beginDate "
+            + " AND hw.contZPointId = :contZpointId " + " AND hw.dataDate >= :beginDate "
             + " AND hw.dataDate <= :endDate AND hw.deleted = 0";
 
 		Query q1 = dbSessionService.em().createQuery(qryStr);
@@ -428,7 +428,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		sqlString.append(" FROM ");
 		sqlString.append(" ContServiceDataHWater hw ");
 		sqlString.append(" WHERE hw.timeDetailType = :timeDetailType ");
-		sqlString.append(" AND hw.contZPoint.id = :contZpointId ");
+		sqlString.append(" AND hw.contZPointId = :contZpointId ");
 		sqlString.append(" AND hw.dataDate >= :beginDate ");
 		sqlString.append(" AND hw.dataDate <= :endDate ");
 		sqlString.append(" AND hw.deleted = 0 ");
@@ -615,7 +615,10 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		inData.forEach((d) -> {
 			d.setContZPointId(contZpointId);
 			//d.setTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname());
-			d.setDeviceObject(dObject);
+            if (dObject != null) {
+                d.setDeviceObjectId(dObject.getId());
+            }
+
 		});
 
 		contServiceDataHWaterRepository.save(inData);

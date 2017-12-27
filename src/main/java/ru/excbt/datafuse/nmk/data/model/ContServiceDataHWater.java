@@ -54,15 +54,9 @@ public class ContServiceDataHWater extends AbstractAuditableModel implements Dat
     @Column(name = "data_date", updatable = false)
     private Date dataDate;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_object_id" ,updatable = false)
     @JsonIgnore
-    private DeviceObject deviceObject;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cont_zpoint_id", insertable = false, updatable = false)
-    @JsonIgnore
-    private ContZPoint contZPoint;
+    @Column(name = "device_object_id" ,updatable = false)
+    private Long DeviceObjectId;
 
     @Column(name = "cont_zpoint_id", updatable = false)
     @JsonIgnore

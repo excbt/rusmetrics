@@ -6,4 +6,6 @@ import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 
 @Mapper(componentModel = "spring")
 public interface ContServiceDataHWaterMapper extends EntityMapper<ContServiceDataHWaterDTO, ContServiceDataHWater> {
+
+
 }
