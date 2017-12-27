@@ -1,5 +1,6 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.uuid.Generators;
 import org.apache.commons.io.FilenameUtils;
@@ -11,6 +12,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,18 +21,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
@@ -39,9 +38,8 @@ import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 import javax.persistence.Tuple;
@@ -50,6 +48,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.*;
@@ -62,12 +61,12 @@ import static com.google.common.base.Preconditions.*;
  * @since 24.03.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataHWaterController extends AbstractSubscrApiResource {
+@Primary
+public class SubscrContServiceDataHWaterResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterResource.class);
 
 
 	public static final String HEAT = "heat";
@@ -96,15 +95,19 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 	private final ObjectAccessService objectAccessService;
 
+	protected final PortalUserIdsService portalUserIdsService;
+
 	@Autowired
-    public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
-                                                 HWatersCsvService hWatersCsvService,
-                                                 WebAppPropsService webAppPropsService,
-                                                 CurrentSubscriberService currentSubscriberService,
-                                                 ContServiceDataHWaterService contServiceDataHWaterService,
-                                                 ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService) {
+    public SubscrContServiceDataHWaterResource(ContZPointService contZPointService,
+                                               HWatersCsvService hWatersCsvService,
+                                               WebAppPropsService webAppPropsService,
+                                               CurrentSubscriberService currentSubscriberService,
+                                               ContServiceDataHWaterService contServiceDataHWaterService,
+                                               ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
+                                               ContServiceDataHWaterImportService contServiceDataHWaterImportService,
+                                               SubscrDataSourceService subscrDataSourceService,
+                                               ObjectAccessService objectAccessService,
+                                               PortalUserIdsService portalUserIdsService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
         this.webAppPropsService = webAppPropsService;
@@ -114,6 +117,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
         this.contServiceDataHWaterImportService = contServiceDataHWaterImportService;
         this.subscrDataSourceService = subscrDataSourceService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -125,8 +129,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @param toDateStr
      * @return
      */
-    @RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-        produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}")
+    @Timed
     public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
                                            @PathVariable("contZPointId") long contZPointId,
                                            @PathVariable("timeDetailType") String timeDetailType,
@@ -176,7 +180,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 					.body(String.format("Invalid parameters timeDetailType:{}", timeDetailType));
 		}
 
-		List<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
+		List<ContServiceDataHWaterDTO> result = contServiceDataHWaterService.selectDTOByContZPoint(contZPointId, timeDetail,
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(result);
@@ -194,8 +198,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @param pageable
      * @return
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged", method = RequestMethod.GET,
-			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged")
+    @Timed
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
@@ -248,7 +252,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		PageRequest pageRequest = new PageRequest(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-		Page<ContServiceDataHWater> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
+		Page<ContServiceDataHWaterDTO> result = contServiceDataHWaterService.selectByContZPoint(contZPointId, timeDetail,
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay(), pageRequest);
 
 		return ResponseEntity.ok(new PageInfoList<>(result));
@@ -264,8 +268,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @param endDateS
      * @return
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary")
+    @Timed
 	public ResponseEntity<?> getDataHWaterSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String beginDateS, @RequestParam("endDate") String endDateS) {
@@ -357,7 +361,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @param response
      * @throws IOException
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.GET)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv")
+    @Timed
 	public void getDataHWater_CsvAbsDownload(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String beginDateS, @RequestParam("endDate") String endDateS,
@@ -442,13 +447,17 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv/noAbs",
-			method = RequestMethod.GET)
+	@GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv/noAbs")
+    @Timed
 	public ResponseEntity<?> getDataHWater_CsvDownload(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
 
-		if (!canAccessContObject(contObjectId)) {
+
+
+	    ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+		if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -499,13 +508,15 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param multipartFile
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@PostMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv")
+    @Timed
 	public ResponseEntity<?> uploadManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("file") MultipartFile multipartFile) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -593,12 +604,14 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param multipartFile
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv",
-			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @PostMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv")
+    @Timed
 	public ResponseEntity<?> uploadManualDataHWaterUniversal(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -657,6 +670,23 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
+
+    /**
+     *
+     */
+    private class FileNameData {
+        final String fileName;
+        final String deviceSerial;
+        final String tsNumber;
+
+        private FileNameData(String fileName, String deviceSerial, String tsNumber) {
+            this.fileName = fileName;
+            this.deviceSerial = deviceSerial;
+            this.tsNumber = tsNumber;
+        }
+    }
+
+
 	/**
 	 *
      * Input file type:
@@ -665,8 +695,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param multipartFiles
 	 * @return
 	 */
-	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
-			produces = ApiConst.APPLICATION_JSON_UTF8)
+	@PostMapping("/service/datahwater/contObjects/importData")
+    @Timed
 	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
@@ -675,7 +705,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 			return ApiResponse.responseBadRequest();
 		}
 
-		SubscriberParam subscriberParam = getSubscriberParam();
+        PortalUserIds userIds = getCurrentPortalUserIds();
 
         List<CsvUtil.CheckFileResult> checkFileResults = CsvUtil.checkCsvFiles(multipartFiles);
         List<CsvUtil.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
@@ -684,17 +714,6 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
             return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
-        class FileNameData {
-           final String fileName;
-           final String deviceSerial;
-           final String tsNumber;
-
-            public FileNameData(String fileName, String deviceSerial, String tsNumber) {
-                this.fileName = fileName;
-                this.deviceSerial = deviceSerial;
-                this.tsNumber = tsNumber;
-            }
-        }
 
 		List<String> fileNameErrorDesc = new ArrayList<>();
 		List<FileNameData> fileNameDataList = new ArrayList<>();
@@ -720,10 +739,10 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		// HWaterImport
 
-		logger.debug("Looking for subscriberId: {}, serials: {}", subscriberParam.getSubscriberId(),
+		logger.debug("Looking for subscriberId: {}, serials: {}", userIds.getSubscriberId(),
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
-		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
+		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(userIds.getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
 				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
@@ -766,18 +785,25 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		}
 
-		Collection<Long> checkContZPoints = filenameDBInfos.values().stream()
+		Collection<Long> loadContZPoints = filenameDBInfos.values().stream()
 				.map(i -> DBRowUtil.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
 
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
 				.map(i -> DBRowUtil.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
 
-		if (!checkContZPoints.isEmpty() && !canAccessContZPoint(checkContZPoints.toArray(new Long[] {}))) {
+
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContZPointId = accessUtil.checkContZPointId(userIds);
+
+        boolean denyAccess =
+            loadContZPoints.stream().filter(i -> !checkContZPointId.test(i)).findAny().map(i -> true).orElse(false);
+
+		if (!loadContZPoints.isEmpty() && denyAccess) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
 		}
 
 		List<Long> availableDataSourceIds = subscrDataSourceService
-				.selectDataSourceIdsBySubscriber(subscriberParam.getSubscriberId());
+				.selectDataSourceIdsBySubscriber(userIds.getSubscriberId());
 
 		if (!checkDataSourceIds.isEmpty() && !ObjectAccessUtil.checkIds(checkDataSourceIds, availableDataSourceIds)) {
 			fileNameErrorDesc.add("Нет доступа к источнику данных");
@@ -799,8 +825,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
 
-			String internalFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
+			String internalFilename = webAppPropsService.getSubscriberCsvPath(userIds.getSubscriberId(),
+					userIds.getUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
 
 			File inFile = new File(internalFilename);
 
@@ -816,7 +842,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 			checkState(row != null);
 
-			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(subscriberParam.getSubscriberId(),
+			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(userIds.getSubscriberId(),
 					DBRowUtil.asLong(row.get("contObjectId")), DBRowUtil.asLong(row.get("contZPointId")),
 					DBRowUtil.asLong(row.get("deviceObjectId")), DBRowUtil.asLong(row.get("subscrDataSourceId")),
                 fileName, internalFilename);
@@ -825,7 +851,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 
 		}
 
-		contServiceDataHWaterImportService.submitImportTask(subscriberParam.getSubscrUserId(), serviceDataImportInfos);
+		contServiceDataHWaterImportService.submitImportTask(userIds.getUserId(), serviceDataImportInfos);
 
 		return ApiResponse.responseOK();
 
@@ -836,7 +862,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@GetMapping("/service/out/csv")
+    @Timed
 	public ResponseEntity<?> getOutCsvDownloadsAvailable() {
 
 		List<File> listFiles = HWatersCsvFileUtils.getOutFiles(webAppPropsService,
@@ -858,7 +885,9 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param filename
 	 * @return
 	 */
+//	@GetMapping(value = "/service/out/csv/{filename}", produces = "text/csv")
 	@RequestMapping(value = "/service/out/csv/{filename}", method = RequestMethod.GET)
+    @Timed
 	public ResponseEntity<?> getOutCsvDownload(@PathVariable("filename") String filename) {
 
 		logger.debug("Request for downloading file: {}", filename);
@@ -883,13 +912,15 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @DeleteMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv")
+    @Timed
 	public ResponseEntity<?> deleteManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String dateFromStr, @RequestParam("endDate") String dateToStr) {
 
-		if (!canAccessContObject(contObjectId)) {
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -954,7 +985,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
+	@GetMapping("/service/hwater/contObjects/serviceTypeInfo")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfo(@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr) {
 
@@ -976,7 +1008,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getAllCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
+				.getAllCityMapContObjectsServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ApiResponse.responseOK(resultList);
@@ -989,14 +1021,19 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/{contObjectId}", method = RequestMethod.GET)
+	@GetMapping("/service/hwater/contObjects/serviceTypeInfo/{contObjectId}")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfoContObject(@PathVariable("contObjectId") long contObjectId,
 			@RequestParam("dateFrom") String dateFromStr, @RequestParam("dateTo") String dateToStr) {
 
 		checkNotNull(dateFromStr);
 		checkNotNull(dateToStr);
 
-		if (!canAccessContObject(contObjectId)) {
+
+
+        ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
+        Predicate<Long> checkContObjectId = accessUtil.checkContObjectId (getCurrentPortalUserIds());
+        if (!checkContObjectId.test(contObjectId)) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -1010,7 +1047,7 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<ContObjectServiceTypeInfo> contObjectServiceTypeInfos = contObjectHWaterDeltaService
-				.getContObjectServiceTypeInfo(getCurrentSubscriberId(),
+				.getContObjectServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), contObjectId);
 
 		return ApiResponse.responseOK(contObjectServiceTypeInfos.isEmpty() ? null : contObjectServiceTypeInfos.get(0));
@@ -1023,7 +1060,8 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
      * @param cityFiasStr
      * @return
      */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/city", method = RequestMethod.GET)
+    @GetMapping("/service/hwater/contObjects/serviceTypeInfo/city")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfoCity(@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr, @RequestParam("cityFias") String cityFiasStr) {
 
@@ -1048,10 +1086,21 @@ public class SubscrContServiceDataHWaterController extends AbstractSubscrApiReso
 		}
 
 		List<CityContObjectsServiceTypeInfo> resultList = contObjectHWaterDeltaService
-				.getOneCityMapContObjectsServiceTypeInfo(getCurrentSubscriberId(),
+				.getOneCityMapContObjectsServiceTypeInfo(getCurrentPortalUserIds().getSubscriberId(),
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), cityFiasUUID);
 
 		return ApiResponse.responseOK(resultList);
 	}
+
+    /**
+     *
+     * @return
+     */
+    protected PortalUserIds getCurrentPortalUserIds() {
+
+        return portalUserIdsService.getCurrentIds();
+    }
+
+
 
 }
