@@ -62,6 +62,34 @@
                     node: null
                 }
             },
+            
+            {
+                name: 'objectsPTree.treeNodeInfo',
+                url: 'tree-node-info',
+                component: 'treeNodeInfoComponent',
+                params: {
+                    node: null
+                }
+            },
+            
+            {
+                name: 'objectsPTree.treeNodeInfo.contObjectControl',
+                url: '/cont-object-control',
+                component: 'contObjectControlComponent',
+                params: {
+                    node: null
+                }
+            },
+            
+            {
+                name: 'objectsPTree.treeNodeInfo.nodeNotifications',
+                url: '/node-notifications',
+                component: 'treeElementNodeComponent',
+                params: {
+                    node: null
+                }
+            },
+            
 /*end 'component version'*/            
             {
                 name: 'demoMap',

@@ -159,8 +159,8 @@
         }
 
         function successLoadPTreeCallback(resp) {
-console.log(resp);
-console.log(resp.data);
+//console.log(resp);
+//console.log(resp.data);
 
             ctrl.data.currentPTree = resp.data;
             setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
@@ -184,7 +184,7 @@ console.log(resp.data);
             $timeout(function () {
                 setEventsForCurrentPTree(ctrl.data.currentPTree);
             }, 1000);
-console.log(ctrl.data.currentPTree);
+//console.log(ctrl.data.currentPTree);
         }
 
         function loadPTreeMonitorWithStartRefresh(treeId, depthLvl) {
@@ -220,8 +220,8 @@ console.log(ctrl.data.currentPTree);
         
         function setMonitorToPTree(monitor, ptree) {
 //console.log('setMonitorToPTree');            
-console.log(monitor);      
-console.log(ptree);            
+//console.log(monitor);      
+//console.log(ptree);            
             if (checkUndefinedNull(monitor) || checkUndefinedNull(ptree) || checkEmptyObject(monitor)) {
                 return false;
             }

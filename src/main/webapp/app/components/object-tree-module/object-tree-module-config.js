@@ -8,18 +8,19 @@
 
     /* @ngInject */
     function configuration (widgetsProvider) {
+        
                 //widget configuration
-            widgetsProvider.setManifestGenerator(function resourceWidgetManufest() {
-                return function (name) {
-                    return {
-                        module: name + 'Widget',
-                        html: 'widgets/' + name + '/' + name + '.html',
-                        files: [
-                            'widgets/' + name + '/' + name + '.js',
-                            'widgets/' + name + '/' + name + '.css'
-                        ]
-                    };
+        widgetsProvider.setManifestGenerator(function resourceWidgetManufest() {
+            return function (name) {
+                return {
+                    module: name + 'Widget',
+                    html: 'widgets/' + name + '/' + name + '.html',
+                    files: [
+                        'widgets/' + name + '/' + name + '.js',
+                        'widgets/' + name + '/' + name + '.css'
+                    ]
                 };
-            });
+            };
+        });
     }
 })();

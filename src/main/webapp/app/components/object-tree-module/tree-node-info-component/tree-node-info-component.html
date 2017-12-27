@@ -1,0 +1,23 @@
+<div>
+    Tree node component.
+    <div class = "container-fluid">
+        <div class = "row">
+            <div class = "col-xs-6">
+               <select class = "form-control"
+                  ng-model = "$ctrl.currentWidget"
+                  ng-options = "widget as widget.caption for widget in $ctrl.nodeWidgets"
+                  ng-change = "$ctrl.changeWidget($ctrl.currentWidget)">
+                   
+               </select>
+            </div>
+            <div class = "col-xs-6">
+                
+            </div>
+        </div>
+        <div class = "row">
+            <div class = "col-xs-12">
+                <ui-view = "treeNodeWidgetView"></ui-view>
+            </div>
+        </div>
+    </div>
+</div>

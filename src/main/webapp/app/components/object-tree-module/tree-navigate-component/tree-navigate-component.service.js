@@ -183,7 +183,7 @@
         }
 
         function successPTreeMonotorLoadCallback(resp) {
-            console.log(resp);
+//console.log(resp);
             pTreeMonitorLoadingFlag = false;
             if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data)) {
                 $rootScope.$broadcast(BROADCASTS.pTreeMonitorLoaded);
@@ -194,7 +194,7 @@
         }
 
         function loadPTreeMonitor(ptreeId) {
-            console.log("objectsTreeSvc.loadPTreeMonitor");
+//console.log("objectsTreeSvc.loadPTreeMonitor");
             var url = P_TREE_NODE_MONITOR_URL;
             url = addParamToURL(url, "nodeId", ptreeId);
             pTreeMonitorLoadingFlag = true;
@@ -202,7 +202,7 @@
         }
 
         $rootScope.$on(BROADCASTS.requestPTreeMonitorLoading, function (even, args) {
-            console.log("Start ptree monitor refresher: ", args);
+//console.log("Start ptree monitor refresher: ", args);
             if (checkUndefinedNull(args.subscrObjectTreeId) || Number(args.subscrObjectTreeId) === pTreeLoadedId) {
                 return false;
             }
@@ -227,7 +227,7 @@
         });
         
         function loadMonitorEventsForObject(objId) {
-    console.log("loadMonitorEventsForObject: " + objId);        
+//console.log("loadMonitorEventsForObject: " + objId);        
             var url = OBJECT_URL + "/" + objId + "/monitorEventsV2";// + "?fromDate=" + $rootScope.monitorStart + "&toDate=" + $rootScope.monitorEnd;
 //            if (isCancelParamsIncorrect() === true) {
 //                var deffer = $q.defer();
