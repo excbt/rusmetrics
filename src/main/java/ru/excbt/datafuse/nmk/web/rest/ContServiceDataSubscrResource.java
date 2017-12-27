@@ -1,24 +1,25 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.rest.SubscrContServiceDataHWaterResource;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
 /**
  * Created by kovtonyk on 31.05.2017.
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class ContServiceDataSubscrResource extends AbstractSubscrApiResource {
+public class ContServiceDataSubscrResource {
 
-    private final SubscrContServiceDataHWaterController subscrContServiceDataHWaterController;
+    private final SubscrContServiceDataHWaterResource subscrContServiceDataHWaterController;
 
-    public ContServiceDataSubscrResource(SubscrContServiceDataHWaterController subscrContServiceDataHWaterController) {
+    @Autowired
+    public ContServiceDataSubscrResource(SubscrContServiceDataHWaterResource subscrContServiceDataHWaterController) {
         this.subscrContServiceDataHWaterController = subscrContServiceDataHWaterController;
     }
 

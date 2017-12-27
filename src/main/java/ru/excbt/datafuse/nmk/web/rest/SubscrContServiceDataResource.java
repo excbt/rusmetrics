@@ -14,7 +14,6 @@ import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.data.service.HWatersCsvService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.SubscrContServiceDataHWaterController;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -41,13 +40,13 @@ public class SubscrContServiceDataResource extends AbstractSubscrApiResource {
 
     private final WebAppPropsService webAppPropsService;
 
-    private final SubscrContServiceDataHWaterController subscrContServiceDataHWaterController;
+    private final SubscrContServiceDataHWaterResource subscrContServiceDataHWaterController;
     private final SubscrContServiceDataImpulseResource subscrContServiceDataImpulseController;
 
 
     @Autowired
     public SubscrContServiceDataResource(WebAppPropsService webAppPropsService,
-                                         SubscrContServiceDataHWaterController subscrContServiceDataHWaterController,
+                                         SubscrContServiceDataHWaterResource subscrContServiceDataHWaterController,
                                          SubscrContServiceDataImpulseResource subscrContServiceDataImpulseController) {
         this.webAppPropsService = webAppPropsService;
         this.subscrContServiceDataHWaterController = subscrContServiceDataHWaterController;
