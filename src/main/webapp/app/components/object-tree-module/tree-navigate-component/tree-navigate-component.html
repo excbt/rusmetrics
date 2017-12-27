@@ -87,29 +87,28 @@
              ng-class="{'glyphicon-chevron-right': $ctrl.isChevronRight(collapsed, item), 'glyphicon-chevron-down': $ctrl.isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': $ctrl.isChevronDisabled(collapsed, item)}"
              data-nodrag ng-click="toggle(this)">
             </i>
-            <a ui-sref = "objectsPTree.treeNodeInfo({node: item})">
-                <span ng-if = "item.type == 'root'">
-                      <strong>\</strong>
-                </span>
-                <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
-                    <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
-                </span>
-                <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
-                    <i class = "glyphicon glyphicon-file text-success"></i>
-                    {{item.nodeObject.fullName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
-                </span>
-                <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
-                   <i class = "glyphicon glyphicon-map-marker text-info"></i>
-                    {{item.nodeObject.customServiceName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
-                </span>
-                <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
-                    <i class = "glyphicon glyphicon-scale text-warning"></i>
-                   <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
-                   <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
-                   <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
-                   <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
-                </span>
-            </a>
+            
+            <span ng-if = "item.type == 'root'">
+                  <strong>\</strong>
+            </span>
+            <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-file text-success"></i>
+                {{item.nodeObject.fullName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
+               <i class = "glyphicon glyphicon-map-marker text-info"></i>
+                {{item.nodeObject.customServiceName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-scale text-warning"></i>
+               <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
+               <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
+               <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
+               <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>            
 <!--
             <a ui-sref = "objectsPTree.info({node: item})"> Уведомления</a>
             <a ui-sref = "objectsPTree.contObjectControl({node: item})"> Контроль</a>

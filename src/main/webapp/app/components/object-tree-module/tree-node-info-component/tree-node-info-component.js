@@ -20,16 +20,21 @@
         ctrl.svc = treeNodeInfoComponentService;
         
         ctrl.$onInit = function () {
-console.log('$stateParams: ', $stateParams);    
+//console.log('$stateParams: ', $stateParams);    
             ctrl.node = $stateParams.node; 
             ctrl.nodeWidgets = ctrl.svc.getNodeWidgets();
-            ctrl.currentWidget = ctrl.nodeWidgets[0];
-            
-            $state.go(ctrl.currentWidget.stateName, {node: ctrl.node});
+            ctrl.currentWidget = ctrl.nodeWidgets[0];            
+            ctrl.changeWidget(ctrl.currentWidget);
         };
         
         ctrl.changeWidget = function (widget) {
-            $state.go(widget.stateName, {node: ctrl.node});
+            if (ctrl.node !== null) {
+                $state.go(widget.stateName, {node: ctrl.node});
+            }            
+        };
+        
+        ctrl.widgetSelectDisabled = function () {
+            return ctrl.node === null;
         };
     }
     

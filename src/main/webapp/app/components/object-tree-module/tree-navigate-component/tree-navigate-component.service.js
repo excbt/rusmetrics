@@ -13,8 +13,8 @@
     function Service($http, $interval, $rootScope, $q, $timeout) {
         var service = {};
         var API_URL = "../api",
-            P_TREE_NODE_URL = API_URL + "/p-tree-node",
-            P_TREE_NODE_MONITOR_URL = API_URL + "/p-tree-node-monitor/all-linked-objects",            
+            P_TREE_NODE_URL = "../api/p-tree-node",
+            P_TREE_NODE_MONITOR_URL = "../api/p-tree-node-monitor/all-linked-objects",            
             OBJECT_URL = "../api/subscr/contEvent/notifications/contObject",
             SUBSCR_TREES_URL = '../api/subscr/subscrObjectTree/contObjectTreeType1',
             REFRESH_PERIOD = 600000,

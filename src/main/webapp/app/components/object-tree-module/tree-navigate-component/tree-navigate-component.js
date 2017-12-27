@@ -8,9 +8,9 @@
             controller: treeNavigateComponentController
         });
     
-    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http'];
+    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http', '$state'];
     
-    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http) {
+    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http, $state) {
         /*jshint validthis: true*/
         var ctrl = this;
         
@@ -532,6 +532,10 @@
 
             if (isLazyNode(item) && (ctrl.data.selectedPNode !== item)) {
                 loadPTreeNode(item, PTREE_DEPTH_LEVEL);
+            }
+            
+            if (ctrl.data.selectedPNode !== item) {
+                $state.go('objectsPTree.treeNodeInfo', {node: item});
             }
 
             item.isSelected = true;
