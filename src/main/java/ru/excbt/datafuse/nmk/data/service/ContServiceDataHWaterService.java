@@ -24,14 +24,13 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.mapper.ContServiceDataHWaterMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 import java.io.ByteArrayInputStream;
@@ -70,22 +69,30 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	private static final Set<String> HWATER_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.CW.getKeyname(),
 			ContServiceTypeKey.HW.getKeyname(), ContServiceTypeKey.HEAT.getKeyname());
 
-	@Autowired
-	private ContServiceDataHWaterRepository contServiceDataHWaterRepository;
+
+	private final ContServiceDataHWaterRepository contServiceDataHWaterRepository;
+
+	private final ContZPointService contZPointService;
+
+	private final DeviceObjectService deviceObjectService;
+
+	private final HWatersCsvService hWatersCsvService;
+
+	private final DBSessionService dbSessionService;
+
+	private final ContServiceDataHWaterMapper dataHWaterMapper;
 
 	@Autowired
-	private ContZPointService contZPointService;
+    public ContServiceDataHWaterService(ContServiceDataHWaterRepository contServiceDataHWaterRepository, ContZPointService contZPointService, DeviceObjectService deviceObjectService, HWatersCsvService hWatersCsvService, DBSessionService dbSessionService, ContServiceDataHWaterMapper dataHWaterMapper) {
+        this.contServiceDataHWaterRepository = contServiceDataHWaterRepository;
+        this.contZPointService = contZPointService;
+        this.deviceObjectService = deviceObjectService;
+        this.hWatersCsvService = hWatersCsvService;
+        this.dbSessionService = dbSessionService;
+        this.dataHWaterMapper = dataHWaterMapper;
+    }
 
-	@Autowired
-	private DeviceObjectService deviceObjectService;
-
-	@PersistenceContext(unitName = "nmk-p")
-	private EntityManager em;
-
-	@Autowired
-	private HWatersCsvService hWatersCsvService;
-
-	/**
+    /**
 	 *
 	 * @param contZpointId
 	 * @return
@@ -343,12 +350,14 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		logger.debug("selectContZPointTotals: contZPoint:{}; timeDetailType:{}; beginDate:{}; endDate:{}", contZpointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 
-		Query q1 = em.createQuery("SELECT sum(m_in) as m_in, sum(m_out) as m_out, sum(m_delta) as m_delta, "
-				+ " sum(h_in) as h_in, sum(h_out) as h_out, sum(h_delta) as h_delta, "
-				+ " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
-				+ " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
-				+ " AND hw.contZPoint.id = :contZpointId " + " AND hw.dataDate >= :beginDate "
-				+ " AND hw.dataDate <= :endDate AND hw.deleted = 0");
+		String qryStr = "SELECT sum(m_in) as m_in, sum(m_out) as m_out, sum(m_delta) as m_delta, "
+            + " sum(h_in) as h_in, sum(h_out) as h_out, sum(h_delta) as h_delta, "
+            + " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
+            + " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
+            + " AND hw.contZPoint.id = :contZpointId " + " AND hw.dataDate >= :beginDate "
+            + " AND hw.dataDate <= :endDate AND hw.deleted = 0";
+
+		Query q1 = dbSessionService.em().createQuery(qryStr);
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
 		q1.setParameter("contZpointId", contZpointId);
@@ -408,7 +417,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		sqlString.append(" AND hw.deleted = 0 ");
 		logger.debug("Sql: {}", sqlString.toString());
 
-		Query q1 = em.createQuery(sqlString.toString());
+		Query q1 = dbSessionService.em().createQuery(sqlString.toString());
 
 		q1.setParameter("timeDetailType", timeDetail.getKeyname());
 		q1.setParameter("contZpointId", contZpointId);

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.uuid.Generators;
 import org.apache.commons.io.FilenameUtils;
@@ -11,7 +12,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -129,8 +129,8 @@ public class SubscrContServiceDataHWaterResource {
      * @param toDateStr
      * @return
      */
-    @RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}", method = RequestMethod.GET,
-        produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}")
+    @Timed
     public ResponseEntity<?> getDataHWater(@PathVariable("contObjectId") long contObjectId,
                                            @PathVariable("contZPointId") long contZPointId,
                                            @PathVariable("timeDetailType") String timeDetailType,
@@ -198,8 +198,8 @@ public class SubscrContServiceDataHWaterResource {
      * @param pageable
      * @return
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged", method = RequestMethod.GET,
-			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/paged")
+    @Timed
 	public ResponseEntity<?> getDataHWaterPaged(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr,
@@ -268,8 +268,8 @@ public class SubscrContServiceDataHWaterResource {
      * @param endDateS
      * @return
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary",
-			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/summary")
+    @Timed
 	public ResponseEntity<?> getDataHWaterSummary(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String beginDateS, @RequestParam("endDate") String endDateS) {
@@ -361,7 +361,8 @@ public class SubscrContServiceDataHWaterResource {
      * @param response
      * @throws IOException
      */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv", method = RequestMethod.GET)
+    @GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv")
+    @Timed
 	public void getDataHWater_CsvAbsDownload(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String beginDateS, @RequestParam("endDate") String endDateS,
@@ -446,8 +447,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param toDateStr
 	 * @return
 	 */
-	@RequestMapping(value = "/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv/noAbs",
-			method = RequestMethod.GET)
+	@GetMapping("/{contObjectId}/service/{timeDetailType}/{contZPointId}/csv/noAbs")
+    @Timed
 	public ResponseEntity<?> getDataHWater_CsvDownload(@PathVariable("contObjectId") long contObjectId,
 			@PathVariable("contZPointId") long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String fromDateStr, @RequestParam("endDate") String toDateStr) {
@@ -507,8 +508,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param multipartFile
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@PostMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv")
+    @Timed
 	public ResponseEntity<?> uploadManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("file") MultipartFile multipartFile) {
@@ -603,8 +604,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param multipartFile
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv",
-			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @PostMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/csv")
+    @Timed
 	public ResponseEntity<?> uploadManualDataHWaterUniversal(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestParam("file") MultipartFile multipartFile) {
 
@@ -694,8 +695,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param multipartFiles
 	 * @return
 	 */
-	@RequestMapping(value = "/service/datahwater/contObjects/importData", method = RequestMethod.POST,
-			produces = ApiConst.APPLICATION_JSON_UTF8)
+	@PostMapping("/service/datahwater/contObjects/importData")
+    @Timed
 	public ResponseEntity<?> importDataHWaterMultipleFiles(@RequestParam("files") MultipartFile[] multipartFiles) {
 
 		checkNotNull(multipartFiles);
@@ -861,7 +862,8 @@ public class SubscrContServiceDataHWaterResource {
 	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/service/out/csv", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+	@GetMapping("/service/out/csv")
+    @Timed
 	public ResponseEntity<?> getOutCsvDownloadsAvailable() {
 
 		List<File> listFiles = HWatersCsvFileUtils.getOutFiles(webAppPropsService,
@@ -883,7 +885,9 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param filename
 	 * @return
 	 */
+//	@GetMapping(value = "/service/out/csv/{filename}", produces = "text/csv")
 	@RequestMapping(value = "/service/out/csv/{filename}", method = RequestMethod.GET)
+    @Timed
 	public ResponseEntity<?> getOutCsvDownload(@PathVariable("filename") String filename) {
 
 		logger.debug("Request for downloading file: {}", filename);
@@ -908,8 +912,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv",
-			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @DeleteMapping("/contObjects/{contObjectId}/contZPoints/{contZPointId}/service/{timeDetailType}/csv")
+    @Timed
 	public ResponseEntity<?> deleteManualDataHWater(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @PathVariable("timeDetailType") String timeDetailType,
 			@RequestParam("beginDate") String dateFromStr, @RequestParam("endDate") String dateToStr) {
@@ -981,7 +985,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo", method = RequestMethod.GET)
+	@GetMapping("/service/hwater/contObjects/serviceTypeInfo")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfo(@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr) {
 
@@ -1016,7 +1021,8 @@ public class SubscrContServiceDataHWaterResource {
 	 * @param dateToStr
 	 * @return
 	 */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/{contObjectId}", method = RequestMethod.GET)
+	@GetMapping("/service/hwater/contObjects/serviceTypeInfo/{contObjectId}")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfoContObject(@PathVariable("contObjectId") long contObjectId,
 			@RequestParam("dateFrom") String dateFromStr, @RequestParam("dateTo") String dateToStr) {
 
@@ -1054,7 +1060,8 @@ public class SubscrContServiceDataHWaterResource {
      * @param cityFiasStr
      * @return
      */
-	@RequestMapping(value = "/service/hwater/contObjects/serviceTypeInfo/city", method = RequestMethod.GET)
+    @GetMapping("/service/hwater/contObjects/serviceTypeInfo/city")
+    @Timed
 	public ResponseEntity<?> getContObjectsServiceTypeInfoCity(@RequestParam("dateFrom") String dateFromStr,
 			@RequestParam("dateTo") String dateToStr, @RequestParam("cityFias") String cityFiasStr) {
 
@@ -1085,6 +1092,10 @@ public class SubscrContServiceDataHWaterResource {
 		return ApiResponse.responseOK(resultList);
 	}
 
+    /**
+     *
+     * @return
+     */
     protected PortalUserIds getCurrentPortalUserIds() {
 
         return portalUserIdsService.getCurrentIds();
