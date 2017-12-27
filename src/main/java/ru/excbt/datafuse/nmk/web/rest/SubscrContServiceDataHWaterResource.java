@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.uuid.Generators;
@@ -11,6 +11,8 @@ import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,10 +22,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -62,12 +61,12 @@ import static com.google.common.base.Preconditions.*;
  * @since 24.03.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataHWaterController {
+@Primary
+public class SubscrContServiceDataHWaterResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterController.class);
-
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterResource.class);
 
 
 	public static final String HEAT = "heat";
@@ -99,14 +98,16 @@ public class SubscrContServiceDataHWaterController {
 	protected final PortalUserIdsService portalUserIdsService;
 
 	@Autowired
-    public SubscrContServiceDataHWaterController(ContZPointService contZPointService,
-                                                 HWatersCsvService hWatersCsvService,
-                                                 WebAppPropsService webAppPropsService,
-                                                 CurrentSubscriberService currentSubscriberService,
-                                                 ContServiceDataHWaterService contServiceDataHWaterService,
-                                                 ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
-                                                 ContServiceDataHWaterImportService contServiceDataHWaterImportService,
-                                                 SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    public SubscrContServiceDataHWaterResource(ContZPointService contZPointService,
+                                               HWatersCsvService hWatersCsvService,
+                                               WebAppPropsService webAppPropsService,
+                                               CurrentSubscriberService currentSubscriberService,
+                                               ContServiceDataHWaterService contServiceDataHWaterService,
+                                               ContServiceDataHWaterDeltaService contObjectHWaterDeltaService,
+                                               ContServiceDataHWaterImportService contServiceDataHWaterImportService,
+                                               SubscrDataSourceService subscrDataSourceService,
+                                               ObjectAccessService objectAccessService,
+                                               PortalUserIdsService portalUserIdsService) {
         this.contZPointService = contZPointService;
         this.hWatersCsvService = hWatersCsvService;
         this.webAppPropsService = webAppPropsService;
@@ -668,6 +669,23 @@ public class SubscrContServiceDataHWaterController {
 		return ApiActionTool.processResponceApiActionUpdate(action);
 	}
 
+
+    /**
+     *
+     */
+    private class FileNameData {
+        final String fileName;
+        final String deviceSerial;
+        final String tsNumber;
+
+        private FileNameData(String fileName, String deviceSerial, String tsNumber) {
+            this.fileName = fileName;
+            this.deviceSerial = deviceSerial;
+            this.tsNumber = tsNumber;
+        }
+    }
+
+
 	/**
 	 *
      * Input file type:
@@ -695,17 +713,6 @@ public class SubscrContServiceDataHWaterController {
             return ApiResponse.responseBadRequest(ApiResult.badRequest(isNotPassed.stream().map((i) -> i.getErrorDesc()).collect(Collectors.toList())));
         }
 
-        class FileNameData {
-           final String fileName;
-           final String deviceSerial;
-           final String tsNumber;
-
-            public FileNameData(String fileName, String deviceSerial, String tsNumber) {
-                this.fileName = fileName;
-                this.deviceSerial = deviceSerial;
-                this.tsNumber = tsNumber;
-            }
-        }
 
 		List<String> fileNameErrorDesc = new ArrayList<>();
 		List<FileNameData> fileNameDataList = new ArrayList<>();
@@ -777,7 +784,7 @@ public class SubscrContServiceDataHWaterController {
 
 		}
 
-		Collection<Long> checkContZPoints = filenameDBInfos.values().stream()
+		Collection<Long> loadContZPoints = filenameDBInfos.values().stream()
 				.map(i -> DBRowUtil.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
 
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
@@ -785,13 +792,12 @@ public class SubscrContServiceDataHWaterController {
 
 
         ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
-        Predicate<Long> checkContZPointId = accessUtil.checkContObjectId (userIds);
-
+        Predicate<Long> checkContZPointId = accessUtil.checkContZPointId(userIds);
 
         boolean denyAccess =
-        checkContZPoints.stream().filter(i -> !checkContZPointId.test(i)).findAny().map(i -> true).orElse(false);
+            loadContZPoints.stream().filter(i -> !checkContZPointId.test(i)).findAny().map(i -> true).orElse(false);
 
-		if (!checkContZPoints.isEmpty() && denyAccess) {
+		if (!loadContZPoints.isEmpty() && denyAccess) {
 			fileNameErrorDesc.add("Нет доступа к точке учета");
 		}
 

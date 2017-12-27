@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.Test;
@@ -35,9 +35,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Transactional
-public class SubscrContServiceDataHWaterControllerTest extends AnyControllerTest {
+public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterControllerTest.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterResourceTest.class);
 
 	public final static String API_SERVICE_URL = "/api/subscr";
 	public final static String API_SERVICE_URL_TEMPLATE = API_SERVICE_URL + "/%d/service/24h/%d";

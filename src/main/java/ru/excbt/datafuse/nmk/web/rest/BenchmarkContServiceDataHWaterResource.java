@@ -1,12 +1,10 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.*;
-import ru.excbt.datafuse.nmk.data.service.BenchmarkService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.HWatersCsvService;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
 /**
@@ -17,13 +15,14 @@ import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
  * @since dd.mm.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/benchmark")
-public class BenchmarkContServiceDataHWaterController extends SubscrContServiceDataHWaterController {
+public class BenchmarkContServiceDataHWaterResource extends SubscrContServiceDataHWaterResource
+{
 
 	private final BenchmarkService benchmarkService;
 
-    public BenchmarkContServiceDataHWaterController(ContZPointService contZPointService, HWatersCsvService hWatersCsvService, WebAppPropsService webAppPropsService, CurrentSubscriberService currentSubscriberService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataHWaterDeltaService contObjectHWaterDeltaService, ContServiceDataHWaterImportService contServiceDataHWaterImportService, SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, BenchmarkService benchmarkService) {
+    public BenchmarkContServiceDataHWaterResource(ContZPointService contZPointService, HWatersCsvService hWatersCsvService, WebAppPropsService webAppPropsService, CurrentSubscriberService currentSubscriberService, ContServiceDataHWaterService contServiceDataHWaterService, ContServiceDataHWaterDeltaService contObjectHWaterDeltaService, ContServiceDataHWaterImportService contServiceDataHWaterImportService, SubscrDataSourceService subscrDataSourceService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, BenchmarkService benchmarkService) {
         super(contZPointService, hWatersCsvService, webAppPropsService, currentSubscriberService, contServiceDataHWaterService, contObjectHWaterDeltaService, contServiceDataHWaterImportService, subscrDataSourceService, objectAccessService, portalUserIdsService);
         this.benchmarkService = benchmarkService;
     }

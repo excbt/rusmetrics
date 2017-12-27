@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.SubscrContServiceDataHWaterResourceTest;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 public class SubscrContServiceDataImpulseControllerTest extends AnyControllerTest {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataHWaterControllerTest.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataHWaterResourceTest.class);
 
     @Autowired
     private ImpulseCsvService impulseCsvService;
