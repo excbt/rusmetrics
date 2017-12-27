@@ -32,8 +32,9 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal.SLogDBProps;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.nmk.data.repository")
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog","ru.excbt.datafuse.nmk.service"})
+@EnableJpaRepositories(basePackages = {"ru.excbt.datafuse.nmk.data.repository", "ru.excbt.datafuse.nmk.repository"})
+@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog","ru.excbt.datafuse.nmk.service",
+    "ru.excbt.datafuse.nmk.domain"})
 @EnableConfigurationProperties(value = { PortalDBProps.class, SLogDBProps.class })
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {
@@ -84,7 +85,7 @@ public class JpaConfigLocal {
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
 			@Qualifier("dataSource") DataSource dataSource) {
         //package with spring data jpa converters "org.springframework.data.jpa.convert.threeten"
-		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.nmk.data.model").persistenceUnit("nmk-p")
+		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.nmk.data.model", "ru.excbt.datafuse.nmk.domain").persistenceUnit("nmk-p")
 				.build();
 	}
 

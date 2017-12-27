@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -192,5 +193,23 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			+ " AND d.timeDetailType IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate ASC ")
 	public List<ContServiceDataHWater> selectFirstDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
+
+
+    @Query("SELECT d FROM ContServiceDataHWater d "
+        + " WHERE d.contZPoint.id = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 " +
+        " AND d.dataDate BETWEEN :dateFrom AND :dateTo")
+    Stream<ContServiceDataHWater> selectForConsumption(@Param("contZPointId") long contZPointId,
+                                                    @Param("timeDetailType") String timeDetailType,
+                                                    @Param("dateFrom") Date dateFrom,
+                                                    @Param("dateTo") Date dateTo);
+
+    @Query("SELECT d FROM ContServiceDataHWater d "
+        + " WHERE time_detail_type = :timeDetailType AND d.deleted = 0 " +
+        " AND d.dataDate BETWEEN :dateFrom AND :dateTo")
+    Stream<ContServiceDataHWater> selectForConsumption(
+                                                    @Param("timeDetailType") String timeDetailType,
+                                                    @Param("dateFrom") Date dateFrom,
+                                                    @Param("dateTo") Date dateTo);
 
 }
