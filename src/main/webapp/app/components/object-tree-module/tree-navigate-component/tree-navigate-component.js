@@ -20,7 +20,8 @@
             VCOOKIE_URL = "../api/subscr/vcookie",
             USER_VCOOKIE_URL = "../api/subscr/vcookie/user",
             OBJECT_INDICATOR_PREFERENCES_VC_MODE = "OBJECT_INDICATOR_PREFERENCES",
-            WIDGETS_URL = "../api/subscr/vcookie/widgets/list";
+            WIDGETS_URL = "../api/subscr/vcookie/widgets/list",
+            TREE_NODE_INFO_STATE_NAME = 'objectsPTree.treeNodeInfo';
         
         var treeNavSvc = treeNavigateComponentService;
         
@@ -267,7 +268,7 @@
 
         function getPTreeMonitor() {
             var monitorData = treeNavSvc.getPTreeMonitor();
-            if (checkUndefinedNull(monitorData)) {
+            if (!angular.isArray(monitorData)) {
                 return false;
             }
             var monitor = {};
@@ -334,27 +335,10 @@
         ctrl.isDeviceNode = treeNavSvc.isDeviceNode;
 
         ctrl.isChevronRight = treeNavSvc.isChevronRight;
-//        function (collapsed, item) {
-//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-//                return false;
-//            }
-//            return collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-//        };
+
         ctrl.isChevronDown = treeNavSvc.isChevronDown;
-//        function (collapsed, item) {
-//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-//                return false;
-//            }
-//            return !collapsed && ((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-//        };
 
         ctrl.isChevronDisabled = treeNavSvc.isChevronDisabled;
-//        function (collapsed, item) {
-//            if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) && checkUndefinedNull(item.linkedNodeObjects))) {
-//                return true;
-//            }
-//            return !((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
-//        };
 
         function findNodeInPTree(node, tree) {
             return treeNavSvc.findNodeInPTree(node, tree);
@@ -450,12 +434,6 @@
                             break;
                         }
                     }
-//                    widgetList[wkey].some(function (elm) {
-//                        if (elm.isDefault === true) {
-//                            defaultWidgets[wkey] = elm.widgetName;
-//                            return true;
-//                        }
-//                    });
                 }
             }
             return defaultWidgets;
@@ -479,17 +457,6 @@
                 
                 defaultWidgets = findAndSetDefaultWidgets(widgetList);
 
-//                for (wkey in widgetList) {
-//                    if (widgetList[wkey].length > 0) {
-//                        defaultWidgets[wkey] = widgetList[wkey][0].widgetName;
-//                        widgetList[wkey].some(function (elm) {
-//                            if (elm.isDefault === true) {
-//                                defaultWidgets[wkey] = elm.widgetName;
-//                                return true;
-//                            }
-//                        });
-//                    }
-//                }
                 ctrl.objectCtrlSettings.widgetSettings = defaultWidgets;
             }, errorCallback);
         }
@@ -535,11 +502,12 @@
             }
             
             if (ctrl.data.selectedPNode !== item) {
-                $state.go('objectsPTree.treeNodeInfo', {node: item});
+                $state.go(TREE_NODE_INFO_STATE_NAME, {node: item});
             }
 
             item.isSelected = true;
             ctrl.data.selectedPNode = item; //angular.copy(item);
+            treeNavSvc.setPTreeSelectedNode(ctrl.data.selectedPNode);
 // console.log(ctrl.data.selectedPNode);
             if (ctrl.isContZpointNode(item)) {
                 // for refresh indicator directive
@@ -556,95 +524,12 @@
 
 
         };
-
-//        function createContObjectWidgetForPTree(contObject) {
-//            var zpointWidget = {};
-//            zpointWidget.type = "";//"chart";
-//            zpointWidget.zpointStatus = "yellow";
-//            zpointWidget.zpointStatusTitle = "На точке учета были происшествия";
-//
-//            var searchingObjectNode = {
-//                nodeType: "CONT_OBJECT",
-//                nodeObject: contObject
-//            };
-//
-//            var foundedObjectNode = angular.copy(findNodeInPTree(searchingObjectNode, ctrl.data.currentPTree));
-//
-//            if (ctrl.data.selectedPNode.hasOwnProperty('childNodes')) {
-//
-//                ctrl.data.selectedPNode.childNodes.forEach(function (zpNode) {
-//                    if (thisdata.contServiceTypes.hasOwnProperty(zpNode.nodeObject.contServiceTypeKeyname)) {
-//                        zpNode.zpointOrder = thisdata.contServiceTypes[zpNode.nodeObject.contServiceTypeKeyname].serviceOrder + zpNode.nodeObject.customServiceName;
-//                    }
-//                    var zpWidgetOpts = {};
-//                    zpWidgetOpts.type = contObject.widgets[zpNode.nodeObject.contServiceTypeKeyname];
-//                    zpWidgetOpts.zpointName = zpNode.nodeObject.customServiceName || zpNode.nodeObject.contServiceTypeKeyname;
-//                    zpWidgetOpts.contZpointId = zpNode.nodeObject.id;
-//                    if (angular.isArray(zpNode.childNodes) && zpNode.childNodes.length > 0) {
-//                        zpWidgetOpts.zpointModel = zpNode.childNodes[0].deviceModelId;
-//                        zpWidgetOpts.zpointNumber = zpNode.childNodes[0].number;
-//                        zpWidgetOpts.isImpulse = zpNode.childNodes[0].nodeObject.isImpulse;
-//                        zpWidgetOpts.isManualLoading = zpNode.childNodes[0].nodeObject.isManual;
-//                    }
-//                    zpWidgetOpts.zpointType = zpNode.nodeObject.contServiceTypeKeyname;
-//                    //measureUnitCaption
-//                    zpWidgetOpts.contObjectId = zpNode.nodeObject.contObjectId;
-//                    zpWidgetOpts.contObjectFullName = contObject.fullName;
-//
-//                    zpNode.widgetOptions = zpWidgetOpts;
-//                });
-//
-//                treeNavSvc.sortItemsBy(ctrl.data.selectedPNode.childNodes, 'zpointOrder');
-////console.log(ctrl.data.selectedPNode.childNodes);
-//            }
-//
-//        }
-
-//        function createContZpointWidgetForPTree(zpointPTreeNode) {
-//            var zpointWidget = {};
-//            zpointWidget.type = "";//"chart";
-//            zpointWidget.zpointStatus = "yellow";
-//            zpointWidget.zpointStatusTitle = "На точке учета были происшествия";
-//        }
-
-//        function setPTreeIndicatorParams(url, zpId) {
-////                    zpId;
-//            var zpointNode = null,
-//                zpModel = null;
-//            ctrl.data.selectedPNode.childNodes.some(function (elm) {
-//                if (elm.nodeObject.id === zpId) {
-//                    zpointNode = elm;
-//                    return true;
-//                }
-//            });
-//
-//            thisdata.deviceModels.some(function (dm) {
-//                if (dm.id === zpointNode.childNodes[0].nodeObject.deviceModelId) {
-//                    zpModel = dm;
-//                    return true;
-//                }
-//            });
-//            //                    url += "/impulse-indicators";
-//            if (zpModel !== null && (zpModel.isImpulse === true || zpModel.deviceType === treeNavSvc.HEAT_DISTRIBUTOR)) {
-//                url += "/impulse-indicators";
-//            } else if (zpointNode.nodeObject.contServiceTypeKeyname === 'el') {
-//                url += "/indicator-electricity";
-//            } else {
-//                url += "/indicators";
-//            }
-//            url += "/?objectId=" + encodeURIComponent(ctrl.data.selectedPNode.nodeObject.id) + "&zpointId=" + encodeURIComponent(zpId) + "&objectName=" + encodeURIComponent(ctrl.data.selectedPNode.nodeObject.fullName) + "&zpointName=" + encodeURIComponent(zpointNode.nodeObject.customServiceName);
-//
-//            if (!checkUndefinedNull(zpointNode.childNodes[0].nodeObject.isManual)) {
-//                url += "&isManualLoading=" + encodeURIComponent(zpointNode.childNodes[0].nodeObject.isManual);
-//            }
-//            return url;
-//        }
-
-// *******************************************************************************************
-//         End of  Upgrade Tree Interface
-//********************************************************************************************
         
         ctrl.$onInit = function () {
+            ctrl.data.selectedPNode = treeNavSvc.getPTreeSelectedNode();
+            if (ctrl.data.selectedPNode !== null) {
+                $state.go(TREE_NODE_INFO_STATE_NAME, {node: ctrl.data.selectedPNode});
+            }
             getWidgetList();
             checkTreeSettingsAndGetObjectsData();
         };

@@ -38,7 +38,8 @@
             pTree = null,
             pTreeLoadingFlag = false,
             pTreeMonitor = null,
-            pTreeMonitorLoadingFlag = false;
+            pTreeMonitorLoadingFlag = false,
+            pTreeSelectedNode = null;
 
         var interval = null,
             requestParams = {};
@@ -82,6 +83,14 @@
 
         function getPTreeMonitor() {
             return pTreeMonitor;
+        }
+        
+        function getPTreeSelectedNode() {
+            return pTreeSelectedNode;
+        }
+
+        function setPTreeSelectedNode(ptreeNode) {
+            pTreeSelectedNode = ptreeNode;
         }
         
         function addParamToURL(url, paramName, paramValue) {
@@ -425,7 +434,9 @@
         service.checkEmptyObject = checkEmptyObject;
         service.findItemBy = findItemBy;
         service.findNodeInPTree = findNodeInPTree;
+        service.getPTree = getPTree;
         service.getPTreeMonitor = getPTreeMonitor;
+        service.getPTreeSelectedNode = getPTreeSelectedNode;
         service.getRequestCanceler = getRequestCanceler;
         
         service.isChevronDisabled = isChevronDisabled;
@@ -440,8 +451,8 @@
         service.loadPTreeNode = loadPTreeNode;
         service.loadSubscrTrees = loadSubscrTrees;
         service.setEventsForObject = setEventsForObject;        
-        service.getPTree = getPTree;
         service.setPTree = setPTree;
+        service.setPTreeSelectedNode = setPTreeSelectedNode;
         service.sortItemsBy = sortItemsBy;
         return service;
     }
