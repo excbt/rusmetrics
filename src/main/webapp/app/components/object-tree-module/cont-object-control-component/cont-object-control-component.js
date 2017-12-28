@@ -25,6 +25,21 @@
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png";
         
+        var MONITOR_STATE_LVLS = {
+            'green': {
+                level: 0,
+                color: 'green'
+            },
+            'yellow': {
+                level: 1,
+                color: 'yellow'
+            },
+            'red': {
+                level: 2,
+                color: 'red'
+            }
+        };
+        
         var contObjectCtrlSvc = contObjectControlComponentService;
         
         ctrl.columns = [
@@ -34,7 +49,7 @@
                 headerClass: "col-xs-3"
             }, {
                 name: "heat",
-                caption: "СО",
+                caption: "Отопление",
                 headerClass: "col-xs-1",
                 type: "img"
             }, {
@@ -49,7 +64,7 @@
                 type: "img"
             }, {
                 name: "el",
-                caption: "Эл-во",
+                caption: "Электричество",
                 headerClass: "col-xs-1",
                 type: "img"
 
@@ -77,9 +92,23 @@
                 tmpObjInfo.modeImgSrc = IMG_PATH_MODE_TEMPLATE + inpData.contObjectShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
             }
             if (angular.isArray(inpData.contZPointMonitorState)) {
+                var zpointsStates = {};
                 inpData.contZPointMonitorState.forEach(function (zpoint) {
-                    tmpObjInfo[zpoint.contServiceTypeKeyname] = IMG_PATH_MONITOR_TEMPLATE + zpoint.stateColor.toLowerCase() + IMG_EXT;                    
+                    if (zpointsStates.hasOwnProperty(zpoint.contServiceTypeKeyname)) {
+                        if (zpointsStates[zpoint.contServiceTypeKeyname].level < MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()].level) {
+
+                            zpointsStates[zpoint.contServiceTypeKeyname] = angular.copy(MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()]);
+                        }
+                    } else {
+                        zpointsStates[zpoint.contServiceTypeKeyname] = angular.copy(MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()]);
+                    }
                 });
+                
+                for (var kkey in zpointsStates) {
+                    if (zpointsStates.hasOwnProperty(kkey)) {
+                        tmpObjInfo[kkey] = IMG_PATH_MONITOR_TEMPLATE + zpointsStates[kkey].color + IMG_EXT;
+                    }
+                }
             }
             ctrl.objects.some(function (obj) {
                 if (inpData.contObjectShortInfo.contObjectId === obj.id) {

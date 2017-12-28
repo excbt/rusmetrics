@@ -27,10 +27,19 @@
             NODE_ID_FIELD_NAME = "_id",
             SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
         
+        var CONT_OBJECTS_PER_PAGE = 42;
+        
         var EVENTS = {};
         EVENTS.OBJECT_CLICK = 'contObjectControlComponentService:objectClick';
+        //struct for keep nodes objects
+//        nodes = {
+//            "node1": [objects1],
+//            "node2": [objects2],
+//        }
+        var nodes = {};
         
         this.EVENTS = EVENTS;
+        this.CONT_OBJECTS_PER_PAGE = CONT_OBJECTS_PER_PAGE;
         this.checkUndefinedNull = checkUndefinedNull;
         this.loadContObjectMonitorState = loadContObjectMonitorState;
         this.loadNodeObjects = loadNodeObjects;
