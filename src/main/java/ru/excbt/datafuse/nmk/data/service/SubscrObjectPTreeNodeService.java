@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -62,6 +63,7 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
         return pTreeElement;
     }
 
+    @Transactional
     public PTreeNode readSubscrObjectTree (Long subscrObjectTreeId, Integer childLevel, PortalUserIds portalUserIds) {
         SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
 
@@ -80,8 +82,34 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
         return pTreeElement;
     }
 
+    @Transactional
+    public PTreeNode readSubscrObjectTreeStub (Long subscrObjectTreeId, Integer childLevel, PortalUserIds portalUserIds) {
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
+
+        PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
+
+        ObjectAccessUtil objectAccessUtil = objectAccessService.objectAccessUtil();
+
+        readChildSubscrObjectTreeStub (
+            pTreeElement,
+            subscrObjectTree,
+            childLevel,
+            objectAccessUtil.checkContObjectId(portalUserIds),
+            objectAccessUtil.checkContZPointId(portalUserIds)
+        );
+
+        return pTreeElement;
+    }
 
 
+    /**
+     *
+     * @param pTreeElement
+     * @param subscrObjectTree
+     * @param childLevel
+     * @param contObjectAccess
+     * @param contZPointAccess
+     */
     private void readChildSubscrObjectTree (PTreeElement pTreeElement, SubscrObjectTree subscrObjectTree, final Integer childLevel,
                                             final Predicate<ContObject> contObjectAccess,
                                             final Predicate<ContZPoint> contZPointAccess) {
@@ -134,6 +162,57 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
     }
 
 
+    private void readChildSubscrObjectTreeStub (PTreeElement pTreeElement, SubscrObjectTree subscrObjectTree, final Integer childLevel,
+                                            final Predicate<Long> contObjectAccess,
+                                            final Predicate<Long> contZPointAccess) {
+
+        List<Long> contObjectIds = subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTree.getId())
+            .stream().filter(id -> contObjectAccess.test(id)).collect(Collectors.toList());
+
+
+        List<ContZPoint> contZPoints = contObjectIds.isEmpty() ? Collections.emptyList() :
+            contZPointRepository.findByContObjectIds(contObjectIds);
+
+        Map<Long,List<ContZPoint>> contZPointMap = new HashMap<>();
+        contZPoints.stream().filter(zp -> contZPointAccess.test(zp.getId())).forEach(i -> {
+            List<ContZPoint> contZPointList = contZPointMap.get(i.getContObjectId());
+            if (contZPointList == null) {
+                contZPointList = new ArrayList<>();
+                contZPointMap.put(i.getContObjectId(), contZPointList);
+            }
+            contZPointList.add(i);
+        });
+
+        for (Long contObjectId : contObjectIds) {
+            PTreeContObjectNodeStub pTreeContObjectNode = new PTreeContObjectNodeStub(new StubId(contObjectId));
+            pTreeElement.addLinkedObject(pTreeContObjectNode);
+
+            addContZPointsStubMap(pTreeContObjectNode, contObjectId, contZPointMap);
+        }
+
+        boolean levelThreshold = childLevel != null && childLevel < 1;
+
+        if (!levelThreshold) {
+            for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
+                readChildSubscrObjectTreeStub (pTreeElement.addChildElement(SubscrObjectTreeTools.makeFromSubscrObjectTree(child)),
+                    child,
+                    childLevel != null ? childLevel - 1 : null,
+                    contObjectAccess,
+                    contZPointAccess);
+            }
+        } else {
+            for (SubscrObjectTree child : subscrObjectTree.getChildObjectList()) {
+                PTreeElement pChildTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(child);
+                pChildTreeElement.setLazyNode(true);
+                pTreeElement.addChildElement(pChildTreeElement);
+            }
+        }
+
+
+    }
+
+
+
 
     public void readChildSubscrObjectTree (PTreeElement pTreeElement, SubscrObjectTree subscrObjectTree) {
         List<ContObject> contObjects = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTree.getId());
@@ -174,6 +253,18 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
         }
     }
 
+    private void addContZPointsStubMap(PTreeContObjectNodeStub pTreeContObjectNode, final Long contZPointId, final Map<Long, List<ContZPoint>> contZPointMap) {
+        List<ContZPoint> contZPoints = contZPointMap.get(contZPointId);
+
+        if (contZPoints == null) contZPoints = Collections.emptyList();
+
+        for (ContZPoint contZPoint : contZPoints) {
+            if (contZPoint.getDeleted() != 0) continue;
+            PTreeContZPointNodeStub contZPointNode = pTreeContObjectNode.addContZPointStub(new StubId(contZPoint.getId()));
+            addDeviceObjectStub(contZPointNode, contZPoint);
+        }
+    }
+
 
 
     private void addDeviceObject (PTreeContZPointNode pTreeContZPointNode, ContZPoint contZPoint) {
@@ -189,6 +280,12 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
         //}
     }
 
+    private void addDeviceObjectStub(PTreeContZPointNodeStub pTreeContZPointNode, ContZPoint contZPoint) {
+        if (contZPoint.getDeviceObject() != null && contZPoint.getDeviceObject().getDeleted() != 0) {
+            return;
+        }
+        pTreeContZPointNode.addDeviceObjectStub(new StubId(contZPoint.getDeviceObject().getId()));
+    }
 
 
 }

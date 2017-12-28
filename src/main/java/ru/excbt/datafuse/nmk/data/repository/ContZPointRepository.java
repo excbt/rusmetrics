@@ -69,4 +69,8 @@ public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, C
 	@Query("SELECT zp.contObjectId FROM ContZPoint zp WHERE zp.id = :contZpointId ")
 	List<Long> selectContObjectByContZPointId(@Param("contZpointId") Long contZpointId);
 
+
+//    @Query("SELECT zp.id FROM ContZPoint zp WHERE zp.contObject.id in (:contObjectIds)")
+//    List<Long> findIdsByContObjectIds(@Param("contObjectIds") List<Long> contObjectIds);
+
 }
