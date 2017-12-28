@@ -29,7 +29,6 @@ import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PortalApplication.class)
-@Transactional
 public class ConsumptionServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionServiceTest.class);
@@ -44,6 +43,7 @@ public class ConsumptionServiceTest {
     private ContZPointRepository contZPointRepository;
 
     @Test
+    @Transactional
     public void testEntity() {
         ContZPointConsumption consumption = new ContZPointConsumption();
         consumption.setContServiceType(ContServiceTypeKey.CW.getKeyname());
@@ -52,6 +52,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
+    @Transactional
     public void processHWaterOne() {
 
         ContZPoint contZPoint = contZPointRepository.findOne(71843481L);
@@ -60,11 +61,12 @@ public class ConsumptionServiceTest {
 
         LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(day)
             .dateTimeTo(day.plusDays(1).minusSeconds(1)).build();
-        consumptionService.processHWater(contZPoint, TimeDetailKey.TYPE_1H, period);
+        consumptionService.processHWater(contZPoint, TimeDetailKey.TYPE_1H, period, true);
     }
 
 
     @Test
+    @Transactional
     public void processHWaterDay() {
 
         LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
@@ -73,7 +75,7 @@ public class ConsumptionServiceTest {
         stopWatch.start();
         LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(day)
             .dateTimeTo(day.plusDays(1).minusSeconds(1)).build();
-        consumptionService.processHWater(TimeDetailKey.TYPE_1H, period);
+        consumptionService.processHWater(TimeDetailKey.TYPE_1H, period, true);
 
         stopWatch.stop();
         log.info("Test Time: {}", stopWatch.toString());

@@ -22,7 +22,6 @@ public class LocalDateTimePeriod implements DateInterval {
 
     private final LocalDateTime dateTimeTo;
 
-
     @Override
     public Date getFromDate() {
         return LocalDateUtils.asDate(dateTimeFrom);

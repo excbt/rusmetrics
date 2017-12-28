@@ -2,9 +2,11 @@ package ru.excbt.datafuse.nmk.domain;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,12 +17,12 @@ public class ContZPointConsumption {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "contZPointConsumptionSeq", sequenceName = "portal.cont_zpoint_consumption_id_seq", allocationSize = 1)
+    @SequenceGenerator(name = "contZPointConsumptionSeq", sequenceName = "portal.cont_zpoint_consumption_id_seq", allocationSize = 50)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contZPointConsumptionSeq")
     private Long id;
 
     @Column(name = "cont_zpoint_id")
-    private Long contZpointId;
+    private Long contZPointId;
 
     @Column(name = "cont_service_type")
     private String contServiceType;
@@ -45,5 +47,16 @@ public class ContZPointConsumption {
 
     @Column(name = "measure_unit")
     private String measureUnit;
+
+    @Column(name = "cons_func")
+    private String consFunc;
+
+    @Type( type = "double-array" )
+    @Column(name = "cons_data", columnDefinition = "float[]")
+    private double[] consData;
+
+    @Size(max = 32)
+    @Column(name = "cons_data_md5")
+    private String consDataMD5;
 
 }
