@@ -5,7 +5,9 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.ContZPointShortInfoVM;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
@@ -177,6 +179,36 @@ public class ObjectAccessService {
         return result;
     }
 
+//    public List<ContObjectShortInfo> findContObjectsShortInfo(Long subscriberId) {
+//        Objects.requireNonNull(subscriberId);
+//        List<ContZPointShortInfo> result = new ArrayList<>();
+//
+//        ColumnHelper columnHelper = new ColumnHelper("id", "name", "fullName", "currentSettingMode");
+//
+//        List<Object[]> queryResult = contObjectAccessRepository.findAllContObjectShortInfo(subscriberId);
+//
+//        for (Object[] row : queryResult) {
+//
+//            Long contObjectId = columnHelper.getResultAsClass(row, "id", Long.class);
+//            String contObjectName = columnHelper.getResultAsClass(row, "name", String.class);
+//            String contObjectFullName = columnHelper.getResultAsClass(row, "fullName", String.class);
+//            String currentSettingMode = columnHelper.getResultAsClass(row, "currentSettingMode", String.class);
+//
+//            //ContObjectShortInfo
+//
+//            ContZPointShortInfo shortInfo = ContZPointShortInfoVM.builder()
+//                .contZPointId(contZPointId)
+//                .contObjectId(contObjectId)
+//                .customServiceName(customServiceName)
+//                .contServiceType(contServiceType)
+//                .contServiceTypeCaption(contServiceTypeCaption).build();
+//            result.add(shortInfo);
+//        }
+//
+//        return result;
+//    }
+
+
 
     public List<Long> findSubscriberIdsByRma (Long rmaSubscriberId, Long contObjectId) {
         List<Long> result;
@@ -258,7 +290,7 @@ public class ObjectAccessService {
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-    public void setupRmaHaveSubscr(final SubscriberParam subscriberParam, final List<ContObject> contObjects) {
+    public void setupRmaHaveSubscr(final PortalUserIds subscriberParam, final List<ContObject> contObjects) {
         Objects.requireNonNull(subscriberParam);
         Objects.requireNonNull(contObjects);
 
@@ -266,7 +298,7 @@ public class ObjectAccessService {
             return;
         }
 
-        List<Long> subscrContObjectIds = this.findRmaSubscribersContObjectIds(subscriberParam.getRmaSubscriberId());
+        List<Long> subscrContObjectIds = this.findRmaSubscribersContObjectIds(subscriberParam.getRmaId());
 
         Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
         contObjects.forEach(i -> {
@@ -276,15 +308,15 @@ public class ObjectAccessService {
     }
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-    public void setupRmaHaveSubscrDTO(final SubscriberParam subscriberParam, final List<ContObjectDTO> contObjects) {
-        Objects.requireNonNull(subscriberParam);
+    public void setupRmaHaveSubscrDTO(final PortalUserIds portalUserIds, final List<ContObjectDTO> contObjects) {
+        Objects.requireNonNull(portalUserIds);
         Objects.requireNonNull(contObjects);
 
-        if (!subscriberParam.isRma()) {
+        if (!portalUserIds.isRma()) {
             return;
         }
 
-        List<Long> subscrContObjectIds = findRmaSubscribersContObjectIds(subscriberParam.getRmaSubscriberId());
+        List<Long> subscrContObjectIds = findRmaSubscribersContObjectIds(portalUserIds.getRmaId());
 
         Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
         contObjects.forEach(i -> {
@@ -499,5 +531,9 @@ public class ObjectAccessService {
         }
         return result;
     }
+
+
+    //public
+
 
 }
