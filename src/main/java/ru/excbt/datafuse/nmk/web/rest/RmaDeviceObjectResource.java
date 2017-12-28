@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +64,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getDeviceObjects(@PathVariable("contObjectId") Long contObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
 			return ApiResponse.responseForbidden();
@@ -84,7 +86,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	@Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
 		if (!canAccessContObject(contObjectId)) {
@@ -122,7 +125,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
     @Override
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObjectDTO) {
 
         Objects.requireNonNull(deviceObjectDTO);
@@ -159,7 +163,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects", method = RequestMethod.POST,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> createDeviceObjectByContObject(@PathVariable("contObjectId") Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
         return createDeviceObject(contObjectId,deviceObject, request);
@@ -174,7 +179,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
      * @return
      */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createDeviceObject(
+    @Timed
+    public ResponseEntity<?> createDeviceObject(
 			@RequestParam(value = "contObjectId", required = true) Long contObjectId,
 			@RequestBody DeviceObject deviceObject, HttpServletRequest request) {
 
@@ -205,7 +211,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteDeviceObject(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> deleteDeviceObject(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
@@ -229,7 +236,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/deviceObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getDeviceObjects() {
+    @Timed
+    public ResponseEntity<?> getDeviceObjects() {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceObject> deviceObjects = deviceObjectService
@@ -280,7 +288,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
 			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> updateDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody DeviceObjectLoadingSettings deviceObjectLoadingSettings) {
 
@@ -318,7 +327,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	@RequestMapping(
 			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
 			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDeviceObjectDataSourceLoadingSettings(
+    @Timed
+    public ResponseEntity<?> updateDeviceObjectDataSourceLoadingSettings(
 			@PathVariable("contObjectId") Long contObjectId, @PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody SubscrDataSourceLoadingSettings requestEntity) {
 
@@ -357,7 +367,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateDeviceModel(@PathVariable("id") Long deviceModelId,
+    @Timed
+    public ResponseEntity<?> updateDeviceModel(@PathVariable("id") Long deviceModelId,
 			@RequestBody DeviceModel requestEntity) {
 
 		if (!portalUserIdsService.isSystemUser()) {
@@ -382,7 +393,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
      */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.POST,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
+    @Timed
+    public ResponseEntity<?> createDeviceModel(@RequestBody DeviceModel requestEntity, HttpServletRequest request) {
 
 		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();
@@ -402,7 +414,8 @@ public class RmaDeviceObjectResource extends SubscrDeviceObjectResource {
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
+    @Timed
+    public ResponseEntity<?> deleteDeviceModel(@PathVariable("id") Long deviceModelId) {
 
 		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();

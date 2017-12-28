@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMap;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -99,7 +100,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContZPoints(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPoint> zpList = contZPointService.findContObjectZPoints(contObjectId, portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(zpList));
 	}
@@ -123,7 +125,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/vo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContZPointsVo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointFullVM> vmList = contZPointService.selectContObjectZPointsStatsVM(contObjectId,
             portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(vmList);
@@ -136,7 +139,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPointsStatInfo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContZPointStatInfo(@PathVariable("contObjectId") Long contObjectId) {
 		List<ContZPointStatInfo> resultList = contZPointService.selectContZPointStatInfo(contObjectId);
 		return ApiResponse.responseOK(resultList);
 	}
@@ -150,7 +154,8 @@ public class SubscrContZPointResource {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> updateContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId, @RequestBody ContZPointFullVM contZPointFullVM) {
 
 		return ApiActionTool.processResponceApiActionUpdate(() -> {
@@ -168,7 +173,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPoint(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		checkNotNull(contObjectId);
@@ -190,7 +196,8 @@ public class SubscrContZPointResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/zpoints", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPoints() {
+    @Timed
+    public ResponseEntity<?> getContZPoints() {
 
 		List<ContZPointDTO> contZPoints = objectAccessService.findAllContZPoints(portalUserIdsService.getCurrentIds().getSubscriberId());
 
@@ -203,7 +210,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/zpoints/shortInfo", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointsInfo() {
+    @Timed
+    public ResponseEntity<?> getContZPointsInfo() {
 
 		List<ContZPointShortInfo> contZPoints = objectAccessService.findContZPointShortInfo(portalUserIdsService.getCurrentIds().getSubscriberId());
 
@@ -216,7 +224,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/contServiceTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContServiceTypes() {
+    @Timed
+    public ResponseEntity<?> getContServiceTypes() {
 		List<ContServiceType> contServiceTypes = contZPointService.selectContServiceTypes();
 
 		return ApiResponse.responseOK(contServiceTypes);
@@ -229,7 +238,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/timeDetailLastDate", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> getContZPointsTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId) {
 
 		List<Pair<String, Long>> idPairList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
 
@@ -254,7 +264,8 @@ public class SubscrContZPointResource {
 	@RequestMapping(value = "/contObjects/{contObjectId}/contZPoints/{contZPointId}/timeDetailLastDate",
 			method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointTimeDetailLastDate(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		List<Pair<String, Long>> serviceTypeContZPointIdList = contZPointService.selectContZPointServiceTypeIds(contObjectId);
@@ -277,7 +288,8 @@ public class SubscrContZPointResource {
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects/rsoOrganizations", method = RequestMethod.GET)
-	public ResponseEntity<?> getRsoOrganizations(
+    @Timed
+    public ResponseEntity<?> getRsoOrganizations(
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
 
@@ -297,7 +309,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		checkNotNull(contObjectId);
@@ -326,7 +339,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/measureUnits",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointMetadatameasureUnits(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointMetadatameasureUnits(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId,
 			@RequestParam(value = "measureUnit", required = false) String measureUnit) {
 
@@ -348,7 +362,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/srcProp",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointMetadataSrcProp(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointMetadataSrcProp(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		checkNotNull(contObjectId);
@@ -373,7 +388,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destProp",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointMetadataDestProp(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointMetadataDestProp(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		checkNotNull(contObjectId);
@@ -398,7 +414,8 @@ public class SubscrContZPointResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/zpoints/{contZPointId}/metadata/destDb",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContZPointMetadataDestDB(@PathVariable("contObjectId") Long contObjectId,
+    @Timed
+    public ResponseEntity<?> getContZPointMetadataDestDB(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
 		checkNotNull(contObjectId);

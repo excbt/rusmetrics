@@ -11,8 +11,10 @@ import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
+import ru.excbt.datafuse.nmk.data.model.support.ContObjectShort;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
@@ -23,10 +25,12 @@ import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import ru.excbt.datafuse.nmk.service.vm.ContObjectShortInfoVM;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Tuple;
+import javax.sound.sampled.Port;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -61,8 +65,6 @@ public class ContObjectService implements SecuredRoles {
 
 	private final ContObjectDaDataService contObjectDaDataService;
 
-	private final TimezoneDefService timezoneDefService;
-
 	private final ContManagementService contManagementService;
 
 	private final FiasService fiasService;
@@ -72,8 +74,6 @@ public class ContObjectService implements SecuredRoles {
 	private final ContEventMonitorV3Service contEventMonitorV3Service;
 
 	private final WeatherForecastService weatherForecastService;
-
-	private final MeterPeriodSettingRepository meterPeriodSettingRepository;
 
 	private final ContObjectMapper contObjectMapper;
 
@@ -85,38 +85,41 @@ public class ContObjectService implements SecuredRoles {
 
 	private final ContZPointAccessRepository contZPointAccessRepository;
 
+	private final ContObjectAccessRepository contObjectAccessRepository;
+
     public ContObjectService(ContObjectRepository contObjectRepository,
                              ContObjectSettingModeTypeRepository contObjectSettingModeTypeRepository,
                              SubscriberService subscriberService,
                              ContObjectFiasRepository contObjectFiasRepository,
                              ContObjectGeoPosRepository contObjectGeoPosRepository,
                              ContObjectDaDataService contObjectDaDataService,
-                             TimezoneDefService timezoneDefService,
                              ContManagementService contManagementService,
                              FiasService fiasService,
                              LocalPlaceService localPlaceService,
                              ContEventMonitorV3Service contEventMonitorV3Service,
                              WeatherForecastService weatherForecastService,
-                             MeterPeriodSettingRepository meterPeriodSettingRepository,
-                             ContObjectMapper contObjectMapper, ContObjectFiasService contObjectFiasService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, ContZPointAccessRepository contZPointAccessRepository) {
+                             ContObjectMapper contObjectMapper,
+                             ContObjectFiasService contObjectFiasService,
+                             SubscriberAccessService subscriberAccessService,
+                             ObjectAccessService objectAccessService,
+                             ContZPointAccessRepository contZPointAccessRepository, ContObjectAccessRepository contObjectAccessRepository) {
         this.contObjectRepository = contObjectRepository;
         this.contObjectSettingModeTypeRepository = contObjectSettingModeTypeRepository;
         this.subscriberService = subscriberService;
         this.contObjectFiasRepository = contObjectFiasRepository;
         this.contObjectGeoPosRepository = contObjectGeoPosRepository;
         this.contObjectDaDataService = contObjectDaDataService;
-        this.timezoneDefService = timezoneDefService;
         this.contManagementService = contManagementService;
         this.fiasService = fiasService;
         this.localPlaceService = localPlaceService;
         this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.weatherForecastService = weatherForecastService;
-        this.meterPeriodSettingRepository = meterPeriodSettingRepository;
         this.contObjectMapper = contObjectMapper;
         this.contObjectFiasService = contObjectFiasService;
         this.subscriberAccessService = subscriberAccessService;
         this.objectAccessService = objectAccessService;
         this.contZPointAccessRepository = contZPointAccessRepository;
+        this.contObjectAccessRepository = contObjectAccessRepository;
     }
 
 
@@ -154,11 +157,11 @@ public class ContObjectService implements SecuredRoles {
 
 
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public ContObjectMonitorDTO findContObjectMonitorDTO(SubscriberParam subscriberParam,  Long contObjectId) {
+	public ContObjectMonitorDTO findContObjectMonitorDTO(PortalUserIds portalUserIds,  Long contObjectId) {
 		ContObject contObject = findContObjectChecked(contObjectId);
         contObjectDaDataService.findOneByContObjectId(contObjectId).ifPresent((i) -> contObject.set_daDataSraw(i.getSraw()));
-		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
-        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOList);
+		List<ContObjectMonitorDTO> monitorDTOList = wrapContObjectsMonitorDTO(portalUserIds, Arrays.asList(contObject));
+        objectAccessService.readContObjectAccess(portalUserIds.getSubscriberId(), monitorDTOList);
         return monitorDTOList.get(0);
 	}
 
@@ -824,9 +827,9 @@ public class ContObjectService implements SecuredRoles {
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects) {
-	    List<ContObjectMonitorDTO> monitorDTOS = wrapContObjectsMonitorDTO (subscriberParam, contObjects, true);
-        objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), monitorDTOS);
+	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(PortalUserIds portalUserIds, List<ContObject> contObjects) {
+	    List<ContObjectMonitorDTO> monitorDTOS = wrapContObjectsMonitorDTO (portalUserIds, contObjects, true);
+        objectAccessService.readContObjectAccess(portalUserIds.getSubscriberId(), monitorDTOS);
 	    return monitorDTOS;
 	}
 
@@ -837,7 +840,7 @@ public class ContObjectService implements SecuredRoles {
      * @param contEventStats
      * @return
      */
-    public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(SubscriberParam subscriberParam, List<ContObject> contObjects, final boolean contEventStats) {
+    public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(PortalUserIds portalUserIds, List<ContObject> contObjects, final boolean contEventStats) {
         Objects.requireNonNull(contObjects);
 
         List<ContObjectMonitorDTO> contObjectMonitorDTOList= contObjects.stream()
@@ -847,7 +850,7 @@ public class ContObjectService implements SecuredRoles {
         List<Long> contObjectIds = contObjectMonitorDTOList.stream().map(i -> i.getId()).distinct()
             .collect(Collectors.toList());
 
-        Map<Long, Integer> contObjectStats = selectContObjectZPointCounter(subscriberParam, contObjectIds);
+        Map<Long, Integer> contObjectStats = selectContObjectZPointCounter(portalUserIds, contObjectIds);
 
         // Cont Event Block
         List<ContEventMonitorX> contEventMonitors = contEventStats ?
@@ -893,9 +896,9 @@ public class ContObjectService implements SecuredRoles {
      * @param contEventStats
      * @return
      */
-    public ContObjectMonitorDTO wrapContObjectMonitorDTO(SubscriberParam subscriberParam, ContObject contObject, final boolean contEventStats) {
-        List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(subscriberParam, Arrays.asList(contObject));
-        if (list != null) objectAccessService.readContObjectAccess(subscriberParam.getSubscriberId(), list);
+    public ContObjectMonitorDTO wrapContObjectMonitorDTO(PortalUserIds portalUserIds, ContObject contObject, final boolean contEventStats) {
+        List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(portalUserIds, Arrays.asList(contObject));
+        if (list != null) objectAccessService.readContObjectAccess(portalUserIds.getSubscriberId(), list);
         return list.isEmpty() ? null : list.get(0);
     }
 
@@ -904,13 +907,13 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectIds
 	 * @return
 	 */
-	private Map<Long, Integer> selectContObjectZPointCounter(SubscriberParam subscriberParam, Collection<Long> contObjectIds) {
+	private Map<Long, Integer> selectContObjectZPointCounter(PortalUserIds portalUserIds, Collection<Long> contObjectIds) {
 
 		if (contObjectIds.isEmpty()) {
 			return new HashMap<>();
 		}
 
-        List<Object[]> resultList = contZPointAccessRepository.findContObjectZPointStats(subscriberParam.getSubscriberId(), new ArrayList<>(contObjectIds));
+        List<Object[]> resultList = contZPointAccessRepository.findContObjectZPointStats(portalUserIds.getSubscriberId(), new ArrayList<>(contObjectIds));
 
 //		StringBuilder sqlString = new StringBuilder();
 //		sqlString.append(" SELECT cont_object_id, count(*) ");
@@ -1065,6 +1068,13 @@ public class ContObjectService implements SecuredRoles {
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public ContObjectDTO mapToDTO(ContObject contObjects) {
         return contObjectMapper.toDto(contObjects);
+    }
+
+
+    @Transactional(readOnly = true)
+    public List<ContObjectShortInfoVM> findShortInfo (PortalUserIds portalUserIds) {
+	    return contObjectAccessRepository.findAllContObjects(portalUserIds.getSubscriberId()).stream()
+            .map(i -> contObjectMapper.toShortInfoVM(i)).collect(Collectors.toList());
     }
 
 }

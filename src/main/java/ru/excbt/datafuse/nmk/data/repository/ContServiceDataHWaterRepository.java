@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long> {
 
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
+			+ " WHERE d.contZPointId = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
 	public Page<ContServiceDataHWater> selectByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String timeDetailType, Pageable pageable);
 
@@ -37,7 +37,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	 * @return
 	 */
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
+			+ " WHERE d.contZPointId = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
 			+ " AND time_detail_type = :timeDetailType AND d.deleted = 0 ORDER BY d.dataDate ")
 	public List<ContServiceDataHWater> selectByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
@@ -53,7 +53,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	 * @return
 	 */
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
+			+ " WHERE d.contZPointId = :contZPointId AND d.dataDate >= :beginDate " + " AND d.dataDate <= :endDate "
 			+ " AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
 	public Page<ContServiceDataHWater> selectByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("beginDate") Date beginDate,
@@ -160,7 +160,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	 * @return
 	 */
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " WHERE d.contZPointId = :contZPointId AND d.dataDate <= :dataDate "
 			+ " AND d.timeDetailType = :timeDetailType AND d.deleted = 0 " + " ORDER BY d.dataDate desc ")
 	public Page<ContServiceDataHWater> selectLastDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
@@ -174,7 +174,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	 * @return
 	 */
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate <= :dataDate "
+			+ " WHERE d.contZPointId = :contZPointId AND d.dataDate <= :dataDate "
 			+ " AND d.timeDetailType IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate DESC ")
 	public List<ContServiceDataHWater> selectLastDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
@@ -188,7 +188,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 	 * @return
 	 */
 	@Query("SELECT d FROM ContServiceDataHWater d "
-			+ " WHERE d.contZPoint.id = :contZPointId AND d.dataDate >= :dataDate "
+			+ " WHERE d.contZPointId = :contZPointId AND d.dataDate >= :dataDate "
 			+ " AND d.timeDetailType IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate ASC ")
 	public List<ContServiceDataHWater> selectFirstDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);

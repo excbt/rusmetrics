@@ -88,9 +88,9 @@ public class OrganizationService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Organization> selectCmOrganizations(SubscriberParam subscriberParam) {
+	public List<Organization> selectCmOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
-				.selectCmOrganizations(subscriberParam.getRmaSubscriberId());
+				.selectCmOrganizations(portalUserIds.getRmaId());
 		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
 		return result;
@@ -101,9 +101,9 @@ public class OrganizationService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Organization> selectOrganizations(SubscriberParam subscriberParam) {
+	public List<Organization> selectOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
-				.findOrganizationsOfRma(subscriberParam.getRmaSubscriberId());
+				.findOrganizationsOfRma(portalUserIds.getRmaId());
 		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
 		return result;

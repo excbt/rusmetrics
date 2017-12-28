@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,6 +126,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
      */
     @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.GET,
         produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<?> getDeviceObject(@PathVariable("contObjectId") Long contObjectId,
                                                          @PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -161,6 +163,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 
     @RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}", method = RequestMethod.PUT,
         produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<?> updateDeviceObject(@PathVariable("contObjectId") Long contObjectId,
                                               @PathVariable("deviceObjectId") Long deviceObjectId, @RequestBody DeviceObjectDTO deviceObjectDTO) {
 
@@ -193,6 +196,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectMetaVzlet(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -213,6 +217,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet/{entityId}",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectMetaVzletId(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId, @PathVariable("entityId") Long entityId) {
 
@@ -235,6 +240,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet",
 			method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> createDeviceObjectMetaVzlet(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody DeviceObjectMetaVzlet deviceObjectMetaVzlet, HttpServletRequest request) {
@@ -280,6 +286,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet",
 			method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> updateDeviceObjectMetaVzlet(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId,
 			@RequestBody DeviceObjectMetaVzlet deviceObjectMetaVzlet) {
@@ -314,6 +321,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/metaVzlet",
 			method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> deleteDeviceObjectMetaVzlet(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -332,6 +340,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/metaVzlet/system", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectMetaVzletSystem() {
 		List<VzletSystem> preList = vzletSystemRepository.findAll();
 		List<VzletSystem> result = preList.stream().sorted(Comparator.comparingLong(VzletSystem::getId)).collect(Collectors.toList());
@@ -343,6 +352,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 * @return
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceModels() {
 		ApiActionObjectProcess actionProcess = () -> {
 			List<DeviceModelDTO> deviceModels = deviceModelService.findDeviceModelDTOs();
@@ -361,6 +371,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{id}", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceModel(@PathVariable("id") Long deviceModelId) {
 		ApiActionObjectProcess actionProcess = () -> {
 			DeviceModelDTO deviceModel = deviceModelService.findDeviceModelDTO(deviceModelId);
@@ -375,6 +386,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModelTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceModelTypes() {
 		return ApiResponse.responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
 	}
@@ -385,6 +397,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceDataTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceDataTypes() {
 		return ApiResponse.responseOK(() -> deviceDataTypeService.findDeviceDataTypes());
 	}
@@ -395,6 +408,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
      * @return
      */
     @RequestMapping(value = "/deviceObjects/heatRadiatorTypes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<?> getHeatRadiatorTypes() {
         return ApiResponse.responseOK(() -> heatRadiatorTypeService.findAllHeatRadiators());
     }
@@ -406,6 +420,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/impulseCounterTypes", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceImpulseCounterTypes() {
 		return ApiResponse.responseOK(() -> deviceModelService.findImpulseCounterTypes());
 	}
@@ -419,6 +434,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingSettings",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -446,6 +462,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	@RequestMapping(
 			value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource/loadingSettings",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectDataSourceLoadingSettings(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -478,6 +495,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/loadingLog",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectLoadingLog(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -502,6 +520,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/deviceObjects/deviceModels/{deviceModelId}/metadata", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceModelMetadata(@PathVariable("deviceModelId") Long deviceModelId) {
 
 		List<DeviceMetadata> metadata = deviceMetadataService.selectDeviceMetadata(deviceModelId,
@@ -518,6 +537,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/deviceObjects/{deviceObjectId}/subscrDataSource",
 			method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
 	public ResponseEntity<?> getDeviceObjectSubscrDataSource(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
@@ -557,8 +577,8 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 //		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
 	}
 
-
     @GetMapping ("/device-objects/cont-zpoints/{contZPointId}/history")
+    @Timed
 	public ResponseEntity<?> deviceObjectsHistory (@PathVariable("contZPointId") Long contZPointId) {
 	    List<ContZPointDeviceHistoryDTO> historyList = contZPointDeviceHistoryService.findHistory(new ContZPoint().id(contZPointId));
 	    return ApiResponse.responseOK(historyList);

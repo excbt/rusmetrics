@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -53,7 +54,8 @@ public class RmaSubscriberResource extends SubscriberController {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers", method = RequestMethod.GET)
-	public ResponseEntity<?> getRmaSubscribers() {
+    @Timed
+    public ResponseEntity<?> getRmaSubscribers() {
 		if (!currentSubscriberService.isRma()) {
 			return ApiResponse.responseForbidden();
 		}
@@ -67,7 +69,8 @@ public class RmaSubscriberResource extends SubscriberController {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.GET)
-	public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
+    @Timed
+    public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
 
 
         PortalUserIds portalUserIds = getSubscriberParam().asPortalUserIds();
@@ -98,7 +101,8 @@ public class RmaSubscriberResource extends SubscriberController {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
+    @Timed
+    public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
 
 		checkNotNull(rSubscriber);
 		checkNotNull(rSubscriber.getOrganizationId());
@@ -127,7 +131,8 @@ public class RmaSubscriberResource extends SubscriberController {
      */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
+    @Timed
+    public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestBody Subscriber rSubscriber) {
 
 		checkNotNull(rSubscriberId);
@@ -152,7 +157,8 @@ public class RmaSubscriberResource extends SubscriberController {
 	 */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
+    @Timed
+    public ResponseEntity<?> deleteSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
 		checkNotNull(rSubscriberId);
@@ -172,7 +178,8 @@ public class RmaSubscriberResource extends SubscriberController {
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getOrganizations() {
+    @Timed
+    public ResponseEntity<?> getOrganizations() {
 		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().asPortalUserIds());
 		return ApiResponse.responseOK(organizations);
 	}

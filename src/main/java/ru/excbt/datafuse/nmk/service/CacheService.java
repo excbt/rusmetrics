@@ -7,7 +7,7 @@ import javax.cache.CacheManager;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+//@Service
 public class CacheService {
 
     private final CacheManager cacheManager;

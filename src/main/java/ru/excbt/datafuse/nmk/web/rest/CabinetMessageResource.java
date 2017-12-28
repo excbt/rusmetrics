@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
@@ -43,8 +44,9 @@ public class CabinetMessageResource {
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of cabinetMessages in body
      */
-    @ApiOperation("Get all cabinet messages to current subscriber")
     @GetMapping("/cabinet-messages")
+    @ApiOperation("Get all cabinet messages to current subscriber")
+    @Timed
     public ResponseEntity<List<CabinetMessageDTO>> getAllCabinetMessageRequests(@ApiParam("message type") @RequestParam(name = "messageType", required = false) @Valid CabinetMessageType cabinetMessageType , Pageable pageable) {
         log.debug("REST request to get a page of CabinetMessages");
 //        CabinetMessageType cabinetMessageType = EnumUtils.getEnum(CabinetMessageType.class, messageType);
@@ -56,16 +58,18 @@ public class CabinetMessageResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @ApiOperation("Get chain of messages by master message id")
     @GetMapping("/cabinet-messages/{id}/chain")
+    @ApiOperation("Get chain of messages by master message id")
+    @Timed
     public ResponseEntity<List<CabinetMessageDTO>> getCabinetMessageChain(@ApiParam("id of master message") @PathVariable("id") Long masterMessageId) {
         log.debug("REST request to get a page of CabinetMessages");
         List<CabinetMessageDTO> list = cabinetMessageService.findMessageChain(masterMessageId);
         return new ResponseEntity<>(list, HttpStatus.OK);
     }
 
-    @ApiOperation("Update review datetime of chain of messages by master message id")
     @PutMapping("/cabinet-messages/{id}/chainReview")
+    @ApiOperation("Update review datetime of chain of messages by master message id")
+    @Timed
     public ResponseEntity<?> updateMessageChainReview(@ApiParam("id of master  message") @PathVariable("id") Long masterMessageId,
                                                       @RequestParam(name = "resetReviews", required = false) @ApiParam() Boolean resetReviews) {
         log.debug("REST request to get a page of CabinetMessages");

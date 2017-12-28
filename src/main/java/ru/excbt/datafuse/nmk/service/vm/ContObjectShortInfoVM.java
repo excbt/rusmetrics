@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.service.vm;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter

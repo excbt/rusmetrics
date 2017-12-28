@@ -114,4 +114,14 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         " ORDER BY do.contObject.fullAddress, do.contObject.id ")
     List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
+
+    @Query("SELECT co.id, co.name, co.fullName, co.currentSettingMode " +
+        " FROM ContObject co WHERE co.id IN " +
+        " (SELECT a.contObjectId FROM ContObjectAccess a " +
+        "  WHERE a.subscriberId = :subscriberId  " +
+        "  AND a.accessTtl IS NULL" +
+        " ) AND co.deleted = 0")
+    List<Object[]> findAllContObjectShortInfo(@Param("subscriberId") Long subscriberId);
+
+
 }
