@@ -77,6 +77,16 @@
         ctrl.checkUndefinedNull = contObjectCtrlSvc.checkUndefinedNull;
         ctrl.EVENTS = contObjectCtrlSvc.EVENTS;
         
+        ctrl.orderBy = {field: 'caption', asc: false};
+//console.log('ctrl.orderBy: ', ctrl.orderBy);
+        
+        ctrl.setOrderBy = function (field) {
+            var asc = ctrl.orderBy.field === field ? !ctrl.orderBy.asc : true;
+            ctrl.orderBy = { field: field, asc: asc };
+//console.log('ctrl.orderBy: ', ctrl.orderBy);
+//console.log(ctrl.objects);            
+        };
+        
         function errorCallback(e) {
             console.error(e);
         }
@@ -94,10 +104,11 @@
             if (angular.isArray(inpData.contZPointMonitorState)) {
                 var zpointsStates = {};
                 inpData.contZPointMonitorState.forEach(function (zpoint) {
+//                    tmpObjInfo[zpoint.contServiceTypeKeyname] = IMG_PATH_MONITOR_TEMPLATE + zpoint.stateColor.toLowerCase() + IMG_EXT;
                     if (zpointsStates.hasOwnProperty(zpoint.contServiceTypeKeyname)) {
                         if (zpointsStates[zpoint.contServiceTypeKeyname].level < MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()].level) {
 
-                            zpointsStates[zpoint.contServiceTypeKeyname] = angular.copy(MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()]);
+                            zpointsStates[zpoint.contServiceTypeKeyname] = angular.copy(MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()]);                            
                         }
                     } else {
                         zpointsStates[zpoint.contServiceTypeKeyname] = angular.copy(MONITOR_STATE_LVLS[zpoint.stateColor.toLowerCase()]);
@@ -119,7 +130,7 @@
                     return true;
                 }
             });
-            
+//console.log(ctrl.objects);            
         }
         
         

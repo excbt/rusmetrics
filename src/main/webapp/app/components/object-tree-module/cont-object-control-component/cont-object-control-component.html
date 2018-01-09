@@ -7,8 +7,14 @@
                 <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                    Режим-->
                 </th>
-                <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+                <th ng-repeat = "column in $ctrl.columns track by $index" 
+                   ng-class = "column.headerClass"
+                   ng-click = "$ctrl.setOrderBy(column.name)">
                     {{column.caption}}
+                    <i class = "glyphicon" 
+                       ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
+                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'">
+                    </i>
                 </th>
             </tr>
     </table>
@@ -27,7 +33,7 @@
             </tr>
             
 
-            <tr ng-repeat = "object in $ctrl.objects track by $index">
+            <tr ng-repeat = "object in $ctrl.objects | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index">
 <!--
                <td ng-if = "object.loading" class = "col-xs-1">
                    <div ng-show = "object.loading" class="nmc-loading">
@@ -57,9 +63,11 @@
 
                             </td>
                             <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+
                                <div ng-switch on = "column.type">
                                     <div ng-switch-when = "img">
-                                        <img class = "marginRight2 nmc-p-tree-status-img" 
+                                        <img ng-if = "object[column.name]"
+                                        class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"
                                         />
                                     </div>
@@ -76,11 +84,7 @@
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
                               <div ng-repeat = "zpoint in object.zpoints track by $index"
                                 class = "col-xs-6">
-<!--
-                                 <pre>
-                                      {{zpoint | json}}
-                                  </pre>
--->
+
                                    <div ng-controller='zpointWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
                                        <span ng-show='title' ng-bind='title'></span>
                                        <div ng-show='isLoading'>Загрузка...</div>
