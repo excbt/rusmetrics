@@ -87,6 +87,36 @@
 //console.log(ctrl.objects);            
         };
         
+//        function closeAllObjectsInArr(objArr) {
+//            objArr.forEach(function (obj) {
+//                obj.showWidgetFlag = false;
+//            });
+//        }
+//        
+//                // search objects
+//        ctrl.searchObjects = function (searchString) {
+//            if ((ctrl.objects.length <= 0)) {
+//                return;
+//            }
+//
+//                //close all opened objects zpoints
+//            closeAllObjectsInArr(ctrl.objectsOnPage);
+//
+//            var tempArr = [];
+//            if (angular.isUndefined(searchString) || (searchString === '')) {
+//                //                        
+//                ctrl.objectCtrlSettings.objectsOnPage = ctrl.objectCtrlSettings.beginObjectsOnPage;//objectsPerScroll
+//                tempArr =  ctrl.objects.slice(0, ctrl.objectCtrlSettings.beginObjectsOnPage);//objectsPerScroll
+//            } else {
+//                ctrl.objects.forEach(function (elem) {
+//                    if (elem.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
+//                        tempArr.push(elem);
+//                    }
+//                });
+//            }
+//            $scope.objectsOnPage = tempArr;
+//        };
+        
         function errorCallback(e) {
             console.error(e);
         }
