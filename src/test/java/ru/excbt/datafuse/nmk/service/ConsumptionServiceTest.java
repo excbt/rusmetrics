@@ -51,6 +51,9 @@ public class ConsumptionServiceTest {
     }
 
 
+    /**
+     *
+     */
     @Test
     @Transactional
     public void processHWaterOne() {
@@ -65,6 +68,9 @@ public class ConsumptionServiceTest {
     }
 
 
+    /**
+     *
+     */
     @Test
     @Transactional
     public void processHWaterDay() {
@@ -76,6 +82,32 @@ public class ConsumptionServiceTest {
         LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(day)
             .dateTimeTo(day.plusDays(1).minusSeconds(1)).build();
         consumptionService.processHWater(TimeDetailKey.TYPE_1H, period, true);
+
+        stopWatch.stop();
+        log.info("Test Time: {}", stopWatch.toString());
+    }
+
+    /**
+     *
+     */
+    @Test
+    @Transactional
+    public void processHWaterDayTask() {
+
+        LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        consumptionService.processHWater(
+            ConsumptionTask.builder()
+                .name("MyName")
+                .dateTimeFrom(day)
+                .dateTimeTo(day.plusDays(1).minusSeconds(1))
+                .contServiceType(ContServiceTypeKey.HW.getKeyname())
+                .timeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
+                .retryCnt(3).build()
+        );
 
         stopWatch.stop();
         log.info("Test Time: {}", stopWatch.toString());

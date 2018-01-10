@@ -26,10 +26,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -115,13 +113,13 @@ public class ConsumptionService {
             throw new IllegalArgumentException("period is invalid");
         }
 
-        Stream<ContServiceDataHWater> dataStream = dataHWaterRepository.selectForConsumption(
+        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
                                                                                 contZPoint.getId(),
                                                                                 timeDetailKey.getKeyname(),
                                                                                 period.getFromDate(),
                                                                                 period.getToDate());
 
-        processHWaterStream (period, dataStream, md5Hash);
+        processHWaterList (period, data, md5Hash);
 
     }
 
@@ -133,13 +131,26 @@ public class ConsumptionService {
     @Transactional
     public void processHWater(TimeDetailKey timeDetailKey, LocalDateTimePeriod period, boolean md5Hash) {
 
-        Stream<ContServiceDataHWater> dataStream = dataHWaterRepository.selectForConsumption(
+        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
             timeDetailKey.getKeyname(),
             period.getFromDate(),
             period.getToDate());
 
-        processHWaterStream (period, dataStream, md5Hash);
+        processHWaterList (period, data, md5Hash);
 
+    }
+
+    @Transactional
+    public void processHWater(ConsumptionTask task) {
+        Objects.requireNonNull(task);
+
+        TimeDetailKey timeDetailKey = TimeDetailKey.searchKeyname(task.getTimeDetailType());
+        LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(task.getDateTimeFrom()).dateTimeTo(task.getDateTimeTo()).build();
+        if (timeDetailKey != null && period.isValid()) {
+            processHWater(timeDetailKey,period,true);
+        } else {
+            log.warn("ConsumptionTask is invalid: {}", task);
+        }
     }
 
 
@@ -150,12 +161,16 @@ public class ConsumptionService {
     /**
      *
      * @param period
-     * @param dataHWaterStream
+     * @param dataHWaterList
      */
-    private void processHWaterStream(LocalDateTimePeriod period, Stream<ContServiceDataHWater> dataHWaterStream, boolean md5Hash) {
-        Map<Long, List<ContServiceDataHWater>> dataMap = GroupUtil.makeIdMap(dataHWaterStream, (i) -> i.getContZPointId());
-        log.info("ContZPoints: ");
-        dataMap.keySet().stream().forEach(i -> log.info("Id: {}, Size: {}", i, dataMap.get(i).size()));
+    private void processHWaterList(LocalDateTimePeriod period, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
+
+        Set<ConsumptionCleanKey> cleanKeys = dataHWaterList.stream().map(i -> new ConsumptionCleanKey(i, period.getDateTimeFrom())).collect(Collectors.toSet());
+        cleanConsumption(cleanKeys);
+
+        Map<Long, List<ContServiceDataHWater>> dataMap = GroupUtil.makeIdMap(dataHWaterList, (i) -> i.getContZPointId());
+        log.debug("ContZPoints: ");
+        dataMap.keySet().stream().forEach(i -> log.debug("Id: {}, Size: {}", i, dataMap.get(i).size()));
 
         dataMap.keySet().stream().forEach(i -> {
             ContZPoint contZPoint = contZPointRepository.findOne(i);
@@ -190,9 +205,7 @@ public class ConsumptionService {
             }
 
             consumptionRepository.save(consumption);
-            log.info("Consumption ID: {}", consumption.getId());
-            log.info("Hash: {}", consValues.hashCode());
-            log.info("MD5: {}", consumption.getConsDataMD5());
+            log.debug("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsDataMD5());
         });
         consumptionRepository.flush();
     }
@@ -222,5 +235,40 @@ public class ConsumptionService {
         return myChecksum;
     }
 
+
+    private class ConsumptionCleanKey {
+        private final Long contZPointId;
+        private final String timeDetailType;
+        private final LocalDateTime dateTimeFrom;
+
+        private ConsumptionCleanKey (ContServiceDataHWater hWater, LocalDateTime dateTimeFrom) {
+            this.contZPointId = hWater.getContZPointId();
+            this.timeDetailType = hWater.getTimeDetailType();
+            this.dateTimeFrom = dateTimeFrom;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ConsumptionCleanKey that = (ConsumptionCleanKey) o;
+            return Objects.equals(contZPointId, that.contZPointId) &&
+                Objects.equals(timeDetailType, that.timeDetailType) &&
+                Objects.equals(dateTimeFrom, that.dateTimeFrom);
+        }
+
+        @Override
+        public int hashCode() {
+
+            return Objects.hash(contZPointId, timeDetailType, dateTimeFrom);
+        }
+    }
+
+    private void cleanConsumption(Collection<ConsumptionCleanKey> cleanKeys) {
+        cleanKeys.stream().forEach(key -> {
+            consumptionRepository.deleteByKey(key.contZPointId, key.timeDetailType, key.dateTimeFrom);
+        });
+
+    }
 
 }

@@ -10,7 +10,13 @@ import org.springframework.stereotype.Service;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
+import javax.jms.JMSException;
+import javax.jms.Message;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static ru.excbt.datafuse.nmk.service.ConsumptionTask.CONS_TASK_QUEUE;
 
@@ -19,17 +25,16 @@ public class ConsumptionTaskService {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionTaskService.class);
 
-    private final ConsumptionService consumptionService;
-
     private final JmsTemplate jmsTemplate;
 
+    private final MessageConverter messageConverter;
+
     @Autowired
-    public ConsumptionTaskService(ConsumptionService consumptionService,
-                                  ConnectionFactory connectionFactory,
+    public ConsumptionTaskService(ConnectionFactory connectionFactory,
                                   MessageConverter messageConverter
                                   //JmsTemplate jmsTemplate
-                                    ) {
-        this.consumptionService = consumptionService;
+    ) {
+        this.messageConverter = messageConverter;
 
         this.jmsTemplate = new JmsTemplate();
         this.jmsTemplate.setConnectionFactory(connectionFactory);
@@ -41,32 +46,86 @@ public class ConsumptionTaskService {
         this.jmsTemplate.setReceiveTimeout(1);
     }
 
-    public void send(ConsumptionTask task) {
-        log.info("sending with convertAndSend() to queue <" + task + ">");
+    /**
+     *
+     * @param task
+     */
+    public void sendTask(ConsumptionTask task) {
+        log.info("sending with convertAndSend() to queue <{}>", task );
         jmsTemplate.convertAndSend(CONS_TASK_QUEUE, task);
     }
 
-    public int queueSize () {
+    /**
+     *
+     * @return
+     */
+    public int getTaskQueueSize() {
         BrowserCallback<Integer> browserCallback = (s, qb) -> Collections.list(qb.getEnumeration()).size();
         return jmsTemplate.browse(CONS_TASK_QUEUE, browserCallback);
     }
 
+    /**
+     * @return
+     */
+    public List<ConsumptionTask> viewTaskQueue() {
 
-    public ConsumptionTask receive() {
-        Object o = jmsTemplate.receiveAndConvert(ConsumptionTask.CONS_TASK_QUEUE);
-        if (o == null) {
-            return null;
-        }
+        BrowserCallback<List<Object>> browserCallback = (s, qb) -> Collections.list(qb.getEnumeration());
+
+        return jmsTemplate.browse(CONS_TASK_QUEUE, browserCallback).stream().map(i -> {
+            ConsumptionTask task = null;
+            try {
+                Object obj = messageConverter.fromMessage((Message) i);
+                task = objToConsumptionTask(obj);
+            } catch (JMSException e) {
+                log.error("MQ message conversion to ConsumptionTask error", e);
+            }
+            return task;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
+
+    /**
+     *
+     * @param obj
+     * @return
+     */
+    private ConsumptionTask objToConsumptionTask(Object obj) {
         ConsumptionTask task;
-        if (o instanceof ConsumptionTask) {
-            task = (ConsumptionTask) o;
+        if (obj instanceof ConsumptionTask) {
+            task = (ConsumptionTask) obj;
         } else {
-            log.info("o: {}", o);
-            throw new IllegalStateException("ConsumptionTask is invalid");
+            log.warn("MQ message is not ConsumptionTask compatible");
+            task = null;
         }
-
         return task;
     }
 
+
+    /**
+     * @return
+     */
+    public ConsumptionTask receiveTask() {
+        Object obj = jmsTemplate.receiveAndConvert(ConsumptionTask.CONS_TASK_QUEUE);
+        if (obj == null) {
+            return null;
+        }
+        ConsumptionTask task = objToConsumptionTask(obj);
+        return task;
+    }
+
+
+    public void processTaskQueue(Consumer<ConsumptionTask> consumer) {
+        log.debug("Processing Queue");
+        ConsumptionTask task = receiveTask();
+        int cnt = 0;
+        while (task != null) {
+            log.debug("Processing task:{}", task);
+            consumer.accept(task);
+            log.debug("Processing task:{} complete. Read next", task);
+            task = receiveTask();
+            cnt++;
+        }
+        log.debug("Processing Queue complete. Finish: {} tasks", cnt);
+    }
 
 }
