@@ -18,6 +18,8 @@ import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PortalApplication.class)
@@ -116,4 +118,18 @@ public class ConsumptionServiceTest {
         log.info("Test Time: {}", stopWatch.toString());
     }
 
+    @Test
+    public void invalidateConsumption() {
+        LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
+
+        ConsumptionService.ConsumptionZPointKey key = ConsumptionService.ConsumptionZPointKey
+            .builder()
+            .contZPointId(71843465L)
+            .dateTimeFrom(day)
+            .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+            .build();
+        Set<ConsumptionService.ConsumptionZPointKey> keys = new HashSet<>();
+        keys.add(key);
+        consumptionService.invalidateConsumption(keys);
+    }
 }

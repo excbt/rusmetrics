@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.service;
 
+import lombok.Builder;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,6 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
-import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
@@ -17,7 +18,6 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
-import ru.excbt.datafuse.nmk.domain.datatype.ArrayUtil;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
@@ -31,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class ConsumptionService {
@@ -41,7 +40,8 @@ public class ConsumptionService {
     public static final String MD5_HASH_SECRET = "YsoB66IIyYlEFw50ObB2";
     public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
-    public static final String CONS_STATUS_CALCULATED = "calculated";
+    public static final String CONS_STATUS_CALCULATED = "CALCULATED";
+    public static final String CONS_STATUS_INVALIDATED = "INVALIDATED";
 
     private final ContServiceDataHWaterRepository dataHWaterRepository;
 
@@ -183,8 +183,8 @@ public class ConsumptionService {
      */
     private void processHWaterList(ConsumptionTask task, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
 
-        Set<ConsumptionCleanKey> cleanKeys = dataHWaterList.stream()
-            .map(i -> new ConsumptionCleanKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
+        Set<ConsumptionZPointKey> cleanKeys = dataHWaterList.stream()
+            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
             .collect(Collectors.toSet());
 
         cleanConsumption(cleanKeys);
@@ -264,12 +264,17 @@ public class ConsumptionService {
     }
 
 
-    private class ConsumptionCleanKey {
+    /**
+     *
+     */
+    @Getter
+    @Builder
+    public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
         private final LocalDateTime dateTimeFrom;
 
-        private ConsumptionCleanKey (Long contZPointId, String destTimeDetailType, LocalDateTime dateTimeFrom) {
+        private ConsumptionZPointKey (Long contZPointId, String destTimeDetailType, LocalDateTime dateTimeFrom) {
             this.contZPointId = contZPointId;
             this.destTimeDetailType = destTimeDetailType;
             this.dateTimeFrom = dateTimeFrom;
@@ -279,24 +284,32 @@ public class ConsumptionService {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            ConsumptionCleanKey that = (ConsumptionCleanKey) o;
-            return Objects.equals(contZPointId, that.contZPointId) &&
-                Objects.equals(destTimeDetailType, that.destTimeDetailType) &&
-                Objects.equals(dateTimeFrom, that.dateTimeFrom);
+            ConsumptionZPointKey key = (ConsumptionZPointKey) o;
+            return Objects.equals(destTimeDetailType, key.destTimeDetailType) &&
+                Objects.equals(dateTimeFrom, key.dateTimeFrom) &&
+                Objects.equals(contZPointId, key.contZPointId);
         }
 
         @Override
         public int hashCode() {
 
-            return Objects.hash(contZPointId, destTimeDetailType, dateTimeFrom);
+            return Objects.hash(destTimeDetailType, dateTimeFrom, contZPointId);
         }
     }
 
-    private void cleanConsumption(Collection<ConsumptionCleanKey> cleanKeys) {
-        cleanKeys.stream().forEach(key -> {
-            consumptionRepository.deleteByKey(key.contZPointId, key.destTimeDetailType, key.dateTimeFrom);
-        });
 
+
+    private void cleanConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
+        cleanKeys.stream().forEach(key -> {
+            consumptionRepository.deleteByKey(key.getContZPointId(), key.getDestTimeDetailType(), key.getDateTimeFrom());
+        });
+    }
+
+    @Transactional
+    public void invalidateConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
+        cleanKeys.stream().forEach(key -> {
+            consumptionRepository.statusByKey(CONS_STATUS_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getDateTimeFrom());
+        });
     }
 
 }
