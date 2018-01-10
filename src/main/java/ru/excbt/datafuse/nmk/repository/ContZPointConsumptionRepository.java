@@ -14,9 +14,9 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
 
     @Modifying
     @Query("DELETE FROM ContZPointConsumption c WHERE c.contZPointId = :contZPointId " +
-        "AND c.timeDetailType = :timeDetailType AND c.dateFrom = :dateFrom")
+        "AND c.destTimeDetailType = :destTimeDetailType AND c.dateFrom = :dateFrom")
     void deleteByKey (@Param("contZPointId") Long contZPointId,
-                      @Param("timeDetailType") String timeDetailType,
+                      @Param("destTimeDetailType") String destTimeDetailType,
                       @Param("dateFrom")LocalDateTime dateFrom);
 
 }

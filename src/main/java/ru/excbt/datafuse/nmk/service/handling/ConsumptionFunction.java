@@ -8,9 +8,12 @@ public class ConsumptionFunction<T> {
 
     private final Function<T, Double> func;
 
-    public ConsumptionFunction(String funcName, Function<T, Double> func) {
+    private final String measureUnit;
+
+    public ConsumptionFunction(String funcName, Function<T, Double> func, String measureUnit) {
         this.funcName = funcName;
         this.func = func;
+        this.measureUnit = measureUnit;
     }
 
     public String getFuncName() {
@@ -19,5 +22,9 @@ public class ConsumptionFunction<T> {
 
     public Function<T, Double> getFunc() {
         return func;
+    }
+
+    public String getMeasureUnit() {
+        return measureUnit;
     }
 }

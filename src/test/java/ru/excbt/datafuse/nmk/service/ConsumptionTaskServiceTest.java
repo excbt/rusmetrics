@@ -87,7 +87,8 @@ public class ConsumptionTaskServiceTest {
                 .dateTimeFrom(day)
                 .dateTimeTo(day.plusDays(1).minusSeconds(1))
                 .contServiceType(ContServiceTypeKey.HW.getKeyname())
-                .timeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
+                .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
+                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
                 .retryCnt(3).build());
 
         size = consumptionTaskService.getTaskQueueSize();
