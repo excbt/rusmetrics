@@ -175,9 +175,6 @@ public class ConsumptionService {
     }
 
 
-    private ConsumptionFunction<ContServiceDataHWater> cons_M1 = new ConsumptionFunction<>("M1", (d) -> d.getM_in(), MeasureUnitKey.M_TON.name());
-
-    private ConsumptionFunction<ContServiceDataHWater> cons_M1_sub_M2 = new ConsumptionFunction<>("M1-M2", (d) -> Math.abs(d.getM_in() - d.getM_out()), MeasureUnitKey.M_TON.name());
 
     /**
      *
@@ -211,10 +208,12 @@ public class ConsumptionService {
 
             String srcTimeDetailType = srcTimeDetailTypes.iterator().next();
 
-            ConsumptionFunction<ContServiceDataHWater> consFunc = Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
-                cons_M1_sub_M2 : cons_M1;
+            ConsumptionFunction<ContServiceDataHWater> consFunc = ConsumptionFunctionLib.findHWaterFunc(contZPoint);
 
-            double[] consValues = dataHWaters.stream().map(d -> consFunc.getFunc().apply(d)).mapToDouble(x -> x).toArray();
+            double[] consValues = dataHWaters.stream()
+                .filter(d -> consFunc.getFilter().test(d))
+                .map(d -> consFunc.getFunc().apply(d))
+                .mapToDouble(x -> x).toArray();
 
             ContZPointConsumption consumption = new ContZPointConsumption();
             consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
