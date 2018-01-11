@@ -85,6 +85,8 @@ public class ContZPointFullVM implements ModelIdable {
     @JsonDeserialize(using = FlexDataToString.class)
     private String flexData;
 
+    private Set<ContZPointConsFieldDTO> consFields = new HashSet<>();
+
     public Date getLastDataDate() {
         if (timeDetailLastDates.size() > 0) {
             final MaxCheck<Date> maxCheck = new MaxCheck<>();
