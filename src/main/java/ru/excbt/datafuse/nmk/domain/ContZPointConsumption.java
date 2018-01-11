@@ -26,8 +26,14 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "cont_zpoint_id")
     private Long contZPointId;
 
+    @Column(name = "data_type")
+    private String dataType;
+
     @Column(name = "cont_service_type")
     private String contServiceType;
+
+    @Column(name = "cons_date_time")
+    private LocalDateTime consDateTime;
 
     @Column(name = "src_time_detail_type")
     private String srcTimeDetailType;
@@ -35,11 +41,11 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "dest_time_detail_type")
     private String destTimeDetailType;
 
-    @Column(name = "date_from")
-    private LocalDateTime dateFrom;
+    @Column(name = "date_time_from")
+    private LocalDateTime dateTimeFrom;
 
-    @Column(name = "date_to")
-    private LocalDateTime dateTo;
+    @Column(name = "date_time_to")
+    private LocalDateTime dateTimeTo;
 
     @Column(name = "last_calc_time")
     private LocalDateTime lastCalcTime = LocalDateTime.now();

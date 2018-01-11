@@ -14,17 +14,27 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
 
     @Modifying
     @Query("DELETE FROM ContZPointConsumption c WHERE c.contZPointId = :contZPointId " +
-        "AND c.destTimeDetailType = :destTimeDetailType AND c.dateFrom = :dateFrom")
+        "AND c.destTimeDetailType = :destTimeDetailType AND c.consDateTime = :consDateTime")
     void deleteByKey (@Param("contZPointId") Long contZPointId,
                       @Param("destTimeDetailType") String destTimeDetailType,
-                      @Param("dateFrom")LocalDateTime dateFrom);
+                      @Param("consDateTime")LocalDateTime consDateTime);
+
+    @Modifying
+    @Query("DELETE FROM ContZPointConsumption c WHERE c.dataType = :dataType" +
+        " AND c.destTimeDetailType = :destTimeDetailType AND c.consDateTime = :consDateTime")
+    void deleteByDataTypeKey (
+                            @Param("dataType") String dataType,
+                            @Param("destTimeDetailType") String destTimeDetailType,
+                            @Param("consDateTime")LocalDateTime consDateTime);
+
+
 
     @Modifying
     @Query("UPDATE ContZPointConsumption c SET c.status = :status WHERE c.contZPointId = :contZPointId " +
-        "AND c.destTimeDetailType = :destTimeDetailType AND c.dateFrom = :dateFrom")
-    void statusByKey (@Param("status") String status,
-                      @Param("contZPointId") Long contZPointId,
-                      @Param("destTimeDetailType") String destTimeDetailType,
-                      @Param("dateFrom")LocalDateTime dateFrom);
+        "AND c.destTimeDetailType = :destTimeDetailType AND c.consDateTime = :consDateTime")
+    void updateStatusByKey(@Param("status") String status,
+                           @Param("contZPointId") Long contZPointId,
+                           @Param("destTimeDetailType") String destTimeDetailType,
+                           @Param("consDateTime")LocalDateTime consDateTime);
 
 }

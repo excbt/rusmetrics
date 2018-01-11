@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.service;
 
 import org.apache.commons.lang.time.StopWatch;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -125,11 +126,46 @@ public class ConsumptionServiceTest {
         ConsumptionService.ConsumptionZPointKey key = ConsumptionService.ConsumptionZPointKey
             .builder()
             .contZPointId(71843465L)
-            .dateTimeFrom(day)
+            .contDateTime(day)
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
             .build();
         Set<ConsumptionService.ConsumptionZPointKey> keys = new HashSet<>();
         keys.add(key);
         consumptionService.invalidateConsumption(keys);
+    }
+
+
+    @Test
+    @Ignore
+    public void testConsumption2016() {
+
+        LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
+        LocalDateTime endDay = LocalDateTime.of(2016,2,1,0,0);
+
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        LocalDateTime day = startDay;
+        while (day.isBefore(endDay)) {
+            log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
+            ConsumptionTask task = ConsumptionTask.builder()
+                .name("MyName")
+                .dateTimeFrom(day)
+                .dateTimeTo(day.plusDays(1).minusSeconds(1))
+                .contServiceType(ContServiceTypeKey.HW.getKeyname())
+                .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
+                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+                .retryCnt(3).build();
+
+            consumptionService.processHWater(task);
+
+            day = day.plusDays(1);
+        }
+
+        stopWatch.stop();
+        log.info("Test Time: {}", stopWatch.toString());
+
+
     }
 }

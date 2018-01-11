@@ -1,7 +1,9 @@
 package ru.excbt.datafuse.nmk.service;
 
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.apache.commons.lang.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,6 +45,8 @@ public class ConsumptionService {
 
     public static final String CONS_STATUS_CALCULATED = "CALCULATED";
     public static final String CONS_STATUS_INVALIDATED = "INVALIDATED";
+
+    public static final String DATA_TYPE_HWATER = "HWATER";
 
     private final ContServiceDataHWaterRepository dataHWaterRepository;
 
@@ -156,18 +161,26 @@ public class ConsumptionService {
             return;
         }
 
+        log.debug("Processing task: {}" ,task.toString());
+
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(task.getSrcTimeDetailType());
         LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(task.getDateTimeFrom()).dateTimeTo(task.getDateTimeTo()).build();
 
         if (srcTimeDetailKey != null && period.isValid()) {
 
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
             List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
                 srcTimeDetailKey.getKeyname(),
                 period.getFromDate(),
                 period.getToDate());
-
+            stopWatch.stop();
+            log.debug("task data loaded in {}", stopWatch.toString());
+            stopWatch.reset();
+            stopWatch.start();
             processHWaterList (task, data, true);
-
+            stopWatch.stop();
+            log.debug("task data processed in {}", stopWatch.toString());
         } else {
             log.warn("ConsumptionTask is invalid: {}", task);
         }
@@ -183,20 +196,40 @@ public class ConsumptionService {
      */
     private void processHWaterList(ConsumptionTask task, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
 
-        Set<ConsumptionZPointKey> cleanKeys = dataHWaterList.stream()
-            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
-            .collect(Collectors.toSet());
+        Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
+        cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(DATA_TYPE_HWATER).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
 
-        cleanConsumption(cleanKeys);
+        cleanConsumptionDataType(cleanKeys2);
+
+//        Set<ConsumptionZPointKey> cleanKeys = dataHWaterList.stream()
+//            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
+//            .collect(Collectors.toSet());
+//
+//        log.debug("Clean consumption in progress");
+//        cleanConsumptionZPoint(cleanKeys);
+//        log.debug("Clean consumption complete");
 
         Map<Long, List<ContServiceDataHWater>> dataMap = GroupUtil.makeIdMap(dataHWaterList, (i) -> i.getContZPointId());
-        log.debug("ContZPoints: ");
-        dataMap.keySet().stream().forEach(i -> log.debug("Id: {}, Size: {}", i, dataMap.get(i).size()));
+        log.trace("ContZPoints: ");
+        dataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, dataMap.get(i).size()));
+
+        List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
+
+        //List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
+
+        //Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
 
         dataMap.keySet().stream().forEach(i -> {
             ContZPoint contZPoint = contZPointRepository.findOne(i);
+            //contZPointMap.get(i);
 
-            ContServiceDataHWater data = dataMap.get(i).get(0);
+            if (contZPoint == null) {
+                log.warn("ContZPoint (id={}) is not found", i);
+                return;
+            }
+            //contZPointRepository.findOne(i);
+
+            //ContServiceDataHWater data = dataMap.get(i).get(0);
 
             List<ContServiceDataHWater> dataHWaters = dataMap.get(i);
 
@@ -215,13 +248,19 @@ public class ConsumptionService {
                 .map(d -> consFunc.getFunc().apply(d))
                 .mapToDouble(x -> x).toArray();
 
+            if (consValues.length == 0) {
+                return;
+            }
+
             ContZPointConsumption consumption = new ContZPointConsumption();
             consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
             consumption.setContZPointId(i);
+            consumption.setDataType(DATA_TYPE_HWATER);
+            consumption.setConsDateTime(task.getDateTimeFrom());
             consumption.setSrcTimeDetailType(srcTimeDetailType);
             consumption.setDestTimeDetailType(task.getDestTimeDetailType());
-            consumption.setDateFrom(task.getDateTimeFrom());
-            consumption.setDateTo(task.getDateTimeTo());
+            consumption.setDateTimeFrom(task.getDateTimeFrom());
+            consumption.setDateTimeTo(task.getDateTimeTo());
             consumption.setConsFunc(consFunc.getFuncName());
             consumption.setConsData(consValues);
             consumption.setMeasureUnit(consFunc.getMeasureUnit());
@@ -233,8 +272,9 @@ public class ConsumptionService {
             }
 
             consumptionRepository.save(consumption);
-            log.debug("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsDataMD5());
+            log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsDataMD5());
         });
+
         consumptionRepository.flush();
     }
 
@@ -269,47 +309,47 @@ public class ConsumptionService {
      */
     @Getter
     @Builder
+    @EqualsAndHashCode
     public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
-        private final LocalDateTime dateTimeFrom;
-
-        private ConsumptionZPointKey (Long contZPointId, String destTimeDetailType, LocalDateTime dateTimeFrom) {
-            this.contZPointId = contZPointId;
-            this.destTimeDetailType = destTimeDetailType;
-            this.dateTimeFrom = dateTimeFrom;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ConsumptionZPointKey key = (ConsumptionZPointKey) o;
-            return Objects.equals(destTimeDetailType, key.destTimeDetailType) &&
-                Objects.equals(dateTimeFrom, key.dateTimeFrom) &&
-                Objects.equals(contZPointId, key.contZPointId);
-        }
-
-        @Override
-        public int hashCode() {
-
-            return Objects.hash(destTimeDetailType, dateTimeFrom, contZPointId);
-        }
+        private final LocalDateTime contDateTime;
     }
 
 
+    @Getter
+    @Builder
+    @EqualsAndHashCode
+    public static class ConsumptionDataTypeKey {
+        private final String dataType;
+        private final String destTimeDetailType;
+        private final LocalDateTime consDateTime;
+    }
 
-    private void cleanConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
+
+    private void cleanConsumptionZPoint(Collection<ConsumptionZPointKey> cleanKeys) {
+        log.debug("Cleaning {} keys", cleanKeys.size());
         cleanKeys.stream().forEach(key -> {
-            consumptionRepository.deleteByKey(key.getContZPointId(), key.getDestTimeDetailType(), key.getDateTimeFrom());
+            consumptionRepository.deleteByKey(key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
         });
     }
 
     @Transactional
     public void invalidateConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
+        log.debug("Updating {} keys", cleanKeys.size());
         cleanKeys.stream().forEach(key -> {
-            consumptionRepository.statusByKey(CONS_STATUS_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getDateTimeFrom());
+            consumptionRepository.updateStatusByKey(CONS_STATUS_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
         });
     }
+
+    private void cleanConsumptionDataType(Collection<ConsumptionDataTypeKey> cleanKeys) {
+        log.debug("Cleaning {} keys", cleanKeys.size());
+        log.debug("Clean consumption by dataType in progress");
+        cleanKeys.stream().forEach(key -> {
+            consumptionRepository.deleteByDataTypeKey(key.getDataType(), key.getDestTimeDetailType(), key.getConsDateTime());
+        });
+        log.debug("Clean consumption by dataType complete");
+    }
+
 
 }
