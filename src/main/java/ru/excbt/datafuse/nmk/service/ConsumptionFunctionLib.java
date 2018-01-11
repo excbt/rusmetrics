@@ -65,8 +65,21 @@ public class ConsumptionFunctionLib {
                 cons_H1_sub_H2 : cons_H1);
         }
         if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
-            consumptionFunctions.add(Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
-                cons_M1_sub_M2 : cons_M1);
+            boolean vCase = contZPoint.getConsFields().stream().anyMatch(i -> "V".equals(i.getFieldName()));
+            boolean mCase = contZPoint.getConsFields().stream().anyMatch(i -> "M".equals(i.getFieldName()));
+            boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
+            if (mCase) {
+                consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);
+            }
+            if (vCase) {
+                consumptionFunctions.add(doublePipe ? cons_V1_sub_V2 : cons_V1);
+            }
+
+            // No settings. Calculate all
+            if (consumptionFunctions.isEmpty()) {
+                consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);
+                consumptionFunctions.add(doublePipe ? cons_V1_sub_V2 : cons_V1);
+            }
         }
         return consumptionFunctions;
     }
