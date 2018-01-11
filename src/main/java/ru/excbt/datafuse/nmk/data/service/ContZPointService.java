@@ -607,6 +607,7 @@ public class ContZPointService implements SecuredRoles {
         Objects.requireNonNull(contZPointFullVM);
 		ContZPoint contZPoint = contZPointMapper.toEntity(contZPointFullVM);
 		contZPoint.setIsManual(true);
+        contZPoint.getConsFields().stream().forEach(i -> i.setContZPoint(contZPoint));
 
 		ContZPoint savedContZPoint = contZPointRepository.saveAndFlush(contZPoint);
 		contZPointSettingModeService.initContZPointSettingMode(savedContZPoint.getId());

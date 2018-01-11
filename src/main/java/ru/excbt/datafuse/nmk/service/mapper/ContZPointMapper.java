@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.service.dto.ContZPointMonitorStateDTO;
 
 @Mapper(componentModel = "spring", uses = {ContServiceTypeMapper.class,
     TemperatureChartMapper.class, DeviceObjectMapper.class, ContObjectMapper.class, ContServiceTypeMapper.class,
-    OrganizationMapper.class})
+    OrganizationMapper.class, ContZPointConsFieldMapper.class})
 public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint> {
 
 
@@ -47,6 +47,7 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
 //    @Mapping(target = "droolsDisable", source = "isDroolsDisable")
     @Mapping(target = "tagNames", ignore = true)
     @Mapping(target = "timeDetailLastDates", ignore = true)
+    @Mapping(target = "consFields", source = "consFields")
     ContZPointFullVM toFullVM(ContZPoint contZPoint);
 
 
@@ -69,5 +70,10 @@ public interface ContZPointMapper extends EntityMapper<ContZPointDTO, ContZPoint
     @Mapping(target = "contZPointId", source = "id")
     @Mapping(target = "stateColor", ignore = true)
     ContZPointMonitorStateDTO toMonitorStateDTO(ContZPoint contZPoint);
+
+
+    default ContZPoint contZPointFromId(Long id) {
+        return id == null ? null : new ContZPoint().id(id);
+    }
 
 }
