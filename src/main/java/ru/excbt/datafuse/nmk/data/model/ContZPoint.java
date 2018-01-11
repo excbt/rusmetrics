@@ -45,7 +45,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id", updatable = false)
 	@JsonIgnore
 	private ContObject contObject;
