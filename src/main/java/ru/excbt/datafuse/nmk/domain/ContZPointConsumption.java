@@ -53,9 +53,6 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "last_start_time")
     private LocalDateTime lastStartTime = LocalDateTime.now();
 
-    @Column(name = "status")
-    private String status;
-
     @Column(name = "measure_unit")
     private String measureUnit;
 
@@ -66,9 +63,12 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "cons_data", columnDefinition = "float[]")
     private double[] consData;
 
+    @Column(name = "cons_status")
+    private String consStatus;
+
     @Size(max = 32)
-    @Column(name = "cons_data_md5")
-    private String consDataMD5;
+    @Column(name = "cons_md5")
+    private String consMD5;
 
     @Override
     public boolean equals(Object o) {

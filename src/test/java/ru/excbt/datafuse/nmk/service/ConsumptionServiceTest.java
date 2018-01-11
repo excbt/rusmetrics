@@ -136,7 +136,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
-    @Ignore
+    //@Ignore
     public void testConsumption2016() {
 
         LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);

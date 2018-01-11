@@ -2,12 +2,19 @@ package ru.excbt.datafuse.nmk.service;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class ConsumptionFunctionLib {
+
+    private ConsumptionFunctionLib() {
+    }
+
 
     public static ConsumptionFunction<ContServiceDataHWater> cons_M1 = new ConsumptionFunction<>(
         "M1",
@@ -32,12 +39,56 @@ public class ConsumptionFunctionLib {
         d -> Objects.nonNull(d.getV_in()) && Objects.nonNull(d.getV_out()),
         d -> Math.abs(d.getV_in() - d.getV_out()), MeasureUnitKey.V_M3.name());
 
-    private ConsumptionFunctionLib() {
+    public static ConsumptionFunction<ContServiceDataHWater> cons_H1 = new ConsumptionFunction<>(
+        "H1",
+        d -> Objects.nonNull(d.getH_in()),
+        d -> d.getH_in(),
+        MeasureUnitKey.W_GCAL.name());
+
+    public static ConsumptionFunction<ContServiceDataHWater> cons_H1_sub_H2 = new ConsumptionFunction<>(
+        "H1-H2",
+        d -> Objects.nonNull(d.getH_in()) && Objects.nonNull(d.getH_out()),
+        d -> Math.abs(d.getH_in() - d.getH_out()),
+        MeasureUnitKey.W_GCAL.name());
+
+
+    /**
+     *
+     * @param contZPoint
+     * @return
+     */
+    public static List<ConsumptionFunction<ContServiceDataHWater>> findHWaterFunc(ContZPoint contZPoint) {
+        List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = new ArrayList<>();
+
+        if (checkAnyService(contZPoint, ContServiceTypeKey.HEAT)) {
+            consumptionFunctions.add(Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
+                cons_H1_sub_H2 : cons_H1);
+        }
+        if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
+            consumptionFunctions.add(Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
+                cons_M1_sub_M2 : cons_M1);
+        }
+        return consumptionFunctions;
     }
 
-    public static ConsumptionFunction<ContServiceDataHWater> findHWaterFunc(ContZPoint contZPoint) {
-        return Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
-            cons_M1_sub_M2 : cons_M1;
+
+    /**
+     *
+     * @param contZPoint
+     * @param serviceKeys
+     * @return
+     */
+    private static boolean checkAnyService(ContZPoint contZPoint, ContServiceTypeKey ... serviceKeys) {
+        Objects.requireNonNull(serviceKeys);
+        Objects.requireNonNull(contZPoint);
+        boolean res = false;
+        for (ContServiceTypeKey key : serviceKeys) {
+            if (key.getKeyname().equals(contZPoint.getContServiceTypeKeyname())) {
+                res = true;
+                break;
+            }
+        }
+        return res;
     }
 
 }

@@ -30,9 +30,9 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
 
 
     @Modifying
-    @Query("UPDATE ContZPointConsumption c SET c.status = :status WHERE c.contZPointId = :contZPointId " +
+    @Query("UPDATE ContZPointConsumption c SET c.consStatus = :consStatus WHERE c.contZPointId = :contZPointId " +
         "AND c.destTimeDetailType = :destTimeDetailType AND c.consDateTime = :consDateTime")
-    void updateStatusByKey(@Param("status") String status,
+    void updateStatusByKey(@Param("consStatus") String consStatus,
                            @Param("contZPointId") Long contZPointId,
                            @Param("destTimeDetailType") String destTimeDetailType,
                            @Param("consDateTime")LocalDateTime consDateTime);

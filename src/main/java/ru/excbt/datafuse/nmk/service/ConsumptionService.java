@@ -205,18 +205,14 @@ public class ConsumptionService {
 //            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
 //            .collect(Collectors.toSet());
 //
-//        log.debug("Clean consumption in progress");
 //        cleanConsumptionZPoint(cleanKeys);
-//        log.debug("Clean consumption complete");
 
         Map<Long, List<ContServiceDataHWater>> dataMap = GroupUtil.makeIdMap(dataHWaterList, (i) -> i.getContZPointId());
         log.trace("ContZPoints: ");
         dataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, dataMap.get(i).size()));
 
-        List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
-
+        //List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
         //List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
-
         //Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
 
         dataMap.keySet().stream().forEach(i -> {
@@ -241,38 +237,42 @@ public class ConsumptionService {
 
             String srcTimeDetailType = srcTimeDetailTypes.iterator().next();
 
-            ConsumptionFunction<ContServiceDataHWater> consFunc = ConsumptionFunctionLib.findHWaterFunc(contZPoint);
+            List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = ConsumptionFunctionLib.findHWaterFunc(contZPoint);
 
-            double[] consValues = dataHWaters.stream()
-                .filter(d -> consFunc.getFilter().test(d))
-                .map(d -> consFunc.getFunc().apply(d))
-                .mapToDouble(x -> x).toArray();
+            List<ContZPointConsumption> consumptions = new ArrayList<>();
 
-            if (consValues.length == 0) {
-                return;
+            for (ConsumptionFunction<ContServiceDataHWater> consFunc: consumptionFunctions) {
+                double[] consValues = dataHWaters.stream()
+                    .filter(d -> consFunc.getFilter().test(d))
+                    .map(d -> consFunc.getFunc().apply(d))
+                    .mapToDouble(x -> x).toArray();
+
+                if (consValues.length == 0) {
+                    continue;
+                }
+
+                ContZPointConsumption consumption = new ContZPointConsumption();
+                consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
+                consumption.setContZPointId(i);
+                consumption.setDataType(DATA_TYPE_HWATER);
+                consumption.setConsDateTime(task.getDateTimeFrom());
+                consumption.setSrcTimeDetailType(srcTimeDetailType);
+                consumption.setDestTimeDetailType(task.getDestTimeDetailType());
+                consumption.setDateTimeFrom(task.getDateTimeFrom());
+                consumption.setDateTimeTo(task.getDateTimeTo());
+                consumption.setConsFunc(consFunc.getFuncName());
+                consumption.setConsData(consValues);
+                consumption.setMeasureUnit(consFunc.getMeasureUnit());
+                consumption.setConsStatus(CONS_STATUS_CALCULATED);
+
+                if (md5Hash) {
+                    String hash = calcMd5Hash(consValues);
+                    consumption.setConsMD5(hash);
+                }
+                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
+                consumptions.add(consumption);
             }
-
-            ContZPointConsumption consumption = new ContZPointConsumption();
-            consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
-            consumption.setContZPointId(i);
-            consumption.setDataType(DATA_TYPE_HWATER);
-            consumption.setConsDateTime(task.getDateTimeFrom());
-            consumption.setSrcTimeDetailType(srcTimeDetailType);
-            consumption.setDestTimeDetailType(task.getDestTimeDetailType());
-            consumption.setDateTimeFrom(task.getDateTimeFrom());
-            consumption.setDateTimeTo(task.getDateTimeTo());
-            consumption.setConsFunc(consFunc.getFuncName());
-            consumption.setConsData(consValues);
-            consumption.setMeasureUnit(consFunc.getMeasureUnit());
-            consumption.setStatus(CONS_STATUS_CALCULATED);
-
-            if (md5Hash) {
-                String hash = calcMd5Hash(consValues);
-                consumption.setConsDataMD5(hash);
-            }
-
-            consumptionRepository.save(consumption);
-            log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsDataMD5());
+            consumptionRepository.save(consumptions);
         });
 
         consumptionRepository.flush();
