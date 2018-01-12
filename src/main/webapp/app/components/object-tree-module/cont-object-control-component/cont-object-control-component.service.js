@@ -38,13 +38,16 @@
 //        }
         var nodes = {};
         
-        this.EVENTS = EVENTS;
-        this.CONT_OBJECTS_PER_PAGE = CONT_OBJECTS_PER_PAGE;
-        this.checkUndefinedNull = checkUndefinedNull;
-        this.loadContObjectMonitorState = loadContObjectMonitorState;
-        this.loadNodeObjects = loadNodeObjects;
-        this.loadZpointsByObjectId = loadZpointsByObjectId;
-        this.loadZpointWidgetList = loadZpointWidgetList;
+        var svc = this;
+        svc.EVENTS = EVENTS;
+        svc.CONT_OBJECTS_PER_PAGE = CONT_OBJECTS_PER_PAGE;
+        svc.checkUndefinedNull = checkUndefinedNull;
+        svc.getNodeData = getNodeData;
+        svc.loadContObjectMonitorState = loadContObjectMonitorState;
+        svc.loadNodeObjects = loadNodeObjects;
+        svc.loadZpointsByObjectId = loadZpointsByObjectId;
+        svc.loadZpointWidgetList = loadZpointWidgetList;
+        svc.setNodeData = setNodeData;
 
         ////////////////
         
@@ -63,6 +66,21 @@
             url += ((url.indexOf('?') === -1) ? '?' : '&') + encodeURIComponent(paramName) + "=" + encodeURIComponent(paramValue);
             return url;
 
+        }
+        
+        function getNodeData(nodeId) {
+            if (checkUndefinedNull(nodeId) || !nodes.hasOwnProperty(nodeId)) {
+                return null;
+            }
+            return angular.copy(nodes[nodeId]);
+        }
+        
+        function setNodeData(nodeId, nodeData) {
+            if (checkUndefinedNull(nodeId) || checkUndefinedNull(nodeData)) {
+                return false;
+            }
+            nodes[nodeId] = angular.copy(nodeData);
+            return true;
         }
 
         function loadNodeObjects(nodeId) {

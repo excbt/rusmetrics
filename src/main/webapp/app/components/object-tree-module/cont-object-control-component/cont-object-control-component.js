@@ -180,7 +180,11 @@
                 ctrl.objects.push(obj);
                 contObjectCtrlSvc.loadContObjectMonitorState(obj.id)
                     .then(successLoadObjectMonitorStateCallback, errorCallback);
-            });            
+            });
+            
+            //save contobjects at service
+            var node = $stateParams.node;
+            contObjectCtrlSvc.setNodeData(node.id | node._id, ctrl.objects);
         }
         
         //get objects with statuses
@@ -297,7 +301,20 @@
 //            console.log($stateParams);
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
-                ctrl.loadObjects(node.id || node._id);
+                var nodeId = node.id || node._id;
+                var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+                if (nodeObjects === null) {
+                    ctrl.loadObjects(nodeId);
+                } else {
+                    nodeObjects.forEach(function (elm) {
+                        elm.loading = true;                        
+                    });
+                    ctrl.objects = nodeObjects;
+                    ctrl.objects.forEach(function (elm) {                        
+                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+                            .then(successLoadObjectMonitorStateCallback, errorCallback);
+                    });
+                }
             }
             ctrl.loadZpointWidgetList();
         };
