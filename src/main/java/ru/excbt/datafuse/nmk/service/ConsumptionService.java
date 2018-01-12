@@ -262,7 +262,9 @@ public class ConsumptionService {
 
         final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
 
-        dataMap.keySet().stream().forEach(i -> {
+        Comparator<ContServiceDataHWater> cmpByDataDate = Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+
+        dataMap.keySet().stream().sorted().forEach(i -> {
             ContZPoint contZPoint = contZPointRepository.findOne(i);
             //contZPointMap.get(i);
 
@@ -291,6 +293,7 @@ public class ConsumptionService {
             for (ConsumptionFunction<ContServiceDataHWater> consFunc: consumptionFunctions) {
                 double[] consValues = dataHWaters.stream()
                     .filter(d -> consFunc.getFilter().test(d))
+                    .sorted(cmpByDataDate)
                     .map(d -> consFunc.getFunc().apply(d))
                     .mapToDouble(x -> x).toArray();
 
