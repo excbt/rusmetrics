@@ -63,12 +63,15 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "cons_data", columnDefinition = "float[]")
     private double[] consData;
 
-    @Column(name = "cons_status")
-    private String consStatus;
+    @Column(name = "cons_state")
+    private String consState;
 
     @Size(max = 32)
     @Column(name = "cons_md5")
     private String consMD5;
+
+    @Column(name = "cons_task_id")
+    private Long consTaskId;
 
     @Override
     public boolean equals(Object o) {

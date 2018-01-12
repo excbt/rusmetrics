@@ -205,10 +205,11 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 
     @Query("SELECT d FROM ContServiceDataHWater d "
         + " WHERE time_detail_type = :timeDetailType AND d.deleted = 0 " +
-        " AND d.dataDate BETWEEN :dateFrom AND :dateTo")
+        " AND d.dataDate BETWEEN :dateFrom AND :dateTo AND (:contZPointId IS NULL OR d.contZPointId = :contZPointId)")
     List<ContServiceDataHWater> selectForConsumption(
                                                     @Param("timeDetailType") String timeDetailType,
                                                     @Param("dateFrom") Date dateFrom,
-                                                    @Param("dateTo") Date dateTo);
+                                                    @Param("dateTo") Date dateTo,
+                                                    @Param("contZPointId") Long contZPointId);
 
 }

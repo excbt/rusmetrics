@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.service;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.uuid.Generators;
 import lombok.*;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
@@ -11,6 +12,7 @@ import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -22,13 +24,15 @@ public class ConsumptionTask implements Serializable {
     public static final String CONS_TASK_QUEUE = "CONS_TASK_QUEUE";
     public static final int DEFAULT_RETRY = 3;
 
-    private String name;
+    private final UUID taskUUID;
 
-    private String srcTimeDetailType;
+    private final String name;
 
-    private String destTimeDetailType;
+    private final String srcTimeDetailType;
 
-    private String contServiceType;
+    private final String destTimeDetailType;
+
+    private final String contServiceType;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long contZPointId;
@@ -55,6 +59,24 @@ public class ConsumptionTask implements Serializable {
     }
 
     @JsonIgnore
+    public ConsumptionTask newTaskUUID(UUID taskUUID) {
+
+        if (this.taskUUID != null)
+            return this;
+
+        return ConsumptionTask.builder()
+            .name(this.name)
+            .srcTimeDetailType(this.srcTimeDetailType)
+            .destTimeDetailType(this.destTimeDetailType)
+            .contServiceType(this.contServiceType)
+            .dateTimeFrom(this.dateTimeFrom)
+            .dateTimeTo(this.dateTimeTo)
+            .retryCnt(this.retryCnt)
+            .taskUUID(taskUUID)
+            .build();
+    }
+
+    @JsonIgnore
     public DateInterval toDateInterval() {
         return LocalDateTimePeriod.builder().dateTimeFrom(this.dateTimeFrom).dateTimeTo(this.dateTimeTo).build();
     }
@@ -65,4 +87,5 @@ public class ConsumptionTask implements Serializable {
             TimeDetailKey.searchKeyname(destTimeDetailType) != null &&
             ContServiceTypeKey.searchKeyname(contServiceType) != null && toDateInterval().isValid();
     }
+
 }

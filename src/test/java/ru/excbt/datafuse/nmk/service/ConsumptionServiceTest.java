@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.fasterxml.uuid.Generators;
 import org.apache.commons.lang.time.StopWatch;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,6 +22,7 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PortalApplication.class)
@@ -96,7 +98,7 @@ public class ConsumptionServiceTest {
      *
      */
     @Test
-    //@Transactional
+    @Transactional
     public void processHWaterDayTask() {
 
         LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
@@ -104,16 +106,18 @@ public class ConsumptionServiceTest {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
-        consumptionService.processHWater(
-            ConsumptionTask.builder()
-                .name("MyName")
-                .dateTimeFrom(day)
-                .dateTimeTo(day.plusDays(1).minusSeconds(1))
-                .contServiceType(ContServiceTypeKey.HW.getKeyname())
-                .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
-                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
-                .retryCnt(3).build()
-        );
+        ConsumptionTask task = ConsumptionTask.builder()
+            .name("MyName")
+            .dateTimeFrom(day)
+            .dateTimeTo(day.plusDays(1).minusSeconds(1))
+            .contServiceType(ContServiceTypeKey.HW.getKeyname())
+            .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
+            .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+            .retryCnt(3).build();
+
+        task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+
+        consumptionService.processHWater(task);
 
         stopWatch.stop();
         log.info("Test Time: {}", stopWatch.toString());
@@ -146,6 +150,7 @@ public class ConsumptionServiceTest {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
+
         LocalDateTime day = startDay;
         while (day.isBefore(endDay)) {
             log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
@@ -156,7 +161,10 @@ public class ConsumptionServiceTest {
                 .contServiceType(ContServiceTypeKey.HW.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+                .taskUUID(Generators.timeBasedGenerator().generate())
                 .retryCnt(3).build();
+
+            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
 
             consumptionService.processHWater(task);
 

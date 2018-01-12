@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.fasterxml.uuid.Generators;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,7 +21,9 @@ import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
+import ru.excbt.datafuse.nmk.domain.ContZPointConsumptionTask;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
+import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
@@ -32,7 +35,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,8 +45,14 @@ public class ConsumptionService {
     public static final String MD5_HASH_SECRET = "YsoB66IIyYlEFw50ObB2";
     public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
-    public static final String CONS_STATUS_CALCULATED = "CALCULATED";
-    public static final String CONS_STATUS_INVALIDATED = "INVALIDATED";
+    public static final String CONS_STATE_CALCULATED = "CALCULATED";
+    public static final String CONS_STATE_INVALIDATED = "INVALIDATED";
+
+    public static final String TASK_STATE_CALCULATING = "CALCULATING";
+    public static final String TASK_STATE_FINISHED = "FINISHED";
+    public static final String TASK_STATE_SCHEDULED = "SCHEDULED";
+    public static final String TASK_STATE_NEW = "NEW";
+
 
     public static final String DATA_TYPE_HWATER = "HWATER";
 
@@ -58,13 +66,16 @@ public class ConsumptionService {
 
     private final ContZPointRepository contZPointRepository;
 
+    private final ContZPointConsumptionTaskRepository consumptionTaskRepository;
+
     @Autowired
-    public ConsumptionService(ContServiceDataHWaterRepository dataHWaterRepository, ContServiceDataImpulseRepository dataImpulseRepository, ContServiceDataElConsRepository dataElConsRepository, ContZPointConsumptionRepository consumptionRepository, ContZPointRepository contZPointRepository) {
+    public ConsumptionService(ContServiceDataHWaterRepository dataHWaterRepository, ContServiceDataImpulseRepository dataImpulseRepository, ContServiceDataElConsRepository dataElConsRepository, ContZPointConsumptionRepository consumptionRepository, ContZPointRepository contZPointRepository, ContZPointConsumptionTaskRepository consumptionTaskRepository) {
         this.dataHWaterRepository = dataHWaterRepository;
         this.dataImpulseRepository = dataImpulseRepository;
         this.dataElConsRepository = dataElConsRepository;
         this.consumptionRepository = consumptionRepository;
         this.contZPointRepository = contZPointRepository;
+        this.consumptionTaskRepository = consumptionTaskRepository;
     }
 
 
@@ -110,14 +121,19 @@ public class ConsumptionService {
     }
 
 
-    @Transactional(readOnly = true)
-    public void processHWater(ContZPoint contZPoint, ConsumptionTask task, boolean md5Hash) {
+    @Transactional
+    public void processHWater(final ConsumptionTask task, ContZPoint contZPoint, boolean md5Hash) {
+
+        Objects.requireNonNull(task);
+
+        //final ConsumptionTask workTask = task.newIfNoUUID();
+        final ConsumptionTask workTask = task;
 
         Objects.requireNonNull(contZPoint);
         Objects.requireNonNull(contZPoint.getId());
-        Objects.requireNonNull(task);
+        Objects.requireNonNull(workTask);
 
-        DateInterval period = task.toDateInterval();
+        DateInterval period = workTask.toDateInterval();
 
         if (period.isInvalid()) {
             throw new IllegalArgumentException("period is invalid");
@@ -125,11 +141,11 @@ public class ConsumptionService {
 
         List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
                                                                                 contZPoint.getId(),
-            task.getSrcTimeDetailType(),
+            workTask.getSrcTimeDetailType(),
             period.getFromDate(),
             period.getToDate());
 
-        processHWaterList (task, data, md5Hash);
+        processHWaterList (workTask, data, md5Hash);
 
     }
 
@@ -139,32 +155,43 @@ public class ConsumptionService {
      * @param md5Hash
      */
     @Transactional
-    public void processHWater(ConsumptionTask task, boolean md5Hash) {
+    public void processHWater(final ConsumptionTask task, boolean md5Hash) {
 
-        DateInterval period = task.toDateInterval();
+        Objects.requireNonNull(task);
+
+        //ConsumptionTask workTask = task.newIfNoUUID();
+        ConsumptionTask workTask = task;
+
+        DateInterval period = workTask.toDateInterval();
 
         List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
-            task.getSrcTimeDetailType(),
+            workTask.getSrcTimeDetailType(),
             period.getFromDate(),
-            period.getToDate());
+            period.getToDate(),
+            workTask.getContZPointId());
 
-        processHWaterList (task, data, md5Hash);
+        processHWaterList (workTask, data, md5Hash);
 
     }
 
     @Transactional
-    public void processHWater(ConsumptionTask task) {
+    public void processHWater(final ConsumptionTask task) {
         Objects.requireNonNull(task);
 
-        if (!task.isValid()) {
+        //final ConsumptionTask workTask = task.newIfNoUUID();
+        final ConsumptionTask workTask = task;
+
+        if (!workTask.isValid()) {
             log.warn("Task is invalid");
             return;
         }
 
-        log.debug("Processing task: {}" ,task.toString());
+        log.debug("Processing task: {}" ,workTask.toString());
 
-        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(task.getSrcTimeDetailType());
-        LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(task.getDateTimeFrom()).dateTimeTo(task.getDateTimeTo()).build();
+        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
+        LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+
+
 
         if (srcTimeDetailKey != null && period.isValid()) {
 
@@ -173,7 +200,9 @@ public class ConsumptionService {
             List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
                 srcTimeDetailKey.getKeyname(),
                 period.getFromDate(),
-                period.getToDate());
+                period.getToDate(),
+                workTask.getContZPointId());
+
             stopWatch.stop();
             log.debug("task data loaded in {}", stopWatch.toString());
             stopWatch.reset();
@@ -194,7 +223,23 @@ public class ConsumptionService {
      * @param task
      * @param dataHWaterList
      */
-    private void processHWaterList(ConsumptionTask task, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
+    private void processHWaterList(final ConsumptionTask task, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
+
+        Objects.requireNonNull(task);
+
+        Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
+            consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
+
+        optContZPointConsumptionTask = optContZPointConsumptionTask.map(i -> {
+
+            if (!TASK_STATE_SCHEDULED.equals(i.getTaskState())) {
+                throw new IllegalStateException("Illegal task status");
+            }
+
+            i.setTaskState(TASK_STATE_CALCULATING);
+            i.setTaskDateTime(LocalDateTime.now());
+            return consumptionTaskRepository.saveAndFlush(i);
+        });
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
         cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(DATA_TYPE_HWATER).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
@@ -202,7 +247,7 @@ public class ConsumptionService {
         cleanConsumptionDataType(cleanKeys2);
 
 //        Set<ConsumptionZPointKey> cleanKeys = dataHWaterList.stream()
-//            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), task.getDestTimeDetailType(), task.getDateTimeFrom()))
+//            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), workTask.getDestTimeDetailType(), workTask.getDateTimeFrom()))
 //            .collect(Collectors.toSet());
 //
 //        cleanConsumptionZPoint(cleanKeys);
@@ -214,6 +259,8 @@ public class ConsumptionService {
         //List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
         //List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
         //Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
+
+        final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
 
         dataMap.keySet().stream().forEach(i -> {
             ContZPoint contZPoint = contZPointRepository.findOne(i);
@@ -263,7 +310,8 @@ public class ConsumptionService {
                 consumption.setConsFunc(consFunc.getFuncName());
                 consumption.setConsData(consValues);
                 consumption.setMeasureUnit(consFunc.getMeasureUnit());
-                consumption.setConsStatus(CONS_STATUS_CALCULATED);
+                consumption.setConsState(CONS_STATE_CALCULATED);
+                consumption.setConsTaskId(taskId);
 
                 if (md5Hash) {
                     String hash = calcMd5Hash(consValues);
@@ -276,6 +324,14 @@ public class ConsumptionService {
         });
 
         consumptionRepository.flush();
+
+        optContZPointConsumptionTask = optContZPointConsumptionTask.map( i -> {
+                i.setTaskState(TASK_STATE_FINISHED);
+                i.setTaskDateTime(LocalDateTime.now());
+                return consumptionTaskRepository.saveAndFlush(i);
+            }
+        );
+
     }
 
 
@@ -338,7 +394,7 @@ public class ConsumptionService {
     public void invalidateConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
         log.debug("Updating {} keys", cleanKeys.size());
         cleanKeys.stream().forEach(key -> {
-            consumptionRepository.updateStatusByKey(CONS_STATUS_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
+            consumptionRepository.updateStateByKey(CONS_STATE_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
         });
     }
 
@@ -351,5 +407,43 @@ public class ConsumptionService {
         log.debug("Clean consumption by dataType complete");
     }
 
+
+    @Transactional
+    public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final String taskState) {
+
+        ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
+        contZPointConsumptionTask.setTaskState(taskState == null ? TASK_STATE_NEW : taskState);
+        contZPointConsumptionTask.setTaskDateTime(LocalDateTime.now());
+        contZPointConsumptionTask.setTaskStateDt(contZPointConsumptionTask.getTaskDateTime());
+        contZPointConsumptionTask.setContZPointId(consumptionTask.getContZPointId());
+        contZPointConsumptionTask.setTaskUUID(consumptionTask.getTaskUUID() != null ? consumptionTask.getTaskUUID() : Generators.timeBasedGenerator().generate());
+        consumptionTaskRepository.save(contZPointConsumptionTask);
+
+        return consumptionTask.newTaskUUID(contZPointConsumptionTask.getTaskUUID());
+    }
+
+
+    /**
+     *
+     * @param consumptionTask
+     * @param taskState
+     * @return
+     */
+    @Transactional
+    public boolean updateState(final ConsumptionTask consumptionTask, String taskState) {
+        if (consumptionTask.getTaskUUID() == null) {
+            return false;
+        }
+
+        Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
+        task.ifPresent( i -> {
+                i.setTaskState(taskState);
+                i.setTaskStateDt(LocalDateTime.now());
+                consumptionTaskRepository.save(i);
+            }
+        );
+
+        return task.isPresent();
+    }
 
 }
