@@ -1,4 +1,4 @@
 /*global angular*/
 (function () {
-    angular.module('objectTreeModule', ['ui.tree']);
+    angular.module('objectTreeModule', ['ui.tree', 'contObjectModule']);
 }());
