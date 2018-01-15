@@ -16,6 +16,7 @@ import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
+import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
@@ -31,7 +32,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
+@SpringBootTest(classes = PortalApplicationTest.class)
 public class ConsumptionTaskServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionTaskServiceTest.class);
