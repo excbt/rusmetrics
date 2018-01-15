@@ -372,8 +372,6 @@ public class ConsumptionService {
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
         InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
 
-
-
         if (srcTimeDetailKey != null && period.isValid()) {
 
             StopWatch stopWatch = new StopWatch();
@@ -446,8 +444,15 @@ public class ConsumptionService {
 
         final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
 
+        List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
+        List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
+        Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
+
+        log.debug("Starting loop for: {} keys", dataMap.keySet().size());
+
         dataMap.keySet().stream().sorted().forEach(i -> {
-            ContZPoint contZPoint = contZPointRepository.findOne(i);
+            ContZPoint contZPoint = contZPointMap.get(i);
+                //contZPointRepository.findOne(i);
 
             if (contZPoint == null) {
                 log.warn("ContZPoint (id={}) is not found", i);
@@ -488,6 +493,8 @@ public class ConsumptionService {
             }
             consumptionRepository.save(consumptions);
         });
+
+        log.debug("End loop for: {} keys", dataMap.keySet().size());
 
         consumptionRepository.flush();
 
@@ -580,7 +587,8 @@ public class ConsumptionService {
         ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
         contZPointConsumptionTask.setTaskState(taskState == null ? TASK_STATE_NEW : taskState);
         contZPointConsumptionTask.setTaskDateTime(Instant.now());
-        //contZPointConsumptionTask.setConsDateTime(contZPointConsumptionTask.get);
+        contZPointConsumptionTask.setConsDateTime(consumptionTask.getDateTimeFrom());
+        contZPointConsumptionTask.setDataType(consumptionTask.getDataType());
         contZPointConsumptionTask.setTaskStateDt(contZPointConsumptionTask.getTaskDateTime());
         contZPointConsumptionTask.setContZPointId(consumptionTask.getContZPointId());
         contZPointConsumptionTask.setTaskUUID(consumptionTask.getTaskUUID() != null ? consumptionTask.getTaskUUID() : Generators.timeBasedGenerator().generate());

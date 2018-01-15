@@ -64,8 +64,8 @@ public class ConsumptionFunctionLib {
                 cons_H1_sub_H2 : cons_H1);
         }
         if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
-            boolean vCase = contZPoint.getConsFields().stream().anyMatch(i -> "V".equals(i.getFieldName()));
-            boolean mCase = contZPoint.getConsFields().stream().anyMatch(i -> "M".equals(i.getFieldName()));
+            boolean vCase = contZPoint.getConsFields().stream().anyMatch(i -> "V".equals(i.getFieldName()) && Boolean.TRUE.equals(i.getIsEnabled()));
+            boolean mCase = contZPoint.getConsFields().stream().anyMatch(i -> "M".equals(i.getFieldName()) && Boolean.TRUE.equals(i.getIsEnabled()));
             boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
             if (mCase) {
                 consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);

@@ -11,6 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
+import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -24,7 +25,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
+@SpringBootTest(classes = PortalApplicationTest.class)
 public class ConsumptionServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionServiceTest.class);
@@ -145,7 +146,7 @@ public class ConsumptionServiceTest {
     public void testConsumption2016() {
 
         LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
-        LocalDateTime endDay = LocalDateTime.of(2016,1,5,0,0);
+        LocalDateTime endDay = LocalDateTime.of(2016,1,1,0,0);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -153,7 +154,7 @@ public class ConsumptionServiceTest {
 
 
         LocalDateTime day = startDay;
-        while (day.isBefore(endDay)) {
+        while (day.isBefore(endDay) || day.isEqual(endDay)) {
             log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
             ConsumptionTask task = ConsumptionTask.builder()
                 .name("MyName")
