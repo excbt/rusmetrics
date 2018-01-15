@@ -63,6 +63,7 @@ public class ContZPointDTO implements ModelIdable {
     @JsonDeserialize(using = FlexDataToString.class)
     private String flexData;
 
+    private Set<ContZPointConsFieldDTO> consFields = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -239,5 +240,13 @@ public class ContZPointDTO implements ModelIdable {
 
     public void setFlexData(String flexData) {
         this.flexData = flexData;
+    }
+
+    public Set<ContZPointConsFieldDTO> getConsFields() {
+        return consFields;
+    }
+
+    public void setConsFields(Set<ContZPointConsFieldDTO> consFields) {
+        this.consFields = consFields;
     }
 }

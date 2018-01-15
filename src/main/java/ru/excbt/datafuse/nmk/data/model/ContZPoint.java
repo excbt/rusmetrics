@@ -17,8 +17,10 @@ import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+import javax.validation.constraints.Size;
+import java.util.*;
 
 /**
  * Подписка контейнера на ресурсные системы
@@ -43,7 +45,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne
+	@ManyToOne (fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_object_id", updatable = false)
 	@JsonIgnore
 	private ContObject contObject;
@@ -131,6 +133,18 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	private String flexData;
 
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "contZPoint")
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+    private Set<ContZPointConsField> consFields = new HashSet<>();
+
+//    @ElementCollection
+//    @CollectionTable(schema = DBMetadata.SCHEME_PORTAL, name = "cont_zpoint_cons",
+//        joinColumns = @JoinColumn(name = "cont_zpoint_id"))
+//    @Column(name = "field_name")
+//    //@Fetch(value = FetchMode.SUBSELECT)
+//    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+//    private Set<String> consumptionFields = new HashSet<>();
+//
     @Override
     public String toString() {
         return "ContZPoint{" +
