@@ -12,7 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.repository.support.ConsuptionRepositoryRI;
 
 /**
  * Repository для ContServiceDataHWater
@@ -22,7 +24,9 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
  * @since 23.03.2015
  *
  */
-public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long> {
+@Repository
+public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long>,
+    ConsuptionRepositoryRI<ContServiceDataHWater> {
 
 	@Query("SELECT d FROM ContServiceDataHWater d "
 			+ " WHERE d.contZPointId = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
@@ -194,22 +198,5 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
 
-
-    @Query("SELECT d FROM ContServiceDataHWater d "
-        + " WHERE d.contZPointId = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 " +
-        " AND d.dataDate BETWEEN :dateFrom AND :dateTo")
-    List<ContServiceDataHWater> selectForConsumption(@Param("contZPointId") long contZPointId,
-                                                    @Param("timeDetailType") String timeDetailType,
-                                                    @Param("dateFrom") Date dateFrom,
-                                                    @Param("dateTo") Date dateTo);
-
-    @Query("SELECT d FROM ContServiceDataHWater d "
-        + " WHERE time_detail_type = :timeDetailType AND d.deleted = 0 " +
-        " AND d.dataDate BETWEEN :dateFrom AND :dateTo AND (:contZPointId IS NULL OR d.contZPointId = :contZPointId)")
-    List<ContServiceDataHWater> selectForConsumption(
-                                                    @Param("timeDetailType") String timeDetailType,
-                                                    @Param("dateFrom") Date dateFrom,
-                                                    @Param("dateTo") Date dateTo,
-                                                    @Param("contZPointId") Long contZPointId);
 
 }

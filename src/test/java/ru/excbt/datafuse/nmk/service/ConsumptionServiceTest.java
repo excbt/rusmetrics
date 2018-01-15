@@ -146,7 +146,7 @@ public class ConsumptionServiceTest {
     public void testConsumption2016() {
 
         LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
-        LocalDateTime endDay = LocalDateTime.of(2016,1,1,0,0);
+        LocalDateTime endDay = LocalDateTime.of(2016,1,2,0,0);
 
 
         StopWatch stopWatch = new StopWatch();

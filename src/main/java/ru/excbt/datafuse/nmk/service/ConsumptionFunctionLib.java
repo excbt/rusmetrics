@@ -8,6 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ConsumptionFunctionLib {
 
@@ -64,8 +65,16 @@ public class ConsumptionFunctionLib {
                 cons_H1_sub_H2 : cons_H1);
         }
         if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
-            boolean vCase = contZPoint.getConsFields().stream().anyMatch(i -> "V".equals(i.getFieldName()) && Boolean.TRUE.equals(i.getIsEnabled()));
-            boolean mCase = contZPoint.getConsFields().stream().anyMatch(i -> "M".equals(i.getFieldName()) && Boolean.TRUE.equals(i.getIsEnabled()));
+            List<String> fields = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
+                .map(i -> i.getFieldName()).collect(Collectors.toList());
+            boolean vCase = fields.contains("V");
+            boolean mCase = fields.contains("M");
+//                contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
+//                .map(i -> i.getFieldName()).anyMatch(i -> "M".equals(i));
+//            boolean vCase = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
+//                .map(i -> i.getFieldName()).anyMatch(i -> "V".equals(i));
+//            boolean mCase = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
+//                .map(i -> i.getFieldName()).anyMatch(i -> "M".equals(i));
             boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
             if (mCase) {
                 consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);

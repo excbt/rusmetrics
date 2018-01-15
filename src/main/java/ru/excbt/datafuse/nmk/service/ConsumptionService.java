@@ -36,7 +36,6 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,6 +62,8 @@ public class ConsumptionService {
 
     private final ContServiceDataHWaterRepository dataHWaterRepository;
 
+    private final ContServiceDataElConsRepository elConsRepository;
+
     private final ContServiceDataImpulseRepository dataImpulseRepository;
 
     private final ContServiceDataElConsRepository dataElConsRepository;
@@ -74,8 +75,9 @@ public class ConsumptionService {
     private final ContZPointConsumptionTaskRepository consumptionTaskRepository;
 
     @Autowired
-    public ConsumptionService(ContServiceDataHWaterRepository dataHWaterRepository, ContServiceDataImpulseRepository dataImpulseRepository, ContServiceDataElConsRepository dataElConsRepository, ContZPointConsumptionRepository consumptionRepository, ContZPointRepository contZPointRepository, ContZPointConsumptionTaskRepository consumptionTaskRepository) {
+    public ConsumptionService(ContServiceDataHWaterRepository dataHWaterRepository, ContServiceDataElConsRepository elConsRepository, ContServiceDataImpulseRepository dataImpulseRepository, ContServiceDataElConsRepository dataElConsRepository, ContZPointConsumptionRepository consumptionRepository, ContZPointRepository contZPointRepository, ContZPointConsumptionTaskRepository consumptionTaskRepository) {
         this.dataHWaterRepository = dataHWaterRepository;
+        this.elConsRepository = elConsRepository;
         this.dataImpulseRepository = dataImpulseRepository;
         this.dataElConsRepository = dataElConsRepository;
         this.consumptionRepository = consumptionRepository;
@@ -144,7 +146,7 @@ public class ConsumptionService {
             throw new IllegalArgumentException("period is invalid");
         }
 
-        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
+        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumptionOne(
                                                                                 contZPoint.getId(),
             workTask.getSrcTimeDetailType(),
             period.getFromDate(),
@@ -169,7 +171,7 @@ public class ConsumptionService {
 
         DateInterval period = workTask.toDateInterval();
 
-        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
+        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumptionAny(
             workTask.getSrcTimeDetailType(),
             period.getFromDate(),
             period.getToDate(),
@@ -202,7 +204,7 @@ public class ConsumptionService {
 
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
-            List<ContServiceDataHWater> dataHWaterList = dataHWaterRepository.selectForConsumption(
+            List<ContServiceDataHWater> dataHWaterList = dataHWaterRepository.selectForConsumptionAny(
                 srcTimeDetailKey.getKeyname(),
                 period.getFromDate(),
                 period.getToDate(),
@@ -377,12 +379,11 @@ public class ConsumptionService {
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
 
-            List<ContServiceDataElCons> data = Collections.emptyList();
-//                dataHWaterRepository.selectForConsumption(
-//                srcTimeDetailKey.getKeyname(),
-//                period.getFromDate(),
-//                period.getToDate(),
-//                workTask.getContZPointId());
+            List<ContServiceDataElCons> data = elConsRepository.selectForConsumptionAny(
+                srcTimeDetailKey.getKeyname(),
+                period.getFromDate(),
+                period.getToDate(),
+                workTask.getContZPointId());
 
             stopWatch.stop();
             log.debug("task data loaded in {}", stopWatch.toString());

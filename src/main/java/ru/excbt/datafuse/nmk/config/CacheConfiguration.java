@@ -76,6 +76,7 @@ public class CacheConfiguration {
 
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContObjectAccess.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointAccess.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ContZPointConsField.class.getName());
 
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.ReportMetaParamDirectoryItem.class.getName());
