@@ -35,9 +35,11 @@ public class ActiveMQEmbConfiguration {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //objectMapper.configure(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE, false);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new AfterburnerModule());
+        //objectMapper.registerModule(new JavaTimeModule());
+        //objectMapper.registerModule(new AfterburnerModule());
+        objectMapper.findAndRegisterModules();// registerModule(new );
 
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);

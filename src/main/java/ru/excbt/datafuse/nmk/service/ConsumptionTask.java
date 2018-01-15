@@ -38,10 +38,10 @@ public class ConsumptionTask implements Serializable {
 
     private final int retryCnt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Instant dateTimeFrom;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    //@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Instant dateTimeTo;
 
     private final String dataType;
