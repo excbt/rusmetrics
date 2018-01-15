@@ -1,4 +1,4 @@
-/*global angular*/
+/*global angular, console*/
 (function () {
     'use strict';
 
@@ -6,26 +6,33 @@
         .module('contObjectModule')
         .service('contObjectService', Service);
 
-    Service.$inject = ['$http', '$q'];
+    Service.$inject = ['$http', '$q', '$rootScope'];
 
     /* @ngInject */
-    function Service($http, $q) {
+    function Service($http, $q, $rootScope) {
         
         var CONT_OBJECT_SHORT_INFO_URL = '../api/subscr/cont-objects/short-info';
+        var EVENTS = {
+            CONT_OBJECTS_SHORT_INFO_LOADED: "contObjectService:contObjectsShortInfoLoaded"
+        };
         var requestCanceler = null,
             httpOptions = null,
-            contObjectsShortInfoArray = null;
+            contObjectsShortInfoArray = null,
+            contObjectsShortInfoArrayLoading = false;
         
         var svc = this;
         svc.getContObjectsShortInfoArray = getContObjectsShortInfoArray;
         svc.getRequestCanceler = getRequestCanceler;
         svc.loadContObjectsShortInfo = loadContObjectsShortInfo;
-        svc.setContObjectsShortInfoArray = setContObjectsShortInfoArray;
-        
-        initSvc();
+        svc.setContObjectsShortInfoArray = setContObjectsShortInfoArray;        
 
         ////////////////
 
+        function errorCallback(e) {
+            console.log(e);
+            contObjectsShortInfoArrayLoading = false;
+        }
+        
         function getContObjectsShortInfoArray() {
             return contObjectsShortInfoArray;
         }
@@ -39,8 +46,23 @@
             return $http.get(url, httpOptions);
         }
         
+        function loadContObjectsShortInfoWrap() {
+            contObjectsShortInfoArrayLoading = true;
+            loadContObjectsShortInfo().then(successLoadContObjectsShortInfo, errorCallback);
+        }
+        
         function setContObjectsShortInfoArray(arr) {
             contObjectsShortInfoArray = arr;
+        }
+        
+        function successLoadContObjectsShortInfo(resp) {
+            contObjectsShortInfoArrayLoading = false;
+            if (resp === null || resp.data === null) {
+                setContObjectsShortInfoArray(null);
+                return false;
+            }
+            setContObjectsShortInfoArray(resp.data);
+            $rootScope.$broadcast(EVENTS.CONT_OBJECTS_SHORT_INFO_LOADED);
         }
         
         //service initialization
@@ -51,5 +73,6 @@
                 timeout: requestCanceler.promise
             };            
         };
+        initSvc();
     }
 })();

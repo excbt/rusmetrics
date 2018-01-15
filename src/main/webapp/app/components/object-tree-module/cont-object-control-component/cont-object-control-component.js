@@ -14,9 +14,9 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];
@@ -189,7 +189,8 @@
         
         //get objects with statuses
         ctrl.loadObjects = function (nodeId) {
-            contObjectCtrlSvc.loadNodeObjects(nodeId).then(successLoadObjectsCallback, errorCallback);
+            contObjectCtrlSvc.loadNodeObjects(nodeId);
+//            contObjectCtrlSvc.loadNodeObjects(nodeId).then(successLoadObjectsCallback, errorCallback);
         };
         
         function performZpointData(inputZpoints) {
@@ -298,7 +299,7 @@
         };
         
         ctrl.$onInit = function () {
-//            console.log($stateParams);
+console.log($stateParams);
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
                 var nodeId = node.id || node._id;
@@ -318,6 +319,21 @@
             }
             ctrl.loadZpointWidgetList();
         };
+        
+        $scope.$on(contObjectCtrlSvc.EVENTS.OBJECTS_LOADED, function () {
+            var node = $stateParams.node;
+            var nodeId = node.id || node._id;
+            var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+            nodeObjects.forEach(function (elm) {
+                elm.loading = true;                        
+            });
+            ctrl.objects = nodeObjects;
+            ctrl.objects.forEach(function (elm) {                        
+                contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+                    .then(successLoadObjectMonitorStateCallback, errorCallback);
+            });
+        });
+        
     }
     
 }());

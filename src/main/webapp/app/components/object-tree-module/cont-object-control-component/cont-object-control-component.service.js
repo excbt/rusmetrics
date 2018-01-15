@@ -1,4 +1,4 @@
-/*global angular*/
+/*global angular, console*/
 /***
     created by Artamonov A.A. , Dec. 2017
 */
@@ -9,10 +9,10 @@
         .module('objectTreeModule')
         .service('contObjectControlComponentService', Service);
 
-    Service.$inject = ['$http'];
+    Service.$inject = ['$http', 'objectTreeService', '$rootScope'];
 
     /* @ngInject */
-    function Service($http) {
+    function Service($http, objectTreeService, $rootScope) {
         
         var P_TREE_NODE_URL = "../api/p-tree-node",
             P_TREE_NODE_MONITOR_URL = "../api/p-tree-node-monitor/all-linked-objects",            
@@ -31,6 +31,7 @@
         
         var EVENTS = {};
         EVENTS.OBJECT_CLICK = 'contObjectControlComponentService:objectClick';
+        EVENTS.OBJECTS_LOADED = 'contObjectControlComponentService:objectsLoaded';
         //struct for keep nodes objects
 //        nodes = {
 //            "node1": [objects1],
@@ -84,6 +85,33 @@
         }
 
         function loadNodeObjects(nodeId) {
+            var treeStub = objectTreeService.getCurrentTreeStub();
+//console.log(treeStub);
+            if (treeStub === null) {
+                // request to load
+                return false;
+            }
+            var contObjects = null; // objectTreeService.findContObjectsByNodeId(nodeId);
+            if (nodeId === treeStub._id) {
+                contObjects = objectTreeService.findContObjectsByFullTree(nodeId);
+            } else {
+                contObjects = objectTreeService.findContObjectsByNodeId(nodeId);
+            }
+            
+            var tmpContObjects = angular.copy(contObjects),
+                resultContObjects = [];
+            tmpContObjects.forEach(function (tco) {
+                var obj = {
+                    id: tco.nodeObject.id,
+                    loading: true
+                };
+                resultContObjects.push(obj);
+            });
+            nodes[nodeId] = resultContObjects;
+            $rootScope.$broadcast(EVENTS.OBJECTS_LOADED);
+//console.log(resultContObjects);
+            
+            // first old version
             var url = P_TREE_NODE_MONITOR_URL;
             url = addParamToURL(url, "nodeId", nodeId);
             return $http.get(url);

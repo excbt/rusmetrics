@@ -8,9 +8,9 @@
             controller: treeNavigateComponentController
         });
     
-    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http', '$state'];
+    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http', '$state', 'objectTreeService'];
     
-    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http, $state) {
+    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http, $state, objectTreeService) {
         /*jshint validthis: true*/
         var ctrl = this;
         
@@ -74,7 +74,7 @@
         ctrl.loadTree = function (tree, objId) {
             ctrl.loading = true;
             ctrl.treeLoading = true;
-
+            objectTreeService.loadTreeStubWrap(tree.id);
             var tmpPTree = treeNavSvc.getPTree();
             if (checkUndefinedNull(tmpPTree) || tmpPTree._id !== tree.id) {
                 loadPTree(tree.id, PTREE_DEPTH_LEVEL);
