@@ -3,15 +3,14 @@ package ru.excbt.datafuse.nmk.service;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.uuid.Generators;
 import lombok.*;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -40,10 +39,12 @@ public class ConsumptionTask implements Serializable {
     private final int retryCnt;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateTimeFrom;
+    private Instant dateTimeFrom;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime dateTimeTo;
+    private Instant dateTimeTo;
+
+    private final String dataType;
 
     @JsonIgnore
     public ConsumptionTask makeRetry() {
@@ -78,7 +79,7 @@ public class ConsumptionTask implements Serializable {
 
     @JsonIgnore
     public DateInterval toDateInterval() {
-        return LocalDateTimePeriod.builder().dateTimeFrom(this.dateTimeFrom).dateTimeTo(this.dateTimeTo).build();
+        return InstantPeriod.builder().dateTimeFrom(this.dateTimeFrom).dateTimeTo(this.dateTimeTo).build();
     }
 
     @JsonIgnore

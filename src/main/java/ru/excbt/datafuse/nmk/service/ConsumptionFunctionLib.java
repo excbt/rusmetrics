@@ -1,14 +1,13 @@
 package ru.excbt.datafuse.nmk.service;
 
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ConsumptionFunctionLib {
 
@@ -84,13 +83,19 @@ public class ConsumptionFunctionLib {
         return consumptionFunctions;
     }
 
+    public static List<ConsumptionFunction<ContServiceDataElCons>> findElConsFunc(ContZPoint contZPoint) {
+        List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = new ArrayList<>();
 
-    /**
-     *
-     * @param contZPoint
-     * @param serviceKeys
-     * @return
-     */
+
+        return Collections.emptyList();
+    }
+
+        /**
+         *
+         * @param contZPoint
+         * @param serviceKeys
+         * @return
+         */
     private static boolean checkAnyService(ContZPoint contZPoint, ContServiceTypeKey ... serviceKeys) {
         Objects.requireNonNull(serviceKeys);
         Objects.requireNonNull(contZPoint);
@@ -103,5 +108,18 @@ public class ConsumptionFunctionLib {
         }
         return res;
     }
+
+
+    public static <T> double[] allValues (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
+
+        double[] consValues = data.stream()
+            .filter(d -> consFunc.getFilter().test(d))
+            .sorted(cmp)
+            .map(d -> consFunc.getFunc().apply(d))
+            .mapToDouble(x -> x).toArray();
+
+        return consValues;
+    }
+
 
 }

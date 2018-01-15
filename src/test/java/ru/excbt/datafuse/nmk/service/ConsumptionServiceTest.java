@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.service;
 
 import com.fasterxml.uuid.Generators;
 import org.apache.commons.lang.time.StopWatch;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -20,9 +19,9 @@ import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PortalApplication.class)
@@ -63,8 +62,8 @@ public class ConsumptionServiceTest {
             .contZPointId(contZPoint.getId())
             .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
-            .dateTimeFrom(day)
-            .dateTimeTo(day.plusDays(1).minusSeconds(1)).build();
+            .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+            .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant()).build();
 
         consumptionService.processHWater(task, true);
     }
@@ -85,8 +84,9 @@ public class ConsumptionServiceTest {
         ConsumptionTask task = ConsumptionTask.builder()
             .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
-            .dateTimeFrom(day)
-            .dateTimeTo(day.plusDays(1).minusSeconds(1)).build();
+            .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
+            .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant()).build();
 
         consumptionService.processHWater(task, true);
 
@@ -108,11 +108,12 @@ public class ConsumptionServiceTest {
 
         ConsumptionTask task = ConsumptionTask.builder()
             .name("MyName")
-            .dateTimeFrom(day)
-            .dateTimeTo(day.plusDays(1).minusSeconds(1))
+            .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+            .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
             .contServiceType(ContServiceTypeKey.HW.getKeyname())
             .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
             .retryCnt(3).build();
 
         task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
@@ -130,7 +131,7 @@ public class ConsumptionServiceTest {
         ConsumptionService.ConsumptionZPointKey key = ConsumptionService.ConsumptionZPointKey
             .builder()
             .contZPointId(71843465L)
-            .contDateTime(day)
+            .contDateTime(day.atZone(ZoneId.systemDefault()).toInstant())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
             .build();
         Set<ConsumptionService.ConsumptionZPointKey> keys = new HashSet<>();
@@ -144,7 +145,7 @@ public class ConsumptionServiceTest {
     public void testConsumption2016() {
 
         LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
-        LocalDateTime endDay = LocalDateTime.of(2016,2,1,0,0);
+        LocalDateTime endDay = LocalDateTime.of(2016,1,5,0,0);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -156,12 +157,13 @@ public class ConsumptionServiceTest {
             log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
             ConsumptionTask task = ConsumptionTask.builder()
                 .name("MyName")
-                .dateTimeFrom(day)
-                .dateTimeTo(day.plusDays(1).minusSeconds(1))
+                .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+                .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
                 .contServiceType(ContServiceTypeKey.HW.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
                 .taskUUID(Generators.timeBasedGenerator().generate())
+                .dataType(ConsumptionService.DATA_TYPE_HWATER)
                 .retryCnt(3).build();
 
             task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);

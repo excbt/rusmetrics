@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
+import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -33,8 +35,10 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,6 +59,7 @@ public class ConsumptionService {
 
 
     public static final String DATA_TYPE_HWATER = "HWATER";
+    public static final String DATA_TYPE_EL = "EL";
 
     private final ContServiceDataHWaterRepository dataHWaterRepository;
 
@@ -189,7 +194,7 @@ public class ConsumptionService {
         log.debug("Processing task: {}" ,workTask.toString());
 
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        LocalDateTimePeriod period = LocalDateTimePeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
 
 
 
@@ -197,7 +202,7 @@ public class ConsumptionService {
 
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
-            List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumption(
+            List<ContServiceDataHWater> dataHWaterList = dataHWaterRepository.selectForConsumption(
                 srcTimeDetailKey.getKeyname(),
                 period.getFromDate(),
                 period.getToDate(),
@@ -207,7 +212,18 @@ public class ConsumptionService {
             log.debug("task data loaded in {}", stopWatch.toString());
             stopWatch.reset();
             stopWatch.start();
-            processHWaterList (task, data, true);
+
+            processAnyList(task,
+                dataHWaterList,
+                d -> d.getContZPointId(),
+                Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
+                zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
+                true
+            );
+
+
+//            processHWaterList (task, dataHWaterList, true);
+
             stopWatch.stop();
             log.debug("task data processed in {}", stopWatch.toString());
         } else {
@@ -237,7 +253,7 @@ public class ConsumptionService {
             }
 
             i.setTaskState(TASK_STATE_CALCULATING);
-            i.setTaskDateTime(LocalDateTime.now());
+            i.setTaskDateTime(Instant.now());
             return consumptionTaskRepository.saveAndFlush(i);
         });
 
@@ -284,18 +300,19 @@ public class ConsumptionService {
                 throw new IllegalStateException("Time detail type is invalid");
             }
 
-            String srcTimeDetailType = srcTimeDetailTypes.iterator().next();
+            //String srcTimeDetailType = srcTimeDetailTypes.iterator().next();
 
             List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = ConsumptionFunctionLib.findHWaterFunc(contZPoint);
 
             List<ContZPointConsumption> consumptions = new ArrayList<>();
 
             for (ConsumptionFunction<ContServiceDataHWater> consFunc: consumptionFunctions) {
-                double[] consValues = dataHWaters.stream()
-                    .filter(d -> consFunc.getFilter().test(d))
-                    .sorted(cmpByDataDate)
-                    .map(d -> consFunc.getFunc().apply(d))
-                    .mapToDouble(x -> x).toArray();
+                double[] consValues = ConsumptionFunctionLib.allValues(dataHWaters, cmpByDataDate, consFunc);
+//                double[] consValues = dataHWaters.stream()
+//                    .filter(d -> consFunc.getFilter().test(d))
+//                    .sorted(cmpByDataDate)
+//                    .map(d -> consFunc.getFunc().apply(d))
+//                    .mapToDouble(x -> x).toArray();
 
                 if (consValues.length == 0) {
                     continue;
@@ -306,7 +323,7 @@ public class ConsumptionService {
                 consumption.setContZPointId(i);
                 consumption.setDataType(DATA_TYPE_HWATER);
                 consumption.setConsDateTime(task.getDateTimeFrom());
-                consumption.setSrcTimeDetailType(srcTimeDetailType);
+                consumption.setSrcTimeDetailType(task.getSrcTimeDetailType());
                 consumption.setDestTimeDetailType(task.getDestTimeDetailType());
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
@@ -330,8 +347,154 @@ public class ConsumptionService {
 
         optContZPointConsumptionTask = optContZPointConsumptionTask.map( i -> {
                 i.setTaskState(TASK_STATE_FINISHED);
-                i.setTaskDateTime(LocalDateTime.now());
+                i.setTaskDateTime(Instant.now());
                 return consumptionTaskRepository.saveAndFlush(i);
+            }
+        );
+
+    }
+
+
+    @Transactional
+    public void processElCons(final ConsumptionTask task) {
+        Objects.requireNonNull(task);
+
+        //final ConsumptionTask workTask = task.newIfNoUUID();
+        final ConsumptionTask workTask = task;
+
+        if (!workTask.isValid()) {
+            log.warn("Task is invalid");
+            return;
+        }
+
+        log.debug("Processing task: {}" ,workTask.toString());
+
+        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
+        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+
+
+
+        if (srcTimeDetailKey != null && period.isValid()) {
+
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+            List<ContServiceDataElCons> data = Collections.emptyList();
+//                dataHWaterRepository.selectForConsumption(
+//                srcTimeDetailKey.getKeyname(),
+//                period.getFromDate(),
+//                period.getToDate(),
+//                workTask.getContZPointId());
+
+            stopWatch.stop();
+            log.debug("task data loaded in {}", stopWatch.toString());
+            stopWatch.reset();
+            stopWatch.start();
+            processAnyList(task,
+                            data,
+                            i -> i.getContZPointId(),
+                            Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
+                            zp -> ConsumptionFunctionLib.findElConsFunc(zp),
+                            true
+                            );
+            stopWatch.stop();
+            log.debug("task data processed in {}", stopWatch.toString());
+        } else {
+            log.warn("ConsumptionTask is invalid: {}", task);
+        }
+
+    }
+
+
+
+    /**
+     *
+     * @param task
+     * @param inDataList
+     * @param md5Hash
+     */
+    private <T> void processAnyList(final ConsumptionTask task,
+                                    final List<T> inDataList,
+                                    Function<T, Long> contZPointIdGetter,
+                                    Comparator<T> cmp,
+                                    Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
+                                    boolean md5Hash) {
+
+        Objects.requireNonNull(task);
+
+        Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
+            consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
+
+        optContZPointConsumptionTask = optContZPointConsumptionTask.map(i -> {
+
+            if (!TASK_STATE_SCHEDULED.equals(i.getTaskState())) {
+                throw new IllegalStateException("Illegal task status");
+            }
+
+            i.setTaskState(TASK_STATE_CALCULATING);
+            i.setTaskDateTime(Instant.now());
+            return consumptionTaskRepository.saveAndFlush(i);
+        });
+
+        Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
+        cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
+
+        cleanConsumptionDataType(cleanKeys2);
+        Map<Long, List<T>> dataMap = GroupUtil.makeIdMap(inDataList, contZPointIdGetter);
+        log.trace("ContZPoints: ");
+        dataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, dataMap.get(i).size()));
+
+        final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
+
+        dataMap.keySet().stream().sorted().forEach(i -> {
+            ContZPoint contZPoint = contZPointRepository.findOne(i);
+
+            if (contZPoint == null) {
+                log.warn("ContZPoint (id={}) is not found", i);
+                return;
+            }
+            List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
+
+            List<ContZPointConsumption> consumptions = new ArrayList<>();
+
+            for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
+                double[] consValues = ConsumptionFunctionLib.allValues(inDataList, cmp, consFunc);
+
+                if (consValues.length == 0) {
+                    continue;
+                }
+
+                ContZPointConsumption consumption = new ContZPointConsumption();
+                consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
+                consumption.setContZPointId(i);
+                consumption.setDataType(task.getDataType());
+                consumption.setConsDateTime(task.getDateTimeFrom());
+                consumption.setSrcTimeDetailType(task.getSrcTimeDetailType());
+                consumption.setDestTimeDetailType(task.getDestTimeDetailType());
+                consumption.setDateTimeFrom(task.getDateTimeFrom());
+                consumption.setDateTimeTo(task.getDateTimeTo());
+                consumption.setConsFunc(consFunc.getFuncName());
+                consumption.setConsData(consValues);
+                consumption.setMeasureUnit(consFunc.getMeasureUnit());
+                consumption.setConsState(CONS_STATE_CALCULATED);
+                consumption.setConsTaskId(taskId);
+
+                if (md5Hash) {
+                    String hash = calcMd5Hash(consValues);
+                    consumption.setConsMD5(hash);
+                }
+                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
+                consumptions.add(consumption);
+            }
+            consumptionRepository.save(consumptions);
+        });
+
+        consumptionRepository.flush();
+
+        optContZPointConsumptionTask.ifPresent( i -> {
+                i.setTaskState(TASK_STATE_FINISHED);
+                i.setTaskDateTime(Instant.now());
+                consumptionTaskRepository.saveAndFlush(i);
             }
         );
 
@@ -372,7 +535,7 @@ public class ConsumptionService {
     public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
-        private final LocalDateTime contDateTime;
+        private final Instant contDateTime;
     }
 
 
@@ -382,7 +545,7 @@ public class ConsumptionService {
     public static class ConsumptionDataTypeKey {
         private final String dataType;
         private final String destTimeDetailType;
-        private final LocalDateTime consDateTime;
+        private final Instant consDateTime;
     }
 
 
@@ -416,7 +579,8 @@ public class ConsumptionService {
 
         ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
         contZPointConsumptionTask.setTaskState(taskState == null ? TASK_STATE_NEW : taskState);
-        contZPointConsumptionTask.setTaskDateTime(LocalDateTime.now());
+        contZPointConsumptionTask.setTaskDateTime(Instant.now());
+        //contZPointConsumptionTask.setConsDateTime(contZPointConsumptionTask.get);
         contZPointConsumptionTask.setTaskStateDt(contZPointConsumptionTask.getTaskDateTime());
         contZPointConsumptionTask.setContZPointId(consumptionTask.getContZPointId());
         contZPointConsumptionTask.setTaskUUID(consumptionTask.getTaskUUID() != null ? consumptionTask.getTaskUUID() : Generators.timeBasedGenerator().generate());
@@ -441,7 +605,7 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
         task.ifPresent( i -> {
                 i.setTaskState(taskState);
-                i.setTaskStateDt(LocalDateTime.now());
+                i.setTaskStateDt(Instant.now());
                 consumptionTaskRepository.save(i);
             }
         );

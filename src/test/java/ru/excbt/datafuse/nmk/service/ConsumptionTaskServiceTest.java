@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.jms.ConnectionFactory;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -84,8 +85,8 @@ public class ConsumptionTaskServiceTest {
         consumptionTaskService.sendTask(
             ConsumptionTask.builder()
                 .name("MyName")
-                .dateTimeFrom(day)
-                .dateTimeTo(day.plusDays(1).minusSeconds(1))
+                .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+                .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
                 .contServiceType(ContServiceTypeKey.HW.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())

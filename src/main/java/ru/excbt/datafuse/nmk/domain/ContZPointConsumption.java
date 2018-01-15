@@ -8,7 +8,7 @@ import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Objects;
 
 @Entity
@@ -33,7 +33,7 @@ public class ContZPointConsumption implements Serializable {
     private String contServiceType;
 
     @Column(name = "cons_date_time")
-    private LocalDateTime consDateTime;
+    private Instant consDateTime;
 
     @Column(name = "src_time_detail_type")
     private String srcTimeDetailType;
@@ -42,16 +42,16 @@ public class ContZPointConsumption implements Serializable {
     private String destTimeDetailType;
 
     @Column(name = "date_time_from")
-    private LocalDateTime dateTimeFrom;
+    private Instant dateTimeFrom;
 
     @Column(name = "date_time_to")
-    private LocalDateTime dateTimeTo;
+    private Instant dateTimeTo;
 
     @Column(name = "last_calc_time")
-    private LocalDateTime lastCalcTime = LocalDateTime.now();
+    private Instant lastCalcTime = Instant.now();
 
     @Column(name = "last_start_time")
-    private LocalDateTime lastStartTime = LocalDateTime.now();
+    private Instant lastStartTime = Instant.now();
 
     @Column(name = "measure_unit")
     private String measureUnit;
