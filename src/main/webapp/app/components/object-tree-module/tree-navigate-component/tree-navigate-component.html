@@ -70,7 +70,7 @@
     </div>
             
       <script type="text/ng-template" id="subscr_object_p_tree_items_renderer.html">
-        <div ui-tree-handle ng-click="$ctrl.selectPNode(item, $event, collapsed)"
+        <div ui-tree-handle ng-click="$ctrl.selectPNode(item, $event, collapsed, this, toggle)"
              ng-mouseover = "item.isHover = true"
              ng-mouseleave = "item.isHover = false"
              ng-class="{'nmc-bg-distinguish': item.isSelected}">

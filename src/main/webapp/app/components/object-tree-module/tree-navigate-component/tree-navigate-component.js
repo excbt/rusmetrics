@@ -310,7 +310,7 @@
             setMonitorToPTree(ctrl.data.currentPTreeMonitor, PTnode);
         }
 
-        function loadPTreeNode(pTreeNode, depthLvl) {
+        function loadPTreeNode(pTreeNode, depthLvl, treeScope, toggleMethod) {
             if (pTreeNode.loading === true) {
                 return;
             }
@@ -319,6 +319,7 @@
                 .then(function (resp) {
                     pTreeNode.loading = false;
                     successLoadPTreeNodeCallback(resp, pTreeNode);
+                    toggleMethod(treeScope);
                 }, function (err) {
                     pTreeNode.loading = false;
                     errorCallback(err);
@@ -472,7 +473,9 @@
                     //  end Load widget settings
     //*********************************************************************************************        
 
-        ctrl.selectPNode = function (item, ev, collapsed) {
+        ctrl.selectPNode = function (item, ev, collapsed, treeScope, toggleMethod) {
+//console.log(treeScope);
+//console.log(toggleMethod);
 //console.log(collapsed);
             if (ctrl.isContObjectNode(item)) {
 //                ctrl.selectedObjectBy(item.nodeObject);
@@ -498,7 +501,7 @@
             }
 
             if (isLazyNode(item) && (ctrl.data.selectedPNode !== item)) {
-                loadPTreeNode(item, PTREE_DEPTH_LEVEL);
+                loadPTreeNode(item, PTREE_DEPTH_LEVEL, treeScope, toggleMethod);
             }
             
             if (ctrl.data.selectedPNode !== item) {

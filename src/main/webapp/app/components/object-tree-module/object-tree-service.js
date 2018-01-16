@@ -30,13 +30,18 @@
         svc.getCurrentTreeStub = getCurrentTreeStub;
         svc.getTreeList = getTreeList;
         
+        svc.isContObjectNode = isContObjectNode;
+        svc.isContZpointNode = isContZpointNode;
+        svc.isDeviceNode = isDeviceNode;
+        svc.isElementNode = isElementNode; 
+        
         svc.loadTreeStub = loadTreeStub;
         svc.loadTreeStubWrap = loadTreeStubWrap;
         
         svc.setCurrentNode = setCurrentNode;
         svc.setCurrentTree = setCurrentTree;
         svc.setCurrentTreeStub = setCurrentTreeStub;
-        svc.setTreeList = setTreeList;
+        svc.setTreeList = setTreeList;               
 
         ////////////////
         

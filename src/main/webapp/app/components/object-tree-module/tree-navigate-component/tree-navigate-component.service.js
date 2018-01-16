@@ -7,10 +7,10 @@
         .module('objectTreeModule')
         .service('treeNavigateComponentService', Service);
 
-    Service.$inject = ['$http', '$interval', '$rootScope', '$q', '$timeout'];
+    Service.$inject = ['$http', '$interval', '$rootScope', '$q', '$timeout', 'objectTreeService'];
 
     /* @ngInject */
-    function Service($http, $interval, $rootScope, $q, $timeout) {
+    function Service($http, $interval, $rootScope, $q, $timeout, objectTreeService) {
         var service = {};
         var API_URL = "../api",
             P_TREE_NODE_URL = "../api/p-tree-node",
@@ -363,30 +363,13 @@
             return !((!checkUndefinedNull(item.childNodes) && item.childNodes.length > 0) || (!checkUndefinedNull(item.linkedNodeObjects) && item.linkedNodeObjects.length > 0));
         }
         
-        function isContObjectNode(item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'CONT_OBJECT';
-        }
-        function isContZpointNode(item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'CONT_ZPOINT';
-        }
-        function isDeviceNode(item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'DEVICE_OBJECT';
-        }
-        function isElementNode(item) {
-            if (angular.isUndefined(item) || item === null) {
-                return false;
-            }
-            return item.nodeType === 'ELEMENT';
-        }
+        var isContObjectNode = objectTreeService.isContObjectNode;
+
+        var isContZpointNode = objectTreeService.isContZpointNode;
+
+        var isDeviceNode = objectTreeService.isDeviceNode;
+
+        var isElementNode = objectTreeService.isElementNode;
         
             // Sort object array by some string field
         function sortItemsBy(itemArray, sortField) {
@@ -442,6 +425,7 @@
         service.isChevronDisabled = isChevronDisabled;
         service.isChevronDown = isChevronDown;
         service.isChevronRight = isChevronRight;
+        
         service.isContObjectNode = isContObjectNode;
         service.isContZpointNode = isContZpointNode;
         service.isDeviceNode = isDeviceNode;
