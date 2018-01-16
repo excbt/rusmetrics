@@ -76,8 +76,12 @@
             var cObjects = [];
             var foundedNode = findNodeByIdAtTree(tree, nodeId);
 console.log(foundedNode);            
-            if (foundedNode.hasOwnProperty('linkedNodeObjects') && angular.isArray(foundedNode.linkedNodeObjects)) {
-                cObjects = foundedNode.linkedNodeObjects;
+            if (angular.isDefined(foundedNode) && foundedNode.hasOwnProperty('linkedNodeObjects') && angular.isArray(foundedNode.linkedNodeObjects)) {
+                if (isContObjectNode(foundedNode)) {
+                    cObjects = [foundedNode];
+                } else {
+                    cObjects = foundedNode.linkedNodeObjects;
+                }
             }
             return cObjects;
         }
@@ -165,6 +169,31 @@ console.log(foundedNode);
             } else {
                 setCurrentTreeStub(null);
             }
+        }
+        
+        function isContObjectNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'CONT_OBJECT';
+        }
+        function isContZpointNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'CONT_ZPOINT';
+        }
+        function isDeviceNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'DEVICE_OBJECT';
+        }
+        function isElementNode(item) {
+            if (angular.isUndefined(item) || item === null) {
+                return false;
+            }
+            return item.nodeType === 'ELEMENT';
         }
     }
 })();

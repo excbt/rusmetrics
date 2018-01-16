@@ -75,6 +75,7 @@
         ctrl.zpointWidgetList = {};
         
         ctrl.checkUndefinedNull = contObjectCtrlSvc.checkUndefinedNull;
+        ctrl.checkEmptyObject = contObjectCtrlSvc.checkEmptyObject;
         ctrl.EVENTS = contObjectCtrlSvc.EVENTS;
         
         ctrl.orderBy = {field: 'caption', asc: false};
@@ -151,16 +152,10 @@
                     }
                 }
             }
-            ctrl.objects.some(function (obj) {
-                if (inpData.contObjectShortInfo.contObjectId === obj.id) {
-                    for (var k in tmpObjInfo) {
-                        obj[k] = tmpObjInfo[k];
-                    }
-                    obj.loading = false;
-                    return true;
-                }
-            });
-//console.log(ctrl.objects);            
+            var changedObject = contObjectCtrlSvc.findContObjectById(ctrl.objects, inpData.contObjectShortInfo.contObjectId);            
+            if (changedObject !== null) {
+                contObjectCtrlSvc.updateContObjectInfo(changedObject, tmpObjInfo);
+            }           
         }
         
         
@@ -291,6 +286,7 @@
                 }
             }
             ctrl.zpointWidgetList = defaultWidgets;
+            contObjectCtrlSvc.setWidgetList(defaultWidgets);
         }
         
         ctrl.loadZpointWidgetList = function () {
@@ -298,40 +294,48 @@
                 .then(successLoadZpointWidgetListCallback, errorCallback);
         };
         
-        ctrl.$onInit = function () {
-console.log($stateParams);
+        function getNodeContObjects() {
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
-                var nodeId = node.id || node._id;
+                var nodeId = node.id || node._id || node.nodeObject.id;
                 var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
                 if (nodeObjects === null) {
                     ctrl.loadObjects(nodeId);
                 } else {
                     nodeObjects.forEach(function (elm) {
-                        elm.loading = true;                        
+                        elm.loading = true;
                     });
                     ctrl.objects = nodeObjects;
-                    ctrl.objects.forEach(function (elm) {                        
+                    ctrl.objects.forEach(function (elm) {
                         contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
                             .then(successLoadObjectMonitorStateCallback, errorCallback);
                     });
                 }
             }
-            ctrl.loadZpointWidgetList();
+        }
+        
+        ctrl.$onInit = function () {
+//console.log($stateParams);
+            getNodeContObjects();
+            ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
+            if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {
+                ctrl.loadZpointWidgetList();
+            }
         };
         
         $scope.$on(contObjectCtrlSvc.EVENTS.OBJECTS_LOADED, function () {
-            var node = $stateParams.node;
-            var nodeId = node.id || node._id;
-            var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
-            nodeObjects.forEach(function (elm) {
-                elm.loading = true;                        
-            });
-            ctrl.objects = nodeObjects;
-            ctrl.objects.forEach(function (elm) {                        
-                contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
-                    .then(successLoadObjectMonitorStateCallback, errorCallback);
-            });
+            getNodeContObjects();
+//            var node = $stateParams.node;
+//            var nodeId = node.id || node._id;
+//            var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+//            nodeObjects.forEach(function (elm) {
+//                elm.loading = true;
+//            });
+//            ctrl.objects = nodeObjects;
+//            ctrl.objects.forEach(function (elm) {
+//                contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+//                    .then(successLoadObjectMonitorStateCallback, errorCallback);
+//            });
         });
         
     }

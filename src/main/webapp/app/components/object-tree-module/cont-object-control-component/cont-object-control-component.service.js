@@ -37,18 +37,25 @@
 //            "node1": [objects1],
 //            "node2": [objects2],
 //        }
-        var nodes = {};
+        var nodes = {},
+            widgetList = {};
         
         var svc = this;
         svc.EVENTS = EVENTS;
         svc.CONT_OBJECTS_PER_PAGE = CONT_OBJECTS_PER_PAGE;
         svc.checkUndefinedNull = checkUndefinedNull;
+        svc.checkEmptyObject = checkEmptyObject;
         svc.getNodeData = getNodeData;
+        svc.getWidgetList = getWidgetList;
+        svc.findContObjectById = findContObjectById;
         svc.loadContObjectMonitorState = loadContObjectMonitorState;
         svc.loadNodeObjects = loadNodeObjects;
         svc.loadZpointsByObjectId = loadZpointsByObjectId;
         svc.loadZpointWidgetList = loadZpointWidgetList;
         svc.setNodeData = setNodeData;
+        svc.setWidgetList = setWidgetList;
+        svc.updateContObject = updateContObject;
+        svc.updateContObjectInfo = updateContObjectInfo;
 
         ////////////////
         
@@ -58,6 +65,10 @@
                 result = true;
             }
             return result;
+        }
+        
+        function checkEmptyObject(obj) {
+                return Object.keys(obj).length === 0 && obj.constructor === Object;
         }
         
         function addParamToURL(url, paramName, paramValue) {
@@ -112,9 +123,9 @@
 //console.log(resultContObjects);
             
             // first old version
-            var url = P_TREE_NODE_MONITOR_URL;
-            url = addParamToURL(url, "nodeId", nodeId);
-            return $http.get(url);
+//            var url = P_TREE_NODE_MONITOR_URL;
+//            url = addParamToURL(url, "nodeId", nodeId);
+//            return $http.get(url);
         }
         
         function loadContObjectMonitorState(contObjectId) {
@@ -135,6 +146,44 @@
         function loadZpointWidgetList() {
             var url = WIDGETS_URL;
             return $http.get(url);
+        }
+        
+        function getWidgetList() {
+            return widgetList;
+        }
+        
+        function setWidgetList(wList) {
+            widgetList = wList;
+        }
+        
+        function updateContObject(contObjectsArr, objId, newObjInfo) {
+            contObjectsArr.some(function (obj) {
+                if (objId === obj.id) {
+                    for (var k in newObjInfo) {
+                        obj[k] = newObjInfo[k];
+                    }
+                    obj.loading = false;
+                    return true;
+                }
+            });
+        }
+        
+        function updateContObjectInfo(contObject, newObjInfo) {
+            for (var k in newObjInfo) {
+                contObject[k] = newObjInfo[k];
+            }
+            contObject.loading = false;
+        }
+        
+        function findContObjectById(contObjectsArr, objId) {
+            var result = null;
+            contObjectsArr.some(function (obj) {
+                if (objId === obj.id) {
+                    result = obj;
+                    return true;
+                }
+            });
+            return result;
         }
     }
 })();
