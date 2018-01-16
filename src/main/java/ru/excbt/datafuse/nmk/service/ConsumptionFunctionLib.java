@@ -146,7 +146,7 @@ public class ConsumptionFunctionLib {
             .sorted(cmp.reversed())
             .map(d -> consFunc.getFunc().apply(d)).findFirst().orElse(null);
 
-        return consValue;
+        return consFunc.postProcessingRound(consValue);
     }
 
 

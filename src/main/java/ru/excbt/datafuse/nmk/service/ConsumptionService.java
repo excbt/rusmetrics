@@ -491,7 +491,7 @@ public class ConsumptionService {
                 return tuppleToDalaElCons(resultTupleList);
             };
 
-            processAnyListAggr(task,
+            processAnyListAbs(task,
                             data,
                             prePeriodLastDataLoader,
                             i -> i.getContZPointId(),
@@ -624,6 +624,10 @@ public class ConsumptionService {
     }
 
     private String calcMd5Hash (double[] data) {
+        if (data == null) {
+            return null;
+        }
+
         ByteBuffer bb = ByteBuffer.allocate(data.length * 8);
         for(double d : data) {
             bb.putDouble(d);
@@ -787,13 +791,13 @@ public class ConsumptionService {
      * @param md5Hash
      * @param <T>
      */
-    private <T> List<ContZPointConsumption> processAnyListAggr( final ConsumptionTask task,
-                                                                final List<T> inDataList,
-                                                                final Function<List<Long>, List<T>> prePeriodLastDataLoader,
-                                                                Function<T, Long> contZPointIdGetter,
-                                                                Comparator<T> dataComparator,
-                                                                Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
-                                                                boolean md5Hash) {
+    private <T> List<ContZPointConsumption> processAnyListAbs(final ConsumptionTask task,
+                                                              final List<T> inDataList,
+                                                              final Function<List<Long>, List<T>> prePeriodLastDataLoader,
+                                                              Function<T, Long> contZPointIdGetter,
+                                                              Comparator<T> dataComparator,
+                                                              Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
+                                                              boolean md5Hash) {
 
         Objects.requireNonNull(task);
 
@@ -856,9 +860,14 @@ public class ConsumptionService {
                     continue;
                 }
                 Double prePeriodLastValue = ConsumptionFunctionLib.lastValue(prePeriodLastData, dataComparator, consFunc);
-                double[] consValues = new double[2];
-                consValues[0] = periodLastValue != null ? periodLastValue : 0;
-                consValues[1] = prePeriodLastValue != null ? prePeriodLastValue : 0;
+                double[] consValues = null;
+
+                if (periodLastValue != null && prePeriodLastValue != null) {
+                    double absValue = Math.abs(periodLastValue -
+                                               prePeriodLastValue);
+                    consValues = new double[1];
+                    consValues[0] = consFunc.postProcessingRound(absValue);
+                }
 
                 ContZPointConsumption consumption = new ContZPointConsumption();
                 consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
