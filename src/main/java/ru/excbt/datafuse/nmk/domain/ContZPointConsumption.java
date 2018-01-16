@@ -50,14 +50,17 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "last_calc_time")
     private Instant lastCalcTime = Instant.now();
 
-    @Column(name = "last_start_time")
-    private Instant lastStartTime = Instant.now();
-
     @Column(name = "measure_unit")
     private String measureUnit;
 
     @Column(name = "cons_func")
     private String consFunc;
+
+    @Column(name = "data_in_abs")
+    private Double dataInAbs;
+
+    @Column(name = "data_out_abs")
+    private Double dataOutAbs;
 
     @Type( type = "double-array" )
     @Column(name = "cons_data", columnDefinition = "float[]")

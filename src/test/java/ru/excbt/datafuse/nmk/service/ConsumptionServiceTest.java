@@ -218,6 +218,7 @@ public class ConsumptionServiceTest {
 
         ConsumptionTask task = ConsumptionTask.builder()
             .contZPointId(contZPoint.getId())
+            .dataType(ConsumptionService.DATA_TYPE_ELECTRICITY)
             .contServiceType(ContServiceTypeKey.EL.getKeyname())
             .srcTimeDetailType(TimeDetailKey.TYPE_1H_ABS.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())

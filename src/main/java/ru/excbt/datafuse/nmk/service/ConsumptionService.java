@@ -62,7 +62,7 @@ public class ConsumptionService {
 
 
     public static final String DATA_TYPE_HWATER = "HWATER";
-    public static final String DATA_TYPE_EL = "EL";
+    public static final String DATA_TYPE_ELECTRICITY = "ELECTRICITY";
 
     private final DBSessionService dbSessionService;
 
@@ -814,17 +814,15 @@ public class ConsumptionService {
 
             List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
 
-
-
             for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
                 Double periodLastValue = ConsumptionFunctionLib.lastValue(periodData, dataComparator, consFunc);
+                if (periodLastValue == null) {
+                    continue;
+                }
                 Double prePeriodLastValue = ConsumptionFunctionLib.lastValue(prePeriodLastData, dataComparator, consFunc);
                 double[] consValues = new double[2];
                 consValues[0] = periodLastValue != null ? periodLastValue : 0;
                 consValues[1] = prePeriodLastValue != null ? prePeriodLastValue : 0;
-                if (consValues.length == 0) {
-                    continue;
-                }
 
                 ContZPointConsumption consumption = new ContZPointConsumption();
                 consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
@@ -836,6 +834,8 @@ public class ConsumptionService {
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
                 consumption.setConsFunc(consFunc.getFuncName());
+                consumption.setDataInAbs(prePeriodLastValue);
+                consumption.setDataOutAbs(periodLastValue);
                 consumption.setConsData(consValues);
                 consumption.setMeasureUnit(consFunc.getMeasureUnit());
                 consumption.setConsState(CONS_STATE_CALCULATED);
