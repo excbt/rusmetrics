@@ -140,6 +140,9 @@ public class ConsumptionFunctionLib {
      * @return
      */
     public static <T> Double lastValue (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
+        if (data == null) {
+            return null;
+        }
 
         Double consValue = data.stream()
             .filter(d -> consFunc.getFilter().test(d))

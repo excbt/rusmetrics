@@ -527,16 +527,7 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        optContZPointConsumptionTask = optContZPointConsumptionTask.map(i -> {
-
-            if (!TASK_STATE_SCHEDULED.equals(i.getTaskState())) {
-                throw new IllegalStateException("Illegal task status");
-            }
-
-            i.setTaskState(TASK_STATE_CALCULATING);
-            i.setTaskDateTime(Instant.now());
-            return consumptionTaskRepository.saveAndFlush(i);
-        });
+        updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
         cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
@@ -604,12 +595,7 @@ public class ConsumptionService {
 
         consumptionRepository.flush();
 
-        optContZPointConsumptionTask.ifPresent( i -> {
-                i.setTaskState(TASK_STATE_FINISHED);
-                i.setTaskDateTime(Instant.now());
-                consumptionTaskRepository.saveAndFlush(i);
-            }
-        );
+        updateTaskState (task, TASK_STATE_FINISHED);
 
     }
 
@@ -763,13 +749,30 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public boolean updateState(final ConsumptionTask consumptionTask, String taskState) {
+    public boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState) {
+        return updateTaskState(consumptionTask, taskState, null);
+    }
+
+    /**
+     *
+     * @param consumptionTask
+     * @param taskState
+     * @param expectedState
+     * @return
+     */
+    @Transactional
+    public boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState, String expectedState) {
         if (consumptionTask.getTaskUUID() == null) {
             return false;
         }
 
         Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
         task.ifPresent( i -> {
+
+                if (expectedState != null && !expectedState.equals(i.getTaskState())) {
+                    throw new IllegalStateException("Illegal task status");
+                }
+
                 i.setTaskState(taskState);
                 i.setTaskStateDt(Instant.now());
                 consumptionTaskRepository.save(i);
@@ -778,6 +781,7 @@ public class ConsumptionService {
 
         return task.isPresent();
     }
+
 
 
     /**
@@ -804,21 +808,17 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        optContZPointConsumptionTask = optContZPointConsumptionTask.map(i -> {
-
-            if (!TASK_STATE_SCHEDULED.equals(i.getTaskState())) {
-                throw new IllegalStateException("Illegal task status");
-            }
-
-            i.setTaskState(TASK_STATE_CALCULATING);
-            i.setTaskDateTime(Instant.now());
-            return consumptionTaskRepository.saveAndFlush(i);
-        });
+        updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
         cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
 
         cleanConsumptionDataType(cleanKeys2);
+
+        if (inDataList.isEmpty()) {
+            updateTaskState (task, TASK_STATE_FINISHED);
+            return Collections.emptyList();
+        }
 
         final Map<Long, List<T>> periodDataMap = GroupUtil.makeIdMap(inDataList, contZPointIdGetter);
 
@@ -832,8 +832,12 @@ public class ConsumptionService {
         Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
 
         log.debug("Pre period Data fetching");
-        final List<T> prePeriodLastDataDataAll = prePeriodLastDataLoader.apply(contZPointIds);
+        final List<T> prePeriodLastDataDataAll = contZPointIds.isEmpty() ? null : prePeriodLastDataLoader.apply(contZPointIds);
         log.debug("Pre period Data fetching complete");
+
+        if (prePeriodLastDataDataAll == null) {
+            return Collections.emptyList();
+        }
 
         Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(prePeriodLastDataDataAll, contZPointIdGetter);
 
@@ -869,6 +873,10 @@ public class ConsumptionService {
                     consValues[0] = consFunc.postProcessingRound(absValue);
                 }
 
+                if (consValues == null) {
+                    continue;
+                }
+
                 ContZPointConsumption consumption = new ContZPointConsumption();
                 consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
                 consumption.setContZPointId(id);
@@ -901,14 +909,10 @@ public class ConsumptionService {
         consumptionRepository.save(consumptionDataList);
         consumptionRepository.flush();
 
-        optContZPointConsumptionTask.ifPresent( i -> {
-                i.setTaskState(TASK_STATE_FINISHED);
-                i.setTaskDateTime(Instant.now());
-                consumptionTaskRepository.saveAndFlush(i);
-            }
-        );
+        updateTaskState (task, TASK_STATE_FINISHED);
 
         return consumptionDataList;
     }
+
 
 }
