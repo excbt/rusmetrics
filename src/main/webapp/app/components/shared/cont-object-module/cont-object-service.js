@@ -18,27 +18,47 @@
         var requestCanceler = null,
             httpOptions = null,
             contObjectsShortInfoArray = null,
-            contObjectsShortInfoArrayLoading = false;
+            contObjectsShortInfoHashTable = {},
+            contObjectsShortInfoLoading = false,
+            contObjectsShortInfoLoaded = false;
         
         var svc = this;
         svc.getContObjectsShortInfoArray = getContObjectsShortInfoArray;
+        svc.getContObjectShortInfoById = getContObjectShortInfoById;
         svc.getRequestCanceler = getRequestCanceler;
+        svc.getShortinfoLoadedFlag = getShortinfoLoadedFlag;
         svc.loadContObjectsShortInfo = loadContObjectsShortInfo;
+        svc.loadContObjectsShortInfoWrap = loadContObjectsShortInfoWrap;
         svc.setContObjectsShortInfoArray = setContObjectsShortInfoArray;        
 
         ////////////////
 
         function errorCallback(e) {
             console.log(e);
-            contObjectsShortInfoArrayLoading = false;
+            contObjectsShortInfoLoading = false;
         }
         
         function getContObjectsShortInfoArray() {
             return contObjectsShortInfoArray;
         }
         
+        function getContObjectShortInfoById(objId) {
+            if (angular.isUndefined(objId) || !contObjectsShortInfoHashTable.hasOwnProperty(objId)) {
+                return null;
+            }
+            return angular.copy(contObjectsShortInfoHashTable[objId]);
+        }
+        
         function getRequestCanceler() {
             return requestCanceler;
+        }
+        
+        function getContObjectsShortInfoHashTable() {
+            return contObjectsShortInfoHashTable;
+        }
+        
+        function getShortinfoLoadedFlag() {
+            return contObjectsShortInfoLoaded;
         }
         
         function loadContObjectsShortInfo() {
@@ -47,7 +67,8 @@
         }
         
         function loadContObjectsShortInfoWrap() {
-            contObjectsShortInfoArrayLoading = true;
+            contObjectsShortInfoLoading = true;
+            contObjectsShortInfoLoaded = false;
             loadContObjectsShortInfo().then(successLoadContObjectsShortInfo, errorCallback);
         }
         
@@ -55,13 +76,25 @@
             contObjectsShortInfoArray = arr;
         }
         
+        function setContObjectsShortInfoHashTable(hashTbl) {
+            contObjectsShortInfoHashTable = hashTbl;
+        }
+        
         function successLoadContObjectsShortInfo(resp) {
-            contObjectsShortInfoArrayLoading = false;
+            contObjectsShortInfoLoading = false;
             if (resp === null || resp.data === null) {
                 setContObjectsShortInfoArray(null);
                 return false;
             }
             setContObjectsShortInfoArray(resp.data);
+            //prepare hash table
+            var tmpHashTable = {};
+            resp.data.forEach(function (contObject) {
+                tmpHashTable[contObject.contObjectId] = contObject;
+            });
+            setContObjectsShortInfoHashTable(tmpHashTable);
+            contObjectsShortInfoLoaded = true;
+//console.log(getContObjectsShortInfoHashTable());            
             $rootScope.$broadcast(EVENTS.CONT_OBJECTS_SHORT_INFO_LOADED);
         }
         

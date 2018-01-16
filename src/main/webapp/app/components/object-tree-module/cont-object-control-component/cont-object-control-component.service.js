@@ -9,10 +9,10 @@
         .module('objectTreeModule')
         .service('contObjectControlComponentService', Service);
 
-    Service.$inject = ['$http', 'objectTreeService', '$rootScope'];
+    Service.$inject = ['$http', 'objectTreeService', '$rootScope', 'contObjectService'];
 
     /* @ngInject */
-    function Service($http, objectTreeService, $rootScope) {
+    function Service($http, objectTreeService, $rootScope, contObjectService) {
         
         var P_TREE_NODE_URL = "../api/p-tree-node",
             P_TREE_NODE_MONITOR_URL = "../api/p-tree-node-monitor/all-linked-objects",            
@@ -25,7 +25,9 @@
             REFRESH_PERIOD = 600000,
             TREE_ID_FIELD_NAME = "_id",
             NODE_ID_FIELD_NAME = "_id",
-            SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";
+            SUBSCR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS",        
+            IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
+            IMG_EXT = ".png";
         
         var CONT_OBJECTS_PER_PAGE = 42;
         
@@ -107,7 +109,7 @@
                 contObjects = objectTreeService.findContObjectsByFullTree(nodeId);
             } else {
                 contObjects = objectTreeService.findContObjectsByNodeId(nodeId);
-            }
+            }            
             
             var tmpContObjects = angular.copy(contObjects),
                 resultContObjects = [];
@@ -118,6 +120,13 @@
                 };
                 resultContObjects.push(obj);
             });
+            if (contObjectService.getShortinfoLoadedFlag()) {
+                resultContObjects.forEach(function (contObject) {
+                    var objShortInfo = contObjectService.getContObjectShortInfoById(contObject.id);
+                    contObject.caption = objShortInfo.contObjectName || objShortInfo.contObjectFullName || objShortInfo.id;
+                    contObject.modeImgSrc = IMG_PATH_MODE_TEMPLATE + objShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
+                });
+            }
             nodes[nodeId] = resultContObjects;
             $rootScope.$broadcast(EVENTS.OBJECTS_LOADED);
 //console.log(resultContObjects);

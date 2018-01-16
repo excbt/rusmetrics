@@ -27,7 +27,7 @@
         var HEAT_DISTRIBUTOR = "HEAT_DISTRIBUTOR";//
 
         var BROADCASTS = {
-            requestPTreeLoading: 'objectsTreeSvc:requestPTreeLoading',
+            requestPTreeLoading: 'objectsTreeSvc:requestPTreeLoading',            
             requestPTreeMonitorLoading: 'objectsTreeSvc:requestPTreeMonitorLoading',
             cancelInterval: 'objectsTreeSvc:cancelInterval',
             pTreeLoaded: 'objectsTreeSvc:pTreeLoaded',
@@ -120,6 +120,7 @@
 //            console.log("subscrObjectTreeId = " + subscrObjectTreeId);
 //            console.log("requestParams: ", requestParams);
 //            console.log("childLevel: ", childLevel);
+            
             if (checkUndefinedNull(subscrObjectTreeId)) {
                 console.warn("Incorrect input param: ", subscrObjectTreeId);
                 return null;
@@ -137,12 +138,11 @@
     //        });
         }
 
-        function loadingPTreeNode(subscrObjectTreeId, childLevel) {
+        function loadingPTree(subscrObjectTreeId, childLevel) {
             pTreeLoadingFlag = true;
             loadPTreeNode(subscrObjectTreeId, childLevel)
                 .then(successPTreeLoadingCallback, errorCallback);
         }
-
 
         var findNodeInPTree = function (node, tree) {
             var result = null;

@@ -128,10 +128,10 @@
             }
             var inpData = resp.data, //angular.copy(resp.data);
                 tmpObjInfo = {};
-            if (!ctrl.checkUndefinedNull(inpData.contObjectShortInfo)) {
-                tmpObjInfo.caption = inpData.contObjectShortInfo.contObjectName || inpData.contObjectShortInfo.contObjectFullName || inpData.contObjectShortInfo.contObjectId;
-                tmpObjInfo.modeImgSrc = IMG_PATH_MODE_TEMPLATE + inpData.contObjectShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
-            }
+//            if (!ctrl.checkUndefinedNull(inpData.contObjectShortInfo)) {
+//                tmpObjInfo.caption = inpData.contObjectShortInfo.contObjectName || inpData.contObjectShortInfo.contObjectFullName || inpData.contObjectShortInfo.contObjectId;
+//                tmpObjInfo.modeImgSrc = IMG_PATH_MODE_TEMPLATE + inpData.contObjectShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
+//            }
             if (angular.isArray(inpData.contZPointMonitorState)) {
                 var zpointsStates = {};
                 inpData.contZPointMonitorState.forEach(function (zpoint) {
@@ -159,28 +159,28 @@
         }
         
         
-        function successLoadObjectsCallback(resp) {
-            var tmpBuf = angular.copy(resp.data);
-            if (!angular.isArray(tmpBuf)) {
-                return false;
-            }
-            tmpBuf.forEach(function (elm) {
-                if (elm.nodeType !== "CONT_OBJECT") {
-                    return false;
-                }
-                var obj = {
-                    id: elm.monitorObjectId,
-                    loading: true
-                };
-                ctrl.objects.push(obj);
-                contObjectCtrlSvc.loadContObjectMonitorState(obj.id)
-                    .then(successLoadObjectMonitorStateCallback, errorCallback);
-            });
-            
-            //save contobjects at service
-            var node = $stateParams.node;
-            contObjectCtrlSvc.setNodeData(node.id | node._id, ctrl.objects);
-        }
+//        function successLoadObjectsCallback(resp) {
+//            var tmpBuf = angular.copy(resp.data);
+//            if (!angular.isArray(tmpBuf)) {
+//                return false;
+//            }
+//            tmpBuf.forEach(function (elm) {
+//                if (elm.nodeType !== "CONT_OBJECT") {
+//                    return false;
+//                }
+//                var obj = {
+//                    id: elm.monitorObjectId,
+//                    loading: true
+//                };
+//                ctrl.objects.push(obj);
+//                contObjectCtrlSvc.loadContObjectMonitorState(obj.id)
+//                    .then(successLoadObjectMonitorStateCallback, errorCallback);
+//            });
+//            
+//            //save contobjects at service
+//            var node = $stateParams.node;
+//            contObjectCtrlSvc.setNodeData(node.id | node._id, ctrl.objects);
+//        }
         
         //get objects with statuses
         ctrl.loadObjects = function (nodeId) {
@@ -295,10 +295,12 @@
         };
         
         function getNodeContObjects() {
+//console.log('getNodeContObjects:', getNodeContObjects);            
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
                 var nodeId = node.id || node._id || node.nodeObject.id;
                 var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+//console.log(nodeObjects);
                 if (nodeObjects === null) {
                     ctrl.loadObjects(nodeId);
                 } else {
