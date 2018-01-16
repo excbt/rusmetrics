@@ -9,5 +9,5 @@ package ru.excbt.datafuse.nmk.data.model.types;
  *
  */
 public enum MeasureUnitKey {
-	V_M3, W_GCAL, M_TON;
+	V_M3, W_GCAL, M_TON, PWR_KWT_H;
 }

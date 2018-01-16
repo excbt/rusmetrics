@@ -52,6 +52,14 @@ public class ConsumptionFunctionLib {
         MeasureUnitKey.W_GCAL.name());
 
 
+    public static ConsumptionFunction<ContServiceDataElCons> cons_EL_P_AP1 = new ConsumptionFunction<>(
+        "P_AP1",
+        d -> Objects.nonNull(d.getP_Ap1()),
+        d -> d.getP_Ap1(),
+        MeasureUnitKey.PWR_KWT_H.name());
+
+
+
     /**
      *
      * @param contZPoint
@@ -93,10 +101,11 @@ public class ConsumptionFunctionLib {
     }
 
     public static List<ConsumptionFunction<ContServiceDataElCons>> findElConsFunc(ContZPoint contZPoint) {
-        List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = new ArrayList<>();
+        List<ConsumptionFunction<ContServiceDataElCons>> consumptionFunctions = new ArrayList<>();
 
+        consumptionFunctions.add(cons_EL_P_AP1);
 
-        return Collections.emptyList();
+        return consumptionFunctions;
     }
 
         /**
@@ -119,6 +128,14 @@ public class ConsumptionFunctionLib {
     }
 
 
+    /**
+     *
+     * @param data
+     * @param cmp
+     * @param consFunc
+     * @param <T>
+     * @return
+     */
     public static <T> double[] allValues (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
 
         double[] consValues = data.stream()
@@ -129,6 +146,25 @@ public class ConsumptionFunctionLib {
 
         return consValues;
     }
+
+    /**
+     *
+     * @param data
+     * @param cmp
+     * @param consFunc
+     * @param <T>
+     * @return
+     */
+    public static <T> Double lastValue (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
+
+        Double consValue = data.stream()
+            .filter(d -> consFunc.getFilter().test(d))
+            .sorted(cmp.reversed())
+            .map(d -> consFunc.getFunc().apply(d)).findFirst().orElse(null);
+
+        return consValue;
+    }
+
 
 
 }
