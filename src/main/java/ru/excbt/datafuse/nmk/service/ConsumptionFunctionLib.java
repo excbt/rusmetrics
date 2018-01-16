@@ -4,7 +4,6 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
-import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
 
 import java.util.*;
@@ -16,47 +15,10 @@ public class ConsumptionFunctionLib {
     }
 
 
-    public static ConsumptionFunction<ContServiceDataHWater> cons_M1 = new ConsumptionFunction<>(
-        "M1",
-        d -> Objects.nonNull(d.getM_in()),
-        d -> d.getM_in(),
-        MeasureUnitKey.M_TON.name());
-
-    public static ConsumptionFunction<ContServiceDataHWater> cons_M1_sub_M2 = new ConsumptionFunction<>(
-        "M1-M2",
-        d -> Objects.nonNull(d.getM_in()) && Objects.nonNull(d.getM_out()),
-        d -> Math.abs(d.getM_in() - d.getM_out()),
-        MeasureUnitKey.M_TON.name());
-
-    public static ConsumptionFunction<ContServiceDataHWater> cons_V1 = new ConsumptionFunction<>(
-        "V1",
-        d -> Objects.nonNull(d.getV_in()),
-        d -> d.getV_in(),
-        MeasureUnitKey.V_M3.name());
-
-    public static ConsumptionFunction<ContServiceDataHWater> cons_V1_sub_V2 = new ConsumptionFunction<>(
-        "V1-V2",
-        d -> Objects.nonNull(d.getV_in()) && Objects.nonNull(d.getV_out()),
-        d -> Math.abs(d.getV_in() - d.getV_out()), MeasureUnitKey.V_M3.name());
-
-    public static ConsumptionFunction<ContServiceDataHWater> cons_H1 = new ConsumptionFunction<>(
-        "H1",
-        d -> Objects.nonNull(d.getH_in()),
-        d -> d.getH_in(),
-        MeasureUnitKey.W_GCAL.name());
-
-    public static ConsumptionFunction<ContServiceDataHWater> cons_H1_sub_H2 = new ConsumptionFunction<>(
-        "H1-H2",
-        d -> Objects.nonNull(d.getH_in()) && Objects.nonNull(d.getH_out()),
-        d -> Math.abs(d.getH_in() - d.getH_out()),
-        MeasureUnitKey.W_GCAL.name());
 
 
-    public static ConsumptionFunction<ContServiceDataElCons> cons_EL_P_AP1 = new ConsumptionFunction<>(
-        "P_AP1",
-        d -> Objects.nonNull(d.getP_Ap1()),
-        d -> d.getP_Ap1(),
-        MeasureUnitKey.PWR_KWT_H.name());
+
+
 
 
 
@@ -70,7 +32,7 @@ public class ConsumptionFunctionLib {
 
         if (checkAnyService(contZPoint, ContServiceTypeKey.HEAT)) {
             consumptionFunctions.add(Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
-                cons_H1_sub_H2 : cons_H1);
+                ConsumptionFunctionLibDataHWater.H1_sub_H2 : ConsumptionFunctionLibDataHWater.H1);
         }
         if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
             List<String> fields = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
@@ -85,16 +47,16 @@ public class ConsumptionFunctionLib {
 //                .map(i -> i.getFieldName()).anyMatch(i -> "M".equals(i));
             boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
             if (mCase) {
-                consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);
+                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.M1_sub_M2 : ConsumptionFunctionLibDataHWater.M1);
             }
             if (vCase) {
-                consumptionFunctions.add(doublePipe ? cons_V1_sub_V2 : cons_V1);
+                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.V1_sub_V2 : ConsumptionFunctionLibDataHWater.V1);
             }
 
             // No settings. Calculate all
             if (consumptionFunctions.isEmpty()) {
-                consumptionFunctions.add(doublePipe ? cons_M1_sub_M2 : cons_M1);
-                consumptionFunctions.add(doublePipe ? cons_V1_sub_V2 : cons_V1);
+                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.M1_sub_M2 : ConsumptionFunctionLibDataHWater.M1);
+                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.V1_sub_V2 : ConsumptionFunctionLibDataHWater.V1);
             }
         }
         return consumptionFunctions;
@@ -103,7 +65,29 @@ public class ConsumptionFunctionLib {
     public static List<ConsumptionFunction<ContServiceDataElCons>> findElConsFunc(ContZPoint contZPoint) {
         List<ConsumptionFunction<ContServiceDataElCons>> consumptionFunctions = new ArrayList<>();
 
-        consumptionFunctions.add(cons_EL_P_AP1);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_Ap);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_Ap1);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_Ap2);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_Ap3);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_Ap4);
+
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_An);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_An1);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_An2);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_An3);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.P_An4);
+
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rp);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rp1);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rp2);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rp3);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rp4);
+
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn1);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn2);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn3);
+        consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn4);
 
         return consumptionFunctions;
     }

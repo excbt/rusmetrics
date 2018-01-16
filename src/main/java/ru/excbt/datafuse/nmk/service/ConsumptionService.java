@@ -370,21 +370,25 @@ public class ConsumptionService {
         dataElCons.setP_Ap1(tuple.get(qContServiceDataElCons.p_Ap1.max()));
         dataElCons.setP_Ap2(tuple.get(qContServiceDataElCons.p_Ap2.max()));
         dataElCons.setP_Ap3(tuple.get(qContServiceDataElCons.p_Ap3.max()));
+        dataElCons.setP_Ap4(tuple.get(qContServiceDataElCons.p_Ap4.max()));
 
         dataElCons.setP_An(tuple.get(qContServiceDataElCons.p_An.max()));
         dataElCons.setP_An1(tuple.get(qContServiceDataElCons.p_An1.max()));
         dataElCons.setP_An2(tuple.get(qContServiceDataElCons.p_An2.max()));
         dataElCons.setP_An3(tuple.get(qContServiceDataElCons.p_An3.max()));
+        dataElCons.setP_An4(tuple.get(qContServiceDataElCons.p_An4.max()));
 
         dataElCons.setQ_Rp(tuple.get(qContServiceDataElCons.q_Rp.max()));
         dataElCons.setQ_Rp1(tuple.get(qContServiceDataElCons.q_Rp1.max()));
         dataElCons.setQ_Rp2(tuple.get(qContServiceDataElCons.q_Rp2.max()));
         dataElCons.setQ_Rp3(tuple.get(qContServiceDataElCons.q_Rp3.max()));
+        dataElCons.setQ_Rp4(tuple.get(qContServiceDataElCons.q_Rp4.max()));
 
         dataElCons.setQ_Rn(tuple.get(qContServiceDataElCons.q_Rn.max()));
         dataElCons.setQ_Rn1(tuple.get(qContServiceDataElCons.q_Rn1.max()));
         dataElCons.setQ_Rn2(tuple.get(qContServiceDataElCons.q_Rn2.max()));
         dataElCons.setQ_Rn3(tuple.get(qContServiceDataElCons.q_Rn3.max()));
+        dataElCons.setQ_Rn4(tuple.get(qContServiceDataElCons.q_Rn4.max()));
 
         return dataElCons;
 
@@ -416,21 +420,25 @@ public class ConsumptionService {
                 qContServiceDataElCons.p_Ap1.max(),
                 qContServiceDataElCons.p_Ap2.max(),
                 qContServiceDataElCons.p_Ap3.max(),
+                qContServiceDataElCons.p_Ap4.max(),
 
                 qContServiceDataElCons.p_An.max(),
                 qContServiceDataElCons.p_An1.max(),
                 qContServiceDataElCons.p_An2.max(),
                 qContServiceDataElCons.p_An3.max(),
+                qContServiceDataElCons.p_An4.max(),
 
                 qContServiceDataElCons.q_Rp.max(),
                 qContServiceDataElCons.q_Rp1.max(),
                 qContServiceDataElCons.q_Rp2.max(),
                 qContServiceDataElCons.q_Rp3.max(),
+                qContServiceDataElCons.q_Rp4.max(),
 
                 qContServiceDataElCons.q_Rn.max(),
                 qContServiceDataElCons.q_Rn1.max(),
                 qContServiceDataElCons.q_Rn2.max(),
-                qContServiceDataElCons.q_Rn3.max()
+                qContServiceDataElCons.q_Rn3.max(),
+                qContServiceDataElCons.q_Rn4.max()
             )
                 .from(qContServiceDataElCons);
 
@@ -582,7 +590,8 @@ public class ConsumptionService {
                 consumption.setConsTaskId(taskId);
 
                 if (md5Hash) {
-                    String hash = calcMd5Hash(consValues);
+                    //String hash = calcMd5Hash(consValues);
+                    String hash = calcMd5Hash(consumption);
                     consumption.setConsMD5(hash);
                 }
                 log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
@@ -627,6 +636,33 @@ public class ConsumptionService {
         String myChecksum = DatatypeConverter
             .printHexBinary(digest).toUpperCase();
         return myChecksum;
+    }
+
+
+    /**
+     *
+     * @param consumption
+     * @return
+     */
+    private String calcMd5Hash (ContZPointConsumption consumption) {
+        final double[] values = consumption.getConsData();
+        if (values == null || values.length == 0) {
+            return null;
+        }
+        int len = values.length;
+        if (consumption.getDataInAbs() != null) len ++;
+        if (consumption.getDataOutAbs() != null) len ++;
+
+        double[] valuesFull = new double[len];
+
+        for (int i = 0; i < values.length; i++) {
+            valuesFull[i] = values[i];
+        }
+        int posCnt = values.length - 1;
+        if (consumption.getDataInAbs() != null) valuesFull[posCnt++] = consumption.getDataInAbs();
+        if (consumption.getDataOutAbs() != null) valuesFull[posCnt++] = consumption.getDataOutAbs();
+
+        return calcMd5Hash(valuesFull);
     }
 
 
@@ -842,7 +878,8 @@ public class ConsumptionService {
                 consumption.setConsTaskId(taskId);
 
                 if (md5Hash) {
-                    String hash = calcMd5Hash(consValues);
+                    //String hash = calcMd5Hash(consValues);
+                    String hash = calcMd5Hash(consumption);
                     consumption.setConsMD5(hash);
                 }
                 log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
