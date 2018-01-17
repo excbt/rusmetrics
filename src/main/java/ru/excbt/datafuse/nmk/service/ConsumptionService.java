@@ -224,14 +224,31 @@ public class ConsumptionService {
             stopWatch.reset();
             stopWatch.start();
 
-            processAnyList(task,
+            ConsumptionDataProcessorArr<ContServiceDataHWater> dataProcessor = new ConsumptionDataProcessorArr<ContServiceDataHWater>() {
+                @Override
+                public Comparator<ContServiceDataHWater> getDataComparator() {
+                    return Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+                }
+            };
+
+            processAnyListAbs(task,
                 dataHWaterList,
+                Optional.empty(),
                 d -> d.getContZPointId(),
-                Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
+                dataProcessor,
                 zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
                 true
             );
 
+
+//            processAnyList(task,
+//                dataHWaterList,
+//                d -> d.getContZPointId(),
+//                Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
+//                zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
+//                true
+//            );
+//
 
 //            processHWaterList (task, dataHWaterList, true);
 
@@ -506,7 +523,7 @@ public class ConsumptionService {
             processAnyListAbs(task,
                             data,
                             Optional.of(prePeriodLastDataLoader),
-                            i -> i.getContZPointId(),
+                            d -> d.getContZPointId(),
                             dataProcessor,
                             zp -> ConsumptionFunctionLib.findElConsFunc(zp),
                             true
@@ -527,6 +544,7 @@ public class ConsumptionService {
      * @param inDataList
      * @param md5Hash
      */
+    @Deprecated
     private <T> void processAnyList(final ConsumptionTask task,
                                     final List<T> inDataList,
                                     Function<T, Long> contZPointIdGetter,
@@ -840,6 +858,34 @@ public class ConsumptionService {
         }
     }
 
+    /**
+     *
+     * @param <T>
+     */
+    public static abstract class ConsumptionDataProcessorArr<T> implements ConsumptionDataProcessor<T> {
+
+        public abstract Comparator<T> getDataComparator();
+
+        @Override
+        public Boolean apply(ContZPointConsumption consumption, List<T> inData, Optional<List<T>> preData, ConsumptionFunction<T> consFunc) {
+
+            double[] consValues = ConsumptionFunctionLib.allValues(inData, getDataComparator(), consFunc);
+
+            if (consValues.length == 0) {
+                return false;
+            }
+
+            consumption.setConsValueName(consFunc.getValueName());
+            consumption.setDataInAbs(null);
+            consumption.setDataOutAbs(null);
+            consumption.setConsData(consValues);
+            consumption.setMeasureUnit(consFunc.getMeasureUnit());
+
+            return true;
+        }
+    }
+
+
 
     /**
      *
@@ -908,7 +954,7 @@ public class ConsumptionService {
         Optional<Map<Long, List<T>>> optPrePeriodLastDataDataMap = optPrePeriodLastDataDataAll
             .map(i -> GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter));
 
-        Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter);
+        //Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter);
 
         log.debug("Starting loop for: {} keys", periodDataMap.keySet().size());
 
@@ -923,7 +969,7 @@ public class ConsumptionService {
                 return;
             }
             List<T> periodData = periodDataMap.get(id);
-            List<T> prePeriodLastData = prePeriodLastDataDataMap.get(id);
+            //List<T> prePeriodLastData = prePeriodLastDataDataMap.get(id);
 
             List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
 
