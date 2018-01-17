@@ -712,6 +712,10 @@ public class ConsumptionService {
 
                 consValues = new double[1];
                 consValues[0] = absValue;
+
+                if (absValue == 0) {
+                    return false;
+                }
             }
 
             if (consValues == null) {
