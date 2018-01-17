@@ -603,16 +603,16 @@ public class ConsumptionService {
         @Override
         public Boolean apply(ContZPointConsumption consumption, List<T> inData, Optional<List<T>> preData, ConsumptionFunction<T> consFunc) {
 
-            Double periodLastValue = ConsumptionFunctionLib.lastValue(inData, getDataComparator(), consFunc);
-            if (periodLastValue == null) {
+            Optional<Double> periodLastValue = ConsumptionFunctionLib.lastValue(inData, getDataComparator(), consFunc);
+            if (!periodLastValue.isPresent()) {
                 return false;
             }
-            Double prePeriodLastValue = preData.map(d -> ConsumptionFunctionLib.lastValue(d, getDataComparator(), consFunc)).orElse(null);
+            Optional<Double> prePeriodLastValue = preData.map(d -> ConsumptionFunctionLib.lastValue(d, getDataComparator(), consFunc)).orElse(null);
             double[] consValues = null;
 
-            if (periodLastValue != null && prePeriodLastValue != null) {
-                double absValue = Math.abs(periodLastValue -
-                    prePeriodLastValue);
+            if (periodLastValue.isPresent() && prePeriodLastValue.isPresent()) {
+                double absValue = Math.abs(periodLastValue.get() -
+                    prePeriodLastValue.get());
                 consValues = new double[1];
                 consValues[0] = consFunc.postProcessingRound(absValue);
             }
@@ -622,8 +622,8 @@ public class ConsumptionService {
             }
 
             consumption.setConsValueName(consFunc.getValueName());
-            consumption.setDataInAbs(prePeriodLastValue);
-            consumption.setDataOutAbs(periodLastValue);
+            consumption.setDataInAbs(prePeriodLastValue.get());
+            consumption.setDataOutAbs(periodLastValue.get());
             consumption.setConsData(consValues);
             consumption.setMeasureUnit(consFunc.getMeasureUnit());
 

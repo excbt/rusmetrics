@@ -127,17 +127,17 @@ public class ConsumptionFunctionLib {
      * @param <T>
      * @return
      */
-    public static <T> Double lastValue (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
+    public static <T> Optional<Double> lastValue (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
         if (data == null) {
             return null;
         }
 
-        Double consValue = data.stream()
+        Optional<Double> consValue = data.stream()
             .filter(d -> consFunc.getFilter().test(d))
             .sorted(cmp.reversed())
-            .map(d -> consFunc.getValueFunction().apply(d)).findFirst().orElse(null);
+            .map(d -> consFunc.getValueFunction().apply(d)).findFirst();
 
-        return consFunc.postProcessingRound(consValue);
+        return consValue.map(i -> consFunc.postProcessingRound(i));
     }
 
 
