@@ -8,27 +8,27 @@ public class ConsumptionFunction<T> {
 
     public final static int DEFAULT_ROUND_SCALE = 7;
 
-    private final String funcName;
+    private final String funcValueName;
 
-    private final Function<T, Double> func;
+    private final Function<T, Double> valueFunction;
 
     private final Predicate<T> filter;
 
     private final String measureUnit;
 
-    public ConsumptionFunction(String funcName, Predicate<T> filter, Function<T, Double> func, String measureUnit) {
-        this.funcName = funcName;
-        this.func = func;
+    public ConsumptionFunction(String funcValueName, Predicate<T> filter, Function<T, Double> valueFunction, String measureUnit) {
+        this.funcValueName = funcValueName;
+        this.valueFunction = valueFunction;
         this.measureUnit = measureUnit;
         this.filter = filter;
     }
 
-    public String getFuncName() {
-        return funcName;
+    public String getValueName() {
+        return funcValueName;
     }
 
-    public Function<T, Double> getFunc() {
-        return func;
+    public Function<T, Double> getValueFunction() {
+        return valueFunction;
     }
 
     public Predicate<T> getFilter() {

@@ -53,8 +53,8 @@ public class ContZPointConsumption implements Serializable {
     @Column(name = "measure_unit")
     private String measureUnit;
 
-    @Column(name = "cons_func")
-    private String consFunc;
+    @Column(name = "cons_value_name")
+    private String consValueName;
 
     @Column(name = "data_in_abs")
     private Double dataInAbs;

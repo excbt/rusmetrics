@@ -328,7 +328,7 @@ public class ConsumptionService {
                 consumption.setDestTimeDetailType(task.getDestTimeDetailType());
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
-                consumption.setConsFunc(consFunc.getFuncName());
+                consumption.setConsValueName(consFunc.getValueName());
                 consumption.setConsData(consValues);
                 consumption.setMeasureUnit(consFunc.getMeasureUnit());
                 consumption.setConsState(CONS_STATE_CALCULATED);
@@ -480,6 +480,11 @@ public class ConsumptionService {
             stopWatch.start();
 
             Function<List<Long>, List<ContServiceDataElCons>> prePeriodLastDataLoader = ids -> {
+
+                if (ids == null || ids.isEmpty()) {
+                    return Collections.emptyList();
+                }
+
                 QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
                 List<Tuple> resultTupleList = elDataMaxDSLQueryStarter()
                     .where(
@@ -491,11 +496,44 @@ public class ConsumptionService {
                 return tuppleToDalaElCons(resultTupleList);
             };
 
+
+            Comparator<ContServiceDataElCons> dataComparator =  Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+
+            ConsumptionDataProcessor<ContServiceDataElCons> dataProcessor =
+                (consumption, inData, optPreData, consFunc) -> {
+                    Double periodLastValue = ConsumptionFunctionLib.lastValue(inData, dataComparator, consFunc);
+                    if (periodLastValue == null) {
+                        return false;
+                    }
+                    Double prePeriodLastValue = optPreData.map(d -> ConsumptionFunctionLib.lastValue(d, dataComparator, consFunc)).orElse(null);
+                    double[] consValues = null;
+
+                    if (periodLastValue != null && prePeriodLastValue != null) {
+                        double absValue = Math.abs(periodLastValue -
+                            prePeriodLastValue);
+                        consValues = new double[1];
+                        consValues[0] = consFunc.postProcessingRound(absValue);
+                    }
+
+                    if (consValues == null) {
+                        return false;
+                    }
+
+                    consumption.setConsValueName(consFunc.getValueName());
+                    consumption.setDataInAbs(prePeriodLastValue);
+                    consumption.setDataOutAbs(periodLastValue);
+                    consumption.setConsData(consValues);
+                    consumption.setMeasureUnit(consFunc.getMeasureUnit());
+
+                    return true;
+            };
+
             processAnyListAbs(task,
                             data,
-                            prePeriodLastDataLoader,
+                            Optional.of(prePeriodLastDataLoader),
                             i -> i.getContZPointId(),
                             Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
+                            dataProcessor,
                             zp -> ConsumptionFunctionLib.findElConsFunc(zp),
                             true
                             );
@@ -574,7 +612,7 @@ public class ConsumptionService {
                 consumption.setDestTimeDetailType(task.getDestTimeDetailType());
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
-                consumption.setConsFunc(consFunc.getFuncName());
+                consumption.setConsValueName(consFunc.getValueName());
                 consumption.setConsData(consValues);
                 consumption.setMeasureUnit(consFunc.getMeasureUnit());
                 consumption.setConsState(CONS_STATE_CALCULATED);
@@ -749,7 +787,7 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState) {
+    public Boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState) {
         return updateTaskState(consumptionTask, taskState, null);
     }
 
@@ -761,27 +799,34 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState, String expectedState) {
+    public Boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState, String expectedState) {
         if (consumptionTask.getTaskUUID() == null) {
-            return false;
+            return null;
         }
 
         Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
-        task.ifPresent( i -> {
+        Boolean result = task.map( i -> {
 
                 if (expectedState != null && !expectedState.equals(i.getTaskState())) {
-                    throw new IllegalStateException("Illegal task status");
+                    return false;
+                    //throw new IllegalStateException("Illegal task status");
                 }
 
                 i.setTaskState(taskState);
                 i.setTaskStateDt(Instant.now());
                 consumptionTaskRepository.save(i);
+                return true;
             }
-        );
+        ).orElse(null);
 
-        return task.isPresent();
+        return result;
     }
 
+
+
+    public interface ConsumptionDataProcessor<T> {
+        Boolean apply(ContZPointConsumption consumptionTask, List<T> inData, Optional<List<T>> preData, ConsumptionFunction<T> consFunc);
+    }
 
 
     /**
@@ -797,9 +842,10 @@ public class ConsumptionService {
      */
     private <T> List<ContZPointConsumption> processAnyListAbs(final ConsumptionTask task,
                                                               final List<T> inDataList,
-                                                              final Function<List<Long>, List<T>> prePeriodLastDataLoader,
+                                                              final Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader,
                                                               Function<T, Long> contZPointIdGetter,
                                                               Comparator<T> dataComparator,
+                                                              ConsumptionDataProcessor<T> consumptionDataProcessor,
                                                               Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
                                                               boolean md5Hash) {
 
@@ -808,7 +854,10 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
+        Boolean taskStateUpdateResult = updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
+        if (Boolean.FALSE.equals(taskStateUpdateResult)) {
+            throw new IllegalStateException("Expecting state of task is not " + TASK_STATE_SCHEDULED);
+        }
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
         cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
@@ -831,15 +880,23 @@ public class ConsumptionService {
         List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
         Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
 
-        log.debug("Pre period Data fetching");
-        final List<T> prePeriodLastDataDataAll = contZPointIds.isEmpty() ? null : prePeriodLastDataLoader.apply(contZPointIds);
-        log.debug("Pre period Data fetching complete");
+        prePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching"));
+        Optional<List<T>> optPrePeriodLastDataDataAll = prePeriodLastDataLoader.map(i -> i.apply(contZPointIds));
+        prePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching complete"));
 
-        if (prePeriodLastDataDataAll == null) {
-            return Collections.emptyList();
+        if (optPrePeriodLastDataDataAll.isPresent()) {
+            if (optPrePeriodLastDataDataAll.get() == null ||
+                optPrePeriodLastDataDataAll.get().isEmpty()) {
+                updateTaskState (task, TASK_STATE_FINISHED);
+                return Collections.emptyList();
+            }
         }
 
-        Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(prePeriodLastDataDataAll, contZPointIdGetter);
+
+        Optional<Map<Long, List<T>>> optPrePeriodLastDataDataMap = optPrePeriodLastDataDataAll
+            .map(i -> GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter));
+
+        Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter);
 
         log.debug("Starting loop for: {} keys", periodDataMap.keySet().size());
 
@@ -859,25 +916,37 @@ public class ConsumptionService {
             List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
 
             for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
-                Double periodLastValue = ConsumptionFunctionLib.lastValue(periodData, dataComparator, consFunc);
-                if (periodLastValue == null) {
-                    continue;
-                }
-                Double prePeriodLastValue = ConsumptionFunctionLib.lastValue(prePeriodLastData, dataComparator, consFunc);
-                double[] consValues = null;
 
-                if (periodLastValue != null && prePeriodLastValue != null) {
-                    double absValue = Math.abs(periodLastValue -
-                                               prePeriodLastValue);
-                    consValues = new double[1];
-                    consValues[0] = consFunc.postProcessingRound(absValue);
-                }
-
-                if (consValues == null) {
-                    continue;
-                }
+//                Double periodLastValue = ConsumptionFunctionLib.lastValue(periodData, dataComparator, consFunc);
+//                if (periodLastValue == null) {
+//                    continue;
+//                }
+//                Double prePeriodLastValue = ConsumptionFunctionLib.lastValue(prePeriodLastData, dataComparator, consFunc);
+//                double[] consValues = null;
+//
+//                if (periodLastValue != null && prePeriodLastValue != null) {
+//                    double absValue = Math.abs(periodLastValue -
+//                                               prePeriodLastValue);
+//                    consValues = new double[1];
+//                    consValues[0] = consFunc.postProcessingRound(absValue);
+//                }
+//
+//                if (consValues == null) {
+//                    continue;
+//                }
 
                 ContZPointConsumption consumption = new ContZPointConsumption();
+
+                Boolean dataProcessorResult =  consumptionDataProcessor.apply(
+                                                consumption,
+                                                periodData,
+                                                optPrePeriodLastDataDataMap.map(i -> i.get(id)) ,
+                                                consFunc );
+
+                if (Boolean.FALSE.equals(dataProcessorResult)) {
+                    continue;
+                }
+
                 consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
                 consumption.setContZPointId(id);
                 consumption.setDataType(task.getDataType());
@@ -886,11 +955,11 @@ public class ConsumptionService {
                 consumption.setDestTimeDetailType(task.getDestTimeDetailType());
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
-                consumption.setConsFunc(consFunc.getFuncName());
-                consumption.setDataInAbs(prePeriodLastValue);
-                consumption.setDataOutAbs(periodLastValue);
-                consumption.setConsData(consValues);
-                consumption.setMeasureUnit(consFunc.getMeasureUnit());
+//                consumption.setConsValueName(consFunc.getValueName());
+//                consumption.setDataInAbs(prePeriodLastValue);
+//                consumption.setDataOutAbs(periodLastValue);
+//                consumption.setConsData(consValues);
+//                consumption.setMeasureUnit(consFunc.getMeasureUnit());
                 consumption.setConsState(CONS_STATE_CALCULATED);
                 consumption.setConsTaskId(taskId);
 
@@ -899,7 +968,7 @@ public class ConsumptionService {
                     String hash = calcMd5Hash(consumption);
                     consumption.setConsMD5(hash);
                 }
-                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
+                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consumption.getConsData().hashCode(), consumption.getConsMD5());
                 consumptionDataList.add(consumption);
             }
         });

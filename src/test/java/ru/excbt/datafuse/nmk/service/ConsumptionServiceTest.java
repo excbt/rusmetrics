@@ -305,7 +305,7 @@ public class ConsumptionServiceTest {
     public void testElConsumption2016() {
 
         LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
-        LocalDateTime endDay = LocalDateTime.of(2016,12,31,0,0);
+        LocalDateTime endDay = LocalDateTime.of(2016,2,1,0,0);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -313,7 +313,7 @@ public class ConsumptionServiceTest {
 
 
         LocalDateTime day = startDay;
-        while (day.isBefore(endDay) || day.isEqual(endDay)) {
+        while (day.isBefore(endDay) ) {
             log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
 
             ConsumptionTask task = ConsumptionTask.builder()
