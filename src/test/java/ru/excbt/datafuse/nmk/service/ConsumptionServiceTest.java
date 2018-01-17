@@ -129,7 +129,6 @@ public class ConsumptionServiceTest {
             .name("MyName")
             .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
             .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
-            .contServiceType(ContServiceTypeKey.HW.getKeyname())
             .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
             .dataType(ConsumptionService.DATA_TYPE_HWATER)
@@ -179,7 +178,6 @@ public class ConsumptionServiceTest {
                 .name("MyName")
                 .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
                 .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
-                .contServiceType(ContServiceTypeKey.HW.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
                 .taskUUID(Generators.timeBasedGenerator().generate())
@@ -210,7 +208,6 @@ public class ConsumptionServiceTest {
         ConsumptionTask task = ConsumptionTask.builder()
             .contZPointId(contZPoint.getId())
             .dataType(ConsumptionService.DATA_TYPE_ELECTRICITY)
-            .contServiceType(ContServiceTypeKey.EL.getKeyname())
             .srcTimeDetailType(TimeDetailKey.TYPE_1H_ABS.getKeyname())
             .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
             .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
@@ -281,7 +278,7 @@ public class ConsumptionServiceTest {
             p_Ap = i.get(1, Double.class);
             log.info("id:{}, p_An: {}, p_Ap: {}", id, p_An, p_Ap);
 
-            ContServiceDataElCons data = ConsumptionService.lastTupleDataToDalaElCons(i);
+            ContServiceDataElCons data = ConsumptionService.lastTupleDataToDataElCons(i);
 
         });
 
@@ -310,7 +307,6 @@ public class ConsumptionServiceTest {
             ConsumptionTask task = ConsumptionTask.builder()
                 .name("MyName")
                 .dataType(ConsumptionService.DATA_TYPE_ELECTRICITY)
-                .contServiceType(ContServiceTypeKey.EL.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H_ABS.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
                 .taskUUID(Generators.timeBasedGenerator().generate())
@@ -318,21 +314,70 @@ public class ConsumptionServiceTest {
                 .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
                 .build();
 
-
-//            ConsumptionTask task = ConsumptionTask.builder()
-//                .name("MyName")
-//                .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
-//                .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
-//                .contServiceType(ContServiceTypeKey.HW.getKeyname())
-//                .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
-//                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
-//                .taskUUID(Generators.timeBasedGenerator().generate())
-//                .dataType(ConsumptionService.DATA_TYPE_HWATER)
-//                .retryCnt(3).build();
-
             task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
 
             consumptionService.processElCons(task);
+
+            day = day.plusDays(1);
+        }
+
+        stopWatch.stop();
+        log.info("Test Time: {}", stopWatch.toString());
+    }
+
+
+    @Test
+    @Transactional
+    public void processImpulseOne() {
+
+        ContZPoint contZPoint = contZPointRepository.findOne(128794022L);
+
+        LocalDateTime day = LocalDateTime.of(2016, 12, 2, 0,0);
+        LocalDateTime endDay = day.plusDays(1).minusSeconds(1);
+
+        ConsumptionTask task = ConsumptionTask.builder()
+            .contZPointId(contZPoint.getId())
+            .dataType(ConsumptionService.DATA_TYPE_IMPULSE)
+            .srcTimeDetailType(TimeDetailKey.TYPE_24H_ABS.getKeyname())
+            .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+            .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+            .dateTimeTo(endDay.atZone(ZoneId.systemDefault()).toInstant()).build();
+
+        consumptionService.processImpulse(task);
+
+
+    }
+
+
+    @Test
+    //@Ignore
+    public void processImpulseConsumption2016() {
+
+        LocalDateTime startDay = LocalDateTime.of(2016, 1, 1, 0,0);
+        LocalDateTime endDay = LocalDateTime.of(2017,1,1,0,0);
+
+
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+
+        LocalDateTime day = startDay;
+        while (day.isBefore(endDay) ) {
+            log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
+
+            ConsumptionTask task = ConsumptionTask.builder()
+                .name("MyName")
+                .dataType(ConsumptionService.DATA_TYPE_IMPULSE)
+                .srcTimeDetailType(TimeDetailKey.TYPE_24H_ABS.getKeyname())
+                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+                .taskUUID(Generators.timeBasedGenerator().generate())
+                .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
+                .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
+                .build();
+
+            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+
+            consumptionService.processImpulse(task);
 
             day = day.plusDays(1);
         }

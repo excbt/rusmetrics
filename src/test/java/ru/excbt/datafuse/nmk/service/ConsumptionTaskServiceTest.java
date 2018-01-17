@@ -88,7 +88,7 @@ public class ConsumptionTaskServiceTest {
                 .name("MyName")
                 .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
                 .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
-                .contServiceType(ContServiceTypeKey.HW.getKeyname())
+                //.contServiceType(ContServiceTypeKey.HW.getKeyname())
                 .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
                 .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
                 .retryCnt(3).build());

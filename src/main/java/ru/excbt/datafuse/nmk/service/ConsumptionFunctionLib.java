@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.service;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
@@ -75,6 +76,20 @@ public class ConsumptionFunctionLib {
         consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn2);
         consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn3);
         consumptionFunctions.add(ConsumptionFunctionLibDataElCons.Q_Rn4);
+
+        return consumptionFunctions;
+    }
+
+    public static List<ConsumptionFunction<ContServiceDataImpulse>> findImpulseFunc(ContZPoint contZPoint) {
+        List<ConsumptionFunction<ContServiceDataImpulse>> consumptionFunctions = new ArrayList<>();
+
+        if (checkAnyService(contZPoint, ContServiceTypeKey.HEAT, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
+            consumptionFunctions.add(ConsumptionFunctionLibDataImpulse.HWATER);
+        }
+
+        if (checkAnyService(contZPoint, ContServiceTypeKey.EL)) {
+            consumptionFunctions.add(ConsumptionFunctionLibDataImpulse.EL_PWR);
+        }
 
         return consumptionFunctions;
     }

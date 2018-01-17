@@ -12,10 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.QContServiceDataElCons;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
@@ -63,6 +60,7 @@ public class ConsumptionService {
 
     public static final String DATA_TYPE_HWATER = "HWATER";
     public static final String DATA_TYPE_ELECTRICITY = "ELECTRICITY";
+    public static final String DATA_TYPE_IMPULSE = "IMPULSE";
 
     private final DBSessionService dbSessionService;
 
@@ -241,7 +239,7 @@ public class ConsumptionService {
      * @param tuple
      * @return
      */
-    public static ContServiceDataElCons lastTupleDataToDalaElCons(Tuple tuple) {
+    public static ContServiceDataElCons lastTupleDataToDataElCons(Tuple tuple) {
 
         QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
         ContServiceDataElCons dataElCons = new ContServiceDataElCons();
@@ -273,6 +271,29 @@ public class ConsumptionService {
 
         return dataElCons;
 
+    }
+
+    /**
+     *
+     * @param tuples
+     * @return
+     */
+    public static List<ContServiceDataElCons> lastTupleDataToDataElCons(List<Tuple> tuples) {
+        return tuples.stream().map(i -> lastTupleDataToDataElCons(i)).collect(Collectors.toList());
+    }
+
+    /**
+     *
+     * @param tuple
+     * @return
+     */
+    public static ContServiceDataImpulse lastTupleDataToDataImpulse(Tuple tuple) {
+        QContServiceDataImpulse qContServiceDataImpulse = QContServiceDataImpulse.contServiceDataImpulse;
+        ContServiceDataImpulse dataImpulse = new ContServiceDataImpulse();
+        dataImpulse.setContZPointId(tuple.get(qContServiceDataImpulse.contZPointId));
+        dataImpulse.setDataValue(tuple.get(qContServiceDataImpulse.dataValue.max()));
+        return dataImpulse;
+
 
     }
 
@@ -281,8 +302,8 @@ public class ConsumptionService {
      * @param tuples
      * @return
      */
-    public static List<ContServiceDataElCons> tuppleToDalaElCons(List<Tuple> tuples) {
-        return tuples.stream().map(i -> lastTupleDataToDalaElCons(i)).collect(Collectors.toList());
+    public static List<ContServiceDataImpulse> lastTupleDataToDataImpulse(List<Tuple> tuples) {
+        return tuples.stream().map(i -> lastTupleDataToDataImpulse(i)).collect(Collectors.toList());
     }
 
     /**
@@ -374,7 +395,7 @@ public class ConsumptionService {
                             .and(qContServiceDataElCons.deleted.eq(0))
                             .and(qContServiceDataElCons.dataDate.lt(Date.from(task.getDateTimeFrom())))
                     ).groupBy(qContServiceDataElCons.contZPointId).fetch();
-                return tuppleToDalaElCons(resultTupleList);
+                return lastTupleDataToDataElCons(resultTupleList);
             };
 
             processAnyListUniversal(task,
@@ -393,6 +414,78 @@ public class ConsumptionService {
 
     }
 
+
+    @Transactional
+    public void processImpulse(final ConsumptionTask task) {
+        Objects.requireNonNull(task);
+
+        //final ConsumptionTask workTask = task.newIfNoUUID();
+        final ConsumptionTask workTask = task;
+
+        if (!workTask.isValid()) {
+            log.warn("Task is invalid");
+            return;
+        }
+
+        log.debug("Processing task: {}" ,workTask.toString());
+
+        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
+        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+
+        if (srcTimeDetailKey != null && period.isValid()) {
+
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+            List<ContServiceDataImpulse> data = dataImpulseRepository.selectForConsumptionAny(
+                srcTimeDetailKey.getKeyname(),
+                period.getFromDate(),
+                period.getToDate(),
+                workTask.getContZPointId());
+
+            stopWatch.stop();
+            log.debug("task data loaded in {}", stopWatch.toString());
+            stopWatch.reset();
+            stopWatch.start();
+
+
+            Function<List<Long>, List<ContServiceDataImpulse>> prePeriodLastDataLoader = ids -> {
+
+                if (ids == null || ids.isEmpty()) {
+                    return Collections.emptyList();
+                }
+
+                QContServiceDataImpulse qContServiceDataImpulse = QContServiceDataImpulse.contServiceDataImpulse;
+
+                List<Tuple> resultTuple = dbSessionService.jpaQueryFactory().select(
+                        qContServiceDataImpulse.contZPointId,
+                        qContServiceDataImpulse.dataValue.max()
+                    ).from(qContServiceDataImpulse).where(
+                        qContServiceDataImpulse.contZPointId.in(ids)
+                            .and(qContServiceDataImpulse.timeDetailType.eq(task.getSrcTimeDetailType()))
+                            .and(qContServiceDataImpulse.deleted.eq(0))
+                            .and(qContServiceDataImpulse.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                    ).groupBy(qContServiceDataImpulse.contZPointId).fetch();
+
+                return lastTupleDataToDataImpulse(resultTuple);
+            };
+
+            processAnyListUniversal(
+                task,
+                data,
+                Optional.of(prePeriodLastDataLoader),
+                d -> d.getContZPointId(),
+                impulseDataProcessor,
+                zp -> ConsumptionFunctionLib.findImpulseFunc(zp),
+                true
+            );
+            stopWatch.stop();
+            log.debug("task data processed in {}", stopWatch.toString());
+        } else {
+            log.warn("ConsumptionTask is invalid: {}", task);
+        }
+
+    }
 
     /**
      *
@@ -680,6 +773,13 @@ public class ConsumptionService {
         @Override
         public Comparator<ContServiceDataElCons> getDataComparator() {
             return Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+        }
+    };
+
+    private ConsumptionDataProcessorAbs<ContServiceDataImpulse> impulseDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataImpulse>() {
+        @Override
+        public Comparator<ContServiceDataImpulse> getDataComparator() {
+            return Comparator.comparing(ContServiceDataImpulse::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
         }
     };
 

@@ -31,7 +31,7 @@ public class ConsumptionTask implements Serializable {
 
     private final String destTimeDetailType;
 
-    private final String contServiceType;
+    //private final String contServiceType;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long contZPointId;
@@ -52,7 +52,7 @@ public class ConsumptionTask implements Serializable {
             .name(this.name)
             .srcTimeDetailType(this.srcTimeDetailType)
             .destTimeDetailType(this.destTimeDetailType)
-            .contServiceType(this.contServiceType)
+            //.contServiceType(this.contServiceType)
             .dateTimeFrom(this.dateTimeFrom)
             .dateTimeTo(this.dateTimeTo)
             .retryCnt(this.retryCnt > 0 ? this.retryCnt - 1 : 0)
@@ -69,7 +69,7 @@ public class ConsumptionTask implements Serializable {
             .name(this.name)
             .srcTimeDetailType(this.srcTimeDetailType)
             .destTimeDetailType(this.destTimeDetailType)
-            .contServiceType(this.contServiceType)
+            //.contServiceType(this.contServiceType)
             .dateTimeFrom(this.dateTimeFrom)
             .dateTimeTo(this.dateTimeTo)
             .retryCnt(this.retryCnt)
@@ -86,7 +86,8 @@ public class ConsumptionTask implements Serializable {
     public boolean isValid() {
         return TimeDetailKey.searchKeyname(srcTimeDetailType) != null &&
             TimeDetailKey.searchKeyname(destTimeDetailType) != null &&
-            ContServiceTypeKey.searchKeyname(contServiceType) != null && toDateInterval().isValid();
+            //ContServiceTypeKey.searchKeyname(contServiceType) != null &&
+            toDateInterval().isValid();
     }
 
 }
