@@ -95,6 +95,16 @@
 -->
             <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
+                
+                <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0)"
+                   style = "display: inline;">
+                    ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
+                    <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">
+                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще {{$ctrl.ELEMENTS_PER_NODE}}</i>
+                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewAllElements(item)">Показать все</i>
+                  </span>
+                </p>    
+                
             </span>
             <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-file text-success"></i>
@@ -110,7 +120,12 @@
                <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
                <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
                <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+<!--
+            <span>
+                item.lazyNode: {{item.lazyNode}}
             </span>            
+-->
 <!--
             <a ui-sref = "objectsPTree.info({node: item})"> Уведомления</a>
             <a ui-sref = "objectsPTree.contObjectControl({node: item})"> Контроль</a>
@@ -121,21 +136,30 @@
         </div>
         <div ng-hide = "item.loading">
             <ol ui-tree-nodes="options"
-                ng-model="item.childNodes"
+                ng-model="item.childNodesOnPage"
                 ng-class="{hidden: collapsed}">
-              <li ng-repeat="item in item.childNodes"
+              <li ng-repeat="item in item.childNodesOnPage"
                   ui-tree-node data-collapsed = "true"
                   ng-include="'subscr_object_p_tree_items_renderer.html'">
               </li>
             </ol>
             <ol ui-tree-nodes="options"
-                ng-model="item.linkedNodeObjects"
+                ng-model="item.linkedNodeObjectsOnPage"
                 ng-class="{hidden: collapsed}">
-              <li ng-repeat="item in item.linkedNodeObjects"
+              <li ng-repeat="item in item.linkedNodeObjectsOnPage"
                   ui-tree-node data-collapsed = "true"
                   ng-include="'subscr_object_p_tree_items_renderer.html'">
               </li>
             </ol>
+<!--
+            <ol ng-if = "$ctrl.isElementNode(item) && (item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0)">
+                <li>
+                    ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
+                    <i class = "btn btn-default btn-xs" ng-click = "viewMoreElements(item)">Показать еще {{ELEMENTS_PER_NODE}}</i>
+                    <i class = "btn btn-default btn-xs" ng-click = "viewAllElements(item)">Показать все</i>
+                </li>
+            </ol>
+-->
         </div>
     </script>
 </div>

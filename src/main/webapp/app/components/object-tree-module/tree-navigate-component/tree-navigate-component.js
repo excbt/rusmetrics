@@ -35,6 +35,7 @@
         ctrl.messages = {
             treeMenuHeader: "Wazzzuuuup"
         };
+        ctrl.ELEMENTS_PER_NODE = 25;
         
         var thisdata = {};
         thisdata.deviceModels = [];
@@ -165,6 +166,8 @@
 
             ctrl.data.currentPTree = resp.data;
             setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
+            ctrl.data.currentPTree.linkedNodeObjectsOnPage = ctrl.data.currentPTree.linkedNodeObjects;
+            ctrl.data.currentPTree.childNodesOnPage = ctrl.data.currentPTree.childNodes;
             ctrl.data.currentPTreeWrapper = [ctrl.data.currentPTree];
             treeNavSvc.setPTree(ctrl.data.currentPTree);
             $cookies.loadedPTreeId = ctrl.data.currentPTree._id;
@@ -292,6 +295,16 @@
             treeNavSvc.loadPTreeNode(treeId, depthLvl)
                 .then(successLoadPTreeCallback, errorCallback);
         }
+        
+        ctrl.viewAllElements = function (item) {
+            item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjects.length));
+            item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodes.length));
+        };
+        
+        ctrl.viewMoreElements = function (item) {
+            item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjectsOnPage.length + ctrl.ELEMENTS_PER_NODE));
+            item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodesOnPage.length + ctrl.ELEMENTS_PER_NODE));
+        };
 
         function successLoadPTreeNodeCallback(resp, PTnode) {
             if (checkUndefinedNull(resp) || checkUndefinedNull(resp.data)) {
@@ -299,9 +312,11 @@
             }
             if (!checkUndefinedNull(resp.data.linkedNodeObjects)) {
                 PTnode.linkedNodeObjects = resp.data.linkedNodeObjects;
+                PTnode.linkedNodeObjectsOnPage = PTnode.linkedNodeObjects.slice(0, ctrl.ELEMENTS_PER_NODE);
             }
             if (!checkUndefinedNull(resp.data.childNodes)) {
                 PTnode.childNodes = resp.data.childNodes;
+                PTnode.childNodesOnPage = PTnode.childNodes.slice(0, ctrl.ELEMENTS_PER_NODE);
             }
             
             //set lazyNode = false because node is loaded
@@ -318,32 +333,37 @@
             treeNavSvc.loadPTreeNode(pTreeNode.id || pTreeNode._id, depthLvl)
                 .then(function (resp) {
                     pTreeNode.loading = false;
-                    successLoadPTreeNodeCallback(resp, pTreeNode);
-                    toggleMethod(treeScope);
+                    successLoadPTreeNodeCallback(resp, pTreeNode);              
+//                    toggleMethod(treeScope);
                 }, function (err) {
                     pTreeNode.loading = false;
                     errorCallback(err);
                 });
         }
 
-        function isLazyNode(item) {
-            return item.lazyNode;
-        }
+        var isLazyNode = treeNavSvc.isLazyNode;
+//        (item) {
+//            return item.lazyNode;
+//        }
 
-        ctrl.isElementNode = treeNavSvc.isElementNode; 
-        ctrl.isContObjectNode = treeNavSvc.isContObjectNode;
-        ctrl.isContZpointNode = treeNavSvc.isContZpointNode;
-        ctrl.isDeviceNode = treeNavSvc.isDeviceNode;
+//        ctrl.isElementNode = treeNavSvc.isElementNode; 
+//        ctrl.isContObjectNode = treeNavSvc.isContObjectNode;
+//        ctrl.isContZpointNode = treeNavSvc.isContZpointNode;
+//        ctrl.isDeviceNode = treeNavSvc.isDeviceNode;
 
-        ctrl.isChevronRight = treeNavSvc.isChevronRight;
+//        ctrl.isChevronRight = treeNavSvc.isChevronRight;
 
-        ctrl.isChevronDown = treeNavSvc.isChevronDown;
+//        ctrl.isChevronDown = treeNavSvc.isChevronDown;
 
-        ctrl.isChevronDisabled = treeNavSvc.isChevronDisabled;
+//        ctrl.isChevronDisabled = treeNavSvc.isChevronDisabled;
 
         function findNodeInPTree(node, tree) {
             return treeNavSvc.findNodeInPTree(node, tree);
         }
+        
+        ctrl.testClick = function () {
+            console.log('test click');
+        };
         
             // ********************************************************************************************
                     //  Load widget settings - Need it here ???

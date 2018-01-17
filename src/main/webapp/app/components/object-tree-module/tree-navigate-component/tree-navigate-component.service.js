@@ -341,6 +341,9 @@
         
         
         function isChevronRight(collapsed, item) {
+            if (isLazyNode(item)) {
+                 return true;
+            }
             if (checkUndefinedNull(item) || (checkUndefinedNull(item.childNodes) &&  checkUndefinedNull(item.linkedNodeObjects))) {
                 return false;
             }
@@ -354,9 +357,9 @@
         }
 
         function isChevronDisabled(collapsed, item) {
-            // if (isLazyNode(item)) {
-            //     return false;
-            // }
+            if (isLazyNode(item)) {
+                return false;
+            }
             if ( checkUndefinedNull(item) || ( checkUndefinedNull(item.childNodes) &&  checkUndefinedNull(item.linkedNodeObjects))) {
                 return true;
             }
@@ -370,6 +373,10 @@
         var isDeviceNode = objectTreeService.isDeviceNode;
 
         var isElementNode = objectTreeService.isElementNode;
+        
+        function isLazyNode(item) {
+            return item.lazyNode;
+        }
         
             // Sort object array by some string field
         function sortItemsBy(itemArray, sortField) {
@@ -429,7 +436,8 @@
         service.isContObjectNode = isContObjectNode;
         service.isContZpointNode = isContZpointNode;
         service.isDeviceNode = isDeviceNode;
-        service.isElementNode = isElementNode;        
+        service.isElementNode = isElementNode;
+        service.isLazyNode = isLazyNode;
         
         service.loadDefaultTreeSetting = loadDefaultTreeSetting;
         service.loadPTreeNode = loadPTreeNode;
