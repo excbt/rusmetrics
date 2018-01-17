@@ -15,7 +15,7 @@
           <div class = "col-xs-3 noPadding">
              <div class = "pull-right">
                   <label class="nmc-form-label">Всего:</label>
-                  <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="$ctrl.objectsOnPage.length">
+                  <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="($ctrl.objects | filter: $ctrl.filter).length">
               </div>
           </div>
        </div>

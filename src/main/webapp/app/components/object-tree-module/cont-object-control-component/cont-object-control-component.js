@@ -314,18 +314,16 @@
         ctrl.filterObjects = filterObjects;
         function filterObjects() {
             var filteredObjects = $filter('filter')(ctrl.objects, ctrl.filter);
-            filteredObjects = $filter('orderBy')(filteredObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+            filteredObjects = $filter('orderBy')(filteredObjects, ctrl.orderBy.field, ctrl.orderBy.asc);            
             ctrl.objectsOnPage = filteredObjects;
+//console.log(ctrl.filter);
+//console.log(ctrl.objectsOnPage);            
             filteredObjects.forEach(function (elm) {
                 if (elm.loading === true) {
                     contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
                         .then(successLoadObjectMonitorStateCallback, errorCallback);
                 }
-            });
-        }
-        
-        function orderObjects() {
-            
+            });            
         }
         
         function getNodeContObjects() {
@@ -343,7 +341,7 @@
                     });
                     nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
                     ctrl.objects = nodeObjects;                    
-console.log(ctrl.objects);                    
+//console.log(ctrl.objects);                    
                     ctrl.addMoreObjectsOnPage();
 //                    ctrl.objects.forEach(function (elm) {
 //                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
