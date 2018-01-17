@@ -14,16 +14,19 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter) {
         /*jshint validthis: true*/
         var ctrl = this;
-        ctrl.objects = [];
+        ctrl.objects = [];        
+        ctrl.objectsOnPage = [];
+        ctrl.filter = '';
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
-            IMG_EXT = ".png";
+            IMG_EXT = ".png",
+            OBJECTS_PER_PAGE = 42;
         
         var MONITOR_STATE_LVLS = {
             'green': {
@@ -84,6 +87,7 @@
         ctrl.setOrderBy = function (field) {
             var asc = ctrl.orderBy.field === field ? !ctrl.orderBy.asc : true;
             ctrl.orderBy = { field: field, asc: asc };
+            ctrl.filterObjects();
 //console.log('ctrl.orderBy: ', ctrl.orderBy);
 //console.log(ctrl.objects);            
         };
@@ -121,6 +125,19 @@
         function errorCallback(e) {
             console.error(e);
         }
+        
+        ctrl.addMoreObjectsOnPage = function () {
+            if (ctrl.objectsOnPage.length < ctrl.objects.length) {
+                var addedObjects = ctrl.objects.slice(ctrl.objectsOnPage.length, ctrl.objectsOnPage.length + OBJECTS_PER_PAGE);
+                ctrl.objectsOnPage = ctrl.objectsOnPage.concat(addedObjects);
+                addedObjects.forEach(function (elm) {
+                    contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+                        .then(successLoadObjectMonitorStateCallback, errorCallback);
+                });
+            }
+            
+//console.log(ctrl.objectsOnPage);            
+        };
         
         function successLoadObjectMonitorStateCallback(resp) {
             if (angular.isUndefined(resp) || resp === null || angular.isUndefined(resp.data) || resp.data === null) {
@@ -294,6 +311,23 @@
                 .then(successLoadZpointWidgetListCallback, errorCallback);
         };
         
+        ctrl.filterObjects = filterObjects;
+        function filterObjects() {
+            var filteredObjects = $filter('filter')(ctrl.objects, ctrl.filter);
+            filteredObjects = $filter('orderBy')(filteredObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+            ctrl.objectsOnPage = filteredObjects;
+            filteredObjects.forEach(function (elm) {
+                if (elm.loading === true) {
+                    contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+                        .then(successLoadObjectMonitorStateCallback, errorCallback);
+                }
+            });
+        }
+        
+        function orderObjects() {
+            
+        }
+        
         function getNodeContObjects() {
 //console.log('getNodeContObjects:', getNodeContObjects);            
             var node = $stateParams.node;
@@ -307,11 +341,14 @@
                     nodeObjects.forEach(function (elm) {
                         elm.loading = true;
                     });
-                    ctrl.objects = nodeObjects;
-                    ctrl.objects.forEach(function (elm) {
-                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
-                            .then(successLoadObjectMonitorStateCallback, errorCallback);
-                    });
+                    nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+                    ctrl.objects = nodeObjects;                    
+console.log(ctrl.objects);                    
+                    ctrl.addMoreObjectsOnPage();
+//                    ctrl.objects.forEach(function (elm) {
+//                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+//                            .then(successLoadObjectMonitorStateCallback, errorCallback);
+//                    });
                 }
             }
         }

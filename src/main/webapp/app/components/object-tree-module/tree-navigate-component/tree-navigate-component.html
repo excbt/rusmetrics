@@ -88,9 +88,11 @@
              data-nodrag ng-click="toggle(this)">
             </i>
             
+<!--
             <span ng-if = "item.type == 'root'">
                   <strong>\</strong>
             </span>
+-->
             <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
                 <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
             </span>
