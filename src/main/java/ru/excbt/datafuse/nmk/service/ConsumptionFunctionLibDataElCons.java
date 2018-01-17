@@ -48,7 +48,6 @@ public class ConsumptionFunctionLibDataElCons {
     private static <T> ConsumptionFunction<T> createInternal (final String name, final Function<T, Double> valueGetter) {
         return new ConsumptionFunction<>(
             name,
-            d -> Objects.nonNull(valueGetter.apply(d)) && valueGetter.apply(d) != 0, // Skip null & zero values
             d -> valueGetter.apply(d),
             MeasureUnitKey.PWR_KWT_H.name());
     }

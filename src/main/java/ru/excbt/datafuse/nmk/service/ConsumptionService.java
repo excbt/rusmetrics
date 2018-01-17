@@ -604,17 +604,21 @@ public class ConsumptionService {
         public Boolean apply(ContZPointConsumption consumption, List<T> inData, Optional<List<T>> preData, ConsumptionFunction<T> consFunc) {
 
             Optional<Double> periodLastValue = ConsumptionFunctionLib.lastValue(inData, getDataComparator(), consFunc);
+
             if (!periodLastValue.isPresent()) {
                 return false;
             }
-            Optional<Double> prePeriodLastValue = preData.map(d -> ConsumptionFunctionLib.lastValue(d, getDataComparator(), consFunc)).orElse(null);
+
+            Optional<Double> prePeriodLastValue = preData.map(d -> ConsumptionFunctionLib.lastValue(d, getDataComparator(), consFunc).orElse(null));
             double[] consValues = null;
 
-            if (periodLastValue.isPresent() && prePeriodLastValue.isPresent()) {
-                double absValue = Math.abs(periodLastValue.get() -
-                    prePeriodLastValue.get());
+            // periodLastValue.isPresent() is always true
+            if (prePeriodLastValue.isPresent()) {
+
+                double absValue = Math.abs(periodLastValue.get() - prePeriodLastValue.get());
+
                 consValues = new double[1];
-                consValues[0] = consFunc.postProcessingRound(absValue);
+                consValues[0] = absValue;
             }
 
             if (consValues == null) {
@@ -644,7 +648,12 @@ public class ConsumptionService {
 
             double[] consValues = ConsumptionFunctionLib.allValues(inData, getDataComparator(), consFunc);
 
-            if (consValues.length == 0) {
+            double sum = 0;
+            for (int i = 0; i < consValues.length; i++) {
+                sum = sum + consValues[i];
+            }
+
+            if (consValues.length == 0 || sum == 0) {
                 return false;
             }
 
