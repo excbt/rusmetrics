@@ -110,7 +110,7 @@ public class ConsumptionFunctionLib {
     public static <T> double[] allValues (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
 
         double[] consValues = data.stream()
-            .filter(d -> consFunc.getFilter().test(d))
+            .filter(d -> consFunc.getDataFilter().test(d))
             .sorted(cmp)
             .map(d -> consFunc.getValueFunction().apply(d))
             .map(d -> consFunc.postProcessingRound(d))
@@ -129,15 +129,18 @@ public class ConsumptionFunctionLib {
      */
     public static <T> Optional<Double> lastValue (List<T> data, Comparator<T> cmp, ConsumptionFunction<T> consFunc) {
         if (data == null) {
-            return null;
+            return Optional.empty();
         }
 
         Optional<Double> consValue = data.stream()
-            .filter(d -> consFunc.getFilter().test(d))
+            .filter(d -> consFunc.getDataFilter().test(d))
             .sorted(cmp.reversed())
-            .map(d -> consFunc.getValueFunction().apply(d)).findFirst();
+            .filter(d -> consFunc.getNotZeroFilter().test(d))
+            .map(d -> consFunc.getValueFunction().apply(d))
+            .findFirst()
+            .map(i -> consFunc.postProcessingRound(i));
 
-        return consValue.map(i -> consFunc.postProcessingRound(i));
+        return consValue;
     }
 
 
