@@ -15,13 +15,6 @@ public class ConsumptionFunctionLib {
     }
 
 
-
-
-
-
-
-
-
     /**
      *
      * @param contZPoint
@@ -39,12 +32,6 @@ public class ConsumptionFunctionLib {
                 .map(i -> i.getFieldName()).collect(Collectors.toList());
             boolean vCase = fields.contains("V");
             boolean mCase = fields.contains("M");
-//                contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
-//                .map(i -> i.getFieldName()).anyMatch(i -> "M".equals(i));
-//            boolean vCase = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
-//                .map(i -> i.getFieldName()).anyMatch(i -> "V".equals(i));
-//            boolean mCase = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
-//                .map(i -> i.getFieldName()).anyMatch(i -> "M".equals(i));
             boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
             if (mCase) {
                 consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.M1_sub_M2 : ConsumptionFunctionLibDataHWater.M1);
@@ -126,6 +113,7 @@ public class ConsumptionFunctionLib {
             .filter(d -> consFunc.getFilter().test(d))
             .sorted(cmp)
             .map(d -> consFunc.getValueFunction().apply(d))
+            .map(d -> consFunc.postProcessingRound(d))
             .mapToDouble(x -> x).toArray();
 
         return consValues;
