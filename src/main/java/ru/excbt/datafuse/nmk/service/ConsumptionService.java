@@ -142,7 +142,6 @@ public class ConsumptionService {
 
         Objects.requireNonNull(task);
 
-        //final ConsumptionTask workTask = task.newIfNoUUID();
         final ConsumptionTask workTask = task;
 
         Objects.requireNonNull(contZPoint);
@@ -161,8 +160,26 @@ public class ConsumptionService {
             period.getFromDate(),
             period.getToDate());
 
-        processHWaterList (workTask, data, md5Hash);
 
+        processAnyListUniversal(task,
+            data,
+            Optional.empty(),
+            d -> d.getContZPointId(),
+            hWaterDataProcessor,
+            zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
+            md5Hash
+        );
+
+
+    }
+
+    /**
+     *
+     * @param task
+     */
+    @Transactional
+    public void processHWater(final ConsumptionTask task) {
+        processHWater (task, true);
     }
 
     /**
@@ -172,26 +189,6 @@ public class ConsumptionService {
      */
     @Transactional
     public void processHWater(final ConsumptionTask task, boolean md5Hash) {
-
-        Objects.requireNonNull(task);
-
-        //ConsumptionTask workTask = task.newIfNoUUID();
-        ConsumptionTask workTask = task;
-
-        DateInterval period = workTask.toDateInterval();
-
-        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumptionAny(
-            workTask.getSrcTimeDetailType(),
-            period.getFromDate(),
-            period.getToDate(),
-            workTask.getContZPointId());
-
-        processHWaterList (workTask, data, md5Hash);
-
-    }
-
-    @Transactional
-    public void processHWater(final ConsumptionTask task) {
         Objects.requireNonNull(task);
 
         //final ConsumptionTask workTask = task.newIfNoUUID();
@@ -206,8 +203,6 @@ public class ConsumptionService {
 
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
         InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
-
-
 
         if (srcTimeDetailKey != null && period.isValid()) {
 
@@ -224,151 +219,20 @@ public class ConsumptionService {
             stopWatch.reset();
             stopWatch.start();
 
-            ConsumptionDataProcessorArr<ContServiceDataHWater> dataProcessor = new ConsumptionDataProcessorArr<ContServiceDataHWater>() {
-                @Override
-                public Comparator<ContServiceDataHWater> getDataComparator() {
-                    return Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
-                }
-            };
-
-            processAnyListAbs(task,
+            processAnyListUniversal(task,
                 dataHWaterList,
                 Optional.empty(),
                 d -> d.getContZPointId(),
-                dataProcessor,
+                hWaterDataProcessor,
                 zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
-                true
+                md5Hash
             );
-
-
-//            processAnyList(task,
-//                dataHWaterList,
-//                d -> d.getContZPointId(),
-//                Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder())),
-//                zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
-//                true
-//            );
-//
-
-//            processHWaterList (task, dataHWaterList, true);
 
             stopWatch.stop();
             log.debug("task data processed in {}", stopWatch.toString());
         } else {
             log.warn("ConsumptionTask is invalid: {}", task);
         }
-
-    }
-
-
-
-    /**
-     *
-     * @param task
-     * @param dataHWaterList
-     */
-    private void processHWaterList(final ConsumptionTask task, List<ContServiceDataHWater> dataHWaterList, boolean md5Hash) {
-
-        Objects.requireNonNull(task);
-
-        Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
-            consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
-
-        optContZPointConsumptionTask = optContZPointConsumptionTask.map(i -> {
-
-            if (!TASK_STATE_SCHEDULED.equals(i.getTaskState())) {
-                throw new IllegalStateException("Illegal task status");
-            }
-
-            i.setTaskState(TASK_STATE_CALCULATING);
-            i.setTaskDateTime(Instant.now());
-            return consumptionTaskRepository.saveAndFlush(i);
-        });
-
-        Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
-        cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(DATA_TYPE_HWATER).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
-
-        cleanConsumptionDataType(cleanKeys2);
-
-//        Set<ConsumptionZPointKey> cleanKeys = dataHWaterList.stream()
-//            .map(i -> new ConsumptionZPointKey(i.getContZPointId(), workTask.getDestTimeDetailType(), workTask.getDateTimeFrom()))
-//            .collect(Collectors.toSet());
-//
-//        cleanConsumptionZPoint(cleanKeys);
-
-        Map<Long, List<ContServiceDataHWater>> dataMap = GroupUtil.makeIdMap(dataHWaterList, (i) -> i.getContZPointId());
-        log.trace("ContZPoints: ");
-        dataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, dataMap.get(i).size()));
-
-        //List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
-        //List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
-        //Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
-
-        final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
-
-        Comparator<ContServiceDataHWater> cmpByDataDate = Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
-
-        dataMap.keySet().stream().sorted().forEach(i -> {
-            ContZPoint contZPoint = contZPointRepository.findOne(i);
-            //contZPointMap.get(i);
-
-            if (contZPoint == null) {
-                log.warn("ContZPoint (id={}) is not found", i);
-                return;
-            }
-
-            final List<ContServiceDataHWater> dataHWaters = dataMap.get(i);
-
-            Set<String> srcTimeDetailTypes = dataHWaters.stream().map(ContServiceDataHWater::getTimeDetailType).distinct().collect(Collectors.toSet());
-
-            if (srcTimeDetailTypes.size() != 1) {
-                throw new IllegalStateException("Time detail type is invalid");
-            }
-
-            List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = ConsumptionFunctionLib.findHWaterFunc(contZPoint);
-
-            List<ContZPointConsumption> consumptions = new ArrayList<>();
-
-            for (ConsumptionFunction<ContServiceDataHWater> consFunc: consumptionFunctions) {
-                double[] consValues = ConsumptionFunctionLib.allValues(dataHWaters, cmpByDataDate, consFunc);
-
-                if (consValues.length == 0) {
-                    continue;
-                }
-
-                ContZPointConsumption consumption = new ContZPointConsumption();
-                consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
-                consumption.setContZPointId(i);
-                consumption.setDataType(DATA_TYPE_HWATER);
-                consumption.setConsDateTime(task.getDateTimeFrom());
-                consumption.setSrcTimeDetailType(task.getSrcTimeDetailType());
-                consumption.setDestTimeDetailType(task.getDestTimeDetailType());
-                consumption.setDateTimeFrom(task.getDateTimeFrom());
-                consumption.setDateTimeTo(task.getDateTimeTo());
-                consumption.setConsValueName(consFunc.getValueName());
-                consumption.setConsData(consValues);
-                consumption.setMeasureUnit(consFunc.getMeasureUnit());
-                consumption.setConsState(CONS_STATE_CALCULATED);
-                consumption.setConsTaskId(taskId);
-
-                if (md5Hash) {
-                    String hash = calcMd5Hash(consValues);
-                    consumption.setConsMD5(hash);
-                }
-                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
-                consumptions.add(consumption);
-            }
-            consumptionRepository.save(consumptions);
-        });
-
-        consumptionRepository.flush();
-
-        optContZPointConsumptionTask = optContZPointConsumptionTask.map( i -> {
-                i.setTaskState(TASK_STATE_FINISHED);
-                i.setTaskDateTime(Instant.now());
-                return consumptionTaskRepository.saveAndFlush(i);
-            }
-        );
 
     }
 
@@ -513,18 +377,11 @@ public class ConsumptionService {
                 return tuppleToDalaElCons(resultTupleList);
             };
 
-            ConsumptionDataProcessorAbs<ContServiceDataElCons> dataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataElCons>() {
-                @Override
-                public Comparator<ContServiceDataElCons> getDataComparator() {
-                    return Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
-                }
-            };
-
-            processAnyListAbs(task,
+            processAnyListUniversal(task,
                             data,
                             Optional.of(prePeriodLastDataLoader),
                             d -> d.getContZPointId(),
-                            dataProcessor,
+                            elConsDataProcessor,
                             zp -> ConsumptionFunctionLib.findElConsFunc(zp),
                             true
                             );
@@ -537,99 +394,10 @@ public class ConsumptionService {
     }
 
 
-
     /**
      *
-     * @param task
-     * @param inDataList
-     * @param md5Hash
+     * @return
      */
-    @Deprecated
-    private <T> void processAnyList(final ConsumptionTask task,
-                                    final List<T> inDataList,
-                                    Function<T, Long> contZPointIdGetter,
-                                    Comparator<T> cmp,
-                                    Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
-                                    boolean md5Hash) {
-
-        Objects.requireNonNull(task);
-
-        Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
-            consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
-
-        updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
-
-        Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
-        cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
-        cleanConsumptionDataType(cleanKeys2);
-
-        Map<Long, List<T>> dataMap = GroupUtil.makeIdMap(inDataList, contZPointIdGetter);
-        log.trace("ContZPoints: ");
-        dataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, dataMap.get(i).size()));
-
-        final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
-
-        List<Long> contZPointIds = dataMap.keySet().stream().distinct().collect(Collectors.toList());
-        List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
-        Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
-
-        log.debug("Starting loop for: {} keys", dataMap.keySet().size());
-
-        dataMap.keySet().stream().sorted().forEach(i -> {
-            final ContZPoint contZPoint = contZPointMap.get(i);
-
-            final List<T> contZPointData = dataMap.get(i);
-
-            if (contZPoint == null) {
-                log.warn("ContZPoint (id={}) is not found", i);
-                return;
-            }
-            List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
-
-            List<ContZPointConsumption> consumptionDataList = new ArrayList<>();
-
-            for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
-                double[] consValues = ConsumptionFunctionLib.allValues(contZPointData, cmp, consFunc);
-
-                if (consValues.length == 0) {
-                    continue;
-                }
-
-                ContZPointConsumption consumption = new ContZPointConsumption();
-                consumption.setContServiceType(contZPoint.getContServiceTypeKeyname());
-                consumption.setContZPointId(i);
-                consumption.setDataType(task.getDataType());
-                consumption.setConsDateTime(task.getDateTimeFrom());
-                consumption.setSrcTimeDetailType(task.getSrcTimeDetailType());
-                consumption.setDestTimeDetailType(task.getDestTimeDetailType());
-                consumption.setDateTimeFrom(task.getDateTimeFrom());
-                consumption.setDateTimeTo(task.getDateTimeTo());
-                consumption.setConsValueName(consFunc.getValueName());
-                consumption.setConsData(consValues);
-                consumption.setMeasureUnit(consFunc.getMeasureUnit());
-                consumption.setConsState(CONS_STATE_CALCULATED);
-                consumption.setConsTaskId(taskId);
-
-                if (md5Hash) {
-                    //String hash = calcMd5Hash(consValues);
-                    String hash = calcMd5Hash(consumption);
-                    consumption.setConsMD5(hash);
-                }
-                log.trace("Consumption ID: {}, Hash: {}, MD5: {}", consumption.getId(), consValues.hashCode(), consumption.getConsMD5());
-                consumptionDataList.add(consumption);
-            }
-            consumptionRepository.save(consumptionDataList);
-        });
-
-        log.debug("End loop for: {} keys", dataMap.keySet().size());
-
-        consumptionRepository.flush();
-
-        updateTaskState (task, TASK_STATE_FINISHED);
-
-    }
-
-
     private MessageDigest md5Hash() {
         try {
             return MessageDigest.getInstance("MD5");
@@ -639,6 +407,11 @@ public class ConsumptionService {
         }
     }
 
+    /**
+     *
+     * @param data
+     * @return
+     */
     private String calcMd5Hash (double[] data) {
         if (data == null) {
             return null;
@@ -886,6 +659,22 @@ public class ConsumptionService {
     }
 
 
+    private ConsumptionDataProcessorArr<ContServiceDataHWater> hWaterDataProcessor = new ConsumptionDataProcessorArr<ContServiceDataHWater>() {
+        @Override
+        public Comparator<ContServiceDataHWater> getDataComparator() {
+            return Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+        }
+    };
+
+
+    private ConsumptionDataProcessorAbs<ContServiceDataElCons> elConsDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataElCons>() {
+        @Override
+        public Comparator<ContServiceDataElCons> getDataComparator() {
+            return Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
+        }
+    };
+
+
 
     /**
      *
@@ -899,13 +688,13 @@ public class ConsumptionService {
      * @param <T>
      * @return
      */
-    private <T> List<ContZPointConsumption> processAnyListAbs(final ConsumptionTask task,
-                                                              final List<T> inDataList,
-                                                              final Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader,
-                                                              Function<T, Long> contZPointIdGetter,
-                                                              ConsumptionDataProcessor<T> consumptionDataProcessor,
-                                                              Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
-                                                              boolean md5Hash) {
+    private <T> List<ContZPointConsumption> processAnyListUniversal(final ConsumptionTask task,
+                                                                    final List<T> inDataList,
+                                                                    final Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader,
+                                                                    Function<T, Long> contZPointIdGetter,
+                                                                    ConsumptionDataProcessor<T> consumptionDataProcessor,
+                                                                    Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
+                                                                    boolean md5Hash) {
 
         Objects.requireNonNull(task);
 
@@ -932,7 +721,7 @@ public class ConsumptionService {
         log.trace("ContZPoints: ");
         periodDataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, periodDataMap.get(i).size()));
 
-        final Long taskId = optContZPointConsumptionTask.map(i -> i.getId()).orElse(null);
+        final Optional<Long> optTaskId = optContZPointConsumptionTask.map(i -> i.getId());
 
         List<Long> contZPointIds = periodDataMap.keySet().stream().distinct().collect(Collectors.toList());
         List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
@@ -950,18 +739,14 @@ public class ConsumptionService {
             }
         }
 
-
         Optional<Map<Long, List<T>>> optPrePeriodLastDataDataMap = optPrePeriodLastDataDataAll
             .map(i -> GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter));
 
-        //Map<Long, List<T>> prePeriodLastDataDataMap = GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter);
-
         log.debug("Starting loop for: {} keys", periodDataMap.keySet().size());
-
-        // For each ContZPoint
 
         List<ContZPointConsumption> consumptionDataList = new ArrayList<>();
 
+        // For each ContZPoint
         periodDataMap.keySet().stream().sorted().forEach(id -> {
             ContZPoint contZPoint = contZPointMap.get(id);
             if (contZPoint == null) {
@@ -969,29 +754,10 @@ public class ConsumptionService {
                 return;
             }
             List<T> periodData = periodDataMap.get(id);
-            //List<T> prePeriodLastData = prePeriodLastDataDataMap.get(id);
 
             List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
 
             for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
-
-//                Double periodLastValue = ConsumptionFunctionLib.lastValue(periodData, dataComparator, consFunc);
-//                if (periodLastValue == null) {
-//                    continue;
-//                }
-//                Double prePeriodLastValue = ConsumptionFunctionLib.lastValue(prePeriodLastData, dataComparator, consFunc);
-//                double[] consValues = null;
-//
-//                if (periodLastValue != null && prePeriodLastValue != null) {
-//                    double absValue = Math.abs(periodLastValue -
-//                                               prePeriodLastValue);
-//                    consValues = new double[1];
-//                    consValues[0] = consFunc.postProcessingRound(absValue);
-//                }
-//
-//                if (consValues == null) {
-//                    continue;
-//                }
 
                 ContZPointConsumption consumption = new ContZPointConsumption();
 
@@ -1013,16 +779,10 @@ public class ConsumptionService {
                 consumption.setDestTimeDetailType(task.getDestTimeDetailType());
                 consumption.setDateTimeFrom(task.getDateTimeFrom());
                 consumption.setDateTimeTo(task.getDateTimeTo());
-//                consumption.setConsValueName(consFunc.getValueName());
-//                consumption.setDataInAbs(prePeriodLastValue);
-//                consumption.setDataOutAbs(periodLastValue);
-//                consumption.setConsData(consValues);
-//                consumption.setMeasureUnit(consFunc.getMeasureUnit());
                 consumption.setConsState(CONS_STATE_CALCULATED);
-                consumption.setConsTaskId(taskId);
+                optTaskId.ifPresent(i -> consumption.setConsTaskId(i));
 
                 if (md5Hash) {
-                    //String hash = calcMd5Hash(consValues);
                     String hash = calcMd5Hash(consumption);
                     consumption.setConsMD5(hash);
                 }

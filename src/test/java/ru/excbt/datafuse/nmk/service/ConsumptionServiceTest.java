@@ -2,17 +2,9 @@ package ru.excbt.datafuse.nmk.service;
 
 import com.fasterxml.uuid.Generators;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.Predicate;
-import com.querydsl.core.types.Visitor;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.jpa.hibernate.HibernateQuery;
-import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.sql.JPASQLQuery;
-import com.querydsl.sql.SQLQueryFactory;
 import org.apache.commons.lang.time.StopWatch;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -38,7 +30,6 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.repository.DataElConsumptionRepository;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
-import javax.annotation.Nullable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
