@@ -123,6 +123,9 @@
             if (contObjectService.getShortinfoLoadedFlag()) {
                 resultContObjects.forEach(function (contObject) {
                     var objShortInfo = contObjectService.getContObjectShortInfoById(contObject.id);
+                    if (angular.isUndefined(objShortInfo) || objShortInfo === null) {
+                        return false;
+                    }
                     contObject.caption = objShortInfo.contObjectName || objShortInfo.contObjectFullName || objShortInfo.id;
                     contObject.modeImgSrc = IMG_PATH_MODE_TEMPLATE + objShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
                 });
