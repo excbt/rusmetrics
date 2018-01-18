@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.domain.ContZPointConsumptionTask;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.repository.DataElConsumptionRepository;
-import ru.excbt.datafuse.nmk.service.handling.ConsumptionFunction;
+import ru.excbt.datafuse.nmk.service.handling.*;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
@@ -38,7 +38,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 @Service
@@ -187,51 +189,21 @@ public class ConsumptionService {
      */
     @Transactional
     public void processHWater(final ConsumptionTask task, boolean md5Hash) {
-        Objects.requireNonNull(task);
 
-        //final ConsumptionTask workTask = task.newIfNoUUID();
-        final ConsumptionTask workTask = task;
+        ConsumptionTaskDataLoader<ContServiceDataHWater> dataLoader = (t) -> dataHWaterRepository.selectForConsumptionAny(
+            t.getSrcTimeDetailType(),
+            Date.from(t.getDateTimeFrom()),
+            Date.from(t.getDateTimeTo()),
+            t.getContZPointId());
 
-        if (!workTask.isValid()) {
-            log.warn("Task is invalid");
-            return;
-        }
 
-        log.debug("Processing task: {}" ,workTask.toString());
-
-        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
-
-        if (srcTimeDetailKey != null && period.isValid()) {
-
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-            List<ContServiceDataHWater> dataHWaterList = dataHWaterRepository.selectForConsumptionAny(
-                srcTimeDetailKey.getKeyname(),
-                period.getFromDate(),
-                period.getToDate(),
-                workTask.getContZPointId());
-
-            stopWatch.stop();
-            log.debug("task data loaded in {}", stopWatch.toString());
-            stopWatch.reset();
-            stopWatch.start();
-
-            processAnyListUniversal(task,
-                dataHWaterList,
-                Optional.empty(),
-                d -> d.getContZPointId(),
-                hWaterDataProcessor,
-                zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
-                md5Hash
-            );
-
-            stopWatch.stop();
-            log.debug("task data processed in {}", stopWatch.toString());
-        } else {
-            log.warn("ConsumptionTask is invalid: {}", task);
-        }
-
+        internalProcessTask(task,
+            dataLoader,
+            Optional.empty(),
+            zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
+            hWaterDataProcessor,
+            e -> e.getContZPointId(),
+            md5Hash);
     }
 
     /**
@@ -350,140 +322,77 @@ public class ConsumptionService {
 
     @Transactional
     public void processElCons(final ConsumptionTask task) {
-        Objects.requireNonNull(task);
 
-        //final ConsumptionTask workTask = task.newIfNoUUID();
-        final ConsumptionTask workTask = task;
 
-        if (!workTask.isValid()) {
-            log.warn("Task is invalid");
-            return;
-        }
+        ConsumptionTaskDataLoader<ContServiceDataElCons> dataLoader = (t) -> dataElConsRepository.selectForConsumptionAny(
+            t.getSrcTimeDetailType(),
+            Date.from(t.getDateTimeFrom()),
+            Date.from(t.getDateTimeTo()),
+            t.getContZPointId());
 
-        log.debug("Processing task: {}" ,workTask.toString());
 
-        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        ConsumptionTaskLastDataLoader<ContServiceDataElCons> lastDataLoader = (t, ids) -> {
+            if (ids == null || ids.isEmpty()) {
+                return Collections.emptyList();
+            }
+            QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
+            List<Tuple> resultTupleList = elDataMaxDSLQueryStarter()
+                .where(
+                    qContServiceDataElCons.contZPointId.in(ids)
+                        .and(qContServiceDataElCons.timeDetailType.eq(task.getSrcTimeDetailType()))
+                        .and(qContServiceDataElCons.deleted.eq(0))
+                        .and(qContServiceDataElCons.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                ).groupBy(qContServiceDataElCons.contZPointId).fetch();
+            return lastTupleDataToDataElCons(resultTupleList);
+        };
 
-        if (srcTimeDetailKey != null && period.isValid()) {
-
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-
-            List<ContServiceDataElCons> data = dataElConsRepository.selectForConsumptionAny(
-                srcTimeDetailKey.getKeyname(),
-                period.getFromDate(),
-                period.getToDate(),
-                workTask.getContZPointId());
-
-            stopWatch.stop();
-            log.debug("task data loaded in {}", stopWatch.toString());
-            stopWatch.reset();
-            stopWatch.start();
-
-            Function<List<Long>, List<ContServiceDataElCons>> prePeriodLastDataLoader = ids -> {
-
-                if (ids == null || ids.isEmpty()) {
-                    return Collections.emptyList();
-                }
-
-                QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
-                List<Tuple> resultTupleList = elDataMaxDSLQueryStarter()
-                    .where(
-                        qContServiceDataElCons.contZPointId.in(ids)
-                            .and(qContServiceDataElCons.timeDetailType.eq(task.getSrcTimeDetailType()))
-                            .and(qContServiceDataElCons.deleted.eq(0))
-                            .and(qContServiceDataElCons.dataDate.lt(Date.from(task.getDateTimeFrom())))
-                    ).groupBy(qContServiceDataElCons.contZPointId).fetch();
-                return lastTupleDataToDataElCons(resultTupleList);
-            };
-
-            processAnyListUniversal(task,
-                            data,
-                            Optional.of(prePeriodLastDataLoader),
-                            d -> d.getContZPointId(),
-                            elConsDataProcessor,
-                            zp -> ConsumptionFunctionLib.findElConsFunc(zp),
-                            true
-                            );
-            stopWatch.stop();
-            log.debug("task data processed in {}", stopWatch.toString());
-        } else {
-            log.warn("ConsumptionTask is invalid: {}", task);
-        }
+        internalProcessTask(task,
+            dataLoader,
+            Optional.of(lastDataLoader),
+            zp -> ConsumptionFunctionLib.findElConsFunc(zp),
+            elConsDataProcessor,
+            e -> e.getContZPointId(),
+            true);
 
     }
 
 
     @Transactional
     public void processImpulse(final ConsumptionTask task) {
-        Objects.requireNonNull(task);
 
-        //final ConsumptionTask workTask = task.newIfNoUUID();
-        final ConsumptionTask workTask = task;
-
-        if (!workTask.isValid()) {
-            log.warn("Task is invalid");
-            return;
-        }
-
-        log.debug("Processing task: {}" ,workTask.toString());
-
-        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
-
-        if (srcTimeDetailKey != null && period.isValid()) {
-
-            StopWatch stopWatch = new StopWatch();
-            stopWatch.start();
-
-            List<ContServiceDataImpulse> data = dataImpulseRepository.selectForConsumptionAny(
-                srcTimeDetailKey.getKeyname(),
-                period.getFromDate(),
-                period.getToDate(),
-                workTask.getContZPointId());
-
-            stopWatch.stop();
-            log.debug("task data loaded in {}", stopWatch.toString());
-            stopWatch.reset();
-            stopWatch.start();
+        ConsumptionTaskDataLoader<ContServiceDataImpulse> dataLoader = (t) -> dataImpulseRepository.selectForConsumptionAny(
+            t.getSrcTimeDetailType(),
+            Date.from(t.getDateTimeFrom()),
+            Date.from(t.getDateTimeTo()),
+            t.getContZPointId());
 
 
-            Function<List<Long>, List<ContServiceDataImpulse>> prePeriodLastDataLoader = ids -> {
+        ConsumptionTaskLastDataLoader<ContServiceDataImpulse> lastDataLoader = (t, ids) -> {
+            if (ids == null || ids.isEmpty()) {
+                return Collections.emptyList();
+            }
+            QContServiceDataImpulse qContServiceDataImpulse = QContServiceDataImpulse.contServiceDataImpulse;
+            List<Tuple> resultTuple = dbSessionService.jpaQueryFactory().select(
+                qContServiceDataImpulse.contZPointId,
+                qContServiceDataImpulse.dataValue.max()
+            ).from(qContServiceDataImpulse).where(
+                qContServiceDataImpulse.contZPointId.in(ids)
+                    .and(qContServiceDataImpulse.timeDetailType.eq(task.getSrcTimeDetailType()))
+                    .and(qContServiceDataImpulse.deleted.eq(0))
+                    .and(qContServiceDataImpulse.dataDate.lt(Date.from(task.getDateTimeFrom())))
+            ).groupBy(qContServiceDataImpulse.contZPointId).fetch();
+            return lastTupleDataToDataImpulse(resultTuple);
+        };
 
-                if (ids == null || ids.isEmpty()) {
-                    return Collections.emptyList();
-                }
 
-                QContServiceDataImpulse qContServiceDataImpulse = QContServiceDataImpulse.contServiceDataImpulse;
-
-                List<Tuple> resultTuple = dbSessionService.jpaQueryFactory().select(
-                        qContServiceDataImpulse.contZPointId,
-                        qContServiceDataImpulse.dataValue.max()
-                    ).from(qContServiceDataImpulse).where(
-                        qContServiceDataImpulse.contZPointId.in(ids)
-                            .and(qContServiceDataImpulse.timeDetailType.eq(task.getSrcTimeDetailType()))
-                            .and(qContServiceDataImpulse.deleted.eq(0))
-                            .and(qContServiceDataImpulse.dataDate.lt(Date.from(task.getDateTimeFrom())))
-                    ).groupBy(qContServiceDataImpulse.contZPointId).fetch();
-
-                return lastTupleDataToDataImpulse(resultTuple);
-            };
-
-            processAnyListUniversal(
-                task,
-                data,
-                Optional.of(prePeriodLastDataLoader),
-                d -> d.getContZPointId(),
-                impulseDataProcessor,
-                zp -> ConsumptionFunctionLib.findImpulseFunc(zp),
-                true
-            );
-            stopWatch.stop();
-            log.debug("task data processed in {}", stopWatch.toString());
-        } else {
-            log.warn("ConsumptionTask is invalid: {}", task);
-        }
+        internalProcessTask(
+            task,
+            dataLoader,
+            Optional.of(lastDataLoader),
+            zp -> ConsumptionFunctionLib.findImpulseFunc(zp),
+            impulseDataProcessor,
+            e -> e.getContZPointId(),
+            true);
 
     }
 
@@ -680,6 +589,7 @@ public class ConsumptionService {
         return result;
     }
 
+    @FunctionalInterface
     public interface ConsumptionDataProcessor<T> {
         Boolean apply(ContZPointConsumption consumption, List<T> inData, Optional<List<T>> preData, ConsumptionFunction<T> consFunc);
     }
@@ -914,5 +824,59 @@ public class ConsumptionService {
         return consumptionDataList;
     }
 
+
+    private <T> void internalProcessTask(final ConsumptionTask task,
+                                         final ConsumptionTaskDataLoader<T> taskDataLoader,
+                                         final Optional<ConsumptionTaskLastDataLoader<T>> optTaskLastDataLoader,
+                                         final ConsumptionFunctionSupplier<T> consumptionFunctionSupplier,
+                                         final ConsumptionDataProcessor<T> consumptionDataProcessor,
+                                         final EntityIdExtractor<T> idExtractor,
+                                         boolean md5hash) {
+        Objects.requireNonNull(task);
+
+        //final ConsumptionTask workTask = task.newIfNoUUID();
+        final ConsumptionTask workTask = task;
+
+        if (!workTask.isValid()) {
+            log.warn("Task is invalid");
+            return;
+        }
+
+        log.debug("Processing task: {}" ,workTask.toString());
+
+        TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
+        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+
+        if (srcTimeDetailKey != null && period.isValid()) {
+
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+
+            List<T> data = taskDataLoader.load(workTask);
+
+            stopWatch.stop();
+            log.debug("task data loaded in {}", stopWatch.toString());
+            stopWatch.reset();
+            stopWatch.start();
+
+            Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader =
+                optTaskLastDataLoader.map(loader -> (ids) -> loader.load(task, ids));
+
+            processAnyListUniversal(
+                task,
+                data,
+                prePeriodLastDataLoader,
+                d -> idExtractor.getId(d),
+                consumptionDataProcessor,
+                zp -> consumptionFunctionSupplier.supply(zp),
+                md5hash
+            );
+            stopWatch.stop();
+            log.debug("task data processed in {}", stopWatch.toString());
+        } else {
+            log.warn("ConsumptionTask is invalid: {}", task);
+        }
+
+    }
 
 }
