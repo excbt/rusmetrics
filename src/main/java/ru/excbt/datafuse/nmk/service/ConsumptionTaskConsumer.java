@@ -3,16 +3,13 @@ package ru.excbt.datafuse.nmk.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
+import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import javax.jms.Session;
-
-import static ru.excbt.datafuse.nmk.service.ConsumptionTask.*;
 
 //@Component
 public class ConsumptionTaskConsumer {

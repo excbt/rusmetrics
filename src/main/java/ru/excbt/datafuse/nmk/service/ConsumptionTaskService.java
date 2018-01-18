@@ -7,6 +7,7 @@ import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.stereotype.Service;
+import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
@@ -18,7 +19,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static ru.excbt.datafuse.nmk.service.ConsumptionTask.CONS_TASK_QUEUE;
+import static ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask.CONS_TASK_QUEUE;
 
 @Service
 public class ConsumptionTaskService {

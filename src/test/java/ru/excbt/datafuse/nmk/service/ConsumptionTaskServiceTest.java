@@ -10,20 +10,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jms.JmsException;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
-import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
-import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
+import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.jms.ConnectionFactory;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.concurrent.TimeUnit;
@@ -78,7 +77,7 @@ public class ConsumptionTaskServiceTest {
         //size = consumptionTaskService.queueSize();
         //log.info("Size before: {}", size);
 
-        LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
+        LocalDate day = LocalDate.of(2017, 5, 26);
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -86,11 +85,9 @@ public class ConsumptionTaskServiceTest {
         consumptionTaskService.sendTask(
             ConsumptionTask.builder()
                 .name("MyName")
-                .dateTimeFrom(day.atZone(ZoneId.systemDefault()).toInstant())
-                .dateTimeTo(day.plusDays(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant())
-                //.contServiceType(ContServiceTypeKey.HW.getKeyname())
-                .srcTimeDetailType(TimeDetailKey.TYPE_1H.getKeyname())
-                .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
+                .dateFrom(day)
+                .dateTo(day)
+                .template(ConsumptionTaskTemplate.Template24H_from_1H)
                 .retryCnt(3).build());
 
         size = consumptionTaskService.getTaskQueueSize();
@@ -126,4 +123,15 @@ public class ConsumptionTaskServiceTest {
         log.info("Test Time: {}", stopWatch.toString());
         TimeUnit.SECONDS.sleep(1);
     }
+
+
+    @Test
+    @Transactional
+    public void testSendDay() throws InterruptedException {
+        //DayConsumptionTask day = DayConsumptionTask.builder().
+        //DayConsumptionTask.dayBuilder().
+            ConsumptionTask ta = ConsumptionTask.builder().build();
+            //ta.se
+    }
+
 }
