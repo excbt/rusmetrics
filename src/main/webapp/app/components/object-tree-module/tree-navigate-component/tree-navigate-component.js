@@ -302,8 +302,12 @@
         };
         
         ctrl.viewMoreElements = function (item) {
-            item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjectsOnPage.length + ctrl.ELEMENTS_PER_NODE));
-            item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodesOnPage.length + ctrl.ELEMENTS_PER_NODE));
+            if (item.hasOwnProperty("linkedNodeObjectsOnPage") && angular.isArray(item.linkedNodeObjectsOnPage)) {
+                item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjectsOnPage.length + ctrl.ELEMENTS_PER_NODE));
+            }
+            if (item.hasOwnProperty("childNodesOnPage") && angular.isArray(item.childNodesOnPage)) {
+                item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodesOnPage.length + ctrl.ELEMENTS_PER_NODE));
+            }
         };
 
         function successLoadPTreeNodeCallback(resp, PTnode) {
