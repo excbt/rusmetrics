@@ -29,7 +29,6 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.repository.DataElConsumptionRepository;
 import ru.excbt.datafuse.nmk.service.handling.*;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
-import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.ByteBuffer;
@@ -38,9 +37,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.*;
-import java.util.function.BinaryOperator;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 
 @Service
@@ -134,43 +131,6 @@ public class ConsumptionService {
     private List<ZPointConsumptionVM> findHWaterCons(ContZPoint contZPoint, LocalDateTimePeriod dateTimePeriod) {
 
         return Collections.emptyList();
-    }
-
-
-    @Transactional
-    public void processHWater(final ConsumptionTask task, ContZPoint contZPoint, boolean md5Hash) {
-
-        Objects.requireNonNull(task);
-
-        final ConsumptionTask workTask = task;
-
-        Objects.requireNonNull(contZPoint);
-        Objects.requireNonNull(contZPoint.getId());
-        Objects.requireNonNull(workTask);
-
-        DateInterval period = workTask.toDateInterval();
-
-        if (period.isInvalid()) {
-            throw new IllegalArgumentException("period is invalid");
-        }
-
-        List<ContServiceDataHWater> data = dataHWaterRepository.selectForConsumptionOne(
-                                                                                contZPoint.getId(),
-            workTask.getSrcTimeDetailType(),
-            period.getFromDate(),
-            period.getToDate());
-
-
-        processAnyListUniversal(task,
-            data,
-            Optional.empty(),
-            d -> d.getContZPointId(),
-            hWaterDataProcessor,
-            zp -> ConsumptionFunctionLib.findHWaterFunc(zp),
-            md5Hash
-        );
-
-
     }
 
     /**
@@ -400,7 +360,7 @@ public class ConsumptionService {
      *
      * @return
      */
-    private MessageDigest md5Hash() {
+    private MessageDigest getMd5HashDigest() {
         try {
             return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -424,7 +384,7 @@ public class ConsumptionService {
             bb.putDouble(d);
         }
         byte[] bytes = bb.array();
-        MessageDigest md = md5Hash();
+        MessageDigest md = getMd5HashDigest();
         md.update(bytes);
         md.update(MD5_HASH_SECRET_BYTES);
         byte[] digest = md.digest();
