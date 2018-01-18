@@ -11,7 +11,7 @@ public class ConsumptionFunction<T> {
 
     private final String valueName;
 
-    private final Function<T, Double> valueFunction;
+    private final ConsumptionValueExtractor<T> valueExtractor;
 
     private final Predicate<T> dataFilter;
 
@@ -19,15 +19,15 @@ public class ConsumptionFunction<T> {
 
     private final Predicate<T> notZeroFilter;
 
-    public ConsumptionFunction(String valueName, Predicate<T> dataFilter, Function<T, Double> valueFunction, String measureUnit) {
+    public ConsumptionFunction(String valueName, Predicate<T> dataFilter, ConsumptionValueExtractor<T> valueExtractor, String measureUnit) {
         this.valueName = valueName;
-        this.valueFunction = valueFunction;
+        this.valueExtractor = valueExtractor;
         this.measureUnit = measureUnit;
         this.dataFilter = dataFilter;
-        this.notZeroFilter = (i) -> valueFunction.apply(i) != null && valueFunction.apply(i) != 0;
+        this.notZeroFilter = (i) -> valueExtractor.apply(i) != null && valueExtractor.apply(i) != 0;
     }
 
-    public ConsumptionFunction(String valueName, Function<T, Double> valueFunction, String measureUnit) {
+    public ConsumptionFunction(String valueName, ConsumptionValueExtractor<T> valueFunction, String measureUnit) {
         this(valueName,
             (i) -> Objects.nonNull(valueFunction.apply(i)),
             valueFunction,
@@ -39,8 +39,8 @@ public class ConsumptionFunction<T> {
         return valueName;
     }
 
-    public Function<T, Double> getValueFunction() {
-        return valueFunction;
+    public Function<T, Double> getValueExtractor() {
+        return valueExtractor;
     }
 
     public Predicate<T> getDataFilter() {

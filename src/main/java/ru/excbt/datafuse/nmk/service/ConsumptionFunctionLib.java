@@ -127,7 +127,7 @@ public class ConsumptionFunctionLib {
         double[] consValues = data.stream()
             .filter(d -> consFunc.getDataFilter().test(d))
             .sorted(cmp)
-            .map(d -> consFunc.getValueFunction().apply(d))
+            .map(d -> consFunc.getValueExtractor().apply(d))
             .map(d -> consFunc.postProcessingRound(d))
             .mapToDouble(x -> x).toArray();
 
@@ -151,7 +151,7 @@ public class ConsumptionFunctionLib {
             .filter(d -> consFunc.getDataFilter().test(d))
             .sorted(cmp.reversed())
             .filter(d -> consFunc.getNotZeroFilter().test(d))
-            .map(d -> consFunc.getValueFunction().apply(d))
+            .map(d -> consFunc.getValueExtractor().apply(d))
             .findFirst()
             .map(i -> consFunc.postProcessingRound(i));
 
