@@ -157,7 +157,13 @@
                         <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
                         <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                     </div>
-                    <div class="col-xs-offset-2 col-xs-2 col-md-offset-2 col-md-2">
+                    <div class = "col-xs-1">
+                       <div ng-if = "isSystemuser()">
+                           <i class = "btn btn-xs" data-target = "#manyObjectAddWindowModal" data-toggle = "modal" style = "opacity: 0.1">++</i>
+                       </div>
+                        
+                    </div>
+                    <div class="col-xs-offset-1 col-xs-2 col-md-offset-1 col-md-2">
                             <label class="nmc-form-label">Всего:</label>
                              <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
                             <span id="timeOutput"></span>
@@ -2234,6 +2240,117 @@
                     data-dismiss="modal"
                 ng-click="exit()">
                 Ок
+            </button>				
+		</div>
+	</div>
+</div>
+
+
+<!-- window: set subscribers for objects-->
+<div ng-if = "isSystemuser()" id="manyObjectAddWindowModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="manyObjectAddWindowLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="manyObjectAddWindowLabel" class="nmc-h3">
+				Создать объекты учета
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputContObjectsCount">Количество создаваемых объектов</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(objectParams.objectsCount)}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputContObjectsCount" 
+                                               placeholder="Количество" 
+                                               ng-model="objectParams.objectsCount"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputContObjectsTemplate">Шаблон наименования</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(objectParams.nameTemplate)}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputContObjectsTemplate" 
+                                               placeholder="Наименование" 
+                                               ng-model="objectParams.nameTemplate"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription1" >Описание</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription1" placeholder="Описание" ng-model="objectParams.description"></textarea>
+                                </td>
+                            </tr>
+                            <tr >
+                                <td class="col-sm-3"><label for="inputTmz1">Часовой пояс</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(objectParams.timezoneDefKeyname)}">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                id="inputTmz1" 
+                                                ng-model="objectParams.timezoneDefKeyname" 
+                                                ng-options="timezone.keyname as timezone.caption for timezone in data.timezones"
+                                                
+                                                >
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr> 
+                            <tr >
+                                <td class="col-sm-3"><label for="inputCC1">Управляющая компания</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': checkUndefinedNull(objectParams.contManagementId)}">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                id="inputCm1" 
+                                                ng-model="objectParams.contManagementId" 
+                                                ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations"
+                                                
+                                                >
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr >
+                                <td class="col-sm-3"><label for="inputMode1">Режим функционирования</label>
+                                </td>
+                                <td class="nmc-text-align-left col-sm-9">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': emptyString(objectParams.currentSettingMode)}">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                id="inputMode1" 
+                                                ng-model="objectParams.currentSettingMode" 
+                                                ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check"
+                                                
+                                                >
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>       
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <button class="btn btn-primary btn-block btn-xs nmc-cancel-button pull-right" 
+                    data-dismiss="modal"
+                ng-click="createObjects(objectParams)">
+                Создать!!!
             </button>				
 		</div>
 	</div>

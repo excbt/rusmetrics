@@ -2391,7 +2391,25 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 // ********************************************************************************************
                 //  end Building types
 //*********************************************************************************************                
-                
+    $scope.createObjects = function (objectParams) {
+        console.log(objectParams);        
+        var url = objectSvc.getRmaObjectsUrl();
+        if (angular.isDefined(objectParams.contManagementId) && (objectParams.contManagementId != null)) {
+            url += "/?cmOrganizationId=" + objectParams.contManagementId;
+        }
+        
+        for (var i = 1; i <= Number(objectParams.objectsCount); i++) {
+            var obj = {
+                fullName: objectParams.nameTemplate + i,
+                description: objectParams.description,
+                timezoneDefKeyname: objectParams.timezoneDefKeyname,
+                currentSettingMode: objectParams.currentSettingMode,
+                contManagementId: objectParams.contManagementId
+            };
+            obj._daDataSraw = null;            
+            crudGridDataFactory(url).save(obj, function (resp) {console.log("Object created: ", resp);}, function (e) {console.error(e);});
+        }
+    };
                 
     //set focus on first input element when window will be opened                
     $('#showTreeOptionModal').on('shown.bs.modal', function () {
