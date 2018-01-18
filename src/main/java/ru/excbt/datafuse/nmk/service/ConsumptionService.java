@@ -635,7 +635,7 @@ public class ConsumptionService {
     }
 
 
-    private ConsumptionDataProcessorArr<ContServiceDataHWater> hWaterDataProcessor = new ConsumptionDataProcessorArr<ContServiceDataHWater>() {
+    private final ConsumptionDataProcessorArr<ContServiceDataHWater> hWaterDataProcessor = new ConsumptionDataProcessorArr<ContServiceDataHWater>() {
         @Override
         public Comparator<ContServiceDataHWater> getDataComparator() {
             return Comparator.comparing(ContServiceDataHWater::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
@@ -643,14 +643,14 @@ public class ConsumptionService {
     };
 
 
-    private ConsumptionDataProcessorAbs<ContServiceDataElCons> elConsDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataElCons>() {
+    private final ConsumptionDataProcessorAbs<ContServiceDataElCons> elConsDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataElCons>() {
         @Override
         public Comparator<ContServiceDataElCons> getDataComparator() {
             return Comparator.comparing(ContServiceDataElCons::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
         }
     };
 
-    private ConsumptionDataProcessorAbs<ContServiceDataImpulse> impulseDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataImpulse>() {
+    private final ConsumptionDataProcessorAbs<ContServiceDataImpulse> impulseDataProcessor = new ConsumptionDataProcessorAbs<ContServiceDataImpulse>() {
         @Override
         public Comparator<ContServiceDataImpulse> getDataComparator() {
             return Comparator.comparing(ContServiceDataImpulse::getDataDate, Comparator.nullsLast(Comparator.naturalOrder()));
@@ -658,25 +658,24 @@ public class ConsumptionService {
     };
 
 
-
     /**
      *
      * @param task
      * @param inDataList
-     * @param prePeriodLastDataLoader
-     * @param contZPointIdGetter
+     * @param optPrePeriodLastDataLoader
+     * @param entityIdExtractor
      * @param consumptionDataProcessor
-     * @param consumptionFunctionGetter
+     * @param consumptionFunctionSupplier
      * @param md5Hash
      * @param <T>
      * @return
      */
     private <T> List<ContZPointConsumption> processAnyListUniversal(final ConsumptionTask task,
                                                                     final List<T> inDataList,
-                                                                    final Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader,
-                                                                    Function<T, Long> contZPointIdGetter,
+                                                                    Optional<ConsumptionTaskLastDataLoader <T>> optPrePeriodLastDataLoader,
+                                                                    EntityIdExtractor<T> entityIdExtractor,
                                                                     ConsumptionDataProcessor<T> consumptionDataProcessor,
-                                                                    Function<ContZPoint, List<ConsumptionFunction<T>>> consumptionFunctionGetter,
+                                                                    ConsumptionFunctionSupplier<T> consumptionFunctionSupplier,
                                                                     boolean md5Hash) {
 
         Objects.requireNonNull(task);
@@ -699,7 +698,7 @@ public class ConsumptionService {
             return Collections.emptyList();
         }
 
-        final Map<Long, List<T>> periodDataMap = GroupUtil.makeIdMap(inDataList, contZPointIdGetter);
+        final Map<Long, List<T>> periodDataMap = GroupUtil.makeIdMap(inDataList, (e) -> entityIdExtractor.getId(e));
 
         log.trace("ContZPoints: ");
         periodDataMap.keySet().stream().forEach(i -> log.trace("Id: {}, Size: {}", i, periodDataMap.get(i).size()));
@@ -710,9 +709,9 @@ public class ConsumptionService {
         List<ContZPoint> contZPoints = contZPointRepository.findByIds(contZPointIds);
         Map<Long, ContZPoint> contZPointMap = contZPoints.stream().collect(Collectors.toMap(x -> x.getId(), Function.identity()));
 
-        prePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching"));
-        Optional<List<T>> optPrePeriodLastDataDataAll = prePeriodLastDataLoader.map(i -> i.apply(contZPointIds));
-        prePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching complete"));
+        optPrePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching"));
+        Optional<List<T>> optPrePeriodLastDataDataAll = optPrePeriodLastDataLoader.map(i -> i.load(task, contZPointIds));
+        optPrePeriodLastDataLoader.ifPresent(i -> log.debug("Pre period Data fetching complete"));
 
         if (optPrePeriodLastDataDataAll.isPresent()) {
             if (optPrePeriodLastDataDataAll.get() == null ||
@@ -723,7 +722,7 @@ public class ConsumptionService {
         }
 
         Optional<Map<Long, List<T>>> optPrePeriodLastDataDataMap = optPrePeriodLastDataDataAll
-            .map(i -> GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), contZPointIdGetter));
+            .map(i -> GroupUtil.makeIdMap(optPrePeriodLastDataDataAll.get(), e -> entityIdExtractor.getId(e)));
 
         log.debug("Starting loop for: {} keys", periodDataMap.keySet().size());
 
@@ -738,7 +737,7 @@ public class ConsumptionService {
             }
             List<T> periodData = periodDataMap.get(id);
 
-            List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionGetter.apply(contZPoint);
+            List<ConsumptionFunction<T>> consumptionFunctions = consumptionFunctionSupplier.supply(contZPoint);
 
             for (ConsumptionFunction<T> consFunc: consumptionFunctions) {
 
@@ -819,13 +818,10 @@ public class ConsumptionService {
             stopWatch.reset();
             stopWatch.start();
 
-            Optional<Function<List<Long>, List<T>>> prePeriodLastDataLoader =
-                optTaskLastDataLoader.map(loader -> (ids) -> loader.load(task, ids));
-
             processAnyListUniversal(
                 task,
                 data,
-                prePeriodLastDataLoader,
+                optTaskLastDataLoader,
                 d -> idExtractor.getId(d),
                 consumptionDataProcessor,
                 zp -> consumptionFunctionSupplier.supply(zp),
