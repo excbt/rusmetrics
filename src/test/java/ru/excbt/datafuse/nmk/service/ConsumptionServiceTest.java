@@ -17,7 +17,6 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
-import ru.excbt.datafuse.nmk.repository.DataElConsumptionRepository;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import java.time.LocalDate;
@@ -34,6 +33,8 @@ public class ConsumptionServiceTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionServiceTest.class);
 
+    public static final String TASK_STATE_SCHEDULED = ConsumptionService.TaskState.SCHEDULED.getKeyname();
+
     @Autowired
     private ConsumptionService consumptionService;
 
@@ -42,9 +43,6 @@ public class ConsumptionServiceTest {
 
     @Autowired
     private ContZPointRepository contZPointRepository;
-
-    @Autowired
-    private DataElConsumptionRepository dataElConsumptionRepository;
 
     @Autowired
     private QueryDSLService queryDSLService;
@@ -124,7 +122,7 @@ public class ConsumptionServiceTest {
             .dataType(ConsumptionService.DATA_TYPE_HWATER)
             .retryCnt(3).build().checkDaysBetween(1);
 
-        task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+        task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
 
         consumptionService.processHWater(task);
 
@@ -173,7 +171,7 @@ public class ConsumptionServiceTest {
                 .dataType(ConsumptionService.DATA_TYPE_HWATER)
                 .retryCnt(3).build().checkDaysBetween(1);
 
-            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED.getKeyname());
 
             consumptionService.processHWater(task);
 
@@ -229,7 +227,7 @@ public class ConsumptionServiceTest {
                 .dateTo(day)
                 .build();
 
-            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+            task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
 
             consumptionService.processElCons(task.checkDaysBetween(1));
 
@@ -288,7 +286,7 @@ public class ConsumptionServiceTest {
                 .dateTo(day)
                 .build().checkDaysBetween(1);
 
-            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TASK_STATE_SCHEDULED);
+            task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
 
             consumptionService.processImpulse(task);
 

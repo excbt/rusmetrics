@@ -13,20 +13,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
-import ru.excbt.datafuse.nmk.data.service.DBSessionService;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumptionTask;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
-import ru.excbt.datafuse.nmk.repository.DataElConsumptionRepository;
+import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.handling.*;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
 
@@ -51,23 +52,26 @@ public class ConsumptionService {
     public static final String CONS_STATE_CALCULATED = "CALCULATED";
     public static final String CONS_STATE_INVALIDATED = "INVALIDATED";
 
-    public static final String TASK_STATE_CALCULATING = "CALCULATING";
-    public static final String TASK_STATE_FINISHED = "FINISHED";
-    public static final String TASK_STATE_SCHEDULED = "SCHEDULED";
-    public static final String TASK_STATE_NEW = "NEW";
+    public enum TaskState implements KeynameObject {
+        NEW, CALCULATING, FINISHED, SCHEDULED;
 
+        @Override
+        public String getKeyname() {
+            return this.name().toLowerCase();
+        }
+    }
 
     public static final String DATA_TYPE_HWATER = "HWATER";
     public static final String DATA_TYPE_ELECTRICITY = "ELECTRICITY";
     public static final String DATA_TYPE_IMPULSE = "IMPULSE";
 
-    private final DBSessionService dbSessionService;
+    private final QueryDSLService queryDSLService;
 
     private final ContServiceDataHWaterRepository dataHWaterRepository;
 
     private final ContServiceDataImpulseRepository dataImpulseRepository;
 
-    private final DataElConsumptionRepository dataElConsRepository;
+    private final ContServiceDataElConsRepository dataElConsRepository;
 
     private final ContZPointConsumptionRepository consumptionRepository;
 
@@ -76,13 +80,14 @@ public class ConsumptionService {
     private final ContZPointConsumptionTaskRepository consumptionTaskRepository;
 
     @Autowired
-    public ConsumptionService(DBSessionService dbSessionService, ContServiceDataHWaterRepository dataHWaterRepository,
+    public ConsumptionService(QueryDSLService queryDSLService,
+                              ContServiceDataHWaterRepository dataHWaterRepository,
                               ContServiceDataImpulseRepository dataImpulseRepository,
-                              DataElConsumptionRepository dataElConsRepository,
+                              ContServiceDataElConsRepository dataElConsRepository,
                               ContZPointConsumptionRepository consumptionRepository,
                               ContZPointRepository contZPointRepository,
                               ContZPointConsumptionTaskRepository consumptionTaskRepository) {
-        this.dbSessionService = dbSessionService;
+        this.queryDSLService = queryDSLService;
         this.dataHWaterRepository = dataHWaterRepository;
         this.dataImpulseRepository = dataImpulseRepository;
         this.dataElConsRepository = dataElConsRepository;
@@ -247,7 +252,7 @@ public class ConsumptionService {
         QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
 
         JPAQuery<Tuple> qry =
-            dbSessionService.jpaQueryFactory().select(
+            queryDSLService.queryFactory().select(
                 qContServiceDataElCons.contZPointId,
 
                 qContServiceDataElCons.p_Ap.max(),
@@ -332,7 +337,8 @@ public class ConsumptionService {
                 return Collections.emptyList();
             }
             QContServiceDataImpulse qContServiceDataImpulse = QContServiceDataImpulse.contServiceDataImpulse;
-            List<Tuple> resultTuple = dbSessionService.jpaQueryFactory().select(
+            List<Tuple> resultTuple = queryDSLService.queryFactory()
+                .select(
                 qContServiceDataImpulse.contZPointId,
                 qContServiceDataImpulse.dataValue.max()
             ).from(qContServiceDataImpulse).where(
@@ -494,7 +500,7 @@ public class ConsumptionService {
     public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final String taskState) {
 
         ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
-        contZPointConsumptionTask.setTaskState(taskState == null ? TASK_STATE_NEW : taskState);
+        contZPointConsumptionTask.setTaskState(taskState == null ? TaskState.NEW.name() : taskState);
         contZPointConsumptionTask.setTaskDateTime(Instant.now());
         contZPointConsumptionTask.setConsDateTime(consumptionTask.getDateTimeFrom());
         contZPointConsumptionTask.setDataType(consumptionTask.getDataType());
@@ -514,7 +520,7 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public Boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState) {
+    public Boolean updateTaskState(final ConsumptionTask consumptionTask, TaskState taskState) {
         return updateTaskState(consumptionTask, taskState, null);
     }
 
@@ -526,7 +532,7 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public Boolean updateTaskState(final ConsumptionTask consumptionTask, String taskState, String expectedState) {
+    public Boolean updateTaskState(final ConsumptionTask consumptionTask, TaskState taskState, TaskState expectedState) {
         if (consumptionTask.getTaskUUID() == null) {
             return null;
         }
@@ -534,12 +540,12 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
         Boolean result = task.map( i -> {
 
-                if (expectedState != null && !expectedState.equals(i.getTaskState())) {
+                if (expectedState != null && !expectedState.getKeyname().equals(i.getTaskState())) {
                     return false;
                     //throw new IllegalStateException("Illegal task status");
                 }
 
-                i.setTaskState(taskState);
+                i.setTaskState(taskState.getKeyname());
                 i.setTaskStateDt(Instant.now());
                 consumptionTaskRepository.save(i);
                 return true;
@@ -683,9 +689,9 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        Boolean taskStateUpdateResult = updateTaskState (task, TASK_STATE_CALCULATING, TASK_STATE_SCHEDULED);
+        Boolean taskStateUpdateResult = updateTaskState (task, TaskState.CALCULATING, TaskState.SCHEDULED);
         if (Boolean.FALSE.equals(taskStateUpdateResult)) {
-            throw new IllegalStateException("Expecting state of task is not " + TASK_STATE_SCHEDULED);
+            throw new IllegalStateException("Expecting state of task is not " + TaskState.SCHEDULED);
         }
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
@@ -694,7 +700,7 @@ public class ConsumptionService {
         cleanConsumptionDataType(cleanKeys2);
 
         if (inDataList.isEmpty()) {
-            updateTaskState (task, TASK_STATE_FINISHED);
+            updateTaskState (task, TaskState.FINISHED);
             return Collections.emptyList();
         }
 
@@ -716,7 +722,7 @@ public class ConsumptionService {
         if (optPrePeriodLastDataDataAll.isPresent()) {
             if (optPrePeriodLastDataDataAll.get() == null ||
                 optPrePeriodLastDataDataAll.get().isEmpty()) {
-                updateTaskState (task, TASK_STATE_FINISHED);
+                updateTaskState (task, TaskState.FINISHED);
                 return Collections.emptyList();
             }
         }
@@ -778,7 +784,7 @@ public class ConsumptionService {
         consumptionRepository.save(consumptionDataList);
         consumptionRepository.flush();
 
-        updateTaskState (task, TASK_STATE_FINISHED);
+        updateTaskState (task, TaskState.FINISHED);
 
         return consumptionDataList;
     }
