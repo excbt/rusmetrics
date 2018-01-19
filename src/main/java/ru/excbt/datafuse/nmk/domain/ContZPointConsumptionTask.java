@@ -55,6 +55,12 @@ public class ContZPointConsumptionTask extends AbstractAuditableModel {
     @Column(name = "finish_date_time")
     private Instant finishDateTime;
 
+    @Column(name = "in_count")
+    private Long inCount;
+
+    @Column(name = "out_count")
+    private Long outCount;
+
     @Version
     private int version;
 

@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumptionTask;
+import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
@@ -37,6 +38,8 @@ import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,8 +52,9 @@ public class ConsumptionService {
     public static final String MD5_HASH_SECRET = "YsoB66IIyYlEFw50ObB2";
     public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
-    public static final String CONS_STATE_CALCULATED = "CALCULATED";
-    public static final String CONS_STATE_INVALIDATED = "INVALIDATED";
+
+    private static final String CONS_STATE_CALCULATED = "calculated";
+    private static final String CONS_STATE_INVALIDATED = "invalidated";
 
     public enum TaskState implements KeynameObject {
         NEW, STARTED, FINISHED, SCHEDULED;
@@ -61,9 +65,22 @@ public class ConsumptionService {
         }
     }
 
-    public static final String DATA_TYPE_HWATER = "HWATER";
-    public static final String DATA_TYPE_ELECTRICITY = "ELECTRICITY";
-    public static final String DATA_TYPE_IMPULSE = "IMPULSE";
+
+    public enum DataType implements KeynameObject {
+        HWATER,
+        ELECTRICITY,
+        IMPULSE;
+
+        @Override
+        public String getKeyname() {
+            return this.name();
+        }
+
+    }
+
+    public static final String DATA_TYPE_HWATER = DataType.HWATER.getKeyname();
+    public static final String DATA_TYPE_ELECTRICITY = DataType.ELECTRICITY.getKeyname();
+    public static final String DATA_TYPE_IMPULSE = DataType.IMPULSE.getKeyname();
 
     private final QueryDSLService queryDSLService;
 
@@ -288,7 +305,6 @@ public class ConsumptionService {
     @Transactional
     public void processElCons(final ConsumptionTask task) {
 
-
         ConsumptionTaskDataLoader<ContServiceDataElCons> dataLoader = (t) -> dataElConsRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
             Date.from(t.getDateTimeFrom()),
@@ -431,12 +447,31 @@ public class ConsumptionService {
      *
      */
     @Getter
-    @Builder
     @EqualsAndHashCode
     public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
-        private final Instant contDateTime;
+        private final Instant consDateTime;
+
+        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, Instant consDateTime) {
+            Objects.requireNonNull(contZPointId);
+            Objects.requireNonNull(destTimeDetailType);
+            Objects.requireNonNull(consDateTime);
+
+            this.contZPointId = contZPointId;
+            this.destTimeDetailType = destTimeDetailType;
+            this.consDateTime = consDateTime;
+        }
+
+        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, LocalDate consDate) {
+            Objects.requireNonNull(contZPointId);
+            Objects.requireNonNull(destTimeDetailType);
+            Objects.requireNonNull(consDate);
+
+            this.contZPointId = contZPointId;
+            this.destTimeDetailType = destTimeDetailType;
+            this.consDateTime = consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+        }
     }
 
 
@@ -444,12 +479,38 @@ public class ConsumptionService {
      *
      */
     @Getter
-    @Builder
     @EqualsAndHashCode
     public static class ConsumptionDataTypeKey {
+
         private final String dataType;
         private final String destTimeDetailType;
         private final Instant consDateTime;
+
+        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, Instant consDateTime) {
+            Objects.requireNonNull(dataType);
+            Objects.requireNonNull(destTimeDetailType);
+            Objects.requireNonNull(consDateTime);
+
+            if (!KeyEnumTool.checkKeys(TimeDetailKey.class, destTimeDetailType)) {
+                throw new IllegalArgumentException("destTimeDetailType is invalid");
+            }
+
+            if (!KeyEnumTool.checkKeys(DataType.class, dataType)) {
+                throw new IllegalArgumentException("dataType is invalid");
+            }
+
+            this.dataType = dataType;
+            this.destTimeDetailType = destTimeDetailType;
+            this.consDateTime = consDateTime;
+        }
+
+        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, LocalDate consDate) {
+
+            this(dataType,
+                destTimeDetailType,
+                (consDate == null) ? null : consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        }
+
     }
 
 
@@ -460,7 +521,7 @@ public class ConsumptionService {
     private void cleanConsumptionZPoint(Collection<ConsumptionZPointKey> cleanKeys) {
         log.debug("Cleaning {} keys", cleanKeys.size());
         cleanKeys.stream().forEach(key -> {
-            consumptionRepository.deleteByKey(key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
+            consumptionRepository.deleteByKey(key.getContZPointId(), key.getDestTimeDetailType(), key.getConsDateTime());
         });
     }
 
@@ -472,8 +533,20 @@ public class ConsumptionService {
     public void invalidateConsumption(Collection<ConsumptionZPointKey> cleanKeys) {
         log.debug("Updating {} keys", cleanKeys.size());
         cleanKeys.stream().forEach(key -> {
-            consumptionRepository.updateStateByKey(CONS_STATE_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getContDateTime());
+            consumptionRepository.updateStateByKey(CONS_STATE_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getConsDateTime());
         });
+    }
+
+    /**
+     *
+     * @param cleanKeys
+     */
+    @Transactional
+    public void invalidateConsumption(ConsumptionZPointKey ... cleanKeys) {
+        log.debug("Updating {} keys", cleanKeys.length);
+        for (ConsumptionZPointKey key: cleanKeys) {
+            consumptionRepository.updateStateByKey(CONS_STATE_INVALIDATED, key.getContZPointId(), key.getDestTimeDetailType(), key.getConsDateTime());
+        }
     }
 
     /**
@@ -521,7 +594,7 @@ public class ConsumptionService {
      */
     @Transactional
     public Boolean updateTaskState(final ConsumptionTask consumptionTask, TaskState taskState) {
-        return updateTaskState(consumptionTask, taskState, null);
+        return updateTaskStateInt(consumptionTask, taskState, Optional.empty(), Optional.empty());
     }
 
     /**
@@ -532,15 +605,53 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public Boolean updateTaskState(final ConsumptionTask consumptionTask, TaskState taskState, TaskState expectedState) {
+    public Boolean updateTaskState(final ConsumptionTask consumptionTask, TaskState taskState, Optional<TaskState> expectedState) {
+        return updateTaskStateInt (consumptionTask, taskState, expectedState, Optional.empty());
+    }
+
+
+    private class TaskDataCounter {
+
+        final Long inCount;
+        final Long outCount;
+
+        public TaskDataCounter(Long inCount, Long outCount) {
+            this.inCount = inCount;
+            this.outCount = outCount;
+        }
+
+        public TaskDataCounter(Integer inCount, Integer outCount) {
+            this.inCount = Long.valueOf(inCount);
+            this.outCount = Long.valueOf(outCount);
+        }
+
+        private boolean notNullValues() {
+            return inCount != null && outCount != null;
+        }
+    }
+
+    /**
+     *
+     * @param consumptionTask
+     * @param taskState
+     * @param expectedState
+     * @param taskDataCounter
+     * @return
+     */
+    private Boolean updateTaskStateInt(final ConsumptionTask consumptionTask,
+                                       final TaskState taskState,
+                                       final Optional<TaskState> expectedState,
+                                       final Optional<TaskDataCounter> taskDataCounter) {
         if (consumptionTask.getTaskUUID() == null) {
             return null;
         }
 
+        Objects.requireNonNull(expectedState);
+
         Optional<ContZPointConsumptionTask> task = consumptionTaskRepository.findByTaskUUID(consumptionTask.getTaskUUID()).stream().findFirst();
         Boolean result = task.map( i -> {
 
-                if (expectedState != null && !expectedState.getKeyname().equals(i.getTaskState())) {
+                if (expectedState.isPresent() && !expectedState.get().getKeyname().equals(i.getTaskState())) {
                     return false;
                     //throw new IllegalStateException("Illegal task status");
                 }
@@ -551,6 +662,10 @@ public class ConsumptionService {
                     i.setStartDateTime(Instant.now());
                 } else if (taskState == TaskState.FINISHED) {
                     i.setFinishDateTime(Instant.now());
+                    taskDataCounter.filter(TaskDataCounter::notNullValues).ifPresent(cnt -> {
+                        i.setInCount(cnt.inCount);
+                        i.setOutCount(cnt.outCount);
+                    });
                 }
                 consumptionTaskRepository.save(i);
                 return true;
@@ -694,13 +809,13 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        Boolean taskStateUpdateResult = updateTaskState (task, TaskState.STARTED, TaskState.SCHEDULED);
+        Boolean taskStateUpdateResult = updateTaskState (task, TaskState.STARTED, Optional.of(TaskState.SCHEDULED));
         if (Boolean.FALSE.equals(taskStateUpdateResult)) {
             throw new IllegalStateException("Expecting state of task is not " + TaskState.SCHEDULED);
         }
 
         Set<ConsumptionDataTypeKey> cleanKeys2 = new HashSet<>();
-        cleanKeys2.add(ConsumptionDataTypeKey.builder().dataType(task.getDataType()).destTimeDetailType(task.getDestTimeDetailType()).consDateTime(task.getDateTimeFrom()).build());
+        cleanKeys2.add(new ConsumptionDataTypeKey(task.getDataType(), task.getDestTimeDetailType(), task.getDateFrom()));
 
         cleanConsumptionDataType(cleanKeys2);
 
@@ -789,12 +904,25 @@ public class ConsumptionService {
         consumptionRepository.save(consumptionDataList);
         consumptionRepository.flush();
 
-        updateTaskState (task, TaskState.FINISHED);
+        TaskDataCounter counter = new TaskDataCounter(inDataList.size(), consumptionDataList.size());
+
+        updateTaskStateInt (task, TaskState.FINISHED, Optional.empty(), Optional.of(counter));
 
         return consumptionDataList;
     }
 
 
+    /**
+     *
+     * @param task
+     * @param taskDataLoader
+     * @param optTaskLastDataLoader
+     * @param consumptionFunctionSupplier
+     * @param consumptionDataProcessor
+     * @param idExtractor
+     * @param md5hash
+     * @param <T>
+     */
     private <T> void internalProcessTask(final ConsumptionTask task,
                                          final ConsumptionTaskDataLoader<T> taskDataLoader,
                                          final Optional<ConsumptionTaskLastDataLoader<T>> optTaskLastDataLoader,
@@ -803,6 +931,14 @@ public class ConsumptionService {
                                          final EntityIdExtractor<T> idExtractor,
                                          boolean md5hash) {
         Objects.requireNonNull(task);
+
+        if (!task.isValid()) {
+            throw new IllegalArgumentException("Task is invalid");
+        }
+
+        if (!KeyEnumTool.checkNames(DataType.class, task.getDataType())) {
+            throw new IllegalArgumentException("Data type is invalid: " + task.getDataType());
+        }
 
         //final ConsumptionTask workTask = task.newIfNoUUID();
         final ConsumptionTask workTask = task;

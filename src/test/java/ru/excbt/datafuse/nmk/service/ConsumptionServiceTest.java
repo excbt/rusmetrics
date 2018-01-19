@@ -20,10 +20,6 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.HashSet;
-import java.util.Set;
 
 import static ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate.*;
 
@@ -133,49 +129,41 @@ public class ConsumptionServiceTest {
     @Test
     @Transactional
     public void invalidateConsumption() {
-        LocalDateTime day = LocalDateTime.of(2017, 5, 26, 0,0);
+        LocalDate day = LocalDate.of(2017, 5, 26);
 
-        ConsumptionService.ConsumptionZPointKey key = ConsumptionService.ConsumptionZPointKey
-            .builder()
-            .contZPointId(71843465L)
-            .contDateTime(day.atZone(ZoneId.systemDefault()).toInstant())
-            .destTimeDetailType(TimeDetailKey.TYPE_24H.getKeyname())
-            .build();
-        Set<ConsumptionService.ConsumptionZPointKey> keys = new HashSet<>();
-        keys.add(key);
-        consumptionService.invalidateConsumption(keys);
+        ConsumptionService.ConsumptionZPointKey key =
+            new ConsumptionService.ConsumptionZPointKey(71843465L, TimeDetailKey.TYPE_24H.getKeyname(), day);
+
+        consumptionService.invalidateConsumption(key);
     }
 
 
     @Test
-    //@Ignore
-    public void testHWaterConsumption2016() {
+    public void processHWaterConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2016,1,2);
+        LocalDate endDay = LocalDate.of(2018,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
 
+        //LocalDate day = startDay;
 
-        LocalDate day = startDay;
-        while (day.isBefore(endDay) || day.isEqual(endDay)) {
-            log.info("Processing: {}-{}-{}", day.getYear(), day.getMonthValue(), day.getDayOfMonth());
-            ConsumptionTask task = ConsumptionTask.builder()
-                .name("MyName")
-                .dateFrom(day)
-                .dateTo(day)
-                .template(Template24H_from_1H)
-                .taskUUID(Generators.timeBasedGenerator().generate())
-                .dataType(ConsumptionService.DATA_TYPE_HWATER)
-                .retryCnt(3).build().checkDaysBetween(1);
+        ConsumptionTask task = ConsumptionTask.builder()
+            .name("MyName")
+            .dateFrom(startDay)
+            .dateTo(startDay)
+            .template(Template24H_from_1H)
+            .taskUUID(Generators.timeBasedGenerator().generate())
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
+            .retryCnt(3).build().checkDaysBetween(1);
 
-            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED.getKeyname());
-
-            consumptionService.processHWater(task);
-
-            day = day.plusDays(1);
+        while (task.getDateFrom().isBefore(endDay) || task.getDateFrom().isEqual(endDay)) {
+            log.info("Processing: {}-{}-{}", task.getDateFrom().getYear(), task.getDateFrom().getMonthValue(), task.getDateFrom().getDayOfMonth());
+            ConsumptionTask savedTask = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED.getKeyname());
+            consumptionService.processHWater(savedTask);
+            task = savedTask.nextDay();
         }
 
         stopWatch.stop();
@@ -204,10 +192,10 @@ public class ConsumptionServiceTest {
 
     @Test
     //@Ignore
-    public void testElConsumption2016() {
+    public void processElConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2016,2,1);
+        LocalDate endDay = LocalDate.of(2018,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -263,10 +251,10 @@ public class ConsumptionServiceTest {
 
     @Test
     //@Ignore
-    public void processImpulseConsumption2016() {
+    public void processImpulseConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2017,1,1);
+        LocalDate endDay = LocalDate.of(2018,1,1);
 
 
         StopWatch stopWatch = new StopWatch();

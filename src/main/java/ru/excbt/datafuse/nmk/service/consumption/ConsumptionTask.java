@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.service.consumption;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.uuid.Generators;
 import lombok.*;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
@@ -88,7 +89,7 @@ public class ConsumptionTask implements Serializable {
 
     @JsonIgnore
     public ConsumptionTask newTaskUUID(UUID taskUUID) {
-        if (this.taskUUID != null) {
+        if (this.taskUUID == null) {
             throw new IllegalArgumentException("taskUUID is null");
         }
         return cloneBuilder().taskUUID(taskUUID).build();
@@ -176,7 +177,11 @@ public class ConsumptionTask implements Serializable {
 
         LocalDate nextDayFrom = this.dateFrom.plusDays(1);
 
-        return cloneBuilder().dateFrom(nextDayFrom).dateTo(nextDayFrom).build();
+        return cloneBuilder()
+            .dateFrom(nextDayFrom)
+            .dateTo(nextDayFrom)
+            .taskUUID(Generators.timeBasedGenerator().generate())
+            .build();
     }
 
     /**
