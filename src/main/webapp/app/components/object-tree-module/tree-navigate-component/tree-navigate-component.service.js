@@ -385,7 +385,7 @@
             }
             if (checkUndefinedNull(sortField)) {
                 return "Field for sort is undefined or null.";
-            }
+            }            
             itemArray.sort(function (firstItem, secondItem) {
                 if (checkUndefinedNull(firstItem[sortField]) && checkUndefinedNull(secondItem[sortField])) {
                     return 0;
@@ -400,6 +400,44 @@
                     return 1;
                 }
                 if (firstItem[sortField].toUpperCase() < secondItem[sortField].toUpperCase()) {
+                    return -1;
+                }
+                return 0;
+            });
+        }
+        
+        function sortLinkedObjects(objectsArr, sortField) {
+            if (!angular.isArray(objectsArr)) {
+                return "Input value is no array.";
+            }
+            if (checkUndefinedNull(sortField)) {
+                return "Field for sort is undefined or null.";
+            }
+            var nodeObject = 'nodeObject';
+            objectsArr.sort(function (firstItem, secondItem) {
+                if (checkUndefinedNull(firstItem[nodeObject]) && checkUndefinedNull(secondItem[nodeObject])) {
+                    return 0;
+                }
+                if (checkUndefinedNull(firstItem[nodeObject])) {
+                    return -1;
+                }
+                if (checkUndefinedNull(secondItem[nodeObject])) {
+                    return 1;
+                }
+                
+                if (checkUndefinedNull(firstItem.nodeObject[sortField]) && checkUndefinedNull(secondItem.nodeObject[sortField])) {
+                    return 0;
+                }
+                if (checkUndefinedNull(firstItem.nodeObject[sortField])) {
+                    return -1;
+                }
+                if (checkUndefinedNull(secondItem.nodeObject[sortField])) {
+                    return 1;
+                }
+                if (firstItem.nodeObject[sortField].toUpperCase() > secondItem.nodeObject[sortField].toUpperCase()) {
+                    return 1;
+                }
+                if (firstItem.nodeObject[sortField].toUpperCase() < secondItem.nodeObject[sortField].toUpperCase()) {
                     return -1;
                 }
                 return 0;
@@ -446,6 +484,7 @@
         service.setPTree = setPTree;
         service.setPTreeSelectedNode = setPTreeSelectedNode;
         service.sortItemsBy = sortItemsBy;
+        service.sortLinkedObjects = sortLinkedObjects;
         return service;
     }
 })();

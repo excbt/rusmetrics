@@ -163,7 +163,8 @@
         function successLoadPTreeCallback(resp) {
 //console.log(resp);
 //console.log(resp.data);
-
+            treeNavSvc.sortLinkedObjects(resp.data.linkedNodeObjects, "fullName");
+            treeNavSvc.sortItemsBy(resp.data.childNodes, "nodeName");
             ctrl.data.currentPTree = resp.data;
             setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
             ctrl.data.currentPTree.linkedNodeObjectsOnPage = ctrl.data.currentPTree.linkedNodeObjects;
@@ -315,10 +316,12 @@
                 return false;
             }
             if (!checkUndefinedNull(resp.data.linkedNodeObjects)) {
+                treeNavSvc.sortLinkedObjects(resp.data.linkedNodeObjects, "fullName");
                 PTnode.linkedNodeObjects = resp.data.linkedNodeObjects;
                 PTnode.linkedNodeObjectsOnPage = PTnode.linkedNodeObjects.slice(0, ctrl.ELEMENTS_PER_NODE);
             }
             if (!checkUndefinedNull(resp.data.childNodes)) {
+                treeNavSvc.sortItemsBy(resp.data.childNodes, "nodeName");
                 PTnode.childNodes = resp.data.childNodes;
                 PTnode.childNodesOnPage = PTnode.childNodes.slice(0, ctrl.ELEMENTS_PER_NODE);
             }
