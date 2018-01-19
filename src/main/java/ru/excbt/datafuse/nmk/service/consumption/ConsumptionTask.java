@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
+import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
@@ -50,31 +51,47 @@ public class ConsumptionTask implements Serializable {
     @Getter
     private final String dataType;
 
-    @JsonIgnore
-    public ConsumptionTask makeRetry() {
+
+    /**
+     *
+     * @return
+     */
+    private ConsumptionTaskBuilder cloneBuilder() {
         return ConsumptionTask.builder()
-            .name(this.name)
+            .name(name)
+            .taskUUID(this.taskUUID)
             .template(this.template)
             .dateFrom(this.dateFrom)
             .dateTo(this.dateTo)
-            .retryCnt(this.retryCnt > 0 ? this.retryCnt - 1 : 0)
-            .build();
+            .contZPointId(this.contZPointId)
+            .retryCnt(DEFAULT_RETRY)
+            .dataType(this.dataType);
+    }
+
+    /**
+     *
+     * @param day
+     * @return
+     */
+    public static ConsumptionTaskBuilder dayBuilder(LocalDate day) {
+        if (day == null) {
+            throw new IllegalArgumentException("day is null");
+        }
+        return ConsumptionTask.builder().dateFrom(day).dateTo(day);
+    }
+
+
+    @JsonIgnore
+    public ConsumptionTask makeRetry() {
+        return cloneBuilder().retryCnt(this.retryCnt > 0 ? this.retryCnt - 1 : 0).build();
     }
 
     @JsonIgnore
     public ConsumptionTask newTaskUUID(UUID taskUUID) {
-
-        if (this.taskUUID != null)
-            return this;
-
-        return ConsumptionTask.builder()
-            .name(this.name)
-            .template(this.template)
-            .dateFrom(this.dateFrom)
-            .dateTo(this.dateTo)
-            .retryCnt(this.retryCnt)
-            .taskUUID(taskUUID)
-            .build();
+        if (this.taskUUID != null) {
+            throw new IllegalArgumentException("taskUUID is null");
+        }
+        return cloneBuilder().taskUUID(taskUUID).build();
     }
 
     @JsonIgnore
@@ -84,12 +101,9 @@ public class ConsumptionTask implements Serializable {
 
     @JsonIgnore
     public boolean isValid() {
-        return TimeDetailKey.searchKeyname(template.getSrcTimeDetailType()) != null &&
-            TimeDetailKey.searchKeyname(template.getDestTimeDetailType()) != null &&
-            //ContServiceTypeKey.searchKeyname(contServiceType) != null &&
-            toDateInterval().isValid();
+        return KeyEnumTool.checkKeys(TimeDetailKey.class, template.getSrcTimeDetailType(), template.getDestTimeDetailType())
+            && toDateInterval().isValid();
     }
-
 
     @JsonIgnore
     public String getSrcTimeDetailType() {
@@ -138,5 +152,45 @@ public class ConsumptionTask implements Serializable {
     public static ConsumptionTask dayConsumptionTask(ConsumptionTaskTemplate template, LocalDate date) {
         return ConsumptionTask.builder().template(template).dateFrom(date).dateTo(date).build();
     }
+
+    /**
+     *
+     * @return
+     */
+    public ConsumptionTask nextDay()
+    {
+        return nextDay(null);
+    }
+
+
+    /**
+     *
+     * @param name
+     * @return
+     */
+    public ConsumptionTask nextDay(String name)
+    {
+        if (getDaysBetween() != 1) {
+            throw new IllegalStateException("Days between in current task is not 1");
+        }
+
+        LocalDate nextDayFrom = this.dateFrom.plusDays(1);
+
+        return cloneBuilder().dateFrom(nextDayFrom).dateTo(nextDayFrom).build();
+    }
+
+    /**
+     *
+     * @param contZPointId
+     * @return
+     */
+    public ConsumptionTask nextContZPointId(Long contZPointId)
+    {
+        if (contZPointId == null) {
+            throw new IllegalArgumentException("contZPointId is null");
+        }
+        return cloneBuilder().contZPointId(contZPointId).build();
+    }
+
 
 }

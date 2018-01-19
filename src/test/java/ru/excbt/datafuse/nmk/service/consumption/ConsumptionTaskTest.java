@@ -53,4 +53,33 @@ public class ConsumptionTaskTest {
         assertThat(task.getDaysBetween()).isEqualTo(2);
     }
 
-}
+
+    @Test
+    public void testNextDay() {
+        ConsumptionTask task = ConsumptionTask.dayBuilder(LocalDate.now())
+            .template(Template24H_from_1H)
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
+            .build();
+
+        ConsumptionTask nextDayTask = task.nextDay();
+
+        assertThat(nextDayTask.getDaysBetween()).isEqualTo(1);
+
+        assertThat(nextDayTask.getDateFrom()).isEqualTo(task.getDateFrom().plusDays(1));
+    }
+
+    @Test
+    public void testNextContZPointId() {
+        ConsumptionTask task = ConsumptionTask.dayBuilder(LocalDate.now())
+            .template(Template24H_from_1H)
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
+            .contZPointId(1L)
+            .build();
+
+
+        ConsumptionTask nextContZPointTask = task.nextContZPointId(2L);
+
+        assertThat(nextContZPointTask.getContZPointId()).isEqualTo(2L);
+    }
+
+    }
