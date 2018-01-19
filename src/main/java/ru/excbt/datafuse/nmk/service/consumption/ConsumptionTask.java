@@ -88,8 +88,8 @@ public class ConsumptionTask implements Serializable {
     }
 
     @JsonIgnore
-    public ConsumptionTask newTaskUUID(UUID taskUUID) {
-        if (this.taskUUID == null) {
+    public ConsumptionTask newTaskUUID(final UUID taskUUID) {
+        if (taskUUID == null) {
             throw new IllegalArgumentException("taskUUID is null");
         }
         return cloneBuilder().taskUUID(taskUUID).build();

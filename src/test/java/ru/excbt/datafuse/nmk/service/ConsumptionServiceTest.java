@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.service;
 
 import com.fasterxml.uuid.Generators;
 import org.apache.commons.lang.time.StopWatch;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class ConsumptionServiceTest {
             .contZPointId(contZPoint.getId())
             .template(Template24H_from_1H)
             .dateFrom(day)
+            .dataType(ConsumptionService.DATA_TYPE_HWATER)
             .dateTo(day).build().checkDaysBetween(1);
 
         consumptionService.processHWater(task, true);
@@ -116,6 +118,7 @@ public class ConsumptionServiceTest {
             .dateTo(day)
             .template(Template24H_from_1H)
             .dataType(ConsumptionService.DATA_TYPE_HWATER)
+            //.taskUUID()
             .retryCnt(3).build().checkDaysBetween(1);
 
         task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
@@ -139,6 +142,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
+    @Ignore
     public void processHWaterConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
@@ -191,7 +195,7 @@ public class ConsumptionServiceTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void processElConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
@@ -250,7 +254,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
-    //@Ignore
+    @Ignore
     public void processImpulseConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
