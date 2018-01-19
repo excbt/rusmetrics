@@ -43,11 +43,17 @@ public class ContZPointConsumptionTask extends AbstractAuditableModel {
     @Column(name = "task_state")
     private String taskState;
 
-    @Column(name = "task_state_dt")
-    private Instant taskStateDt;
+    @Column(name = "task_state_date_time")
+    private Instant taskStateDateTime;
 
     @Column(name = "cont_zpoint_id")
     private Long contZPointId;
+
+    @Column(name = "start_date_time")
+    private Instant startDateTime;
+
+    @Column(name = "finish_date_time")
+    private Instant finishDateTime;
 
     @Version
     private int version;

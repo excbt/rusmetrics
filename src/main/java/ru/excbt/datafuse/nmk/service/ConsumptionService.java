@@ -53,7 +53,7 @@ public class ConsumptionService {
     public static final String CONS_STATE_INVALIDATED = "INVALIDATED";
 
     public enum TaskState implements KeynameObject {
-        NEW, CALCULATING, FINISHED, SCHEDULED;
+        NEW, STARTED, FINISHED, SCHEDULED;
 
         @Override
         public String getKeyname() {
@@ -504,7 +504,7 @@ public class ConsumptionService {
         contZPointConsumptionTask.setTaskDateTime(Instant.now());
         contZPointConsumptionTask.setConsDateTime(consumptionTask.getDateTimeFrom());
         contZPointConsumptionTask.setDataType(consumptionTask.getDataType());
-        contZPointConsumptionTask.setTaskStateDt(contZPointConsumptionTask.getTaskDateTime());
+        contZPointConsumptionTask.setTaskStateDateTime(contZPointConsumptionTask.getTaskDateTime());
         contZPointConsumptionTask.setContZPointId(consumptionTask.getContZPointId());
         contZPointConsumptionTask.setTaskUUID(consumptionTask.getTaskUUID() != null ? consumptionTask.getTaskUUID() : Generators.timeBasedGenerator().generate());
         consumptionTaskRepository.save(contZPointConsumptionTask);
@@ -546,7 +546,12 @@ public class ConsumptionService {
                 }
 
                 i.setTaskState(taskState.getKeyname());
-                i.setTaskStateDt(Instant.now());
+                i.setTaskStateDateTime(Instant.now());
+                if (taskState == TaskState.STARTED) {
+                    i.setStartDateTime(Instant.now());
+                } else if (taskState == TaskState.FINISHED) {
+                    i.setFinishDateTime(Instant.now());
+                }
                 consumptionTaskRepository.save(i);
                 return true;
             }
@@ -689,7 +694,7 @@ public class ConsumptionService {
         Optional<ContZPointConsumptionTask> optContZPointConsumptionTask = task.getTaskUUID() == null ? Optional.empty() :
             consumptionTaskRepository.findByTaskUUID(task.getTaskUUID()).stream().findAny();
 
-        Boolean taskStateUpdateResult = updateTaskState (task, TaskState.CALCULATING, TaskState.SCHEDULED);
+        Boolean taskStateUpdateResult = updateTaskState (task, TaskState.STARTED, TaskState.SCHEDULED);
         if (Boolean.FALSE.equals(taskStateUpdateResult)) {
             throw new IllegalStateException("Expecting state of task is not " + TaskState.SCHEDULED);
         }
