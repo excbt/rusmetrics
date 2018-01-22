@@ -24,22 +24,23 @@ public class ConsumptionFunctionLib {
     public static List<ConsumptionFunction<ContServiceDataHWater>> findHWaterFunc(ContZPoint contZPoint) {
         List<ConsumptionFunction<ContServiceDataHWater>> consumptionFunctions = new ArrayList<>();
 
+        boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
+
         if (checkAnyService(contZPoint, ContServiceTypeKey.HEAT)) {
-            consumptionFunctions.add(Boolean.TRUE.equals(contZPoint.getDoublePipe()) ?
-                ConsumptionFunctionLibDataHWater.H1_sub_H2 : ConsumptionFunctionLibDataHWater.H1);
+            consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.H1_sub_H2 : ConsumptionFunctionLibDataHWater.H1);
         }
         if (checkAnyService(contZPoint, ContServiceTypeKey.CW, ContServiceTypeKey.HW)) {
-            List<String> fields = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
-                .map(i -> i.getFieldName()).collect(Collectors.toList());
-            boolean vCase = fields.contains("V");
-            boolean mCase = fields.contains("M");
-            boolean doublePipe = Boolean.TRUE.equals(contZPoint.getDoublePipe());
-            if (mCase) {
-                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.M1_sub_M2 : ConsumptionFunctionLibDataHWater.M1);
-            }
-            if (vCase) {
-                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.V1_sub_V2 : ConsumptionFunctionLibDataHWater.V1);
-            }
+//            List<String> fields = contZPoint.getConsFields().stream().filter(i -> Boolean.TRUE.equals(i.getIsEnabled()))
+//                .map(i -> i.getFieldName()).collect(Collectors.toList());
+//            boolean vCase = fields.contains("V");
+//            boolean mCase = fields.contains("M");
+
+//            if (mCase) {
+//                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.M1_sub_M2 : ConsumptionFunctionLibDataHWater.M1);
+//            }
+//            if (vCase) {
+//                consumptionFunctions.add(doublePipe ? ConsumptionFunctionLibDataHWater.V1_sub_V2 : ConsumptionFunctionLibDataHWater.V1);
+//            }
 
             // No settings. Calculate all
             if (consumptionFunctions.isEmpty()) {
@@ -50,6 +51,11 @@ public class ConsumptionFunctionLib {
         return consumptionFunctions;
     }
 
+    /**
+     *
+     * @param contZPoint
+     * @return
+     */
     public static List<ConsumptionFunction<ContServiceDataElCons>> findElConsFunc(ContZPoint contZPoint) {
         List<ConsumptionFunction<ContServiceDataElCons>> consumptionFunctions = new ArrayList<>();
 
@@ -80,6 +86,12 @@ public class ConsumptionFunctionLib {
         return consumptionFunctions;
     }
 
+
+    /**
+     *
+     * @param contZPoint
+     * @return
+     */
     public static List<ConsumptionFunction<ContServiceDataImpulse>> findImpulseFunc(ContZPoint contZPoint) {
         List<ConsumptionFunction<ContServiceDataImpulse>> consumptionFunctions = new ArrayList<>();
 
