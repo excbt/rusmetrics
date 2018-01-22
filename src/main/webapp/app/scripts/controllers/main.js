@@ -27,7 +27,9 @@
             'reportSvc',
             'monitorSvc',
             'logSvc',
-            'APP_LABEL'
+            'APP_LABEL',
+            'settingModeService',
+            '$scope'
         ];
 
     function mainCtrl(
@@ -41,7 +43,9 @@
                        reportSvc,
                        monitorSvc,
                        logSvc,
-                       APP_LABEL
+                       APP_LABEL,
+                       settingModeService,
+                       $scope
                       ) {
         /*jshint validthis: true*/
         var vm = this;
@@ -55,7 +59,7 @@
         vm.mainCtrlSettings.loadingServicePermissionFlag = mainSvc.getLoadingServicePermissionFlag();
         vm.mainCtrlSettings.ctxId = "nmc_main";
 
-        vm.debugModeFlag = false;
+        vm.debugModeFlag = settingModeService.getModeState();
 
         vm.data = {};
         vm.data.menuLabels = {
@@ -86,8 +90,12 @@
         //end for indicators 
 
         vm.debugModeClick = function() {
-            vm.debugModeFlag = !vm.debugModeFlag;       
+            vm.debugModeFlag = !vm.debugModeFlag;
+            settingModeService.setModeState(vm.debugModeFlag);
         };
+        $scope.$on(settingModeService.EVENTS.modeStateChanged, function () {
+            vm.debugModeFlag = settingModeService.getModeState();
+        });
 
     //  flags for selected menu item                  
         vm.menuMassive = {};

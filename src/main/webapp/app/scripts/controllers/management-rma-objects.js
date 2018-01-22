@@ -2,7 +2,7 @@
 /*global angular, $, alert, moment*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', 'settingModeService', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window, settingModeService) {
     $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -54,6 +54,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
     $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
 //    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
+    
+    $scope.getModeState = settingModeService.getModeState;
+    
+    $scope.addManyObjectsEnabled = function () {        
+        return $scope.isSystemuser() && $scope.getModeState();
+    }
+//    $scope.$on(settingModeService.EVENTS.settingModeChanged, function () {
+//        
+//    });
                 
     var setVisibles = function () {
         var tmp = mainSvc.getContextIds();

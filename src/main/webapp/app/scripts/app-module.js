@@ -35,6 +35,7 @@
             'ui.router',
             'ngTagsInput',
             
-            'objectTreeModule'
+            'objectTreeModule',
+            'settingModeModule'
         ]);
 }());

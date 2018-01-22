@@ -158,7 +158,7 @@
                         <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
                     </div>
                     <div class = "col-xs-1">
-                       <div ng-if = "isSystemuser()">
+                       <div ng-if = "addManyObjectsEnabled()">
                            <i class = "btn btn-xs" data-target = "#manyObjectAddWindowModal" data-toggle = "modal" style = "opacity: 0.1">++</i>
                        </div>
                         
