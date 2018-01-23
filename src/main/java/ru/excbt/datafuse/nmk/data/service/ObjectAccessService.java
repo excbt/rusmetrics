@@ -298,7 +298,8 @@ public class ObjectAccessService {
             return;
         }
 
-        List<Long> subscrContObjectIds = this.findRmaSubscribersContObjectIds(subscriberParam.getRmaId());
+        // subscriberId is rmaSubscriberId
+        List<Long> subscrContObjectIds = this.findRmaSubscribersContObjectIds(subscriberParam.getSubscriberId());
 
         Set<Long> subscrContObjectIdMap = new HashSet<>(subscrContObjectIds);
         contObjects.forEach(i -> {
