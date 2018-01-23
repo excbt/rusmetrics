@@ -46,7 +46,7 @@ spring:
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format_sql: false
-            hibernate.show_sql: false
+            hibernate.show_sql: true
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
             hibernate.generate_statistics: false
             #hibernate.cache.use_structured_entries: true
@@ -83,13 +83,13 @@ spring:
             time-between-expiration-check: -1
             use-anonymous-producers: true
 
-  # Spring JMS Settings
+    # Spring JMS Settings
     jms:
         listener:
             acknowledge-mode: auto
             auto-startup: true
-#      concurrency: 5
-#      max-concurrency: 10
+#           concurrency: 5
+#           max-concurrency: 10
             concurrency: 1
             max-concurrency: 1
         pub-sub-domain: false
