@@ -195,14 +195,23 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.fasterxml.jackson.datatype</groupId>-->
+            <!--<artifactId>jackson-modules-java8</artifactId>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-json-org</artifactId>
         </dependency>
 
         <dependency>
-        <groupId>com.fasterxml.jackson.dataformat</groupId>
-        <artifactId>jackson-dataformat-csv</artifactId>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-csv</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-afterburner</artifactId>
         </dependency>
 
         <!-- JsonPath -->
@@ -610,7 +619,38 @@
         </dependency>
 
 
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-apt</artifactId>
+            <version>${querydsl.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-jpa</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.querydsl</groupId>
+            <artifactId>querydsl-sql-spring</artifactId>
+            <version>${querydsl.version}</version>
+        </dependency>
+
+</dependencies>
 
 
 	<repositories>
@@ -650,8 +690,6 @@
         </pluginRepository>
     </pluginRepositories>
 
-
-
 	<build>
 		<finalName>${rp.build.warname}</finalName>
         <defaultGoal>spring-boot:run</defaultGoal>
@@ -684,6 +722,10 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
+                    <compilerArgs>
+                        <arg>-Aquerydsl.entityAccessors=true</arg>
+                        <arg>-Aquerydsl.useFields=false</arg>
+                    </compilerArgs>
                     <annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
@@ -699,6 +741,17 @@
 							<groupId>org.hibernate</groupId>
 							<artifactId>hibernate-jpamodelgen</artifactId>
 							<version>${hibernate.version}</version>
+						</path>
+						<path>
+                            <groupId>com.querydsl</groupId>
+                            <artifactId>querydsl-apt</artifactId>
+                            <version>${querydsl.version}</version>
+                            <classifier>jpa</classifier>
+						</path>
+						<path>
+                            <groupId>org.hibernate.javax.persistence</groupId>
+                            <artifactId>hibernate-jpa-2.1-api</artifactId>
+                            <version>1.0.0.Final</version>
 						</path>
                     </annotationProcessorPaths>
 				</configuration>

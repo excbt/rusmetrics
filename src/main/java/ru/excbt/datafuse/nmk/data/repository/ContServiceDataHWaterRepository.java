@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -11,7 +12,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
+import ru.excbt.datafuse.nmk.repository.support.ConsuptionRepositoryRI;
 
 /**
  * Repository для ContServiceDataHWater
@@ -21,7 +24,9 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
  * @since 23.03.2015
  *
  */
-public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long> {
+@Repository
+public interface ContServiceDataHWaterRepository extends PagingAndSortingRepository<ContServiceDataHWater, Long>,
+    ConsuptionRepositoryRI<ContServiceDataHWater> {
 
 	@Query("SELECT d FROM ContServiceDataHWater d "
 			+ " WHERE d.contZPointId = :contZPointId AND time_detail_type = :timeDetailType AND d.deleted = 0 ")
@@ -90,7 +95,6 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
      *
      * @param contZPointId
      * @param fromDateTime
-     * @param pageable
      * @return
      */
 	@Query("SELECT max(d.dataDate) FROM ContServiceDataHWater d " + " WHERE d.contZPointId = :contZPointId AND "
@@ -122,11 +126,11 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			+ " WHERE d.contZPointId = :contZPointId AND d.deleted = 0 " + " GROUP BY d.timeDetailType")
 	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointId") long contZPointId);
 
-	/**
-	 *
-	 * @param contZPointId
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointIds
+     * @return
+     */
 	@Query("SELECT d.contZPointId, d.timeDetailType, max(d.dataDate) FROM ContServiceDataHWater d "
 			+ " WHERE d.contZPointId in (:contZPointIds) AND d.deleted = 0 "
 			+ " GROUP BY d.contZPointId, d.timeDetailType")
@@ -192,5 +196,7 @@ public interface ContServiceDataHWaterRepository extends PagingAndSortingReposit
 			+ " AND d.timeDetailType IN (:timeDetailType) AND d.deleted = 0 " + " ORDER BY d.dataDate ASC ")
 	public List<ContServiceDataHWater> selectFirstDetailDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
+
+
 
 }

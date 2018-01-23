@@ -7,7 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 /**
  * Тип данных: Тип сервиса системы
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 03.08.2015
@@ -15,11 +15,11 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
  */
 public enum ContServiceTypeKey implements KeynameObject {
 
-	CW(MeasureUnit.V_M3), EL, ENV, GAS, HEAT(MeasureUnit.W_GCAL), HW(MeasureUnit.V_M3);
+	CW(MeasureUnitKey.V_M3), EL, ENV, GAS, HEAT(MeasureUnitKey.W_GCAL), HW(MeasureUnitKey.V_M3);
 
-	private final MeasureUnit measureUnit;
+	private final MeasureUnitKey measureUnit;
 
-	private ContServiceTypeKey(MeasureUnit measureUnit) {
+	private ContServiceTypeKey(MeasureUnitKey measureUnit) {
 		this.measureUnit = measureUnit;
 	}
 
@@ -28,7 +28,7 @@ public enum ContServiceTypeKey implements KeynameObject {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String getKeyname() {
@@ -36,7 +36,7 @@ public enum ContServiceTypeKey implements KeynameObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -48,7 +48,7 @@ public enum ContServiceTypeKey implements KeynameObject {
 		return opt.isPresent() ? opt.get() : null;
 	}
 
-	public MeasureUnit getMeasureUnit() {
+	public MeasureUnitKey getMeasureUnit() {
 		return measureUnit;
 	}
 

@@ -121,7 +121,7 @@ public class CabinetOutService {
 
     private void importImpulseData(ContZPoint contZPoint, CabinetOutMeterData meterData, ZonedDateTime dataDate){
         ContServiceDataImpulse dataImpulse = new ContServiceDataImpulse();
-        dataImpulse.setContZpointId(contZPoint.getId());
+        dataImpulse.setContZPointId(contZPoint.getId());
         dataImpulse.setDataDate(LocalDateUtils.asDate(meterData.getInsdDateTime().toLocalDateTime()));
         dataImpulse.setDeviceObjectId(meterData.getDeviceObjectId());
         dataImpulse.setTimeDetailType(CABINET_OUT_TIME_DETAIL.keyName());

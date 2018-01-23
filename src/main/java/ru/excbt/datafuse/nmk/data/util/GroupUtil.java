@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 public class GroupUtil {
 
@@ -31,5 +32,19 @@ public class GroupUtil {
 
         return resultMap;
     }
+
+
+    public static <K,V> Map<K, List<V>> makeIdMap(Stream<V> inStream, Function<V, K> idGetter) {
+        Map<K, List<V>> resultMap = new HashMap<>();
+        inStream.forEach(m -> {
+            if (!resultMap.containsKey(idGetter.apply(m))) {
+                resultMap.put(idGetter.apply(m), new ArrayList<>());
+            }
+            resultMap.get(idGetter.apply(m)).add(m);
+
+        });
+        return resultMap;
+    }
+
 
 }

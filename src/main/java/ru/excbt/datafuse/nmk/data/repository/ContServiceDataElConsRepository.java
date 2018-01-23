@@ -12,6 +12,7 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
+import ru.excbt.datafuse.nmk.repository.support.ConsuptionRepositoryRI;
 
 /**
  * Repository для ContServiceDataElCons
@@ -21,7 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
  * @since 15.12.2015
  *
  */
-public interface ContServiceDataElConsRepository extends Repository<ContServiceDataElCons, Long> {
+public interface ContServiceDataElConsRepository extends Repository<ContServiceDataElCons, Long>, ConsuptionRepositoryRI<ContServiceDataElCons> {
 
 	/**
 	 *
@@ -131,4 +132,5 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			+ " WHERE d.contZPointId in (:contZPointIds) AND d.deleted = 0 "
 			+ " GROUP BY d.contZPointId, d.timeDetailType")
 	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointIds") List<Long> contZPointIds);
+
 }
