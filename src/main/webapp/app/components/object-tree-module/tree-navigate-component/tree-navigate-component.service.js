@@ -50,7 +50,9 @@
                 result = true;
             }
             return result;
-        }        
+        }
+        
+        var isSystemuser = objectTreeService.isSystemuser;
 
         ////////////////////////////request canceler 
         var requestCanceler = null;
@@ -370,13 +372,10 @@
 
         var isContZpointNode = objectTreeService.isContZpointNode;
 
-        var isDeviceNode = objectTreeService.isDeviceNode;
+        var isDeviceNode = objectTreeService.isDeviceNode;        
 
         var isElementNode = objectTreeService.isElementNode;
-        
-        function isLazyNode(item) {
-            return item.lazyNode;
-        }
+        var isLazyNode = objectTreeService.isLazyNode;        
         
             // Sort object array by some string field
         function sortItemsBy(itemArray, sortField) {
@@ -406,7 +405,7 @@
             });
         }
         
-        function sortLinkedObjects(objectsArr, sortField) {
+        function sortArrayWithNodeObjectBy(objectsArr, sortField) {
             if (!angular.isArray(objectsArr)) {
                 return "Input value is no array.";
             }
@@ -473,9 +472,11 @@
         
         service.isContObjectNode = isContObjectNode;
         service.isContZpointNode = isContZpointNode;
-        service.isDeviceNode = isDeviceNode;
+        service.isDeviceNode = isDeviceNode;        
         service.isElementNode = isElementNode;
         service.isLazyNode = isLazyNode;
+        
+        service.isSystemuser = isSystemuser;
         
         service.loadDefaultTreeSetting = loadDefaultTreeSetting;
         service.loadPTreeNode = loadPTreeNode;
@@ -484,7 +485,7 @@
         service.setPTree = setPTree;
         service.setPTreeSelectedNode = setPTreeSelectedNode;
         service.sortItemsBy = sortItemsBy;
-        service.sortLinkedObjects = sortLinkedObjects;
+        service.sortArrayWithNodeObjectBy = sortArrayWithNodeObjectBy;
         return service;
     }
 })();

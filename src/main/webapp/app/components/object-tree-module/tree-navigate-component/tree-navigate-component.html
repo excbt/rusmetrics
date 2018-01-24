@@ -94,8 +94,24 @@
             </span>
 -->
             <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
-                
+                <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item._id}})</span>                
+            </span>
+            <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-file text-success"></i>
+                {{item.nodeObject.fullName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
+               <i class = "glyphicon glyphicon-map-marker text-info"></i>
+                {{item.nodeObject.customServiceName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-scale text-warning"></i>
+               <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
+               <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
+               <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
+               <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span class="nmc-valign-middle">                
                 <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0)"
                    style = "display: inline;">
                     ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
@@ -105,21 +121,6 @@
                   </span>
                 </p>    
                 
-            </span>
-            <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-file text-success"></i>
-                {{item.nodeObject.fullName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
-            </span>
-            <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
-               <i class = "glyphicon glyphicon-map-marker text-info"></i>
-                {{item.nodeObject.customServiceName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
-            </span>
-            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-scale text-warning"></i>
-               <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
-               <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
-               <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
-               <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
 <!--
             <span>

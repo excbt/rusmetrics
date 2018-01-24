@@ -31,9 +31,12 @@
         svc.getTreeList = getTreeList;
         
         svc.isContObjectNode = isContObjectNode;
-        svc.isContZpointNode = isContZpointNode;
-        svc.isDeviceNode = isDeviceNode;
+        svc.isContZpointNode = isContZpointNode;        
+        svc.isDeviceNode = isDeviceNode;        
         svc.isElementNode = isElementNode; 
+        svc.isLazyNode = isLazyNode;
+        
+        svc.isSystemuser = isSystemuser;
         
         svc.loadTreeStub = loadTreeStub;
         svc.loadTreeStubWrap = loadTreeStubWrap;
@@ -77,10 +80,13 @@
         
         function findContObjectsByNodeId(nodeId) {
             //TODO: check node id
+            if (angular.isUndefined(nodeId) || nodeId === null) {
+                return [];
+            }
             var tree = getCurrentTreeStub();
             var cObjects = [];
             var foundedNode = findNodeByIdAtTree(tree, nodeId);
-console.log(foundedNode);            
+//console.log(foundedNode);            
             if (angular.isDefined(foundedNode) && foundedNode.hasOwnProperty('linkedNodeObjects') && angular.isArray(foundedNode.linkedNodeObjects)) {
                 if (isContObjectNode(foundedNode)) {
                     cObjects = [foundedNode];
@@ -199,6 +205,22 @@ console.log(foundedNode);
                 return false;
             }
             return item.nodeType === 'ELEMENT';
+        }
+        
+        function isLazyNode(item) {
+            return item.lazyNode;
+        }
+        
+        var getProp = function (obj, propName) {
+            var result = false;
+            if (angular.isDefined(obj) && obj !== null && obj.hasOwnProperty(propName)) {
+                result = obj[propName];
+            }
+            return result;
+        };        
+            //check user: system? - true/false
+        function isSystemuser() {
+            return getProp($rootScope.userInfo, "_system");
         }
     }
 })();

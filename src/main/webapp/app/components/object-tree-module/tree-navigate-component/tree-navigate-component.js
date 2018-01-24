@@ -59,6 +59,8 @@
         ctrl.isContZpointNode = treeNavSvc.isContZpointNode;
         ctrl.isDeviceNode = treeNavSvc.isDeviceNode;
         ctrl.isElementNode = treeNavSvc.isElementNode;
+        
+        ctrl.isSystemuser = treeNavSvc.isSystemuser;
 
  // ********************************************************************************************
     //  TREEVIEW
@@ -163,7 +165,7 @@
         function successLoadPTreeCallback(resp) {
 //console.log(resp);
 //console.log(resp.data);
-            treeNavSvc.sortLinkedObjects(resp.data.linkedNodeObjects, "fullName");
+            treeNavSvc.sortArrayWithNodeObjectBy(resp.data.linkedNodeObjects, "fullName");
             treeNavSvc.sortItemsBy(resp.data.childNodes, "nodeName");
             ctrl.data.currentPTree = resp.data;
             setMonitorToPTree(ctrl.data.currentPTreeMonitor, ctrl.data.currentPTree);
@@ -316,7 +318,7 @@
                 return false;
             }
             if (!checkUndefinedNull(resp.data.linkedNodeObjects)) {
-                treeNavSvc.sortLinkedObjects(resp.data.linkedNodeObjects, "fullName");
+                treeNavSvc.sortArrayWithNodeObjectBy(resp.data.linkedNodeObjects, "fullName");
                 PTnode.linkedNodeObjects = resp.data.linkedNodeObjects;
                 PTnode.linkedNodeObjectsOnPage = PTnode.linkedNodeObjects.slice(0, ctrl.ELEMENTS_PER_NODE);
             }
@@ -348,7 +350,7 @@
                 });
         }
 
-        var isLazyNode = treeNavSvc.isLazyNode;
+        var isLazyNode = treeNavSvc.isLazyNode;        
 //        (item) {
 //            return item.lazyNode;
 //        }
@@ -504,6 +506,10 @@
 //console.log(treeScope);
 //console.log(toggleMethod);
 //console.log(collapsed);
+//console.log(item);
+            if (ctrl.data.selectedPNode === item) {
+                return false;
+            }
             if (ctrl.isContObjectNode(item)) {
 //                ctrl.selectedObjectBy(item.nodeObject);
                 loadViewMode(item.nodeObject);
@@ -529,6 +535,16 @@
 
             if (isLazyNode(item) && (ctrl.data.selectedPNode !== item)) {
                 loadPTreeNode(item, PTREE_DEPTH_LEVEL, treeScope, toggleMethod);
+            }
+            if (!isLazyNode(item) && !ctrl.isElementNode(item)) {
+                if (!checkUndefinedNull(item.linkedNodeObjects)) {
+                    treeNavSvc.sortArrayWithNodeObjectBy(item.linkedNodeObjects, "fullName");                    
+                    item.linkedNodeObjectsOnPage = item.linkedNodeObjects.slice(0, ctrl.ELEMENTS_PER_NODE);
+                }
+                if (!checkUndefinedNull(item.childNodes)) {
+//                    treeNavSvc.sortArrayWithNodeObjectBy(item.childNodes, "customServiceName");                    
+                    item.childNodesOnPage = item.childNodes.slice(0, ctrl.ELEMENTS_PER_NODE);
+                }
             }
             
             if (ctrl.data.selectedPNode !== item) {
