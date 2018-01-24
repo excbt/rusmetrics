@@ -16,7 +16,7 @@
             {
                 keyname: "INFO_VIEW",
                 caption: "Информация",
-                stateName: "objectsPTree.treeNodeInfo.infoView"
+                stateName: "objectsPTree.treeNodeInfo.nodeInfoView"
             }
         ];
         
@@ -52,7 +52,8 @@
         }
         
         function getNodeWidgets() {
-            return nodeWidgets;
+            var result = nodeWidgets.concat(defaultWidgets);
+            return result;
         }
         
         function setCurrentWidget(curWidget) {

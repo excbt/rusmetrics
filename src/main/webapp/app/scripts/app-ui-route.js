@@ -88,6 +88,14 @@
                 params: {
                     node: null
                 }
+            },            
+            {
+                name: 'objectsPTree.treeNodeInfo.nodeInfoView',
+                url: '/node-info-view',
+                component: 'treeNodeInfoViewComponent',
+                params: {
+                    node: null
+                }
             },
             
 /*end 'component version'*/            
