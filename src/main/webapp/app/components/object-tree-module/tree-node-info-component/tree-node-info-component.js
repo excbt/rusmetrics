@@ -23,14 +23,15 @@
 //console.log('$stateParams: ', $stateParams);    
             ctrl.node = $stateParams.node; 
             ctrl.nodeWidgets = ctrl.svc.getNodeWidgets();
-            ctrl.currentWidget = ctrl.nodeWidgets[0];            
+            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget() === null ? ctrl.nodeWidgets[0] : treeNodeInfoComponentService.getCurrentWidget();
             ctrl.changeWidget(ctrl.currentWidget);
         };
         
         ctrl.changeWidget = function (widget) {
             if (ctrl.node !== null) {
                 $state.go(widget.stateName, {node: ctrl.node});
-            }            
+            }
+            treeNodeInfoComponentService.setCurrentWidget(widget);
         };
         
         ctrl.widgetSelectDisabled = function () {

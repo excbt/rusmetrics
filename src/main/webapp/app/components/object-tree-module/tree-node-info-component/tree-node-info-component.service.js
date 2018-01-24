@@ -10,6 +10,8 @@
 
     /* @ngInject */
     function Service() {
+        var currentWidget = null;
+        
         var defaultWidgets = [
             {
                 keyname: "INFO_VIEW",
@@ -38,13 +40,23 @@
                 stateName: "objectsPTree.treeNodeInfo.indicatorView"
             }
         ];
-        
-        this.getNodeWidgets = getNodeWidgets;
+        var svc = this;
+        svc.getCurrentWidget = getCurrentWidget;
+        svc.getNodeWidgets = getNodeWidgets;
+        svc.setCurrentWidget = setCurrentWidget;
 
         ////////////////
 
+        function getCurrentWidget() {
+            return currentWidget;
+        }
+        
         function getNodeWidgets() {
             return nodeWidgets;
+        }
+        
+        function setCurrentWidget(curWidget) {
+            currentWidget = curWidget;
         }
     }
 })();
