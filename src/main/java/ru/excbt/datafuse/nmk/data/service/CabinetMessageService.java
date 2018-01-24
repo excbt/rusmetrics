@@ -6,7 +6,6 @@ import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.RelationalPathBase;
 import com.querydsl.sql.dml.SQLInsertClause;
 import com.querydsl.sql.dml.SQLUpdateClause;
-import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -47,18 +46,18 @@ public class CabinetMessageService {
 
     private final CabinetMessageMapper cabinetMessageMapper;
 
-    private final DBSessionService sessionService;
-
     private final SubscriberRepository subscriberRepository;
 
     private final DBFDWSequence fdwSequence;
 
-    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, DBSessionService sessionService, SubscriberRepository subscriberRepository) {
+    private final QueryDSLService queryDSLService;
+
+    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, DBSessionService sessionService, SubscriberRepository subscriberRepository, QueryDSLService queryDSLService) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
-        this.sessionService = sessionService;
         this.subscriberRepository = subscriberRepository;
-        this.fdwSequence = new DBFDWSequence(sessionService, "SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table", 50);
+        this.fdwSequence = new DBFDWSequence(queryDSLService, DBMetadata.SCHEME_CABINET2, 50);
+        this.queryDSLService = queryDSLService;
     }
 
     // CustomQueryBuilder
@@ -95,10 +94,8 @@ public class CabinetMessageService {
         final Long seqId = fdwSequence.next();
 
         final QCustomCabinetMessagePath p = QCustomCabinetMessagePath.instance;
-        Session session = sessionService.getSession();
-
         log.debug("new cabinet message id: {}", seqId);
-        session.doWork((Connection c) -> {
+        queryDSLService.doWork((Connection c) -> {
 
             SQLInsertClause insert = new SQLInsertClause(c, QueryDSLService.templates, p.userPath);
             insert
@@ -131,7 +128,7 @@ public class CabinetMessageService {
      */
     private int updateCabinetMessageReviewDate(Long id, ZonedDateTime reviewDateTime) {
         final QCustomCabinetMessagePath p = QCustomCabinetMessagePath.instance;
-        long count = sessionService.getSession().doReturningWork((Connection c) -> {
+        long count = queryDSLService.doReturningWork((Connection c) -> {
             SQLUpdateClause updateClause = new SQLUpdateClause(c, QueryDSLService.templates, p.userPath);
             updateClause.set(p.reviewDateTime, reviewDateTime).where(p.id.eq(id));
             long r = updateClause.execute();
