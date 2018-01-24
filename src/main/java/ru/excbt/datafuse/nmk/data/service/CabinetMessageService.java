@@ -1,6 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.fasterxml.uuid.Generators;
+import com.querydsl.core.types.dsl.*;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.dml.SQLInsertClause;
+import com.querydsl.sql.dml.SQLUpdateClause;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,19 +13,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
+import ru.excbt.datafuse.nmk.data.model.CabinetMessageDirection;
+import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.Timestamp;
-import java.sql.Types;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -55,82 +61,83 @@ public class CabinetMessageService {
         this.fdwSequence = new DBFDWSequence(sessionService, "SELECT a FROM  " + DBMetadata.SCHEME_CABINET2 + ".hibernate_seq_table", 50);
     }
 
-    public static final String INS_SQL_QRY = "INSERT INTO "+ DBMetadata.SCHEME_CABINET2 + ".cabinet_message( " +
-        "id, " + //1
-        "message_type, " + //2
-        "message_direction, " + //3
-        "from_portal_subscriber_id, " + //4
-        "from_portal_user_id, " + //5
-        "to_portal_subscriber_id, " + //6
-        "to_portal_user_id, " + //7
-        "message_subject, " + //8
-        "message_body, " + //9
-        "master_id, " + //10
-        "response_to_id, " + //11
-        "creation_date_time, " + //12
-        "review_date_time," + //13
-        "master_uuid) " + //14
-        " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?); ";
+    // CustomQueryBuilder
+    private static class QCustomCabinetMessagePath {
 
+        private final static QCustomCabinetMessagePath instance = new QCustomCabinetMessagePath();
 
-    public static final String UPD_SQL_QRY = "UPDATE " + DBMetadata.SCHEME_CABINET2 +".cabinet_message" +
-        "   SET review_date_time=?" +
-        " WHERE id=?;";
+        private final RelationalPath<Object> userPath = new RelationalPathBase<>(Object.class, "cabinetMessage", DBMetadata.SCHEME_CABINET2, "cabinet_message");
 
+        private final DateTimePath<ZonedDateTime> creationDateTime = Expressions.dateTimePath(ZonedDateTime.class, userPath, "creation_date_time");
+        private final NumberPath<Long> fromPortalSubscriberId = Expressions.numberPath(Long.class, userPath, "from_portal_subscriber_id");
+        private final NumberPath<Long> fromPortalUserId = Expressions.numberPath(Long.class, userPath, "from_portal_user_id");
+        private final NumberPath<Long> id = Expressions.numberPath(Long.class, userPath, "id");
+        private final NumberPath<Long> masterId = Expressions.numberPath(Long.class, userPath, "master_id");
+        private final ComparablePath<UUID> masterUuid = Expressions.comparablePath(java.util.UUID.class, userPath, "master_uuid");
+        private final StringPath messageBody = Expressions.stringPath(userPath, "message_body");
+        private final StringPath messageDirection = Expressions.stringPath(userPath, "message_direction");
+        private final StringPath messageSubject = Expressions.stringPath(userPath, "message_subject");
+        private final StringPath messageType = Expressions.stringPath(userPath, "message_type");
+        private final NumberPath<Long> responseToId = Expressions.numberPath(Long.class, userPath, "response_to_id");
+        private final DateTimePath<ZonedDateTime> reviewDateTime = Expressions.dateTimePath(ZonedDateTime.class, userPath, "review_date_time");
+        private final NumberPath<Long> toPortalSubscriberId = Expressions.numberPath(Long.class, userPath, "to_portal_subscriber_id");
+        private final NumberPath<Long> toPortalUserId = Expressions.numberPath(Long.class, userPath, "to_portal_user_id");
 
-    private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
-        Session session = sessionService.getSession();
-        final Long id = fdwSequence.next();
-        log.debug("new cabinet message id: {}", id);
-        session.doWork((Connection c) -> {
-            try (PreparedStatement preparedStatement = c.prepareStatement(INS_SQL_QRY)) {
-                preparedStatement.setObject(1, id);
-                preparedStatement.setObject(2, cabinetMessage.getMessageType());
-                preparedStatement.setObject(3, cabinetMessage.getMessageDirection());
-                preparedStatement.setObject(4, cabinetMessage.getFromPortalSubscriberId());
-                preparedStatement.setObject(5, cabinetMessage.getFromPortalUserId());
-                preparedStatement.setObject(6, cabinetMessage.getToPortalSubscriberId());
-                preparedStatement.setObject(7, cabinetMessage.getToPortalUserId());
-                preparedStatement.setObject(8, cabinetMessage.getMessageSubject());
-                preparedStatement.setObject(9, cabinetMessage.getMessageBody());
-                preparedStatement.setObject(10, cabinetMessage.getMasterId());
-                preparedStatement.setObject(11, cabinetMessage.getResponseToId());
-
-                if (cabinetMessage.getCreationDateTime() != null) {
-                    preparedStatement.setTimestamp(12,
-                        Timestamp.valueOf(cabinetMessage.getCreationDateTime().toLocalDateTime()));
-                } else preparedStatement.setNull(12, Types.TIMESTAMP);
-
-                if (cabinetMessage.getReviewDateTime() != null) {
-                    preparedStatement.setTimestamp(13,
-                        Timestamp.valueOf(cabinetMessage.getReviewDateTime().toLocalDateTime()));
-                } else preparedStatement.setNull(13, Types.TIMESTAMP);
-
-                preparedStatement.setObject(14, cabinetMessage.getMasterUuid());
-
-                log.debug("Create CabinetMessage SQL: {}", preparedStatement.toString());
-                preparedStatement.execute();
-            }
-        });
-
-        return id;
     }
 
-    private int updateCabinetMessageReviewDate(Long id, ZonedDateTime reviewDateTime) {
-        Session session = sessionService.getSession();
-        return session.doReturningWork((Connection c) -> {
-            try (PreparedStatement preparedStatement = c.prepareStatement(UPD_SQL_QRY);) {
-                if (reviewDateTime != null) {
-                    preparedStatement.setTimestamp(1,
-                        Timestamp.valueOf(reviewDateTime.toLocalDateTime()));
-                } else preparedStatement.setNull(1, Types.TIMESTAMP);
+    /**
+     *
+     * @param cabinetMessage
+     * @return
+     */
+    private Long insertCabinetMessageSQL(CabinetMessage cabinetMessage) {
 
-                preparedStatement.setObject(2, id);
-                log.debug("Update CabinetMessage: {}", preparedStatement.toString());
-                int cnt = preparedStatement.executeUpdate();
-                return cnt;
-            }
+        final Long seqId = fdwSequence.next();
+
+        final QCustomCabinetMessagePath p = QCustomCabinetMessagePath.instance;
+        Session session = sessionService.getSession();
+
+        log.debug("new cabinet message id: {}", seqId);
+        session.doWork((Connection c) -> {
+
+            SQLInsertClause insert = new SQLInsertClause(c, QueryDSLService.templates, p.userPath);
+            insert
+                .set(p.id, seqId)
+                .set(p.messageType, cabinetMessage.getMessageType())
+                .set(p.messageDirection, cabinetMessage.getMessageDirection())
+                .set(p.fromPortalSubscriberId, cabinetMessage.getFromPortalSubscriberId())
+                .set(p.fromPortalUserId, cabinetMessage.getFromPortalUserId())
+                .set(p.toPortalSubscriberId, cabinetMessage.getToPortalSubscriberId())
+                .set(p.toPortalUserId, cabinetMessage.getToPortalUserId())
+                .set(p.messageSubject, cabinetMessage.getMessageSubject())
+                .set(p.messageBody, cabinetMessage.getMessageBody())
+                .set(p.masterId, cabinetMessage.getMasterId())
+                .set(p.responseToId, cabinetMessage.getResponseToId())
+                .set(p.creationDateTime, cabinetMessage.getCreationDateTime())
+                .set(p.reviewDateTime, cabinetMessage.getCreationDateTime())
+                .set(p.masterUuid, cabinetMessage.getMasterUuid());
+
+            insert.execute();
         });
+
+        return seqId;
+    }
+
+    /**
+     *
+     * @param id
+     * @param reviewDateTime
+     * @return
+     */
+    private int updateCabinetMessageReviewDate(Long id, ZonedDateTime reviewDateTime) {
+        final QCustomCabinetMessagePath p = QCustomCabinetMessagePath.instance;
+        long count = sessionService.getSession().doReturningWork((Connection c) -> {
+            SQLUpdateClause updateClause = new SQLUpdateClause(c, QueryDSLService.templates, p.userPath);
+            updateClause.set(p.reviewDateTime, reviewDateTime).where(p.id.eq(id));
+            long r = updateClause.execute();
+            return r;
+        });
+        return Long.valueOf(count).intValue();
     }
 
     /**
@@ -160,6 +167,8 @@ public class CabinetMessageService {
         cabinetMessage.setCreationDateTime(ZonedDateTime.now());
 
         Long id = insertCabinetMessageSQL(cabinetMessage);
+
+        cabinetMessageRepository.flush();
 
         cabinetMessage = cabinetMessageRepository.findOne(id);
         return cabinetMessageMapper.toDto(cabinetMessage);
@@ -246,8 +255,9 @@ public class CabinetMessageService {
      *  @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete CabinetMessage : {}", id);
-        cabinetMessageRepository.delete(id);
+        throw new UnsupportedOperationException("Delete is not supported");
+//        log.debug("Request to delete CabinetMessage : {}", id);
+//        cabinetMessageRepository.delete(id);
     }
 
 
@@ -287,6 +297,14 @@ public class CabinetMessageService {
     }
 
 
+    /**
+     *
+     * @param parentIds
+     * @param messageSubject
+     * @param messageBody
+     * @param subscrCabinetIds
+     * @return
+     */
     @Transactional
     public UUID sendNotificationToCabinets(PortalUserIds parentIds, String messageSubject, String messageBody, List<Long> subscrCabinetIds) {
 
