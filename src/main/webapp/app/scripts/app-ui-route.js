@@ -46,14 +46,14 @@
                     }]
                 }
             },
-            {
+/*            {
                 name: 'objectsPTree.info',
                 url: 'tree-info',
                 component: 'treeElementNodeComponent',
                 params: {
                     node: null
                 }
-            },
+            },*/
             {
                 name: 'objectsPTree.contObjectControl',
                 url: 'cont-object-control',
@@ -84,7 +84,7 @@
             {
                 name: 'objectsPTree.treeNodeInfo.nodeNotifications',
                 url: '/node-notifications',
-                component: 'treeElementNodeComponent',
+                component: 'treeNodeNotificationsComponent',
                 params: {
                     node: null
                 }

@@ -10,6 +10,13 @@
 
     /* @ngInject */
     function Service() {
+        var defaultWidgets = [
+            {
+                keyname: "INFO_VIEW",
+                caption: "Информация",
+                stateName: "objectsPTree.treeNodeInfo.infoView"
+            }
+        ];
         
         var nodeWidgets = [            
             {
@@ -21,6 +28,14 @@
                 keyname: "NOTIFICATION",
                 caption: "Уведомления",
                 stateName: "objectsPTree.treeNodeInfo.nodeNotifications"
+            }
+        ];
+        
+        var zpointNodeWidgets = [
+            {
+                keyname: "INDICATOR_VIEW",
+                caption: "Показания",
+                stateName: "objectsPTree.treeNodeInfo.indicatorView"
             }
         ];
         

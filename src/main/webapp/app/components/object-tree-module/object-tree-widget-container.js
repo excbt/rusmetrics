@@ -4,7 +4,7 @@
 
     angular
         .module('objectTreeModule')
-        .controller('zpointWidgetContainer', Controller);
+        .controller('objectTreeWidgetContainer', Controller);
 
     Controller.$inject = ['$scope'];
 

@@ -6,13 +6,13 @@
         bindings: {
             'spnode': '<'
         },
-        templateUrl: 'components/tree-element-node-component/tree-element-node-component.html',
+        templateUrl: 'components/object-tree-module/tree-node-notifications-component/tree-node-notifications-component.html',
         controller: treeElementNodeController
     };
     
-    treeElementNodeController.$inject = ['$scope', '$element', '$attrs', 'treeElementNodeComponentService', '$stateParams'];
+    treeElementNodeController.$inject = ['$scope', '$element', '$attrs', 'treeNodeNotificationsComponentService', '$stateParams'];
     
-    function treeElementNodeController($scope, $element, $attrs, treeElementNodeComponentService, $stateParams) {
+    function treeElementNodeController($scope, $element, $attrs, treeNodeNotificationsComponentService, $stateParams) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.data = {};
@@ -30,7 +30,7 @@
         ctrl.criticalEventsCount = 0;
         ctrl.objectWithCriticalEventsCount = 0;
         
-        ctrl.isCriticalEvent = treeElementNodeComponentService.isCriticalEvent;
+        ctrl.isCriticalEvent = treeNodeNotificationsComponentService.isCriticalEvent;
         
         function prepareContEventData(inputContEventData, field) {
             console.log(inputContEventData);
@@ -112,12 +112,12 @@
         }
         
         function loadContEventTypes() {
-            treeElementNodeComponentService.loadContEventTypes()
+            treeNodeNotificationsComponentService.loadContEventTypes()
                 .then(successLoadContEventTypesCallback, errorCallback);
         }
         
         function loadNodeStats() {
-            treeElementNodeComponentService.loadPTreeNodeStats(ctrl.spnode._id)
+            treeNodeNotificationsComponentService.loadPTreeNodeStats(ctrl.spnode._id)
                 .then(successLoadStatsCallback, errorCallback);
         }
         
@@ -134,7 +134,7 @@
         };
     }
     
-    angular.module('portalNMC')
-        .component('treeElementNodeComponent', treeElementNodeComponentOpt);
+    angular.module('objectTreeModule')
+        .component('treeNodeNotificationsComponent', treeElementNodeComponentOpt);
     
 } ());

@@ -5,13 +5,10 @@
     'use strict';
     
     function treeElementNodeComponentServiceFn($http, $rootScope) {
-        var WIDGETS_URL = "../api/widgets",
-            CONT_EVENT_MONITOR = WIDGETS_URL + "/cont-event-monitor";
         var API = {
-
-            CONT_EVENT_CATEGORIES_URL: CONT_EVENT_MONITOR + "/cont-event-categories",
-            CONT_EVENT_TYPES_URL: CONT_EVENT_MONITOR + "/cont-event-types",
-            PTREE_NODE_STATS_URL: "resource/treeNotificationStats.json" /*CONT_EVENT_MONITOR + "/p-tree-node/stats"*/
+            CONT_EVENT_CATEGORIES_URL: "../api/widgets/cont-event-monitor/cont-event-categories",
+            CONT_EVENT_TYPES_URL: "../api/widgets/cont-event-monitor/cont-event-types",
+            PTREE_NODE_STATS_URL: "../api/widgets/cont-event-monitor/p-tree-node/stats" /*"resource/treeNotificationStats.json"*/
         };
 
         var service = {};
@@ -52,6 +49,6 @@
     
     treeElementNodeComponentServiceFn.$inject = ['$http', '$rootScope'];
     
-    angular.module('portalNMC')
-        .service('treeElementNodeComponentService', treeElementNodeComponentServiceFn);
+    angular.module('objectTreeModule')
+        .service('treeNodeNotificationsComponentService', treeElementNodeComponentServiceFn);
 }());

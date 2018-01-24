@@ -106,7 +106,7 @@
                               <div ng-repeat = "zpoint in object.zpoints track by $index"
                                 class = "col-xs-6">
 
-                                   <div ng-controller='zpointWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                                   <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
                                        <span ng-show='title' ng-bind='title'></span>
                                        <div ng-show='isLoading'>Загрузка...</div>
                                        <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
