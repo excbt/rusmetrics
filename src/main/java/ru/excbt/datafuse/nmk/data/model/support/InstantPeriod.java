@@ -5,11 +5,11 @@ import lombok.Builder;
 import lombok.Getter;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.modelmapper.internal.cglib.core.Local;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.*;
 import java.util.Date;
 
 @Builder
@@ -46,4 +46,13 @@ public class InstantPeriod implements DateInterval {
 
         return dateTimeFrom.compareTo(dateTimeTo) >= 0;
     }
+
+    public static InstantPeriod month (int year, int month) {
+        LocalDate d = LocalDate.of(year, month, 1);
+        Instant startDay = d.atStartOfDay(ZoneId.systemDefault()).toInstant();
+        Instant endDay = d.atStartOfDay().plusMonths(1).minusSeconds(1).atZone(ZoneId.systemDefault()).toInstant();
+        return builder().dateTimeFrom(startDay).dateTimeTo(endDay).build();
+    }
+
+
 }

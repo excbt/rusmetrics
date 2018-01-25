@@ -9,6 +9,8 @@ public class ConsumptionFunction<T> {
 
     public final static int DEFAULT_ROUND_SCALE = 7;
 
+    public static final int DEFAULT_ROUND_MODE = BigDecimal.ROUND_CEILING;
+
     private final String valueName;
 
     private final ConsumptionValueExtractor<T> valueExtractor;
@@ -53,7 +55,7 @@ public class ConsumptionFunction<T> {
 
 
     public Double postProcessingRound(Double arg) {
-        return roundScale(arg, roundScale(), BigDecimal.ROUND_CEILING);
+        return roundScale(arg, roundScale(), DEFAULT_ROUND_MODE);
     }
 
 
@@ -62,7 +64,7 @@ public class ConsumptionFunction<T> {
     }
 
 
-    protected static Double roundScale(Double arg, int scale, int roundingMode) {
+    public static Double roundScale(Double arg, int scale, int roundingMode) {
         if (arg == null) {
             return null;
         }

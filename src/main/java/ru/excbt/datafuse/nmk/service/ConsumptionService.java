@@ -53,8 +53,8 @@ public class ConsumptionService {
     public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
 
-    private static final String CONS_STATE_CALCULATED = "calculated";
-    private static final String CONS_STATE_INVALIDATED = "invalidated";
+    public static final String CONS_STATE_CALCULATED = "calculated";
+    public static final String CONS_STATE_INVALIDATED = "invalidated";
 
     public enum TaskState implements KeynameObject {
         NEW, STARTED, FINISHED, SCHEDULED;
