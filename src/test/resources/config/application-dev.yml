@@ -64,6 +64,8 @@ spring:
 #            hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
 #            hibernate.javax.cache.uri: ${spring.cache.jcache.config}
 #            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
+
+
 portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource

@@ -1,8 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.google.common.collect.ImmutableSet;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.core.types.dsl.NumberExpression;
 import org.apache.commons.lang3.tuple.Pair;
-import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
-import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
@@ -22,9 +22,9 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElProfileRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElTechRepository;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
-import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import java.sql.Timestamp;
@@ -32,10 +32,11 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAmount;
-import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -60,9 +61,54 @@ public class ContServiceDataElService {
 
 	private static final PageRequest LIMIT1_PAGE_REQUEST = new PageRequest(0, 1);
 
-	private static final String[] CONS_COLUMNS = new String[] { "p_Ap1", "p_An1", "q_Rp1", "q_Rn1", "p_Ap2", "p_An2",
-			"q_Rp2", "q_Rn2", "p_Ap3", "p_An3", "q_Rp3", "q_Rn3", "p_Ap4", "p_An4", "q_Rp4", "q_Rn4", "p_Ap", "p_An",
-			"q_Rp", "q_Rn" };
+    private static final QContServiceDataElCons qContServiceDataElCons = QContServiceDataElCons.contServiceDataElCons;
+    private static final QContServiceDataElProfile qContServiceDataElProfile = QContServiceDataElProfile.contServiceDataElProfile;
+    private static final QContServiceDataElTech qContServiceDataElTech = QContServiceDataElTech.contServiceDataElTech;
+
+    private static final List<NumberExpression<Double>> dataElConsColumnPathList =
+        Arrays.asList(
+            qContServiceDataElCons.p_Ap,
+            qContServiceDataElCons.p_Ap1,
+            qContServiceDataElCons.p_Ap2,
+            qContServiceDataElCons.p_Ap3,
+            qContServiceDataElCons.p_Ap4,
+
+            qContServiceDataElCons.p_An,
+            qContServiceDataElCons.p_An1,
+            qContServiceDataElCons.p_An2,
+            qContServiceDataElCons.p_An3,
+            qContServiceDataElCons.p_An4,
+
+            qContServiceDataElCons.q_Rp,
+            qContServiceDataElCons.q_Rp1,
+            qContServiceDataElCons.q_Rp2,
+            qContServiceDataElCons.q_Rp3,
+            qContServiceDataElCons.q_Rp4,
+
+            qContServiceDataElCons.q_Rn,
+            qContServiceDataElCons.q_Rn1,
+            qContServiceDataElCons.q_Rn2,
+            qContServiceDataElCons.q_Rn3,
+            qContServiceDataElCons.q_Rn4);
+
+    private static final List<NumberExpression<Double>> dataElProfileColumnPathList =
+        Arrays.asList(
+            qContServiceDataElProfile.p_Ap,
+            qContServiceDataElProfile.p_An,
+            qContServiceDataElProfile.q_Rp,
+            qContServiceDataElProfile.q_Rn);
+
+    private static final List<NumberExpression<Double>> dataElTechColumnPathList =
+        Arrays.asList(
+            qContServiceDataElTech.u1,
+            qContServiceDataElTech.u2,
+            qContServiceDataElTech.u3,
+            qContServiceDataElTech.i1,
+            qContServiceDataElTech.i2,
+            qContServiceDataElTech.i3,
+            qContServiceDataElTech.k1,
+            qContServiceDataElTech.k2,
+            qContServiceDataElTech.k3);
 
 	private static final Set<String> EL_SERVICE_TYPE_SET = ImmutableSet.of(ContServiceTypeKey.EL.getKeyname());
 
@@ -72,16 +118,16 @@ public class ContServiceDataElService {
 
 	private final ContServiceDataElProfileRepository contServiceDataElProfileRepository;
 
-	private final DBSessionService dbSessionService;
+	private final QueryDSLService queryDSLService;
 
 	@Autowired
     public ContServiceDataElService(ContServiceDataElConsRepository contServiceDataElConsRepository,
                                     ContServiceDataElTechRepository contServiceDataElTechRepository,
-                                    ContServiceDataElProfileRepository contServiceDataElProfileRepository, DBSessionService dbSessionService) {
+                                    ContServiceDataElProfileRepository contServiceDataElProfileRepository, QueryDSLService queryDSLService) {
         this.contServiceDataElConsRepository = contServiceDataElConsRepository;
         this.contServiceDataElTechRepository = contServiceDataElTechRepository;
         this.contServiceDataElProfileRepository = contServiceDataElProfileRepository;
-        this.dbSessionService = dbSessionService;
+        this.queryDSLService = queryDSLService;
     }
 
     /**
@@ -227,42 +273,72 @@ public class ContServiceDataElService {
 		diffs.setQ_Rn(ContServiceDataTool.processDelta(firstData.getQ_Rn(), lastData.getQ_Rn()));
 	}
 
-	/**
-	 *
-	 * @param columnHelper
-	 * @param queryResults
-	 * @return
-	 */
-	private ContServiceDataElCons consColumnHelperReader(ColumnHelper columnHelper, Object[] queryResults) {
+
+	private ContServiceDataElCons consColumnHelperReader(Tuple queryResults,
+                                                         Function<NumberExpression<Double>, NumberExpression<Double>> mapper) {
 		ContServiceDataElCons result = new ContServiceDataElCons();
 
-		result.setP_Ap1(columnHelper.getResultDouble(queryResults, "p_Ap1"));
-		result.setP_An1(columnHelper.getResultDouble(queryResults, "p_An1"));
-		result.setQ_Rp1(columnHelper.getResultDouble(queryResults, "q_Rp1"));
-		result.setQ_Rn1(columnHelper.getResultDouble(queryResults, "q_Rn1"));
+		result.setP_Ap1(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap1)));
+		result.setP_An1(queryResults.get(mapper.apply(qContServiceDataElCons.p_An1)));
+		result.setQ_Rp1(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp1)));
+		result.setQ_Rn1(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn1)));
 
-		result.setP_Ap2(columnHelper.getResultDouble(queryResults, "p_Ap2"));
-		result.setP_An2(columnHelper.getResultDouble(queryResults, "p_An2"));
-		result.setQ_Rp2(columnHelper.getResultDouble(queryResults, "q_Rp2"));
-		result.setQ_Rn2(columnHelper.getResultDouble(queryResults, "q_Rn2"));
+        result.setP_Ap2(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap2)));
+        result.setP_An2(queryResults.get(mapper.apply(qContServiceDataElCons.p_An2)));
+        result.setQ_Rp2(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp2)));
+        result.setQ_Rn2(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn2)));
 
-		result.setP_Ap3(columnHelper.getResultDouble(queryResults, "p_Ap3"));
-		result.setP_An3(columnHelper.getResultDouble(queryResults, "p_An3"));
-		result.setQ_Rp3(columnHelper.getResultDouble(queryResults, "q_Rp3"));
-		result.setQ_Rn3(columnHelper.getResultDouble(queryResults, "q_Rn3"));
+        result.setP_Ap3(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap3)));
+        result.setP_An3(queryResults.get(mapper.apply(qContServiceDataElCons.p_An3)));
+        result.setQ_Rp3(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp3)));
+        result.setQ_Rn3(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn3)));
 
-		result.setP_Ap4(columnHelper.getResultDouble(queryResults, "p_Ap4"));
-		result.setP_An4(columnHelper.getResultDouble(queryResults, "p_An4"));
-		result.setQ_Rp4(columnHelper.getResultDouble(queryResults, "q_Rp4"));
-		result.setQ_Rn4(columnHelper.getResultDouble(queryResults, "q_Rn4"));
+        result.setP_Ap4(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap4)));
+        result.setP_An4(queryResults.get(mapper.apply(qContServiceDataElCons.p_An4)));
+        result.setQ_Rp4(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp4)));
+        result.setQ_Rn4(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn4)));
 
-		result.setP_Ap(columnHelper.getResultDouble(queryResults, "p_Ap"));
-		result.setP_An(columnHelper.getResultDouble(queryResults, "p_An"));
-		result.setQ_Rp(columnHelper.getResultDouble(queryResults, "q_Rp"));
-		result.setQ_Rn(columnHelper.getResultDouble(queryResults, "q_Rn"));
+        result.setP_Ap5(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap5)));
+        result.setP_An5(queryResults.get(mapper.apply(qContServiceDataElCons.p_An5)));
+        result.setQ_Rp5(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp5)));
+        result.setQ_Rn5(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn5)));
+
+        result.setP_Ap(queryResults.get(mapper.apply(qContServiceDataElCons.p_Ap)));
+        result.setP_An(queryResults.get(mapper.apply(qContServiceDataElCons.p_An)));
+        result.setQ_Rp(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rp)));
+        result.setQ_Rn(queryResults.get(mapper.apply(qContServiceDataElCons.q_Rn)));
 
 		return result;
 	}
+
+
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetail
+     * @param localDatePeriod
+     * @param mapper
+     * @return
+     */
+	private ContServiceDataElCons processElConsAggr(Long contZPointId, TimeDetailKey timeDetail,
+                                                    LocalDatePeriod localDatePeriod,
+                                                    Function<NumberExpression<Double>, NumberExpression<Double>> mapper) {
+        checkNotNull(timeDetail);
+        checkNotNull(localDatePeriod);
+        checkArgument(localDatePeriod.isValidEq());
+
+        Expression<?>[] expr = dataElConsColumnPathList.stream().map(i -> mapper.apply(i)).collect(Collectors.toList()).toArray(new Expression<?>[0]);
+        Tuple result = queryDSLService.queryFactory().select(expr)
+            .from(qContServiceDataElCons)
+            .where(
+                qContServiceDataElCons.timeDetailType.eq(timeDetail.getKeyname())
+                    .and(qContServiceDataElCons.contZPointId.eq(contZPointId))
+                    .and(qContServiceDataElCons.dataDate.between(localDatePeriod.getDateFrom(), localDatePeriod.getDateTo())))
+            .fetchOne();
+
+
+        return consColumnHelperReader(result, mapper);
+    }
 
     /**
      *
@@ -275,16 +351,7 @@ public class ContServiceDataElService {
 	public ContServiceDataElCons selectCons_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
-		checkNotNull(timeDetail);
-		checkNotNull(localDatePeriod);
-		checkArgument(localDatePeriod.isValidEq());
-
-		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "avg(%s)");
-
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class, dbSessionService.getSession());
-
-		return consColumnHelperReader(columnHelper, queryResults);
+		return processElConsAggr(contZPointId, timeDetail, localDatePeriod, r -> r.avg());
 
 	}
 
@@ -299,17 +366,7 @@ public class ContServiceDataElService {
 	public ContServiceDataElCons selectCons_Min(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
-		checkNotNull(timeDetail);
-		checkNotNull(localDatePeriod);
-		checkArgument(localDatePeriod.isValidEq());
-
-		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "min(%s)");
-
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class, dbSessionService.getSession());
-
-		return consColumnHelperReader(columnHelper, queryResults);
-
+        return processElConsAggr(contZPointId, timeDetail, localDatePeriod, r -> r.min());
 	}
 
 	/**
@@ -323,16 +380,7 @@ public class ContServiceDataElService {
 	public ContServiceDataElCons selectCons_Max(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
-		checkNotNull(timeDetail);
-		checkNotNull(localDatePeriod);
-		checkArgument(localDatePeriod.isValidEq());
-
-		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "max(%s)");
-
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class, dbSessionService.getSession());
-
-		return consColumnHelperReader(columnHelper, queryResults);
+        return processElConsAggr(contZPointId, timeDetail, localDatePeriod, r -> r.max());
 
 	}
 
@@ -347,16 +395,7 @@ public class ContServiceDataElService {
 	public ContServiceDataElCons selectCons_Sum(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
-		checkNotNull(timeDetail);
-		checkNotNull(localDatePeriod);
-		checkArgument(localDatePeriod.isValidEq());
-
-		ColumnHelper columnHelper = new ColumnHelper(CONS_COLUMNS, "sum(%s)");
-
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElCons.class, dbSessionService.getSession());
-
-		return consColumnHelperReader(columnHelper, queryResults);
+        return processElConsAggr(contZPointId, timeDetail, localDatePeriod, r -> r.sum());
 
 	}
 
@@ -451,25 +490,28 @@ public class ContServiceDataElService {
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq());
 
-		String[] columns = new String[] { "u1", "u2", "u3", "i1", "i2", "i3", "k1", "k2", "k3" };
 
-		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
+        Expression<?>[] expr = dataElTechColumnPathList.stream().map(i -> i.avg()).collect(Collectors.toList()).toArray(new Expression<?>[0]);
+        Tuple resultTuple = queryDSLService.queryFactory().select(expr)
+            .from(qContServiceDataElTech)
+            .where(
+                qContServiceDataElTech.timeDetailType.eq(timeDetail.getKeyname())
+                    .and(qContServiceDataElTech.contZPointId.eq(contZPointId))
+                    .and(qContServiceDataElTech.dataDate.between(localDatePeriod.getDateFrom(), localDatePeriod.getDateTo())))
+            .fetchOne();
 
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElTech.class, dbSessionService.getSession());
+        ContServiceDataElTech result = new ContServiceDataElTech();
+        result.setU1(resultTuple.get(qContServiceDataElTech.u1.avg()));
+        result.setU2(resultTuple.get(qContServiceDataElTech.u2.avg()));
+        result.setU3(resultTuple.get(qContServiceDataElTech.u3.avg()));
 
-		ContServiceDataElTech result = new ContServiceDataElTech();
-		result.setU1(columnHelper.getResultDouble(queryResults, "u1"));
-		result.setU2(columnHelper.getResultDouble(queryResults, "u2"));
-		result.setU3(columnHelper.getResultDouble(queryResults, "u3"));
+        result.setI1(resultTuple.get(qContServiceDataElTech.i1.avg()));
+        result.setI2(resultTuple.get(qContServiceDataElTech.i2.avg()));
+        result.setI3(resultTuple.get(qContServiceDataElTech.i3.avg()));
 
-		result.setI1(columnHelper.getResultDouble(queryResults, "i1"));
-		result.setI2(columnHelper.getResultDouble(queryResults, "i2"));
-		result.setI3(columnHelper.getResultDouble(queryResults, "i3"));
-
-		result.setK1(columnHelper.getResultDouble(queryResults, "k1"));
-		result.setK2(columnHelper.getResultDouble(queryResults, "k2"));
-		result.setK3(columnHelper.getResultDouble(queryResults, "k3"));
+        result.setK1(resultTuple.get(qContServiceDataElTech.k1.avg()));
+        result.setK2(resultTuple.get(qContServiceDataElTech.k2.avg()));
+        result.setK3(resultTuple.get(qContServiceDataElTech.k3.avg()));
 
 		return result;
 
@@ -572,19 +614,20 @@ public class ContServiceDataElService {
 		checkNotNull(localDatePeriod);
 		checkArgument(localDatePeriod.isValidEq());
 
-		String[] columns = new String[] { "p_Ap", "p_An", "q_Rp", "q_Rn" };
+        Expression<?>[] expr = dataElProfileColumnPathList.stream().map(i -> i.avg()).collect(Collectors.toList()).toArray(new Expression<?>[0]);
+        Tuple resultTuple = queryDSLService.queryFactory().select(expr)
+            .from(qContServiceDataElProfile)
+            .where(
+                qContServiceDataElProfile.timeDetailType.eq(timeDetail.getKeyname())
+                    .and(qContServiceDataElProfile.contZPointId.eq(contZPointId))
+                    .and(qContServiceDataElProfile.dataDate.between(localDatePeriod.getDateFrom(), localDatePeriod.getDateTo())))
+            .fetchOne();
 
-		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
-
-		Object[] queryResults = ContServiceDataTool.serviceDataCustomQuery(contZPointId, timeDetail, localDatePeriod, columnHelper,
-				ContServiceDataElProfile.class, dbSessionService.getSession());
-
-		ContServiceDataElProfile result = new ContServiceDataElProfile();
-		result.setP_Ap(columnHelper.getResultDouble(queryResults, "p_Ap"));
-		result.setP_An(columnHelper.getResultDouble(queryResults, "p_An"));
-		result.setQ_Rp(columnHelper.getResultDouble(queryResults, "q_Rp"));
-		result.setQ_Rn(columnHelper.getResultDouble(queryResults, "q_Rn"));
-
+        ContServiceDataElProfile result = new ContServiceDataElProfile();
+        result.setP_Ap(resultTuple.get(qContServiceDataElProfile.p_Ap.avg()));
+        result.setP_An(resultTuple.get(qContServiceDataElProfile.p_An.avg()));
+        result.setQ_Rp(resultTuple.get(qContServiceDataElProfile.q_Rp.avg()));
+        result.setQ_Rn(resultTuple.get(qContServiceDataElProfile.q_Rn.avg()));
 		return result;
 
 	}

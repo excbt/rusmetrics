@@ -65,7 +65,7 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
      * @param subscriberId
      * @return
      */
-    @Query("SELECT zp.id, zp.contObjectId " +
+    @Query("SELECT DISTINCT zp.id, zp.contObjectId " +
             " FROM ContZPoint zp WHERE zp.id IN " +
             " (SELECT a.contZPointId FROM ContZPointAccess a " +
             "  WHERE a.subscriberId = :subscriberId " +
@@ -74,14 +74,19 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
     List<Object[]> findAllContZPointIdPairs(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT zp.deviceObject FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
+//    @Query("SELECT zp.deviceObject FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
+//        " WHERE a.subscriberId = :subscriberId " +
+//        " AND a.accessTtl IS NULL" +
+//        " AND a.contZPoint.deleted = 0 ")
+    @Query("SELECT dev FROM DeviceObject dev WHERE dev.deleted = 0 and dev.id IN ( " +
+        " SELECT zp.deviceObject.id FROM ContZPointAccess a LEFT JOIN a.contZPoint zp " +
         " WHERE a.subscriberId = :subscriberId " +
         " AND a.accessTtl IS NULL" +
-        " AND a.contZPoint.deleted = 0 ")
+        " AND a.contZPoint.deleted = 0 )")
     List<DeviceObject> findAllDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 
-    @Query(value = "SELECT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, " +
+    @Query(value = "SELECT DISTINCT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, " +
         " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSource.id as subscrDataSourceId" +
         " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObject d LEFT JOIN d.deviceObjectDataSource ds" +
         " WHERE a.subscriberId = :subscriberId AND zp.id = a.contZPointId AND d.number IN (:deviceObjectNumbers) " +

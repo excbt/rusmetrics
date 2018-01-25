@@ -1,35 +1,68 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLQuery;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 
-import javax.persistence.Query;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class DBFDWSequence {
 
-    private final String sql;
+    public static final String DEFAULT_HIBERNATE_SEQ_TABLE = "hibernate_seq_table";
+    public static final String DEFAULT_HIBERNATE_SEQ_COLUMN = "a";
 
-    private final DBSessionService sessionService;
+    private final QueryDSLService queryDSLService;
 
     private final int increment;
 
     private final ConcurrentLinkedQueue<Long> concurrentLinkedQueue = new ConcurrentLinkedQueue<>();;
 
-    public DBFDWSequence(DBSessionService sessionService, String sql) {
-        this.sql = sql;
-        this.sessionService = sessionService;
-        this.increment = 1;
+    private final Path path;
+
+    private static class Path {
+        private final RelationalPath<Object> userPath;
+        private final NumberPath<Long> nextId;
+
+        public Path(String schema, String sequenceTable, String column) {
+            userPath = new RelationalPathBase<>(Object.class, "setTable", schema, sequenceTable);
+            nextId =  Expressions.numberPath(Long.class, userPath, column);
+        }
     }
 
-    public DBFDWSequence(DBSessionService sessionService, String sql, int increment) {
-        this.sql = sql;
-        this.sessionService = sessionService;
+    public DBFDWSequence(QueryDSLService queryDSLService, String schema, String tableName, String column, int increment) {
+        this.path = new Path(schema, tableName, column);
+        this.queryDSLService = queryDSLService;
         this.increment = increment;
     }
 
+    public DBFDWSequence(QueryDSLService queryDSLService, String schema) {
+        this.path = new Path(schema, DEFAULT_HIBERNATE_SEQ_TABLE, DEFAULT_HIBERNATE_SEQ_COLUMN);
+        this.queryDSLService = queryDSLService;
+        this.increment = 1;
+    }
+
+    public DBFDWSequence(QueryDSLService queryDSLService, String schema, int increment) {
+        this.path = new Path(schema, DEFAULT_HIBERNATE_SEQ_TABLE, DEFAULT_HIBERNATE_SEQ_COLUMN);
+        this.queryDSLService = queryDSLService;
+        this.increment = increment;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private Long nextId() {
+        return queryDSLService.doReturningWork(c -> {
+            SQLQuery<Long> query = new SQLQuery<>(c, QueryDSLService.templates);
+            return query.select(path.nextId).from(path.userPath).fetchFirst();
+        });
+    }
+
     private void loadSequence () {
-        Query qry = sessionService.getSession().createNativeQuery(sql);
-        Long id = DBRowUtil.asLong(qry.getSingleResult());
+        Long id = nextId();
         for (int i = 0; i < increment; i++) {
             concurrentLinkedQueue.add(id + i);
         }

@@ -115,7 +115,10 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
 
 		List<DeviceObject> deviceObjects = deviceObjectService.selectDeviceObjectsByContObjectId(contObjectId);
 
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(deviceObjects));
+        List<DeviceObjectFullVM> deviceObjectFullVMList = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toFullVM(i)).collect(Collectors.toList());
+        //List<DeviceObjectShortInfoDTO> deviceObjectDTOS = deviceObjects.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> deviceObjectMapper.toShortInfoDTO(i)).collect(Collectors.toList());
+
+		return ApiResponse.responseOK(deviceObjectFullVMList);
 	}
 
     /**

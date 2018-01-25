@@ -12,6 +12,7 @@ import org.joda.time.format.DateTimeFormatter;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
+@Deprecated
 public class LocalDatePeriod implements DateInterval {
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";
@@ -158,7 +159,7 @@ public class LocalDatePeriod implements DateInterval {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public LocalDatePeriod buildEndOfDay() {
@@ -171,7 +172,7 @@ public class LocalDatePeriod implements DateInterval {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public LocalDatePeriod buildDateToNextMonth() {
@@ -180,7 +181,7 @@ public class LocalDatePeriod implements DateInterval {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public LocalDatePeriod buildDateToNextDay() {

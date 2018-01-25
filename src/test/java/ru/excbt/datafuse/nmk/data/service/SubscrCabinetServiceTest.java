@@ -120,4 +120,9 @@ public class SubscrCabinetServiceTest extends JpaSupportTest {
 
 	}
 
+    @Test
+    public void testGetNr() {
+	    Long nr = subscrCabinetService.getSubscrCabinetNr();
+	    assertNotNull(nr);
+    }
 }

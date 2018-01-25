@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import ru.excbt.datafuse.nmk.config.ActiveMQEmbConfiguration;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
@@ -26,7 +27,8 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 @ActiveProfiles(value = {Constants.SPRING_PROFILE_TEST })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class  })
+@Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class,
+    ActiveMQEmbConfiguration.class  })
 public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo{
 
 	private final static long TEST_AUDIT_USER = 1;

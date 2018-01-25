@@ -42,21 +42,25 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
 
     /// Queries for ContObject
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
-        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        " SELECT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId )" +
+        " ORDER BY co.fullAddress, co.id")
     List<ContObject> findAllContObjects(@Param("subscriberId") Long subscriberId);
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
-        " AND a.accessTtl IS NULL " +
-        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        "SELECT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId " +
+        " AND a.accessTtl IS NULL )" +
+        " ORDER BY co.fullAddress, co.id")
     List<ContObject> findAllContObjectsNoTtl(@Param("subscriberId") Long subscriberId);
 
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a " +
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        " SELECT a.contObjectId FROM ContObjectAccess a " +
         " WHERE a.subscriberId = :subscriberId " +
         " AND a.contObjectId NOT IN (:idList)" +
-        " AND a.accessTtl IS NULL " +
-        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+        " AND a.accessTtl IS NULL ) " +
+        " ORDER BY co.fullAddress, co.id")
     List<ContObject> findContObjectsExcludingIdsNoTtl(@Param("subscriberId") Long subscriberId,
                                                  @Param("idList") List<Long> idList);
 
@@ -68,11 +72,12 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
     List<Long> findRmaSubscribersContObjectIdsNoTtl(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a " +
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        "SELECT a.contObjectId FROM ContObjectAccess a " +
         " WHERE a.subscriberId = :subscriberId " +
         " AND a.contObjectId IN (:contObjectIds) AND a.contObject.deleted = 0" +
-        " AND a.accessTtl IS NULL" +
-        " ORDER BY a.contObject.fullAddress, a.contObject.id")
+        " AND a.accessTtl IS NULL ) " +
+        " ORDER BY co.fullAddress, co.id")
     List<ContObject> findContObjectsByIdsNoTtl(@Param("subscriberId") Long subscriberId,
                                           @Param("contObjectIds") List<Long> contObjectIds);
 
@@ -86,9 +91,10 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
                                     @Param("contObjectId") Long contObjectId);
 
 
-    @Query("SELECT ra.contObject FROM ContObjectAccess ra WHERE ra.subscriberId = :rmaSubscriberId AND ra.contObjectId NOT IN " +
-        " (SELECT sa.contObjectId FROM ContObjectAccess sa WHERE sa.subscriberId=:subscriberId) " +
-        " ORDER BY ra.contObject.fullAddress, ra.contObject.id ")
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        "SELECT ra.contObjectId FROM ContObjectAccess ra WHERE ra.subscriberId = :rmaSubscriberId AND ra.contObjectId NOT IN " +
+        " (SELECT sa.contObjectId FROM ContObjectAccess sa WHERE sa.subscriberId=:subscriberId) )" +
+        " ORDER BY co.fullAddress, co.id")
     List<ContObject> findRmaAvailableContObjects(@Param("subscriberId") Long subscriberId,
                                                  @Param("rmaSubscriberId") Long rmaSubscriberId);
 
@@ -101,17 +107,18 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
     List<Object[]> findChildSubscrCabinetContObjectsStats(@Param("parentSubscriberId") Long parentSubscriberId);
 
 
-    @Query("SELECT a.contObject FROM ContObjectAccess a WHERE a.contObjectId IN " +
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        " SELECT a.contObjectId FROM ContObjectAccess a WHERE a.contObjectId IN " +
         "( SELECT ci.contObject.id FROM SubscrContGroupItem ci INNER JOIN ci.contGroup cg " +
-        " WHERE cg.id = :contGroupId ) AND a.subscriberId = :subscriberId" +
-        " ORDER BY a.contObject.name, a.contObject.id ")
+        " WHERE cg.id = :contGroupId ) AND a.subscriberId = :subscriberId ) " +
+        " ORDER BY co.name, co.id ")
     List<ContObject> findContObjectsBySubscriberGroup(@Param("subscriberId") long subscriberId,
                                                         @Param("contGroupId") long contGroupId);
 
-    @Query("SELECT do FROM DeviceObject do " +
-        " WHERE do.contObject.id IN (SELECT a.contObjectId FROM ContObjectAccess a " +
+    @Query("SELECT dev FROM DeviceObject dev " +
+        " WHERE dev.contObject.id IN (SELECT a.contObjectId FROM ContObjectAccess a " +
         " WHERE a.subscriberId = :subscriberId )" +
-        " ORDER BY do.contObject.fullAddress, do.contObject.id ")
+        " ORDER BY dev.contObject.fullAddress, dev.contObject.id")
     List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 

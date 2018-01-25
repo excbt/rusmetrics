@@ -44,7 +44,7 @@ public class ContServiceDataImpulse extends AbstractAuditableModel implements Da
 	private Date dataDate;
 
 	@Column(name = "cont_zpoint_id", updatable = false)
-	private Long contZpointId;
+	private Long contZPointId;
 
 	@Column(name = "device_object_id", updatable = false)
 	private Long deviceObjectId;

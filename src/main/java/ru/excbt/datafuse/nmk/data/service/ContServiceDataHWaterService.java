@@ -1,6 +1,9 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import com.google.common.collect.ImmutableSet;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.Expression;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.joda.time.DateTime;
@@ -16,6 +19,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.QContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterAbs_Csv;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -24,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataHWaterRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContServiceDataHWaterMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
@@ -57,7 +62,7 @@ import static com.google.common.base.Preconditions.*;
  *
  */
 @Service
-public class ContServiceDataHWaterService implements SecuredRoles {
+public class ContServiceDataHWaterService  {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterService.class);
 
@@ -79,18 +84,18 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 
 	private final HWatersCsvService hWatersCsvService;
 
-	private final DBSessionService dbSessionService;
-
 	private final ContServiceDataHWaterMapper dataHWaterMapper;
 
+	private final QueryDSLService queryDSLService;
+
 	@Autowired
-    public ContServiceDataHWaterService(ContServiceDataHWaterRepository contServiceDataHWaterRepository, ContZPointService contZPointService, DeviceObjectService deviceObjectService, HWatersCsvService hWatersCsvService, DBSessionService dbSessionService, ContServiceDataHWaterMapper dataHWaterMapper) {
+    public ContServiceDataHWaterService(ContServiceDataHWaterRepository contServiceDataHWaterRepository, ContZPointService contZPointService, DeviceObjectService deviceObjectService, HWatersCsvService hWatersCsvService, ContServiceDataHWaterMapper dataHWaterMapper, QueryDSLService queryDSLService) {
         this.contServiceDataHWaterRepository = contServiceDataHWaterRepository;
         this.contZPointService = contZPointService;
         this.deviceObjectService = deviceObjectService;
         this.hWatersCsvService = hWatersCsvService;
-        this.dbSessionService = dbSessionService;
         this.dataHWaterMapper = dataHWaterMapper;
+        this.queryDSLService = queryDSLService;
     }
 
     /**
@@ -367,37 +372,46 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		logger.debug("selectContZPointTotals: contZPoint:{}; timeDetailType:{}; beginDate:{}; endDate:{}", contZpointId,
 				timeDetail.getKeyname(), beginDate.toDate(), endDate.toDate());
 
-		String qryStr = "SELECT sum(m_in) as m_in, sum(m_out) as m_out, sum(m_delta) as m_delta, "
-            + " sum(h_in) as h_in, sum(h_out) as h_out, sum(h_delta) as h_delta, "
-            + " sum(v_in) as v_in, sum(v_out) as v_out, sum(v_delta) as v_delta "
-            + " FROM ContServiceDataHWater hw " + " WHERE hw.timeDetailType = :timeDetailType "
-            + " AND hw.contZPointId = :contZpointId " + " AND hw.dataDate >= :beginDate "
-            + " AND hw.dataDate <= :endDate AND hw.deleted = 0";
 
-		Query q1 = dbSessionService.em().createQuery(qryStr);
+        QContServiceDataHWater qContServiceDataHWater = QContServiceDataHWater.contServiceDataHWater;
 
-		q1.setParameter("timeDetailType", timeDetail.getKeyname());
-		q1.setParameter("contZpointId", contZpointId);
-		q1.setParameter("beginDate", beginDate.toDate());
-		q1.setParameter("endDate", endDate.toDate());
 
-		Object[] results = (Object[]) q1.getSingleResult();
-		checkNotNull(results);
+        JPAQuery<Tuple> qry = queryDSLService.queryFactory().select(
+
+            qContServiceDataHWater.m_in.sum(),
+            qContServiceDataHWater.m_out.sum(),
+            qContServiceDataHWater.m_delta.sum(),
+
+            qContServiceDataHWater.h_in.sum(),
+            qContServiceDataHWater.h_out.sum(),
+            qContServiceDataHWater.h_delta.sum(),
+
+            qContServiceDataHWater.v_in.sum(),
+            qContServiceDataHWater.v_out.sum(),
+            qContServiceDataHWater.v_delta.sum())
+
+            .from(qContServiceDataHWater)
+            .where(qContServiceDataHWater.timeDetailType.eq(timeDetail.getKeyname())
+                .and(qContServiceDataHWater.contZPointId.eq(contZpointId))
+                .and(qContServiceDataHWater.dataDate.between(beginDate.toDate(), endDate.toDate()))
+                .and(qContServiceDataHWater.deleted.eq(0)));
+
+
+        Tuple tuple = qry.fetchOne();
 
 		ContServiceDataHWaterTotals result = new ContServiceDataHWaterTotals();
 
-		// TODO
-		result.setM_in((Double) results[0]);
-		result.setM_out((Double) results[1]);
-		result.setM_delta((Double) results[2]);
+		result.setM_in(tuple.get(qContServiceDataHWater.m_in.sum()));
+		result.setM_out(tuple.get(qContServiceDataHWater.m_out.sum()));
+		result.setM_delta(tuple.get(qContServiceDataHWater.m_delta.sum()));
 
-		result.setH_in((Double) results[3]);
-		result.setH_out((Double) results[4]);
-		result.setH_delta((Double) results[5]);
+		result.setH_in(tuple.get(qContServiceDataHWater.h_in.sum()));
+		result.setH_out(tuple.get(qContServiceDataHWater.h_out.sum()));
+		result.setH_delta(tuple.get(qContServiceDataHWater.h_delta.sum()));
 
-		result.setV_in((Double) results[6]);
-		result.setV_out((Double) results[7]);
-		result.setV_delta((Double) results[8]);
+		result.setV_in(tuple.get(qContServiceDataHWater.v_in.sum()));
+		result.setV_out(tuple.get(qContServiceDataHWater.v_out.sum()));
+		result.setV_delta(tuple.get(qContServiceDataHWater.v_delta.sum()));
 
 		result.setContZPointId(contZpointId);
 		result.setBeginDate(beginDate.toDate());
@@ -416,53 +430,64 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 		checkNotNull(period);
 		checkArgument(period.isValidEq());
 
-		String[] columns = new String[] { "t_in", "t_out", "t_cold", "t_outdoor", "m_in", "m_out", "m_delta", "v_in",
-				"v_out", "v_delta", "h_in", "h_out", "h_delta", "p_in", "p_out", "p_delta", "workTime", "failTime" };
+        QContServiceDataHWater qContServiceDataHWater = QContServiceDataHWater.contServiceDataHWater;
 
-		ColumnHelper columnHelper = new ColumnHelper(columns, "avg(%s)");
-		logger.debug("Colums: {}", columnHelper.build());
+        JPAQuery<Tuple> qry = queryDSLService.queryFactory().select(
 
-		StringBuilder sqlString = new StringBuilder();
-		sqlString.append(" SELECT ");
-		sqlString.append(columnHelper.build());
-		sqlString.append(" FROM ");
-		sqlString.append(" ContServiceDataHWater hw ");
-		sqlString.append(" WHERE hw.timeDetailType = :timeDetailType ");
-		sqlString.append(" AND hw.contZPointId = :contZpointId ");
-		sqlString.append(" AND hw.dataDate >= :beginDate ");
-		sqlString.append(" AND hw.dataDate <= :endDate ");
-		sqlString.append(" AND hw.deleted = 0 ");
-		logger.debug("Sql: {}", sqlString.toString());
+            qContServiceDataHWater.t_in.avg(),
+            qContServiceDataHWater.t_out.avg(),
+            qContServiceDataHWater.t_cold.avg(),
+            qContServiceDataHWater.t_outdoor.avg(),
 
-		Query q1 = dbSessionService.em().createQuery(sqlString.toString());
+            qContServiceDataHWater.m_in.avg(),
+            qContServiceDataHWater.m_out.avg(),
+            qContServiceDataHWater.m_delta.avg(),
 
-		q1.setParameter("timeDetailType", timeDetail.getKeyname());
-		q1.setParameter("contZpointId", contZpointId);
-		q1.setParameter("beginDate", period.getDateFrom());
-		q1.setParameter("endDate", period.getDateTo());
+            qContServiceDataHWater.v_in.avg(),
+            qContServiceDataHWater.v_out.avg(),
+            qContServiceDataHWater.v_delta.avg(),
 
-		Object[] results = (Object[]) q1.getSingleResult();
-		checkNotNull(results);
+            qContServiceDataHWater.h_in.avg(),
+            qContServiceDataHWater.h_out.avg(),
+            qContServiceDataHWater.h_delta.avg(),
+
+            qContServiceDataHWater.p_in.avg(),
+            qContServiceDataHWater.p_out.avg(),
+            qContServiceDataHWater.p_delta.avg()
+        )
+
+            .from(qContServiceDataHWater)
+            .where(qContServiceDataHWater.timeDetailType.eq(timeDetail.getKeyname())
+                .and(qContServiceDataHWater.contZPointId.eq(contZpointId))
+                .and(qContServiceDataHWater.dataDate.between(period.getDateFrom(), period.getDateTo()))
+                .and(qContServiceDataHWater.deleted.eq(0)));
+
+        Tuple tuple = qry.fetchOne();
 
 		ContServiceDataHWater result = new ContServiceDataHWater();
-		result.setT_in(columnHelper.getResultDouble(results, "t_in"));
-		result.setT_out(columnHelper.getResultDouble(results, "t_out"));
-		result.setT_cold(columnHelper.getResultDouble(results, "t_cold"));
-		result.setT_outdoor(columnHelper.getResultDouble(results, "t_outdoor"));
-		result.setM_in(columnHelper.getResultDouble(results, "m_in"));
-		result.setM_out(columnHelper.getResultDouble(results, "m_out"));
-		result.setM_delta(columnHelper.getResultDouble(results, "m_delta"));
-		result.setV_in(columnHelper.getResultDouble(results, "v_in"));
-		result.setV_out(columnHelper.getResultDouble(results, "v_out"));
-		result.setV_delta(columnHelper.getResultDouble(results, "v_delta"));
-		result.setH_in(columnHelper.getResultDouble(results, "h_in"));
-		result.setH_out(columnHelper.getResultDouble(results, "h_out"));
-		result.setH_delta(columnHelper.getResultDouble(results, "h_delta"));
-		result.setP_in(columnHelper.getResultDouble(results, "p_in"));
-		result.setP_out(columnHelper.getResultDouble(results, "p_out"));
-		result.setP_delta(columnHelper.getResultDouble(results, "p_delta"));
-		result.setWorkTime(columnHelper.getResultDouble(results, "workTime"));
-		result.setFailTime(columnHelper.getResultDouble(results, "failTime"));
+		result.setT_in(tuple.get(qContServiceDataHWater.t_in.avg()));
+		result.setT_out(tuple.get(qContServiceDataHWater.t_out.avg()));
+		result.setT_cold(tuple.get(qContServiceDataHWater.t_cold.avg()));
+		result.setT_outdoor(tuple.get(qContServiceDataHWater.t_outdoor.avg()));
+
+		result.setM_in(tuple.get(qContServiceDataHWater.m_in.avg()));
+		result.setM_out(tuple.get(qContServiceDataHWater.m_out.avg()));
+		result.setM_delta(tuple.get(qContServiceDataHWater.m_delta.avg()));
+
+		result.setV_in(tuple.get(qContServiceDataHWater.v_in.avg()));
+		result.setV_out(tuple.get(qContServiceDataHWater.v_out.avg()));
+		result.setV_delta(tuple.get(qContServiceDataHWater.v_delta.avg()));
+
+		result.setH_in(tuple.get(qContServiceDataHWater.h_in.avg()));
+		result.setH_out(tuple.get(qContServiceDataHWater.h_out.avg()));
+		result.setH_delta(tuple.get(qContServiceDataHWater.h_delta.avg()));
+
+		result.setP_in(tuple.get(qContServiceDataHWater.p_in.avg()));
+		result.setP_out(tuple.get(qContServiceDataHWater.p_out.avg()));
+		result.setP_delta(tuple.get(qContServiceDataHWater.p_delta.avg()));
+
+		result.setWorkTime(tuple.get(qContServiceDataHWater.workTime.avg()));
+		result.setFailTime(tuple.get(qContServiceDataHWater.failTime.avg()));
 
 		return result;
 
@@ -575,7 +600,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @param inData
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ SecuredRoles.ROLE_ADMIN, SecuredRoles.ROLE_SUBSCR_ADMIN })
 	public void insertManualLoadDataHWater(Long contZpointId, List<ContServiceDataHWater> inData, File outFile) {
 
 		checkNotNull(contZpointId);
@@ -633,7 +658,7 @@ public class ContServiceDataHWaterService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ SecuredRoles.ROLE_ADMIN, SecuredRoles.ROLE_SUBSCR_ADMIN })
 	public List<ContServiceDataHWater> deleteManualDataHWater(Long contZpointId, LocalDatePeriod localDatePeriod,
 			TimeDetailKey timeDetailKey, File outFile) {
 

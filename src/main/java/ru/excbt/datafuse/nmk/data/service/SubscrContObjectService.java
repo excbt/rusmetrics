@@ -49,17 +49,14 @@ public class SubscrContObjectService implements SecuredRoles {
 
     private final ObjectAccessService objectAccessService;
 
-    private final DBSessionService dbSessionService;
-
 	@Autowired
-    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService, DBSessionService dbSessionService) {
+    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.subscriberService = subscriberService;
         this.contGroupService = contGroupService;
         this.contObjectMapper = contObjectMapper;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.objectAccessService = objectAccessService;
-        this.dbSessionService = dbSessionService;
     }
 
     private final Access access = new Access();
@@ -208,78 +205,5 @@ public class SubscrContObjectService implements SecuredRoles {
         });
 
     }
-
-
-
-	/**
-	 * TODO delete
-	 * @param subscriberId
-	 * @return
-	 */
-	@Deprecated
-	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	private List<ContObjectShortInfo> selectSubscriberContObjectsShortInfo22(Long subscriberId) {
-        Objects.requireNonNull(subscriberId);
-
-		List<ContObjectShortInfo> result = new ArrayList<>();
-
-		ColumnHelper columnHelper = new ColumnHelper("id", "name", "fullName");
-
-		StringBuilder sqlString = new StringBuilder();
-		sqlString.append(" SELECT ");
-		sqlString.append(columnHelper.build());
-		sqlString.append(" FROM ");
-		sqlString.append(ContObject.class.getSimpleName());
-		sqlString.append(" c ");
-		sqlString.append(" WHERE c.id IN ( ");
-		sqlString.append(" SELECT sco.contObjectId FROM ");
-		sqlString.append(SubscrContObject.class.getSimpleName());
-		sqlString.append(" sco ");
-		sqlString.append(" WHERE sco.subscriberId = :subscriberId ");
-		sqlString.append(" AND sco.deleted = 0 ");
-		sqlString.append(" AND sco.subscrEndDate IS NULL ");
-		sqlString.append(" ) ");
-
-		logger.debug("SQL: {}", sqlString.toString());
-
-		Query q1 = dbSessionService.getSession().createQuery(sqlString.toString());
-
-		q1.setParameter("subscriberId", subscriberId);
-
-		List<?> resultRows = q1.getResultList();
-
-		for (Object r : resultRows) {
-			if (!(r instanceof Object[])) {
-				throw new IllegalStateException();
-			}
-			Object[] row = (Object[]) r;
-			final Long id = columnHelper.getResultAsClass(row, "id", Long.class);
-			final String contObjectName = columnHelper.getResultAsClass(row, "name", String.class);
-			final String contObjectFullName = columnHelper.getResultAsClass(row, "fullName", String.class);
-
-			ContObjectShortInfo contObjectShortInfo = new ContObjectShortInfo() {
-
-				@Override
-				public String getName() {
-					return contObjectName;
-				}
-
-				@Override
-				public String getFullName() {
-					return contObjectFullName;
-				}
-
-				@Override
-				public Long getContObjectId() {
-					return id;
-				}
-			};
-
-			result.add(contObjectShortInfo);
-
-		}
-
-		return result;
-	}
 
 }
