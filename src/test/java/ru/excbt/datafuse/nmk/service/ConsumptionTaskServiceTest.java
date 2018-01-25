@@ -102,12 +102,15 @@ public class ConsumptionTaskServiceTest {
 
         TimeUnit.SECONDS.sleep(10);
         ConsumptionTask task = consumptionTaskService.receiveTask();
-        assertThat(task).isNotNull();
-        log.info(task.toString());
-        consumptionTaskService.sendTask(task.makeRetry());
+        if (task != null) {
+            assertThat(task).isNotNull();
+            log.info(task.toString());
+            consumptionTaskService.sendTask(task.makeRetry());
 
-        TimeUnit.SECONDS.sleep(1);
-        consumptionTaskService.processTaskQueue(i -> consumptionService.processHWater(i));
+            TimeUnit.SECONDS.sleep(10);
+            consumptionTaskService.processTaskQueue(i -> consumptionService.processHWater(i));
+
+        }
 
 //        try {
 //            task = (ConsumptionTask) jmsTemplateLocal.receiveAndConvert(ConsumptionTask.CONS_TASK_QUEUE);
