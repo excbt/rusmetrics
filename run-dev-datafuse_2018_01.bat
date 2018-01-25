@@ -1,0 +1,1 @@
+mvnw -Pdev,standalone -Drun.jvmArguments="-Dportal.datasource.url=jdbc:postgresql://192.168.84.216:6432/datafuse_2018_01?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-dev"
