@@ -91,7 +91,7 @@ public class ConsumptionTaskServiceTest {
                 .retryCnt(3).build());
 
         size = consumptionTaskService.getTaskQueueSize();
-        //TimeUnit.SECONDS.sleep(2);
+
         log.info("Size after:{}", size);
         assertThat(size).isGreaterThan(0);
 
@@ -100,7 +100,7 @@ public class ConsumptionTaskServiceTest {
             log.info("B Task: {}", i.toString());
         });
 
-
+        TimeUnit.SECONDS.sleep(10);
         ConsumptionTask task = consumptionTaskService.receiveTask();
         assertThat(task).isNotNull();
         log.info(task.toString());
