@@ -19,16 +19,20 @@ import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
+import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
 public class ContZPointMetadataServiceTest extends JpaSupportTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(ContZPointMetadataServiceTest.class);
+	private static final Logger log = LoggerFactory.getLogger(ContZPointMetadataServiceTest.class);
 
 	@Autowired
 	private ContZPointMetadataService contZPointMetadataService;
+
+    @Autowired
+	private DBMetadataService dbMetadataService;
 
 	@Test
 	public void test() throws Exception {
@@ -37,8 +41,15 @@ public class ContZPointMetadataServiceTest extends JpaSupportTest {
 		Map<String, List<String>> res = contZPointMetadataService.getSrcPropsDeviceMapping(metadataList);
 		assertNotNull(res);
 		res.forEach((x, y) -> {
-			logger.info("srcProp:{}, vals: {}", x, y.toString());
+			log.info("srcProp:{}, vals: {}", x, y.toString());
 		});
 	}
 
+
+    @Test
+    public void testMetadata() {
+        List<EntityColumn> entityColumns = dbMetadataService.selectTableEntityColumns("portal", "v_device_object_metadata_info", false);
+        entityColumns.forEach(i -> log.info("Column: {}, DataType: {}", i.getColumnName(), i.getDataType()));
+        assertTrue(entityColumns.size() > 0);
+    }
 }
