@@ -6,12 +6,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
+import ru.excbt.datafuse.nmk.domain.QContZPointConsumption;
+import ru.excbt.datafuse.nmk.repository.support.ExCustomRepository;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Repository
-public interface ContZPointConsumptionRepository extends JpaRepository<ContZPointConsumption, Long> {
+public interface ContZPointConsumptionRepository extends JpaRepository<ContZPointConsumption, Long>,
+    ExCustomRepository<ContZPointConsumption, QContZPointConsumption, Long> {
 
     @Modifying
     @Query("DELETE FROM ContZPointConsumption c WHERE c.contZPointId = :contZPointId " +
