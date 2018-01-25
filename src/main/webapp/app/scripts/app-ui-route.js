@@ -97,6 +97,14 @@
                     node: null
                 }
             },
+            {
+                name: 'objectsPTree.treeNodeInfo.nodeIndicatorView',
+                url: '/node-indicator-view',
+                component: 'ptreeNodeIndicatorView',
+                params: {
+                    node: null
+                }
+            },
             
 /*end 'component version'*/            
             {

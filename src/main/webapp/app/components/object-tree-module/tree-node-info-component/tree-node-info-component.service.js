@@ -52,7 +52,7 @@
             {
                 keyname: "INDICATOR_VIEW",
                 caption: "Показания",
-                stateName: "objectsPTree.treeNodeInfo.indicatorView"
+                stateName: "objectsPTree.treeNodeInfo.nodeIndicatorView"
             }
         ];
         var nodeWidgets = {
