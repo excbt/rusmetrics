@@ -6,11 +6,18 @@
         .module('objectTreeModule')
         .service('treeNodeInfoComponentService', Service);
 
-    Service.$inject = [];
+    Service.$inject = ['objectTreeService'];
 
     /* @ngInject */
-    function Service() {
-        var currentWidget = null;
+    function Service(objectTreeService) {
+        var nodeTypes = ["ELEMENT", "CONT_OBJECT", "CONT_ZPOINT", "DEVICE_OBJECT"];
+        var currentWidget = {
+            "ELEMENT": null,
+            "CONT_OBJECT": null,
+            "CONT_ZPOINT": null,
+            "DEVICE_OBJECT": null,
+            "DEFAULT": null
+        };
         
         var defaultWidgets = [
             {
@@ -20,7 +27,7 @@
             }
         ];
         
-        var nodeWidgets = [            
+        var elementNodeWidgets = [
             {
                 keyname: "CONTOBJECT_CONTROL",
                 caption: "Контроль",
@@ -33,6 +40,14 @@
             }
         ];
         
+        var objectNodeWidgets = [
+            {
+                keyname: "CONTOBJECT_CONTROL",
+                caption: "Контроль",
+                stateName: "objectsPTree.treeNodeInfo.contObjectControl"
+            }
+        ]; 
+        
         var zpointNodeWidgets = [
             {
                 keyname: "INDICATOR_VIEW",
@@ -40,24 +55,37 @@
                 stateName: "objectsPTree.treeNodeInfo.indicatorView"
             }
         ];
+        var nodeWidgets = {
+            "ELEMENT": elementNodeWidgets.concat(defaultWidgets),
+            "CONT_OBJECT": objectNodeWidgets.concat(defaultWidgets),
+            "CONT_ZPOINT": zpointNodeWidgets.concat(defaultWidgets),
+            "DEVICE_OBJECT": defaultWidgets,
+            "DEFAULT": defaultWidgets
+        };
+        
         var svc = this;
         svc.getCurrentWidget = getCurrentWidget;
         svc.getNodeWidgets = getNodeWidgets;
         svc.setCurrentWidget = setCurrentWidget;
+//        svc. = objectTreeService.
+        svc.isContObjectNode = objectTreeService.isContObjectNode;
+        svc.isContZpointNode = objectTreeService.isContZpointNode;
+        svc.isDeviceNode = objectTreeService.isDeviceNode;
+        svc.isElementNode = objectTreeService.isElementNode;
 
         ////////////////
 
-        function getCurrentWidget() {
-            return currentWidget;
+        function getCurrentWidget(nodeType) {
+            return currentWidget[nodeType];
         }
         
-        function getNodeWidgets() {
-            var result = nodeWidgets.concat(defaultWidgets);
+        function getNodeWidgets(nodeType) {
+            var result = nodeWidgets[nodeType];
             return result;
         }
         
-        function setCurrentWidget(curWidget) {
-            currentWidget = curWidget;
+        function setCurrentWidget(nodeType, curWidget) {
+            currentWidget[nodeType] = curWidget;
         }
     }
 })();

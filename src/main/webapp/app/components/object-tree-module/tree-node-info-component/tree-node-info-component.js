@@ -21,9 +21,12 @@
         
         ctrl.$onInit = function () {
 //console.log('$stateParams: ', $stateParams);    
-            ctrl.node = $stateParams.node; 
-            ctrl.nodeWidgets = ctrl.svc.getNodeWidgets();
-            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget() === null ? ctrl.nodeWidgets[0] : treeNodeInfoComponentService.getCurrentWidget();
+            ctrl.node = $stateParams.node;
+            if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
+                return false;
+            }
+            ctrl.nodeWidgets = ctrl.svc.getNodeWidgets(ctrl.node.nodeType);
+            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType) === null ? ctrl.nodeWidgets[0] : treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType);
             ctrl.changeWidget(ctrl.currentWidget);
         };
         
@@ -31,7 +34,7 @@
             if (ctrl.node !== null) {
                 $state.go(widget.stateName, {node: ctrl.node});
             }
-            treeNodeInfoComponentService.setCurrentWidget(widget);
+            treeNodeInfoComponentService.setCurrentWidget(ctrl.node.nodeType, widget);
         };
         
         ctrl.widgetSelectDisabled = function () {
