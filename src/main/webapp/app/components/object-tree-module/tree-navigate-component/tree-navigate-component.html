@@ -117,7 +117,7 @@
                <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
             <span class="nmc-valign-middle">                
-                <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0)"
+                <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0) && !collapsed"
                    style = "display: inline;">
                     ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
                     <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">
