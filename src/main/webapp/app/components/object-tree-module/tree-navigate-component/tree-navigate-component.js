@@ -86,6 +86,17 @@
             }
             loadPTreeMonitorWithStartRefresh(tree.id);
         };
+        
+        ctrl.viewFullObjectList = viewFullObjectList;
+        function viewFullObjectList() {
+            ctrl.messages.treeMenuHeader = "Полный список объектов";
+        }
+        
+        ctrl.noTreesView = viewNoTree;
+        function viewNoTree() {
+            ctrl.messages.treeMenuHeader = "Выберите иерархию";
+            ctrl.noTreesMessage = "В Настройках создайте и включите иерархии в интерфейс.";
+        }
 
         var loadTrees = function (treeSetting) {
             ctrl.treeLoading = true;
@@ -99,9 +110,9 @@
                 if (ctrl.data.defaultTree === null && !checkUndefinedNull(treeSetting) && (treeSetting.isActive === true)) {
                     ctrl.data.defaultTree = treeNavSvc.findItemBy(ctrl.data.trees, "id", Number(treeSetting.value));
                 }
-                if (!angular.isArray(ctrl.data.trees) || ctrl.data.trees.length <= 0 || checkUndefinedNull(ctrl.data.defaultTree)) {
-                    ctrl.viewFullObjectList();
-                    return "View full object list!";
+                if (!angular.isArray(ctrl.data.trees) || ctrl.data.trees.length <= 0 || checkUndefinedNull(ctrl.data.defaultTree)) {                    
+                    ctrl.noTreesView();
+                    return "No trees!";
                 }
 //                monitorSvc.setMonitorSettings({currentTree: ctrl.data.defaultTree, curTreeId: ctrl.data.defaultTree.id});
 //                        $rootScope.$broadcast('monitor:updateObjectsRequest');

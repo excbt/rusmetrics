@@ -2717,6 +2717,11 @@ tr.nmc-bg-distinguish > td {
     padding-top: 5px;
 }
 
+.paddingTop25 {
+    padding-top: 25px;
+}
+
+
 .noPaddingTop {
     padding-top: 0px;
 }

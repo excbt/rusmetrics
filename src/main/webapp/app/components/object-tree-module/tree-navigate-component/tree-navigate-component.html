@@ -47,6 +47,11 @@
                 </div>
             </div>
         </div>
+        <div class = "row" ng-if = "!($ctrl.data.trees.length > 0)">
+            <div class = "paddingLeft20 paddingTop25">
+                {{$ctrl.noTreesMessage}}
+            </div>
+        </div>
         <div class = "row">
           <div class = "noPadding paddingRight10 paddingLeft20" ng-show="$ctrl.objectCtrlSettings.isTreeView == true && $ctrl.objectCtrlSettings.isFullObjectView == false">
                 <div ng-show="$ctrl.treeLoading" class="nmc-loading"
