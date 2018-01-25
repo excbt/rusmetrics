@@ -46,7 +46,7 @@
             nodeInfo.nameCaption = vm.svc.isDeviceNode(loadedNode) ? "Серийный номер" : "Название";
             nodeInfo.name = loadedNode.nodeName || loadedNode.nodeObject.fullName || loadedNode.nodeObject.customServiceName || loadedNode.nodeObject.number;
             nodeInfo.childCount = angular.isArray(loadedNode.childNodes)? loadedNode.childNodes.length : 0;
-            nodeInfo.contObjectCount = angular.isArray(loadedNode.linkedContObjects) ? loadedNode.linkedNodeObjects.length : 0;
+            nodeInfo.contObjectCount = angular.isArray(loadedNode.linkedNodeObjects) ? loadedNode.linkedNodeObjects.length : 0;
             return nodeInfo;
         }
         
