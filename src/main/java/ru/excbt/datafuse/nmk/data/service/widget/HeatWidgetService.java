@@ -3,42 +3,27 @@
  */
 package ru.excbt.datafuse.nmk.data.service.widget;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.persistence.Query;
-
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.Expression;
-import com.querydsl.core.types.Path;
 import com.querydsl.core.types.dsl.*;
-import com.querydsl.sql.RelationalPath;
 import com.querydsl.sql.SQLQuery;
-import com.querydsl.sql.dml.SQLUpdateClause;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
-import ru.excbt.datafuse.nmk.data.service.DBSessionService;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
-import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
 
 /**
  *
