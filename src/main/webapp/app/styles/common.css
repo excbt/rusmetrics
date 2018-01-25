@@ -2208,6 +2208,12 @@ tr.nmc-inactive-price > td {
     max-height: 320px;
     top: 240%;
 }
+
+    /* в новом интерфейсе просмотра*/
+.nmc-view-p-tree-list-items {
+    overflow-y: auto;
+    max-height: 320px;    
+}
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
     padding-top: 150px;
