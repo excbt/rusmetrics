@@ -52,4 +52,13 @@ public class HeatWidgetServiceTest extends JpaSupportTest {
 		result.forEach(i -> log.info(i.toString()));
 	}
 
+    @Test
+    public void testGetWidgetData2() throws Exception {
+
+        List<HeatWidgetTemperatureDto> result = heatWidgetService.selectChartData2(107365375L,
+            ZonedDateTime.of(LocalDate.of(2016, 03, 07), LocalTime.now(), ZoneId.systemDefault()), "WEEK");
+        result.forEach(i -> log.info(i.toString()));
+    }
+
+
 }

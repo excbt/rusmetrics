@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
@@ -88,7 +89,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
             cabinetMessageResponseDTO.setMessageDirection(CabinetMessageDirection.OUT.name());
             cabinetMessageResponseDTO.setResponseToId(i.getId());
             return cabinetMessageService.saveResponse(cabinetMessageResponseDTO, portalUserIds);
-        }).findFirst().ifPresent(c -> {
+        }).filter(Objects::nonNull).findFirst().ifPresent(c -> {
             log.info("Created CabinetMessage:{}", c.toString());
         });
 

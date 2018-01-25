@@ -1,9 +1,21 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.querydsl.sql.PostgreSQLTemplates;
+import com.querydsl.sql.SQLExpressions;
+import com.querydsl.sql.SQLQuery;
+import com.querydsl.sql.SQLTemplates;
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.hibernate.jdbc.ReturningWork;
+import org.hibernate.jdbc.Work;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+import ru.excbt.datafuse.nmk.data.service.DBSessionService;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -15,10 +27,14 @@ public class QueryDSLService {
 
     private static final Logger log = LoggerFactory.getLogger(QueryDSLService.class);
 
+    public static final SQLTemplates templates = PostgreSQLTemplates.builder().printSchema().build();
+
     @PersistenceContext(unitName = "nmk-p")
     private EntityManager em;
 
+
     private AtomicReference<JPAQueryFactory> jpaQueryFactoryRef = new AtomicReference<>();
+
 
     @PostConstruct
     private void postInit() {
@@ -72,6 +88,36 @@ public class QueryDSLService {
         }
         return result;
 
-    };
+    }
+
+    @Transactional
+    public void doWork(Work work) throws HibernateException {
+        unwrapSession().doWork(work);
+    }
+
+    @Transactional
+    public <T> T doReturningWork(ReturningWork<T> work) throws HibernateException {
+        return unwrapSession().doReturningWork(work);
+    }
+
+    private Session unwrapSession() {
+        if (em == null) {
+            throw new IllegalStateException("Session Service is not available");
+        }
+        Session session = em.unwrap(Session.class);
+        return session;
+    }
+
+    public Long getNextSequenceValue(String sequenceName) {
+        return doReturningWork((c) -> {
+            SQLQuery<Tuple> query = new SQLQuery<>(c, QueryDSLService.templates);
+            Long nr = query.select(SQLExpressions.nextval(sequenceName)).fetchOne();
+            return nr;
+        });
+    }
+
+    public Long getNextSequenceValue(String schemaName, String sequenceName) {
+        return getNextSequenceValue(schemaName + '.' + sequenceName);
+    }
 
 }
