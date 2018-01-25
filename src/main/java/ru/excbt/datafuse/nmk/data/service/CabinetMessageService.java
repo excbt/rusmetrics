@@ -52,7 +52,7 @@ public class CabinetMessageService {
 
     private final QueryDSLService queryDSLService;
 
-    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, DBSessionService sessionService, SubscriberRepository subscriberRepository, QueryDSLService queryDSLService) {
+    public CabinetMessageService(CabinetMessageRepository cabinetMessageRepository, CabinetMessageMapper cabinetMessageMapper, SubscriberRepository subscriberRepository, QueryDSLService queryDSLService) {
         this.cabinetMessageRepository = cabinetMessageRepository;
         this.cabinetMessageMapper = cabinetMessageMapper;
         this.subscriberRepository = subscriberRepository;
