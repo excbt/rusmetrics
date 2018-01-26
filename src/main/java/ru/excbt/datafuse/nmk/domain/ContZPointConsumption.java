@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -33,7 +34,7 @@ public class ContZPointConsumption implements Serializable {
     private String contServiceType;
 
     @Column(name = "cons_date_time")
-    private Instant consDateTime;
+    private LocalDateTime consDateTime;
 
     @Column(name = "src_time_detail_type")
     private String srcTimeDetailType;
@@ -42,10 +43,10 @@ public class ContZPointConsumption implements Serializable {
     private String destTimeDetailType;
 
     @Column(name = "date_time_from")
-    private Instant dateTimeFrom;
+    private LocalDateTime dateTimeFrom;
 
     @Column(name = "date_time_to")
-    private Instant dateTimeTo;
+    private LocalDateTime dateTimeTo;
 
     @Column(name = "last_calc_time")
     private Instant lastCalcTime = Instant.now();

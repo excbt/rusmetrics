@@ -121,13 +121,13 @@ public class ConsumptionTask implements Serializable {
     }
 
     @JsonIgnore
-    public Instant getDateTimeFrom() {
-        return startOfDay(dateFrom);
+    public LocalDateTime getDateTimeFrom() {
+        return dateFrom.atStartOfDay();
     }
 
     @JsonIgnore
-    public Instant getDateTimeTo() {
-        return endOfDay(dateTo);
+    public LocalDateTime getDateTimeTo() {
+        return dateTo.atStartOfDay().plusDays(1).minusSeconds(1); //endOfDay(dateTo);
     }
 
     private Instant endOfDay(LocalDate date) {

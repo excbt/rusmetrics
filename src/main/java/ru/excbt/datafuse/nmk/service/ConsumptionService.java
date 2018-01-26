@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.service;
 import com.fasterxml.uuid.Generators;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.time.StopWatch;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
-import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -31,6 +29,7 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.handling.*;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.ByteBuffer;
@@ -174,8 +173,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataHWater> dataLoader = (t) -> dataHWaterRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -307,8 +306,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataElCons> dataLoader = (t) -> dataElConsRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -322,7 +321,7 @@ public class ConsumptionService {
                     qContServiceDataElCons.contZPointId.in(ids)
                         .and(qContServiceDataElCons.timeDetailType.eq(task.getSrcTimeDetailType()))
                         .and(qContServiceDataElCons.deleted.eq(0))
-                        .and(qContServiceDataElCons.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                        .and(qContServiceDataElCons.dataDate.lt(LocalDateUtils.asDate(task.getDateTimeFrom())))
                 ).groupBy(qContServiceDataElCons.contZPointId).fetch();
             return lastTupleDataToDataElCons(resultTupleList);
         };
@@ -343,8 +342,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataImpulse> dataLoader = (t) -> dataImpulseRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -361,7 +360,7 @@ public class ConsumptionService {
                 qContServiceDataImpulse.contZPointId.in(ids)
                     .and(qContServiceDataImpulse.timeDetailType.eq(task.getSrcTimeDetailType()))
                     .and(qContServiceDataImpulse.deleted.eq(0))
-                    .and(qContServiceDataImpulse.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                    .and(qContServiceDataImpulse.dataDate.lt(LocalDateUtils.asDate(task.getDateTimeFrom())))
             ).groupBy(qContServiceDataImpulse.contZPointId).fetch();
             return lastTupleDataToDataImpulse(resultTuple);
         };
@@ -951,9 +950,11 @@ public class ConsumptionService {
         log.debug("Processing task: {}" ,workTask.toString());
 
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        //InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        LocalDateTimePeriod localPeriod = LocalDateTimePeriod.builder()
+            .dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
 
-        if (srcTimeDetailKey != null && period.isValid()) {
+        if (srcTimeDetailKey != null && localPeriod.isValid()) {
 
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();

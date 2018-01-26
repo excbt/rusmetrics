@@ -35,7 +35,7 @@ public class ContZPointConsumptionTask extends AbstractAuditableModel {
     private String dataType;
 
     @Column(name = "cons_date_time")
-    private Instant consDateTime;
+    private LocalDateTime consDateTime;
 
     @Column(name = "task_date_time")
     private Instant taskDateTime;

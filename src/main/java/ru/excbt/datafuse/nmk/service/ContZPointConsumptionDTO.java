@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -14,7 +15,7 @@ public class ContZPointConsumptionDTO {
 
     private Long contZPointId;
 
-    private Instant consDateTime;
+    private LocalDateTime consDateTime;
 
     private Double consValue;
 

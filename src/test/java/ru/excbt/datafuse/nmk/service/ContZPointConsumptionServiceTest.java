@@ -41,7 +41,7 @@ public class ContZPointConsumptionServiceTest {
 
         List<ContZPointConsumptionDTO> consumptionList = contZPointConsumptionService.getConsumption(128551684L,
             TimeDetailKey.TYPE_24H,
-            ConsumptionService.DataType.ELECTRICITY, period
+            ConsumptionService.DataType.ELECTRICITY, localDateTimePeriod
             );
 
         assertNotNull(consumptionList);

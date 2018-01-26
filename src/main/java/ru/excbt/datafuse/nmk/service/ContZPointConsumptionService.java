@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
+import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.domain.QContZPointConsumption;
@@ -38,7 +39,7 @@ public class ContZPointConsumptionService {
     public List<ContZPointConsumptionDTO> getConsumption(Long contZPointId,
                                                          TimeDetailKey timeDetailKey,
                                                          ConsumptionService.DataType dataType,
-                                                         InstantPeriod period) {
+                                                         LocalDateTimePeriod period) {
 
         QContZPointConsumption qContZPointConsumption = QContZPointConsumption.contZPointConsumption;
 
