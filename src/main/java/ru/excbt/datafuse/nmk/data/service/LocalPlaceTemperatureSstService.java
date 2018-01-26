@@ -231,7 +231,15 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 			return monthSstList;
 		}
 
+		if (monthSstList.get(0).getLocalPlaceId() == null) {
+		    return monthSstList;
+        }
+
 		LocalPlace localPlace = localPlaceService.findLocalPlace(monthSstList.get(0).getLocalPlaceId());
+
+		if (localPlace == null) {
+		    return monthSstList;
+        }
 
 		if (localPlace.getWeatherPlaceId() == null) {
 			return monthSstList;
