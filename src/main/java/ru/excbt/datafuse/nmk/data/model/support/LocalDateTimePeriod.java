@@ -8,7 +8,10 @@ import org.joda.time.format.DateTimeFormatter;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Builder
@@ -45,4 +48,13 @@ public class LocalDateTimePeriod implements DateInterval {
 
         return dateTimeFrom.isBefore(dateTimeTo) || dateTimeFrom.isEqual(dateTimeTo);
     }
+
+
+    public static LocalDateTimePeriod month (int year, int month) {
+        LocalDate d = LocalDate.of(year, month, 1);
+        LocalDateTime startDay = d.atStartOfDay();
+        LocalDateTime endDay = startDay.plusMonths(1).minusSeconds(1);
+        return builder().dateTimeFrom(startDay).dateTimeTo(endDay).build();
+    }
+
 }
