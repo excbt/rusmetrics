@@ -950,7 +950,7 @@ public class ConsumptionService {
         log.debug("Processing task: {}" ,workTask.toString());
 
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        //InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        //InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getFrom()).dateTimeTo(workTask.getTo()).build();
         LocalDateTimePeriod localPeriod = LocalDateTimePeriod.builder()
             .dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
 

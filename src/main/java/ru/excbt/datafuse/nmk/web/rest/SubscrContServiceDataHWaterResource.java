@@ -304,7 +304,7 @@ public class SubscrContServiceDataHWaterResource {
 					ApiResult.validationError("Invalid parameters timeDetailType:%s", timeDetailType));
 		}
 
-		//LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getDateTimeTo().plusDays(1));
+		//LocalDateTime endOfPeriod = JodaTimeUtils.startOfDay(period.getTo().plusDays(1));
 
 		LocalDateTime endOfDay = JodaTimeUtils.endOfDay(period.getDateTimeTo());
 

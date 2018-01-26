@@ -13,9 +13,9 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
-import ru.excbt.datafuse.nmk.utils.LocalDateTimeInterval;
 
 /**
  *
@@ -99,7 +99,7 @@ public abstract class WidgetService {
 	 */
 	public static DateInterval calculateModeDateInterval(ZonedDateTime dateTime, String mode) {
 		Pair<LocalDateTime, LocalDateTime> preResult = calculateModeDatePairs(dateTime, mode);
-		return preResult != null ? new LocalDateTimeInterval(preResult) : null;
+		return preResult != null ? LocalDateTimePeriod.fromPair(preResult) : null;
 	}
 
 	/**
