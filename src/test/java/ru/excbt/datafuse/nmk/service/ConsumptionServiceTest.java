@@ -142,7 +142,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
-    //@Ignore
+    @Ignore
     public void processHWaterConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
@@ -195,7 +195,7 @@ public class ConsumptionServiceTest {
     }
 
     @Test
-    //@Ignore
+    @Ignore
     public void processElConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
@@ -254,7 +254,7 @@ public class ConsumptionServiceTest {
 
 
     @Test
-//    @Ignore
+    @Ignore
     public void processImpulseConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
