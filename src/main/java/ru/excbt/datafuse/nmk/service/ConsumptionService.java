@@ -983,4 +983,27 @@ public class ConsumptionService {
 
     }
 
+
+    public static Optional<DataType> getDataType (ContServiceTypeKey contServiceTypeKey, Boolean isImpulse) {
+
+        if (Boolean.TRUE.equals(isImpulse)) {
+            return Optional.of(DataType.IMPULSE);
+        }
+
+        if (EnumSet.of(
+            ContServiceTypeKey.HEAT,
+            ContServiceTypeKey.CW,
+            ContServiceTypeKey.HW).contains(contServiceTypeKey)) {
+            return Optional.of(DataType.HWATER);
+        }
+
+        if (EnumSet.of(
+            ContServiceTypeKey.EL).contains(contServiceTypeKey)) {
+            return Optional.of(DataType.ELECTRICITY);
+        }
+
+        return Optional.empty();
+    }
+
+
 }

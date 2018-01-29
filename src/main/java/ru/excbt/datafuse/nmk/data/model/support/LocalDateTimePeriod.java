@@ -65,6 +65,13 @@ public class LocalDateTimePeriod implements AnyPeriod<LocalDateTime>, DateInterv
         return builder().dateTimeFrom(startDay).dateTimeTo(endDay).build();
     }
 
+    public static LocalDateTimePeriod year (int year) {
+        LocalDate d = LocalDate.of(year, 1, 1);
+        LocalDateTime startDay = d.atStartOfDay();
+        LocalDateTime endDay = startDay.plusYears(1).minusSeconds(1);
+        return builder().dateTimeFrom(startDay).dateTimeTo(endDay).build();
+    }
+
     public static LocalDateTimePeriod day (int year, int month, int day) {
         LocalDate d = LocalDate.of(year, month, day);
         LocalDateTime startDay = d.atStartOfDay();
@@ -77,5 +84,11 @@ public class LocalDateTimePeriod implements AnyPeriod<LocalDateTime>, DateInterv
         return builder().dateTimeFrom(datePairs.getLeft()).dateTimeTo(datePairs.getRight()).build();
     }
 
+    public static LocalDateTimePeriod currentMonth() {
+        LocalDate d = LocalDate.now().withDayOfMonth(1);
+        LocalDateTime startDay = d.atStartOfDay();
+        LocalDateTime endDay = startDay.plusMonths(1).minusSeconds(1);
+        return builder().dateTimeFrom(startDay).dateTimeTo(endDay).build();
+    }
 
 }
