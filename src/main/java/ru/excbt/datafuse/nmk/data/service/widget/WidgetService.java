@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 

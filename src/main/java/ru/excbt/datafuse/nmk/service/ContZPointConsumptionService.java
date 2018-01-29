@@ -7,10 +7,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.QContZPoint;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
@@ -25,6 +28,7 @@ import ru.excbt.datafuse.nmk.utils.AnyPeriod;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -32,6 +36,8 @@ import java.util.stream.StreamSupport;
 public class ContZPointConsumptionService {
 
     private static final Logger log = LoggerFactory.getLogger(ContZPointConsumptionService.class);
+
+    public static final Page<ContZPointConsumptionDTO> EMPTY_PAGE = new PageImpl<>(Collections.EMPTY_LIST);
 
     private final static QContZPointConsumption qContZPointConsumption = QContZPointConsumption.contZPointConsumption;
     private final static QContZPoint qContZPoint = QContZPoint.contZPoint;
@@ -86,6 +92,35 @@ public class ContZPointConsumptionService {
 
     }
 
+    @Transactional(readOnly = true)
+    public Page<ContZPointConsumptionDTO> getConsumptionDataPaged(Long contZPointId,
+                                                              TimeDetailKey timeDetailKey,
+                                                              AnyPeriod<LocalDateTime> period,
+                                                              Pageable pageable) {
+
+        if (period.isInvalidEq()) {
+            log.info("period is not valid");
+            return EMPTY_PAGE;
+        }
+
+        Optional<ConsumptionService.DataType> dataType = findDataType(contZPointId);
+        if (!dataType.isPresent()) {
+            return EMPTY_PAGE;
+        }
+
+
+        Predicate expression = qContZPointConsumption.contZPointId.eq(contZPointId)
+            .and(qContZPointConsumption.consDateTime.between(period.getFrom(), period.getTo()))
+            .and(qContZPointConsumption.destTimeDetailType.eq(timeDetailKey.getKeyname()))
+            .and(qContZPointConsumption.consState.eq(ConsumptionService.CONS_STATE_CALCULATED))
+            .and(qContZPointConsumption.dataType.eq(dataType.get().getKeyname()));
+
+        Page<ContZPointConsumption> rawConsumption = consumptionRepository.findAll(expression, pageable);
+
+        return rawConsumption.map(this::processSum);
+
+    }
+
     /**
      *
      * @param contZPointId
@@ -94,7 +129,7 @@ public class ContZPointConsumptionService {
      * @return
      */
     @Transactional(readOnly = true)
-    public List<ContZPointConsumptionDTO> getConsumption(Long contZPointId,
+    public List<ContZPointConsumptionDTO> getConsumptionData(Long contZPointId,
                                                          TimeDetailKey timeDetailKey,
                                                          AnyPeriod<LocalDateTime> period) {
 
@@ -131,6 +166,19 @@ public class ContZPointConsumptionService {
         if (consumption == null) {
             return dto;
         }
+
+        sumDataValues(consumption.getConsData()).ifPresent(dto::setConsValue);
+
+        return dto;
+
+    }
+
+    private ContZPointConsumptionDTO processSum(ContZPointConsumption consumption) {
+        if (consumption == null) {
+            return null;
+        }
+
+        ContZPointConsumptionDTO dto = contZPointConsumptionMapper.toDto(consumption);
 
         sumDataValues(consumption.getConsData()).ifPresent(dto::setConsValue);
 

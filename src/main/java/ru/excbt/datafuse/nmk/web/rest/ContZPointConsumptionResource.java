@@ -3,9 +3,14 @@ package ru.excbt.datafuse.nmk.web.rest;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDatePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDatePeriodParser;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.service.ContZPointConsumptionDTO;
@@ -29,11 +34,15 @@ public class ContZPointConsumptionResource {
         this.contZPointConsumptionService = contZPointConsumptionService;
     }
 
-    @GetMapping("/{contZPointId}")
+    @GetMapping("/{contZPointId}/paged")
     @ApiOperation("Get list of supported service types")
     @Timed
-    public ResponseEntity<?> getServiceTypes(@PathVariable("contZPointId") final Long contZPointId,
-                                             @RequestParam(name = "timeDetailKeyname", required = false) final String timeDetailKeyname) {
+    public ResponseEntity<?> getConsumptionDataPaged(@PathVariable("contZPointId") final Long contZPointId,
+                                                    @RequestParam(name = "timeDetailKeyname", required = false) final String timeDetailKeyname,
+                                                    @RequestParam(name = "fromDateStr", required = false) String fromDateStr,
+                                                    @RequestParam(name = "toDateStr", required = false) String toDateStr,
+                                                    @PageableDefault(value = 50) Pageable pageable) {
+
 
         String searchTimeDetailKeyname = timeDetailKeyname == null ? TimeDetailKey.TYPE_24H.getKeyname() : timeDetailKeyname;
 
@@ -42,8 +51,23 @@ public class ContZPointConsumptionResource {
             return ApiResponse.responseBadRequest();
         }
 
-        List<ContZPointConsumptionDTO> resultList = contZPointConsumptionService.getConsumption(contZPointId,
-            timeDetailKeyOptional.get(), LocalDateTimePeriod.month(2017,2));
+        if ((fromDateStr == null) ^ (toDateStr == null)) {
+            return ResponseEntity.badRequest().body(String
+                .format("Invalid parameters fromDateStr:{} and toDateStr:{}. Must be both null or not null", fromDateStr, toDateStr));
+        }
+
+        Optional<LocalDatePeriod> localDatePeriod = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
+
+        if (localDatePeriod.isPresent() && localDatePeriod.get().isInvalidEq()) {
+            return ResponseEntity.badRequest().body(String
+                .format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+        }
+
+        Page<ContZPointConsumptionDTO> resultList = contZPointConsumptionService.getConsumptionDataPaged(
+            contZPointId,
+            timeDetailKeyOptional.get(),
+            localDatePeriod.map(LocalDatePeriod::toLocalDateTimePeriod).orElse(LocalDateTimePeriod.currentMonth()),
+            pageable);
         return ResponseEntity.ok(resultList);
     }
 

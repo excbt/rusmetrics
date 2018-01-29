@@ -1,10 +1,8 @@
-package ru.excbt.datafuse.nmk.data.model.support;
+package ru.excbt.datafuse.nmk.data.model.support.time;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import org.apache.commons.lang3.tuple.Pair;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import ru.excbt.datafuse.nmk.utils.AnyPeriod;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -17,7 +15,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class LocalDateTimePeriod implements AnyPeriod<LocalDateTime>, DateInterval {
     public final static String DATE_TEMPLATE = "yyyy-MM-dd";
-    public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_TEMPLATE);
 
     private final LocalDateTime dateTimeFrom;
 

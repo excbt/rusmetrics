@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.ContZPointConsumptionService;
@@ -69,10 +70,16 @@ public class ContZPointConsumptionResourceTest {
 
     @Test
     @Transactional
-    public void testGetConsumption() throws Exception {
-        //129832662L
+    public void testGetConsumptionDataPaged() throws Exception {
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-consumption/{contZPointId}", 128551684))
+        LocalDatePeriod localDatePeriod = LocalDatePeriod.month(2017,2);
+
+        Long contZPointId = 128551684L;
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-consumption/{contZPointId}/paged", contZPointId)
+                .param("fromDateStr", localDatePeriod.dateFromStr())
+                .param("toDateStr", localDatePeriod.dateToStr())
+                .param("size", String.valueOf(50)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
@@ -85,7 +92,11 @@ public class ContZPointConsumptionResourceTest {
     public void testAvailableYearData() throws Exception {
         //129832662L
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-consumption/year/{yyyy}", 2017))
+        LocalDatePeriod localDatePeriod = LocalDatePeriod.month(2017,2);
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-consumption/year/{yyyy}", 2017)
+                .param("fromDateStr", localDatePeriod.dateFromStr())
+                .param("toDateStr", localDatePeriod.dateToStr()))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
