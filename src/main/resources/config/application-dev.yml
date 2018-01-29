@@ -46,7 +46,7 @@ spring:
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format_sql: false
-            hibernate.show_sql: true
+            hibernate.show_sql: false
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
             hibernate.generate_statistics: false
             #hibernate.cache.use_structured_entries: true
@@ -103,9 +103,11 @@ spring:
 
 portal:
     datasource:
+        databaseName: test_datafuse
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:6432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.216:${databasePort}/${databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -161,9 +163,11 @@ portal:
 
 raw:
     datasource:
+        databaseName: test_dataraw
+        databasePort: 6432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:6432/test_dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -187,14 +191,7 @@ raw:
 
 
 slog:
-    datasource:
-        type: org.postgresql.Driver
-        driverClassName: org.postgresql.Driver
-        username: dbuser1
-        password: exbt_123456
-        url: jdbc:postgresql://192.168.84.216:6432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
-        #url: ${slog.datasource.jdbcUrl}
-        #dataSource.pool.size=2
+    settings:
         schema: slog
 
 ldap:

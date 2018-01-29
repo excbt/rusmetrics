@@ -104,9 +104,11 @@ spring:
 
 portal:
     datasource:
+        databaseName: datafuse
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         #driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        url: jdbc:postgresql://109.120.159.198:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -164,9 +166,11 @@ portal:
 
 raw:
     datasource:
+        databaseName: dataraw
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        url: jdbc:postgresql://109.120.159.198:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -191,14 +195,7 @@ raw:
 #            pool-name: raw
 
 slog:
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        username: dbuser1
-        password: Y[Q^1>f{
-        jdbcUrl: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
-        url: ${slog.datasource.jdbcUrl}
-        #dataSource.pool.size=2
+    settings:
         schema: slog
 
 ldap:
