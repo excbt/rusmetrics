@@ -38,6 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.function.Function;
@@ -450,9 +451,9 @@ public class ConsumptionService {
     public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
-        private final Instant consDateTime;
+        private final LocalDateTime consDateTime;
 
-        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, Instant consDateTime) {
+        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, LocalDateTime consDateTime) {
             Objects.requireNonNull(contZPointId);
             Objects.requireNonNull(destTimeDetailType);
             Objects.requireNonNull(consDateTime);
@@ -469,7 +470,7 @@ public class ConsumptionService {
 
             this.contZPointId = contZPointId;
             this.destTimeDetailType = destTimeDetailType;
-            this.consDateTime = consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+            this.consDateTime = consDate.atStartOfDay();
         }
     }
 
@@ -483,9 +484,9 @@ public class ConsumptionService {
 
         private final String dataType;
         private final String destTimeDetailType;
-        private final Instant consDateTime;
+        private final LocalDateTime consDateTime;
 
-        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, Instant consDateTime) {
+        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, LocalDateTime consDateTime) {
             Objects.requireNonNull(dataType);
             Objects.requireNonNull(destTimeDetailType);
             Objects.requireNonNull(consDateTime);
@@ -507,7 +508,7 @@ public class ConsumptionService {
 
             this(dataType,
                 destTimeDetailType,
-                (consDate == null) ? null : consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                (consDate == null) ? null : consDate.atStartOfDay());
         }
 
     }

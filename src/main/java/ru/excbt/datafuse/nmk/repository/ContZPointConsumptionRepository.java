@@ -21,7 +21,7 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
         "AND c.destTimeDetailType = :destTimeDetailType AND c.consDateTime = :consDateTime")
     void deleteByKey (@Param("contZPointId") Long contZPointId,
                       @Param("destTimeDetailType") String destTimeDetailType,
-                      @Param("consDateTime") Instant consDateTime);
+                      @Param("consDateTime") LocalDateTime consDateTime);
 
     @Modifying
     @Query("DELETE FROM ContZPointConsumption c WHERE c.dataType = :dataType" +
@@ -29,7 +29,7 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
     void deleteByDataTypeKey (
                             @Param("dataType") String dataType,
                             @Param("destTimeDetailType") String destTimeDetailType,
-                            @Param("consDateTime") Instant consDateTime);
+                            @Param("consDateTime") LocalDateTime consDateTime);
 
     @Modifying
     @Query("UPDATE ContZPointConsumption c SET c.consState = :consState WHERE c.contZPointId = :contZPointId " +
@@ -37,6 +37,6 @@ public interface ContZPointConsumptionRepository extends JpaRepository<ContZPoin
     void updateStateByKey(@Param("consState") String consState,
                           @Param("contZPointId") Long contZPointId,
                           @Param("destTimeDetailType") String destTimeDetailType,
-                          @Param("consDateTime") Instant consDateTime);
+                          @Param("consDateTime") LocalDateTime consDateTime);
 
 }
