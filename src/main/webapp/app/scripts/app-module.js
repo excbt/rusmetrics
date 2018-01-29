@@ -19,7 +19,8 @@
             'ngResource',
             'ngRoute',
             'ngSanitize',
-            'ngTouch',
+            /*'ngTouch',*/
+            'ngAria',
             'ui.tree',
             'daterangepicker',
             'angularUtils.directives.dirPagination',
@@ -34,6 +35,7 @@
             'ui.layout',
             'ui.router',
             'ngTagsInput',
+            'ngMaterial',
             
             'objectTreeModule',
             'settingModeModule'

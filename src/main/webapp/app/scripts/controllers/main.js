@@ -29,7 +29,8 @@
             'logSvc',
             'APP_LABEL',
             'settingModeService',
-            '$scope'
+            '$scope',
+            '$mdSidenav'
         ];
 
     function mainCtrl(
@@ -45,7 +46,8 @@
                        logSvc,
                        APP_LABEL,
                        settingModeService,
-                       $scope
+                       $scope,
+                       $mdSidenav
                       ) {
         /*jshint validthis: true*/
         var vm = this;
@@ -368,6 +370,10 @@
                 notificationFactory.success();
                 $('#changePasswordModal').modal('hide');
             }, errorCallback);
+        };
+                           
+        vm.menuToggleList = function () {
+            $mdSidenav('left').toggle();
         };
     //    setPageTitle();
 
