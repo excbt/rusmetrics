@@ -36,7 +36,7 @@ public class ContZPointConsumptionServiceTest {
         log.info("LocalDatePeriod from {} to {}", localDateTimePeriod.getFrom(), localDateTimePeriod.getTo());
         log.info("LocalDatePeriod valid {} from {} to {}", localDateTimePeriod2.isValidEq(), localDateTimePeriod2.getFrom(), localDateTimePeriod2.getTo());
 
-        List<ContZPointConsumptionDTO> consumptionList = contZPointConsumptionService.getConsumption(128551684L,
+        List<ContZPointConsumptionDTO> consumptionList = contZPointConsumptionService.getConsumptionData(128551684L,
             TimeDetailKey.TYPE_24H,
             ConsumptionService.DataType.ELECTRICITY, localDateTimePeriod
             );

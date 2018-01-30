@@ -62,8 +62,31 @@ public class ContZPointConsumptionService {
     }
 
 
+    /**
+     *
+     * @param contZPointId
+     * @param timeDetailKey
+     * @param dataType
+     * @param period
+     * @return
+     */
+    private Predicate consumptionPredicate(Long contZPointId,
+                                           TimeDetailKey timeDetailKey,
+                                           ConsumptionService.DataType dataType,
+                                           AnyPeriod<LocalDateTime> period) {
+
+        Predicate expression = qContZPointConsumption.contZPointId.eq(contZPointId)
+            .and(qContZPointConsumption.consDateTime.between(period.getFrom(), period.getTo()))
+            .and(qContZPointConsumption.destTimeDetailType.eq(timeDetailKey.getKeyname()))
+            .and(qContZPointConsumption.consState.eq(ConsumptionService.CONS_STATE_CALCULATED))
+            .and(qContZPointConsumption.dataType.eq(dataType.getKeyname()));
+
+        return expression;
+    }
+
+
     @Transactional(readOnly = true)
-    public List<ContZPointConsumptionDTO> getConsumption(Long contZPointId,
+    public List<ContZPointConsumptionDTO> getConsumptionData(Long contZPointId,
                                                          TimeDetailKey timeDetailKey,
                                                          ConsumptionService.DataType dataType,
                                                          AnyPeriod<LocalDateTime> period) {
@@ -74,14 +97,9 @@ public class ContZPointConsumptionService {
         }
 
 
-        Predicate expression = qContZPointConsumption.contZPointId.eq(contZPointId)
-            .and(qContZPointConsumption.consDateTime.between(period.getFrom(), period.getTo()))
-            .and(qContZPointConsumption.destTimeDetailType.eq(timeDetailKey.getKeyname()))
-            .and(qContZPointConsumption.consState.eq(ConsumptionService.CONS_STATE_CALCULATED))
-            .and(qContZPointConsumption.dataType.eq(dataType.getKeyname()));
+        Predicate expression = consumptionPredicate(contZPointId, timeDetailKey, dataType, period);
 
         Iterable<ContZPointConsumption> resultIterator = consumptionRepository.findAll(expression);
-
 
         List<ContZPointConsumptionDTO> resultDTOList = StreamSupport.stream(resultIterator.spliterator(), false)
             .map(i -> processSum(contZPointConsumptionMapper.toDto(i), i))
@@ -103,17 +121,12 @@ public class ContZPointConsumptionService {
             return EMPTY_PAGE;
         }
 
-        Optional<ConsumptionService.DataType> dataType = findDataType(contZPointId);
-        if (!dataType.isPresent()) {
+        Optional<ConsumptionService.DataType> optDataType = findDataType(contZPointId);
+        if (!optDataType.isPresent()) {
             return EMPTY_PAGE;
         }
 
-
-        Predicate expression = qContZPointConsumption.contZPointId.eq(contZPointId)
-            .and(qContZPointConsumption.consDateTime.between(period.getFrom(), period.getTo()))
-            .and(qContZPointConsumption.destTimeDetailType.eq(timeDetailKey.getKeyname()))
-            .and(qContZPointConsumption.consState.eq(ConsumptionService.CONS_STATE_CALCULATED))
-            .and(qContZPointConsumption.dataType.eq(dataType.get().getKeyname()));
+        Predicate expression = consumptionPredicate(contZPointId, timeDetailKey, optDataType.get(), period);
 
         Page<ContZPointConsumption> rawConsumption = consumptionRepository.findAll(expression, pageable);
 
@@ -133,12 +146,14 @@ public class ContZPointConsumptionService {
                                                          TimeDetailKey timeDetailKey,
                                                          AnyPeriod<LocalDateTime> period) {
 
-        Optional<ConsumptionService.DataType> dataType = findDataType(contZPointId);
-        if (!dataType.isPresent()) {
+        if (period.isInvalidEq()) {
             return Collections.emptyList();
         }
 
-        return getConsumption(contZPointId, timeDetailKey, dataType.get(), period);
+        return findDataType(contZPointId)
+            .map(dt -> getConsumptionData(contZPointId, timeDetailKey, dt, period))
+            .orElse(Collections.emptyList());
+
     }
 
 

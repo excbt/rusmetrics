@@ -34,6 +34,8 @@ public class ContZPointConsumptionResource {
         this.contZPointConsumptionService = contZPointConsumptionService;
     }
 
+
+
     @GetMapping("/{contZPointId}/paged")
     @ApiOperation("Get list of supported service types")
     @Timed
@@ -44,19 +46,18 @@ public class ContZPointConsumptionResource {
                                                     @PageableDefault(value = 50) Pageable pageable) {
 
 
-        String searchTimeDetailKeyname = timeDetailKeyname == null ? TimeDetailKey.TYPE_24H.getKeyname() : timeDetailKeyname;
+        Optional<TimeDetailKey> timeDetailKeyOptional = KeyEnumTool.searchKey(TimeDetailKey.class, timeDetailKeyname, TimeDetailKey.TYPE_24H);
+        LocalDatePeriodParser parser = new LocalDatePeriodParser(fromDateStr, toDateStr);
+        Optional<LocalDatePeriod> localDatePeriod = parser.parse(LocalDatePeriod.currentMonth());
 
-        Optional<TimeDetailKey> timeDetailKeyOptional = KeyEnumTool.searchKey(TimeDetailKey.class, searchTimeDetailKeyname);
         if (!timeDetailKeyOptional.isPresent()) {
             return ApiResponse.responseBadRequest();
         }
 
-        if ((fromDateStr == null) ^ (toDateStr == null)) {
+        if (!parser.checkNulls()) {
             return ResponseEntity.badRequest().body(String
                 .format("Invalid parameters fromDateStr:{} and toDateStr:{}. Must be both null or not null", fromDateStr, toDateStr));
         }
-
-        Optional<LocalDatePeriod> localDatePeriod = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
 
         if (localDatePeriod.isPresent() && localDatePeriod.get().isInvalidEq()) {
             return ResponseEntity.badRequest().body(String
@@ -68,6 +69,41 @@ public class ContZPointConsumptionResource {
             timeDetailKeyOptional.get(),
             localDatePeriod.map(LocalDatePeriod::toLocalDateTimePeriod).orElse(LocalDateTimePeriod.currentMonth()),
             pageable);
+        return ResponseEntity.ok(resultList);
+    }
+
+    @GetMapping("/{contZPointId}")
+    @ApiOperation("Get list of supported service types")
+    @Timed
+    public ResponseEntity<?> getConsumptionData(@PathVariable("contZPointId") final Long contZPointId,
+                                                    @RequestParam(name = "timeDetailKeyname", required = false) final String timeDetailKeyname,
+                                                    @RequestParam(name = "fromDateStr", required = false) String fromDateStr,
+                                                    @RequestParam(name = "toDateStr", required = false) String toDateStr) {
+
+
+        Optional<TimeDetailKey> timeDetailKeyOptional = KeyEnumTool.searchKey(TimeDetailKey.class, timeDetailKeyname, TimeDetailKey.TYPE_24H);
+        LocalDatePeriodParser parser = new LocalDatePeriodParser(fromDateStr, toDateStr);
+        Optional<LocalDatePeriod> localDatePeriod = parser.parse(LocalDatePeriod.currentMonth());
+
+        if (!timeDetailKeyOptional.isPresent()) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        if (!parser.checkNulls()) {
+            return ResponseEntity.badRequest().body(String
+                .format("Invalid parameters fromDateStr:{} and toDateStr:{}. Must be both null or not null", fromDateStr, toDateStr));
+        }
+
+        if (localDatePeriod.isPresent() && localDatePeriod.get().isInvalidEq()) {
+            return ResponseEntity.badRequest().body(String
+                .format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
+        }
+
+        List<ContZPointConsumptionDTO> resultList = contZPointConsumptionService.getConsumptionData(
+            contZPointId,
+            timeDetailKeyOptional.get(),
+            localDatePeriod.map(LocalDatePeriod::toLocalDateTimePeriod).orElse(LocalDateTimePeriod.currentMonth()));
+
         return ResponseEntity.ok(resultList);
     }
 

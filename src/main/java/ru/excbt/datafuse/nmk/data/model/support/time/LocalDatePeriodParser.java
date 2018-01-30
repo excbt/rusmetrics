@@ -2,23 +2,24 @@ package ru.excbt.datafuse.nmk.data.model.support.time;
 
 
 import java.time.LocalDate;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 public class LocalDatePeriodParser {
 
 	public static class ParserArguments {
-		public final String dateFromStr;
-		public final String dateToStr;
+		public final String fromDateStr;
+		public final String toDateStr;
 
 		private ParserArguments(String fromDateStr, String toDateStr) {
-			this.dateFromStr = fromDateStr;
-			this.dateToStr = toDateStr;
+			this.fromDateStr = fromDateStr;
+			this.toDateStr = toDateStr;
 		}
 
 		private ParserArguments() {
-			this.dateFromStr = null;
-			this.dateToStr = null;
+			this.fromDateStr = null;
+			this.toDateStr = null;
 		}
 	}
 
@@ -35,10 +36,26 @@ public class LocalDatePeriodParser {
 		this.parserArguments = new ParserArguments();
 	}
 
-    private LocalDatePeriodParser(String dateFrom, String dateTo) {
+    public LocalDatePeriodParser(String dateFrom, String dateTo) {
 		this.parserArguments = new ParserArguments(dateFrom, dateTo);
 		this.isEmpty = false;
 	}
+
+	public boolean checkNulls() {
+        return (parserArguments.fromDateStr == null) == (parserArguments.toDateStr == null);
+    }
+
+    public Optional<LocalDatePeriod> parse() {
+        return LocalDatePeriodParser.parse(parserArguments.fromDateStr, parserArguments.toDateStr);
+    }
+
+    public Optional<LocalDatePeriod> parse(LocalDatePeriod orValue) {
+        Objects.requireNonNull(orValue);
+	    if (!checkNulls()) {
+	        return Optional.of(orValue);
+        }
+        return LocalDatePeriodParser.parse(parserArguments.fromDateStr, parserArguments.toDateStr);
+    }
 
 	/**
 	 *
@@ -47,9 +64,6 @@ public class LocalDatePeriodParser {
 	 */
 	public static Optional<LocalDatePeriod> parse(String dateFromStr,
                                  String dateToStr) {
-
-		ParserArguments parserArguments = new ParserArguments(dateFromStr,
-				dateToStr);
 
         Optional<LocalDatePeriod> result = Optional.empty();
 		if (dateFromStr != null && dateToStr != null) {

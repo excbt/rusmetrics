@@ -86,6 +86,24 @@ public class ContZPointConsumptionResourceTest {
 
     }
 
+    @Test
+    @Transactional
+    public void testGetConsumptionData() throws Exception {
+
+        LocalDatePeriod localDatePeriod = LocalDatePeriod.month(2017,2);
+
+        Long contZPointId = 128551684L;
+
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/cont-zpoint-consumption/{contZPointId}", contZPointId)
+                .param("fromDateStr", localDatePeriod.dateFromStr())
+                .param("toDateStr", localDatePeriod.dateToStr())
+                .param("size", String.valueOf(50)))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
+
+    }
+
 
     @Test
     @Transactional
