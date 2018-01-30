@@ -45,7 +45,7 @@ spring:
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format-sql: true
-            hibernate.show_sql: true
+            hibernate.show_sql: false
 
 #            naming:
 #                physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
@@ -59,9 +59,11 @@ spring:
 #            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
 portal:
     datasource:
+        databaseName: datafuse_2018_01
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&amp;characterEncoding=UTF-8
+        url: jdbc:postgresql://192.168.84.201:5432/${portal.datasource.databaseName}}?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
         username: #dbuser1
@@ -69,9 +71,11 @@ portal:
 
 raw:
     datasource:
+        databaseName: test_dataraw
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.201:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster_WARN
+        url: jdbc:postgresql://192.168.84.201:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster_WARN
         name:
         jndi-name:
         username: #dbuser1
@@ -83,13 +87,7 @@ raw:
 #            pool-name: raw
 
 slog:
-    datasource:
-        type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        username: dbuser1
-        password: exbt_123456
-        url: jdbc:postgresql://192.168.84.201:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw_WARN
-        #dataSource.pool.size=2
+    settings:
         schema: slog
 
 ldap:

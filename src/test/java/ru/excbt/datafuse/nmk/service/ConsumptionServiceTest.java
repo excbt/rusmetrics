@@ -146,7 +146,7 @@ public class ConsumptionServiceTest {
     public void processHWaterConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -199,7 +199,7 @@ public class ConsumptionServiceTest {
     public void processElConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -258,7 +258,7 @@ public class ConsumptionServiceTest {
     public void processImpulseConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();

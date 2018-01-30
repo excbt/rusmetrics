@@ -5,7 +5,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.QContZPoint;
 import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
+import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
+import ru.excbt.datafuse.nmk.domain.QContZPointConsumption;
+import ru.excbt.datafuse.nmk.repository.support.ExCustomRepository;
 
 import java.util.List;
 
@@ -17,7 +21,7 @@ import java.util.List;
  * @since 26.02.2015
  *
  */
-public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, ContObjectRI<ContZPoint> {
+public interface ContZPointRepository extends JpaRepository<ContZPoint, Long>, ContObjectRI<ContZPoint>{
 
 	List<ContZPoint> findByIdAndContObject(long contZpointId, long contObjectId);
 
