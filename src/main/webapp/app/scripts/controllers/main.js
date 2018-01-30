@@ -375,6 +375,10 @@
         vm.menuToggleList = function () {
             $mdSidenav('left').toggle();
         };
+                           
+        vm.openUserMenu = function ($mdMenu, ev) {
+            $mdMenu.open(ev);
+        };
     //    setPageTitle();
 
     //    function initCtrl () {

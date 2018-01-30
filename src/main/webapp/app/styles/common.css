@@ -589,6 +589,12 @@ body{
 /*    color: #4a88d2;*/
 }
 
+/*Material: пункт главного меню*/
+.nmc-md-main-menu-item {
+    width: 100%;
+    text-align: left !important;
+}
+
 
 /*   Выпадающее меню - аля контекстное меню у объектов, приборов и т.п.*/
 .nmc-dropdown-menu>li>a:hover, .nmc-dropdown-menu>li>a:focus {
@@ -2488,6 +2494,11 @@ tr.nmc-bg-distinguish > td {
 
 
 .nmc-img2 {
+}
+
+.nmc-img-user-menu {
+    width: 24px;
+    height: 24px;
 }
 
     /*Вертикальная линия в кнопках на странице Объекты*/
