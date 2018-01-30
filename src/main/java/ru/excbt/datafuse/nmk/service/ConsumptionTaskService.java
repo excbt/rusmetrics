@@ -52,8 +52,15 @@ public class ConsumptionTaskService {
      * @param task
      */
     public void sendTask(ConsumptionTask task) {
+        Objects.requireNonNull(task);
         log.info("sending with convertAndSend() to queue <{}>", task );
-        jmsTemplate.convertAndSend(CONS_TASK_QUEUE, task);
+        ConsumptionTask taskToSend = task;
+        if (taskToSend.getTaskUUID() == null) {
+            log.warn("Task UUID is not set. Generating NEW");
+            taskToSend = taskToSend.generateTaskUUID();
+        }
+
+        jmsTemplate.convertAndSend(CONS_TASK_QUEUE, taskToSend);
     }
 
     /**

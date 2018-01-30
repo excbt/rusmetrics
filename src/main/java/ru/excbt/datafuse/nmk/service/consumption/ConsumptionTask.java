@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.UUIDGenerator;
 import lombok.*;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
@@ -93,6 +94,11 @@ public class ConsumptionTask implements Serializable {
             throw new IllegalArgumentException("taskUUID is null");
         }
         return cloneBuilder().taskUUID(taskUUID).build();
+    }
+
+    @JsonIgnore
+    public ConsumptionTask generateTaskUUID() {
+        return cloneBuilder().taskUUID(Generators.timeBasedGenerator().generate()).build();
     }
 
     @JsonIgnore
