@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.service;
 import com.fasterxml.uuid.Generators;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQuery;
-import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.apache.commons.lang.time.StopWatch;
@@ -14,8 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
-import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDateTimePeriod;
+import ru.excbt.datafuse.nmk.data.model.support.time.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataElConsRepository;
@@ -31,6 +29,7 @@ import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionTaskRepository;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.handling.*;
 import ru.excbt.datafuse.nmk.service.vm.ZPointConsumptionVM;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.xml.bind.DatatypeConverter;
 import java.nio.ByteBuffer;
@@ -39,7 +38,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,8 +52,8 @@ public class ConsumptionService {
     public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
 
-    private static final String CONS_STATE_CALCULATED = "calculated";
-    private static final String CONS_STATE_INVALIDATED = "invalidated";
+    public static final String CONS_STATE_CALCULATED = "calculated";
+    public static final String CONS_STATE_INVALIDATED = "invalidated";
 
     public enum TaskState implements KeynameObject {
         NEW, STARTED, FINISHED, SCHEDULED;
@@ -114,6 +113,12 @@ public class ConsumptionService {
     }
 
 
+    /**
+     *
+     * @param contZPoint
+     * @param localDateTimePeriod
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<ZPointConsumptionVM> findConsumption(ContZPoint contZPoint, LocalDateTimePeriod localDateTimePeriod) {
 
@@ -174,8 +179,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataHWater> dataLoader = (t) -> dataHWaterRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -307,8 +312,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataElCons> dataLoader = (t) -> dataElConsRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -322,7 +327,7 @@ public class ConsumptionService {
                     qContServiceDataElCons.contZPointId.in(ids)
                         .and(qContServiceDataElCons.timeDetailType.eq(task.getSrcTimeDetailType()))
                         .and(qContServiceDataElCons.deleted.eq(0))
-                        .and(qContServiceDataElCons.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                        .and(qContServiceDataElCons.dataDate.lt(LocalDateUtils.asDate(task.getDateTimeFrom())))
                 ).groupBy(qContServiceDataElCons.contZPointId).fetch();
             return lastTupleDataToDataElCons(resultTupleList);
         };
@@ -343,8 +348,8 @@ public class ConsumptionService {
 
         ConsumptionTaskDataLoader<ContServiceDataImpulse> dataLoader = (t) -> dataImpulseRepository.selectForConsumptionAny(
             t.getSrcTimeDetailType(),
-            Date.from(t.getDateTimeFrom()),
-            Date.from(t.getDateTimeTo()),
+            LocalDateUtils.asDate(t.getDateTimeFrom()),
+            LocalDateUtils.asDate(t.getDateTimeTo()),
             t.getContZPointId());
 
 
@@ -361,7 +366,7 @@ public class ConsumptionService {
                 qContServiceDataImpulse.contZPointId.in(ids)
                     .and(qContServiceDataImpulse.timeDetailType.eq(task.getSrcTimeDetailType()))
                     .and(qContServiceDataImpulse.deleted.eq(0))
-                    .and(qContServiceDataImpulse.dataDate.lt(Date.from(task.getDateTimeFrom())))
+                    .and(qContServiceDataImpulse.dataDate.lt(LocalDateUtils.asDate(task.getDateTimeFrom())))
             ).groupBy(qContServiceDataImpulse.contZPointId).fetch();
             return lastTupleDataToDataImpulse(resultTuple);
         };
@@ -451,9 +456,9 @@ public class ConsumptionService {
     public static class ConsumptionZPointKey {
         private final Long contZPointId;
         private final String destTimeDetailType;
-        private final Instant consDateTime;
+        private final LocalDateTime consDateTime;
 
-        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, Instant consDateTime) {
+        public ConsumptionZPointKey(Long contZPointId, String destTimeDetailType, LocalDateTime consDateTime) {
             Objects.requireNonNull(contZPointId);
             Objects.requireNonNull(destTimeDetailType);
             Objects.requireNonNull(consDateTime);
@@ -470,7 +475,7 @@ public class ConsumptionService {
 
             this.contZPointId = contZPointId;
             this.destTimeDetailType = destTimeDetailType;
-            this.consDateTime = consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant();
+            this.consDateTime = consDate.atStartOfDay();
         }
     }
 
@@ -484,9 +489,9 @@ public class ConsumptionService {
 
         private final String dataType;
         private final String destTimeDetailType;
-        private final Instant consDateTime;
+        private final LocalDateTime consDateTime;
 
-        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, Instant consDateTime) {
+        public ConsumptionDataTypeKey(String dataType, String destTimeDetailType, LocalDateTime consDateTime) {
             Objects.requireNonNull(dataType);
             Objects.requireNonNull(destTimeDetailType);
             Objects.requireNonNull(consDateTime);
@@ -508,7 +513,7 @@ public class ConsumptionService {
 
             this(dataType,
                 destTimeDetailType,
-                (consDate == null) ? null : consDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+                (consDate == null) ? null : consDate.atStartOfDay());
         }
 
     }
@@ -570,10 +575,10 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final String taskState) {
+    public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final TaskState taskState) {
 
         ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
-        contZPointConsumptionTask.setTaskState(taskState == null ? TaskState.NEW.name() : taskState);
+        contZPointConsumptionTask.setTaskState(taskState == null ? TaskState.NEW.name() : taskState.getKeyname());
         contZPointConsumptionTask.setTaskDateTime(Instant.now());
         contZPointConsumptionTask.setConsDateTime(consumptionTask.getDateTimeFrom());
         contZPointConsumptionTask.setDataType(consumptionTask.getDataType());
@@ -951,9 +956,11 @@ public class ConsumptionService {
         log.debug("Processing task: {}" ,workTask.toString());
 
         TimeDetailKey srcTimeDetailKey = TimeDetailKey.searchKeyname(workTask.getSrcTimeDetailType());
-        InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
+        //InstantPeriod period = InstantPeriod.builder().dateTimeFrom(workTask.getFrom()).dateTimeTo(workTask.getTo()).build();
+        LocalDateTimePeriod localPeriod = LocalDateTimePeriod.builder()
+            .dateTimeFrom(workTask.getDateTimeFrom()).dateTimeTo(workTask.getDateTimeTo()).build();
 
-        if (srcTimeDetailKey != null && period.isValid()) {
+        if (srcTimeDetailKey != null && localPeriod.isValid()) {
 
             StopWatch stopWatch = new StopWatch();
             stopWatch.start();
@@ -980,6 +987,55 @@ public class ConsumptionService {
             log.warn("ConsumptionTask is invalid: {}", task);
         }
 
+    }
+
+
+    public static Optional<DataType> getDataType (ContServiceTypeKey contServiceTypeKey, Boolean isImpulse) {
+
+        if (Boolean.TRUE.equals(isImpulse)) {
+            return Optional.of(DataType.IMPULSE);
+        }
+
+        if (EnumSet.of(
+            ContServiceTypeKey.HEAT,
+            ContServiceTypeKey.CW,
+            ContServiceTypeKey.HW).contains(contServiceTypeKey)) {
+            return Optional.of(DataType.HWATER);
+        }
+
+        if (EnumSet.of(
+            ContServiceTypeKey.EL).contains(contServiceTypeKey)) {
+            return Optional.of(DataType.ELECTRICITY);
+        }
+
+        return Optional.empty();
+    }
+
+
+    @Transactional
+    public boolean processUniversal(ConsumptionTask task) {
+        Optional<DataType> optTaskDataType = KeyEnumTool.searchKey(DataType.class, task.getDataType());
+        if (!optTaskDataType.isPresent()) {
+            return false;
+        }
+
+        boolean result = true;
+
+        switch (optTaskDataType.get()) {
+            case ELECTRICITY:
+                processElCons(task);
+                break;
+            case HWATER:
+                processHWater(task);
+                break;
+            case IMPULSE:
+                processImpulse(task);
+                break;
+            default:
+                result = false;
+        }
+
+        return result;
     }
 
 }

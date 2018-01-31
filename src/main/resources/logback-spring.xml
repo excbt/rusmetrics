@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+
+	<include resource="org/springframework/boot/logging/logback/base.xml"/>
+	<!-- Insert the current time formatted as "yyyyMMdd'T'HHmmss" under the
+		key "bySecond" into the logger context. This value will be available to all
+		subsequent configuration elements. -->
+
+    <timestamp key="bySecond" datePattern="yyMMdd't'HHmm" />
+
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${catalina.base:-.}/logs/nmk_boot_${bySecond}.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${catalina.base:-.}/logs/nmk_boot_${bySecond}_%d{yyyy-MM-dd}.log</FileNamePattern>
+		</rollingPolicy>
+
+		<encoder>
+    		<!-- <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+    		<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+  		</encoder>
+
+	</appender>
+
+<!-- 	<springProfile name="dev"> -->
+<!--     	<logger name="ru.excbt" level="trace"> -->
+<!--     		<appender-ref ref="CONSOLE" /> -->
+<!--     	</logger>	 -->
+
+<!--     	<logger name="ru.excbt" level="WARN"> -->
+<!--     		<appender-ref ref="FILE" /> -->
+<!--     	</logger> -->
+<!--     </springProfile>		 -->
+
+<!-- 	<springProfile name="prod"> -->
+<!--     	<logger name="ru.excbt" level="WARN"> -->
+<!--     		<appender-ref ref="FILE" /> -->
+<!--     	</logger> -->
+<!--     </springProfile>		 -->
+
+
+	<!-- 3rdparty Loggers -->
+	<logger name="org.apache.tomcat.util" level="error" />
+
+	<logger name="org.springframework.core" level="info" />
+
+	<logger name="org.springframework.beans" level="info" />
+
+	<logger name="org.springframework.context" level="info" />
+
+	<logger name="org.hibernate.SQL" level="info" />
+
+	<logger name="org.hibernate.ejb.HibernatePersistence" level="OFF"/>
+	<!--<logger name="org.hibernate.engine.internal" level="WARN"/>-->
+
+	<logger name="org.springframework.web" level="warn" />
+
+	<logger name="org.springframework.security.saml" level="info" />
+
+	<logger name="org.pentaho.reporting" level="warn" />
+
+	<logger name="net.sf.jasperreports" level="warn" />
+
+	<logger name="ru.excbt.datafuse.slogwriter" level="error" />
+
+
+    <!--Tracing SQL parameters-->
+    <!--<logger name="org.hibernate.SQL" level="debug" />-->
+    <!--<logger name="org.hibernate.type" level="trace" />-->
+
+    <logger name="org.hibernate" level="info" />
+
+    <logger name="org.springframework" level="info" />
+    <!--<logger name="org.apache.tomcat.jdbc.pool" level="debug" />-->
+
+    <logger name="ru.excbt.datafuse.nmk.config" level="debug" />
+
+    <springProfile name="dev">
+        <!-- configuration to be enabled when the "dev" profiles are active -->
+        <logger name="ru.excbt.datafuse.nmk" level="debug" />
+    </springProfile>
+
+	<root level="debug">
+<!-- 		<appender-ref ref="console" /> -->
+		<appender-ref ref="FILE" />
+	</root>
+
+
+</configuration>

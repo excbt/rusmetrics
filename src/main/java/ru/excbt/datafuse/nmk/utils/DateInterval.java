@@ -12,38 +12,11 @@ import java.util.Date;
  * @since 11.01.2017
  *
  */
-public interface DateInterval {
+public interface DateInterval extends ValidPeriodCheckable {
 	Date getFromDate();
 
 	Date getToDate();
 
-	/**
-	 *
-	 * @return
-	 */
-	boolean isValid();
-
-	/**
-	 *
-	 * @return
-	 */
-	boolean isValidEq();
-
-	/**
-	 *
-	 * @return
-	 */
-	default boolean isInvalid() {
-		return !isValid();
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	default boolean isInvalidEq() {
-		return !isValidEq();
-	}
 
 	/**
 	 *

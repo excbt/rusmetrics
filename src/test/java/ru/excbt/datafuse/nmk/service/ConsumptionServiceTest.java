@@ -121,7 +121,7 @@ public class ConsumptionServiceTest {
             //.taskUUID()
             .retryCnt(3).build().checkDaysBetween(1);
 
-        task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
+        task = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED);
 
         consumptionService.processHWater(task);
 
@@ -146,7 +146,7 @@ public class ConsumptionServiceTest {
     public void processHWaterConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -165,7 +165,7 @@ public class ConsumptionServiceTest {
 
         while (task.getDateFrom().isBefore(endDay) || task.getDateFrom().isEqual(endDay)) {
             log.info("Processing: {}-{}-{}", task.getDateFrom().getYear(), task.getDateFrom().getMonthValue(), task.getDateFrom().getDayOfMonth());
-            ConsumptionTask savedTask = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED.getKeyname());
+            ConsumptionTask savedTask = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED);
             consumptionService.processHWater(savedTask);
             task = savedTask.nextDay();
         }
@@ -199,7 +199,7 @@ public class ConsumptionServiceTest {
     public void processElConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -219,7 +219,7 @@ public class ConsumptionServiceTest {
                 .dateTo(day)
                 .build();
 
-            task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
+            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED);
 
             consumptionService.processElCons(task.checkDaysBetween(1));
 
@@ -258,7 +258,7 @@ public class ConsumptionServiceTest {
     public void processImpulseConsumption_YYYY() {
 
         LocalDate startDay = LocalDate.of(2016, 1, 1);
-        LocalDate endDay = LocalDate.of(2018,1,1);
+        LocalDate endDay = LocalDate.of(2019,1,1);
 
 
         StopWatch stopWatch = new StopWatch();
@@ -278,7 +278,7 @@ public class ConsumptionServiceTest {
                 .dateTo(day)
                 .build().checkDaysBetween(1);
 
-            task = consumptionService.saveConsumptionTask(task, TASK_STATE_SCHEDULED);
+            task = consumptionService.saveConsumptionTask(task, ConsumptionService.TaskState.SCHEDULED);
 
             consumptionService.processImpulse(task);
 

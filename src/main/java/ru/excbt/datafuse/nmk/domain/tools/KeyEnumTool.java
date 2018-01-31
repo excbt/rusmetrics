@@ -47,7 +47,23 @@ public class KeyEnumTool {
      */
     public static <T extends Enum<T> & KeynameObject> Optional<T> searchKey(Class<T> enumType, String keyString) {
         Objects.requireNonNull(enumType);
-        Objects.requireNonNull(keyString);
+        Set<T> values = EnumSet.allOf(enumType);
+        return values.stream().filter(i -> i.getKeyname().equals(keyString)).findFirst();
+    }
+
+    /**
+     *
+     * @param enumType
+     * @param keyString
+     * @param nullValue
+     * @param <T>
+     * @return
+     */
+    public static <T extends Enum<T> & KeynameObject> Optional<T> searchKey(Class<T> enumType, String keyString, T nullValue) {
+        Objects.requireNonNull(enumType);
+        if (keyString == null) {
+            return Optional.ofNullable(nullValue);
+        }
         Set<T> values = EnumSet.allOf(enumType);
         return values.stream().filter(i -> keyString.equals(i.getKeyname())).findFirst();
     }

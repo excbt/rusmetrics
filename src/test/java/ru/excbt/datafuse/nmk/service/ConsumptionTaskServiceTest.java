@@ -25,6 +25,7 @@ import javax.jms.ConnectionFactory;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -101,11 +102,11 @@ public class ConsumptionTaskServiceTest {
         });
 
         TimeUnit.SECONDS.sleep(10);
-        ConsumptionTask task = consumptionTaskService.receiveTask();
-        if (task != null) {
-            assertThat(task).isNotNull();
-            log.info(task.toString());
-            consumptionTaskService.sendTask(task.makeRetry());
+        Optional<ConsumptionTask> optTask = consumptionTaskService.receiveTask();
+        if (optTask.isPresent()) {
+            assertThat(optTask.get()).isNotNull();
+            log.info(optTask.get().toString());
+            consumptionTaskService.sendTask(optTask.get().makeRetry());
 
             TimeUnit.SECONDS.sleep(10);
             consumptionTaskService.processTaskQueue(i -> consumptionService.processHWater(i));
