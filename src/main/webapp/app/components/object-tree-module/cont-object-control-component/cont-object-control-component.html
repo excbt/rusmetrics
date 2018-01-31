@@ -67,8 +67,10 @@
                        <tr>
                
                             <td class = "col-xs-1 nmc-td-for-button-object-control">                  
-                               <i class = "btn glyphicon glyphicon-chevron-right pull-right"
-                                  ng-click = "$ctrl.showObjectWidget(object, $index)">
+                               <i class = "btn glyphicon pull-right"
+                                 ng-class = "{'glyphicon-chevron-right': !object.showWidgetFlag, 'glyphicon-chevron-down': object.showWidgetFlag}"
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  >
                                    
                                </i>
 <!--
