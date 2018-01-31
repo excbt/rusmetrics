@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
-import org.apache.activemq.command.MessageId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,12 +16,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.excbt.datafuse.nmk.app.PortalApplication;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.model.support.time.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.ConsumptionService;
+import ru.excbt.datafuse.nmk.service.ConsumptionTaskSchedule;
 import ru.excbt.datafuse.nmk.service.ConsumptionTaskService;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate;
@@ -34,7 +34,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -60,6 +59,9 @@ public class ConsumptionTaskResourceTest {
     @Autowired
     private ConsumptionTaskService consumptionTaskService;
 
+    @Autowired
+    private ConsumptionTaskSchedule consumptionTaskSchedule;
+
     private ConsumptionTaskResource consumptionTaskResource;
 
     @Before
@@ -68,7 +70,7 @@ public class ConsumptionTaskResourceTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        consumptionTaskResource = new ConsumptionTaskResource(consumptionTaskService);
+        consumptionTaskResource = new ConsumptionTaskResource(consumptionTaskService, consumptionTaskSchedule);
 
         this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(consumptionTaskResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -122,6 +124,7 @@ public class ConsumptionTaskResourceTest {
 
 
     @Test
+    @Transactional
     public void getNew() throws Exception {
 
         LocalDatePeriod period = LocalDatePeriod.currentMonth();
@@ -140,6 +143,7 @@ public class ConsumptionTaskResourceTest {
 
 
     @Test
+    @Transactional
     public void putMonth() throws Exception {
         ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new/month")
             .param("year", String.valueOf(2017))
@@ -151,12 +155,33 @@ public class ConsumptionTaskResourceTest {
     }
 
     @Test
+    @Transactional
     public void putYear() throws Exception {
         ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new/year")
             .param("year", String.valueOf(2017)))
             .andDo(MockMvcResultHandlers.print())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
             .andExpect(status().isOk());
-
     }
+
+    @Test
+    @Transactional
+    public void getToday() throws Exception {
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/rma/consumption-task/new/today")
+            .param("year", String.valueOf(2017)))
+            .andDo(MockMvcResultHandlers.print())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(status().isOk());
+    }
+
+    @Test
+    @Transactional
+    public void putToday() throws Exception {
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new/today")
+            .param("year", String.valueOf(2017)))
+            .andDo(MockMvcResultHandlers.print())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(status().isOk());
+    }
+
 }

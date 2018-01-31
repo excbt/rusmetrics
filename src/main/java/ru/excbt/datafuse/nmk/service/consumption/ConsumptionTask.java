@@ -50,6 +50,11 @@ public class ConsumptionTask implements Serializable {
     @Setter
     private LocalDate dateTo;
 
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @Getter
+//    @Setter
+//    private LocalDate consDate;
+
     @Getter
     private final String dataType;
 
@@ -63,6 +68,7 @@ public class ConsumptionTask implements Serializable {
             .name(name)
             .taskUUID(this.taskUUID)
             .template(this.template)
+            //.consDate(this.consDate)
             .dateFrom(this.dateFrom)
             .dateTo(this.dateTo)
             .contZPointId(this.contZPointId)
@@ -79,7 +85,8 @@ public class ConsumptionTask implements Serializable {
         if (day == null) {
             throw new IllegalArgumentException("day is null");
         }
-        return ConsumptionTask.builder().dateFrom(day).dateTo(day);
+        return ConsumptionTask.builder()//.consDate(day)
+            .dateFrom(day).dateTo(day);
     }
 
 
@@ -186,6 +193,7 @@ public class ConsumptionTask implements Serializable {
         return cloneBuilder()
             .dateFrom(nextDayFrom)
             .dateTo(nextDayFrom)
+            //.consDate(nextDayFrom)
             .taskUUID(Generators.timeBasedGenerator().generate())
             .build();
     }

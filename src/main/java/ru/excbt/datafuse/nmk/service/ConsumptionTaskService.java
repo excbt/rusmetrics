@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.BrowserCallback;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import javax.jms.*;
@@ -40,7 +42,7 @@ public class ConsumptionTaskService {
         this.jmsTemplate.setConnectionFactory(connectionFactory);
         this.jmsTemplate.setMessageConverter(messageConverter);
         this.jmsTemplate.setExplicitQosEnabled(true);
-        this.jmsTemplate.setTimeToLive(3600);
+        this.jmsTemplate.setTimeToLive(0);
         this.jmsTemplate.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
         this.jmsTemplate.setPriority(100);
         this.jmsTemplate.setReceiveTimeout(1);
@@ -52,7 +54,7 @@ public class ConsumptionTaskService {
      */
     public void sendTask(ConsumptionTask task) {
         Objects.requireNonNull(task);
-        log.info("sending with convertAndSend() to queue <{}>", task );
+        log.debug("sending with convertAndSend() to queue <{}>", task );
         ConsumptionTask taskToSend = task;
         if (taskToSend.getTaskUUID() == null) {
             log.warn("Task UUID is not set. Generating NEW");
@@ -177,17 +179,23 @@ public class ConsumptionTaskService {
     }
 
     public void processTaskQueue(Consumer<ConsumptionTask> consumer) {
-        log.debug("Processing Queue");
+        log.info("Processing Queue");
         Optional<ConsumptionTask> optTask = receiveTask();
         int cnt = 0;
         while (optTask.isPresent()) {
             log.debug("Processing task:{}", optTask.get());
-            consumer.accept(optTask.get());
+            try {
+                consumer.accept(optTask.get());
+            } catch (Exception e) {
+                log.error("Error during processing task");
+            }
+
             log.debug("Processing task:{} complete. Read next", optTask.get());
             optTask = receiveTask();
             cnt++;
         }
         log.debug("Processing Queue complete. Finish: {} tasks", cnt);
     }
+
 
 }

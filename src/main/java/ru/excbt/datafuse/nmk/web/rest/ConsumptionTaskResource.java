@@ -6,10 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.service.ConsumptionService;
+import ru.excbt.datafuse.nmk.service.ConsumptionTaskSchedule;
 import ru.excbt.datafuse.nmk.service.ConsumptionTaskService;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate;
@@ -28,9 +28,12 @@ public class ConsumptionTaskResource {
 
     private final ConsumptionTaskService consumptionTaskService;
 
+    private final ConsumptionTaskSchedule consumptionTaskSchedule;
+
     @Autowired
-    public ConsumptionTaskResource(ConsumptionTaskService consumptionTaskService) {
+    public ConsumptionTaskResource(ConsumptionTaskService consumptionTaskService, ConsumptionTaskSchedule consumptionTaskSchedule) {
         this.consumptionTaskService = consumptionTaskService;
+        this.consumptionTaskSchedule = consumptionTaskSchedule;
     }
 
 
@@ -55,7 +58,7 @@ public class ConsumptionTaskResource {
 
         List<LocalDate> taskDates = new ArrayList<>();
 
-        log.info("date exists: {}" ,date.isPresent());
+        log.debug("date exists: {}" ,date.isPresent());
 
         if (date.isPresent()) {
             taskDates.add(date.get());
@@ -86,10 +89,11 @@ public class ConsumptionTaskResource {
                     .dataType(dt.getKeyname())
                     .template(ConsumptionTaskTemplate.Template24H_from_1H)
                     .retryCnt(3).build().generateTaskUUID();
-                consumptionTaskService.sendTask(task);
+                consumptionTaskSchedule.saveAndSendTask(task);
                 taskList.add(task);
             });
         }
+        log.debug("Size of queue: {}", consumptionTaskService.getTaskQueueSize());
         return taskList;
     }
 
@@ -150,5 +154,45 @@ public class ConsumptionTaskResource {
 
 
         return ResponseEntity.ok(taskList);
+    }
+
+    /**
+     *
+     * @param
+     * @return
+     */
+    @PutMapping("/new/today")
+    @Timed
+    @ApiOperation("Generates tasks for year")
+    public ResponseEntity<?> putToday() {
+
+        LocalDate fromDate = LocalDate.now();
+        LocalDate date2 = fromDate;
+
+        List<LocalDate> taskDates = new ArrayList<>();
+        LocalDate day = fromDate;
+        while (day.isBefore(date2) || day.isEqual(date2)) {
+            taskDates.add(day);
+            day = day.plusDays(1);
+        }
+
+        List<ConsumptionTask> taskList = processDateList(
+            taskDates,
+            EnumSet.allOf(ConsumptionService.DataType.class));
+
+
+        return ResponseEntity.ok(taskList);
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping("/new/today")
+    @Timed
+    @ApiOperation("Generates tasks for year")
+    public ResponseEntity<?> getToday() {
+        return putToday();
     }
 }
