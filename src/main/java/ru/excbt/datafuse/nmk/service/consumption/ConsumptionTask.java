@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.UUIDGenerator;
 import lombok.*;
 import ru.excbt.datafuse.nmk.data.model.support.InstantPeriod;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
@@ -49,6 +50,11 @@ public class ConsumptionTask implements Serializable {
     @Setter
     private LocalDate dateTo;
 
+//    @JsonFormat(pattern = "yyyy-MM-dd")
+//    @Getter
+//    @Setter
+//    private LocalDate consDate;
+
     @Getter
     private final String dataType;
 
@@ -62,6 +68,7 @@ public class ConsumptionTask implements Serializable {
             .name(name)
             .taskUUID(this.taskUUID)
             .template(this.template)
+            //.consDate(this.consDate)
             .dateFrom(this.dateFrom)
             .dateTo(this.dateTo)
             .contZPointId(this.contZPointId)
@@ -78,7 +85,8 @@ public class ConsumptionTask implements Serializable {
         if (day == null) {
             throw new IllegalArgumentException("day is null");
         }
-        return ConsumptionTask.builder().dateFrom(day).dateTo(day);
+        return ConsumptionTask.builder()//.consDate(day)
+            .dateFrom(day).dateTo(day);
     }
 
 
@@ -93,6 +101,11 @@ public class ConsumptionTask implements Serializable {
             throw new IllegalArgumentException("taskUUID is null");
         }
         return cloneBuilder().taskUUID(taskUUID).build();
+    }
+
+    @JsonIgnore
+    public ConsumptionTask generateTaskUUID() {
+        return cloneBuilder().taskUUID(Generators.timeBasedGenerator().generate()).build();
     }
 
     @JsonIgnore
@@ -180,6 +193,7 @@ public class ConsumptionTask implements Serializable {
         return cloneBuilder()
             .dateFrom(nextDayFrom)
             .dateTo(nextDayFrom)
+            //.consDate(nextDayFrom)
             .taskUUID(Generators.timeBasedGenerator().generate())
             .build();
     }

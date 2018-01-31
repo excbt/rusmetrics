@@ -113,6 +113,12 @@ public class ConsumptionService {
     }
 
 
+    /**
+     *
+     * @param contZPoint
+     * @param localDateTimePeriod
+     * @return
+     */
     @Transactional(readOnly = true)
     public List<ZPointConsumptionVM> findConsumption(ContZPoint contZPoint, LocalDateTimePeriod localDateTimePeriod) {
 
@@ -569,10 +575,10 @@ public class ConsumptionService {
      * @return
      */
     @Transactional
-    public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final String taskState) {
+    public ConsumptionTask saveConsumptionTask(final ConsumptionTask consumptionTask, final TaskState taskState) {
 
         ContZPointConsumptionTask contZPointConsumptionTask = new ContZPointConsumptionTask();
-        contZPointConsumptionTask.setTaskState(taskState == null ? TaskState.NEW.name() : taskState);
+        contZPointConsumptionTask.setTaskState(taskState == null ? TaskState.NEW.name() : taskState.getKeyname());
         contZPointConsumptionTask.setTaskDateTime(Instant.now());
         contZPointConsumptionTask.setConsDateTime(consumptionTask.getDateTimeFrom());
         contZPointConsumptionTask.setDataType(consumptionTask.getDataType());
@@ -1005,5 +1011,31 @@ public class ConsumptionService {
         return Optional.empty();
     }
 
+
+    @Transactional
+    public boolean processUniversal(ConsumptionTask task) {
+        Optional<DataType> optTaskDataType = KeyEnumTool.searchKey(DataType.class, task.getDataType());
+        if (!optTaskDataType.isPresent()) {
+            return false;
+        }
+
+        boolean result = true;
+
+        switch (optTaskDataType.get()) {
+            case ELECTRICITY:
+                processElCons(task);
+                break;
+            case HWATER:
+                processHWater(task);
+                break;
+            case IMPULSE:
+                processImpulse(task);
+                break;
+            default:
+                result = false;
+        }
+
+        return result;
+    }
 
 }
