@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.service.ConsumptionService;
@@ -93,11 +94,17 @@ public class ConsumptionTaskResource {
     }
 
 
+    /**
+     *
+     * @param year
+     * @param mon
+     * @return
+     */
     @PutMapping("/new/month")
-    @ApiOperation("")
     @Timed
+    @ApiOperation("Generates tasks for specified month")
     public ResponseEntity<?> putMonth(@RequestParam(name = "year") Integer year,
-                                        @RequestParam(name = "mon") Integer mon) {
+                                      @RequestParam(name = "mon") Integer mon) {
 
         LocalDate fromDate = LocalDate.of(year, mon, 1);
         LocalDate date2 = fromDate.plusMonths(1).minusDays(1);
@@ -116,4 +123,32 @@ public class ConsumptionTaskResource {
         return ResponseEntity.ok(taskList);
     }
 
+
+    /**
+     *
+     * @param year
+     * @return
+     */
+    @PutMapping("/new/year")
+    @Timed
+    @ApiOperation("Generates tasks for year")
+    public ResponseEntity<?> putYear(@RequestParam(name = "year") Integer year) {
+
+        LocalDate fromDate = LocalDate.of(year, 1, 1);
+        LocalDate date2 = fromDate.plusYears(1).minusDays(1);
+
+        List<LocalDate> taskDates = new ArrayList<>();
+        LocalDate day = fromDate;
+        while (day.isBefore(date2) || day.isEqual(date2)) {
+            taskDates.add(day);
+            day = day.plusDays(1);
+        }
+
+        List<ConsumptionTask> taskList = processDateList(
+            taskDates,
+            EnumSet.allOf(ConsumptionService.DataType.class));
+
+
+        return ResponseEntity.ok(taskList);
+    }
 }

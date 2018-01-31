@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.apache.activemq.command.MessageId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +29,10 @@ import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
+import javax.jms.JMSException;
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -92,6 +96,27 @@ public class ConsumptionTaskResourceTest {
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
+        log.info("CHECK \n");
+
+
+
+        List<String> messageIds = consumptionTaskService.viewTextMessageQueue().stream().map(i -> {
+            try {
+                log.info("MessageText: ID:{}", i.getJMSMessageID());
+                log.debug("Text:{}", i.getText());
+            } catch (JMSException e) {
+                e.printStackTrace();
+                return null;
+            }
+            return i.getJMSMessageID();
+        }).collect(Collectors.toList());
+
+
+        messageIds.forEach(i -> {
+            consumptionTaskService.viewTaskQueue(i).forEach(t -> {
+                log.info("HHH:{}", t.getTaskUUID());
+            });
+        });
 
     }
 
@@ -115,8 +140,7 @@ public class ConsumptionTaskResourceTest {
 
 
     @Test
-    public void getMonth() throws Exception {
-
+    public void putMonth() throws Exception {
         ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new/month")
             .param("year", String.valueOf(2017))
             .param("mon", String.valueOf(1)))
@@ -124,6 +148,15 @@ public class ConsumptionTaskResourceTest {
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
             .andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void putYear() throws Exception {
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new/year")
+            .param("year", String.valueOf(2017)))
+            .andDo(MockMvcResultHandlers.print())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+            .andExpect(status().isOk());
 
     }
 }
