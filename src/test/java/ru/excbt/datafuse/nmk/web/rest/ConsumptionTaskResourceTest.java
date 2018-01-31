@@ -125,11 +125,11 @@ public class ConsumptionTaskResourceTest {
 
     @Test
     @Transactional
-    public void getNew() throws Exception {
+    public void putNewTask() throws Exception {
 
         LocalDatePeriod period = LocalDatePeriod.currentMonth();
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/rma/consumption-task/new")
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/rma/consumption-task/new")
         .param("date", period.dateFromStr()))
             .andDo(MockMvcResultHandlers.print())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))

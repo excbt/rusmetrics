@@ -46,10 +46,10 @@ public class ConsumptionTaskResource {
     }
 
 
-    @GetMapping("/new")
+    @PutMapping("/new")
     @ApiOperation("")
     @Timed
-    public ResponseEntity<?> getNew(@RequestParam(name = "date", required = false)
+    public ResponseEntity<?> putNewTask(@RequestParam(name = "date", required = false)
                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> date,
                                     @RequestParam(name = "fromDateStr", required = false)
                                     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Optional<LocalDate> fromDate,
@@ -89,6 +89,11 @@ public class ConsumptionTaskResource {
                     .dataType(dt.getKeyname())
                     .template(ConsumptionTaskTemplate.Template24H_from_1H)
                     .retryCnt(3).build().generateTaskUUID();
+                log.info("Sending task. UUID {}, DataType: {}, dateFrom: {}, dateTo:{}",
+                    task.getTaskUUID(),
+                    task.getDataType(),
+                    task.getDateFrom(),
+                    task.getDateTimeTo());
                 consumptionTaskSchedule.saveAndSendTask(task);
                 taskList.add(task);
             });

@@ -47,7 +47,7 @@ public class ConsumptionTaskSchedule {
 
         try {
             consumptionTaskService.processTaskQueue(i -> {
-                log.info("Process task UUID {}, DataType: {}, dateFrom: {}, dateTo:{}", i.getTaskUUID(), i.getDataType(), i.getDateFrom(), i.getDateTimeTo());
+                log.info("Process task UUID {}, DataType: {}, dateFrom: {}, dateTo:{}", i.getTaskUUID(), i.getDataType(), i.getDateFrom(), i.getDateTo());
                 consumptionService.processUniversal(i);
             } );
         } finally {

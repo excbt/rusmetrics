@@ -45,7 +45,7 @@ public class ConsumptionTaskService {
         this.jmsTemplate.setTimeToLive(0);
         this.jmsTemplate.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
         this.jmsTemplate.setPriority(100);
-        this.jmsTemplate.setReceiveTimeout(1);
+        this.jmsTemplate.setReceiveTimeout(1000);
     }
 
     /**
