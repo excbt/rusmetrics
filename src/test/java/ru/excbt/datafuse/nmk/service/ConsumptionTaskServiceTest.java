@@ -93,6 +93,7 @@ public class ConsumptionTaskServiceTest {
 
         size = consumptionTaskService.getTaskQueueSize();
 
+        TimeUnit.SECONDS.sleep(1);
         log.info("Size after:{}", size);
         assertThat(size).isGreaterThan(0);
 
@@ -101,14 +102,14 @@ public class ConsumptionTaskServiceTest {
             log.info("B Task: {}", i.toString());
         });
 
-        TimeUnit.SECONDS.sleep(10);
+        TimeUnit.SECONDS.sleep(1);
         Optional<ConsumptionTask> optTask = consumptionTaskService.receiveTask();
         if (optTask.isPresent()) {
             assertThat(optTask.get()).isNotNull();
             log.info(optTask.get().toString());
             consumptionTaskService.sendTask(optTask.get().makeRetry());
 
-            TimeUnit.SECONDS.sleep(10);
+            TimeUnit.SECONDS.sleep(1);
             consumptionTaskService.processTaskQueue(i -> consumptionService.processHWater(i));
 
         }

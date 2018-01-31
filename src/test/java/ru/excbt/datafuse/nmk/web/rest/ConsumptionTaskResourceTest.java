@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -141,7 +142,7 @@ public class ConsumptionTaskResourceTest {
 
     }
 
-
+    @Ignore
     @Test
     @Transactional
     public void putMonth() throws Exception {
@@ -154,6 +155,7 @@ public class ConsumptionTaskResourceTest {
 
     }
 
+    @Ignore
     @Test
     @Transactional
     public void putYear() throws Exception {
@@ -164,6 +166,7 @@ public class ConsumptionTaskResourceTest {
             .andExpect(status().isOk());
     }
 
+    @Ignore
     @Test
     @Transactional
     public void getToday() throws Exception {
@@ -174,6 +177,7 @@ public class ConsumptionTaskResourceTest {
             .andExpect(status().isOk());
     }
 
+    @Ignore
     @Test
     @Transactional
     public void putToday() throws Exception {
