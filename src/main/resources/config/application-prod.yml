@@ -64,7 +64,7 @@ spring:
 
 
     activemq:
-        broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false
+        broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false,useJmx=false
         in-memory: true
         non-blocking-redelivery: true
         packages:
