@@ -179,7 +179,7 @@ public class ConsumptionTaskService {
     }
 
     public void processTaskQueue(Consumer<ConsumptionTask> consumer) {
-        log.info("Processing Queue");
+        log.debug("Processing Queue");
         Optional<ConsumptionTask> optTask = receiveTask();
         int cnt = 0;
         while (optTask.isPresent()) {

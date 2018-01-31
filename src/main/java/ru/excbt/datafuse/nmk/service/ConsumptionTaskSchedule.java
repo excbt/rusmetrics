@@ -57,6 +57,7 @@ public class ConsumptionTaskSchedule {
                 log.error("Running flag is not set");
             }
         }
+        log.info("Processing Schedule complete. OK");
 
     }
 
