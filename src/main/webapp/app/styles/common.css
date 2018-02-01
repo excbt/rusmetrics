@@ -5,6 +5,13 @@
 [ng\:cloak], [ng-cloak], .ng-cloak {
     display: none !important;
 }
+/* Отключаем бордюры у фокусных элементов*/
+:focus {
+    outline-width: 0;
+}
+.btn:focus {
+    outline-width: 0;
+}
 
 /* Полоса прокрутки*/
 /*

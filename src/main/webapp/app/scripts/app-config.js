@@ -34,7 +34,8 @@
                          '$locationProvider',
                          'widgetsProvider',
                          '$mdIconProvider',
-                         '$mdThemingProvider'
+                         '$mdThemingProvider',
+                         '$mdAriaProvider'
                      ];
 
     function configure(KeepaliveProvider,
@@ -44,7 +45,8 @@
                         $locationProvider,
                         widgetsProvider,
                         $mdIconProvider,
-                        $mdThemingProvider
+                        $mdThemingProvider,
+                        $mdAriaProvider
                     ) {
         //  IdleProvider.idle(3600); //idle time in seconds
         //  IdleProvider.timeout(30); //time out in seconds
@@ -88,6 +90,7 @@
         
         $mdIconProvider.icon("menu", "./assets/svg/menu.svg");
         $mdThemingProvider.theme('default').primaryPalette('grey');
+//        $mdAriaProvider.disableWarnings();
     }
 
 }());
