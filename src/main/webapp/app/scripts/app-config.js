@@ -33,7 +33,8 @@
                          'uiMask.ConfigProvider',
                          '$locationProvider',
                          'widgetsProvider',
-                         '$mdIconProvider'
+                         '$mdIconProvider',
+                         '$mdThemingProvider'
                      ];
 
     function configure(KeepaliveProvider,
@@ -42,7 +43,8 @@
                         uiMaskConfigProvider,
                         $locationProvider,
                         widgetsProvider,
-                        $mdIconProvider
+                        $mdIconProvider,
+                        $mdThemingProvider
                     ) {
         //  IdleProvider.idle(3600); //idle time in seconds
         //  IdleProvider.timeout(30); //time out in seconds
@@ -85,6 +87,7 @@
         });
         
         $mdIconProvider.icon("menu", "./assets/svg/menu.svg");
+        $mdThemingProvider.theme('default').primaryPalette('grey');
     }
 
 }());
