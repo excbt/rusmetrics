@@ -2,6 +2,7 @@
 <!--    Cont object controller view-->
    <div class = "container-fluid">
       <div class = "row">
+<!--
           <div class = "col-xs-9 noPadding">
             <div class = "input-group filter marginBottom10 pull-left nmc-search-form">   
                 <span class = "input-group-addon nmc-search-form-addon"><i class = "glyphicon glyphicon-search nmc-search-form-button"></i></span>
@@ -12,8 +13,10 @@
                 ng-change = "$ctrl.filterObjects($ctrl.filter)">
             </div>
           </div>
+-->
           <div class = "col-xs-3 noPadding">
-             <div class = "pull-right">
+<!--             <div class = "pull-right">-->
+              <div>
                   <label class="nmc-form-label">Всего:</label>
                   <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="($ctrl.objects | filter: $ctrl.filter).length">
               </div>
@@ -106,7 +109,7 @@
                        <tr ng-if = "object.showWidgetFlag">
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
                               <div ng-repeat = "zpoint in object.zpoints track by $index"
-                                class = "col-xs-6">
+                                class = "col-xs-6 paddingBottom15">
 
                                    <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
                                        <span ng-show='title' ng-bind='title'></span>

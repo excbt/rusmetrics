@@ -2713,7 +2713,9 @@ tr.nmc-bg-distinguish > td {
 .paddingBottom10 {
     padding-bottom: 10px;
 }
-
+.paddingBottom15 {
+    padding-bottom: 15px;
+}
 .paddingBottom40 {
     padding-bottom: 40px;
 }
