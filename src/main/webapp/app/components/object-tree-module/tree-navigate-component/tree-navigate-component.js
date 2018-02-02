@@ -172,6 +172,23 @@
         function isLinkedObjectNodesEmpty(item) {
             return checkUndefinedNull(item) || checkUndefinedNull(item.linkedNodeObjects) || !angular.isArray(item.linkedNodeObjects) || item.linkedNodeObjects.length === 0;
         }
+        
+        function setDefaultTreeNode(ptree) {
+            var ev = {
+                ctrlKey: false,
+                shiftKey: false
+            };
+            ctrl.selectPNode(ptree, ev, false, null, null);
+//            if (!isChildNodesEmpty(ptree)) {
+//                ctrl.selectPNode(ptree.childNodes[0], ev, false, null, null);
+//                return true;
+//            }
+//            if (!isLinkedObjectNodesEmpty(ptree)) {
+//                ctrl.selectPNode(ptree.linkedNodeObjects[0], ev, false, null, null);
+//                return true;
+//            }
+//            return false;
+        }
 
         function successLoadPTreeCallback(resp) {
 //console.log(resp);
@@ -190,9 +207,10 @@
             ctrl.treeLoading = false;
 
             ctrl.messages.treeMenuHeader = resp.data.nodeName || resp.data._id;
+            setDefaultTreeNode(ctrl.data.currentPTree);
 
-            ctrl.objects = [];
-            ctrl.objectsOnPage = [];
+//            ctrl.objects = [];
+//            ctrl.objectsOnPage = [];
 
 //            monitorSvc.setMonitorSettings({isFullObjectView: false});
 //            monitorSvc.setMonitorSettings({currentTreeNode: null, curTreeNodeId: null});

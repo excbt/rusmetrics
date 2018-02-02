@@ -40,7 +40,8 @@
 //            "node2": [objects2],
 //        }
         var nodes = {},
-            widgetList = {};
+            widgetList = {},
+            currentNodeId = null;
         
         var svc = this;
         svc.EVENTS = EVENTS;
@@ -60,6 +61,14 @@
         svc.updateContObjectInfo = updateContObjectInfo;
 
         ////////////////
+        
+        function setCurrentNodeId(nId) {
+            currentNodeId = nId;
+        }
+        
+        function getCurrentNodeId() {
+            return currentNodeId;
+        }
         
         function checkUndefinedNull(inpObj) {
             var result = false;
@@ -96,12 +105,16 @@
             nodes[nodeId] = angular.copy(nodeData);
             return true;
         }
+        
+        $rootScope.$on(objectTreeService.EVENTS.TREE_STUB_LOADED, function () {
+            loadNodeObjects(getCurrentNodeId());
+        });
 
         function loadNodeObjects(nodeId) {
             var treeStub = objectTreeService.getCurrentTreeStub();
 //console.log(treeStub);
             if (treeStub === null) {
-                // request to load
+                // request to load                
                 return false;
             }
             var contObjects = null; // objectTreeService.findContObjectsByNodeId(nodeId);
