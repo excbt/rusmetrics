@@ -30,7 +30,8 @@
             'APP_LABEL',
             'settingModeService',
             '$scope',
-            '$mdSidenav'
+            '$mdSidenav',
+            '$timeout'
         ];
 
     function mainCtrl(
@@ -47,7 +48,8 @@
                        APP_LABEL,
                        settingModeService,
                        $scope,
-                       $mdSidenav
+                       $mdSidenav,
+                       $timeout
                       ) {
         /*jshint validthis: true*/
         var vm = this;
@@ -378,6 +380,18 @@
                            
         vm.openUserMenu = function ($mdMenu, ev) {
             $mdMenu.open(ev);
+        };
+                           
+        vm.startSearch = function () {
+            vm.searchFlag = true;
+            $timeout(function () {
+                var el = document.getElementById("searchInput");
+                el.focus();
+            }, 0);
+        };
+                           
+        vm.cancelSearch = function () {
+            vm.searchFlag = false;
         };
     //    setPageTitle();
 

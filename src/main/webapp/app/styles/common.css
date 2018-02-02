@@ -1278,7 +1278,11 @@ tr.nmc-inactive-price > td {
     font-weight: normal;
     margin: 0;
 }
- 
+
+.nmc-main-search-input > .md-errors-spacer {
+    display: none;
+}
+
 /* поле поиска */
 .nmc-search-form {
 }
