@@ -346,7 +346,8 @@ body{
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 10px;
-    height: 95vh;
+    height: 92vh;
+    overflow-y: hidden;
 /*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
@@ -407,7 +408,7 @@ body{
 /* Фон главного окна */
 .nmc-main-window-background {
 /*    padding-top: 15px;*/
-    padding-bottom: 20px;
+/*    padding-bottom: 20px;*/
     font-size: 12px;
     background-color: #BEBEBE !important; /*body background color*/
     
