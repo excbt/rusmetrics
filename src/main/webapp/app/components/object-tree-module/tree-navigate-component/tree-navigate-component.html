@@ -59,7 +59,7 @@
                     <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
                 </div>
 
-             <div class="row nmc-tree-with-fixed-header marginRight10"
+             <div class="row nmc-p-tree-with-fixed-header marginRight10"
                   ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}"
                   >
                   <div ui-tree="options" data-drag-enabled="false">
@@ -121,7 +121,7 @@
                    style = "display: inline;">
                     ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
                     <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">
-                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще {{$ctrl.ELEMENTS_PER_NODE}}</i>
+<!--                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще {{$ctrl.ELEMENTS_PER_NODE}}</i>-->
                             <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewAllElements(item)">Показать все</i>
                   </span>
                 </p>    
@@ -166,6 +166,17 @@
                 </li>
             </ol>
 -->
+            <span class="nmc-valign-middle" style = "">                
+                <p ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length"
+                   style = "display: inline; margin-left: 40px;">
+                    ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
+<!--                    <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">-->
+                            <i class = "btn btn-primary btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще</i>
+<!--                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewAllElements(item)">Показать все</i>-->
+<!--                  </span>-->
+                </p>    
+                
+            </span>
         </div>
     </script>
 </div>
