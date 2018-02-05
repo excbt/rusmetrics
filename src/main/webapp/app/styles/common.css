@@ -3329,6 +3329,17 @@ div.nmc-energy-simple-line > div {
     background-color: #eee !important;
 }
 
+/*
+        Интерфейс иерархий p-tree, обновление Осень2017
+*/
+.nmc-p-tree-with-fixed-header {
+    overflow: auto;
+    height: 85vh;
+    min-height: 360px;
+    position:relative;
+    padding-left: 15px;
+}
+
 /* Иконки для дерева объектов*/
 .nmc-p-tree-status-img {
     max-width: 12px;
