@@ -1,0 +1,12 @@
+<div class = "">
+    <label style = "font-size: 14px;">
+        Представление:
+    </label>
+    <select class = "form-control nmc-input-data-with-label nmc-select-form"
+      ng-model = "$ctrl.currentWidget"
+      ng-options = "widget as widget.caption for widget in $ctrl.nodeWidgets"
+      ng-change = "$ctrl.changeWidget($ctrl.currentWidget)"
+      ng-disabled = "$ctrl.widgetSelectDisabled()">
+
+    </select>
+</div>

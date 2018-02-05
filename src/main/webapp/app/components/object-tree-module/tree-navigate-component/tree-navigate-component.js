@@ -581,11 +581,13 @@
             }
             
             if (ctrl.data.selectedPNode !== item) {
-                $state.go(TREE_NODE_INFO_STATE_NAME, {node: item});
+//                $state.go(TREE_NODE_INFO_STATE_NAME, {node: item});
+                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(item)});
             }
 
             item.isSelected = true;
             ctrl.data.selectedPNode = item; //angular.copy(item);
+            
             treeNavSvc.setPTreeSelectedNode(ctrl.data.selectedPNode);
 // console.log(ctrl.data.selectedPNode);
             if (ctrl.isContZpointNode(item)) {
@@ -607,7 +609,8 @@
         ctrl.$onInit = function () {
             ctrl.data.selectedPNode = treeNavSvc.getPTreeSelectedNode();
             if (ctrl.data.selectedPNode !== null) {
-                $state.go(TREE_NODE_INFO_STATE_NAME, {node: ctrl.data.selectedPNode});
+//                $state.go(TREE_NODE_INFO_STATE_NAME, {node: ctrl.data.selectedPNode});
+                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(ctrl.data.selectedPNode)});
             }
             getWidgetList();
             checkTreeSettingsAndGetObjectsData();

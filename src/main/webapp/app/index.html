@@ -78,7 +78,9 @@
              </md-button>
           
               <div flex ng-show = "mainVm.searchFlag != true">
-                  <h2 flex>Локальное меню раздела/подраздела главного меню Русметрикс</h2>
+<!--                  <h2 flex>Локальное меню раздела/подраздела главного меню Русметрикс</h2>-->
+                  <tree-node-view-select></tree-node-view-select>
+
               </div>
               <md-button class = "md-icon-button" aria-label = "Поиск" 
                      ng-click = "mainVm.startSearch()">
@@ -1363,7 +1365,8 @@
     
       <!--      Tree node info component -->
       <script src = "components/object-tree-module/tree-node-info-component/tree-node-info-component.service.js"></script>          
-      <script src = "components/object-tree-module/tree-node-info-component/tree-node-info-component.js"></script>          
+      <script src = "components/object-tree-module/tree-node-info-component/tree-node-info-component.js"></script>
+      <script src = "components/object-tree-module/tree-node-info-component/tree-node-view-select.js"></script>
                                              
                <!--   ptree-component   -->
       <script src = "components/object-tree-module/ptree-component/ptree-component.js"></script>       

@@ -10,6 +10,11 @@
 
     /* @ngInject */
     function Service(objectTreeService) {
+        
+        var EVENTS = {
+            "setWidget": "treeNodeInfoComponentService:setWidget"
+        };
+        
         var nodeTypes = ["ELEMENT", "CONT_OBJECT", "CONT_ZPOINT", "DEVICE_OBJECT"];
         var currentWidget = {
             "ELEMENT": null,
@@ -64,6 +69,7 @@
         };
         
         var svc = this;
+        svc.EVENTS = EVENTS;
         svc.getCurrentWidget = getCurrentWidget;
         svc.getNodeWidgets = getNodeWidgets;
         svc.setCurrentWidget = setCurrentWidget;
