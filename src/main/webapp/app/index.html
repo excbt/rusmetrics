@@ -71,26 +71,36 @@
   <body class="nmc-main-window-background" layout = "column">
      
       <md-toolbar layout = "row">
-        <div class = "md-toolbar-tools">
+         <div class = "md-toolbar-tools" ng-init = "mainVm.searchFlag = false" >
              <md-button class = "menu md-icon-button" ng-click="mainVm.menuToggleList()">
     <!--         <i class = "glyphicon glyphicon-menu-hamburger" ></i>-->
                  <md-icon md-svg-icon="menu"></md-icon>
              </md-button>
-              <h2 flex>Локальное меню раздела/подраздела главного меню Русметрикс</h2>
-              <div ng-init = "mainVm.searchFlag = false">
-                  <md-button class = "md-icon-button" aria-label = "Поиск" 
+          
+              <div flex ng-show = "mainVm.searchFlag != true">
+                  <h2 flex>Локальное меню раздела/подраздела главного меню Русметрикс</h2>
+              </div>
+              <md-button class = "md-icon-button" aria-label = "Поиск" 
                      ng-click = "mainVm.startSearch()">
-                      <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
-                  </md-button>                             
-                  <md-input-container ng-if = "mainVm.searchFlag == true" class = "nmc-main-search-input">
+                  <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+              </md-button>
+              <div flex ng-show = "mainVm.searchFlag == true" >
+                                               
+                  <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
 <!--                     <label>Найти</label>-->
-                      <input id="searchInput" type="text"/>
-                  </md-input-container>                          
-                                        
-                  <md-button ng-if = "mainVm.searchFlag == true" class = "md-icon-button" aria-label = "Отмена" 
-                     ng-click = "mainVm.cancelSearch()">
-                      <md-icon>X</md-icon>
-                  </md-button>
+                      <input style = "width: 96%; border-color: white;" id="searchInput" type="text"/>
+                      <div class="button-group">
+                          <md-button class = "md-icon-button md-raised" aria-label = "Отмена" 
+                             ng-click = "mainVm.cancelSearch()">
+                              <md-icon>X</md-icon>
+                          </md-button>
+                      </div>
+                  </md-input-container>
+<!--
+                  <md-input-container>
+                      
+                  </md-input-container>
+-->
               </div>
 <!--
               <md-menu md-position-mode = "target-right target" md-offset = "0 75">
