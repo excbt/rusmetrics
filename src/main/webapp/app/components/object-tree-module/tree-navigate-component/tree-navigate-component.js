@@ -329,8 +329,12 @@
         }
         
         ctrl.viewAllElements = function (item) {
-            item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjects.length));
-            item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodes.length));
+            if (!checkUndefinedNull(item.linkedNodeObjects)) {
+                item.linkedNodeObjectsOnPage = item.linkedNodeObjectsOnPage.concat(item.linkedNodeObjects.slice(item.linkedNodeObjectsOnPage.length, item.linkedNodeObjects.length));
+            }
+            if (!checkUndefinedNull(item.childNodes)) {
+                item.childNodesOnPage = item.childNodesOnPage.concat(item.childNodes.slice(item.childNodesOnPage.length, item.childNodes.length));
+            }
         };
         
         ctrl.viewMoreElements = function (item) {
