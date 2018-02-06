@@ -1,0 +1,172 @@
+      <md-toolbar layout = "row">
+         <div class = "md-toolbar-tools" ng-init = "$ctrl.searchFlag = false" >
+             <md-button class = "menu md-icon-button" ng-click="$ctrl.menuToggleList()">
+                 <md-icon md-svg-icon="menu"></md-icon>
+             </md-button>
+          
+              <div flex ng-show = "$ctrl.searchFlag != true">
+                  <tree-node-view-select ng-if = "$ctrl.isObjectsPTree()"></tree-node-view-select>
+
+              </div>
+              <md-button class = "md-icon-button" aria-label = "Поиск" 
+                     ng-click = "$ctrl.startSearch()">
+                  <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+              </md-button>
+              <div flex ng-show = "$ctrl.searchFlag == true" >
+                                               
+                  <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
+                      <input style = "width: 92%; border-color: white;" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+                      <div class="button-group">
+                         <md-button class = "md-icon-button md-raised" aria-label = "Найти" 
+                             ng-click = "$ctrl.searching()" title = "найти">
+                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>
+                          </md-button>
+                          <md-button class = "md-icon-button md-raised" aria-label = "Отмена" 
+                             ng-click = "$ctrl.cancelSearch()" title = "Отмена">
+                              <md-icon>X</md-icon>
+                          </md-button>
+                      </div>
+                  </md-input-container>
+              </div>
+              <md-menu md-offset = "0 60">
+                  <md-button class = "md-icon-button"
+                       ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
+                       aria-label = "Пользовательское меню">
+                        <md-icon md-font-set = "fa fa-lg">&#xf007;</md-icon>
+                  </md-button>
+                  <md-menu-content>                     
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Написать в техподдержку">
+                             <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Партнерская лента">
+                             <img class = "nmc-img-user-menu" src = "images/partner_rss.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Техническая лента">
+                             <img class = "nmc-img-user-menu" src = "images/tech_rss.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-divider></md-menu-divider>
+                      <md-menu-item>
+                         <md-button ng-if="$ctrl.userInfo.isReadonly != true"
+                               class = "md-icon-button"
+                               ng-click="$ctrl.changePasswordInit()"
+                               title='Сменить пароль'
+                               data-target="#changePasswordModal"
+                               data-toggle="modal">                                
+                             <md-icon md-font-set = "fa fa-lg">&#xf141;</md-icon>
+                         </md-button>
+                      </md-menu-item>
+                      <md-menu-divider></md-menu-divider>
+                      <md-menu-item>
+                         <md-button 
+                            href="../logout" 
+                            ng-click="$ctrl.logOut()" 
+                            title = "Выход"
+                            class = "md-icon-button">
+                             <md-icon md-font-set = "fa fa-lg">&#xf08b;</md-icon>
+                         </md-button>
+                      </md-menu-item>
+                  </md-menu-content>
+              </md-menu>
+              
+          </div>
+      </md-toolbar>
+      
+         <!--change password window-->
+<div id="changePasswordModal" class="modal fade nmc-modal-window" role="dialog"
+    aria-labelledby="changePasswordLabel" tabindex="-1">
+    <div class="modal-dialog  modal-content nmc-modal-dialog">
+        <div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h3 id="changePasswordLabel" class="nmc-h3">
+                Изменение пароля
+            </h3>
+        </div>
+        <div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="viewLogin">Логин</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="$ctrl.userInfo.userName" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTenantPassword">Текущий пароль</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' : !$ctrl.checkPasswordFields($ctrl.userInfo)}">
+                                        <input class="form-control nmc-text-input-form"
+                                               type="password"
+                                               id="inputCurrentUserInfoPassword"
+                                               placeholder=""
+                                               ng-model="$ctrl.userInfo.oldPassword"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTenantPassword">Новый пароль</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' : !$ctrl.checkPasswordFields($ctrl.userInfo)}">
+                                        <input class="form-control nmc-text-input-form"
+                                               type="password"
+                                               id="inputUserInfoPassword"
+                                               placeholder=""
+                                               ng-model="$ctrl.userInfo.newPassword"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="confirmTenantPassword">Подтверждение пароля</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' : !$ctrl.checkPasswordFields($ctrl.userInfo)}">
+                                        <input class="form-control nmc-text-input-form"
+                                               type="password"
+                                               id="confirmUserInfoPassword"
+                                               placeholder="Повторите пароль"
+                                               ng-model="$ctrl.userInfo.newPasswordConfirm"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class = "modal-footer nmc-modal-footer">
+                <div class = "container-fluid  ">
+
+                    <div class = "row">
+                        <div class = "col-xs-offset-6 col-md-3">
+                            <input type = "submit" class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                ng-click = "$ctrl.changeUserPassword($ctrl.userInfo)"
+                                value = "Сохранить" />
+                        </div>
+                        <div class = "pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+                            <button class = "btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+                                ng-click = "exit('#createPasswordModal')">
+                                Отменить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>

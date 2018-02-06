@@ -14,25 +14,31 @@
      */
     //var app = angular.module('portalNMC');
     angular.module('portalNMC')
-        .controller('MainCtrl', mainCtrl);
-        mainCtrl.$inject = [
-            
-            '$rootScope',
-            '$cookies',
-            '$location',
-            'mainSvc',
-            'notificationFactory',
-            '$http',
-            'objectSvc',
-            'reportSvc',
-            'monitorSvc',
-            'logSvc',
-            'APP_LABEL',
-            'settingModeService',
-            '$scope',
-            '$mdSidenav',
-            '$timeout'
-        ];
+        .component('main', {
+            templateUrl: "components/portal-nmc-module/main/main.html",
+            controller: mainCtrl,
+            controllerAs: "mainVm"
+        });
+    
+    mainCtrl.$inject = [
+
+        '$rootScope',
+        '$cookies',
+        '$location',
+        'mainSvc',
+        'notificationFactory',
+        '$http',
+        'objectSvc',
+        'reportSvc',
+        'monitorSvc',
+        'logSvc',
+        'APP_LABEL',
+        'settingModeService',
+        '$scope',
+        '$mdSidenav',
+        '$timeout',
+        'mainHelperService'
+    ];
 
     function mainCtrl(
                        $rootScope,
@@ -49,7 +55,8 @@
                        settingModeService,
                        $scope,
                        $mdSidenav,
-                       $timeout
+                       $timeout,
+                       mainHelperService
                       ) {
         /*jshint validthis: true*/
         var vm = this;
@@ -102,7 +109,7 @@
         });
 
     //  flags for selected menu item                  
-        vm.menuMassive = {};
+        vm.menuMassive = mainHelperService.getLeftMainMenu();
 
         function setPageTitle(pageName) {
             var title = APP_LABEL;
@@ -137,17 +144,10 @@
               if (vm.menuMassive[mkey] === false) {
                   return false;
               }
-              menuFlag = true;          
-              setPageTitle(vm.data.menuLabels[mkey]);
+              menuFlag = true;
+              setPageTitle(vm.data.menuLabels[mkey]);   
               return true;
             });
-    //        for (var k in vm.menuMassive){
-    //          if (vm.menuMassive[k]===false){
-    //              continue;
-    //          };
-    //          menuFlag = true;
-    //          break;
-    //        };
             //if check menu flag is false
             if (!menuFlag){
               vm.setDefaultMenuState();//set default menu
@@ -160,7 +160,7 @@
               window.location.assign("#/");
             }
             if (vm.menuMassive.object_new_menu_item) {
-              window.location.assign("#/objects/newlist");
+                window.location.assign("#/objects/newlist");                
             }
             if (vm.menuMassive.report_menu_item) {
               window.location.assign("#/reports/");
@@ -194,7 +194,7 @@
     //          for (var k in vm.menuMassive){ 
     //              vm.menuMassive[k] = false;
     //          };        
-             vm.menuMassive[menu] = true;         
+             vm.menuMassive[menu] = true;             
              setPageTitle(vm.data.menuLabels[menu]);
         };
 
@@ -297,115 +297,45 @@
 
         vm.getCtx = function () {
           return $rootScope.ctxId;
-        };
-
-        vm.emptyString = mainSvc.checkUndefinedEmptyNullValue;        
+        };                
 
         vm.isTestMode = function () {
     //console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
             return mainSvc.isTestMode();
         };
-
-
-        function errorCallback (e) {
-            console.log(e);
-            notificationFactory.errorInfo("Не удалось сменить пароль!", "Проверьте правильность текущего пароля.");
-        }
-
-    // *****************************************************************************
-    //          work with user password
-    // *****************************************************************************
-        vm.changePasswordInit = function () {            
-            vm.data.userInfo = angular.copy($rootScope.userInfo);
-        };
-
-        vm.checkPasswordFields = function (userInfo) {
-            if (mainSvc.checkUndefinedNull(userInfo)) {
-                return false;
-            }
-            var result = true;
-            if (vm.emptyString(userInfo.oldPassword)) {
-                result = false;
-            }
-            if (vm.emptyString(userInfo.newPassword)) {
-                result = false;
-            }
-            if (userInfo.newPassword !== userInfo.newPasswordConfirm) {
-                result = false;
-            }
-            return result;
-        };
-
-        function checkPassword (userInfo) {
-            if (mainSvc.checkUndefinedNull(userInfo)) {
-                return false;
-            }
-            var result = true;
-            if (vm.emptyString(userInfo.oldPassword)) {
-                notificationFactory.errorInfo("Ошибка", "Поле \"Текущий пароль\" должно быть заполнено!");
-                result = false;
-            }
-            if (vm.emptyString(userInfo.newPassword)) {
-                notificationFactory.errorInfo("Ошибка", "Пароль не должен быть пустым!");
-                result = false;
-            }
-            if (userInfo.newPassword !== userInfo.newPasswordConfirm) {
-                notificationFactory.errorInfo("Ошибка", "Поля \"Пароль\" и \"Подтверждение пароля\" не совпадают!");
-                result = false;
-            }
-            return result;
-        }
-
-          //change user password
-        vm.changeUserPassword = function (userInfo) {
-            if (checkPassword(userInfo) === false) {return "Password is incorrect!";}
-            var url = "../api/systemInfo/passwordChange",
-            params = {
-                oldPassword : userInfo.oldPassword,
-                newPassword : userInfo.newPassword
-            };
-            $http({
-                method: "PUT",
-                url: url,
-                params: params
-            }).then(function () {
-                notificationFactory.success();
-                $('#changePasswordModal').modal('hide');
-            }, errorCallback);
-        };
                            
         vm.menuToggleList = function () {
-            $mdSidenav('left').toggle();
+            $mdSidenav('left-main-menu').toggle();
         };
-                           
-        vm.openUserMenu = function ($mdMenu, ev) {
-            $mdMenu.open(ev);
-        };
-                           
-        vm.startSearch = function () {
-            vm.searchFlag = true;
-            $timeout(function () {
-                var el = document.getElementById("searchInput");
-                el.focus();
-            }, 0);
-        };
-                           
-        vm.cancelSearch = function () {
-            vm.searchFlag = false;
-            vm.mainFilter = "";
-            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
-        };
-                           
-        vm.isObjectsPTree = function () {
-            return vm.menuMassive.object_new_menu_item;
-        };
-                           
-//        vm.mainFiltering = function (filterString) {
-//            $rootScope.$broadcast('mainSearch:filtering', {filter: filterString});
+//                           
+//        vm.openUserMenu = function ($mdMenu, ev) {
+//            $mdMenu.open(ev);
 //        };
-        vm.searching = function () {
-            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
-        };
+//                           
+//        vm.startSearch = function () {
+//            vm.searchFlag = true;
+//            $timeout(function () {
+//                var el = document.getElementById("searchInput");
+//                el.focus();
+//            }, 0);
+//        };
+//                           
+//        vm.cancelSearch = function () {
+//            vm.searchFlag = false;
+//            vm.mainFilter = "";
+//            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
+//        };
+//                           
+//        vm.isObjectsPTree = function () {
+//            return vm.menuMassive.object_new_menu_item;
+//        };
+//                           
+////        vm.mainFiltering = function (filterString) {
+////            $rootScope.$broadcast('mainSearch:filtering', {filter: filterString});
+////        };
+//        vm.searching = function () {
+//            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
+//        };
         
     //    setPageTitle();
 
