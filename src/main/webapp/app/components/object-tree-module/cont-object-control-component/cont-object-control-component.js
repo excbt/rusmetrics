@@ -326,6 +326,11 @@
             });            
         }
         
+        $scope.$on('mainSearch:filtering', function (ev, args) {
+            ctrl.filter = args.filter;
+            ctrl.filterObjects();
+        });
+        
         function getNodeContObjects() {
 //console.log('getNodeContObjects:', getNodeContObjects);            
             var node = $stateParams.node;

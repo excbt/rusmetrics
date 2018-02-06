@@ -392,7 +392,21 @@
                            
         vm.cancelSearch = function () {
             vm.searchFlag = false;
+            vm.mainFilter = "";
+            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
         };
+                           
+        vm.isObjectsPTree = function () {
+            return vm.menuMassive.object_new_menu_item;
+        };
+                           
+//        vm.mainFiltering = function (filterString) {
+//            $rootScope.$broadcast('mainSearch:filtering', {filter: filterString});
+//        };
+        vm.searching = function () {
+            $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
+        };
+        
     //    setPageTitle();
 
     //    function initCtrl () {

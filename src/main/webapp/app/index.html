@@ -79,7 +79,7 @@
           
               <div flex ng-show = "mainVm.searchFlag != true">
 <!--                  <h2 flex>Локальное меню раздела/подраздела главного меню Русметрикс</h2>-->
-                  <tree-node-view-select></tree-node-view-select>
+                  <tree-node-view-select ng-if = "mainVm.isObjectsPTree()"></tree-node-view-select>
 
               </div>
               <md-button class = "md-icon-button" aria-label = "Поиск" 
@@ -90,10 +90,14 @@
                                                
                   <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
 <!--                     <label>Найти</label>-->
-                      <input style = "width: 96%; border-color: white;" id="searchInput" type="text"/>
+                      <input style = "width: 92%; border-color: white;" id="searchInput" type="text" ng-model = "mainVm.mainFilter"/>
                       <div class="button-group">
+                         <md-button class = "md-icon-button md-raised" aria-label = "Найти" 
+                             ng-click = "mainVm.searching()" title = "найти">
+                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>
+                          </md-button>
                           <md-button class = "md-icon-button md-raised" aria-label = "Отмена" 
-                             ng-click = "mainVm.cancelSearch()">
+                             ng-click = "mainVm.cancelSearch()" title = "Отмена">
                               <md-icon>X</md-icon>
                           </md-button>
                       </div>
