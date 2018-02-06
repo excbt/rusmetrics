@@ -167,7 +167,7 @@
             </ol>
 -->
             <span class="nmc-valign-middle" style = "">                
-                <p ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length"
+                <p ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length  && !collapsed"
                    style = "display: inline; margin-left: 40px;">
                     ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
 <!--                    <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">-->
