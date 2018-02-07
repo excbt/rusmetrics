@@ -141,7 +141,7 @@
             {
                 name: 'notices',
                 url: '/notices/list/',
-                templateUrl: 'views/notice.html',
+                templateUrl: 'components/portal-nmc-module/notices/notice.html',
                 controller: 'NoticeCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -153,7 +153,7 @@
             {
                 name: 'noticesMonitor',
                 url: '/notices/monitor/',
-                templateUrl: 'views/monitor.html',
+                templateUrl: 'components/portal-nmc-module/objects/monitor/monitor.html',
                 controller: 'MonitorCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -165,7 +165,7 @@
             {
                 name: 'noticesMonitorMap',
                 url: '/notices/monitor_map/',
-                templateUrl: 'views/monitor_map.html',
+                templateUrl: 'components/portal-nmc-module/objects/monitor-map/monitor-map.html',
                 controller: 'MonitorMapCtrl',
                 resolve: {
                     permissions: ['mainSvc', function (mainSvc) {
