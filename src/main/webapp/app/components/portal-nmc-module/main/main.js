@@ -267,6 +267,8 @@
     //                ctxFlag = true;
     //            }
                 var elDOM = document.getElementById(element.permissionTagId);//.style.display = "block";
+//console.log(element.permissionTagId);                
+//console.log(elDOM);                
                 if (angular.isUndefined(elDOM) || (elDOM === null)) {
                     return;
                 }
@@ -295,14 +297,15 @@
                            
         vm.isCabinet = mainSvc.isCabinet;
 
-        vm.getCtx = function () {
-          return $rootScope.ctxId;
-        };                
+//        vm.getCtx = function () {
+//          return $rootScope.ctxId;
+//        };                
 
-        vm.isTestMode = function () {
-    //console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
-            return mainSvc.isTestMode();
-        };
+        vm.isTestMode = mainSvc.isTestMode;
+//                           function () {
+//    console.log("mainCtrl isTestMode = " + mainSvc.isTestMode());        
+//            return mainSvc.isTestMode();
+//        };
                            
         vm.menuToggleList = function () {
             $mdSidenav('left-main-menu').toggle();

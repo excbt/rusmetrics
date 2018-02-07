@@ -473,8 +473,8 @@ app.service('mainSvc', ['$cookies', '$http', '$rootScope', '$log', 'objectSvc', 
                 if (!isCabinet()) {
                     contextIds.push(externalAllow[0], externalAllow[1]);
                 }
-    //console.log(tmp);            
-                mainSvcSettings.loadingServicePermissionFlag = false;
+//    console.log(tmp);            
+                mainSvcSettings.loadingServicePermissionFlag = false;            
                 $rootScope.$broadcast('servicePermissions:loaded');
             },
                   function (e) {

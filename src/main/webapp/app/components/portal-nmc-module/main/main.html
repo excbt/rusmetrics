@@ -9,7 +9,7 @@
             <md-divider></md-divider>
             <md-list-item>
                 <md-button id="object_main_menu_item"
-                   class="nmc-md-main-menu-item nmc-hide"
+                   class="nmc-md-main-menu-item"
                    ng-class="{'nmc-hide': !mainVm.isCabinet(), 'nmc-show': mainVm.isCabinet()}"
                    href="#/"
                    data-toggle="offcanvas"
@@ -87,9 +87,9 @@
                    <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">Настройки</span>
                 </md-button>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-if = "mainVm.isRma()" ng-cloak>
                 <md-button id = "management_main_menu_item"
-                   class = "nmc-md-main-menu-item nmc-hide"
+                   class = "nmc-md-main-menu-item"
                    ng-class = "{'nmc-hide': !mainVm.isRma(), 'nmc-show': mainVm.isRma()}"
                    href = "#/management/objects/"
                    data-toggle = "offcanvas"
