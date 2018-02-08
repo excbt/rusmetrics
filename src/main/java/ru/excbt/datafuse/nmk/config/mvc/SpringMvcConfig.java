@@ -33,6 +33,7 @@ public class SpringMvcConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		//registry.addResourceHandler("/app").addResourceLocations("/app/index.html");
 		registry.addResourceHandler("/app/**").addResourceLocations("/app/");
+        registry.addResourceHandler("/v2/**").addResourceLocations("/v2/");
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/api/**").addResourceLocations("/resources/");
 		registry.addResourceHandler("/bower_components/**").addResourceLocations("/app/bower_components/");

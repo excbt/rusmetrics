@@ -932,6 +932,11 @@
                                     <directory>src/main/webapp</directory>
                                     <includes>
                                         <include>WEB-INF/**</include>
+                                        <include>app/**</include>
+                                        <include>devTools/**</include>
+                                        <include>jasper/**</include>
+                                        <include>resources/**</include>
+                                        <include>swagger-ui/**</include>
                                     </includes>
                                 </resource>
                             </webResources>
