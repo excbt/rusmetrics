@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true*/
-/*global angular, $*/
+/*global angular, $, document*/
 'use strict';
 var app = angular.module('portalNMC');
 app.controller('ElectricityCtrl', ['$scope', 'mainSvc', 'indicatorSvc', '$location', '$cookies', '$rootScope', '$timeout', function ($scope, mainSvc, indicatorSvc, $location, $cookies, $rootScope, $timeout) {

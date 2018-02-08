@@ -13,7 +13,7 @@
             {
                 name: 'objects',
                 url: '/',
-                templateUrl: 'views/objects_edit.html',
+                templateUrl: 'components/portal-nmc-module/objects/objects-list/objects_edit.html',
                 controller: 'ObjectsCtrl',
                 resolve: {
                     permissions: ['mainSvc', function (mainSvc) {
@@ -110,7 +110,7 @@
             {
                 name: 'demoMap',
                 url: '/objects/demo-map/',
-                templateUrl: 'views/objects_map.html',
+                templateUrl: 'components/portal-nmc-module/objects/objects-map/objects-map.html',
                 controller: 'ObjectsMapCtrl',
                 resolve: {
                     permissions: ['mainSvc', function (mainSvc) {
@@ -121,27 +121,27 @@
             {
                 name: 'energoPassports',
                 url: '/documents/energo-passports/',
-                templateUrl: 'views/documents-energo-passports.html',
+                templateUrl: 'components/portal-nmc-module/energy/documents-energo-passports.html',
                 controller: 'documentsEnergoPassportsCtrl'
             },
             {
                 name: 'energoPassport',
                 url: '/documents/energo-passport/:param',
                 reloadOnSearch: false,
-                templateUrl: 'views/documents-energo-passport.html',
+                templateUrl: 'components/portal-nmc-module/energy/documents-energo-passport.html',
                 controller: 'documentsEnergoPassportCtrl'
             },
             {
                 name: 'objectPassport',
                 url: '/settings/object-passport/:object/:param',
                 reloadOnSearch: false,
-                templateUrl: 'views/documents-object-passport.html',
+                templateUrl: 'components/portal-nmc-module/settings/object-passport/documents-object-passport.html',
                 controller: 'documentsObjectPassportCtrl'
             },
             {
                 name: 'notices',
                 url: '/notices/list/',
-                templateUrl: 'views/notice.html',
+                templateUrl: 'components/portal-nmc-module/notices/notice.html',
                 controller: 'NoticeCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -153,7 +153,7 @@
             {
                 name: 'noticesMonitor',
                 url: '/notices/monitor/',
-                templateUrl: 'views/monitor.html',
+                templateUrl: 'components/portal-nmc-module/objects/monitor/monitor.html',
                 controller: 'MonitorCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -165,7 +165,7 @@
             {
                 name: 'noticesMonitorMap',
                 url: '/notices/monitor_map/',
-                templateUrl: 'views/monitor_map.html',
+                templateUrl: 'components/portal-nmc-module/objects/monitor-map/monitor-map.html',
                 controller: 'MonitorMapCtrl',
                 resolve: {
                     permissions: ['mainSvc', function (mainSvc) {
@@ -173,7 +173,7 @@
                     }]
                 }
             },
-            {
+            /*{
                 name: 'privateOffice',
                 url: '/private/',
                 templateUrl: 'views/private_office.html',
@@ -201,23 +201,23 @@
                 url: '/private/directories/',
                 templateUrl: 'views/directories.html',
                 controller: 'DirectoryCtrl'
-            },
+            },*/
             {
                 name: 'reports',
                 url: '/reports/',
-                templateUrl: 'views/reports_with_cst.html',
+                templateUrl: 'components/portal-nmc-module/reports/reports_with_cst.html',
                 controller: 'ReportsCtrl'
             },
-            {
+            /*{
                 name: 'reportsCommercial',
                 url: '/reports/commercial_report/',
                 templateUrl: 'views/commercial_report.html',
                 controller: 'MainCtrl'
-            },
+            },*/
             {
                 name: 'indicators',
                 url: '/objects/indicators/',
-                templateUrl: 'views/indicators.html',
+                templateUrl: 'components/portal-nmc-module/indicators/water/indicators.html',
                 controller: 'IndicatorsCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -229,7 +229,7 @@
             {
                 name: 'indicatorsElectricity',
                 url: '/objects/indicator-electricity/',
-                templateUrl: 'views/indicator-electricity.html',
+                templateUrl: 'components/portal-nmc-module/indicators/electricity/indicator-electricity.html',
                 controller: 'ElectricityCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -241,7 +241,7 @@
             {
                 name: 'indicatorsImpulse',
                 url: '/objects/impulse-indicators/',
-                templateUrl: 'views/impulse-indicators.html',
+                templateUrl: 'components/portal-nmc-module/indicators/impulse/impulse-indicators.html',
                 controller: 'ImpulseIndicatorsCtrl',
                 reloadOnSearch: false,
                 resolve: {
@@ -253,85 +253,85 @@
             {
                 name: 'settigsTariffs',
                 url: '/settings/tariffs/',
-                templateUrl: 'views/tariffs.html',
+                templateUrl: 'components/portal-nmc-module/settings/tariffs/tariffs.html',
                 controller: 'TariffsCtrl'
             },
             {
                 name: 'settigsParamsets',
                 url: '/settings/paramsets/',
-                templateUrl: 'views/param_sets.html',
+                templateUrl: 'components/portal-nmc-module/settings/param-sets/param_sets.html',
                 controller: 'ParamSetsCtrl'
             },
             {
                 name: 'settigsDelivery',
                 url: '/settings/delivery/',
-                templateUrl: 'views/delivery.html',
+                templateUrl: 'components/portal-nmc-module/settings/delivery/delivery.html',
                 controller: 'DlvrCtrl'
             },
             {
                 name: 'settigsContacts',
                 url: '/settings/contacts/',
-                templateUrl: 'views/contacts.html',
+                templateUrl: 'components/portal-nmc-module/settings/contacts/contacts.html',
                 controller: 'ContactsCtrl'
             },
             {
                 name: 'settigsObjectGroups',
                 url: '/settings/object_groups/',
-                templateUrl: 'views/object_groups.html',
+                templateUrl: 'components/portal-nmc-module/settings/object-groups/object-groups.html',
                 controller: 'ObjectGroupsCtrl'
             },
             {
                 name: 'settigsUsers',
                 url: '/settings/users/',
-                templateUrl: 'views/settings-users.html',
+                templateUrl: 'components/portal-nmc-module/settings/users/settings-users.html',
                 controller: 'SettingsUsersCtrl'
             },
             {
                 name: 'settigsManagementServices',
                 url: '/settings/management_services',
-                templateUrl: 'views/management-services.html',
+                templateUrl: 'components/portal-nmc-module/settings/services/management-services.html',
                 controller: 'ManagementServicesCtrl'
             },
             {
                 name: 'settigsNotices',
                 url: '/settings/notices',
-                templateUrl: 'views/settings-notices.html',
+                templateUrl: 'components/portal-nmc-module/settings/notices/settings-notices.html',
                 controller: 'SettingsNoticesCtrl'
             },
             {
                 name: 'settigsTenants',
                 url: '/settings/tenants/',
-                templateUrl: 'views/settings-tenants.html',
+                templateUrl: 'components/portal-nmc-module/settings/tenants/settings-tenants.html',
                 controller: 'SettingsTenantsCtrl'
             },
             {
                 name: 'settigsObjectTrees',
                 url: '/settings/object_trees/',
-                templateUrl: 'views/settings-object-trees.html',
+                templateUrl: 'components/portal-nmc-module/settings/object-trees/settings-object-trees.html',
                 controller: 'SettingsObjectTreesCtrl'
             },
             {
                 name: 'settigsProgram',
                 url: '/settings/program',
-                templateUrl: 'views/settings-program.html',
+                templateUrl: 'components/portal-nmc-module/settings/program/settings-program.html',
                 controller: 'SettingsProgramCtrl'
             },
             {
                 name: 'settigsMeterPeriodSetting',
                 url: '/settings/meter-period-setting/',
-                templateUrl: 'views/settings-meter-period-setting.html',
+                templateUrl: 'components/portal-nmc-module/settings/meter-periods/settings-meter-period-setting.html',
                 controller: 'SettingsMeterPeriodSettingCtrl'
             },
             {
                 name: 'settigsObjectView',
                 url: '/settings/object-view/',
-                templateUrl: 'views/settings-object-view.html',
+                templateUrl: 'components/portal-nmc-module/settings/object-views/settings-object-view.html',
                 controller: 'SettingsObjectViewCtrl'
             },
             {
                 name: 'settigsAboutProgram',
                 url: '/settings/about-program/',
-                templateUrl: 'views/about-program.html',
+                templateUrl: 'components/portal-nmc-module/settings/about-program/about-program.html',
                 controller: 'AboutProgramCtrl',
                 resolve: {
                     allow: ['mainSvc', '$q', '$location', function (mainSvc, $q, $location) {
@@ -349,7 +349,7 @@
             {
                 name: 'managementObjects',
                 url: '/management/objects/',
-                templateUrl: 'views/management-rma-objects.html',
+                templateUrl: 'components/portal-nmc-module/management/objects/management-rma-objects.html',
                 controller: 'MngmtObjectsCtrl',
                 resolve: {
                     rsoOrgs: ['objectSvc', function (objectSvc) {
@@ -363,75 +363,75 @@
             {
                 name: 'managementClients',
                 url: '/management/clients/',
-                templateUrl: 'views/management-rma-clients.html',
+                templateUrl: 'components/portal-nmc-module/management/clients/management-rma-clients.html',
                 controller: 'MngmtClientsCtrl'
             },
             {
                 name: 'managementDatasources',
                 url: '/management/datasources/',
-                templateUrl: 'views/management-rma-data-sources.html',
+                templateUrl: 'components/portal-nmc-module/management/data-sources/management-rma-data-sources.html',
                 controller: 'MngmtDatasourcesCtrl'
             },
             {
                 name: 'managementDevices',
                 url: '/management/devices/',
-                templateUrl: 'views/management-rma-devices.html',
+                templateUrl: 'components/portal-nmc-module/management/devices/management-rma-devices.html',
                 controller: 'MngmtDevicesCtrl'
             },
             {
                 name: 'managementUsers',
                 url: '/management/users/',
-                templateUrl: 'views/management-rma-users.html',
+                templateUrl: 'components/portal-nmc-module/management/users/management-rma-users.html',
                 controller: 'MngmtUsersCtrl'
             },
             {
                 name: 'managementPrice',
                 url: '/management/price/',
-                templateUrl: 'views/management-rma-price.html',
+                templateUrl: 'components/portal-nmc-module/management/prices/management-rma-price.html',
                 controller: 'MngmtPriceCtrl'
             },
             {
                 name: 'managementOrganizations',
                 url: '/management/organizations/',
-                templateUrl: 'views/management-rma-organizations.html',
+                templateUrl: 'components/portal-nmc-module/management/organizations/management-rma-organizations.html',
                 controller: 'MngmtOrganizationsCtrl'
             },
             {
                 name: 'managementTempSch',
                 url: '/management/temp-sch/',
-                templateUrl: 'views/management-rma-temp-sch.html',
+                templateUrl: 'components/portal-nmc-module/management/temperature-schedules/management-rma-temp-sch.html',
                 controller: 'TempSchCtrl'
             },
             {
                 name: 'managementModems',
                 url: '/management/modems/',
-                templateUrl: 'views/management-rma-modems.html',
+                templateUrl: 'components/portal-nmc-module/management/modems/management-rma-modems.html',
                 controller: 'MngmtModemsCtrl'
             },
             {
                 name: 'managementDeviceModels',
                 url: '/management/device-models/',
-                templateUrl: 'views/management-rma-device-models.html',
+                templateUrl: 'components/portal-nmc-module/management/device-models/management-rma-device-models.html',
                 controller: 'MngmtDeviceModelsController'
             },
             {
                 name: 'logSessionLog',
                 url: '/log/session-log/',
-                templateUrl: 'views/log-view-resizable-paged.html',
+                templateUrl: 'components/portal-nmc-module/logs/log-view-resizable-paged.html',
                 controller: 'LogViewCtrl'
             },
             {
                 name: 'logSmsLog',
                 url: '/log/sms-log/',
-                templateUrl: 'views/log-sms.html',
+                templateUrl: 'components/portal-nmc-module/logs/log-sms.html',
                 controller: 'LogSmsCtrl'
-            },
+            }/*,
             {
                 name: 'test',
                 url: '/test/',
                 templateUrl: 'views/test.html',
                 controller: 'testCtrl'
-            }
+            }*/
 
         ];
     //console.log(states);
