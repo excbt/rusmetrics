@@ -50,7 +50,7 @@
 
 body{
 /*    min-width: 1200px !important;*/
-    color: rgb(95,95,95) !important;
+/*    color: rgb(95,95,95) !important;*/
 }
 
 /********************
@@ -346,7 +346,7 @@ body{
 /*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
-    padding-top: 10px;
+    padding-top: 0px;
     height: 92vh;
     overflow-y: hidden;
 /*	height: 85%;*/
@@ -3345,4 +3345,45 @@ div.nmc-energy-simple-line > div {
 .nmc-p-tree-status-img {
     max-width: 12px;
     max-height: 12px;
+}
+
+/*Material: toolbar*/
+.nmc-md-main-toolbar-n {
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;
+}
+
+.nmc-md-toolbar-n {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+}
+
+.nmc-md-toolbar-n > .md-toolbar-tools {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+}
+
+.nmc-md-toolbar-n > .md-toolbar-tools > .md-button {
+    height: 25px;
+    min-height: 25px;
+    max-height: 25px;
+    padding-top: 4px;
+}
+
+.nmc-md-toolbar-n > .md-toolbar-tools > .md-menu >.md-button {
+    height: 25px;
+    min-height: 25px;
+    max-height: 25px;
+    padding-top: 4px;
+}
+
+.md-button.md-icon-button.md-raised.nmc-md-ltb-btn, .nmc-md-ltb-btn {
+    min-height: 25px; 
+    height: 25px; 
+    padding-top: 5px;
+    background: transparent;
+    border-radius: 0;
 }

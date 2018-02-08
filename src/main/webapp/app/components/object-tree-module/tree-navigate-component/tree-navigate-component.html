@@ -6,14 +6,17 @@
                 <div class="row nmc-main-workspace-header marginBottom5"
                      ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}">
                      <div class = "col-xs-12">
-                       <md-toolbar layout = "row" style = "background: rgb(231,235,245)">
+                       <md-toolbar layout = "row" class = "md-hue-1 nmc-md-toolbar-n">
+<!--                           style = "background: rgb(231,235,245)">-->
                            <div class = "md-toolbar-tools">
                                <div flex>
                                     <md-menu md-offset = "0 60">
-                                          <md-button class = "md-icon-button"
+                                          <md-button class = "md-icon-button md-raised nmc-md-ltb-btn"
                                                ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
-                                               aria-label = "Выбор представления">
-                                                <md-icon md-font-set = "fa fa-lg">&#xf1bb;</md-icon>
+                                               aria-label = "Выбор иерархии"
+                                               
+                                               >
+                                                <md-icon md-font-set = "fa fa-sm">&#xf1bb;</md-icon>
                                           </md-button>
                                           <md-menu-content>                     
                                               <md-menu-item ng-repeat = "tree in $ctrl.data.trees track by $index">

@@ -11,11 +11,12 @@
 
     </select>
 -->
-    <md-menu md-offset = "0 60" ng-disabled = "$ctrl.widgetSelectDisabled()">
-          <md-button class = "md-icon-button"
+    <md-menu md-offset = "0 30" ng-disabled = "$ctrl.widgetSelectDisabled()">
+          <md-button class = "md-icon-button md-raised nmc-md-ltb-btn"
                ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
-               aria-label = "Выбор представления">
-                <md-icon md-font-set = "fa fa-lg">&#xf0ca;</md-icon>
+               aria-label = "Выбор представления"
+               >
+                <md-icon md-font-set = "fa fa-sm">&#xf0ca;</md-icon>
           </md-button>
           <md-menu-content>                     
               <md-menu-item ng-repeat = "widget in $ctrl.nodeWidgets">

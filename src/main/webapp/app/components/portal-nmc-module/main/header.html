@@ -1,4 +1,5 @@
-      <md-toolbar layout = "row" style = "background-color: #f0f0f0">
+      <md-toolbar layout = "row" class = "nmc-md-toolbar-n">
+<!--         style = "background-color: #f0f0f0">-->
          <div class = "md-toolbar-tools" ng-init = "$ctrl.searchFlag = false" >
              <md-button class = "menu md-icon-button" ng-click="$ctrl.menuToggleList()">
                  <md-icon md-svg-icon="menu"></md-icon>
@@ -15,13 +16,14 @@
               <div flex ng-show = "$ctrl.searchFlag == true" >
                                                
                   <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
-                      <input style = "width: 92%; border-color: white;" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+                      <input style = "width: 90%; border-color: white;" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
                       <div class="button-group">
-                         <md-button class = "md-icon-button md-raised" aria-label = "Найти" 
+                         <md-button class = "md-raised" aria-label = "Найти" 
                              ng-click = "$ctrl.searching()" title = "найти">
-                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>
+<!--                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>-->
+                             Найти
                           </md-button>
-                          <md-button class = "md-icon-button md-raised" aria-label = "Отмена" 
+                          <md-button class = "md-fab md-mini" aria-label = "Отмена" 
                              ng-click = "$ctrl.cancelSearch()" title = "Отмена">
                               <md-icon>X</md-icon>
                           </md-button>
