@@ -1,4 +1,5 @@
-<div class = "">
+<div>
+<!--
     <label style = "font-size: 14px;">
         Представление:
     </label>
@@ -9,4 +10,21 @@
       ng-disabled = "$ctrl.widgetSelectDisabled()">
 
     </select>
+-->
+    <md-menu md-offset = "0 60" ng-disabled = "$ctrl.widgetSelectDisabled()">
+          <md-button class = "md-icon-button"
+               ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
+               aria-label = "Выбор представления">
+                <md-icon md-font-set = "fa fa-lg">&#xf0ca;</md-icon>
+          </md-button>
+          <md-menu-content>                     
+              <md-menu-item ng-repeat = "widget in $ctrl.nodeWidgets">
+                  <md-button class = "md-raised" ng-attr-title = "{{widget.caption}}"
+                      ng-click = "$ctrl.changeWidget(widget)">
+<!--                     <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>-->
+                     {{widget.caption}}
+                  </md-button>
+              </md-menu-item>
+        </md-menu-content>
+    </md-menu>
 </div>

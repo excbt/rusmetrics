@@ -1,8 +1,35 @@
+   <md-toolbar layout = "row" style = "background: rgb(231,235,245)">
+       <div class = "md-toolbar-tools">
+           <div flex>
+              <tree-node-view-select></tree-node-view-select>
+          </div>
+<!--
+          <div flex>
+            <md-menu md-offset = "0 60" ng-disabled = "$ctrl.widgetSelectDisabled()">
+                  <md-button class = "md-icon-button"
+                       ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
+                       aria-label = "Выбор представления">
+                        <md-icon md-font-set = "fa fa-lg">&#xf0ca;</md-icon>
+                  </md-button>
+                  <md-menu-content>                     
+                      <md-menu-item ng-repeat = "widget in $ctrl.nodeWidgets">
+                          <md-button class = "md-raised" ng-attr-title = "{{widget.caption}}"
+                              ng-click = "$ctrl.changeWidget(widget)">            
+                             {{widget.caption}}
+                          </md-button>
+                      </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+          </div>
+-->
+       </div>
+    </md-toolbar>
+    
 <div>    
     <div class = "container-fluid">
 <!--
-        <div class = "row">
-            <div class = "col-xs-6" style = "position: absolute; z-index: 1">
+        <div class = "row">            
+            <div class = "col-xs-6">
                 <div class = "">
                     <label>
                         Представление:

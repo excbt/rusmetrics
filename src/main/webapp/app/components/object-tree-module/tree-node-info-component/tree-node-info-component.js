@@ -40,6 +40,10 @@
         ctrl.widgetSelectDisabled = function () {
             return ctrl.node === null;
         };
+        
+        ctrl.openUserMenu = function ($mdMenu, ev) {
+            $mdMenu.open(ev);
+        };
     }
     
 })();

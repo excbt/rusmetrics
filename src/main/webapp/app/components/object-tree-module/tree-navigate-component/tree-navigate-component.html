@@ -4,10 +4,33 @@
         <div class = "row">
             <div class="noPadding paddingRight10 paddingLeft20" ng-show="$ctrl.objectCtrlSettings.isTreeView == true">
                 <div class="row nmc-main-workspace-header marginBottom5"
-                     ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}"
-                     style = "padding-left: 33px;"
-                     >
-                    <div class="col-xs-6">
+                     ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}">
+                     <div class = "col-xs-12">
+                       <md-toolbar layout = "row" style = "background: rgb(231,235,245)">
+                           <div class = "md-toolbar-tools">
+                               <div flex>
+                                    <md-menu md-offset = "0 60">
+                                          <md-button class = "md-icon-button"
+                                               ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
+                                               aria-label = "Выбор представления">
+                                                <md-icon md-font-set = "fa fa-lg">&#xf1bb;</md-icon>
+                                          </md-button>
+                                          <md-menu-content>                     
+                                              <md-menu-item ng-repeat = "tree in $ctrl.data.trees track by $index">
+                                                  <md-button class = "md-raised" ng-attr-title = "{{tree.objectName}}"
+                                                      ng-click = "$ctrl.loadTree(tree); $ctrl.objectCtrlSettings.isFullObjectView = false">
+                                <!--                     <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>-->
+                                                     {{tree.objectName}}
+                                                  </md-button>
+                                              </md-menu-item>
+                                        </md-menu-content>
+                                    </md-menu>
+                               </div>
+                           </div>
+                         </md-toolbar>
+                         
+                     </div>
+                    <div class="col-xs-6 nmc-hide">
                         <div class="btn-group">
                               <button
                                      title="Иерархии объектов"

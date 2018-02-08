@@ -48,6 +48,9 @@
         ctrl.widgetSelectDisabled = function () {
             return ctrl.node === null;
         };
+        ctrl.openUserMenu = function ($mdMenu, ev) {
+            $mdMenu.open(ev);
+        };
         
         $scope.$on('treeNav:selectPNode', function (ev, args) {
             performInputData(args.node);

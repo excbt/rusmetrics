@@ -1,11 +1,11 @@
-      <md-toolbar layout = "row">
+      <md-toolbar layout = "row" style = "background-color: #f0f0f0">
          <div class = "md-toolbar-tools" ng-init = "$ctrl.searchFlag = false" >
              <md-button class = "menu md-icon-button" ng-click="$ctrl.menuToggleList()">
                  <md-icon md-svg-icon="menu"></md-icon>
              </md-button>
           
               <div flex ng-show = "$ctrl.searchFlag != true">
-                  <tree-node-view-select ng-if = "$ctrl.isObjectsPTree()"></tree-node-view-select>
+<!--                  <tree-node-view-select ng-if = "$ctrl.isObjectsPTree()"></tree-node-view-select>-->
 
               </div>
               <md-button class = "md-icon-button" aria-label = "Поиск" 

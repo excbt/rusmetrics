@@ -581,8 +581,8 @@
             }
             
             if (ctrl.data.selectedPNode !== item) {
-//                $state.go(TREE_NODE_INFO_STATE_NAME, {node: item});
-                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(item)});
+                $state.go(TREE_NODE_INFO_STATE_NAME, {node: item});
+//                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(item)});
             }
 
             item.isSelected = true;
@@ -606,11 +606,15 @@
 
         };
         
+        ctrl.openUserMenu = function ($mdMenu, ev) {
+            $mdMenu.open(ev);
+        };
+        
         ctrl.$onInit = function () {
             ctrl.data.selectedPNode = treeNavSvc.getPTreeSelectedNode();
             if (ctrl.data.selectedPNode !== null) {
-//                $state.go(TREE_NODE_INFO_STATE_NAME, {node: ctrl.data.selectedPNode});
-                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(ctrl.data.selectedPNode)});
+                $state.go(TREE_NODE_INFO_STATE_NAME, {node: ctrl.data.selectedPNode});
+//                $rootScope.$broadcast('treeNav:selectPNode', {node: angular.copy(ctrl.data.selectedPNode)});
             }
             getWidgetList();
             checkTreeSettingsAndGetObjectsData();
