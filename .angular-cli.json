@@ -19,11 +19,16 @@
         "prefix": "jhi",
         "mobile": false,
         "styles": [
-            "content/css/vendor.css",
-            "content/css/global.css"
+            "content/scss/vendor.scss",
+            "content/scss/global.scss"
         ],
         "scripts": []
     }],
+    "e2e": {
+        "protractor": {
+            "config": "src/test/javascript/protractor.conf.js"
+        }
+    },
     "lint": [{
             "project": "../../../tsconfig.json"
         },
@@ -37,7 +42,7 @@
         }
     },
     "defaults": {
-        "styleExt": "css",
+        "styleExt": "scss",
         "prefixInterfaces": false,
         "component" : {
             "inlineStyle" : true,
