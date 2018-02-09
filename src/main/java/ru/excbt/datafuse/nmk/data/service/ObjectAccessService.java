@@ -516,6 +516,22 @@ public class ObjectAccessService {
         return result;
     }
 
+    public List<DeviceObject> findAllContObjectDeviceObjects(Long subscriberId) {
+
+        List<DeviceObject> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findDeviceObjectsBySubscriber(subscriberId);// contZPointAccessRepository.findAllDeviceObjects(subscriberId);
+        } else {
+            result = subscrContObjectRepository.selectDeviceObjects(subscriberId);
+        }
+
+//        result.forEach(i -> {
+//            i.loadLazyProps();
+//        });
+
+        return result;
+    }
+
 
 
     public List<Tuple> findAllContZPointDeviceObjectsEx (Long subscriberId, List<String> deviceObjectNumbers) {
