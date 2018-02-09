@@ -2761,6 +2761,9 @@ tr.nmc-bg-distinguish > td {
 .paddingLeft0 {
     padding-left: 0;
 }
+.paddingLeft0I {
+    padding-left: 0 !important;
+}
 
 .paddingLeft5 {
     padding-left: 5px;
@@ -2768,6 +2771,9 @@ tr.nmc-bg-distinguish > td {
 
 .paddingLeft10 {
     padding-left: 10px;
+}
+.paddingLeft10I {
+    padding-left: 10px !important;
 }
 
 .paddingLeft15 {
@@ -3351,6 +3357,11 @@ div.nmc-energy-simple-line > div {
 .nmc-md-main-toolbar-n {
     height: 35px;
     min-height: 35px;
+    max-height: 35px;    
+}
+.nmc-md-main-toolbar-n > .md-toolbar-tools {
+    height: 35px;
+    min-height: 35px;
     max-height: 35px;
 }
 
@@ -3358,6 +3369,7 @@ div.nmc-energy-simple-line > div {
     height: 32px;
     min-height: 32px;
     max-height: 32px;
+    border: 1px solid #41719c;
 }
 
 .nmc-md-toolbar-n > .md-toolbar-tools {
@@ -3365,25 +3377,38 @@ div.nmc-energy-simple-line > div {
     min-height: 32px;
     max-height: 32px;
 }
-
-.nmc-md-toolbar-n > .md-toolbar-tools > .md-button {
+/*Material: toolbar buttons*/
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-button {
     height: 25px;
     min-height: 25px;
     max-height: 25px;
     padding-top: 4px;
+/*    border: 1px solid #41719c;*/
 }
 
-.nmc-md-toolbar-n > .md-toolbar-tools > .md-menu >.md-button {
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-button md-icon {
+/*    color: rgb(95, 95, 95);*/
+}
+
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-menu >.md-button {
     height: 25px;
     min-height: 25px;
     max-height: 25px;
     padding-top: 4px;
+/*    border: 1px solid #41719c;*/
 }
 
-.md-button.md-icon-button.md-raised.nmc-md-ltb-btn, .nmc-md-ltb-btn {
+.md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
     min-height: 25px; 
     height: 25px; 
     padding-top: 5px;
     background: transparent;
     border-radius: 0;
+/*    border: 1px solid #41719c;*/
+    margin-bottom: 3px;
+}
+
+.md-button.md-icon-button.nmc-md-ltb-btn > .md-icon, .nmc-md-ltb-btn md-icon {
+    color: rgb(95, 95, 95) !important;
+    fill: rgb(95, 95, 95) !important;
 }

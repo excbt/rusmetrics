@@ -5,18 +5,20 @@
             <div class="noPadding paddingRight10 paddingLeft20" ng-show="$ctrl.objectCtrlSettings.isTreeView == true">
                 <div class="row nmc-main-workspace-header marginBottom5"
                      ng-class="{'nmc-hide':$ctrl.treeLoading, 'nmc-show':!$ctrl.treeLoading}">
-                     <div class = "col-xs-12">
+                     <div class = "col-xs-12 paddingLeft0">
                        <md-toolbar layout = "row" class = "md-hue-1 nmc-md-toolbar-n">
 <!--                           style = "background: rgb(231,235,245)">-->
-                           <div class = "md-toolbar-tools">
+                           <div class = "md-toolbar-tools paddingLeft10I">
                                <div flex>
-                                    <md-menu md-offset = "0 60">
-                                          <md-button class = "md-icon-button md-raised nmc-md-ltb-btn"
+                                    <md-menu md-offset = "0 32">
+                                          <md-button class = "md-icon-button nmc-md-ltb-btn"
                                                ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
                                                aria-label = "Выбор иерархии"
                                                
                                                >
-                                                <md-icon md-font-set = "fa fa-sm">&#xf1bb;</md-icon>
+                                                <md-icon md-font-set = "fa fa-sm">&#xf036;</md-icon>
+                                                
+<!--                                                f1bb-->
                                           </md-button>
                                           <md-menu-content>                     
                                               <md-menu-item ng-repeat = "tree in $ctrl.data.trees track by $index">
