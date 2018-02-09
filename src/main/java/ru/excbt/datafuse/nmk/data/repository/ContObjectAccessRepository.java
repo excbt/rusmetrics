@@ -119,7 +119,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         " WHERE dev.contObject.id IN (SELECT a.contObjectId FROM ContObjectAccess a " +
         " WHERE a.subscriberId = :subscriberId )" +
         " ORDER BY dev.contObject.fullAddress, dev.contObject.id")
-    List<DeviceObject> findDeviceObjectsBySubscriber(@Param("subscriberId") Long subscriberId);
+    List<DeviceObject> selectDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 
     @Query("SELECT co.id, co.name, co.fullName, co.currentSettingMode " +
