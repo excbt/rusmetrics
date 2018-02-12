@@ -9,27 +9,41 @@
 <!--                  <tree-node-view-select ng-if = "$ctrl.isObjectsPTree()"></tree-node-view-select>-->
 
               </div>
+              
+              <div flex ng-show = "$ctrl.searchFlag == true" >
+                                               
+                  <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
+                      <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+                      <div class="button-group">
+<!--
+                         <md-button class = "nmc-md-ltb-btn" aria-label = "Найти" 
+                             ng-click = "$ctrl.searching()" title = "найти">
+                             Найти
+                          </md-button>
+-->
+                          <a style = "text-decoration: underline; margin-left: 5px; cursor: pointer; color: rgb(95, 95, 95);"
+                             ng-click = "$ctrl.searching()" title = "найти">
+                              Найти
+                          </a>
+<!--
+                          <md-button class = "md-icon-button nmc-md-ltb-btn" aria-label = "Отмена" 
+                             ng-click = "$ctrl.cancelSearch()" title = "Отмена">
+                              <md-icon>X</md-icon>
+                          </md-button>
+-->
+<!--
+                          <md-button class = "md-icon-button nmc-md-ltb-btn" aria-label = "Поиск" 
+                                 ng-click = "$ctrl.startSearch()">
+                              <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+                          </md-button>
+-->
+                      </div>
+                  </md-input-container>
+              </div>
               <md-button class = "md-icon-button nmc-md-ltb-btn" aria-label = "Поиск" 
                      ng-click = "$ctrl.startSearch()">
                   <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
               </md-button>
-              <div flex ng-show = "$ctrl.searchFlag == true" >
-                                               
-                  <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
-                      <input style = "width: 90%; border-color: white;" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
-                      <div class="button-group">
-                         <md-button class = "md-icon-button md-raised nmc-md-ltb-btn" aria-label = "Найти" 
-                             ng-click = "$ctrl.searching()" title = "найти">
-<!--                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>-->
-                             Найти
-                          </md-button>
-                          <md-button class = "md-icon-button md-raised nmc-md-ltb-btn" aria-label = "Отмена" 
-                             ng-click = "$ctrl.cancelSearch()" title = "Отмена">
-                              <md-icon>X</md-icon>
-                          </md-button>
-                      </div>
-                  </md-input-container>
-              </div>
               <md-menu md-offset = "0 60">
                   <md-button class = "md-icon-button nmc-md-ltb-btn"
                        ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
