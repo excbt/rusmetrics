@@ -89,7 +89,29 @@
         });
         
         $mdIconProvider.icon("menu", "./assets/svg/menu.svg");
-        $mdThemingProvider.theme('default').primaryPalette('grey');
+        
+        $mdThemingProvider.definePalette('nmc', {
+            '50': '#387ef5',/*'#fafafa',*/
+            '100': '#387ef5',/*'#f5f5f5',*/
+            '200': '#387ef5',/*'#eeeeee',*/
+            '300': 'rgb(231,235,245)',/*'#e0e0e0',*/ /*hue-1*/
+            '400': '#ef473a',/*'#bdbdbd',*/ 
+            '500': '#f0f0f0', /*'#9e9e9e',*/ /*default*/
+            '600': '#757575',
+            '700': '#616161',
+            '800': '#424242',
+            '900': '#212121',
+            'A100': '#ffffff',
+            'A200': '#000000',
+            'A400': '#303030',
+            'A700': '#616161',
+            'contrastDefaultColor': 'dark',
+            'contrastLightColors': '600 700 800 900 A200 A400 A700'
+        });
+        
+        $mdThemingProvider.theme('default').primaryPalette('nmc', {
+            
+        });
 //        $mdAriaProvider.disableWarnings();
     }
 

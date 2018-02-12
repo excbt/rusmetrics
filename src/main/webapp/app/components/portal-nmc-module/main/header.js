@@ -27,7 +27,11 @@
             $mdMenu.open(ev);
         };
                            
-        vm.startSearch = function () {
+        vm.startSearch = function () {            
+            if (vm.searchFlag) {
+                vm.cancelSearch();
+                return;
+            }
             vm.searchFlag = true;
             $timeout(function () {
                 var el = document.getElementById("searchInput");
@@ -35,7 +39,7 @@
             }, 0);
         };
                            
-        vm.cancelSearch = function () {
+        vm.cancelSearch = function () {            
             vm.searchFlag = false;
             vm.mainFilter = "";
             $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
@@ -54,6 +58,9 @@
 //            $rootScope.$broadcast('mainSearch:filtering', {filter: filterString});
 //        };
         vm.searching = function () {
+            if (vm.mainFilter === null || vm.mainFilter === '') {
+                return false;
+            }
             $rootScope.$broadcast('mainSearch:filtering', {filter: vm.mainFilter});
         };
                 function errorCallback (e) {
