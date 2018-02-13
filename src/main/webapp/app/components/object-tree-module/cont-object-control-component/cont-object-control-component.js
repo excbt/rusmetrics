@@ -45,6 +45,10 @@
         
         var contObjectCtrlSvc = contObjectControlComponentService;
         
+        function setImgFilter(column) {
+            
+        }
+        
         ctrl.columns = [
             {
                 name: "caption",
