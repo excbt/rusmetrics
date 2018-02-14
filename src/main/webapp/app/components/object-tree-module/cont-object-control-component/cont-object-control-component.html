@@ -83,7 +83,8 @@
                         ng-click = "$ctrl.setFilterBy(column.name)">
                     </i>
 -->
-                    <div class="btn-group">
+                    <div  ng-if = "column.type === 'img'"
+                       class="btn-group">
                         <i  
                             title = "фильтр" 
                             type = "button" 
@@ -91,8 +92,9 @@
                             data-toggle = "dropdown" 
                             aria-haspopup = "true" 
                             aria-expanded = "false"
-                            ng-click = "$ctrl.setFilterBy(column)" 
+                            
                         >
+                        
 <!--
                             <i ng-if = "true"
                                class = "glyphicon glyphicon-filter"
@@ -100,23 +102,36 @@
                             </i>
 -->
                         </i>
-                      <ul ng-if = "column.type === 'img'"
+                      <ul
                         class="dropdown-menu" >
+<!--                        <li style="color: rgb(95, 95, 95)">test IMG</li>-->
                         <li ng-repeat = "fvalue in column.filterValues track by $index">
-<!--                            <a href="">{{fvalue.caption}}</a>-->
-                            <img 
+                            <a href=""
+                              ng-click = "$ctrl.setColorFilter(column, fvalue)">
+                               <img 
                                 class = "marginRight2 nmc-p-tree-status-img" 
                                 ng-src = "{{fvalue}}"
                                 />
+                            </a>
+                            
                         </li>                        
                       </ul>
-                      <ul ng-if = "column.type !== 'img'"
+<!--
+                      <ul ng-if = "column.type === 'img'"
                         class="dropdown-menu" >
-                        <li ng-repeat = "fvalue in column.filterValues track by $index">
-                            {{fvalue}}
+                          <li style="color: rgb(95, 95, 95)">Test no img</li>
+                        <li 
+                           style="color: rgb(95, 95, 95)" ng-repeat = "fvalue in column.filterValues track by $index">
+                            <a>{{fvalue}}</a>
                         </li>                        
                       </ul>
+-->
                     </div>
+                    <i ng-if = "column.setFilterFlag"
+                       class = "glyphicon glyphicon-remove"
+                       ng-click = "$ctrl.removeColorFilter(column)">
+                        
+                    </i>
                 </th>
             </tr>
     </table>
@@ -147,7 +162,6 @@
                <td>
                    <table>
                        <tr>
-               
                             <td class = "col-xs-1 nmc-td-for-button-object-control">                  
                                <i class = "btn glyphicon pull-right"
                                  ng-class = "{'glyphicon-chevron-right': !object.showWidgetFlag, 'glyphicon-chevron-down': object.showWidgetFlag}"
