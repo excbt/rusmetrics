@@ -20,7 +20,7 @@
                $timeout(function () {
                    var tbl = angular.element(element)[0];
                    var elm = tbl.rows[args.index + 1];  // +1 - if table with header                
-                   elm.scrollIntoView();
+                   elm.scrollIntoView({block: "start", behavior: "smooth"});
                }); 
             });
         }
