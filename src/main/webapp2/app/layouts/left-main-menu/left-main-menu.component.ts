@@ -1,11 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+// import { Router } from '@angular/router';
 import { ViewEncapsulation } from '@angular/core';
 import { Subscription } from 'rxjs/Subscription';
-import { SidebarModule } from 'primeng/sidebar';
-import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
-
+// import { SidebarModule } from 'primeng/sidebar';
+// import { MatListModule } from '@angular/material/list';
+// import { MatButtonModule } from '@angular/material/button';
 import { MainMenuService } from './main-menu.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class LeftMainMenuComponent implements OnInit, OnDestroy {
 
   constructor(
     private mainMenuService: MainMenuService,
-    private router: Router
+    // private router: Router
   ) {
     this.mainMenuTogleSubscription = this.mainMenuService.toggleMenuSubject$.subscribe(
       (displayState: Boolean) => {

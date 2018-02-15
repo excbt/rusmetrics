@@ -33,10 +33,10 @@ import { StateStorageService } from './shared/auth/state-storage.service';
 import {
     JhiMainComponent,
     LeftMainMenuComponent,
-    // FooterComponent,
+    FooterComponent,
     ProfileService,
     MainMenuService,
-    // PageRibbonComponent,
+    PageRibbonComponent,
     ActiveMenuDirective,
     ErrorComponent,
     HeaderbarComponent
@@ -70,9 +70,9 @@ import {
         LeftMainMenuComponent,
 //        ClassifiersHomeComponent,
         ErrorComponent,
-        // PageRibbonComponent,
-        ActiveMenuDirective
-        // FooterComponent,
+        PageRibbonComponent,
+        ActiveMenuDirective,
+        FooterComponent
         // MainmenuComponent
     ],
      providers: [

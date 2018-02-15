@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
 
-import { NavbarComponent } from './layouts';
+import { LeftMainMenuComponent } from './layouts';
 
-export const navbarRoute: Route = {
+export const leftMainMenu: Route = {
     path: '',
-    component: NavbarComponent,
-    outlet: 'navbar'
+    component: LeftMainMenuComponent,
+    outlet: 'mainmenu'
 };
