@@ -40,15 +40,15 @@ export class LeftMainMenuComponent implements OnInit, OnDestroy {
     }
   }
 
-  toggle() {
+  toggleMenu() {
     this.mainMenuService.toggleMainMenu();
   }
 
-  hide() {
+  hideMenu() {
     this.mainMenuService.hideMainMenu();
   }
 
-  show() {
+  showMenu() {
     this.mainMenuService.showMainMenu();
   }
 

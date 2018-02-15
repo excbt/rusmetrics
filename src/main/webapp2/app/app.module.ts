@@ -23,6 +23,7 @@ import { NotificationInterceptor } from './blocks/interceptor/notification.inter
 import { JhipsterSharedModule, UserRouteAccessService } from './shared';
 import { JhipsterAppRoutingModule } from './app-routing.module';
 import { JhipsterHomeModule } from './home/home.module';
+import { NmkClassifiersModule } from './classifiers/classifiers.module';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
 // import { JhipsterEntityModule } from './entities/entity.module';
@@ -40,7 +41,7 @@ import {
     ErrorComponent,
     HeaderbarComponent
 } from './layouts';
-import { ClassifierHomeComponent } from './classifiers/classifier-home/classifier-home.component';
+// import { ClassifiersHomeComponent } from './classifiers/classifiers-home.component';
 // import { LeftMainMenuComponent } from './layouts/left-main-menu/left-main-menu.component';
 
 @NgModule({
@@ -57,6 +58,7 @@ import { ClassifierHomeComponent } from './classifiers/classifier-home/classifie
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         JhipsterSharedModule,
         JhipsterHomeModule,
+        NmkClassifiersModule
         // JhipsterAdminModule,
         // JhipsterAccountModule,
         // JhipsterEntityModule,
@@ -66,7 +68,7 @@ import { ClassifierHomeComponent } from './classifiers/classifier-home/classifie
         JhiMainComponent,
         HeaderbarComponent,
         LeftMainMenuComponent,
-        ClassifierHomeComponent,
+//        ClassifiersHomeComponent,
         ErrorComponent,
         // PageRibbonComponent,
         ActiveMenuDirective

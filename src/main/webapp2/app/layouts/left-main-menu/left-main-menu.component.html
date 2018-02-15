@@ -1,22 +1,30 @@
-<p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hide()" (onHide)="hide()" >
+<p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hideMenu()" (onHide)="hideMenu()" >
     <mat-nav-list>
         <mat-list-item>
             <img src="../../../content/images/logo-main-menu-h.png"/> 
         </mat-list-item>  
     </mat-nav-list>
     <mat-nav-list>
-        <button mat-button (click)="toggleMainMenu()">
+        <button mat-button (click)="toggleMenu()">
             <p>Объекты учета</p>
         </button>  
     </mat-nav-list>
     <mat-nav-list>
-        <button mat-button (click)="toggleMainMenu()">
+        <button mat-button (click)="toggleMenu()">
             <p>Отчеты</p>
         </button>  
     </mat-nav-list>
     <mat-nav-list>
-        <button mat-button (click)="toggleMainMenu()">
-            <p>Справочники</p>
+        <button mat-button (click)="toggleMenu()">
+
+                <a class="nav-link" routerLink="/classifiers" (click)="hideMenu()">
+                    <span>
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <!-- <span jhiTranslate="global.menu.home">Home</span> -->
+                        <p>Справочники</p>
+                    </span>
+                </a>
+
         </button>  
     </mat-nav-list>
 </p-sidebar>
