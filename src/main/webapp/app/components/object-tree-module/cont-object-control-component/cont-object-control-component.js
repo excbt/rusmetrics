@@ -45,6 +45,16 @@
         
         var contObjectCtrlSvc = contObjectControlComponentService;
         
+        function setImgFilter(column) {
+            
+        }
+        
+        var filterValues = [
+            IMG_PATH_MONITOR_TEMPLATE + "red" + IMG_EXT,
+            IMG_PATH_MONITOR_TEMPLATE + "yellow" + IMG_EXT,
+            IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
+        ];
+        
         ctrl.columns = [
             {
                 name: "caption",
@@ -54,22 +64,26 @@
                 name: "heat",
                 caption: "Отопление",
                 headerClass: "col-xs-1",
-                type: "img"
+                type: "img",
+                filterValues: filterValues
             }, {
                 name: "hw",
                 caption: "ГВС",
                 headerClass: "col-xs-1",
-                type: "img"
+                type: "img",
+                filterValues: filterValues
             }, {
                 name: "cw",
                 caption: "ХВС",
                 headerClass: "col-xs-1",
-                type: "img"
+                type: "img",
+                filterValues: filterValues
             }, {
                 name: "el",
                 caption: "Электричество",
                 headerClass: "col-xs-1",
-                type: "img"
+                type: "img",
+                filterValues: filterValues
 
             }
 
@@ -327,6 +341,9 @@
         }
         
         $scope.$on('mainSearch:filtering', function (ev, args) {
+            if (ctrl.checkUndefinedNull(args) || ctrl.checkUndefinedNull(args.filter)) {
+                return false;
+            }
             ctrl.filter = args.filter;
             ctrl.filterObjects();
         });
@@ -379,6 +396,38 @@
 //                    .then(successLoadObjectMonitorStateCallback, errorCallback);
 //            });
         });
+        
+//        ctrl.setFilterBy = function (column) {
+//            var result = {},
+//                tmp = {};
+//            ctrl.objects.forEach(function (obj) {
+//                tmp[obj[column.name]] = 1;
+//            });
+//            column.filterValues = Object.keys(tmp);
+//console.log(column);
+//        };
+        
+        ctrl.setColorFilter = function (column, colorPath) {
+            //need column: name, colorPath
+            
+            var filteredObjects = []; //$filter('filter')(ctrl.objects, ctrl.filter);
+            ctrl.objects.forEach(function (obj) {
+                if (obj[column.name] === colorPath) {
+                    filteredObjects.push(obj);
+                }
+            });
+            ctrl.objectsOnPage = filteredObjects;
+            ctrl.columns.forEach(function (clmn) {
+                clmn.setFilterFlag = false;
+            });
+            column.setFilterFlag = true;
+        };
+        
+        ctrl.removeColorFilter = function(column) {
+            column.setFilterFlag = false;
+            ctrl.objectsOnPage = [];
+            ctrl.addMoreObjectsOnPage();
+        };
         
     }
     

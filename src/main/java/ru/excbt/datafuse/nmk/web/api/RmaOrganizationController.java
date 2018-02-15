@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -32,13 +33,17 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 	@Autowired
 	private OrganizationService organizationService;
 
+    @Autowired
+	private PortalUserIdsService portalUserIdsService;
+
+
     /**
      *
      * @return
      */
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> organizationsGet() {
-        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().asPortalUserIds());
+        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(organizations);
 	}
 

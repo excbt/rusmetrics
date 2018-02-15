@@ -111,7 +111,8 @@ public class OrganizationService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids) {
-		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(userids.getRmaId())
+	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
+		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(searchSubscriberId)
             .stream()
                 .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
