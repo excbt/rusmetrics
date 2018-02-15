@@ -1,11 +1,18 @@
-<jhi-page-ribbon></jhi-page-ribbon>
 <div>
-    <router-outlet name="navbar"></router-outlet>
+   <router-outlet name="headerbar"></router-outlet>
+   <router-outlet name="mainmenu"></router-outlet>
 </div>
+<!-- <jhi-headerbar></jhi-headerbar>
+<jhi-left-main-menu></jhi-left-main-menu> -->
+
+<!-- <jhi-page-ribbon></jhi-page-ribbon> -->
+<!-- <div>
+    <router-outlet name="mainmenu"></router-outlet>
+</div> -->
 <div class="container-fluid">
     <div class="card jh-card">
         <router-outlet></router-outlet>
         <router-outlet name="popup"></router-outlet>
     </div>
-    <jhi-footer></jhi-footer>
+    <!-- <jhi-footer></jhi-footer> -->
 </div>

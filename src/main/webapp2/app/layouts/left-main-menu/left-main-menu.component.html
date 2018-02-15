@@ -1,0 +1,22 @@
+<p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hide()" (onHide)="hide()" >
+    <mat-nav-list>
+        <mat-list-item>
+            <img src="../../../content/images/logo-main-menu-h.png"/> 
+        </mat-list-item>  
+    </mat-nav-list>
+    <mat-nav-list>
+        <button mat-button (click)="toggleMainMenu()">
+            <p>Объекты учета</p>
+        </button>  
+    </mat-nav-list>
+    <mat-nav-list>
+        <button mat-button (click)="toggleMainMenu()">
+            <p>Отчеты</p>
+        </button>  
+    </mat-nav-list>
+    <mat-nav-list>
+        <button mat-button (click)="toggleMainMenu()">
+            <p>Справочники</p>
+        </button>  
+    </mat-nav-list>
+</p-sidebar>

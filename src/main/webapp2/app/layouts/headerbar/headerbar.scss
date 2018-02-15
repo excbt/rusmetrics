@@ -1,0 +1,32 @@
+.nmc-md-main-toolbar-n {
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;    
+}
+
+.example-fill-remaining-space {
+    /* This fills the remaining space, by using flexbox. 
+       Every toolbar row uses a flexbox row layout. */
+    flex: 1 1 auto;
+}
+
+
+.md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
+    min-height: 25px; 
+    height: 25px; 
+    padding-top: 5px;
+    background: transparent;
+    border-radius: 0;
+/*    border: 1px solid #41719c;*/
+    margin-bottom: 3px;
+}
+
+@mixin md-icon-size($size: 24px) {
+    font-size: $size;
+    height: $size;
+    width: $size;
+}
+  
+.headerbar-mat-icon {
+    @include md-icon-size(40px);
+}

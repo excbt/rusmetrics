@@ -27,6 +27,18 @@
     "@ngtools/json-schema" "^1.1.0"
     rxjs "^5.5.6"
 
+"@angular/animations@^5.2.4":
+  version "5.2.4"
+  resolved "https://registry.yarnpkg.com/@angular/animations/-/animations-5.2.4.tgz#c5ec749d84a0434733a28a82c6cb6a4e15246201"
+  dependencies:
+    tslib "^1.7.1"
+
+"@angular/cdk@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-5.2.1.tgz#11500502deeaf42f88f92ca7d78d9a7642b07761"
+  dependencies:
+    tslib "^1.7.1"
+
 "@angular/cli@1.6.6":
   version "1.6.6"
   resolved "https://registry.yarnpkg.com/@angular/cli/-/cli-1.6.6.tgz#002119ab2ed804bbdc86075e0095eadda2a0baa0"
@@ -121,6 +133,12 @@
 "@angular/forms@5.2.0":
   version "5.2.0"
   resolved "https://registry.yarnpkg.com/@angular/forms/-/forms-5.2.0.tgz#b5fb6b9ba97334bca0e3202d7fee6b9162cbc824"
+  dependencies:
+    tslib "^1.7.1"
+
+"@angular/material@^5.2.1":
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-5.2.1.tgz#c0433edf98904dc35ae15dfa93ede755418843dd"
   dependencies:
     tslib "^1.7.1"
 
@@ -3147,7 +3165,7 @@ flush-write-stream@^1.0.0:
     inherits "^2.0.1"
     readable-stream "^2.0.4"
 
-font-awesome@4.7.0:
+font-awesome@^4.7.0:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
 
@@ -5322,6 +5340,10 @@ marked@^0.3.12:
   version "0.3.12"
   resolved "https://registry.yarnpkg.com/marked/-/marked-0.3.12.tgz#7cf25ff2252632f3fe2406bde258e94eee927519"
 
+material-design-icons-iconfont@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/material-design-icons-iconfont/-/material-design-icons-iconfont-3.0.3.tgz#154a1084047d4e27237fa7f5a37e1075ceea6df2"
+
 math-expression-evaluator@^1.2.14:
   version "1.2.17"
   resolved "https://registry.yarnpkg.com/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz#de819fdbcd84dccd8fae59c6aeb79615b9d266ac"
@@ -6714,6 +6736,10 @@ pretty-error@^2.0.2:
   dependencies:
     renderkid "^2.0.1"
     utila "~0.4"
+
+primeng@^5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/primeng/-/primeng-5.2.0.tgz#f74c062f1c4eeaebf5b724b92395d71fe6954e19"
 
 private@^0.1.6, private@~0.1.5:
   version "0.1.8"
