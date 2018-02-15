@@ -534,7 +534,21 @@ public class ObjectAccessService {
     }
 
 
-    //public
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
+    public List<DeviceObject> findAllContObjectDeviceObjects(Long subscriberId) {
+
+        List<DeviceObject> result;
+        if (NEW_ACCESS) {
+            result = contObjectAccessRepository.findDeviceObjects(subscriberId);
+        } else {
+            result = subscrContObjectRepository.selectDeviceObjects(subscriberId);
+        }
+        return result;
+    }
 
 
 }

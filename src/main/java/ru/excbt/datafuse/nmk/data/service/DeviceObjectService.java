@@ -647,10 +647,8 @@ public class DeviceObjectService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
-		List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
-//		result.forEach(i -> {
-//			i.loadLazyProps();
-//		});
+		//List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
+		List<DeviceObject> result = objectAccessService.findAllContObjectDeviceObjects(subscriberId);
 		return result;
 	}
 
