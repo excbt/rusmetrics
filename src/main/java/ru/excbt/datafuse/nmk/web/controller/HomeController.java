@@ -37,7 +37,7 @@ public class HomeController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/app", method = RequestMethod.GET)
@@ -46,12 +46,18 @@ public class HomeController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/app/", method = RequestMethod.GET)
 	public String app1() {
 		return "/../../app/index.html";
 	}
+
+
+    @RequestMapping(value = "/v2", method = RequestMethod.GET)
+    public String appV2_redirect() {
+        return "redirect:/v2/index.html";
+    }
 
 }

@@ -871,6 +871,18 @@
                                         <include>WEB-INF/**</include>
                                     </includes>
                                 </resource>
+                                <resource>
+                                    <directory>src/main/webapp2</directory>
+                                    <targetPath>v2</targetPath>
+                                    <!-- enable filtering -->
+                                    <!--<filtering>true</filtering>-->
+                                    <includes>
+                                        <include>app/**</include>
+                                        <include>content/**</include>
+                                        <include>i18n/**</include>
+                                        <include>swagger-ui/**</include>
+                                    </includes>
+                                </resource>
                             </webResources>
 						</configuration>
 					</plugin>
