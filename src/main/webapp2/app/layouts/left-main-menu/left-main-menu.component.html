@@ -1,7 +1,9 @@
 <p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hideMenu()" (onHide)="hideMenu()" >
     <mat-nav-list>
         <mat-list-item>
-            <img src="../../../content/images/logo-main-menu-h.png"/> 
+            <a class="nav-link" routerLink="/" (click)="hideMenu()">
+                <img src="../../../content/images/logo-main-menu-h.png"/> 
+            </a> 
         </mat-list-item>  
     </mat-nav-list>
     <mat-nav-list>
