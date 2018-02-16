@@ -28,7 +28,7 @@ import { NmkClassifiersModule } from './classifiers/classifiers.module';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
 // import { JhipsterEntityModule } from './entities/entity.module';
-// import { PaginationConfig } from './blocks/config/uib-pagination.config';
+import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from './shared/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
@@ -80,11 +80,10 @@ import {
     ],
      providers: [
         MainMenuService,
-//     ],
 
-         ProfileService,
-    //     PaginationConfig,
-         UserRouteAccessService,
+        ProfileService,
+        PaginationConfig,
+        UserRouteAccessService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,

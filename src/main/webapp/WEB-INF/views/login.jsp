@@ -7,8 +7,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
-	href="bower_components/bootstrap/dist/css/bootstrap.css" />
-<link rel="stylesheet" href="resources/styles/main.css" media="screen">
+	href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+<link rel="stylesheet" href="../resources/styles/main.css" media="screen">
 <title>Rusmetrics</title>
 
 </head>
@@ -30,7 +30,7 @@
 				>
 					<h1 class = "nmc-login-logo">
                         <%--<b>Вход в Rusmetrics</b>--%>
-                        <img src = "resources/images/logo-main-menu-h.png"/>
+                        <img src = "../resources/images/logo-main-menu-h.png"/>
                     </h1>
 
 					<!-- <form role="form" method="post" action="j_spring_security_check" class="form-horizontal"> -->
@@ -108,10 +108,10 @@
       </div>
 
 	<script
-		src="bower_components/jquery/dist/jquery.js"></script>
-	<script src="bower_components/angular/angular.js"></script>
+		src="../bower_components/jquery/dist/jquery.js"></script>
+	<script src="../bower_components/angular/angular.js"></script>
 	<script
-		src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+		src="../bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
 	<!-- Application -->
 	<script>
@@ -124,7 +124,7 @@
 					// var url = "" + $location.$$absUrl;
 					// $scope.displayLoginError = (url.indexOf("error") >= 0);
 
-					var url = window.location.pathname.replace("localLogin", "j_spring_security_check");
+					var url = window.location.pathname.replace("localLogin", "../api/authentication");
 					$scope.cred = {};
 					$scope.cred.rememberMe =  true;
 
@@ -144,7 +144,7 @@
 							    }
 							})
 							.then(function () {
-								window.location.replace(window.location.pathname.replace("localLogin", "app"));
+								window.location.replace(window.location.pathname.replace("localLogin", "../app"));
 							}, function (error) {
 								window.location.replace(window.location.pathname);
 							});
@@ -185,7 +185,7 @@
 // 				curSeason = "title_bg";
 // 			}
 
-			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";
+			document.body.style = "background-image: url(../../public/resources/images/" + curSeason + ".png)";
 		}
 
 //		setSeasonBackground();

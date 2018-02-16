@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,12 +15,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 import ru.excbt.datafuse.nmk.config.PortalProperties;
 import ru.excbt.datafuse.nmk.security.AjaxAuthenticationFailureHandler;
 import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
+@Import(SecurityProblemSupport.class)
 //@EnableGlobalMethodSecurity(securedEnabled = true)
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @Profile(value = "!SAML")
@@ -40,11 +44,33 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler;
 
-	@Autowired
+    @Autowired
+    private final SecurityProblemSupport problemSupport;
+
+    public LocalSecurityConfig(SecurityProblemSupport problemSupport) {
+        this.problemSupport = problemSupport;
+    }
+
+    @Autowired
 	public void registerGlobalAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth.authenticationProvider(userAuthenticationProvider);
 	}
 
+
+    @Bean
+    public AjaxAuthenticationSuccessHandler ajaxAuthenticationSuccessHandler() {
+        return new AjaxAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public AjaxAuthenticationFailureHandler ajaxAuthenticationFailureHandler() {
+        return new AjaxAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public AjaxLogoutSuccessHandler ajaxLogoutSuccessHandler() {
+        return new AjaxLogoutSuccessHandler();
+    }
 
     @Override
     public void configure(WebSecurity web) throws Exception {
@@ -68,6 +94,8 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests().antMatchers("/").permitAll().antMatchers("/WEB-INF/**").denyAll()
 				.antMatchers("/app/**").authenticated().antMatchers("/api/benchmark/**").permitAll()
                 .antMatchers("/v2/**").permitAll()
+                .antMatchers("/login*").permitAll()
+                .antMatchers("/localLogin").permitAll()
 				.antMatchers("/api/appStatus/**").permitAll().antMatchers("/api/securityCheck/**").permitAll()
                 .antMatchers("/api/www-metrics").permitAll()
 				.antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS)//.authenticated()
@@ -75,7 +103,16 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 				.antMatchers("/bower_components/**").permitAll().antMatchers("/vendor_components/**").permitAll().and();
 
-		http.sessionManagement().maximumSessions(5).sessionRegistry(getSessionRegistry()).expiredUrl("/login");
+		http
+            .sessionManagement().maximumSessions(5).sessionRegistry(getSessionRegistry()).expiredUrl("/login");
+
+//            .and()
+//            //.addFilterBefore(corsFilter, CsrfFilter.class)
+//            .exceptionHandling()
+//            .authenticationEntryPoint(problemSupport)
+//            .accessDeniedHandler(problemSupport)
+
+
 
 		http.rememberMe()
             .rememberMeServices(rememberMeServices)
@@ -84,15 +121,21 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.formLogin()
 				// указываем страницу с формой логина
-				.loginPage("/login")
+				.loginPage("/auth/login")
 				// указываем action с формы логина
-				.loginProcessingUrl("/j_spring_security_check").defaultSuccessUrl("/app/", true)
+                // old value /j_spring_security_check
+				.loginProcessingUrl("/api/authentication")
+                //.defaultSuccessUrl("/app/", true)
 				// указываем URL при неудачном логине
-				.failureUrl("/login?error")
+                .successHandler(ajaxAuthenticationSuccessHandler())
+                .failureHandler(ajaxAuthenticationFailureHandler())
 				// Указываем параметры логина и пароля с формы логина
 				.usernameParameter("j_username").passwordParameter("j_password")
-				.successHandler(authenticationSuccessHandler)
-                .failureHandler(ajaxAuthenticationFailureHandler)
+//				.successHandler(authenticationSuccessHandler)
+//                .failureHandler(ajaxAuthenticationFailureHandler)
+                .successHandler(ajaxAuthenticationSuccessHandler())
+                .failureHandler(ajaxAuthenticationFailureHandler())
+
 				// даем доступ к форме логина всем
 				.permitAll();
 
@@ -100,11 +143,22 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 				// разрешаем делать логаут всем
 				.permitAll()
 				// указываем URL логаута
-				.logoutUrl("/logout")
+                .logoutUrl("/api/logout")
 				// указываем URL при удачном логауте
-				.logoutSuccessUrl("/login?logout")
+				//.logoutSuccessUrl("/login?logout")
+                .logoutSuccessHandler(ajaxLogoutSuccessHandler())
 				// делаем не валидной текущую сессию
-				.invalidateHttpSession(true);
+				.invalidateHttpSession(true)
+        .and()
+            .authorizeRequests()
+            .antMatchers("/auth/login").permitAll()
+            .antMatchers("/auth/localLogin").permitAll()
+            .antMatchers("/api/register").permitAll()
+            .antMatchers("/api/activate").permitAll()
+            .antMatchers("/api/authenticate").permitAll()
+            .antMatchers("/api/account/reset-password/init").permitAll()
+            .antMatchers("/api/account/reset-password/finish").permitAll()
+            .antMatchers("/api/profile-info").permitAll();
 
 	}
 

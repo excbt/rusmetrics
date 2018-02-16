@@ -15,26 +15,26 @@ public class LoginController {
 	private SamlSecurityConfig samlSecurityConfig;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/localLogin", method = { RequestMethod.GET,
+	@RequestMapping(value = "/auth/localLogin", method = { RequestMethod.GET,
 			RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT })
 	public ModelAndView doLocalLogin() {
 		return new ModelAndView("login.jsp");
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@RequestMapping(value = "/login", method = { RequestMethod.GET,
+	@RequestMapping(value = "/auth/login", method = { RequestMethod.GET,
 			RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT })
 	public String doLogin() {
 
 		if (samlSecurityConfig == null
 				|| samlSecurityConfig.isForceLocalLogin()) {
-			return "redirect:/localLogin";
+			return "redirect:/auth/localLogin";
 		}
 
 		return "redirect:/saml/login";
