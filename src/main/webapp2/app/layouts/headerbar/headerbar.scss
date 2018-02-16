@@ -1,25 +1,3 @@
-.nmc-md-main-toolbar-n {
-    height: 35px;
-    min-height: 35px;
-    max-height: 35px;    
-}
-
-.example-fill-remaining-space {
-    /* This fills the remaining space, by using flexbox. 
-       Every toolbar row uses a flexbox row layout. */
-    flex: 1 1 auto;
-}
-
-
-.md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
-    min-height: 25px; 
-    height: 25px; 
-    padding-top: 5px;
-    background: transparent;
-    border-radius: 0;
-/*    border: 1px solid #41719c;*/
-    margin-bottom: 3px;
-}
 
 @mixin md-icon-size($size: 24px) {
     font-size: $size;
@@ -27,101 +5,52 @@
     width: $size;
 }
   
-.headerbar-mat-icon {
+.headerbar-mat-menu-icon {
     @include md-icon-size(40px);
 }
 
 
-/****
-    JHipster
-
-**/
-
-/* ==========================================================================
-Navbar
-========================================================================== */
-.navbar-version {
-    font-size: 10px;
-    // color: #ccc
+.headerbar-profile-menu-icon {
+    @include md-icon-size(24px);
 }
 
-.jh-navbar {
-    background-color: transparent;
-    padding: .2em 1em;
+.headerbar-profile-font {
+    font-size: 15px;
 }
 
-.jh-navbar .profile-image {
-    margin: -10px 0px;
-    height: 40px;
-    width: 40px;
-    border-radius: 50%;
+.headerbar-right {
+    float: right;
 }
 
-.jh-navbar .dropdown-item.active, .jh-navbar .dropdown-item.active:focus, .jh-navbar .dropdown-item.active:hover {
-    background-color: #353d47;
-}
 
-.jh-navbar .dropdown-toggle::after {
-    margin-left: 0.15em;
-}
-
-.jh-navbar ul.navbar-nav {
-    padding: 0.5em;
-}
-
-.jh-navbar .navbar-nav .nav-item {
-    margin-left: 1.5rem;
-}
-
-.jh-navbar a.nav-link {
-    font-weight: 400;
-}
-
-.jh-navbar .jh-navbar-toggler {
-    // color: rgb(27, 26, 26);
-    font-size: 1.5em;
-    padding: 10px;
-}
-
-.jh-navbar .jh-navbar-toggler:hover {
-    color: #fff;
-}
-
-@media screen and (min-width: 768px) {
-    .jh-navbar-toggler {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 992px) {
-    .jh-logo-container {
-        width: 100%;
-    }
-}
-
-.navbar-title {
+.material-icons-bak {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 20px;  /* Preferred icon size */
     display: inline-block;
-    vertical-align: middle;
-}
+    line-height: 1;
+    text-transform: none;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+  
+    /* Support for all WebKit browsers. */
+    -webkit-font-smoothing: antialiased;
+    /* Support for Safari and Chrome. */
+    text-rendering: optimizeLegibility;
+  
+    /* Support for Firefox. */
+    -moz-osx-font-smoothing: grayscale;
+  
+    /* Support for IE. */
+    font-feature-settings: 'liga';
+  }
 
-/* ==========================================================================
-Logo styles
-========================================================================== */
-
-.navbar-brand.logo {
-    padding: 5px 15px;
-}
-
-.logo .logo-img {
-    height: 45px;
-    display: inline-block;
-    vertical-align: middle;
-    width: 70px;
-}
-
-.logo-img {
-    height: 100%;
-    background: url("../../../content/images/logo-jhipster.png") no-repeat center center;
-    background-size: contain;
-    width: 100%;
+#top-right
+{
+    right: 0;
+    top: 0;
+    position: absolute;
 }

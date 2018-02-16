@@ -5,31 +5,30 @@ headerbar works
 <mat-toolbar>  
     <mat-toolbar-row  >
         <div class="float-left">
-            <button mat-icon-button (click)="toggleMainMenu()">
-                <mat-icon class="nmc-md-ltb-btn headerbar-mat-icon">menu</mat-icon>
+            <button mat-icon-button *ngIf="isAuthenticated()" (click)="toggleMainMenu()">
+                <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>
             </button>
         </div>    
-        
-        <!-- <div class="container-fluid">
-                <nav class="navbar navbar-expand-sm jh-navbar ">
-                        <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
-                                <ul class="navbar-nav ml-auto">
-                                        <li ngbDropdown class="nav-item dropdown pointer" *ngIf="languages">
-                                                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="languagesnavBarDropdown" *ngIf="languages.length > 1">
-                                                    <span>
-                                                        <i class="fa fa-flag" aria-hidden="true"></i>
-                                                        <span jhiTranslate="global.menu.language">Language</span>
-                                                    </span>
-                                                </a>
-                                                <ul class="dropdown-menu" ngbDropdownMenu *ngIf="languages.length > 1">
-                                                    <li *ngFor="let language of languages">
-                                                        <a class="dropdown-item" [jhiActiveMenu]="language" href="javascript:void(0);" (click)="changeLanguage(language);collapseNavbar();">{{language | findLanguageFromKey}}</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                </ul>    
-                            </div>
-                </nav>
-        </div>     -->
+
+        <div id="top-right">
+                <button mat-icon-button [matMenuTriggerFor]="menu" class="">
+                        <mat-icon class="headerbar-profile-menu-icon">more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                        <button mat-menu-item>
+                                <mat-icon class="headerbar-profile-menu-icon">account_box</mat-icon>
+                                <span jhiTranslate="headerbar.login" class="headerbar-profile-font">User profile</span>
+                        </button>
+                        <button mat-menu-item *ngIf="isAuthenticated()">
+                                <mat-icon class="headerbar-profile-menu-icon">account_box</mat-icon>
+                                <span jhiTranslate="headerbar.userprofile" class="headerbar-profile-font">User profile</span>
+                        </button>
+                        <button mat-menu-item *ngIf="isAuthenticated()">
+                                <mat-icon class="headerbar-profile-menu-icon">exit_to_app</mat-icon>
+                                <span jhiTranslate="headerbar.logout" class="headerbar-profile-font">Logout</span>
+                        </button>
+                        
+                </mat-menu>    
+        </div>
     </mat-toolbar-row>
 </mat-toolbar>

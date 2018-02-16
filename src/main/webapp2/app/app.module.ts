@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
@@ -48,17 +49,19 @@ import {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
+        JhipsterAppRoutingModule,
+        JhipsterSharedModule,
+        JhipsterHomeModule,
+        NmkClassifiersModule,
+        // UI modules
+        MatMenuModule,
         SidebarModule,
         PanelModule,
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        MatListModule,
-        JhipsterAppRoutingModule,
-        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
-        JhipsterSharedModule,
-        JhipsterHomeModule,
-        NmkClassifiersModule
+        MatListModule
         // JhipsterAdminModule,
         // JhipsterAccountModule,
         // JhipsterEntityModule,
