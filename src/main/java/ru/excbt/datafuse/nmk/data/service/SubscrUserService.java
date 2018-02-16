@@ -4,6 +4,7 @@ import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -44,7 +45,7 @@ public class SubscrUserService implements SecuredRoles {
 
 	private static final Logger log = LoggerFactory.getLogger(SubscrUserService.class);
 
-	public interface LdapAction {
+    public interface LdapAction {
 		void doAction(LdapUserAccount user);
 	}
 
@@ -65,6 +66,14 @@ public class SubscrUserService implements SecuredRoles {
 
     @Autowired
     private UserPersistentTokenRepository persistentTokenRepository;
+
+    private final CacheManager cacheManager;
+
+    @Autowired
+    public SubscrUserService(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
+
 
 	/**
 	 *
@@ -147,7 +156,9 @@ public class SubscrUserService implements SecuredRoles {
 
 		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
 
-		SubscrUser result = subscrUserRepository.save(subscrUser);
+		SubscrUser user = subscrUserRepository.save(subscrUser);
+
+        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(user.getUserName());
 
 		LdapAction action = (u) -> {
 			ldapService.createUser(u);
@@ -155,10 +166,10 @@ public class SubscrUserService implements SecuredRoles {
 		};
 
 		if (!skipLdapAction) {
-			processLdapAction(result, action);
+			processLdapAction(user, action);
 		}
 
-		return result;
+		return user;
 	}
 
 	/**

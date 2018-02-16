@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
 import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
 import javax.cache.CacheManager;
 import java.util.concurrent.TimeUnit;
@@ -43,7 +44,6 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-
 
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType.class.getName());
@@ -100,7 +100,7 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefValue.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName());
-            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SystemUser.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrRole.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrTypePref.class.getName());
@@ -135,7 +135,11 @@ public class CacheConfiguration {
             //cm.createCache(com.mycompany.myapp.domain.User.class.getName() + ".authorities", jcacheConfiguration);
             //cm.createCache(com.mycompany.myapp.domain.PersistentToken.class.getName(), jcacheConfiguration);
             //cm.createCache(com.mycompany.myapp.domain.User.class.getName() + ".persistentTokens", jcacheConfiguration);
-            // jhipster-needle-ehcache-add-entry
+
+            /// Repository Caches
+
+            createIfNotExists(cm, SubscrUserRepository.USERS_BY_LOGIN_CACHE);
+
         };
     }
 
