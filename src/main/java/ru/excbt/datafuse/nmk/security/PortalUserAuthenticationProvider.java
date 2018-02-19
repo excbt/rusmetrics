@@ -34,11 +34,11 @@ import ru.excbt.datafuse.nmk.data.service.PasswordService;
  *
  */
 @Component("userAuthenticationProvider")
-public class UserAuthenticationProvider implements AuthenticationProvider {
+public class PortalUserAuthenticationProvider implements AuthenticationProvider {
 
 	private static final boolean USE_LDAP_PASSWORD = true;
 
-	private static final Logger logger = LoggerFactory.getLogger(UserAuthenticationProvider.class);
+	private static final Logger logger = LoggerFactory.getLogger(PortalUserAuthenticationProvider.class);
 
 	@Autowired
 	private SecuritySubscriberService subscriberService;

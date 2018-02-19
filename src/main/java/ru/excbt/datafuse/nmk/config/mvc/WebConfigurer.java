@@ -172,4 +172,7 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         return new CorsFilter(source);
     }
 
+
+    // TODO CachingHttpHeadersFilter
+
 }

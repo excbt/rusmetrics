@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberUserDetailsService;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,12 +21,11 @@ public class LogoutController {
 	private CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
 
 	@RequestMapping(value = "/auth/logout", method = { RequestMethod.GET })
-	public String doGet(HttpServletRequest request, HttpServletResponse response) {
+	public String doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException {
 
 		Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
 
-//        SecurityContextHolder.getContext().setAuthentication(null);
-        request.getSession().invalidate();
+        request.logout();
 
 		if (auth != null && (auth.getCredentials() instanceof SAMLCredential)) {
 			return "redirect:/saml/logout";
@@ -33,4 +33,20 @@ public class LogoutController {
 
 		return "redirect:/auth/localLogin";
 	}
+
+
+    @RequestMapping(value = "/logout", method = { RequestMethod.GET })
+    public String doLogoutOld(HttpServletRequest request, HttpServletResponse response) throws ServletException {
+
+        Authentication auth = currentSubscriberUserDetailsService.getAuthentication();
+
+        request.logout();
+
+        if (auth != null && (auth.getCredentials() instanceof SAMLCredential)) {
+            return "redirect:/saml/logout";
+        }
+
+        return "redirect:/auth/localLogin";
+    }
+
 }
