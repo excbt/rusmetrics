@@ -476,6 +476,15 @@ body{
     }
 }
 
+/*Кнопка Поиска в виджете "Контроль"*/
+.nmc-ctrl-cmp-search-btn {
+    float: right;
+}
+.nmc-ctrl-cmp-search-btn:hover {
+    background-color: lightgray !important;
+    outline: 5px solid lightgray;
+}
+
 .nmc-el-view-main-div-with-chart {
     overflow: auto;
     height:45vh;

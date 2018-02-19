@@ -23,7 +23,9 @@
 </md-toolbar>
 -->
 <!--    Cont object controller view-->
-   <div class = "container-fluid" style = "position: absolute; top: -28px; left: 0px; right: 0px; width: 93%; z-index: 2; margin-left: 50px;">
+   <div id = "nmc-ctrl-cmp-toolbarheader-id" 
+       class = "container-fluid" style = "position: absolute; top: -28px; left: 0px; right: 0px; width: 96%; z-index: 2; margin-left: 50px;">
+<!--     margin-left: 50px;-->
       <div class = "row">
           <div class = "col-xs-12 noPadding">
             <div class = "input-group filter nmc-search-form" style = "width: 100%;">   
@@ -32,14 +34,20 @@
                     <i class = "glyphicon glyphicon-search nmc-search-form-button"></i>
                 </span>
 -->
-                <input title = "Введите текст для поиска" 
+                <input ng-if = "$ctrl.searchFlag"
+                id = "nmc-ctrl-cmp-search-btn-id"
+                title = "Введите текст для поиска" 
                 type = "text" 
                 class = "form-control nmc-text-input-form" 
                 ng-model = "$ctrl.filter"
                 ng-change = "$ctrl.filterObjects($ctrl.filter)"
                 style = "border-color: rgb(95, 95, 95); border-radius: 0;">
-                <span class = "input-group-addon" style = "background: transparent; border: none;">
-                    <i class = "glyphicon glyphicon-search nmc-search-form-button"></i>
+                <span class = "input-group-addon" style = "background: transparent; border: none; padding: 0 3px 6px 3px">
+                    <i class = "btn btn-xs glyphicon glyphicon-search nmc-ctrl-cmp-search-btn"
+                        ng-class = "{'glyphicon-search': !$ctrl.searchFlag, 'glyphicon-remove': $ctrl.searchFlag}"
+                    
+                        ng-click = "$ctrl.toggleSearch()"
+                    ></i>
                 </span>
             </div>
           </div>

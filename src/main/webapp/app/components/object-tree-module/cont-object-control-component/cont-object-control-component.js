@@ -14,14 +14,15 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];        
         ctrl.objectsOnPage = [];
         ctrl.filter = '';
+        ctrl.searchFlag = false;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
@@ -438,6 +439,22 @@
             ctrl.objectsOnPage = [];
             ctrl.addMoreObjectsOnPage();
         };
+        
+        ctrl.toggleSearch = function () {
+            ctrl.searchFlag = !ctrl.searchFlag;
+            if (ctrl.searchFlag) {
+                $timeout(function () {
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "99%", "margin-left": "10px"});
+                    $('#nmc-ctrl-cmp-search-btn-id').focus();
+                }, 1);
+            } else {
+                ctrl.filter = '';
+                ctrl.filterObjects();
+                $timeout(function () {
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96%", "margin-left": "50px"});
+                }, 1);
+            }
+        }
         
     }
     
