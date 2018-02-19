@@ -159,6 +159,13 @@ portal:
             host: 192.168.84.131
             port: 5000
             queue-size: 512
+    cors:
+        allowed-origins: "*"
+        allowed-methods: "*"
+        allowed-headers: "*"
+        exposed-headers: "Link,X-Total-Count"
+        allow-credentials: true
+        max-age: 1800
 
 
 raw:
