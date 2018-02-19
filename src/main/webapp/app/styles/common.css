@@ -3412,3 +3412,16 @@ div.nmc-energy-simple-line > div {
     color: rgb(95, 95, 95) !important;
     fill: rgb(95, 95, 95) !important;
 }
+
+/*Material: menu item*/
+.nmc-md-menu-item {
+    height: 24px;
+    min-height: 24px;    
+}
+
+.nmc-md-menu-item > .md-button {
+    font-size: 12px;
+    min-height: 24px;
+    height: 24px;
+    line-height: inherit;
+}

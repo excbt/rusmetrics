@@ -21,8 +21,8 @@
 <!--                                                f1bb-->
                                           </md-button>
                                           <md-menu-content>                     
-                                              <md-menu-item ng-repeat = "tree in $ctrl.data.trees track by $index">
-                                                  <md-button class = "md-raised" ng-attr-title = "{{tree.objectName}}"
+                                              <md-menu-item class = "nmc-md-menu-item" ng-repeat = "tree in $ctrl.data.trees track by $index">
+                                                  <md-button class = "" ng-attr-title = "{{tree.objectName}}"
                                                       ng-click = "$ctrl.loadTree(tree); $ctrl.objectCtrlSettings.isFullObjectView = false">
                                 <!--                     <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>-->
                                                      {{tree.objectName}}

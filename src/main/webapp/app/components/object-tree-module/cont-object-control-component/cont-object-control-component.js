@@ -26,7 +26,7 @@
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png",
-            OBJECTS_PER_PAGE = 42;
+            OBJECTS_PER_PAGE = 100;
         
         var MONITOR_STATE_LVLS = {
             'green': {
@@ -141,6 +141,16 @@
         }
         
         ctrl.addMoreObjectsOnPage = function () {
+            var filterFlag = false;
+            ctrl.columns.some(function (clmn) {
+                if (clmn.setFilterFlag) {
+                    filterFlag = true;
+                    return true;
+                }
+            });
+            if (filterFlag) {
+                return false;
+            }
             if (ctrl.objectsOnPage.length < ctrl.objects.length) {
                 var addedObjects = ctrl.objects.slice(ctrl.objectsOnPage.length, ctrl.objectsOnPage.length + OBJECTS_PER_PAGE);
                 ctrl.objectsOnPage = ctrl.objectsOnPage.concat(addedObjects);

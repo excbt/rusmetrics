@@ -19,8 +19,8 @@
                 <md-icon md-font-set = "fa fa-sm">&#xf0ca;</md-icon>
           </md-button>
           <md-menu-content>                     
-              <md-menu-item ng-repeat = "widget in $ctrl.nodeWidgets">
-                  <md-button class = "md-raised" ng-attr-title = "{{widget.caption}}"
+              <md-menu-item class = "nmc-md-menu-item" ng-repeat = "widget in $ctrl.nodeWidgets">
+                  <md-button class = "" ng-attr-title = "{{widget.caption}}"
                       ng-click = "$ctrl.changeWidget(widget)">
 <!--                     <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>-->
                      {{widget.caption}}
