@@ -607,6 +607,9 @@
         };
         
         ctrl.openUserMenu = function ($mdMenu, ev) {
+//            console.log($mdMenu);
+//            console.log(ev);
+//            ev.currentTarget.addClass("active");
             $mdMenu.open(ev);
         };
         

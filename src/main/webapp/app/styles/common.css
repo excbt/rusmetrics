@@ -312,11 +312,11 @@ body{
     /* Обертка для страницы, которая придавливает футер к низу экрана.
                 Wrapper for page content to push down footer */
 .wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
+/*    min-height: 100%;*/
+/*    height: auto !important;*/
+/*    height: 100%;*/
     /* Negative indent footer by it's height */
-    margin: 0 auto -60px;
+/*    margin: 0 auto -60px;*/
     /* Pad bottom by footer height */
 /*    padding: 0 0 60px;*/
 }
@@ -324,12 +324,18 @@ body{
 .wrap > .container-fluid {
 /*    padding-top: 50px;*/
 /*    min-width: 1320px;*/
+/*
     min-width: 1572px;
+    overflow-x: auto;
+*/
 }
 
 .wrap > .container-fluid > .row {
 /*    min-width: 1320px;*/
+/*
     min-width: 1572px;
+    overflow-x: auto;
+*/
 }
 
 .wrap > .container {
@@ -338,17 +344,18 @@ body{
 }
 /* Главная рабочая область страницы*/
 .nmc-main-workspace {
-    margin-left: 10pt;
-    width: 88.1%;
+/*    margin-left: 10pt;*/
+    width: 100%;
+/*    width: 88.1%;*/
 	min-height: 500px;
     border: none;
-    -webkit-box-shadow: 5px 5px 5px 0px #646263;
+/*    -webkit-box-shadow: 5px 5px 5px 0px #646263;*/
 /*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
     padding-top: 0px;
-    height: 92vh;
-    overflow-y: hidden;
+    height: 95vh;
+    overflow-y: auto;
 /*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
@@ -448,6 +455,22 @@ body{
     .nmc-tariff-main-div, .nmc-object-group-main-div, .nmc-data-sources-main-div, .nmc-el-view-main-div, .nmc-energo-passport-main-div {
         overflow: auto;
         height: 72vh;
+    /*    height:61vh;*/
+        min-height: 290px;
+    }
+}
+
+/* Стиль главныго дива виджета "Контроль" объектов учета*/
+.nmc-cont-object-control-main-div {
+    overflow: auto;
+    height: 85vh;
+/*    height:61vh;*/
+    min-height: 290px;
+}
+@media (max-height: 800px) {
+    .nmc-cont-object-control-main-div {
+        overflow: auto;
+        height: 80vh;
     /*    height:61vh;*/
         min-height: 290px;
     }
@@ -3404,14 +3427,50 @@ div.nmc-energy-simple-line > div {
     padding-top: 5px;
     background: transparent;
     border-radius: 0;
+    margin: 0 2px 4px 2px;
 /*    border: 1px solid #41719c;*/
-    margin-bottom: 3px;
+/*    margin-bottom: 3px;*/
+}
+
+.nmc-md-ltb-btn:hover, .nmc-md-ltb-btn .active {
+    background-color: lightgray !important;
+    outline: 2px solid lightgray;
+}
+
+/*Main menu btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-menu-btn {
+    padding-top: 0;
+    margin: 0 2px 2px -13px !important;
+}
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-menu-btn:hover {
+    background-color: lightgray !important;
+    outline: 5px solid lightgray;
 }
 
 .md-button.md-icon-button.nmc-md-ltb-btn > .md-icon, .nmc-md-ltb-btn md-icon {
     color: rgb(95, 95, 95) !important;
     fill: rgb(95, 95, 95) !important;
 }
+
+/*Main search btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-search-btn {
+    margin: 0 2px 2px 0 !important;
+}
+
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-search-btn:hover {
+    background-color: lightgray !important;
+    outline: 5px solid lightgray;
+}
+
+/*User menu btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn {
+    margin: 0 0 3px 4px !important;
+}
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn:hover {
+    background-color: lightgray !important;
+    outline: 5px solid lightgray;
+}
+
 
 /*Material: menu item*/
 .nmc-md-menu-item {
