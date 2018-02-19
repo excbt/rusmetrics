@@ -106,7 +106,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(corsFilter, CsrfFilter.class)
             .exceptionHandling()
             .authenticationEntryPoint(problemSupport)
-            //.accessDeniedHandler(problemSupport)
+            .accessDeniedHandler(problemSupport)
         .and()
             .rememberMe()
             .rememberMeServices(rememberMeServices)
