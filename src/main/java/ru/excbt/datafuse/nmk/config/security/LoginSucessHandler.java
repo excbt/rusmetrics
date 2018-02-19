@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.security;
+package ru.excbt.datafuse.nmk.config.security;
 
 import java.io.IOException;
 
@@ -14,10 +14,11 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.stereotype.Service;
 
 import ru.excbt.datafuse.nmk.data.service.SubscrUserLoginLogService;
+import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 
 /**
  * Обработка успешного входа в систему
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.10.2015
