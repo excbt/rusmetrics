@@ -89,7 +89,19 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/content/**")
             .antMatchers("/swagger-ui/index.html")
             .antMatchers("/test/**");
+
+
+        web.ignoring()
+            .antMatchers(HttpMethod.OPTIONS, "/**")
+            .antMatchers("/v2/**/*.{js,html}")
+            .antMatchers("/i18n/**")
+            .antMatchers("/content/**")
+            .antMatchers("/swagger-ui/index.html")
+            .antMatchers("/test/**")
+            .antMatchers("/h2-console/**");
     }
+
+
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -139,7 +151,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
             //.logoutSuccessUrl("/login?logout")
             .logoutSuccessHandler(ajaxLogoutSuccessHandler())
             // делаем не валидной текущую сессию
-            //.invalidateHttpSession(true)
+            .invalidateHttpSession(true)
        .and()
             .headers()
             .frameOptions()
