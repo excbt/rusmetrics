@@ -309,6 +309,7 @@
             var monitor = {};
             monitorData.forEach(function (md) {
                 monitor[md.nodeType + md.monitorObjectId] = IMG_PATH_MONITOR_TEMPLATE + md.colorKey.toLowerCase() + IMG_EXT;
+//                monitor[md.nodeType + md.monitorObjectId] = IMG_PATH_MONITOR_TEMPLATE + (Math.random() > 0.5 ? "red" : "yellow") + IMG_EXT;                
                 setEventsForObject(md.monitorObjectId);
             });
 
