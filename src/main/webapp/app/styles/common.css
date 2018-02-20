@@ -3433,7 +3433,7 @@ div.nmc-energy-simple-line > div {
 .md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
     min-height: 25px; 
     height: 25px; 
-    padding-top: 5px;
+    padding-top: 6px;
     background: transparent;
     border-radius: 0;
     margin: 0 2px 4px 2px;
@@ -3443,7 +3443,7 @@ div.nmc-energy-simple-line > div {
 
 .nmc-md-ltb-btn:hover, .nmc-md-ltb-btn .active {
     background-color: lightgray !important;
-    outline: 2px solid lightgray;
+    outline: 4px solid lightgray;
 }
 
 /*Main menu btn*/
@@ -3453,7 +3453,7 @@ div.nmc-energy-simple-line > div {
 }
 .md-icon-button.nmc-md-ltb-btn.nmc-md-main-menu-btn:hover {
     background-color: lightgray !important;
-    outline: 5px solid lightgray;
+    outline: 6px solid lightgray;
 }
 
 .md-button.md-icon-button.nmc-md-ltb-btn > .md-icon, .nmc-md-ltb-btn md-icon {
@@ -3468,7 +3468,7 @@ div.nmc-energy-simple-line > div {
 
 .md-icon-button.nmc-md-ltb-btn.nmc-md-main-search-btn:hover {
     background-color: lightgray !important;
-    outline: 5px solid lightgray;
+    outline: 6px solid lightgray;
 }
 
 /*User menu btn*/
@@ -3477,7 +3477,7 @@ div.nmc-energy-simple-line > div {
 }
 .md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn:hover {
     background-color: lightgray !important;
-    outline: 5px solid lightgray;
+    outline: 6px solid lightgray;
 }
 
 
