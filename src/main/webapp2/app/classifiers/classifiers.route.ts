@@ -8,7 +8,7 @@ const CLASSIFIERS_ROUTES = [
     classifiersDashboardRoute
 ];
 
-export const classifiesrState: Routes = [{
+export const classifiersState: Routes = [{
     path: '',
     data: {
         authorities: []

@@ -1,5 +1,10 @@
 {
     "classifiers": {
-        "title": "Справочники"
+        "title": "Справочники",
+        "organizations": "Организации",
+        "widget": {
+            "list": "список"
+        }
+
     }
 }        
