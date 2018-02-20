@@ -444,14 +444,14 @@
             ctrl.searchFlag = !ctrl.searchFlag;
             if (ctrl.searchFlag) {
                 $timeout(function () {
-                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "99%", "margin-left": "10px"});
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "99.2%", "margin-left": "10px"});
                     $('#nmc-ctrl-cmp-search-btn-id').focus();
                 }, 1);
             } else {
                 ctrl.filter = '';
                 ctrl.filterObjects();
                 $timeout(function () {
-                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96%", "margin-left": "50px"});
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96.4%", "margin-left": "50px"});
                 }, 1);
             }
         }
