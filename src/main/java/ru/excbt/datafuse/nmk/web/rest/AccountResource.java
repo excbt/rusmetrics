@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.dto.UserDTO;
 import ru.excbt.datafuse.nmk.web.rest.errors.InternalServerErrorException;
 
@@ -36,8 +37,14 @@ public class AccountResource {
     @GetMapping("/account")
     @Timed
     public UserDTO getAccount() {
-        return portalUserIdsService.getSubscrUserWithAuthorities().map(UserDTO::new)
-            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+
+        if (SecurityUtils.isSystemUser()) {
+            return portalUserIdsService.getSystemUserWithAuthorities().map(UserDTO::new)
+                .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+        } else {
+            return portalUserIdsService.getSubscrUserWithAuthorities().map(UserDTO::new)
+                .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+        }
     }
 
 }

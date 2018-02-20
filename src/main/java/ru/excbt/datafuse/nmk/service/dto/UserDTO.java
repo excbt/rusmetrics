@@ -7,11 +7,14 @@ import org.hibernate.validator.constraints.NotBlank;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.SystemUser;
+import ru.excbt.datafuse.nmk.security.AdminUtils;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -74,5 +77,21 @@ public class UserDTO {
             this.authorities.add(AuthoritiesConstants.ADMIN);
         }
     }
+
+    public UserDTO(SystemUser systemUser) {
+        this.id = systemUser.getId();
+        this.login = systemUser.getUserName();
+        this.firstName = systemUser.getFirstName();
+        this.lastName = systemUser.getLastName();
+        this.email = "dev-ops@rusmetrics.ru";
+        this.activated = true;
+        this.langKey = "ru";
+        this.createdBy = systemUser.getCreatedBy() != null ? systemUser.getCreatedBy().toString() : null;
+        this.lastModifiedBy = systemUser.getLastModifiedBy() != null ? systemUser.getLastModifiedBy().toString() : null;
+        this.createdDate = systemUser.getCreatedDate();
+        this.lastModifiedDate = systemUser.getLastModifiedDate();
+        this.authorities = AuthoritiesConstants.makeAdminSet();
+    }
+
 
 }

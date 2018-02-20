@@ -24,10 +24,10 @@ import { NotificationInterceptor } from './blocks/interceptor/notification.inter
 import { JhipsterSharedModule, UserRouteAccessService } from './shared';
 import { JhipsterAppRoutingModule } from './app-routing.module';
 import { JhipsterHomeModule } from './home/home.module';
-import { NmkClassifiersModule } from './classifiers/classifiers.module';
+import { PortalClassifiersModule } from './classifiers/classifiers.module';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
-// import { JhipsterEntityModule } from './entities/entity.module';
+import { PortalEntityModule } from './entities/entity.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from './shared/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
@@ -50,10 +50,6 @@ import {
         BrowserModule,
         BrowserAnimationsModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
-        JhipsterAppRoutingModule,
-        JhipsterSharedModule,
-        JhipsterHomeModule,
-        NmkClassifiersModule,
         // UI modules
         MatMenuModule,
         SidebarModule,
@@ -61,10 +57,15 @@ import {
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        MatListModule
+        MatListModule,
+        // Work modules
+        JhipsterAppRoutingModule,
+        JhipsterSharedModule,
+        JhipsterHomeModule,
         // JhipsterAdminModule,
         // JhipsterAccountModule,
-        // JhipsterEntityModule,
+        PortalClassifiersModule,
+        PortalEntityModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

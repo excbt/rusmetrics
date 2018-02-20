@@ -1,18 +1,16 @@
 import { Routes } from '@angular/router';
-
-import {
-    classifiersDashboardRoute
-} from './';
+import {classifiersDashboardRoute} from './';
+import { UserRouteAccessService } from '../shared';
 
 const CLASSIFIERS_ROUTES = [
     classifiersDashboardRoute
 ];
 
-export const classifiesrState: Routes = [{
+export const classifiersState: Routes = [{
     path: '',
     data: {
-        authorities: []
+        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN']
     },
-    canActivate: [],
+    canActivate: [UserRouteAccessService],
     children: CLASSIFIERS_ROUTES
 }];
