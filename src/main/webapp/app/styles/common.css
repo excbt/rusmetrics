@@ -417,7 +417,7 @@ body{
 .nmc-main-window-background {
 /*    padding-top: 15px;*/
 /*    padding-bottom: 20px;*/
-    font-size: 12px;
+    font-size: 14px;
     background-color: #BEBEBE !important; /*body background color*/
     
 /*
@@ -482,7 +482,7 @@ body{
 }
 .nmc-ctrl-cmp-search-btn:hover {
     background-color: lightgray !important;
-    outline: 5px solid lightgray;
+    outline: 4px solid lightgray;
 }
 
 .nmc-el-view-main-div-with-chart {
@@ -3431,8 +3431,8 @@ div.nmc-energy-simple-line > div {
 }
 
 .md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
-    min-height: 25px; 
-    height: 25px; 
+    min-height: 26px; 
+    height: 26px; 
     padding-top: 6px;
     background: transparent;
     border-radius: 0;
@@ -3443,7 +3443,7 @@ div.nmc-energy-simple-line > div {
 
 .nmc-md-ltb-btn:hover, .nmc-md-ltb-btn .active {
     background-color: lightgray !important;
-    outline: 4px solid lightgray;
+    outline: 2px solid lightgray;
 }
 
 /*Main menu btn*/
@@ -3477,7 +3477,7 @@ div.nmc-energy-simple-line > div {
 }
 .md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn:hover {
     background-color: lightgray !important;
-    outline: 6px solid lightgray;
+    outline: 5px solid lightgray;
 }
 
 
