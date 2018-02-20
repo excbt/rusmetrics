@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { organizationsRoute} from './organizations/organizations.route';
 
-// import { UserRouteAccessService } from '../shared';
+import { UserRouteAccessService } from '../shared';
 
 const ENTITY_ROUTES = [
     organizationsRoute
