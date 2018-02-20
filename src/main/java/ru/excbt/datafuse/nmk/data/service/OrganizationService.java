@@ -116,7 +116,7 @@ public class OrganizationService implements SecuredRoles {
             .stream()
                 .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
-                .map(o -> organizationMapper.otganizationToDTO(o)).collect(Collectors.toList());
+                .map(organizationMapper::otganizationToDTO).collect(Collectors.toList());
 		return organizations;
 	}
 

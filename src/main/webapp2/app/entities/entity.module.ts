@@ -3,6 +3,7 @@ import { RouterModule } from '@angular/router';
 import { JhipsterSharedModule } from '../shared';
 import { OrganizationsComponent } from './organizations/organizations.component';
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
+import { OrganizationsService } from './organizations/organizations.service';
 
 import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,7 +29,9 @@ import { entityState } from './';
     ],
     entryComponents: [
     ],
-    providers: [],
+    providers: [
+        OrganizationsService
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
         OrganizationsWidgetComponent

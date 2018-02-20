@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {MatTableDataSource} from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
+import { OrganizationsService } from './organizations.service';
+import { Organization } from './organization.model';
 
 @Component({
   selector: 'jhi-organizations',
@@ -8,12 +10,17 @@ import {MatTableDataSource} from '@angular/material';
 })
 export class OrganizationsComponent implements OnInit {
 
+  organizations: Organization[];
+
   displayedColumns = ['position', 'name', 'weight', 'symbol'];
   dataSource = new MatTableDataSource(ELEMENT_DATA);
 
-  constructor() { }
+  constructor(
+      private organizationService: OrganizationsService
+  ) { }
 
   ngOnInit() {
+    this.organizationService.findAll().subscribe((organizations) => this.organizations = organizations);
   }
 
   applyFilter(filterValue: string) {
