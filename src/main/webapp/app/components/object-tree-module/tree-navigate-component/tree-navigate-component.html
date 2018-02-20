@@ -107,7 +107,7 @@
              ng-mouseover = "item.isHover = true"
              ng-mouseleave = "item.isHover = false"
              ng-class="{'nmc-bg-distinguish': item.isSelected}"
-             style = "font-weight: normal;"
+             style = "font-weight: normal; min-height: 34px; padding-top: 5px;"
              >
              
 <!--            <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"/> -->
@@ -132,10 +132,10 @@
             </span>
 -->
             <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-folder-close" style = "color: rgb(231, 235, 245); margin-right: 5px;"></i> {{item.nodeName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item._id}})</span>                
+                <i class = "glyphicon glyphicon-folder-close" style = "color: rgba(117, 117, 117, 0.72); margin-right: 5px;"></i> {{item.nodeName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item._id}})</span>                
             </span>
             <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-home text-primary" style = "margin-right: 5px;"></i>
+                <i class = "glyphicon glyphicon-home" style = "margin-right: 5px; color: #80a3c1"></i>
                 {{item.nodeObject.fullName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
             <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">

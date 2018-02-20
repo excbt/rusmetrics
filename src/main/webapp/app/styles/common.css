@@ -485,6 +485,12 @@ body{
     background-color: lightgray !important;
     outline: 4px solid lightgray;
 }
+    /* Заголовок таблицы виджета "Контроль"*/
+tr.nmc-ctrl-cmp-table-header > th {
+    background-color: #646263; /*background color*/
+    color: #FFFFFF;
+    font-weight: normal;
+}
 
 .nmc-el-view-main-div-with-chart {
     overflow: auto;

@@ -73,7 +73,7 @@
     
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-            <tr class="nmc-main-table-header">
+            <tr class="nmc-ctrl-cmp-table-header">
                 <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                    Режим-->
                 </th>
@@ -147,7 +147,7 @@
         <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
             scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}">
             
-            <tr class = "nmc-main-table-header nmc-hide">
+            <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
                 <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                        Режим-->
@@ -170,10 +170,13 @@
                <td>
                    <table>
                        <tr>
-                            <td class = "col-xs-1 nmc-td-for-button-object-control">                  
-                               <i class = "btn glyphicon pull-right"
+                            <td class = "col-xs-1 nmc-td-for-button-object-control"
+                              >
+                               <i class = "btn btn-xs glyphicon pull-right"
                                  ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"
                                   ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 10px; padding-left: 12px;"
                                   >
                                    
                                </i>
@@ -186,10 +189,11 @@
 -->
                                 <img class = "marginRight2 nmc-p-tree-status-img pull-right" 
                                 ng-src = "{{object.modeImgSrc}}"
-                                style = "margin-top: 10px;">
+                                style = "margin-top: 3px;">
 
                             </td>
-                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
+                               style = "padding: 7px 0;">
 
                                <div ng-switch on = "column.type">
                                     <div ng-switch-when = "img">
