@@ -27,6 +27,9 @@ import { MatIconModule } from '@angular/material/icon';
     entryComponents: [],
     providers: [
     ],
+    exports: [
+        ClassifiersDashboardComponent
+    ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PortalClassifiersModule {}

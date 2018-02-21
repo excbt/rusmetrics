@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -55,6 +56,16 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
         " AND o.deleted = 0 " +
 		" ORDER BY o.organizationFullName")
 	List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
+    /**
+     *
+     * @param rmaSubscriberId
+     * @param sort
+     * @return
+     */
+	@Query("SELECT o FROM Organization o WHERE (o.rmaSubscriberId = :rmaSubscriberId OR o.isCommon = TRUE) " +
+        " AND o.deleted = 0 ")
+	List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId, Sort sort);
 
 	/**
 	 *

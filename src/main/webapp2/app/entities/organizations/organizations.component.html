@@ -1,4 +1,4 @@
-<div class="course">
+<div>
 
     <h1 jhiTranslate="organizations.title">
         Organization Title
@@ -16,9 +16,9 @@
                 <mat-header-cell *matHeaderCellDef class="organization-header edit-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
                 </mat-checkbox>
             </mat-header-cell>
-            <mat-cell *matCellDef="let row" class="edit-column-width">
-                <button mat-button routerLink="/">
-                    <mat-icon >edit</mat-icon>
+            <mat-cell *matCellDef="let organization" class="edit-column-width">
+                <button mat-button [routerLink]="['/organizations', organization.id]">
+                    <mat-icon>edit</mat-icon>
                 </button>
             </mat-cell>
         </ng-container>

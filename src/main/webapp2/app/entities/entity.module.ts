@@ -1,7 +1,9 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { JhipsterSharedModule } from '../shared';
 import { OrganizationsComponent } from './organizations/organizations.component';
+import { OrganizationDetailComponent } from './organizations/organization-detail.component';
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 
@@ -21,6 +23,7 @@ import { entityState } from './';
 
 @NgModule({
     imports: [
+        BrowserAnimationsModule,
         JhipsterSharedModule,
         RouterModule.forChild(entityState),
         MatInputModule,
@@ -35,6 +38,7 @@ import { entityState } from './';
     ],
     declarations: [
         OrganizationsComponent,
+        OrganizationDetailComponent,
         OrganizationsWidgetComponent
     ],
     entryComponents: [

@@ -9,11 +9,16 @@ import { OrganizationSort } from './organization.model';
 @Injectable()
 export class OrganizationsService {
 
-    private resourceUrl = SERVER_API_URL + 'api/organizations';
+    private resourceUrl = SERVER_API_URL + 'api/organizations/';
     constructor(private http: HttpClient) { }
 
     findAll(sortField: string, sortOrder: string): Observable<Organization[]> {
         return this.http.get<Organization[]>(this.resourceUrl, {params : new HttpParams().set('sort', sortField.concat(',', sortOrder))});
+    }
+
+    find(id: number | string): Observable<Organization> {
+        console.log('query');
+        return this.http.get<Organization>(this.resourceUrl.concat('' + id));
     }
 
 }

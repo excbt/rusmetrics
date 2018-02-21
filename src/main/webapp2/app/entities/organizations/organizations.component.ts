@@ -17,7 +17,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   selection: SelectionModel<Organization>;
   dataSource: OrganizationsDataSource;
 
-  displayedColumns = ['edit', 'id', 'organizationName'];
+  displayedColumns = ['organizationName', 'id', 'edit'];
   // dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
@@ -47,4 +47,5 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   loadOrganization() {
     this.dataSource.findAll(this.sort.active, this.sort.direction);
   }
+
 }
