@@ -5,10 +5,16 @@ import { OrganizationsComponent } from './organizations/organizations.component'
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 
-import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { CardModule } from 'primeng/card';
+import {
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatSortModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule } from '@angular/material';
+
+    import { CardModule } from 'primeng/card';
 
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
@@ -17,6 +23,10 @@ import { entityState } from './';
     imports: [
         JhipsterSharedModule,
         RouterModule.forChild(entityState),
+        MatInputModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        MatSortModule,
         MatTableModule,
         MatButtonModule,
         MatIconModule,

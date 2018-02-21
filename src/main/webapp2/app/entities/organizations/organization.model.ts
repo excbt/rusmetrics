@@ -12,3 +12,15 @@ export class Organization {
         public organizationDescription: string,
     ) { }
 }
+
+export class OrganizationSort {
+    constructor(
+        public field: string,
+        public sortOrder: string
+    ) { }
+
+    sortString(): string {
+        return this.field.concat(',', this.sortOrder);
+    }
+
+}
