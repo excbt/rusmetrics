@@ -456,6 +456,96 @@
             }
         }
         
+        ctrl.getIcon = function (ind) {
+//            if (ind % 2 == 0) {
+//                return "home-g.ico";
+//            } else if (ind % 3 == 0) {
+//                return "home-r.ico";
+//            } else {
+//                return "home-y.ico";
+//            }
+            var cls = "building24.png";
+            var rn = ind % 11;
+            switch (rn) {
+                case 0:
+                    cls = "building24.png";
+                    break;
+                case 1:
+                    cls = "childhome24.png";
+                    break;
+                case 2:
+                    cls = "hospital24.png";
+                    break;
+                case 3:
+                    cls = "hotel26.png";
+                    break;
+                case 4:
+                    cls = "mkd26.png";
+                    break;
+                case 5:
+                    cls = "school24.png";
+                    break;
+                case 6:
+                    cls = "gos26.png";
+                    break;
+                case 7:
+                    cls = "prod32.png";
+                    break;
+                case 8:
+                    cls = "cot16.png";
+                    break;
+                case 9:
+                    cls = "dom26.png";
+                    break;                
+                default:
+                    cls = "stadium24.png";
+                    break;
+            }
+            return cls;
+        }
+        
+        ctrl.getTextShadow = function (ind) {
+            var clr = "rgb(95, 95, 95)";
+            if (ind % 2 == 0) {
+                clr = "green";
+            } else if (ind % 3 == 0) {
+                clr = "#ff0000";
+            } else {
+                clr = "#ffc000";
+            }
+            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
+        }
+        
+        ctrl.getIconCssClass = function (ind) {
+            var cls = "btn btn-xs iconcls pull-right";
+            var rn = ind % 6;//Math.ceil(Math.random()*10);
+//console.log(rn);
+            switch (rn) {
+                case 0:
+                    cls = cls.replace("iconcls", "far fa-building");
+                    break;
+                case 1:
+                    cls = cls.replace("iconcls", "fas fa-home");
+                    break;
+                case 2:
+                    cls = cls.replace("iconcls", "far fa-hospital");
+                    break;
+                case 3:
+                    cls = cls.replace("iconcls", "fas fa-university");
+                    break;
+                case 4:
+                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
+                    break;
+                case 5:
+                    cls = cls.replace("iconcls", "fas fa-industry");
+                    break;
+                default:
+                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
+                    break;
+            }
+            return cls;
+        }
+        
     }
     
 }());

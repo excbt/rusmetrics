@@ -83,7 +83,8 @@
                     <span ng-click = "$ctrl.setOrderBy(column.name)">{{column.caption}}</span>
                     <i class = "glyphicon" 
                        ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
-                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'">
+                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
+                       ng-click = "$ctrl.setOrderBy(column.name)">
                     </i>
 <!--
                     <i ng-if = "true"
@@ -111,7 +112,8 @@
 -->
                         </i>
                       <ul
-                        class="dropdown-menu" >
+                        class="dropdown-menu" 
+                        style = "margin-top: 5px; min-width: 20px;">
 <!--                        <li style="color: rgb(95, 95, 95)">test IMG</li>-->
                         <li ng-repeat = "fvalue in column.filterValues track by $index">
                             <a href=""
@@ -168,18 +170,41 @@
                </td>
 -->
                <td>
-                   <table>
+                   <table style = "width: 100%;">
                        <tr>
                             <td class = "col-xs-1 nmc-td-for-button-object-control"
                               >
-                               <i class = "btn btn-xs glyphicon pull-right"
-                                 ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"
+<!--
+                         <i ng-class = "$ctrl.getIconCssClass($index)"
+                                 
                                   ng-click = "$ctrl.showObjectWidget(object, $index)"
                                   
-                                  style = "font-size: 10px; padding-left: 12px;"
+                                  style = "font-size: 20px; padding-left: 12px; color: white"
+                                  ng-style = "{'text-shadow': $ctrl.getTextShadow($index)}"
                                   >
-                                   
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
                                </i>
+-->
+
+                              <img class="pull-right"
+                              ng-click = "$ctrl.showObjectWidget(object, $index)"
+                               ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon($index)}}"
+                               style = "padding-left: 12px; height: 24px; width: 36px;"
+                               />
+                              
+<!--
+                               <i class = "btn btn-xs glyphicon glyphicon-home pull-right"
+                                 
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 14px; padding-left: 12px; color: #80a3c1"
+                                  ng-style = "{'color': $even ? '#ffc000' : '#ff0000'}"
+                                  >
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
+                               </i>
+-->
 <!--
                                 <img class = "marginRight2 pull-right" 
                                 height = "12"
@@ -189,7 +214,7 @@
 -->
                                 <img class = "marginRight2 nmc-p-tree-status-img pull-right" 
                                 ng-src = "{{object.modeImgSrc}}"
-                                style = "margin-top: 3px;">
+                                style = "margin-top: 7px;">
 
                             </td>
                             <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"

@@ -10,15 +10,18 @@
 <!--                           style = "background: rgb(231,235,245)">-->
                            <div class = "md-toolbar-tools paddingLeft10I">
                                <div flex>
-                                    <md-menu md-offset = "0 36">
+                                    <md-menu md-offset = "0 37">
                                           <md-button class = "md-icon-button nmc-md-ltb-btn"
                                                ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
                                                aria-label = "Выбор иерархии"
                                                style = ""
                                                >
+                                               <md-icon md-font-set = "fa">&#xf0e8;</md-icon>
 <!--                                                <md-icon md-font-set = "fa fa-sm">&#xf036;</md-icon>-->
+<!--
                                                <img style = "height: 16px; width: 16px; margin-top: -12px;"
                                                src = "components/object-tree-module/tree-navigate-component/images/rm_tree.png"/>
+-->
                                                 
 <!--                                                f1bb-->
                                           </md-button>
@@ -110,14 +113,17 @@
              ng-mouseleave = "item.isHover = false"
              ng-class="{'nmc-bg-distinguish': item.isSelected}"
              style = "font-weight: normal; min-height: 34px; padding-top: 5px;"
+             
              >
              
 <!--            <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"/> -->
 
+<!--
             <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
                  class = "marginRight2 nmc-p-tree-status-img"
                   ng-src = "{{item.monitorStatusPath || $ctrl.data.currentPTreeMonitorDefault}}"
                   >
+-->
 <!--                  ng-src = "{{$ctrl.data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || $ctrl.data.currentPTreeMonitorDefault}}"-->
 
           <i ng-if = "!$ctrl.isDeviceNode(item)" 
@@ -134,34 +140,86 @@
             </span>
 -->
             <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-folder-close" style = "color: rgba(117, 117, 117, 0.72); margin-right: 5px;"></i> {{item.nodeName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item._id}})</span>                
+<!--
+                <i class = "glyphicon glyphicon-folder-close" style = "color: rgba(117, 117, 117, 0.72); margin-right: 5px;"
+                    ng-style = "{'color': item.monitorStatusPath}"
+                ></i> 
+-->
+                <i class = "glyphicon glyphicon-folder-close" style = "margin-right: 5px; color: white;"
+                    ng-style = "{'text-shadow': item.monitorStatusPath}"
+                ></i>
+                {{item.nodeName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item._id}})</span>                
             </span>
             <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-home" style = "margin-right: 5px; color: #80a3c1"></i>
+<!--
+               <i class = "glyphicon glyphicon-home" style = "margin-right: 5px; color: white;"
+                    ng-style = "{'text-shadow': item.monitorStatusPath}"
+                ></i>
+-->
+<!--                {{item.monitorStatusPath}}-->
+<!--
+                <i class = "glyphicon glyphicon-home" style = "margin-right: 5px; color: #80a3c1;"
+                    ng-style = "{'color': item.monitorStatusPath}"                                            
+                ></i>
+-->
+                <img class=""
+                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                   ng-src = "components/object-tree-module/tree-navigate-component/images/buildings/{{$ctrl.getBuildingIcon($index)}}"
+                   style = "margin-right: 5px; height: 16px; width: 16px;"
+                   />
                 {{item.nodeObject.fullName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
             <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
-               <i class = "glyphicon glyphicon-map-marker text-info" style = "margin-right: 5px;"></i>
+               
+<!--
+                <img class=""
+                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                   ng-src = "components/object-tree-module/tree-navigate-component/images/{{$ctrl.getItemImg(item)}}"
+                   style = "height: 16px; width: 16px; margin-right: 5px;"
+                   />
+-->
+
+<!--
+                <i class = "" style = "margin-right: 5px; color: white;"
+                    ng-class = "$ctrl.getItemCssClass(item)"
+                
+                   ng-style = "{'text-shadow': item.monitorStatusPath}"
+                ></i>
+-->
+               <i class = "glyphicon glyphicon-map-marker" style = "margin-right: 5px; color: green;"
+                   ng-style = "{'color': item.monitorStatusPath}"
+               ></i>
                 {{item.nodeObject.customServiceName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
-            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
-                <i class = "glyphicon glyphicon-scale text-warning" style = "margin-right: 5px;"></i>
+            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle" style = "margin-left: 25px;">
+                <img class=""                  
+                   ng-src = "components/object-tree-module/tree-navigate-component/images/device.png"
+                   style = "height: 16px; width: 16px; margin-right: 5px;"/>
+<!--
+                <i class = "glyphicon glyphicon-scale text-warning" style = "margin-right: 5px; color: white; text-shadow: -1px 0 #8a6d3b, 0 1px #8a6d3b, 1px 0 #8a6d3b, 0 -1px #8a6d3b;"                    
+                
+                    
+                ></i>
+-->
+              
                <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
                <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
                <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
                <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
+<!--
             <span class="nmc-valign-middle">                
                 <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0) && !collapsed"
                    style = "display: inline;">
                     ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
                     <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">
-<!--                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще {{$ctrl.ELEMENTS_PER_NODE}}</i>-->
+                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще {{$ctrl.ELEMENTS_PER_NODE}}</i>
                             <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewAllElements(item)">Показать все</i>
                   </span>
                 </p>    
                 
             </span>
+-->
 <!--
             <span>
                 item.lazyNode: {{item.lazyNode}}
@@ -201,16 +259,18 @@
                 </li>
             </ol>
 -->
-            <span class="nmc-valign-middle" style = "">                
-                <p ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length  && !collapsed"
-                   style = "display: inline; margin-left: 40px;">
-                    ({{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
+            <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length  && !collapsed"
+               class="nmc-valign-middle nmc-color" style = "">                
+                <p 
+                   style = "display: inline; margin-left: 20px; color: rgb(37, 111, 236); cursor: pointer; font-weight: bold;"
+                   ng-click = "$ctrl.viewMoreElements(item)">                    
 <!--                    <span ng-if = "item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length < item.linkedNodeObjects.length + item.childNodes.length">-->
-                            <i class = "btn btn-primary btn-xs" ng-click = "$ctrl.viewMoreElements(item)">Показать еще</i>
+                           Показать еще ...
+<!--                            <i class = "" ng-click = "$ctrl.viewMoreElements(item)">Показать еще ...</i>-->
 <!--                            <i class = "btn btn-default btn-xs" ng-click = "$ctrl.viewAllElements(item)">Показать все</i>-->
 <!--                  </span>-->
                 </p>    
-                
+                (Показано {{item.linkedNodeObjectsOnPage.length + item.childNodesOnPage.length}} из {{item.linkedNodeObjects.length + item.childNodes.length}}) 
             </span>
         </div>
     </script>

@@ -464,15 +464,16 @@ body{
 /* Стиль главныго дива виджета "Контроль" объектов учета*/
 .nmc-cont-object-control-main-div {
     overflow: auto;
-    height: 85vh;
+/*    height: 100%;*/
+    height: 89vh;
 /*    height:61vh;*/
     min-height: 290px;
 }
 @media (max-height: 800px) {
     .nmc-cont-object-control-main-div {
         overflow: auto;
-        height: 80vh;
-    /*    height:61vh;*/
+        height: 79vh;
+/*        height:61vh;*/
         min-height: 290px;
     }
 }
@@ -1026,6 +1027,10 @@ td.nmc-td-for-buttons{
 
     /* Таблица в основной рабочей области */
 .nmc-main-table {
+ }
+
+.nmc-main-table > tbody > tr:last-child {
+    border-bottom: 1px solid #ddd;
  }
 
     /* Заголовок таблицы */
@@ -3380,7 +3385,7 @@ div.nmc-energy-simple-line > div {
 */
 .nmc-p-tree-with-fixed-header {
     overflow: auto;
-    height: 85vh;
+    height: 89vh;
     min-height: 360px;
     position:relative;
     padding-left: 15px;
@@ -3409,6 +3414,7 @@ div.nmc-energy-simple-line > div {
     min-height: 32px;
     max-height: 32px;
     border: 1px solid #41719c;
+    border-left: none;
 }
 
 .nmc-md-toolbar-n > .md-toolbar-tools {
@@ -3495,7 +3501,7 @@ div.nmc-energy-simple-line > div {
 }
 
 .nmc-md-menu-item > .md-button {
-    font-size: 12px;
+    font-size: 13px;
     min-height: 24px;
     height: 24px;
     line-height: inherit;
