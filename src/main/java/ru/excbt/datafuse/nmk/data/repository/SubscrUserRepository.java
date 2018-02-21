@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -20,7 +21,12 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
  */
 public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
 
+    String USERS_BY_LOGIN_CACHE = "usersByLogin";
+
 	List<SubscrUser> findByUserNameIgnoreCase(String userName);
+
+    @Cacheable(cacheNames = USERS_BY_LOGIN_CACHE)
+	Optional<SubscrUser> findOneByUserName(String userName);
 
     Optional<SubscrUser> findOneByUserNameIgnoreCase(String userName);
 

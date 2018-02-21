@@ -39,7 +39,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 @Entity
 @Table(name = "subscr_user")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
 public class SubscrUser extends JsonAbstractAuditableModel implements SubscriberUser, DeletableObject {
