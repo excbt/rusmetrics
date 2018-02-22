@@ -29,7 +29,7 @@
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png";
         
-        var CONT_OBJECTS_PER_PAGE = 42;
+        var CONT_OBJECTS_PER_PAGE = 100;
         
         var EVENTS = {};
         EVENTS.OBJECT_CLICK = 'contObjectControlComponentService:objectClick';
