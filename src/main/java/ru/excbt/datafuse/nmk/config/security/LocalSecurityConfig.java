@@ -147,7 +147,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/appStatus/**").permitAll()
             .antMatchers("/api/securityCheck/**").permitAll()
             .antMatchers("/api/www-metrics").permitAll()
-            .antMatchers("/api/**").access(RolesAccess.API_SUBSR_ACCESS)//.authenticated()
+            .antMatchers("/api/**").authenticated() //.access(RolesAccess.API_SUBSR_ACCESS)
             .antMatchers("/api/rma/**").access(RolesAccess.API_RMA_ACCESS)
             .antMatchers("/resources/**").permitAll()
             .antMatchers("/bower_components/**").permitAll()

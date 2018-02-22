@@ -64,7 +64,7 @@ public class SubscriberUserDetails extends User implements SubscriberUser {
 		this.id = sUser.getId();
 		this.subscriber = sUser.getSubscriber();
 		this.version = sUser.getVersion();
-		this.isSystem = false;
+		this.isSystem = sUser.getIsSystem();
 		this.skipServiceFilter = false;
 		this.isBlocked = Boolean.TRUE.equals(sUser.getIsBlocked());
 	}
