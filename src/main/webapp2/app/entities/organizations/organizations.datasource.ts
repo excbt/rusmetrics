@@ -1,12 +1,10 @@
 import {CollectionViewer, DataSource, } from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {Organization} from './organization.model';
-import {OrganizationSort} from './organization.model';
 import {OrganizationsService} from './organizations.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import {MatTableDataSource, MatSort} from '@angular/material';
 
 export class OrganizationsDataSource implements DataSource<Organization> {
 

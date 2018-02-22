@@ -1,10 +1,16 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatSort } from '@angular/material';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
-import { Organization, OrganizationSort } from './organization.model';
-import { merge} from 'rxjs/observable/merge';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
+import { Organization } from './organization.model';
+import { merge } from 'rxjs/observable/merge';
+import {
+    // debounceTime,
+    // distinctUntilChanged,
+    // startWith,
+    tap
+    // , delay
+} from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({

@@ -1,8 +1,7 @@
 import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
-import { Router, ActivatedRoute, ParamMap } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { OrganizationsService } from './organizations.service';
 import { slideInDownAnimation } from '../animations';
-import { Observable } from 'rxjs/Observable';
 import { Organization } from './organization.model';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
@@ -27,8 +26,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     constructor(
                 private eventManager: JhiEventManager,
                 private service: OrganizationsService,
-                private route: ActivatedRoute,
-                private router: Router) { }
+                private route: ActivatedRoute) { }
 
     ngOnInit() {
         this.subscription = this.route.params.subscribe((params) => {

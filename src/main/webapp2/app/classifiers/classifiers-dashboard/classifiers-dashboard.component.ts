@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { OrganizationsWidgetComponent } from '../../entities/organizations/organizations-widget.component';
 
 @Component({
   selector: 'jhi-classifiers-dashboard',
