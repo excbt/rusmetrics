@@ -25,6 +25,7 @@ import { JhipsterSharedModule, UserRouteAccessService } from './shared';
 import { JhipsterAppRoutingModule } from './app-routing.module';
 import { JhipsterHomeModule } from './home/home.module';
 import { PortalClassifiersModule } from './classifiers/classifiers.module';
+import { PortalObjectTreeModule } from './components/object-tree';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
 import { PortalEntityModule } from './entities/entity.module';
@@ -66,6 +67,7 @@ import {
         // JhipsterAccountModule,
         PortalClassifiersModule,
         PortalEntityModule,
+        PortalObjectTreeModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
