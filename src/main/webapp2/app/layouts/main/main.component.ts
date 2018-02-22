@@ -4,7 +4,8 @@ import { JhiLanguageHelper } from '../../shared';
 
 @Component({
     selector: 'jhi-main',
-    templateUrl: './main.component.html'
+    templateUrl: './main.component.html',
+    styleUrls: ['./main.component.scss']
 })
 export class JhiMainComponent implements OnInit {
 
