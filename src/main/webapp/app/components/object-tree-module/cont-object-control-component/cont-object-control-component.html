@@ -43,11 +43,16 @@
                 ng-change = "$ctrl.filterObjects($ctrl.filter)"
                 style = "border-color: rgb(95, 95, 95); border-radius: 0;">
                 <span class = "input-group-addon" style = "background: transparent; border: none; padding: 0 3px 6px 3px">
-                    <i class = "btn btn-xs glyphicon glyphicon-search nmc-ctrl-cmp-search-btn"
-                        ng-class = "{'glyphicon-search': !$ctrl.searchFlag, 'glyphicon-remove': $ctrl.searchFlag}"
-                    
+                    <i class = "btn btn-xs glyphicon nmc-ctrl-cmp-search-btn"
+                        ng-class = "{'glyphicon-remove': $ctrl.searchFlag}"                    
                         ng-click = "$ctrl.toggleSearch()"
-                    ></i>
+                    >
+                        <img ng-if = "!$ctrl.searchFlag" 
+                        src = "components\object-tree-module\cont-object-control-component\search26.png"
+                        style = "width: 16px; height: 16px; margin-top: -6px; margin-left: 3px;"
+                        />
+                    </i>
+                    
                 </span>
             </div>
           </div>
