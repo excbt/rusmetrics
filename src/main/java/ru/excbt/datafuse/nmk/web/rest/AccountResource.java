@@ -37,7 +37,7 @@ public class AccountResource {
     @Timed
     public UserDTO getAccount() {
         return portalUserIdsService.getSubscrUserWithAuthorities().map(UserDTO::new)
-            .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
+            .orElseGet(UserDTO::new);
     }
 
 }
