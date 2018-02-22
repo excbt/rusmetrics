@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.config;
 
 import lombok.Getter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,6 +19,12 @@ public class PortalProperties {
     private final PortalProperties.Cache cache = new PortalProperties.Cache();
 
     private final Metrics metrics = new Metrics();
+
+    public CorsConfiguration getCors() {
+        return cors;
+    }
+
+    private final Ribbon ribbon = new Ribbon();
 
     private final Datasource datasource = new Datasource();
 
@@ -39,6 +46,10 @@ public class PortalProperties {
 
     public Datasource getDatasource() {
         return datasource;
+    }
+
+    public Ribbon getRibbon() {
+        return ribbon;
     }
 
     public static class Async {
@@ -366,6 +377,23 @@ public class PortalProperties {
             public void setEnabled(boolean enabled) {
                 this.enabled = enabled;
             }
+        }
+    }
+
+
+    private final CorsConfiguration cors = new CorsConfiguration();
+
+
+    public static class Ribbon {
+
+        private String[] displayOnActiveProfiles = null;
+
+        public String[] getDisplayOnActiveProfiles() {
+            return displayOnActiveProfiles;
+        }
+
+        public void setDisplayOnActiveProfiles(String[] displayOnActiveProfiles) {
+            this.displayOnActiveProfiles = displayOnActiveProfiles;
         }
     }
 

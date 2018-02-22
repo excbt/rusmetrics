@@ -84,7 +84,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import ru.excbt.datafuse.nmk.security.SAMLSubscriberUserDetailsService;
-import ru.excbt.datafuse.nmk.security.UserAuthenticationProvider;
+import ru.excbt.datafuse.nmk.security.PortalUserAuthenticationProvider;
 
 @Configuration
 @EnableWebSecurity
@@ -113,10 +113,10 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	private SAMLSubscriberUserDetailsService samlSubscriberUserDetailsService;
 
 	@Autowired
-	private UserAuthenticationProvider userAuthenticationProvider;
+	private PortalUserAuthenticationProvider userAuthenticationProvider;
 
 	@Autowired
-	private CustomAuthenticationSuccessHandler authenticationSuccessHandler;
+	private MyAuthenticationSuccessHandler authenticationSuccessHandler;
 
 	// XML parser pool needed for OpenSAML parsing
 	@Bean(initMethod = "initialize")
@@ -577,8 +577,8 @@ public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * @return
 	 */
 	@Bean
-	public CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
-		return new CustomAuthenticationSuccessHandler();
+	public MyAuthenticationSuccessHandler customAuthenticationSuccessHandler() {
+		return new MyAuthenticationSuccessHandler();
 	}
 
 }

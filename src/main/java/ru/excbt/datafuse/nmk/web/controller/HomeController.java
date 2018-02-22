@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.security.SecurityUtils;
 
 /**
  * Handles requests for the application home page.
@@ -42,6 +43,11 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/app", method = RequestMethod.GET)
 	public String app() {
+
+	    if (!SecurityUtils.isAuthenticated()) {
+            return "redirect:/auth/localLogin";
+        }
+
 		return "redirect:/app/";
 	}
 
@@ -51,6 +57,11 @@ public class HomeController {
 	 */
 	@RequestMapping(value = "/app/", method = RequestMethod.GET)
 	public String app1() {
+
+        if (!SecurityUtils.isAuthenticated()) {
+            return "redirect:/auth/localLogin";
+        }
+
 		return "/../../app/index.html";
 	}
 

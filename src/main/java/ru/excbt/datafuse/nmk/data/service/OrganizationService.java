@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -116,7 +117,18 @@ public class OrganizationService implements SecuredRoles {
             .stream()
                 .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
-                .map(o -> organizationMapper.otganizationToDTO(o)).collect(Collectors.toList());
+                .map(organizationMapper::toDTO).collect(Collectors.toList());
+		return organizations;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids, Sort sort) {
+	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
+		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(searchSubscriberId, sort)
+            .stream()
+                .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+                .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
+                .map(organizationMapper::toDTO).collect(Collectors.toList());
 		return organizations;
 	}
 

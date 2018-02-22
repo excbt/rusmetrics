@@ -1,0 +1,54 @@
+<div *ngIf="organization">
+    <h2>
+        <span jhiTranslate="organization.title">Organization Name</span> {{organization.organizationName}}</h2>
+    <hr>
+
+    <dl class="row-md jh-entity-details">
+        <dt>
+            <span jhiTranslate="organization.id">id</span>
+        </dt>
+        <dd>
+            <span>{{organization.id}}</span>
+        </dd>
+        <dt>
+            <span jhiTranslate="organization.name">Organization Name</span>
+        </dt>
+        <dd>
+            <span>{{organization.organizationName}}</span>
+        </dd>
+
+        <span jhiTranslate="organization.fullName">Organization Name</span>
+        </dt>
+        <dd>
+            <span>{{organization.organizationName}}</span>
+        </dd>
+
+        </dd>
+
+        <span jhiTranslate="organization.fullName">Organization Name</span>
+        </dt>
+        <dd>
+            <span>{{organization.organizationName}}</span>
+        </dd>
+
+
+    </dl>
+
+    <!-- <button mat-button [routerLink]="['/organizations', organization.id]"  type="submit">
+        <mat-icon>edit</mat-icon>
+    </button>
+ -->
+
+    <hr>
+    <button mat-raised-button (click)="previousState()">
+        <span class="fa fa-arrow-left"></span>&nbsp;
+        <span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+
+    <button mat-raised-button [routerLink]="['/', { outlets: { popup: 'organizations/'+ organization.id + '/edit'} }]" replaceUrl="true"
+        color="primary">
+        <span class="fa fa-pencil"></span>&nbsp;
+        <span jhiTranslate="entity.action.edit"> Edit</span>
+    </button>
+
+</div>

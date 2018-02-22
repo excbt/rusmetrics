@@ -1,0 +1,41 @@
+<div>
+
+    <h1 jhiTranslate="organizations.title">
+        Organization Title
+    </h1>
+
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-table class="organizations-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="edit">
+            <mat-header-cell *matHeaderCellDef class="edit-column-width">
+                <mat-header-cell *matHeaderCellDef class="organization-header edit-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+                </mat-checkbox>
+            </mat-header-cell>
+            <mat-cell *matCellDef="let organization" class="edit-column-width">
+                <button mat-button [routerLink]="['/organizations', organization.id]">
+                    <mat-icon>edit</mat-icon>
+                </button>
+            </mat-cell>
+        </ng-container>
+
+        <!-- Position Column -->
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let organization"> {{organization.id}} </mat-cell>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="organizationName">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organizations.one.name' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let organization"> {{organization.organizationName}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+    </mat-table>
+</div>

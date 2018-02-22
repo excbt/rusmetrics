@@ -7,6 +7,6 @@ export const classifiersDashboardRoute: Route = {
     path: 'classifiers',
     component: ClassifiersDashboardComponent,
     data: {
-        pageTitle: 'Справочники'
+        pageTitle: 'classifiers.title'
     }
 };

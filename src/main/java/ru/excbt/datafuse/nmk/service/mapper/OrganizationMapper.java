@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
 @Mapper(componentModel = "spring")
 public interface OrganizationMapper {
 
-    OrganizationDTO otganizationToDTO(Organization organization);
+    OrganizationDTO toDTO(Organization organization);
 
     Organization.OrganizationInfo toShortInfo(Organization organization);
 

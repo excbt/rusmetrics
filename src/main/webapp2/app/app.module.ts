@@ -16,6 +16,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
@@ -23,11 +24,11 @@ import { NotificationInterceptor } from './blocks/interceptor/notification.inter
 import { JhipsterSharedModule, UserRouteAccessService } from './shared';
 import { JhipsterAppRoutingModule } from './app-routing.module';
 import { JhipsterHomeModule } from './home/home.module';
-import { NmkClassifiersModule } from './classifiers/classifiers.module';
+import { PortalClassifiersModule } from './classifiers/classifiers.module';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
-// import { JhipsterEntityModule } from './entities/entity.module';
-// import { PaginationConfig } from './blocks/config/uib-pagination.config';
+import { PortalEntityModule } from './entities/entity.module';
+import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from './shared/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import {
@@ -48,20 +49,23 @@ import {
     imports: [
         BrowserModule,
         BrowserAnimationsModule,
+        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
+        // UI modules
+        MatMenuModule,
         SidebarModule,
         PanelModule,
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
         MatListModule,
+        // Work modules
         JhipsterAppRoutingModule,
-        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         JhipsterSharedModule,
         JhipsterHomeModule,
-        NmkClassifiersModule
         // JhipsterAdminModule,
         // JhipsterAccountModule,
-        // JhipsterEntityModule,
+        PortalClassifiersModule,
+        PortalEntityModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
@@ -77,11 +81,10 @@ import {
     ],
      providers: [
         MainMenuService,
-//     ],
 
-         ProfileService,
-    //     PaginationConfig,
-         UserRouteAccessService,
+        ProfileService,
+        PaginationConfig,
+        UserRouteAccessService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,

@@ -14,19 +14,20 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];        
         ctrl.objectsOnPage = [];
         ctrl.filter = '';
+        ctrl.searchFlag = false;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png",
-            OBJECTS_PER_PAGE = 42;
+            OBJECTS_PER_PAGE = 100;
         
         var MONITOR_STATE_LVLS = {
             'green': {
@@ -141,6 +142,16 @@
         }
         
         ctrl.addMoreObjectsOnPage = function () {
+            var filterFlag = false;
+            ctrl.columns.some(function (clmn) {
+                if (clmn.setFilterFlag) {
+                    filterFlag = true;
+                    return true;
+                }
+            });
+            if (filterFlag) {
+                return false;
+            }
             if (ctrl.objectsOnPage.length < ctrl.objects.length) {
                 var addedObjects = ctrl.objects.slice(ctrl.objectsOnPage.length, ctrl.objectsOnPage.length + OBJECTS_PER_PAGE);
                 ctrl.objectsOnPage = ctrl.objectsOnPage.concat(addedObjects);
@@ -428,6 +439,112 @@
             ctrl.objectsOnPage = [];
             ctrl.addMoreObjectsOnPage();
         };
+        
+        ctrl.toggleSearch = function () {
+            ctrl.searchFlag = !ctrl.searchFlag;
+            if (ctrl.searchFlag) {
+                $timeout(function () {
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "99.2%", "margin-left": "10px"});
+                    $('#nmc-ctrl-cmp-search-btn-id').focus();
+                }, 1);
+            } else {
+                ctrl.filter = '';
+                ctrl.filterObjects();
+                $timeout(function () {
+                    $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96.4%", "margin-left": "50px"});
+                }, 1);
+            }
+        }
+        
+        ctrl.getIcon = function (ind) {
+//            if (ind % 2 == 0) {
+//                return "home-g.ico";
+//            } else if (ind % 3 == 0) {
+//                return "home-r.ico";
+//            } else {
+//                return "home-y.ico";
+//            }
+            var cls = "building24.png";
+            var rn = ind % 11;
+            switch (rn) {
+                case 0:
+                    cls = "building24.png";
+                    break;
+                case 1:
+                    cls = "childhome24.png";
+                    break;
+                case 2:
+                    cls = "hospital24.png";
+                    break;
+                case 3:
+                    cls = "hotel26.png";
+                    break;
+                case 4:
+                    cls = "mkd26.png";
+                    break;
+                case 5:
+                    cls = "school24.png";
+                    break;
+                case 6:
+                    cls = "gos26.png";
+                    break;
+                case 7:
+                    cls = "prod32.png";
+                    break;
+                case 8:
+                    cls = "cot16.png";
+                    break;
+                case 9:
+                    cls = "dom26.png";
+                    break;                
+                default:
+                    cls = "stadium24.png";
+                    break;
+            }
+            return cls;
+        }
+        
+        ctrl.getTextShadow = function (ind) {
+            var clr = "rgb(95, 95, 95)";
+            if (ind % 2 == 0) {
+                clr = "green";
+            } else if (ind % 3 == 0) {
+                clr = "#ff0000";
+            } else {
+                clr = "#ffc000";
+            }
+            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
+        }
+        
+        ctrl.getIconCssClass = function (ind) {
+            var cls = "btn btn-xs iconcls pull-right";
+            var rn = ind % 6;//Math.ceil(Math.random()*10);
+//console.log(rn);
+            switch (rn) {
+                case 0:
+                    cls = cls.replace("iconcls", "far fa-building");
+                    break;
+                case 1:
+                    cls = cls.replace("iconcls", "fas fa-home");
+                    break;
+                case 2:
+                    cls = cls.replace("iconcls", "far fa-hospital");
+                    break;
+                case 3:
+                    cls = cls.replace("iconcls", "fas fa-university");
+                    break;
+                case 4:
+                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
+                    break;
+                case 5:
+                    cls = cls.replace("iconcls", "fas fa-industry");
+                    break;
+                default:
+                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
+                    break;
+            }
+            return cls;
+        }
         
     }
     
