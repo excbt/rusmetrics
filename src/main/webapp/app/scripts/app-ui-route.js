@@ -105,7 +105,14 @@
                     node: null
                 }
             },
-            
+            {
+                name: 'objectsPTree.treeNodeInfo.contObjectMonitor',
+                url: '/cont-object-monitor',
+                component: 'contObjectMonitorComponent',
+                params: {
+                    node: null
+                }
+            },
 /*end 'component version'*/            
             {
                 name: 'demoMap',

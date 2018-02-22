@@ -42,6 +42,11 @@
                 keyname: "NOTIFICATION",
                 caption: "Уведомления",
                 stateName: "objectsPTree.treeNodeInfo.nodeNotifications"
+            },
+            {
+                keyname: "MONITORING",
+                caption: "Мониторинг",
+                stateName: "objectsPTree.treeNodeInfo.contObjectMonitor"
             }
         ];
         
@@ -50,6 +55,11 @@
                 keyname: "CONTOBJECT_CONTROL",
                 caption: "Контроль",
                 stateName: "objectsPTree.treeNodeInfo.contObjectControl"
+            },
+            {
+                keyname: "MONITORING",
+                caption: "Мониторинг",
+                stateName: "objectsPTree.treeNodeInfo.contObjectMonitor"
             }
         ]; 
         
