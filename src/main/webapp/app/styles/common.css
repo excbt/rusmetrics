@@ -469,6 +469,7 @@ body{
 /*    height:61vh;*/
     min-height: 290px;
 }
+
 @media (max-height: 800px) {
     .nmc-cont-object-control-main-div {
         overflow: auto;

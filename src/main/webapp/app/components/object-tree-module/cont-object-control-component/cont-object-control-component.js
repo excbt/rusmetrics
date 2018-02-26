@@ -360,6 +360,7 @@
         });
         
         function getNodeContObjects() {
+console.log(ctrl.node);            
 //console.log('getNodeContObjects:', getNodeContObjects);            
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {

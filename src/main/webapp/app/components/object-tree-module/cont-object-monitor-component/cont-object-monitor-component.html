@@ -1,13 +1,162 @@
-<div style = "min-width: 1000px;">
+<div style = "min-width: 1000px; display: none;">
 <!--    Cont object monitor view-->
-Мониторинг
-   <div style = "position:relative; height: 200px; width: 200px;">
+<!--Мониторинг-->
+   <div style = "position:relative; height: 300px; width: 300px; border: 1px solid black;">
         <canvas id = "polar-area" 
         class = "chart chart-polar-area"
         chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
-        chart-options = "$ctrl.options">
-
+        chart-options = "$ctrl.options"
+        
+        >
+<!--        chart-colors = "$ctrl.colours"-->
         </canvas>
     </div>
     
+</div>
+
+
+<div class = "container-fluid" style = "display: none;">
+   <div class = "row">
+        <div class = "col-xs-3">
+            <canvas id = "polar-area" 
+                class = "chart chart-polar-area"
+                chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
+                chart-options = "$ctrl.options"
+                >
+            <!--        chart-colors = "$ctrl.colours"-->
+            </canvas>
+        </div>
+        <div class = "col-xs-9">
+          
+        </div>
+   </div>
+    
+</div>
+
+
+<h3>Общая диаграмма монитора объектов и точек учета</h3>
+<div layout = "column">
+    <div layout = "row" style = "border-bottom: 1px solid rgb(95, 95, 95); height: 367px; max-height: 367px;">
+    <!--    style = "background-color: aqua">-->
+        <div flex = "30">
+    <!--        style = "background-color: blueviolet">-->
+           <div style = "position:relative; height: 367px; width: 367px;">
+            <canvas id = "polar-area" 
+                   
+                    class = "chart chart-polar-area"
+                    chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
+                    chart-options = "$ctrl.options"
+                    chart-click = "$ctrl.doughnutClick"
+                    >
+                <!--        chart-colors = "$ctrl.colours"-->
+                </canvas>
+            </div>
+        </div>
+        <div flex = "70">
+    <!--         style = "background-color: brown">-->
+            <div layout = "column">
+    <!--           style = "background-color: indianred">-->
+               <div flex = "20">
+    <!--              style = "background-color: blue">-->
+                  <div layout = "row">
+                      <div flex = "15">
+                          Сбор данных
+                          <div style = "width: 300px;">
+                              <div  style = "position:relative; height: 150px; width: 150px;">
+                                   <canvas id="doughnut"
+                                            class="chart chart-doughnut" 
+                                            chart-data="$ctrl.doughnut3.data"
+                                            chart-labels="$ctrl.doughnut3.labels"                              
+                                            chart-options="$ctrl.doughnut3.options"
+                                            chart-click = "$ctrl.doughnutClick"
+                                            chart-colors = "$ctrl.doughnut3.colors"
+                                            >
+                                    </canvas>
+                              </div>
+                          </div>
+                      </div>
+                      <div flex = "15">
+                          ПУ
+                           <canvas id="doughnut"
+
+                                    class="chart chart-doughnut" 
+                                    chart-data="$ctrl.doughnut2.data"
+                                    chart-labels="$ctrl.doughnut2.labels"                              
+                                    chart-options="$ctrl.doughnut2.options"
+                                    chart-click = "$ctrl.doughnutClick"
+                                    chart-colors = "$ctrl.doughnut2.colors"
+                                    >
+                            </canvas>
+                      </div>
+                   </div>
+               </div>
+                <div flex = "40">
+    <!-- style = "background-color: beige">-->
+    <!--               flex = 40 at column-->
+                   <div layout = "row">
+                       <div flex = "15">
+                          Тепло (Х)
+                           <canvas id="doughnut"
+
+                                    class="chart chart-doughnut" 
+                                    chart-data="$ctrl.doughnut.data"
+                                    chart-labels="$ctrl.doughnut.labels"                              
+                                    chart-options="$ctrl.doughnut.options"
+                                    chart-click = "$ctrl.doughnutClick"
+                                    chart-colors = "$ctrl.doughnut.colors"
+                                    >
+                            </canvas>
+                       </div>
+                       <div flex = "15">
+                          ГВС (У)
+                           <canvas id="doughnut"
+
+                                    class="chart chart-doughnut" 
+                                    chart-data="$ctrl.doughnut.data"
+                                    chart-labels="$ctrl.doughnut.labels"                              
+                                    chart-options="$ctrl.doughnut.options"
+                                    chart-click = "$ctrl.doughnutClick"
+                                    chart-colors = "$ctrl.doughnut.colors"
+                                    >
+                            </canvas>
+                       </div>
+                       <div flex = "15">
+    <!--                      Электроэнергия (Зед)-->
+                          Электроэнергия (Зед)
+                           <canvas id="doughnut"
+
+                                    class="chart chart-doughnut" 
+                                    chart-data="$ctrl.doughnut.data"
+                                    chart-labels="$ctrl.doughnut.labels"                              
+                                    chart-options="$ctrl.doughnut.options"
+                                    chart-click = "$ctrl.doughnutClick"
+                                    chart-colors = "$ctrl.doughnut.colors"
+                                    >
+                            </canvas>
+                       </div>
+                       <div flex = "15">
+                          ХВС (Эн)
+                           <canvas id="doughnut"
+
+                                    class="chart chart-doughnut" 
+                                    chart-data="$ctrl.doughnut.data"
+                                    chart-labels="$ctrl.doughnut.labels"                              
+                                    chart-options="$ctrl.doughnut.options"
+                                    chart-click = "$ctrl.doughnutClick"
+                                    chart-colors = "$ctrl.doughnut.colors"
+                                    >
+                            </canvas>
+                       </div>
+                   </div>
+               </div>
+            </div>
+        </div>
+    </div>
+    <div layout = "row" ng-show = "$ctrl.contObjectStateShowFlag" style = "height: 520px; max-height: 520px;">
+        <div flex>
+<!--            Cont object and zpoint montitor state.-->
+            <cont-object-control-component node = "{id: 1}"></cont-object-control-component>
+
+        </div>
+    </div>
 </div>
