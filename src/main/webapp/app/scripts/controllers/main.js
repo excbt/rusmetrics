@@ -149,9 +149,21 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
             }
         });
     }
+    
+    console.log("Cookies: ", $cookies.getAll());
+    function removeAllCookies() {
+//        $cookies = {};
+        var cooks = $cookies.getAll(),
+            cookKey;
+        for (cookKey in cooks) {
+            if (cooks.hasOwnProperty(cookKey)) {
+                $cookies.remove(cookKey);
+            }
+        }
+    }
       
-    $scope.logOut = function () {
-        $cookies = {};
+    $scope.logOut = function () {        
+        removeAllCookies();
 //        allRequestCancel();
         //cancel all request        
         objectSvc.getRequestCanceler().resolve();
@@ -159,8 +171,6 @@ app.controller('MainCtrl', ['$scope', '$rootScope', '$cookies', '$location', 'ma
         reportSvc.getRequestCanceler().resolve();
         monitorSvc.getRequestCanceler().resolve();
         logSvc.getRequestCanceler().resolve();
-//        $cookies.fromDate = undefined;
-//        $cookies.toDate = undefined;
         $scope.setDefaultMenuState();
     };
 

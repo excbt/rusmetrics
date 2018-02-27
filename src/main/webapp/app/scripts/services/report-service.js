@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('reportSvc', ['$http', '$cookies', '$interval', '$rootScope', 'crudGridDataFactoryWithCanceler', 'mainSvc', '$q', function ($http, $cookies, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q) {
+app.service('reportSvc', ['$http', '$interval', '$rootScope', 'crudGridDataFactoryWithCanceler', 'mainSvc', '$q', function ($http, $interval, $rootScope, crudGridDataFactoryWithCanceler, mainSvc, $q) {
     
     var ALL_RESOURCES = {
             keyname: "ALL",

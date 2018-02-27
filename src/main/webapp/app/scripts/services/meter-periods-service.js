@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
-    .service('meterPeriodsSvc', ['$http', '$cookies', '$interval', '$rootScope', '$q', function ($http, $cookies, $interval, $rootScope, $q) {
+    .service('meterPeriodsSvc', ['$http', '$interval', '$rootScope', '$q', function ($http, $interval, $rootScope, $q) {
         
         var METER_PERIOD_SETTING_URl = "../api/subscr/meter-period-settings";
         

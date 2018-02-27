@@ -2,7 +2,7 @@
 /*global angular, moment*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('ElectricityPkeCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$cookies', '$rootScope', '$filter', 'notificationFactory', '$window', '$timeout', 'objectSvc', function ($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope, $filter, notificationFactory, $window, $timeout, objectSvc) {
+app.controller('ElectricityPkeCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$rootScope', '$filter', 'notificationFactory', '$window', '$timeout', 'objectSvc', function ($scope, $http, indicatorSvc, mainSvc, $location, $rootScope, $filter, notificationFactory, $window, $timeout, objectSvc) {
 //console.log("Run ElectricityPkeCtrl.");
     $scope.electroKind = "Pke";
     

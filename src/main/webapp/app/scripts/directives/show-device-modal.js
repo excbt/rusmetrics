@@ -84,7 +84,7 @@ app.directive('nmcShowDeviceModal', function () {
             $scope.changeDeviceModel = function () {
 //console.log("changeDeviceModel");                
                 if (!mainSvc.checkUndefinedNull($scope.currentDevice.deviceModelId)) {
-                    $cookies.recentDeviceModelId = $scope.currentDevice.deviceModelId;
+                    $cookies.put('recentDeviceModelId', $scope.currentDevice.deviceModelId);
                 }
             };
             
@@ -102,7 +102,7 @@ app.directive('nmcShowDeviceModal', function () {
                 $scope.currentDevice.curDatasource = curDataSource;
 
                 if (!mainSvc.checkUndefinedNull($scope.currentDevice.subscrDataSourceId)) {
-                    $cookies.recentDataSourceId = $scope.currentDevice.subscrDataSourceId;
+                    $cookies.put('recentDataSourceId', $scope.currentDevice.subscrDataSourceId);
                 }
             };
             

@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('ElectricitySpecCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$cookies', '$rootScope', function ($scope, $http, indicatorSvc, mainSvc, $location, $cookies, $rootScope) {
+app.controller('ElectricitySpecCtrl', ['$scope', '$http', 'indicatorSvc', 'mainSvc', '$location', '$rootScope', function ($scope, $http, indicatorSvc, mainSvc, $location, $rootScope) {
 //console.log("Run ElectricitySpecCtrl.");
     $scope.electroKind = "Spec";
     ///api/subscr/66948436/serviceElProfile/30min/159919982
