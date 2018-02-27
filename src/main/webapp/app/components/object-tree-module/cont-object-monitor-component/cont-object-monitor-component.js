@@ -71,43 +71,127 @@
 //                }
 //            ];
             
+            function generateLabels(chart) {
+//                            console.log("generateLabels", chart);
+                var data = chart.data;
+//                            console.log(data);
+                if (data.labels.length && data.datasets.length) {
+                    var result = data.labels.map(function(label, i) {
+                        var meta = chart.getDatasetMeta(0);                                    
+                        var ds = data.datasets[0];
+                        var arc = meta.data[i];
+                        var custom = arc && arc.custom || {};
+                        var getValueAtIndexOrDefault = Chart.helpers.getValueAtIndexOrDefault;
+                        var arcOpts = chart.options.elements.arc;
+                        var fill = custom.backgroundColor ? custom.backgroundColor : getValueAtIndexOrDefault(ds.backgroundColor, i, arcOpts.backgroundColor);
+                        var stroke = custom.borderColor ? custom.borderColor : getValueAtIndexOrDefault(ds.borderColor, i, arcOpts.borderColor);
+                        var bw = custom.borderWidth ? custom.borderWidth : getValueAtIndexOrDefault(ds.borderWidth, i, arcOpts.borderWidth);
+
+                        return {
+                            text: data.datasets[0].data[i]/*label*/,
+                            fillStyle: fill,
+                            strokeStyle: stroke,
+                            lineWidth: bw,
+                            hidden: isNaN(ds.data[i]) || meta.data[i].hidden,
+
+                            // Extra data used for toggling the correct item
+                            index: i
+                        };
+                    });
+//                                console.log(result);
+                    return result;
+                }
+                return [];
+            }
+            
+            function legendCallback(chart) {
+                var text = [], i;
+                text.push('<ul class="' + chart.id + '-legend">');
+
+                var data = chart.data;
+                var datasets = chart.datasets;
+                var labels = data.labels;
+                if (datasets.length){
+                    for (i = 0; i < datasets[0].length; i += 1) {
+                        text.push('<li><span style="height: 12px; width: 12px; border-radius: 5px; background-color:' + datasets[0].backgroundColor[i] + '"></span>');
+                        if (data[i]) {
+                            text.push(data[i]);
+                        }
+                        text.push('</li>');
+                    }
+                }
+                    text.push('</ul>');
+    console.log(text.join(''));
+                    return text.join('');
+                }
+            
             //bublic 1 (doughnut 1)
             ctrl.doughnut = {};
-            ctrl.doughnut.labels = ["Критические", "Некритические", "Остальные"];
             ctrl.doughnut.data = [33, 66, 100];
+            ctrl.doughnut.labels = ["Критические (" + ctrl.doughnut.data[0]+")", "Некритические (" + ctrl.doughnut.data[1]+")", "Остальные (" + ctrl.doughnut.data[2]+")"];            
             ctrl.doughnut.colors = ["#ef473a", "#FDB45C", "#46BFBD"]; //green color
             ctrl.doughnut.options = {
-                responsive: true
-            };
-            
-             //bublic 1 (doughnut 1)
-            ctrl.doughnut2 = {};
-            ctrl.doughnut2.labels = ["Критические", "Некритические", "Остальные"];
-            ctrl.doughnut2.data = [11, 0, 1000];
-            ctrl.doughnut2.colors = ["#ef473a", "#FDB45C", "#46BFBD"]; //green color
-            ctrl.doughnut2.options = {
-                responsive: true
-            };
-            
-                         //bublic 1 (doughnut 1)
-            ctrl.doughnut3 = {};
-            ctrl.doughnut3.labels = ["Критические", "Некритические", "Остальные"];
-            ctrl.doughnut3.data = [1, 123, 0];
-            ctrl.doughnut3.colors = ["#ef473a", "#FDB45C", "#46BFBD"]; //green color
-            ctrl.doughnut3.options = {
-                responsive: true,
-                maintainAspextRatio: false,
+                responsive: false,
+                cutoutPercentage: 80,
                 legend: {
                     display: true,
                     position: "right",
                     onClick: function () {
                         console.log("Label click!");
-                    }
+                    },
+                    labels: {
+                        fontSize: 10,
+                        generateLabels: generateLabels
+                    },                    
                 },
-                title: {
+                legendCallback: legendCallback
+                /*title: {
                     display: true,
-                    position: "top",
-                    text: "График СД"
+                    postion: "top",
+                    text: "<img src = \"components\object-tree-module\cont-object-monitor-component\heat.png\"/> (123)"
+                }*/
+            };
+            
+             //bublic 1 (doughnut 1)
+            ctrl.doughnut2 = {};
+            ctrl.doughnut2.data = [11, 0, 1000];
+            ctrl.doughnut2.labels = ["Критические (" + ctrl.doughnut2.data[0]+")", "Некритические (" + ctrl.doughnut2.data[1]+")", "Остальные (" + ctrl.doughnut2.data[2]+")"];            
+            ctrl.doughnut2.colors = ["#ef473a", "#FDB45C", "#46BFBD"]; //green color
+            ctrl.doughnut2.options = {
+                responsive: false,
+                cutoutPercentage: 80,
+                legend: {
+                    display: true,
+                    position: "right",
+                    onClick: function () {
+                        console.log("Label click!");
+                    },
+                    labels: {
+                        fontSize: 10,
+                        generateLabels: generateLabels
+                    }
+                }
+            };
+            
+                         //bublic 1 (doughnut 1)
+            ctrl.doughnut3 = {};
+            ctrl.doughnut3.data = [1, 123, 0];
+            ctrl.doughnut3.labels = ["Критические (" + ctrl.doughnut3.data[0]+")", "Некритические (" + ctrl.doughnut3.data[1]+")", "Остальные (" + ctrl.doughnut3.data[2]+")"];            
+            ctrl.doughnut3.colors = ["#ef473a", "#FDB45C", "#46BFBD"]; //green color
+            ctrl.doughnut3.options = {
+                responsive: false,
+                cutoutPercentage: 80,
+                maintainAspextRatio: true,
+                legend: {
+                    display: true,
+                    position: "right",
+                    onClick: function () {
+                        console.log("Label click!");
+                    },
+                    labels: {
+                        fontSize: 10,
+                        generateLabels: generateLabels
+                    }
                 }
             };
             
