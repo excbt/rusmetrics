@@ -2,8 +2,8 @@
 /*global angular, moment, $, alert*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('SettingsObjectTreesCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+app.controller('SettingsObjectTreesCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window',
+            function ($scope, $rootScope, $routeParams, $resource, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
         var RADIX = 10;
         $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  

@@ -95,6 +95,8 @@ angular.module('portalNMC')
             $scope.data.datasourceTypesForDatasource = {};
             $scope.data.currentContObjectPassports = [];
                 
+            $scope.data.indicatorsRowPerPageList = [15, 25, 50, 75, 100];
+                
             var checkGeo = function () {
                 $scope.currentObject.geoState = "red";
                 $scope.currentObject.geoStateText = "Не отображается на карте";
@@ -162,8 +164,8 @@ angular.module('portalNMC')
 //                    makeObjectTable(tempArr, true);
                 $scope.loading = false;
                 //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-                if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null") {
-                    var curObj = objectSvc.findObjectById(Number($cookies.contObject), $scope.objects);
+                if (angular.isDefined($cookies.get('contObject')) && $cookies.get('contObject') !== "null") {
+                    var curObj = objectSvc.findObjectById(Number($cookies.get('contObject')), $scope.objects);
                     if (curObj !== null) {
                         var curObjIndex = $scope.objects.indexOf(curObj);
                         if (curObjIndex > $scope.objectCtrlSettings.objectsOnPage) {
@@ -173,7 +175,7 @@ angular.module('portalNMC')
                             Array.prototype.push.apply($scope.objectsOnPage, additionalObjects);
                             $scope.objectCtrlSettings.objectsOnPage = curObjIndex + 1;
                             //$scope.objectCtrlSettings.currentObjectSearchFlag = true;                                
-                            $scope.objectCtrlSettings.tmpCurContObj = $cookies.contObject;
+                            $scope.objectCtrlSettings.tmpCurContObj = $cookies.get('contObject');
                             $timeout(function () {
                                 var curObjElem = document.getElementById("obj" + $scope.objectCtrlSettings.tmpCurContObj);
                                 if (!mainSvc.checkUndefinedNull(curObjElem)) {
@@ -182,9 +184,9 @@ angular.module('portalNMC')
                                 $scope.objectCtrlSettings.tmpCurContObj = null;
                             }, 50);
                         }
-                        $scope.toggleShowGroupDetails(Number($cookies.contObject));
+                        $scope.toggleShowGroupDetails(Number($cookies.get('contObject')));
                     }
-                    $cookies.contObject = null;
+                    $cookies.put('contObject', 'null');
                 }
                 $rootScope.$broadcast('objectSvc:loaded');
             };
@@ -1226,18 +1228,18 @@ angular.module('portalNMC')
             $scope.setIndicatorsParams = function (objectId, zpointId) {
 //console.log("setIndicatorsParams");                    
                 $scope.selectedZpoint(objectId, zpointId);
-                $cookies.contZPoint = $scope.currentZpoint.id;
-                $cookies.contObject = $scope.currentObject.id;
-                $cookies.contZPointName = $scope.currentZpoint.zpointName;
-                $cookies.contObjectName = $scope.currentObject.fullName;
-                $cookies.deviceModel = $scope.currentZpoint.zpointModel;
-                $cookies.deviceSN = $scope.currentZpoint.zpointNumber;
+                $cookies.put('contZPoint', $scope.currentZpoint.id);
+                $cookies.put('contObject', $scope.currentObject.id);
+                $cookies.put('contZPointName', $scope.currentZpoint.zpointName);
+                $cookies.put('contObjectName', $scope.currentObject.fullName);
+                $cookies.put('deviceModel', $scope.currentZpoint.zpointModel);
+                $cookies.put('deviceSN', $scope.currentZpoint.zpointNumber);
 
-                if (angular.isUndefined($cookies.timeDetailType) || ($cookies.timeDetailType == "undefined") || ($cookies.timeDetailType == "null")) {
-                    $cookies.timeDetailType = "24h";
+                if (angular.isUndefined($cookies.get('timeDetailType')) || ($cookies.get('timeDetailType') == "undefined") || ($cookies.get('timeDetailType') == "null")) {
+                    $cookies.put('timeDetailType', "24h");
                 }
 
-                $cookies.isManualLoading = ($scope.currentZpoint.isManualLoading === null ? false : $scope.currentZpoint.isManualLoading) || false;
+                $cookies.put('isManualLoading', (($scope.currentZpoint.isManualLoading === null ? false : $scope.currentZpoint.isManualLoading) || false));
 //console.log($scope.currentZpoint);                    
                 $rootScope.reportStart = moment().subtract(6, 'days').startOf('day').format('YYYY-MM-DD');
                 $rootScope.reportEnd = moment().endOf('day').format('YYYY-MM-DD');
@@ -2128,12 +2130,12 @@ angular.module('portalNMC')
                     var exp = new Date(now.getFullYear() + 10, now.getMonth(), now.getDate());
                     document.cookie = "indicator" + resourceKind + contObj.id + "=" + selectedItems + ";expires=" + exp.toUTCString();
                 } else {
-                    $cookies["indicator" + resourceKind + contObj.id] = null;
+                    $cookies.put("indicator" + resourceKind + contObj.id, 'null');
                 }
             }
 
             function readIndicatorColumnPrefForObject(contObj, resourceKind) {
-                var columnPrefs = $cookies["indicator" + resourceKind + contObj.id];
+                var columnPrefs = $cookies.get("indicator" + resourceKind + contObj.id);
                 if (mainSvc.checkUndefinedNull(columnPrefs)) {
                     return null;
                 }
@@ -2978,7 +2980,7 @@ angular.module('portalNMC')
             $scope.changeBuildingType = function (buildingType) {
 //                    console.log("changeBuildingType");
                 $scope.currentObject.buildingTypeCategory = null;
-                $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                $cookies.put('recentBuildingTypeCategory', $scope.currentObject.buildingTypeCategory);
 //                $('#inputBuildingCategory').removeClass('nmc-select-form-high');
 //                $('#inputBuildingCategory').addClass('nmc-select-form');
                 
@@ -2988,7 +2990,7 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull(buildingType)) {
                     return false;
                 }
-                $cookies.recentBuildingType = buildingType;
+                $cookies.put('recentBuildingType', buildingType);
 //                performBuildingCategoryList(buildingType);
 //                performBuildingCategoryListForUiSelect(buildingType);
                 $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
@@ -3029,7 +3031,7 @@ angular.module('portalNMC')
 
             $scope.changeBuildingCategory = function () {
                 setBuildingCategory();
-                $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+                $cookies.put('recentBuildingTypeCategory', $scope.currentObject.buildingTypeCategory);
             };
 // ********************************************************************************************
             //  end Building types

@@ -509,7 +509,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                 checkImpulseCompatibility(tmpDevModel, $scope.data.currentObject.curDatasource);
             }
             
-            $cookies.recentDeviceModelId = $scope.data.currentObject.deviceModelId;
+            $cookies.put('recentDeviceModelId', $scope.data.currentObject.deviceModelId);
             $scope.data.currentModel = tmpDevModel;
             $scope.data.currentObject.curModel = tmpDevModel;
             
@@ -517,7 +517,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
 //                $scope.data.currentObject.curDatasource = null;
                 $scope.data.currentObject.subscrDataSourceId = null;
                 
-                $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+                $cookies.put('recentDataSourceId', $scope.data.currentObject.subscrDataSourceId);
                 
                 $scope.deviceDatasourceChange();
     //console.log($scope.data.currentObject);            
@@ -530,8 +530,8 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                 setImpulseSettings($scope.data.currentObject, false, null, null, null);
             }
             
-            if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
-                $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
+            if (!mainSvc.checkUndefinedNull($cookies.get('recentHeaterTypeId')) && $scope.deviceIsSpreader()) {
+                $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.get('recentHeaterTypeId'));
             }
             
             setInputmask();
@@ -540,7 +540,7 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
     };
     
     $scope.deviceInstTypeChange = function () {
-        $cookies.recentInstType = $scope.data.currentObject.instType;
+        $cookies.put('recentInstType', $scope.data.currentObject.instType);
     };
     
                 //get device models
@@ -605,8 +605,8 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         $scope.data.currentObject.id = null;
         $scope.data.currentObject.isManual = true;
         $scope.data.currentObject.deviceLoginInfo = {};
-        if (!mainSvc.checkUndefinedNull($cookies.recentDeviceModelId)) {
-            $scope.data.currentObject.deviceModelId = Number($cookies.recentDeviceModelId);
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentDeviceModelId'))) {
+            $scope.data.currentObject.deviceModelId = Number($cookies.get('recentDeviceModelId'));
             $scope.data.currentModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             $scope.data.currentObject.curModel = findDeviceModelById($scope.data.currentObject.deviceModelId);
             
@@ -614,16 +614,16 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
                 setImpulseSettings($scope.data.currentObject, $scope.data.currentModel.isImpulse, $scope.data.currentModel.defaultImpulseK, $scope.data.currentModel.defaultImpulseMu, $scope.data.impulseCounterTypes[0].keyname || null);
             }
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentInstType)) {
-            $scope.data.currentObject.instType = $cookies.recentInstType;
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentInstType'))) {
+            $scope.data.currentObject.instType = $cookies.get('recentInstType');
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentDataSourceId)) {
-            $scope.data.currentObject.subscrDataSourceId = Number($cookies.recentDataSourceId);
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentDataSourceId'))) {
+            $scope.data.currentObject.subscrDataSourceId = Number($cookies.get('recentDataSourceId'));
             $scope.deviceDatasourceChange();
         }
         
-        if (!mainSvc.checkUndefinedNull($cookies.recentHeaterTypeId) && $scope.deviceIsSpreader()) {
-            $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.recentHeaterTypeId);
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentHeaterTypeId')) && $scope.deviceIsSpreader()) {
+            $scope.data.currentObject.heatRadiatorTypeId = Number($cookies.get('recentHeaterTypeId'));
         }
         getDatasources($scope.ctrlSettings.datasourcesUrl);
         $('#showDeviceModal').modal();
@@ -676,13 +676,13 @@ app.controller('MngmtDevicesCtrl', ['$rootScope', '$scope', '$http', '$timeout',
         $scope.data.currentObject.curDatasource = curDataSource;
         
         if (!mainSvc.checkUndefinedNull($scope.data.currentObject.subscrDataSourceId)) {
-            $cookies.recentDataSourceId = $scope.data.currentObject.subscrDataSourceId;
+            $cookies.put('recentDataSourceId', $scope.data.currentObject.subscrDataSourceId);
         }
         
     };
     
     $scope.selectHeaterType = function () {
-        $cookies.recentHeaterTypeId = $scope.data.currentObject.heatRadiatorTypeId;
+        $cookies.put('recentHeaterTypeId', $scope.data.currentObject.heatRadiatorTypeId);
         objectSvc.addRecentHeaterType($scope.data.currentObject.heatRadiatorTypeId);
     };
     

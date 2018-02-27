@@ -2,8 +2,8 @@
 /*global angular, $, alert, moment*/
 'use strict';
 angular.module('portalNMC')
-    .controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window', 'objectSvc', 'meterPeriodsSvc',
-            function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window, objectSvc, meterPeriodsSvc) {
+    .controller('SettingsTenantsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'subscrCabinetsSvc', 'mainSvc', '$timeout', '$window', 'objectSvc', 'meterPeriodsSvc',
+            function ($scope, $rootScope, $routeParams, $resource, $compile, $parse, crudGridDataFactory, notificationFactory, $http, subscrCabinetsSvc, mainSvc, $timeout, $window, objectSvc, meterPeriodsSvc) {
                 
             $rootScope.ctxId = "settings_tenants_page";
 //console.log('Run Object management controller.');  

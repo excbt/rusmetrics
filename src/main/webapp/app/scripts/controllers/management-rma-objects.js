@@ -152,9 +152,9 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
             tempArr =  $scope.objects.slice(0, $scope.objectCtrlSettings.objectsPerScroll);
             $scope.objectsOnPage = tempArr;
             //if we have the contObject id in cookies, then draw the Zpoint table for this object.
-            if (angular.isDefined($cookies.contObject) && $cookies.contObject !== "null") {
-                $scope.toggleShowGroupDetails(Number($cookies.contObject));
-                $cookies.contObject = null;
+            if (angular.isDefined($cookies.get('contObject')) && $cookies.get('contObject') !== "null") {
+                $scope.toggleShowGroupDetails(Number($cookies.get('contObject')));
+                $cookies.put('contObject', 'null');
             }
             $rootScope.$broadcast('objectSvc:loaded');
 //console.log($scope.data.moveToObjectId);                        
@@ -1026,6 +1026,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
+
 //        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
 //            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
 //            $scope.changeServiceType($scope.zpointSettings);
@@ -1035,6 +1036,16 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //        }
 //        $scope.getDevices(object, false);
 //        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentContServiceTypeKeyname'))) {
+            $scope.zpointSettings.contServiceTypeKeyname = $cookies.get('recentContServiceTypeKeyname');
+            $scope.changeServiceType($scope.zpointSettings);
+        }
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentRsoId'))) {
+            $scope.zpointSettings.rsoId = Number($cookies.get('recentRsoId'));
+        }
+        $scope.getDevices(object, false);
+        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
     };
                 
     $scope.getZpointSettings = function (objId, zpointId) {
@@ -1291,10 +1302,31 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //            }
 //        }
 //    };
+
+    $scope.changeServiceType = function (zpSettings) {
+        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
+            $cookies.put('recentContServiceTypeKeyname', zpSettings.contServiceTypeKeyname);
+        }
+        if ($scope.emptyString(zpSettings.customServiceName)) {
+            switch (zpSettings.contServiceTypeKeyname) {
+            case "heat":
+                zpSettings.customServiceName = "Система отопления";
+                break;
+            default:
+                $scope.data.serviceTypes.some(function (svType) {
+                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
+                        zpSettings.customServiceName = svType.caption;
+                        return true;
+                    }
+                });
+
+            }
+        }
+    };
                 
     $scope.changeRso = function (zpSettings) {
         if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)) {
-            $cookies.recentRsoId = zpSettings.rsoId;
+            $cookies.put('recentRsoId', zpSettings.rsoId);
         }
     };
     
@@ -1558,21 +1590,21 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //console.log("addObjectInit");                    
         $scope.currentObject = {};
         $scope.currentObject.isLightForm = isLightForm;
-        if (!mainSvc.checkUndefinedNull($cookies.recentTimezone)) {
-            $scope.currentObject.timezoneDefKeyname = $cookies.recentTimezone;
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentTimezone'))) {
+            $scope.currentObject.timezoneDefKeyname = $cookies.get('recentTimezone');
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentContManagementId)) {
-            $scope.currentObject.contManagementId = Number($cookies.recentContManagementId);
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentContManagementId'))) {
+            $scope.currentObject.contManagementId = Number($cookies.get('recentContManagementId'));
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentSettingMode)) {
-            $scope.currentObject.currentSettingMode = $cookies.recentSettingMode;
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentSettingMode'))) {
+            $scope.currentObject.currentSettingMode = $cookies.get('recentSettingMode');
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentBuildingType)) {
-            $scope.currentObject.buildingType = $cookies.recentBuildingType;
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentBuildingType'))) {
+            $scope.currentObject.buildingType = $cookies.get('recentBuildingType');
             $scope.changeBuildingType($scope.currentObject.buildingType);
         }
-        if (!mainSvc.checkUndefinedNull($cookies.recentBuildingTypeCategory)) {
-            $scope.currentObject.buildingTypeCategory = $cookies.recentBuildingTypeCategory;
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentBuildingTypeCategory'))) {
+            $scope.currentObject.buildingTypeCategory = $cookies.get('recentBuildingTypeCategory');
         }
         checkGeo();
         $('#showObjOptionModal').modal();
@@ -1582,17 +1614,17 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 
     $scope.changeTimeZone = function () {
         if (!mainSvc.checkUndefinedNull($scope.currentObject.timezoneDefKeyname)) {
-            $cookies.recentTimezone = $scope.currentObject.timezoneDefKeyname;
+            $cookies.put('recentTimezone', $scope.currentObject.timezoneDefKeyname);
         }
     };
     $scope.changeContManagement = function () {
         if (!mainSvc.checkUndefinedNull($scope.currentObject.contManagementId)) {
-            $cookies.recentContManagementId = $scope.currentObject.contManagementId;
+            $cookies.put('recentContManagementId', $scope.currentObject.contManagementId);
         }
     };
     $scope.changeSettingMode = function () {
         if (!mainSvc.checkUndefinedNull($scope.currentObject.currentSettingMode)) {
-            $cookies.recentSettingMode = $scope.currentObject.currentSettingMode;
+            $cookies.put('recentSettingMode', $scope.currentObject.currentSettingMode);
         }
     };
                 
@@ -2339,7 +2371,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.changeBuildingType = function (buildingType) {
 //                    console.log("changeBuildingType");
         $scope.currentObject.buildingTypeCategory = null;
-        $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+        $cookies.put('recentBuildingTypeCategory', $scope.currentObject.buildingTypeCategory);
 //        $('#inputBuildingCategory').removeClass('nmc-select-form-high');
 //        $('#inputBuildingCategory').addClass('nmc-select-form');
         
@@ -2349,7 +2381,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
         if (mainSvc.checkUndefinedNull(buildingType)) {
             return false;
         }
-        $cookies.recentBuildingType = buildingType;
+        $cookies.put('recentBuildingType', buildingType);
 //        performBuildingCategoryList(buildingType);
         $scope.data.preparedBuildingCategoryListForUiSelect = objectSvc.performBuildingCategoryListForUiSelect(buildingType, $scope.data.buildingCategories);
     };
@@ -2386,7 +2418,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
                 
     $scope.changeBuildingCategory = function () {
         setBuildingCategory();
-        $cookies.recentBuildingTypeCategory = $scope.currentObject.buildingTypeCategory;
+        $cookies.put('recentBuildingTypeCategory', $scope.currentObject.buildingTypeCategory);
     };
 // ********************************************************************************************
                 //  end Building types

@@ -3,7 +3,7 @@
 'use strict';
 
 var app = angular.module('portalNMC');
-app.controller('ObjectsCtrl', ['$scope', '$rootScope', '$cookies', '$http', 'mainSvc', function ($scope, $rootScope, $cookies, $http, mainSvc) {
+app.controller('ObjectsCtrl', ['$scope', '$rootScope', '$http', 'mainSvc', function ($scope, $rootScope, $http, mainSvc) {
 //console.log("Objects ctrl.");
     
     $scope.ctrlSettings = {};

@@ -2,7 +2,7 @@
 /*global angular*/
 'use strict';
 angular.module('portalNMC')
-    .service('subscrCabinetsSvc', ['$http', '$cookies', '$interval', '$rootScope', function ($http, $cookies, $interval, $rootScope) {
+    .service('subscrCabinetsSvc', ['$http', '$interval', '$rootScope', function ($http, $interval, $rootScope) {
 //console.log("Cabinet Service. Run."); 
                  
         var svcCabinets = [

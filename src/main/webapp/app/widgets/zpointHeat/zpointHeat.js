@@ -14,7 +14,7 @@ angular.module('zpointHeatWidget', ['angularWidget', 'chart.js', 'ngCookies'])
 //            showLines: false
 //        });
     }])
-    .controller('zpointHeatWidgetCtrl', ['$scope', '$http', '$cookies', '$rootScope', 'widgetConfig', function ($scope, $http, $cookies, $rootScope, widgetConfig) {
+    .controller('zpointHeatWidgetCtrl', ['$scope', '$http', '$rootScope', 'widgetConfig', function ($scope, $http, $rootScope, widgetConfig) {
         //data generator
         var timeDetailTypes = {
             month: {

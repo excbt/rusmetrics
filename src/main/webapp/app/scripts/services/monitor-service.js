@@ -2,7 +2,7 @@
 /*global angular, moment, alert*/
 'use strict';
 var app = angular.module('portalNMC');
-app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$cookies', '$location', 'objectSvc', '$q', function ($rootScope, $http, $interval, $cookies, $location, objectSvc, $q) {
+app.service('monitorSvc', ['$rootScope', '$http', '$interval', '$location', 'objectSvc', '$q', function ($rootScope, $http, $interval, $location, objectSvc, $q) {
 //console.log("Monitor service. Run Monitor service.");
     var SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS = "SUBSCR_OBJECT_TREE_CONT_OBJECTS";//"SUBSCR_MONITOR_OBJECT_TREE_CONT_OBJECTS";
             //url to data
