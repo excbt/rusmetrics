@@ -29,15 +29,15 @@
             var text = sumValues,
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = height / 2;
-            if (height === 130) {
+//            if (height === 130) {
                 // labels at cont object monitor component
-                textX = Math.round((height + 30 - ctx.measureText(text).width) / 2);
-            }
+//                textX = Math.round((height + 30 - ctx.measureText(text).width) / 2);
+//            }
 //            ctx.fillText(text, textX, textY);
-            var img =new Image();
-            img.src = "components/object-tree-module/cont-object-monitor-component/db.png";
+//            var img =new Image();
+//            img.src = "components/object-tree-module/cont-object-monitor-component/db.png";
 //            console.log("img", img);
-            ctx.drawImage(img, textX, textY);
+//            ctx.drawImage(img, textX, textY);
             ctx.save();
             
         }

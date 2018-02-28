@@ -206,7 +206,7 @@
                 var elm = $('.nmc-cont-object-control-main-div').get(0);
                 console.log(elm);
                 if (elm !== null) {
-                    elm.style.height = "50vh";//css("height", "45vh");
+                    elm.style.height = "49vh";//css("height", "45vh");
                 }
             }
         };
