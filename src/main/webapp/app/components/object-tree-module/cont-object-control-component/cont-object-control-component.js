@@ -1,4 +1,4 @@
-/*global angular, console*/
+/*global angular, console, $*/
 /***
     created by Artamonov A.A. , Dec. 2017
 */
@@ -25,6 +25,7 @@
         ctrl.searchFlag = false;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
+            IMG_PATH_BUILDING_TYPE = "components/object-tree-module/cont-object-control-component/buildings/",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png",
             OBJECTS_PER_PAGE = 100;
@@ -56,7 +57,16 @@
             IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
         ];
         
+        var contObjectTypeFilterValues = [];        
+        
         ctrl.columns = [
+            {
+                name: "contObjectType",
+                caption: "Тип",
+                headerClass: "col-xs-1 nmc-ctrl-cmp-td-for-type",
+                type: "contObjectType",
+                filterValues: contObjectTypeFilterValues
+            },
             {
                 name: "caption",
                 caption: "Объект",
@@ -455,7 +465,7 @@ console.log(ctrl.node);
                     $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96.4%", "margin-left": "50px"});
                 }, 1);
             }
-        }
+        };
         
         ctrl.getIcon = function (ind) {
 //            if (ind % 2 == 0) {
@@ -503,19 +513,23 @@ console.log(ctrl.node);
                     break;
             }
             return cls;
+        };
+        
+        for (var i = 0; i < 11; i++) {
+            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIcon(i));
         }
         
         ctrl.getTextShadow = function (ind) {
             var clr = "rgb(95, 95, 95)";
-            if (ind % 2 == 0) {
+            if (ind % 2 === 0) {
                 clr = "green";
-            } else if (ind % 3 == 0) {
+            } else if (ind % 3 === 0) {
                 clr = "#ff0000";
             } else {
                 clr = "#ffc000";
             }
             return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
-        }
+        };
         
         ctrl.getIconCssClass = function (ind) {
             var cls = "btn btn-xs iconcls pull-right";
@@ -545,7 +559,7 @@ console.log(ctrl.node);
                     break;
             }
             return cls;
-        }
+        };
         
     }
     

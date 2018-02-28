@@ -79,7 +79,8 @@
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
             <tr class="nmc-ctrl-cmp-table-header">
-                <th class = "col-xs-1 nmc-td-for-button-object-control">
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
 <!--                    Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" 
@@ -97,7 +98,7 @@
                         ng-click = "$ctrl.setFilterBy(column.name)">
                     </i>
 -->
-                    <div  ng-if = "column.type === 'img'"
+                    <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
                        class="btn-group">
                         <i  
                             title = "фильтр" 
@@ -156,7 +157,8 @@
             
             <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
-                <th class = "col-xs-1 nmc-td-for-button-object-control">
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
 <!--                        Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
@@ -166,7 +168,7 @@
             
 
 <!--            <tr ng-repeat = "object in $ctrl.objects | filter: filter | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index">-->
-            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index">
+            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index" ng-init = "contObjectIndex = $index">
 <!--
                <td ng-if = "object.loading" class = "col-xs-1">
                    <div ng-show = "object.loading" class="nmc-loading">
@@ -177,8 +179,8 @@
                <td>
                    <table style = "width: 100%;">
                        <tr>
-                            <td class = "col-xs-1 nmc-td-for-button-object-control"
-                              >
+                            <td class = "col-xs-1 nmc-td-for-button">
+<!--                             nmc-td-for-button-object-control">-->
 <!--
                          <i ng-class = "$ctrl.getIconCssClass($index)"
                                  
@@ -192,11 +194,13 @@
                                </i>
 -->
 
+<!--
                               <img class="pull-right"
                               ng-click = "$ctrl.showObjectWidget(object, $index)"
                                ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon($index)}}"
                                style = "padding-left: 12px; height: 24px; width: 36px;"
                                />
+-->
                               
 <!--
                                <i class = "btn btn-xs glyphicon glyphicon-home pull-right"
@@ -226,7 +230,14 @@
                                style = "padding: 7px 0;">
 
                                <div ng-switch on = "column.type">
-                                    <div ng-switch-when = "img">
+                                   <div ng-switch-when = "contObjectType">
+                                       <img class="pull-left"
+                                          ng-click = "$ctrl.showObjectWidget(object, contObjectIndex)"
+                                           ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
+                                           style = "height: 24px; width: 24px;"
+                                       />
+                                   </div>
+                                    <div ng-switch-when = "img" style = "padding-left: 20%;">
                                         <img ng-if = "object[column.name]"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"

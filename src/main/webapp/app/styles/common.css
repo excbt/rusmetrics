@@ -493,6 +493,11 @@ tr.nmc-ctrl-cmp-table-header > th {
     color: #FFFFFF;
     font-weight: normal;
 }
+    /*Контроль: колонка Тип здания*/
+.nmc-ctrl-cmp-td-for-type {
+    min-width: 53px;
+    width: 2%;
+}
 
 .nmc-el-view-main-div-with-chart {
     overflow: auto;
