@@ -8,7 +8,8 @@
     angular.module('objectTreeModule')
         .component('contObjectControlComponent', {
             bindings: {
-                node: '<'
+                node: '<',
+                contObjectList: '<'
             },
             templateUrl: "components/object-tree-module/cont-object-control-component/cont-object-control-component.html",
             controller: contObjectControlComponentController
@@ -75,7 +76,7 @@
                 type: "text"
             }, {
                 name: "heat",
-                caption: "Отопление",
+                caption: "Тепло",
                 imgPath: IMG_PATH_WIDGETS + "heat22" + IMG_EXT,
                 headerClass: "col-xs-1",
                 type: "img",
@@ -96,7 +97,7 @@
                 filterValues: filterValues
             }, {
                 name: "el",
-                caption: "Электричество",
+                caption: "Э/эн",
                 headerClass: "col-xs-1",
                 imgPath: IMG_PATH_WIDGETS + "el22" + IMG_EXT,
                 type: "img",
@@ -375,9 +376,15 @@
             ctrl.filterObjects();
         });
         
-        function getNodeContObjects() {
-console.log(ctrl.node);            
-//console.log('getNodeContObjects:', getNodeContObjects);            
+        function getContObjects() {
+//console.log(ctrl.node);            
+//console.log('getNodeContObjects:', getNodeContObjects);
+//            var nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+            
+            ctrl.objects = $filter('orderBy')(ctrl.contObjectList, ctrl.orderBy.field, ctrl.orderBy.asc);                    
+            ctrl.addMoreObjectsOnPage();
+console.log(ctrl.objects);            
+return;
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
                 var nodeId = node.id || node._id || node.nodeObject.id;
@@ -391,7 +398,7 @@ console.log(ctrl.node);
                     });
                     nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
                     ctrl.objects = nodeObjects;                    
-//console.log(ctrl.objects);                    
+console.log(ctrl.objects);                    
                     ctrl.addMoreObjectsOnPage();
 //                    ctrl.objects.forEach(function (elm) {
 //                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
@@ -403,7 +410,7 @@ console.log(ctrl.node);
         
         ctrl.$onInit = function () {
 //console.log($stateParams);
-            getNodeContObjects();
+            getContObjects();
             ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {
                 ctrl.loadZpointWidgetList();
@@ -411,7 +418,7 @@ console.log(ctrl.node);
         };
         
         $scope.$on(contObjectCtrlSvc.EVENTS.OBJECTS_LOADED, function () {
-            getNodeContObjects();
+            getContObjects();
 //            var node = $stateParams.node;
 //            var nodeId = node.id || node._id;
 //            var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);

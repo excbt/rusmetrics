@@ -1,4 +1,4 @@
-/*global angular, console*/
+/*global angular, console, Chart, $*/
 /***
     created by Artamonov A.A. , Dec. 2017
 */
@@ -31,29 +31,29 @@
         var ctrl = this;
         ctrl.contObjectStateShowFlag = false;
         
-        function getRandomColor () {
-            var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
-            return getColor(color);
-        }
-        
-        function rgba (color, alpha) {
-          // rgba not supported by IE8
-//            useExcanvas ? 'rgb(' + color.join(',') + ')' : 
-          return 'rgba(' + color.concat(alpha).join(',') + ')';
-        }
-        
-        function getColor (color) {
-            var alpha = color[3] || 1;
-            color = color.slice(0, 3);
-            return {
-                backgroundColor: rgba(color, 0.2),
-                pointBackgroundColor: rgba(color, alpha),
-                pointHoverBackgroundColor: rgba(color, 0.8),
-                borderColor: rgba(color, alpha),
-                pointBorderColor: '#fff',
-                pointHoverBorderColor: rgba(color, alpha)
-            };
-        }
+//        function getRandomColor () {
+//            var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
+//            return getColor(color);
+//        }
+//        
+//        function rgba (color, alpha) {
+//          // rgba not supported by IE8
+////            useExcanvas ? 'rgb(' + color.join(',') + ')' : 
+//          return 'rgba(' + color.concat(alpha).join(',') + ')';
+//        }
+//        
+//        function getColor (color) {
+//            var alpha = color[3] || 1;
+//            color = color.slice(0, 3);
+//            return {
+//                backgroundColor: rgba(color, 0.2),
+//                pointBackgroundColor: rgba(color, alpha),
+//                pointHoverBackgroundColor: rgba(color, 0.8),
+//                borderColor: rgba(color, alpha),
+//                pointBorderColor: '#fff',
+//                pointHoverBorderColor: rgba(color, alpha)
+//            };
+//        }
         
         function generateLabels(chart) {
 //                            console.log("generateLabels", chart);
@@ -88,26 +88,26 @@
             return [];
         }
 
-        function legendCallback(chart) {
-            var text = [], i;
-            text.push('<ul class="' + chart.id + '-legend">');
-
-            var data = chart.data;
-            var datasets = chart.datasets;
-            var labels = data.labels;
-            if (datasets.length){
-                for (i = 0; i < datasets[0].length; i += 1) {
-                    text.push('<li><span style="height: 12px; width: 12px; border-radius: 5px; background-color:' + datasets[0].backgroundColor[i] + '"></span>');
-                    if (data[i]) {
-                        text.push(data[i]);
-                    }
-                    text.push('</li>');
-                }
-            }
-                text.push('</ul>');
-console.log(text.join(''));
-                return text.join('');
-        }
+//        function legendCallback(chart) {
+//            var text = [], i;
+//            text.push('<ul class="' + chart.id + '-legend">');
+//
+//            var data = chart.data;
+//            var datasets = chart.datasets;
+//            var labels = data.labels;
+//            if (datasets.length){
+//                for (i = 0; i < datasets[0].length; i += 1) {
+//                    text.push('<li><span style="height: 12px; width: 12px; border-radius: 5px; background-color:' + datasets[0].backgroundColor[i] + '"></span>');
+//                    if (data[i]) {
+//                        text.push(data[i]);
+//                    }
+//                    text.push('</li>');
+//                }
+//            }
+//                text.push('</ul>');
+//console.log(text.join(''));
+//                return text.join('');
+//        }
         
         function segmentClick() {
             ctrl.contObjectStateShowFlag = false;
@@ -135,8 +135,9 @@ console.log(text.join(''));
                     fontSize: 10,
                     generateLabels: generateLabels
                 },                    
-            },
+            }/*,
             legendCallback: legendCallback
+            */
             /*title: {
                 display: true,
                 postion: "top",

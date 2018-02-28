@@ -87,10 +87,12 @@
                    ng-class = "column.headerClass"
                    >
                     <span ng-switch on = "column.type">
+<!--
                        <span ng-switch-when = "img">
                            <img style = "height: 21px; width: 21px;"
                            ng-src = "{{column.imgPath}}">
                        </span>
+-->
                        <span ng-switch-default>
                            <span>{{column.caption}}</span>
                        </span>

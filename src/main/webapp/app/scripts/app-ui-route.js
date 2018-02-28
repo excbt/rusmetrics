@@ -57,7 +57,7 @@
             {
                 name: 'objectsPTree.contObjectControl',
                 url: 'cont-object-control',
-                component: 'contObjectControlComponent',
+                component: 'nodeControlComponent',
                 params: {
                     node: null
                 }
@@ -75,7 +75,7 @@
             {
                 name: 'objectsPTree.treeNodeInfo.contObjectControl',
                 url: '/cont-object-control',
-                component: 'contObjectControlComponent',
+                component: 'nodeControlComponent',
                 params: {
                     node: null
                 }
