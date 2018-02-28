@@ -86,8 +86,17 @@
                 <th ng-repeat = "column in $ctrl.columns track by $index" 
                    ng-class = "column.headerClass"
                    >
-                    <span ng-click = "$ctrl.setOrderBy(column.name)">{{column.caption}}</span>
-                    <i class = "glyphicon" 
+                    <span ng-switch on = "column.type">
+                       <span ng-switch-when = "img">
+                           <img style = "height: 21px; width: 21px;"
+                           ng-src = "{{column.imgPath}}">
+                       </span>
+                       <span ng-switch-default>
+                           <span>{{column.caption}}</span>
+                       </span>
+                    </span>
+                    <i ng-if = "column.type === 'text'"
+                      class = "glyphicon" 
                        ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
                        ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
                        ng-click = "$ctrl.setOrderBy(column.name)">
@@ -100,15 +109,17 @@
 -->
                     <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
                        class="btn-group">
-                        <i  
+                        <i  ng-show = "!column.setFilterFlag"
                             title = "фильтр" 
                             type = "button" 
-                            class = "glyphicon glyphicon-filter dropdown-toggle" 
+                            class = "dropdown-toggle" 
                             data-toggle = "dropdown" 
                             aria-haspopup = "true" 
                             aria-expanded = "false"
                             
                         >
+                        <img style = "margin-bottom: -14px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/filter16-white.png">
                         
 <!--
                             <i ng-if = "true"
@@ -143,11 +154,21 @@
                       </ul>
 -->
                     </div>
+                    <i ng-show = "column.setFilterFlag"
+                       class = ""
+                       ng-click = "$ctrl.removeColorFilter(column)">
+                       
+                        <img style = "margin-bottom: -14px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/cancel-filter16-white.png">    
+                    </i>
+                    
+<!--
                     <i ng-if = "column.setFilterFlag"
                        class = "glyphicon glyphicon-remove"
                        ng-click = "$ctrl.removeColorFilter(column)">
                         
                     </i>
+-->
                 </th>
             </tr>
     </table>
@@ -237,7 +258,7 @@
                                            style = "height: 24px; width: 24px;"
                                        />
                                    </div>
-                                    <div ng-switch-when = "img" style = "padding-left: 20%;">
+                                    <div ng-switch-when = "img" style = "padding-left: 10%;">
                                         <img ng-if = "object[column.name]"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"

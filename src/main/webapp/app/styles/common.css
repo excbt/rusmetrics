@@ -489,8 +489,8 @@ body{
 }
     /* Заголовок таблицы виджета "Контроль"*/
 tr.nmc-ctrl-cmp-table-header > th {
-    background-color: #646263; /*background color*/
-    color: #FFFFFF;
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
     font-weight: normal;
 }
     /*Контроль: колонка Тип здания*/

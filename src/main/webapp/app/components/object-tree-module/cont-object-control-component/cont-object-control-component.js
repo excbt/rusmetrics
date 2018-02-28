@@ -26,6 +26,7 @@
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_BUILDING_TYPE = "components/object-tree-module/cont-object-control-component/buildings/",
+            IMG_PATH_WIDGETS = "components/object-tree-module/cont-object-control-component/",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png",
             OBJECTS_PER_PAGE = 100;
@@ -62,7 +63,7 @@
         ctrl.columns = [
             {
                 name: "contObjectType",
-                caption: "Тип",
+                caption: "",
                 headerClass: "col-xs-1 nmc-ctrl-cmp-td-for-type",
                 type: "contObjectType",
                 filterValues: contObjectTypeFilterValues
@@ -70,10 +71,12 @@
             {
                 name: "caption",
                 caption: "Объект",
-                headerClass: "col-xs-3"
+                headerClass: "col-xs-3",
+                type: "text"
             }, {
                 name: "heat",
                 caption: "Отопление",
+                imgPath: IMG_PATH_WIDGETS + "heat22" + IMG_EXT,
                 headerClass: "col-xs-1",
                 type: "img",
                 filterValues: filterValues
@@ -81,18 +84,21 @@
                 name: "hw",
                 caption: "ГВС",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "hw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "cw",
                 caption: "ХВС",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "cw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "el",
                 caption: "Электричество",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "el22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
 
@@ -519,47 +525,47 @@ console.log(ctrl.node);
             contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIcon(i));
         }
         
-        ctrl.getTextShadow = function (ind) {
-            var clr = "rgb(95, 95, 95)";
-            if (ind % 2 === 0) {
-                clr = "green";
-            } else if (ind % 3 === 0) {
-                clr = "#ff0000";
-            } else {
-                clr = "#ffc000";
-            }
-            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
-        };
+//        ctrl.getTextShadow = function (ind) {
+//            var clr = "rgb(95, 95, 95)";
+//            if (ind % 2 === 0) {
+//                clr = "green";
+//            } else if (ind % 3 === 0) {
+//                clr = "#ff0000";
+//            } else {
+//                clr = "#ffc000";
+//            }
+//            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
+//        };
         
-        ctrl.getIconCssClass = function (ind) {
-            var cls = "btn btn-xs iconcls pull-right";
-            var rn = ind % 6;//Math.ceil(Math.random()*10);
-//console.log(rn);
-            switch (rn) {
-                case 0:
-                    cls = cls.replace("iconcls", "far fa-building");
-                    break;
-                case 1:
-                    cls = cls.replace("iconcls", "fas fa-home");
-                    break;
-                case 2:
-                    cls = cls.replace("iconcls", "far fa-hospital");
-                    break;
-                case 3:
-                    cls = cls.replace("iconcls", "fas fa-university");
-                    break;
-                case 4:
-                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
-                    break;
-                case 5:
-                    cls = cls.replace("iconcls", "fas fa-industry");
-                    break;
-                default:
-                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
-                    break;
-            }
-            return cls;
-        };
+//        ctrl.getIconCssClass = function (ind) {
+//            var cls = "btn btn-xs iconcls pull-right";
+//            var rn = ind % 6;//Math.ceil(Math.random()*10);
+////console.log(rn);
+//            switch (rn) {
+//                case 0:
+//                    cls = cls.replace("iconcls", "far fa-building");
+//                    break;
+//                case 1:
+//                    cls = cls.replace("iconcls", "fas fa-home");
+//                    break;
+//                case 2:
+//                    cls = cls.replace("iconcls", "far fa-hospital");
+//                    break;
+//                case 3:
+//                    cls = cls.replace("iconcls", "fas fa-university");
+//                    break;
+//                case 4:
+//                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
+//                    break;
+//                case 5:
+//                    cls = cls.replace("iconcls", "fas fa-industry");
+//                    break;
+//                default:
+//                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
+//                    break;
+//            }
+//            return cls;
+//        };
         
     }
     
