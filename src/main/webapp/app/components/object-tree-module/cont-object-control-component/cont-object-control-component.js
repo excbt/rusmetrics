@@ -514,7 +514,7 @@ console.log(ctrl.node);
             }
             return cls;
         };
-        
+        //fill contObjectTypeFilterValues
         for (var i = 0; i < 11; i++) {
             contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIcon(i));
         }
