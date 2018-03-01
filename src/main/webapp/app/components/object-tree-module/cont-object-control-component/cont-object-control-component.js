@@ -24,6 +24,7 @@
         ctrl.objectsOnPage = [];
         ctrl.filter = '';
         ctrl.searchFlag = false;
+        ctrl.contZpointFilterValue = null;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_BUILDING_TYPE = "components/object-tree-module/cont-object-control-component/buildings/",
@@ -278,7 +279,7 @@
         }
         
         function successLoadZpointsCallback(resp) {
-            console.log(resp);
+//console.log(resp);
             if (angular.isUndefined(resp) || resp === null || !angular.isArray(resp.data) || resp.data.length === 0) {
                 return false;
             }
@@ -300,7 +301,8 @@
             $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
         }
         
-        ctrl.showObjectWidget = function (obj, index) {            
+        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {
+            ctrl.contZpointFilterValue = contZpointFilterVal;
             if (obj.hasOwnProperty('showWidgetFlag')) {
                 obj.showWidgetFlag = !obj.showWidgetFlag;
             } else {
@@ -381,9 +383,10 @@
 //console.log('getNodeContObjects:', getNodeContObjects);
 //            var nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
             
+//console.log(ctrl.contObjectList);            
             ctrl.objects = $filter('orderBy')(ctrl.contObjectList, ctrl.orderBy.field, ctrl.orderBy.asc);                    
             ctrl.addMoreObjectsOnPage();
-console.log(ctrl.objects);            
+//console.log(ctrl.objects);            
 return;
             var node = $stateParams.node;
             if (angular.isDefined(node) && node !== null) {
@@ -409,7 +412,7 @@ console.log(ctrl.objects);
         }
         
         ctrl.$onInit = function () {
-//console.log($stateParams);
+//console.log(ctrl);
             getContObjects();
             ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {

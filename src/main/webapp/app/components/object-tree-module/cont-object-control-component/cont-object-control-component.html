@@ -86,22 +86,26 @@
                 <th ng-repeat = "column in $ctrl.columns track by $index" 
                    ng-class = "column.headerClass"
                    >
-                    <span ng-switch on = "column.type">
 <!--
+                    <span ng-switch on = "column.type">
                        <span ng-switch-when = "img">
                            <img style = "height: 21px; width: 21px;"
                            ng-src = "{{column.imgPath}}">
                        </span>
--->
                        <span ng-switch-default>
+-->
                            <span>{{column.caption}}</span>
+<!--
                        </span>
                     </span>
+-->
                     <i ng-if = "column.type === 'text'"
                       class = "glyphicon" 
                        ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
                        ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
-                       ng-click = "$ctrl.setOrderBy(column.name)">
+                       ng-click = "$ctrl.setOrderBy(column.name)"
+                        style = "cursor: pointer;"
+                       >
                     </i>
 <!--
                     <i ng-if = "true"
@@ -110,7 +114,7 @@
                     </i>
 -->
                     <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
-                       class="btn-group">
+                       class="btn-group" style = "cursor: pointer;">
                         <i  ng-show = "!column.setFilterFlag"
                             title = "фильтр" 
                             type = "button" 
@@ -158,7 +162,8 @@
                     </div>
                     <i ng-show = "column.setFilterFlag"
                        class = ""
-                       ng-click = "$ctrl.removeColorFilter(column)">
+                       ng-click = "$ctrl.removeColorFilter(column)"
+                        style = "cursor: pointer;">
                        
                         <img style = "margin-bottom: -14px;"
                         ng-src = "components/object-tree-module/cont-object-control-component/filters/cancel-filter16-white.png">    
@@ -255,15 +260,17 @@
                                <div ng-switch on = "column.type">
                                    <div ng-switch-when = "contObjectType">
                                        <img class="pull-left"
-                                          ng-click = "$ctrl.showObjectWidget(object, contObjectIndex)"
+                                          ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, null)"
                                            ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
-                                           style = "height: 24px; width: 24px;"
+                                           style = "height: 24px; width: 24px; cursor: pointer;"
                                        />
                                    </div>
                                     <div ng-switch-when = "img" style = "padding-left: 10%;">
                                         <img ng-if = "object[column.name]"
+                                        style = "cursor: pointer;"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"
+                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"                                        
                                         />
                                     </div>
                                    <div ng-switch-default>
@@ -277,9 +284,10 @@
                        </tr>
                        <tr ng-if = "object.showWidgetFlag">
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
-                              <div ng-repeat = "zpoint in object.zpoints track by $index"
+                              <div ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">
 
+<!--
                                    <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
                                        <span ng-show='title' ng-bind='title'></span>
                                        <div ng-show='isLoading'>Загрузка...</div>
@@ -290,6 +298,18 @@
 
                                         </ng-widget>
                                    </div>
+-->
+                                   <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "zpoint.id"
+                                       cont-zpoint-name = "zpoint.customServiceName"
+                                       cont-zpoint-type = "zpoint.contServiceTypeKeyname"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+<!--
+                                   <pre>
+                                   {{zpoint | json}}
+                                   </pre>
+-->
 
                                  </div>
                           </td>
