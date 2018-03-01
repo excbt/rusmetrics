@@ -3399,8 +3399,8 @@ div.nmc-energy-simple-line > div {
 
 /* Иконки для дерева объектов*/
 .nmc-p-tree-status-img {
-    max-width: 12px;
-    max-height: 12px;
+    max-width: 16px;
+    max-height: 16px;
 }
 
 /*Material: toolbar*/
@@ -3511,4 +3511,12 @@ div.nmc-energy-simple-line > div {
     min-height: 24px;
     height: 24px;
     line-height: inherit;
+}
+
+/* Компонент-виджет "Мониторинг точки учета"*/
+    /* Заголовок таблицы виджета "Контроль"*/
+tr.nmc-zp-monitor-table-header > th {
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
+    font-weight: normal;
 }
