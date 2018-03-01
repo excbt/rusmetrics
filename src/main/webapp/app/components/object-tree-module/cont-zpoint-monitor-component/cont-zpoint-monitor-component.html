@@ -19,19 +19,27 @@
        </md-input-container>
    </div>
    <div layout = "row">
-       <table class = "table table-striped table-hover">
-           <thead>
-               <tr class = "nmc-zp-monitor-table-header">
-                   <th ng-repeat = "column in $ctrl.columns track by $index"
+       <div class = "table table-striped table-hover nmc-zp-monitor-table">
+           <div class = "nmc-zp-monitor-table-thead">
+<!--               <div class = "nmc-zp-monitor-table-header">-->
+                   <span ng-repeat = "column in $ctrl.columns track by $index"
                      ng-class = "column.headerClass"
+                     style = "display: table-cell;"
                       >
                        {{column.caption}}
-                   </th>
-               </tr>
-           </thead>
-           <tbody>
-               <tr ng-repeat = "row in $ctrl.events track by $index">
-                   <td ng-repeat = "column in $ctrl.columns track by $index">
+                   </span>
+<!--               </div>-->
+           </div>
+<!--           <div>-->
+               <div ng-repeat = "row in $ctrl.events track by $index" 
+                 class = "nmc-zp-monitor-table-row"
+                 ng-init = "rowIndex = $index"
+                  >
+                   <span ng-repeat = "column in $ctrl.columns track by $index"
+                    ng-class = "column.headerClass"
+                     style = "display: table-cell; padding: 5px;"
+                     ng-style = "{'background-color': rowIndex % 2 === 0 ? '#f9f9f9' : 'white'}"
+                     >
                       <span ng-switch on = "column.type">
                           <span ng-switch-when = "img">
                                <img style = "height: 16px; width: 16px;"
@@ -41,9 +49,9 @@
                                {{row[column.name]}}
                           </span>
                        </span>
-                   </td>
-               </tr>
-           </tbody>
-       </table>
+                   </span>
+               </div>
+<!--           </div>-->
+       </div>
    </div>
 </div>

@@ -31,25 +31,25 @@
             },
             {
                 name: "dateString",
-                headerClass: "col-xs-2",
+                headerClass: "col-xs-3",
                 caption: "Дата",
                 type: "text"
             },
             {
                 name: "event",
-                headerClass: "col-xs-3",
+                headerClass: "col-xs-5",
                 caption: "Событие",
                 type: "text"
             },
             {
                 name: "rate",
-                headerClass: "col-xs-2",
+                headerClass: "col-xs-3",
                 caption: "Степень отклонения",
                 type: "text"
             },
         ];
         
-        vm.events = [
+        var events = [
             {
                 status: "yellow",
                 dateString: "01.02.2018 23:59",
@@ -81,6 +81,7 @@
                 rate: "Средняя"
             }
         ];
+        vm.events = events.concat(events).concat(events);
 
 //        vm.$onChanges = changeCmpnt;
         

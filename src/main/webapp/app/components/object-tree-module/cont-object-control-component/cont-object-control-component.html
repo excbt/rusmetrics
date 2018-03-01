@@ -282,7 +282,9 @@
                                 </div>
                             </td>
                        </tr>
-                       <tr ng-if = "object.showWidgetFlag">
+                       <tr ng-if = "object.showWidgetFlag"
+                         style = "border-top: 1px solid rgb(95, 95, 95)"
+                         >
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
                               <div ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">

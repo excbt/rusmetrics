@@ -1,0 +1,29 @@
+/* Компонент-виджет "Мониторинг точки учета"*/
+    /* Заголовок таблицы виджета "Контроль"*/
+/*
+tr.nmc-zp-monitor-table-header > th {
+    background-color:  #646263; 
+    color: #FFFFFF;
+    font-weight: normal;
+}
+*/
+
+.nmc-zp-monitor-table {
+    border: 1px solid red;
+    max-height: 250px;
+    overflow: auto;
+}
+.nmc-zp-monitor-table-thead {
+    position: sticky;
+    top: 0;
+    height: 3em;
+    z-index: 1;
+/*    background: lightpink;*/
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
+    font-weight: normal;
+}
+
+.nmc-zp-monitor-table-row:nth-of-type(odd) {
+    background: grey;
+}
