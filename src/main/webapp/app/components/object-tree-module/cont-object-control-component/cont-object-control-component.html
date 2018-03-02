@@ -260,7 +260,7 @@
                                <div ng-switch on = "column.type">
                                    <div ng-switch-when = "contObjectType">
                                        <img class="pull-left"
-                                          ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, null)"
+                                          ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
                                            ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
                                            style = "height: 24px; width: 24px; cursor: pointer;"
                                        />

@@ -1,4 +1,4 @@
-/*global angular, console, $*/
+/*global angular, console, $, document*/
 /***
     created by Artamonov A.A. , Dec. 2017
 */
@@ -15,9 +15,9 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout', '$mdDialog'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout, $mdDialog) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];        
@@ -300,6 +300,23 @@
         function scrollTableElementToTop(index) {
             $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
         }
+        
+        ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
+            var dialogSettings = {
+                controller: null,
+                templateUrl: "components/object-tree-module/cont-object-control-component/info.tmpl.html",
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                clickOutsideToClose: true
+            };
+            $mdDialog
+                .show(dialogSettings)
+                .then(function (ans) {
+                console.log(ans);
+            }, function () {
+                console.log("Dialog is canceled");
+            });
+        };
         
         ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
             if (obj.hasOwnProperty('showWidgetFlag')) {
