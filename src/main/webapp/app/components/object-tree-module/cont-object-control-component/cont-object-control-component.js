@@ -301,21 +301,35 @@
             $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
         }
         
+        ctrl.ngPopupConfig = {
+            title: "Информация по событиям",
+            width: 810,
+            height: 350,
+            template: "<cont-zpoint-monitor-component cont-zpoint-id = \"0\" cont-zpoint-name = \"null\" cont-zpoint-type = \"null\"></cont-zpoint-monitor-component>",
+            resizable: true,
+            draggable: true,
+            position: {top: 100, left: 300},
+            isShow: false
+        };
+        
         ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
-            var dialogSettings = {
-                controller: null,
-                templateUrl: "components/object-tree-module/cont-object-control-component/info.tmpl.html",
-                parent: angular.element(document.body),
-                targetEvent: ev,
-                clickOutsideToClose: true
-            };
-            $mdDialog
-                .show(dialogSettings)
-                .then(function (ans) {
-                console.log(ans);
-            }, function () {
-                console.log("Dialog is canceled");
-            });
+            ctrl.ngPopupConfig.isShow = true;
+            
+            
+//            var dialogSettings = {
+//                controller: null,
+//                templateUrl: "components/object-tree-module/cont-object-control-component/info.tmpl.html",
+//                parent: angular.element(document.body),
+//                targetEvent: ev,
+//                clickOutsideToClose: true
+//            };
+//            $mdDialog
+//                .show(dialogSettings)
+//                .then(function (ans) {
+//                console.log(ans);
+//            }, function () {
+//                console.log("Dialog is canceled");
+//            });
         };
         
         ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
@@ -593,6 +607,7 @@ console.log(ctrl.objects);
 //            }
 //            return cls;
 //        };
+                
         
     }
     

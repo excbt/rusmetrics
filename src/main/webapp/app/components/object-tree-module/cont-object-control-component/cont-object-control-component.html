@@ -85,6 +85,7 @@
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" 
                    ng-class = "column.headerClass"
+                   ng-style = "{'padding-left' : $index === 0 ? '17px' : '5px'}"
                    >
 <!--
                     <span ng-switch on = "column.type">
@@ -124,7 +125,7 @@
                             aria-expanded = "false"
                             
                         >
-                        <img style = "margin-bottom: -14px;"
+                        <img style = "margin-bottom: -10px;"
                         ng-src = "components/object-tree-module/cont-object-control-component/filters/filter16-white.png">
                         
 <!--
@@ -165,7 +166,7 @@
                        ng-click = "$ctrl.removeColorFilter(column)"
                         style = "cursor: pointer;">
                        
-                        <img style = "margin-bottom: -14px;"
+                        <img style = "margin-bottom: -10px;"
                         ng-src = "components/object-tree-module/cont-object-control-component/filters/cancel-filter16-white.png">    
                     </i>
                     
@@ -334,4 +335,5 @@
         </table>
 
     </div>
+    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>
 </div>
