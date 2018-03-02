@@ -9,7 +9,7 @@ tr.nmc-zp-monitor-table-header > th {
 */
 
 .nmc-zp-monitor-table {
-    border: 1px solid red;
+/*    border: 1px solid red;*/
     max-height: 250px;
     overflow: auto;
 }

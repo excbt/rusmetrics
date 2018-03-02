@@ -286,7 +286,17 @@
                          style = "border-top: 1px solid rgb(95, 95, 95)"
                          >
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
-                              <div ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
+                              <div ng-if = "$ctrl.contZpointFilterValue === null">
+                                  <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "0"
+                                       cont-zpoint-name = "null"
+                                       cont-zpoint-type = "null"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+                              </div>
+                             
+                              <div ng-if = "$ctrl.contZpointFilterValue !== null"
+                                ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">
 
 <!--

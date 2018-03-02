@@ -301,8 +301,7 @@
             $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
         }
         
-        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {
-            ctrl.contZpointFilterValue = contZpointFilterVal;
+        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
             if (obj.hasOwnProperty('showWidgetFlag')) {
                 obj.showWidgetFlag = !obj.showWidgetFlag;
             } else {
@@ -311,6 +310,7 @@
             
             //load cont object zpoints
             if (obj.showWidgetFlag) {
+                ctrl.contZpointFilterValue = contZpointFilterVal;
                 ctrl.loadZpointsByObjectId(obj.id);
                 // close all objects besides current
                 ctrl.objects.forEach(function (elmObj) {

@@ -19,7 +19,8 @@
     /* @ngInject */
     function contZpointMonitorComponentController() {
         /*jshint validthis: true*/
-        var vm = this;        
+        var vm = this;
+        vm.showSettingsFlag = false;
         vm.$onInit = initCmpnt;
         
         vm.columns = [
@@ -82,6 +83,10 @@
             }
         ];
         vm.events = events.concat(events).concat(events);
+        
+        vm.toggleSettings = function () {
+            vm.showSettingsFlag = !vm.showSettingsFlag;
+        };
 
 //        vm.$onChanges = changeCmpnt;
         

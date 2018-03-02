@@ -15,7 +15,10 @@
         function filterFilter(items, val) {
 //            console.log(items);
 //            console.log(val);
-            if (angular.isUndefined(val) || val === null || !angular.isArray(items)) {
+            if (!angular.isArray(items)) {                
+                return items;
+            }
+            if (angular.isUndefined(val) || val === null) {                
                 return items;
             }
             var out = [];
