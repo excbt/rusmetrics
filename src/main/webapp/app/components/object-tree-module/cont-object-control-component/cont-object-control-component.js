@@ -306,7 +306,7 @@
             width: 810,
             height: 350,
             template: "<cont-zpoint-monitor-component cont-zpoint-id = \"0\" cont-zpoint-name = \"null\" cont-zpoint-type = \"null\"></cont-zpoint-monitor-component>",
-            resizable: true,
+            resizable: false,
             draggable: true,
             position: {top: 100, left: 300},
             isShow: false
