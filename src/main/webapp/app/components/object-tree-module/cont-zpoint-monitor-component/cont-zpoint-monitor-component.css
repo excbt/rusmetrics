@@ -10,13 +10,17 @@ tr.nmc-zp-monitor-table-header > th {
 
 .nmc-zp-monitor-table {
 /*    border: 1px solid red;*/
-    max-height: 250px;
+/*    max-height: 250px;*/
+/*    max-height: 50vh;*/
+    position: absolute;
+    bottom: 0;
+    top: 55px;
     overflow: auto;
 }
 .nmc-zp-monitor-table-thead {
     position: sticky;
     top: 0;
-    height: 3em;
+    height: 34px;
     z-index: 1;
 /*    background: lightpink;*/
     background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
