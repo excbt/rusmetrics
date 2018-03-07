@@ -1,4 +1,4 @@
-/*global angular, $, console*/
+/*global angular, $, console, moment*/
 (function() {
     'use strict';
 
@@ -14,10 +14,10 @@
             controller: contZpointMonitorComponentController
         });
 
-    contZpointMonitorComponentController.$inject = [];
+    contZpointMonitorComponentController.$inject = ['dateSvc'];
 
     /* @ngInject */
-    function contZpointMonitorComponentController() {
+    function contZpointMonitorComponentController(dateSvc) {
         /*jshint validthis: true*/
         var vm = this;
         vm.showSettingsFlag = false;
@@ -153,6 +153,10 @@
         vm.toggleSettings = function () {
             vm.showSettingsFlag = !vm.showSettingsFlag;
         };
+        vm.daterange = null;
+        vm.daterangeOpts = null;
+        
+        
 
 //        vm.$onChanges = changeCmpnt;
         
@@ -161,6 +165,31 @@
 //            console.log("contZpointMonitorComponentController on Init.", vm);
 //            console.log("01.02.2018 23:59" > "01.02.2018 00:01");
 //            console.log(events);
+            
+            //init date time range picker
+            vm.daterangeOpts = dateSvc.getDaterangeOptions();            
+            vm.daterangeOpts.timePicker = true;
+            vm.daterangeOpts.timePickerIncrement = 1;
+            vm.daterangeOpts.timePicker24Hour = true;
+            vm.daterangeOpts.locale.format = 'DD.MM.YYYY HH:mm';
+            vm.daterangeOpts.separator = " - ";
+            vm.daterangeOpts.eventHandlers = {
+                'apply.daterangepicker': function (ev, picker) {
+                    console.log(ev);
+                    console.log(picker);
+                    console.log(vm.daterange);
+                }
+            };
+
+            console.log(vm.daterangeOpts);            
+            
+            //init date
+            vm.daterange = {
+                startDate: moment().startOf('Day'),
+                startDateStr: moment().startOf('Day').format("DD.MM.YYYY HH:mm"),
+                endDate: moment().endOf('Day'),
+                endDateStr: moment().endOf('Day').format("DD.MM.YYYY HH:mm")
+            };
         }
         
 //        function changeCmpnt(changes) {

@@ -1,4 +1,4 @@
-<div layout = "column">
+<div layout = "column" ng-cloak>
    <div layout = "row">
      <md-toolbar class = "md-hue-1 nmc-md-toolbar-n">
          <div class = "md-toolbar-tools" style = "font-size: 14px;">
@@ -14,14 +14,18 @@
                             src = "components\object-tree-module\cont-zpoint-monitor-component\settings24.png"                
                         />
                     </i>
-                    Период с {{$ctrl.periodStart}} по {{$ctrl.periodEnd}}
+                    Период с <input date-range-picker class = "form-control date-picker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer; width: 50%; height: 28px; background-color: rgb(231,235,245); border: none; box-shadow: none;"/>
+<!--                    Период с {{$ctrl.daterange.startDateStr}} по {{$ctrl.daterange.endDateStr}}-->
 <!--               </h4>-->
          </div>
        </md-toolbar>
    </div>
-   <div layout = "row" ng-show = "$ctrl.showSettingsFlag">
+   <div layout = "row">
 <!--       Period-->
-      <div style = "position: absolute; top: 57px; left: 0px; right: 0px; z-index: 2; background: #f9f9f9;">
+      <div style = "position: absolute; top: 57px; left: 0px; right: 0px; z-index: 2; background: #f9f9f9;"
+          ng-show = "$ctrl.showSettingsFlag"
+          class = "nmc-zp-monitor-settings-div"
+      >
 <!--
            <md-input-container>
                <label>С</label>
@@ -32,7 +36,7 @@
                <md-datepicker ng-model = "$ctrl.periodEnd"></md-datepicker>
            </md-input-container>
 -->
-          <div flex>
+          <div flex style = "padding-left: 10px; padding-top: 5px; display: none;">
              С <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
                  <option>01</option>
                  <option>02</option>
@@ -93,6 +97,9 @@
                  <option>59</option>
              </select>
              
+          </div>
+          <div flex = "50">
+              <input date-range-picker class = "form-control date-picker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer"/>
           </div>
            <md-button class = "md-primary" 
            style = "background-color: #41719c;"
@@ -213,4 +220,5 @@
 <!--           </div>-->
        </div>
    </div>
+   
 </div>

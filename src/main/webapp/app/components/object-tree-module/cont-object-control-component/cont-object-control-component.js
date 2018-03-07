@@ -316,7 +316,11 @@
         };
         
         ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
-            ctrl.ngPopupConfig.isShow = true;
+            console.log(obj);
+            ctrl.selectedObject = obj;
+            $('#testWindowModal').modal();
+//            ctrl.ngPopupConfig.title = "Информация по событиям на объекте " + obj.fullName;
+//            ctrl.ngPopupConfig.isShow = true;
             
             
 //            var dialogSettings = {
@@ -422,27 +426,27 @@
             ctrl.addMoreObjectsOnPage();
 //console.log(ctrl.objects);            
 return;
-            var node = $stateParams.node;
-            if (angular.isDefined(node) && node !== null) {
-                var nodeId = node.id || node._id || node.nodeObject.id;
-                var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+//            var node = $stateParams.node;
+//            if (angular.isDefined(node) && node !== null) {
+//                var nodeId = node.id || node._id || node.nodeObject.id;
+//                var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
 //console.log(nodeObjects);
-                if (nodeObjects === null) {
-                    ctrl.loadObjects(nodeId);
-                } else {
-                    nodeObjects.forEach(function (elm) {
-                        elm.loading = true;
-                    });
-                    nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
-                    ctrl.objects = nodeObjects;                    
-console.log(ctrl.objects);                    
-                    ctrl.addMoreObjectsOnPage();
-//                    ctrl.objects.forEach(function (elm) {
-//                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
-//                            .then(successLoadObjectMonitorStateCallback, errorCallback);
+//                if (nodeObjects === null) {
+//                    ctrl.loadObjects(nodeId);
+//                } else {
+//                    nodeObjects.forEach(function (elm) {
+//                        elm.loading = true;
 //                    });
-                }
-            }
+//                    nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+//                    ctrl.objects = nodeObjects;                    
+//console.log(ctrl.objects);                    
+//                    ctrl.addMoreObjectsOnPage();
+//ctrl.objects.forEach(function (elm) {
+//    contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+//        .then(successLoadObjectMonitorStateCallback, errorCallback);
+//});
+//                }
+//            }
         }
         
         ctrl.$onInit = function () {
@@ -452,6 +456,14 @@ console.log(ctrl.objects);
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {
                 ctrl.loadZpointWidgetList();
             }
+            
+                        //bootstrap modal win
+            $('.modal-content').resizable({
+                minHeight: 300,
+                minWidth: 600
+            });
+
+            $('.modal-dialog').draggable();
         };
         
         $scope.$on(contObjectCtrlSvc.EVENTS.OBJECTS_LOADED, function () {

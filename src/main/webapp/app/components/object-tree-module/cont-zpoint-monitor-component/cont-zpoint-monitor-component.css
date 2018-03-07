@@ -31,3 +31,15 @@ tr.nmc-zp-monitor-table-header > th {
 .nmc-zp-monitor-table-row:nth-of-type(odd) {
     background: grey;
 }
+
+.nmc-zp-monitor-settings-div {
+    transition: all linear 0.5s;
+    height: 82px;
+}
+
+.nmc-zp-monitor-settings-div.ng-hide {
+    height: 0;
+}
+.nmc-zp-monitor-settings-div.ng-show {
+/*    opacity: 1;*/
+}
