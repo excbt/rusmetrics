@@ -197,7 +197,9 @@
             
 
 <!--            <tr ng-repeat = "object in $ctrl.objects | filter: filter | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index">-->
-            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index" ng-init = "contObjectIndex = $index">
+            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index" ng-init = "contObjectIndex = $index"
+            ng-class="{'nmc-ctrl-cmp-bg-distinguish': object.isSelected}"
+            ng-click = "$ctrl.selectObject(object)">
 <!--
                <td ng-if = "object.loading" class = "col-xs-1">
                    <div ng-show = "object.loading" class="nmc-loading">

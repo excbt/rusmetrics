@@ -316,8 +316,8 @@
         };
         
         ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
-            console.log(obj);
-            ctrl.selectedObject = obj;
+//            console.log(obj);
+//            ctrl.selectedObject = obj;
             $('#testWindowModal').modal();
 //            ctrl.ngPopupConfig.title = "Информация по событиям на объекте " + obj.fullName;
 //            ctrl.ngPopupConfig.isShow = true;
@@ -623,7 +623,14 @@ return;
 //            return cls;
 //        };
                 
-        
+        ctrl.selectObject = function (obj) {
+//            console.log(obj);
+            if (!ctrl.checkUndefinedNull(ctrl.selectedObject)) {
+                ctrl.selectedObject.isSelected = false;
+            }
+            obj.isSelected = !obj.isSelected;
+            ctrl.selectedObject = obj;
+        };
     }
     
 }());

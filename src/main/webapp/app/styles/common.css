@@ -498,6 +498,31 @@ tr.nmc-ctrl-cmp-table-header > th {
     min-width: 53px;
     width: 2%;
 }
+    /*Контроль: подсветка выделенного эл-та таблицы данных*/
+.nmc-ctrl-cmp-bg-distinguish {
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td {
+    background-color: #D2D2D2 !important;
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td:before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 15px;
+/*
+    left: 10px;
+    margin-top: 14px;
+*/
+    border-top: 1px solid rgb(95, 95, 95);
+    border-right: 1px solid rgb(95, 95, 95);
+    transform: rotate(45deg);
+    width: 6px;
+    height: 6px;
+}
 
 .nmc-el-view-main-div-with-chart {
     overflow: auto;
