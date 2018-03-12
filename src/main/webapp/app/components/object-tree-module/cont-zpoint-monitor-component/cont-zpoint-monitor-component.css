@@ -45,3 +45,24 @@ tr.nmc-zp-monitor-table-header > th {
 .nmc-zp-monitor-settings-div.ng-show {
 /*    opacity: 1;*/
 }
+
+
+.nmc-zp-monitor-status-th {
+    width: 48px;
+    max-width: 50px;
+}
+
+.nmc-zp-monitor-date-th {
+    width: 98px;
+    max-width: 100px;
+}
+
+.nmc-zp-monitor-time-th {
+    width: 48px;
+    max-width: 50px;
+}
+
+.nmc-zp-monitor-event-th {
+    position: absolute;
+    right: 0;
+}

@@ -1770,10 +1770,12 @@ tr.nmc-inactive-price > td {
 /* Сохранить */
 .nmc-save-button {
     max-width: 112px;
+    min-width: 112px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
+    min-width: 142px;
     max-width: 142px;
 }
 
