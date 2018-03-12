@@ -347,19 +347,20 @@
           data-backdrop="static"
          >
 
-        <div class="modal-dialog  modal-content nmc-modal-dialog-low">
+        <div class="modal-dialog  modal-content nmc-modal-dialog-low" style = "height: 300px; max-height: 66vh; ">
             <div class="modal-header nmc-modal-header">
                 <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 id="deleteLabel" class="nmc-h3">
                     {{$ctrl.selectedObject.caption}}
                 </h3>
             </div>
-            <div class="modal-body nmc-modal-body"  style = "height: 75%; min-height: 250px;">
+            <div class="modal-body nmc-modal-body"  style = "min-height: 250px; position: absolute; width: 100%; top: 19px;
+               bottom: 15px;">
                 <cont-zpoint-monitor-component cont-zpoint-id = "0" cont-zpoint-name = "null" cont-zpoint-type = "null">
                     
                 </cont-zpoint-monitor-component>
             </div>
-            <div class="modal-footer nmc-modal-footer">
+            <div class="modal-footer nmc-modal-footer" style = "position: absolute; width: 100%; bottom: 0;">
                     <div class="container-fluid">
                         <div class="row">
                             <div class="col-xs-offset-6 col-xs-3">

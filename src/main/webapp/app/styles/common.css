@@ -3083,11 +3083,13 @@ a.user-menu:after {
 /*  Классы для настройки resizable компоненты*/
 /*******************************************************************/
 .ui-resizable-s {
+/*
     height: 14px;
     background-image: url(../images/resizable.png);
     background-repeat: no-repeat;
     background-position: center -26px;
     background-color: #DDD;
+*/
 /*
     border-radius: 4px;
     width: 10%;

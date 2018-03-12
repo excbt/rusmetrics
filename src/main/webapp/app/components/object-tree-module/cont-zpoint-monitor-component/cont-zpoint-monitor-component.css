@@ -14,8 +14,10 @@ tr.nmc-zp-monitor-table-header > th {
 /*    max-height: 50vh;*/
     position: absolute;
     bottom: 0;
-    top: 55px;
+/*    top: 55px;*/
+    top: 42px;
     overflow: auto;
+/*    margin-bottom: 0;*/
 }
 .nmc-zp-monitor-table-thead {
     position: sticky;
