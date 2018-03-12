@@ -555,7 +555,7 @@
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
 			<artifactId>slogwriter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.postgresql</groupId>
