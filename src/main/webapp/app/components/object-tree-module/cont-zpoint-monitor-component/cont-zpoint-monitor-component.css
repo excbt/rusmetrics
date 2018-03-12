@@ -31,7 +31,7 @@ tr.nmc-zp-monitor-table-header > th {
 }
 
 .nmc-zp-monitor-table-row:nth-of-type(odd) {
-    background: grey;
+/*    background: grey;*/
 }
 
 .nmc-zp-monitor-settings-div {

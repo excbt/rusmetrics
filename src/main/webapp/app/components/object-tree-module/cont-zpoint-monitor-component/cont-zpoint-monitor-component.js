@@ -71,7 +71,7 @@
                 name: "timeString",
                 headerClass: "col-xs-1 noPadding",
                 caption: "Время",
-                type: "text",
+                type: "timetext",
                 filterValues: timeFilterValues
             },
             {

@@ -1,17 +1,18 @@
 <div layout = "column" ng-cloak>
    <div layout = "row">
      <md-toolbar class = "md-hue-1 nmc-md-toolbar-n">
-         <div class = "md-toolbar-tools" style = "font-size: 14px;">
+         <div class = "md-toolbar-tools" style = "font-size: 14px; padding-left: 10px;">
 <!--              <h4>-->
-                   <img style = "height: 16px; width: 16px; margin-right: 10px;"
+                   <img ng-if = "$ctrl.contZpointType"
+                       style = "height: 16px; width: 16px; margin-right: 10px;"
                         ng-src = "components/object-tree-module/cont-zpoint-monitor-component/{{$ctrl.contZpointType}}.png"/> 
 
                     {{$ctrl.contZpointName}}
                     <i class = "btn btn-xs"               
                         ng-click = "$ctrl.toggleSettings()"
                     >
-                        <img style = "height: 16px; width: 16px;"
-                            src = "components\object-tree-module\cont-zpoint-monitor-component\settings24.png"                
+                        <img style = "height: 24px; width: 24px;"
+                            src = "components\object-tree-module\cont-zpoint-monitor-component\calendar24.png"                
                         />
                     </i>
                     Период с <input date-range-picker class = "form-control date-picker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer; width: 50%; height: 28px; background-color: rgb(231,235,245); border: none; box-shadow: none;"/>
@@ -20,7 +21,7 @@
          </div>
        </md-toolbar>
    </div>
-   <div layout = "row">
+   <div layout = "row" style = "display: none;">
 <!--       Period-->
       <div style = "position: absolute; top: 57px; left: 0px; right: 0px; z-index: 2; background: #f9f9f9;"
           ng-show = "$ctrl.showSettingsFlag"
@@ -118,7 +119,7 @@
                   
                    <div ng-repeat = "column in $ctrl.columns track by $index"
                      ng-class = "column.headerClass"
-                     style = "display: table-cell; vertical-align: middle; height: 100%"
+                     style = "display: table-cell; vertical-align: baseline; height: 100%"
                       >
                        <span style = "position: relative; top: 24%; transform: translateY(-24%)">{{column.caption}}</span>
                        <i ng-if = "column.type === 'datetext'"
@@ -130,7 +131,7 @@
                            >
                         </i>
                         
-                        <div  ng-if = "column.type === 'img' || column.type === 'datetext' || column.type === 'text'"
+                        <div  ng-if = "column.type === 'img' || column.type === 'text'"
                            class="btn-group" style = "cursor: pointer;">
                             <i  ng-show = "!column.setFilterFlag"
                                 title = "фильтр" 
