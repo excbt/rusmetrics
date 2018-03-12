@@ -1035,15 +1035,16 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
-//        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
-//            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
-//            $scope.changeServiceType($scope.zpointSettings);
-//        }
-//        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
-//            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
-//        }
-//        $scope.getDevices(object, false);
-//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
+
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentContServiceTypeKeyname'))) {
+            $scope.zpointSettings.contServiceTypeKeyname = $cookies.get('recentContServiceTypeKeyname');
+            $scope.changeServiceType($scope.zpointSettings);
+        }
+        if (!mainSvc.checkUndefinedNull($cookies.get('recentRsoId'))) {
+            $scope.zpointSettings.rsoId = Number($cookies.get('recentRsoId'));
+        }
+        $scope.getDevices(object, false);
+        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
     };
                 
     $scope.getZpointSettings = function (objId, zpointId) {
@@ -1300,6 +1301,27 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 //            }
 //        }
 //    };
+
+    $scope.changeServiceType = function (zpSettings) {
+        if (!mainSvc.checkUndefinedNull(zpSettings.contServiceTypeKeyname)) {
+            $cookies.put('recentContServiceTypeKeyname', zpSettings.contServiceTypeKeyname);
+        }
+        if ($scope.emptyString(zpSettings.customServiceName)) {
+            switch (zpSettings.contServiceTypeKeyname) {
+            case "heat":
+                zpSettings.customServiceName = "Система отопления";
+                break;
+            default:
+                $scope.data.serviceTypes.some(function (svType) {
+                    if (svType.keyname == zpSettings.contServiceTypeKeyname) {
+                        zpSettings.customServiceName = svType.caption;
+                        return true;
+                    }
+                });
+
+            }
+        }
+    };
                 
     $scope.changeRso = function (zpSettings) {
         if (!mainSvc.checkUndefinedNull(zpSettings.rsoId)) {
