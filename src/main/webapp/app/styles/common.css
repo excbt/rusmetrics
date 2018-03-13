@@ -3541,3 +3541,12 @@ div.nmc-energy-simple-line > div {
     height: 24px;
     line-height: inherit;
 }
+
+/*    Daterangepicker DateRangePicker drp*/
+.daterangepicker .calendar-time {
+    text-align: left !important;
+}
+
+.nmc-drp-ctrl-btns {
+    width: 49%;
+}

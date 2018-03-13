@@ -15,13 +15,14 @@
         this.getDaterangeOptions = getDaterangeOptions;
         
         var dateOptsRu = {
-            locale : {
-                applyClass : 'btn-green',
+            applyClass : 'btn-primary nmc-drp-ctrl-btns',
+            cancelClass: 'nmc-bg-distinguish nmc-drp-ctrl-btns',
+            locale : {                
                 applyLabel : "Применить",
                 fromLabel : "с",
                 toLabel : "по",
                 cancelLabel : 'Отмена',
-                customRangeLabel : 'Период',
+                customRangeLabel : 'Произвольный период',
                 daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
                 firstDay : 1,
                 monthNames : [ 'Январь', 'Февраль', 'Март', 'Апрель',
@@ -29,13 +30,22 @@
                         'Октябрь', 'Ноябрь', 'Декабрь' ]
             },
             ranges : {
-                'Текущий день' : [ moment().startOf('day'),
+                'Текущие сутки' : [ moment().startOf('day'),
                         moment().endOf('day') ],
-                'Посл 7 дней' : [
-                    moment().subtract(6, 'days').startOf('day'),
+                'За сутки' : [ 
+                    moment().subtract(24, 'hours'),
+                    moment() ],
+                'Прошлые сутки' : [ 
+                    moment().subtract(1, 'days').startOf('day'),
+                    moment().subtract(1, 'days').endOf('day') ],
+                'Текущая неделя' : [ 
+                    moment().startOf('week').add(1, 'days'),
+                    moment() ],
+                '7 дней' : [
+                    moment().subtract(7, 'days').startOf('day'),
                     moment().endOf('day') ],
-                'Посл 30 дней' : [
-                    moment().subtract(29, 'days').startOf('day'),
+                'Текущий месяц' : [
+                    moment().startOf('month'),
                     moment().endOf('day') ]
             },
             startDate : moment().startOf('day'),

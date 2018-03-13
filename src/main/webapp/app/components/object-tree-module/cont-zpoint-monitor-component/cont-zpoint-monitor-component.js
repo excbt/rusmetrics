@@ -180,6 +180,10 @@
                     console.log(vm.daterange);
                 }
             };
+            
+//            vm.daterangeOpts.isCustomDate = function () {
+//                return "nmc-date-class";
+//            };
 
             console.log(vm.daterangeOpts);            
             

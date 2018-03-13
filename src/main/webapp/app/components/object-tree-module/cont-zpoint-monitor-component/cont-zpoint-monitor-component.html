@@ -8,14 +8,16 @@
                         ng-src = "components/object-tree-module/cont-zpoint-monitor-component/{{$ctrl.contZpointType}}.png"/> 
 
                     {{$ctrl.contZpointName}}
+<!--
                     <i class = "btn btn-xs"               
                         ng-click = "$ctrl.toggleSettings()"
                     >
-                        <img style = "height: 24px; width: 24px;"
+-->
+                        <img style = "height: 24px; width: 24px; margin: 0 5px;"
                             src = "components\object-tree-module\cont-zpoint-monitor-component\calendar24.png"                
                         />
-                    </i>
-                    Период с <input date-range-picker class = "form-control date-picker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer; width: 50%; height: 28px; background-color: rgb(231,235,245); border: none; box-shadow: none;"/>
+<!--                    </i>-->
+                    События за период с <input date-range-picker class = "form-control date-picker nmc-daterangepicker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer; width: 50%; height: 28px; background-color: rgb(231,235,245); border: none; box-shadow: none;"/>
 <!--                    Период с {{$ctrl.daterange.startDateStr}} по {{$ctrl.daterange.endDateStr}}-->
 <!--               </h4>-->
          </div>
@@ -100,7 +102,7 @@
              
           </div>
           <div flex = "50">
-              <input date-range-picker class = "form-control date-picker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer"/>
+              <input date-range-picker class = "form-control date-picker nmc-daterangepicker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer"/>
           </div>
            <md-button class = "md-primary" 
            style = "background-color: #41719c;"
