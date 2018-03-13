@@ -55,28 +55,28 @@
         vm.columns = [
             {
                 name: "status",
-                headerClass: "col-xs-1 paddingLeft20I",
+                headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
                 caption: "",
                 type: "img",
                 filterValues: stateFilterValues
             },
             {
                 name: "dateString",
-                headerClass: "col-xs-2",
+                headerClass: "nmc-zp-monitor-date-th",
                 caption: "Дата",
                 type: "datetext",
                 filterValues: dateFilterValues
             },
             {
                 name: "timeString",
-                headerClass: "col-xs-1 noPadding",
+                headerClass: "noPadding nmc-zp-monitor-time-th",
                 caption: "Время",
                 type: "timetext",
                 filterValues: timeFilterValues
             },
             {
                 name: "event",
-                headerClass: "col-xs-8",
+                headerClass: "nmc-zp-monitor-event-th",
                 caption: "Событие",
                 type: "text",
                 filterValues: eventFilterValues

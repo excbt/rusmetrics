@@ -200,8 +200,9 @@
            <div ng-repeat = "row in $ctrl.events | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index" 
              class = "nmc-zp-monitor-table-row"
              ng-init = "rowIndex = $index"
-             style = "display: flex; flex-direction: row; align-items: stretch;"
+             style = "display: table-row; width: 100%"
               >
+<!--              style = "display: flex; flex-direction: row; align-items: stretch;"-->
                <div ng-repeat = "column in $ctrl.columns track by $index"
                 ng-class = "column.headerClass"
                  style = "padding: 7px;"
