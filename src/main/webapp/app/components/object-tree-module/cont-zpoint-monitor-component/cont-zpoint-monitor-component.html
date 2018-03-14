@@ -1,0 +1,228 @@
+<div layout = "column" ng-cloak>
+   <div layout = "row">
+     <md-toolbar class = "md-hue-1 nmc-md-toolbar-n">
+         <div class = "md-toolbar-tools" style = "font-size: 14px; padding-left: 10px;">
+<!--              <h4>-->
+                   <img ng-if = "$ctrl.contZpointType"
+                       style = "height: 16px; width: 16px; margin-right: 10px;"
+                        ng-src = "components/object-tree-module/cont-zpoint-monitor-component/{{$ctrl.contZpointType}}.png"/> 
+
+                    {{$ctrl.contZpointName}}
+<!--
+                    <i class = "btn btn-xs"               
+                        ng-click = "$ctrl.toggleSettings()"
+                    >
+-->
+                        <img style = "height: 24px; width: 24px; margin: 0 5px;"
+                            src = "components\object-tree-module\cont-zpoint-monitor-component\calendar24.png"                
+                        />
+<!--                    </i>-->
+                    События за период с <input date-range-picker class = "form-control date-picker nmc-daterangepicker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer; width: 50%; height: 28px; background-color: rgb(231,235,245); border: none; box-shadow: none;"/>
+<!--                    Период с {{$ctrl.daterange.startDateStr}} по {{$ctrl.daterange.endDateStr}}-->
+<!--               </h4>-->
+         </div>
+       </md-toolbar>
+   </div>
+   <div layout = "row" style = "display: none;">
+<!--       Period-->
+      <div style = "position: absolute; top: 57px; left: 0px; right: 0px; z-index: 2; background: #f9f9f9;"
+          ng-show = "$ctrl.showSettingsFlag"
+          class = "nmc-zp-monitor-settings-div"
+      >
+<!--
+           <md-input-container>
+               <label>С</label>
+               <md-datepicker ng-model = "$ctrl.periodStart"></md-datepicker>
+           </md-input-container>
+           <md-input-container>
+               <label>по</label>
+               <md-datepicker ng-model = "$ctrl.periodEnd"></md-datepicker>
+           </md-input-container>
+-->
+          <div flex style = "padding-left: 10px; padding-top: 5px; display: none;">
+             С <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>01</option>
+                 <option>02</option>
+                 <option>31</option>
+             </select>
+              .
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>01</option>
+                 <option>02</option>
+                 <option>12</option>
+             </select>
+             .
+             <select class = "form-control nmc-select-form nmc-input-digital-data">
+                 <option>2017</option>
+                 <option>2018</option>
+                 <option>2019</option>
+             </select>
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>00</option>
+                 <option>01</option>
+                 <option>23</option>
+             </select>
+             :
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>00</option>
+                 <option>01</option>
+                 <option>59</option>
+             </select>
+             
+             по
+             
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>01</option>
+                 <option>02</option>
+                 <option>31</option>
+             </select>
+              .
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>01</option>
+                 <option>02</option>
+                 <option>12</option>
+             </select>
+             .
+             <select class = "form-control nmc-select-form nmc-input-digital-data">
+                 <option>2017</option>
+                 <option>2018</option>
+                 <option>2019</option>
+             </select>
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>00</option>
+                 <option>01</option>
+                 <option>23</option>
+             </select>
+             :
+             <select class = "form-control nmc-select-form nmc-input-digital-data" style = "width: 50px;">
+                 <option>00</option>
+                 <option>01</option>
+                 <option>59</option>
+             </select>
+             
+          </div>
+          <div flex = "50">
+              <input date-range-picker class = "form-control date-picker nmc-daterangepicker" type = "text" ng-model = "$ctrl.daterange" options = "$ctrl.daterangeOpts" readonly style = "cursor: pointer"/>
+          </div>
+           <md-button class = "md-primary" 
+           style = "background-color: #41719c;"
+           ng-click = "$ctrl.toggleSettings()">Применить</md-button>
+           <md-button class = "" 
+           
+           ng-click = "$ctrl.toggleSettings()">Отменить</md-button>
+       </div>
+   </div>
+   <div layout = "row">
+       <div class = "table table-striped table-hover nmc-zp-monitor-table">
+           <div class = "nmc-zp-monitor-table-thead"
+               style = ""
+           >
+<!--               <div class = "nmc-zp-monitor-table-header">-->
+                  
+                   <div ng-repeat = "column in $ctrl.columns track by $index"
+                     ng-class = "column.headerClass"
+                     style = "display: table-cell; vertical-align: baseline; height: 100%"
+                      >
+                       <span style = "position: relative; top: 24%; transform: translateY(-24%)">{{column.caption}}</span>
+                       <i ng-if = "column.type === 'datetext'"
+                          class = "glyphicon" 
+                           ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
+                           
+                           ng-click = "$ctrl.setOrderBy(column.name)"
+                            style = "cursor: pointer; position: relative; top: 24%;"
+                           >
+                        </i>
+                        
+                        <div  ng-if = "column.type === 'img' || column.type === 'text'"
+                           class="btn-group" style = "cursor: pointer;">
+                            <i  ng-show = "!column.setFilterFlag"
+                                title = "фильтр" 
+                                type = "button" 
+                                class = "dropdown-toggle" 
+                                data-toggle = "dropdown" 
+                                aria-haspopup = "true" 
+                                aria-expanded = "false"
+
+                            >
+                            <img style = "margin-bottom: -24px;"
+                            ng-src = "components/object-tree-module/cont-zpoint-monitor-component/filters/filter16-white.png">
+
+    <!--
+                                <i ng-if = "true"
+                                   class = "glyphicon glyphicon-filter"
+                                    ng-click = "$ctrl.setFilterBy(column.name)">
+                                </i>
+    -->
+                            </i>
+                          <ul
+                            class="dropdown-menu" 
+                            style = "margin-top: 5px; min-width: 20px;">
+    <!--                        <li style="color: rgb(95, 95, 95)">test IMG</li>-->
+                            <li ng-repeat = "fvalue in column.filterValues track by $index">
+                                <a href=""
+                                  ng-click = "$ctrl.setColorFilter(column, fvalue)">
+                                   <img ng-if = "column.type === 'img'"
+                                    class = "marginRight2 nmc-p-tree-status-img" 
+                                    ng-src = "{{fvalue}}"
+                                    />
+                                    <span ng-if = "column.type !== 'img'">
+                                        {{fvalue}}
+                                    </span>
+                                </a>
+
+                            </li>                        
+                          </ul>
+    <!--
+                          <ul ng-if = "column.type === 'img'"
+                            class="dropdown-menu" >
+                              <li style="color: rgb(95, 95, 95)">Test no img</li>
+                            <li 
+                               style="color: rgb(95, 95, 95)" ng-repeat = "fvalue in column.filterValues track by $index">
+                                <a>{{fvalue}}</a>
+                            </li>                        
+                          </ul>
+    -->
+                        </div>
+                        <i ng-show = "column.setFilterFlag"
+                           class = ""
+                           ng-click = "$ctrl.removeColorFilter(column)"
+                            style = "cursor: pointer;">
+
+                            <img style = "margin-bottom: -24px;"
+                            ng-src = "components/object-tree-module/cont-zpoint-monitor-component/filters/cancel-filter16-white.png">    
+                        </i>
+                        
+                   </div>
+               
+<!--               </div>-->
+           </div>
+<!--           <div>-->
+           <div ng-repeat = "row in $ctrl.events | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index" 
+             class = "nmc-zp-monitor-table-row"
+             ng-init = "rowIndex = $index"
+             style = "display: table-row; width: 100%"
+              >
+<!--              style = "display: flex; flex-direction: row; align-items: stretch;"-->
+               <div ng-repeat = "column in $ctrl.columns track by $index"
+                ng-class = "column.headerClass"
+                 style = "padding: 7px;"
+                 ng-style = "{'background-color': rowIndex % 2 === 0 ? '#f9f9f9' : 'white'}"
+                 >
+                  <div ng-switch on = "column.type"
+                    style = "position: relative; top: 25%; transform: translateY(-25%)"
+                     >
+                      <span ng-switch-when = "img">
+                           <img style = "height: 16px; width: 16px;"
+                           ng-src = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-{{row[column.name]}}.png"/>
+                      </span>
+                      <span ng-switch-default>
+                           {{row[column.name]}}
+                      </span>
+                   </div>
+               </div>
+           </div>
+<!--           </div>-->
+       </div>
+   </div>
+   
+</div>

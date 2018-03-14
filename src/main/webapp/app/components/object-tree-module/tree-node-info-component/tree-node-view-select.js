@@ -26,8 +26,7 @@
                 return false;
             }
             ctrl.nodeWidgets = ctrl.svc.getNodeWidgets(ctrl.node.nodeType);
-//console.log(ctrl.nodeWidgets);            
-            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType) === null ? ctrl.nodeWidgets[0] : treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType);
+            ctrl.currentWidget = ctrl.svc.getCurrentWidget(ctrl.node.nodeType) === null ? ctrl.nodeWidgets[0] : ctrl.svc.getCurrentWidget(ctrl.node.nodeType); 
             ctrl.changeWidget(ctrl.currentWidget);
         }
         
@@ -41,7 +40,7 @@
             if (ctrl.node !== null) {
                 $state.go(widget.stateName, {node: ctrl.node});
             }
-            treeNodeInfoComponentService.setCurrentWidget(ctrl.node.nodeType, widget);
+            ctrl.svc.setCurrentWidget(ctrl.node.nodeType, widget);
             $rootScope.$broadcast(ctrl.svc.EVENTS.setWidget);
         };
         

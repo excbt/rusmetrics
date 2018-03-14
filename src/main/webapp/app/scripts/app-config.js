@@ -105,7 +105,7 @@
             'A200': '#000000',
             'A400': '#303030',
             'A700': '#616161',
-            'contrastDefaultColor': 'light',
+            'contrastDefaultColor': 'dark',
             'contrastLightColors': '600 700 800 900 A200 A400 A700'
         });
         

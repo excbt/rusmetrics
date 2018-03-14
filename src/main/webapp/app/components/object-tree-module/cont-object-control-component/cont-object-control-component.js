@@ -1,4 +1,4 @@
-/*global angular, console*/
+/*global angular, console, $, document*/
 /***
     created by Artamonov A.A. , Dec. 2017
 */
@@ -8,23 +8,27 @@
     angular.module('objectTreeModule')
         .component('contObjectControlComponent', {
             bindings: {
-                node: '<'
+                node: '<',
+                contObjectList: '<'
             },
             templateUrl: "components/object-tree-module/cont-object-control-component/cont-object-control-component.html",
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout', '$mdDialog'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout, $mdDialog) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];        
         ctrl.objectsOnPage = [];
         ctrl.filter = '';
         ctrl.searchFlag = false;
+        ctrl.contZpointFilterValue = null;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
+            IMG_PATH_BUILDING_TYPE = "components/object-tree-module/cont-object-control-component/buildings/",
+            IMG_PATH_WIDGETS = "components/object-tree-module/cont-object-control-component/",
             IMG_PATH_MODE_TEMPLATE = "images/object-mode-",
             IMG_EXT = ".png",
             OBJECTS_PER_PAGE = 100;
@@ -56,14 +60,25 @@
             IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
         ];
         
+        var contObjectTypeFilterValues = [];        
+        
         ctrl.columns = [
+            {
+                name: "contObjectType",
+                caption: "",
+                headerClass: "col-xs-1 nmc-ctrl-cmp-td-for-type",
+                type: "contObjectType",
+                filterValues: contObjectTypeFilterValues
+            },
             {
                 name: "caption",
                 caption: "Объект",
-                headerClass: "col-xs-3"
+                headerClass: "col-xs-3",
+                type: "text"
             }, {
                 name: "heat",
-                caption: "Отопление",
+                caption: "Тепло",
+                imgPath: IMG_PATH_WIDGETS + "heat22" + IMG_EXT,
                 headerClass: "col-xs-1",
                 type: "img",
                 filterValues: filterValues
@@ -71,18 +86,21 @@
                 name: "hw",
                 caption: "ГВС",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "hw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "cw",
                 caption: "ХВС",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "cw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "el",
-                caption: "Электричество",
+                caption: "Э/эн",
                 headerClass: "col-xs-1",
+                imgPath: IMG_PATH_WIDGETS + "el22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
 
@@ -261,7 +279,7 @@
         }
         
         function successLoadZpointsCallback(resp) {
-            console.log(resp);
+//console.log(resp);
             if (angular.isUndefined(resp) || resp === null || !angular.isArray(resp.data) || resp.data.length === 0) {
                 return false;
             }
@@ -283,7 +301,45 @@
             $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
         }
         
-        ctrl.showObjectWidget = function (obj, index) {            
+        ctrl.ngPopupConfig = {
+            title: "Информация по событиям",
+            width: 810,
+            /*height: 350,*/
+            height: "66%",
+            template: "<div><cont-zpoint-monitor-component cont-zpoint-id = \"0\" cont-zpoint-name = \"null\" cont-zpoint-type = \"null\"></cont-zpoint-monitor-component></div>",
+            resizable: false,
+            draggable: true,
+            pinned: true,
+            hasTitleBar: true, 
+            position: {top: 100, left: 300},
+            isShow: false
+        };
+        
+        ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
+//            console.log(obj);
+//            ctrl.selectedObject = obj;
+            $('#testWindowModal').modal();
+//            ctrl.ngPopupConfig.title = "Информация по событиям на объекте " + obj.fullName;
+//            ctrl.ngPopupConfig.isShow = true;
+            
+            
+//            var dialogSettings = {
+//                controller: null,
+//                templateUrl: "components/object-tree-module/cont-object-control-component/info.tmpl.html",
+//                parent: angular.element(document.body),
+//                targetEvent: ev,
+//                clickOutsideToClose: true
+//            };
+//            $mdDialog
+//                .show(dialogSettings)
+//                .then(function (ans) {
+//                console.log(ans);
+//            }, function () {
+//                console.log("Dialog is canceled");
+//            });
+        };
+        
+        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
             if (obj.hasOwnProperty('showWidgetFlag')) {
                 obj.showWidgetFlag = !obj.showWidgetFlag;
             } else {
@@ -292,6 +348,7 @@
             
             //load cont object zpoints
             if (obj.showWidgetFlag) {
+                ctrl.contZpointFilterValue = contZpointFilterVal;
                 ctrl.loadZpointsByObjectId(obj.id);
                 // close all objects besides current
                 ctrl.objects.forEach(function (elmObj) {
@@ -359,42 +416,58 @@
             ctrl.filterObjects();
         });
         
-        function getNodeContObjects() {
-//console.log('getNodeContObjects:', getNodeContObjects);            
-            var node = $stateParams.node;
-            if (angular.isDefined(node) && node !== null) {
-                var nodeId = node.id || node._id || node.nodeObject.id;
-                var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
+        function getContObjects() {
+//console.log(ctrl.node);            
+//console.log('getNodeContObjects:', getNodeContObjects);
+//            var nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+            
+//console.log(ctrl.contObjectList);            
+            ctrl.objects = $filter('orderBy')(ctrl.contObjectList, ctrl.orderBy.field, ctrl.orderBy.asc);                    
+            ctrl.addMoreObjectsOnPage();
+//console.log(ctrl.objects);            
+return;
+//            var node = $stateParams.node;
+//            if (angular.isDefined(node) && node !== null) {
+//                var nodeId = node.id || node._id || node.nodeObject.id;
+//                var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
 //console.log(nodeObjects);
-                if (nodeObjects === null) {
-                    ctrl.loadObjects(nodeId);
-                } else {
-                    nodeObjects.forEach(function (elm) {
-                        elm.loading = true;
-                    });
-                    nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
-                    ctrl.objects = nodeObjects;                    
-//console.log(ctrl.objects);                    
-                    ctrl.addMoreObjectsOnPage();
-//                    ctrl.objects.forEach(function (elm) {
-//                        contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
-//                            .then(successLoadObjectMonitorStateCallback, errorCallback);
+//                if (nodeObjects === null) {
+//                    ctrl.loadObjects(nodeId);
+//                } else {
+//                    nodeObjects.forEach(function (elm) {
+//                        elm.loading = true;
 //                    });
-                }
-            }
+//                    nodeObjects = $filter('orderBy')(nodeObjects, ctrl.orderBy.field, ctrl.orderBy.asc);
+//                    ctrl.objects = nodeObjects;                    
+//console.log(ctrl.objects);                    
+//                    ctrl.addMoreObjectsOnPage();
+//ctrl.objects.forEach(function (elm) {
+//    contObjectCtrlSvc.loadContObjectMonitorState(elm.id)
+//        .then(successLoadObjectMonitorStateCallback, errorCallback);
+//});
+//                }
+//            }
         }
         
         ctrl.$onInit = function () {
-//console.log($stateParams);
-            getNodeContObjects();
+//console.log(ctrl);
+            getContObjects();
             ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {
                 ctrl.loadZpointWidgetList();
             }
+            
+                        //bootstrap modal win
+            $('.modal-content').resizable({
+                minHeight: 300,
+                minWidth: 600
+            });
+
+            $('.modal-dialog').draggable();
         };
         
         $scope.$on(contObjectCtrlSvc.EVENTS.OBJECTS_LOADED, function () {
-            getNodeContObjects();
+            getContObjects();
 //            var node = $stateParams.node;
 //            var nodeId = node.id || node._id;
 //            var nodeObjects = contObjectCtrlSvc.getNodeData(nodeId);
@@ -454,7 +527,7 @@
                     $('#nmc-ctrl-cmp-toolbarheader-id').css({"width": "96.4%", "margin-left": "50px"});
                 }, 1);
             }
-        }
+        };
         
         ctrl.getIcon = function (ind) {
 //            if (ind % 2 == 0) {
@@ -502,50 +575,62 @@
                     break;
             }
             return cls;
+        };
+        //fill contObjectTypeFilterValues
+        for (var i = 0; i < 11; i++) {
+            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIcon(i));
         }
         
-        ctrl.getTextShadow = function (ind) {
-            var clr = "rgb(95, 95, 95)";
-            if (ind % 2 == 0) {
-                clr = "green";
-            } else if (ind % 3 == 0) {
-                clr = "#ff0000";
-            } else {
-                clr = "#ffc000";
+//        ctrl.getTextShadow = function (ind) {
+//            var clr = "rgb(95, 95, 95)";
+//            if (ind % 2 === 0) {
+//                clr = "green";
+//            } else if (ind % 3 === 0) {
+//                clr = "#ff0000";
+//            } else {
+//                clr = "#ffc000";
+//            }
+//            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
+//        };
+        
+//        ctrl.getIconCssClass = function (ind) {
+//            var cls = "btn btn-xs iconcls pull-right";
+//            var rn = ind % 6;//Math.ceil(Math.random()*10);
+////console.log(rn);
+//            switch (rn) {
+//                case 0:
+//                    cls = cls.replace("iconcls", "far fa-building");
+//                    break;
+//                case 1:
+//                    cls = cls.replace("iconcls", "fas fa-home");
+//                    break;
+//                case 2:
+//                    cls = cls.replace("iconcls", "far fa-hospital");
+//                    break;
+//                case 3:
+//                    cls = cls.replace("iconcls", "fas fa-university");
+//                    break;
+//                case 4:
+//                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
+//                    break;
+//                case 5:
+//                    cls = cls.replace("iconcls", "fas fa-industry");
+//                    break;
+//                default:
+//                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
+//                    break;
+//            }
+//            return cls;
+//        };
+                
+        ctrl.selectObject = function (obj) {
+//            console.log(obj);
+            if (!ctrl.checkUndefinedNull(ctrl.selectedObject)) {
+                ctrl.selectedObject.isSelected = false;
             }
-            return "-1px 0 clr, 0 1px clr, 1px 0 clr, 0 -1px clr".replace(/clr/g, clr);
-        }
-        
-        ctrl.getIconCssClass = function (ind) {
-            var cls = "btn btn-xs iconcls pull-right";
-            var rn = ind % 6;//Math.ceil(Math.random()*10);
-//console.log(rn);
-            switch (rn) {
-                case 0:
-                    cls = cls.replace("iconcls", "far fa-building");
-                    break;
-                case 1:
-                    cls = cls.replace("iconcls", "fas fa-home");
-                    break;
-                case 2:
-                    cls = cls.replace("iconcls", "far fa-hospital");
-                    break;
-                case 3:
-                    cls = cls.replace("iconcls", "fas fa-university");
-                    break;
-                case 4:
-                    cls = cls.replace("iconcls", "fab fa-fort-awesome");
-                    break;
-                case 5:
-                    cls = cls.replace("iconcls", "fas fa-industry");
-                    break;
-                default:
-                    cls = cls.replace("iconcls", "glyphicon glyphicon-question-sign");
-                    break;
-            }
-            return cls;
-        }
-        
+            obj.isSelected = !obj.isSelected;
+            ctrl.selectedObject = obj;
+        };
     }
     
 }());

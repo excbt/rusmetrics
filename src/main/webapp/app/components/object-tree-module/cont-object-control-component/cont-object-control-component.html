@@ -43,11 +43,16 @@
                 ng-change = "$ctrl.filterObjects($ctrl.filter)"
                 style = "border-color: rgb(95, 95, 95); border-radius: 0;">
                 <span class = "input-group-addon" style = "background: transparent; border: none; padding: 0 3px 6px 3px">
-                    <i class = "btn btn-xs glyphicon glyphicon-search nmc-ctrl-cmp-search-btn"
-                        ng-class = "{'glyphicon-search': !$ctrl.searchFlag, 'glyphicon-remove': $ctrl.searchFlag}"
-                    
+                    <i class = "btn btn-xs glyphicon nmc-ctrl-cmp-search-btn"
+                        ng-class = "{'glyphicon-remove': $ctrl.searchFlag}"                    
                         ng-click = "$ctrl.toggleSearch()"
-                    ></i>
+                    >
+                        <img ng-if = "!$ctrl.searchFlag" 
+                        src = "components\object-tree-module\cont-object-control-component\search26.png"
+                        style = "width: 16px; height: 16px; margin-top: -6px; margin-left: 3px;"
+                        />
+                    </i>
+                    
                 </span>
             </div>
           </div>
@@ -74,17 +79,34 @@
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
             <tr class="nmc-ctrl-cmp-table-header">
-                <th class = "col-xs-1 nmc-td-for-button-object-control">
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
 <!--                    Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" 
                    ng-class = "column.headerClass"
+                   ng-style = "{'padding-left' : $index === 0 ? '17px' : '5px'}"
                    >
-                    <span ng-click = "$ctrl.setOrderBy(column.name)">{{column.caption}}</span>
-                    <i class = "glyphicon" 
+<!--
+                    <span ng-switch on = "column.type">
+                       <span ng-switch-when = "img">
+                           <img style = "height: 21px; width: 21px;"
+                           ng-src = "{{column.imgPath}}">
+                       </span>
+                       <span ng-switch-default>
+-->
+                           <span>{{column.caption}}</span>
+<!--
+                       </span>
+                    </span>
+-->
+                    <i ng-if = "column.type === 'text'"
+                      class = "glyphicon" 
                        ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
                        ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
-                       ng-click = "$ctrl.setOrderBy(column.name)">
+                       ng-click = "$ctrl.setOrderBy(column.name)"
+                        style = "cursor: pointer;"
+                       >
                     </i>
 <!--
                     <i ng-if = "true"
@@ -92,17 +114,19 @@
                         ng-click = "$ctrl.setFilterBy(column.name)">
                     </i>
 -->
-                    <div  ng-if = "column.type === 'img'"
-                       class="btn-group">
-                        <i  
+                    <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
+                       class="btn-group" style = "cursor: pointer;">
+                        <i  ng-show = "!column.setFilterFlag"
                             title = "фильтр" 
                             type = "button" 
-                            class = "glyphicon glyphicon-filter dropdown-toggle" 
+                            class = "dropdown-toggle" 
                             data-toggle = "dropdown" 
                             aria-haspopup = "true" 
                             aria-expanded = "false"
                             
                         >
+                        <img style = "margin-bottom: -10px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/filter16-white.png">
                         
 <!--
                             <i ng-if = "true"
@@ -137,11 +161,22 @@
                       </ul>
 -->
                     </div>
+                    <i ng-show = "column.setFilterFlag"
+                       class = ""
+                       ng-click = "$ctrl.removeColorFilter(column)"
+                        style = "cursor: pointer;">
+                       
+                        <img style = "margin-bottom: -10px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/cancel-filter16-white.png">    
+                    </i>
+                    
+<!--
                     <i ng-if = "column.setFilterFlag"
                        class = "glyphicon glyphicon-remove"
                        ng-click = "$ctrl.removeColorFilter(column)">
                         
                     </i>
+-->
                 </th>
             </tr>
     </table>
@@ -151,7 +186,8 @@
             
             <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
-                <th class = "col-xs-1 nmc-td-for-button-object-control">
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
 <!--                        Режим-->
                 </th>
                 <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
@@ -161,7 +197,9 @@
             
 
 <!--            <tr ng-repeat = "object in $ctrl.objects | filter: filter | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index">-->
-            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index">
+            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index" ng-init = "contObjectIndex = $index"
+            ng-class="{'nmc-ctrl-cmp-bg-distinguish': object.isSelected}"
+            ng-click = "$ctrl.selectObject(object)">
 <!--
                <td ng-if = "object.loading" class = "col-xs-1">
                    <div ng-show = "object.loading" class="nmc-loading">
@@ -172,8 +210,8 @@
                <td>
                    <table style = "width: 100%;">
                        <tr>
-                            <td class = "col-xs-1 nmc-td-for-button-object-control"
-                              >
+                            <td class = "col-xs-1 nmc-td-for-button">
+<!--                             nmc-td-for-button-object-control">-->
 <!--
                          <i ng-class = "$ctrl.getIconCssClass($index)"
                                  
@@ -187,11 +225,13 @@
                                </i>
 -->
 
+<!--
                               <img class="pull-right"
                               ng-click = "$ctrl.showObjectWidget(object, $index)"
                                ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon($index)}}"
                                style = "padding-left: 12px; height: 24px; width: 36px;"
                                />
+-->
                               
 <!--
                                <i class = "btn btn-xs glyphicon glyphicon-home pull-right"
@@ -218,13 +258,22 @@
 
                             </td>
                             <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
-                               style = "padding: 7px 0;">
+                               style = "padding: 5px 0;">
 
                                <div ng-switch on = "column.type">
-                                    <div ng-switch-when = "img">
+                                   <div ng-switch-when = "contObjectType">
+                                       <img class="pull-left"
+                                          ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
+                                           ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
+                                           style = "height: 24px; width: 24px; cursor: pointer;"
+                                       />
+                                   </div>
+                                    <div ng-switch-when = "img" style = "padding-left: 10%;">
                                         <img ng-if = "object[column.name]"
+                                        style = "cursor: pointer;"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"
+                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"                                        
                                         />
                                     </div>
                                    <div ng-switch-default>
@@ -236,11 +285,24 @@
                                 </div>
                             </td>
                        </tr>
-                       <tr ng-if = "object.showWidgetFlag">
+                       <tr ng-if = "object.showWidgetFlag"
+                         style = "border-top: 1px solid rgb(95, 95, 95)"
+                         >
                           <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
-                              <div ng-repeat = "zpoint in object.zpoints track by $index"
+                              <div ng-if = "$ctrl.contZpointFilterValue === null">
+                                  <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "0"
+                                       cont-zpoint-name = "null"
+                                       cont-zpoint-type = "null"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+                              </div>
+                             
+                              <div ng-if = "$ctrl.contZpointFilterValue !== null"
+                                ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">
 
+<!--
                                    <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
                                        <span ng-show='title' ng-bind='title'></span>
                                        <div ng-show='isLoading'>Загрузка...</div>
@@ -251,6 +313,18 @@
 
                                         </ng-widget>
                                    </div>
+-->
+                                   <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "zpoint.id"
+                                       cont-zpoint-name = "zpoint.customServiceName"
+                                       cont-zpoint-type = "zpoint.contServiceTypeKeyname"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+<!--
+                                   <pre>
+                                   {{zpoint | json}}
+                                   </pre>
+-->
 
                                  </div>
                           </td>
@@ -262,5 +336,49 @@
             
         </table>
 
+    </div>
+    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>
+    
+    <div id="testWindowModal" 
+         class="modal fade nmc-modal-window" 
+         role="dialog"
+         aria-labelledby="deleteLabel" 
+         tabindex="-1"
+          data-backdrop="static"
+         >
+
+        <div class="modal-dialog  modal-content nmc-modal-dialog-low" style = "height: 300px; max-height: 66vh; min-height: 300px;">
+            <div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="deleteLabel" class="nmc-h3">
+                    {{$ctrl.selectedObject.caption}}
+                </h3>
+            </div>
+            <div class="modal-body nmc-modal-body"  style = "min-height: 250px; position: absolute; width: 100%; top: 19px;
+               bottom: 15px;">
+                <cont-zpoint-monitor-component cont-zpoint-id = "0" cont-zpoint-name = "null" cont-zpoint-type = "null">
+                    
+                </cont-zpoint-monitor-component>
+            </div>
+            <div class="modal-footer nmc-modal-footer" style = "position: absolute; width: 100%; bottom: 0;">
+<!--                    <div class="container-fluid">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-xs-offset-6 col-xs-3">-->                            
+                                <input  
+                                       type="submit" 
+                                       class="btn btn-xs btn-primary nmc-save-button"                                       
+                                       value="Ok" />
+<!--                            </div>-->
+
+<!--                            <div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">-->                            
+                                <button class="btn btn-xs btn-default nmc-cancel-button" data-dismiss="modal"
+                                    ng-click="exit();">
+                                    Отменить
+                                </button>
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>		-->
+            </div>
+        </div>
     </div>
 </div>

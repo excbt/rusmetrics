@@ -13,6 +13,8 @@
     treeNodeInfoComponentController.$inject = ['$stateParams', 'treeNodeInfoComponentService', '$state'];
     
     function treeNodeInfoComponentController($stateParams, treeNodeInfoComponentService, $state) {
+        var DEFAULT_WIDGET = "CONTOBJECT_CONTROL";
+        
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.node = null;
@@ -26,9 +28,20 @@
                 return false;
             }
             ctrl.nodeWidgets = ctrl.svc.getNodeWidgets(ctrl.node.nodeType);
-            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType) === null ? ctrl.nodeWidgets[0] : treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType);
+            ctrl.currentWidget = treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType) === null ? getWidgetByKeyname(ctrl.nodeWidgets, DEFAULT_WIDGET) : treeNodeInfoComponentService.getCurrentWidget(ctrl.node.nodeType);
             ctrl.changeWidget(ctrl.currentWidget);
         };
+        
+        function getWidgetByKeyname(widgets, keyname) {
+            var result = null;
+            widgets.some(function (wid) {
+                if (wid.keyname === keyname) {
+                    result = wid;
+                    return true;
+                }
+            });            
+            return result;
+        }
         
         ctrl.changeWidget = function (widget) {
             if (ctrl.node !== null) {
