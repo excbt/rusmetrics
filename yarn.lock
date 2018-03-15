@@ -336,6 +336,16 @@ amdefine@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
+angular-resizable-element@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/angular-resizable-element/-/angular-resizable-element-2.0.0.tgz#10a437cce317e459e07c3189519ef395e6b86130"
+
+angular-split@^1.0.0-rc.3:
+  version "1.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/angular-split/-/angular-split-1.0.0-rc.3.tgz#eb63fd60d8fd94587d75c19524d90d8712f136e0"
+  dependencies:
+    tslib "^1.7.1"
+
 angular2-template-loader@0.6.2:
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/angular2-template-loader/-/angular2-template-loader-0.6.2.tgz#c0d44e90fff0fac95e8b23f043acda7fd1c51d7c"

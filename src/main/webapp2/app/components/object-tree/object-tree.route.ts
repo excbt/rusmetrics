@@ -24,7 +24,8 @@ export const objectTreeState: Routes = [{
     path: 'object-trees',
     component: PortalObjectTreeComponent,
     data: {
-        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN']
+        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN'],
+        pageTitle: 'objectTree.title'
     },
     canActivate: [UserRouteAccessService]
 }];

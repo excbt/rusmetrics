@@ -11,10 +11,16 @@ import { objectTreeState,
         PortalObjectTreeComponent
        } from './';
 
+import { ResizableModule } from 'angular-resizable-element';
+
+import { AngularSplitModule } from 'angular-split';
+
 @NgModule({
     imports: [
         JhipsterSharedModule,
-        RouterModule.forRoot(objectTreeState)
+        RouterModule.forRoot(objectTreeState),
+        ResizableModule,
+        AngularSplitModule
     ],
     declarations: [
         PortalObjectTreeComponent
