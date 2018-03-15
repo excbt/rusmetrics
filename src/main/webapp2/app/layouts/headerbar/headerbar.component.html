@@ -2,16 +2,22 @@
 headerbar works
 
 </p> -->
-<mat-toolbar>  
-    <mat-toolbar-row  >
+<mat-toolbar class = "nmc-toolbar" style = "">  
+    <mat-toolbar-row 
+        style = "">
         <div class="float-left">
-            <button mat-icon-button *ngIf="isAuthenticated()" (click)="toggleMainMenu()">
+            <button mat-icon-button *ngIf="isAuthenticated()" (click)="toggleMainMenu()"
+             class ="nmc-toolbar-btn"
+              style = ""
+               >
                 <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>
             </button>
         </div>    
 
         <div id="top-right">
-                <button mat-icon-button [matMenuTriggerFor]="menu" class="">
+                <button mat-icon-button [matMenuTriggerFor]="menu" 
+                      class="nmc-toolbar-btn"
+                       style = "">
                         <mat-icon class="headerbar-profile-menu-icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">

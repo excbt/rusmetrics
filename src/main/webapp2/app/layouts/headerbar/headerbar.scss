@@ -1,21 +1,23 @@
 
-@mixin md-icon-size($size: 24px) {
+@mixin md-icon-size($size: 14px) {
     font-size: $size;
     height: $size;
     width: $size;
 }
   
 .headerbar-mat-menu-icon {
-    @include md-icon-size(40px);
+    @include md-icon-size(24px);
+    color: rgb(95, 95, 95);
 }
 
 
 .headerbar-profile-menu-icon {
     @include md-icon-size(24px);
+    color: rgb(95, 95, 95);
 }
 
 .headerbar-profile-font {
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .headerbar-right {
@@ -53,4 +55,19 @@
     right: 0;
     top: 0;
     position: absolute;
+}
+
+.nmc-toolbar {
+    min-height: 35px; 
+    background-color: rgb(240, 240, 240);
+}
+
+.nmc-toolbar mat-toolbar-row {
+    height: 35px;
+}
+
+.nmc-toolbar-btn {
+    height: 35px; 
+    width: 35px; 
+    line-height: 35px;
 }
