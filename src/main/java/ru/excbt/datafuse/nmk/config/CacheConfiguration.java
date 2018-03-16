@@ -122,6 +122,7 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassportData.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.EnergyPassportDataValue.class.getName());
 
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.domain.OrganizationType.class.getName());
 
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChart.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.TemperatureChartItem.class.getName());
