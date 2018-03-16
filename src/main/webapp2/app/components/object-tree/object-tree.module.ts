@@ -8,28 +8,44 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserRouteAccessService } from '../../shared';
 
 import { objectTreeState,
-        PortalObjectTreeComponent
+        PortalObjectTreeComponent,
+        TreeNavigateComponent,
+        TreeNavigateService
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
 
 import { AngularSplitModule } from 'angular-split';
 
+import { TreeModule } from 'primeng/tree';
+// Angular Material
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+
 @NgModule({
     imports: [
         JhipsterSharedModule,
         RouterModule.forRoot(objectTreeState),
         ResizableModule,
-        AngularSplitModule
+        AngularSplitModule,
+        TreeModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule
     ],
     declarations: [
-        PortalObjectTreeComponent
+        PortalObjectTreeComponent,
+        TreeNavigateComponent
     ],
     entryComponents: [
     ],
     providers: [
         PTreeNodeService,
-        PTreeNodeLinkedObjectService
+        PTreeNodeLinkedObjectService,
+        TreeNavigateService
     ],
     exports: [
         PortalObjectTreeComponent
