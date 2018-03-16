@@ -23,7 +23,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   selection: SelectionModel<Organization>;
   dataSource: OrganizationsDataSource;
 
-  displayedColumns = ['organizationName', 'id', 'edit'];
+  displayedColumns = ['id', 'inn', 'organizationName', 'ogrn', 'edit'];
   // dataSource = new MatTableDataSource(ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;

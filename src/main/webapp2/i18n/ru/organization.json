@@ -9,12 +9,41 @@
             "list": "Показать все"
         }
     },
+
     "organization": {
-        "title": "Организация",
         "id": "Код",
-        "name": "Краткое наименование",
-        "fullName" : "Полное наименование",
-        "description": "Описание",
-        "address": "Адрес"
+        "organizationName": "Краткое наименование",
+        "organizationFullName": "Полное наименование",
+        "organizationFullAddress": "",
+        "flagRso": "",
+        "flagManagement": "",
+        "flagRma": "",
+        "keyname": "",
+        "flagCm": "",
+        "organizationDescription": "Описание",
+        "isCommon": "",
+        "rmaSubscriberId": "",
+        "flagServ": "",
+        "inn": "ИНН",
+        "kpp": "КПП",
+        "okpo": "ОКПО",
+        "ogrn": "ОГРН",
+        "legalAddress": "Адрес юридический",
+        "factAddress": "Адрес фактического местонахождения",
+        "postAddress": "Адрес почтовый",
+        "reqAccount": "Расчетный счет",
+        "reqBankName": "Наименование банка",
+        "reqCorrAccount": "Корр. счет",
+        "reqBik": "БИК",
+        "contactPhone": "Конт. тел.",
+        "contactPhone2": "Конт. тел. 2",
+        "contactPhone3": "Конт. тел. 3",
+        "contactEmail": "e-mail",
+        "siteUrl": "Сайт организации",
+        "directorFio": "Генеральный директор",
+        "chiefAccountantFio": "Гл.бухгалтер",
+        "organizationTypeId": "ID",
+        "organizationTypeName": "Форма организации"
     }
+    
 }
