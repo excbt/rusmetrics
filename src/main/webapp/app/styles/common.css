@@ -1771,12 +1771,16 @@ tr.nmc-inactive-price > td {
 .nmc-save-button {
     max-width: 112px;
     min-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
-    min-width: 142px;
-    max-width: 142px;
+    min-width: 112px;
+    max-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
 
 /* Закрыть окно - крестик в правом верхнем углу модального окна */
@@ -2217,7 +2221,8 @@ tr.nmc-inactive-price > td {
 /* Футер */
 .nmc-modal-footer {
     padding-top: 6px;
-    height: 35px;
+    padding-bottom: 6px;
+    height: 45px;
 }
  
 /* Рабочая панель */
@@ -3450,6 +3455,7 @@ div.nmc-energy-simple-line > div {
     max-height: 32px;
     border: 1px solid #41719c;
     border-left: none;
+    border-right: none;
 }
 
 .nmc-md-toolbar-n > .md-toolbar-tools {
@@ -3549,4 +3555,5 @@ div.nmc-energy-simple-line > div {
 
 .nmc-drp-ctrl-btns {
     width: 49%;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
 }

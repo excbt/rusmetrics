@@ -21,7 +21,7 @@
                 applyLabel : "Применить",
                 fromLabel : "с",
                 toLabel : "по",
-                cancelLabel : 'Отмена',
+                cancelLabel : 'Отменить',
                 customRangeLabel : 'Произвольный период',
                 daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
                 firstDay : 1,

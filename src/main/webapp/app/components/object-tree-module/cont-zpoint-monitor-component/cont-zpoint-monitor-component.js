@@ -18,9 +18,19 @@
 
     /* @ngInject */
     function contZpointMonitorComponentController(dateSvc) {
+        var MODES = {
+            history: {
+                name: "history"
+            },
+            situations: {
+                name: "situations"
+            }
+        };
         /*jshint validthis: true*/
         var vm = this;
+        vm.MODES = MODES;
         vm.showSettingsFlag = false;
+        vm.mode = vm.MODES.situations;
         vm.$onInit = initCmpnt;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-",
@@ -156,7 +166,8 @@
         vm.daterange = null;
         vm.daterangeOpts = null;
         
-        
+        vm.setHistoryMode = setHistoryMode;
+        vm.setSituationsMode = setSituationsMode;
 
 //        vm.$onChanges = changeCmpnt;
         
@@ -199,6 +210,14 @@
 //        function changeCmpnt(changes) {
 //            console.log(changes);
 //        }
+        
+        function setHistoryMode() {
+            vm.mode = vm.MODES.history;            
+        }
+        
+        function setSituationsMode() {
+            vm.mode = vm.MODES.situations;
+        }
         
     }
 })();
