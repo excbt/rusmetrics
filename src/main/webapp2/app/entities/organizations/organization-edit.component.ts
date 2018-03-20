@@ -129,6 +129,10 @@ export function caseLenValidator(v1: number, v2: number): ValidatorFn {
         });
     }
 
+    revertForm() {
+      this.createForm(this.organization);
+    }
+
     ngOnInit() {
         console.log('Edit load');
         this.subscription = this.route.params.subscribe((params) => {

@@ -98,12 +98,18 @@
                     </mat-form-field>
                 </div>
             </div>
-            <div class="ui-lg-6 ui-g-nopad flex-column">
-                <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
-                <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">{{'organization.flagManagement' | translate}}</mat-checkbox>
-                <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">{{'organization.flagRma' | translate}}</mat-checkbox>
-                <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
-                <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
+            <div class="ui-lg-6 ui-g-nopad">
+                <div class="ui-lg-6 ui-g-nopad">
+                    <div class="ui-g-3 flex-column">
+                        <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
+                        <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">{{'organization.flagManagement' | translate}}</mat-checkbox>
+                        <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">{{'organization.flagRma' | translate}}</mat-checkbox>
+                    </div>
+                    <div class="ui-g-3 flex-column">
+                        <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
+                        <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
+                    </div>
+                </div>   
             </div>                
             <div class="ui-lg-6 ui-g-nopad">
                 <mat-form-field class="account-width">
@@ -140,6 +146,22 @@
                 </div>
             </div>                
         </div>    
+        <hr>
+        <button mat-raised-button (click)="previousState()">
+            <span class="fa fa-arrow-left"></span>&nbsp;
+            <span jhiTranslate="entity.action.back"> Back</span>
+        </button>
 
+        <button mat-raised-button (click)="revertForm()"  [disabled]="organizationForm.pristine">
+                <span class="fa fa-ban"></span>&nbsp;
+                <span jhiTranslate="entity.action.revert"> Revert</span>
+        </button>
+            
+        <button mat-raised-button [routerLink]="['/', { outlets: { popup: 'organizations/'+ organization.id + '/edit'} }]" replaceUrl="true"
+            color="primary" [disabled]="organizationForm.pristine">
+            <span class="fa fa-save"></span>&nbsp;
+            <span jhiTranslate="entity.action.save"> Edit</span>
+        </button>
+                
     </form>
 </div>    
