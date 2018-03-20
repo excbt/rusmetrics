@@ -20,9 +20,9 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export function caseLenValidator(v1: number, v2: number): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} => {
       const goodInnLen = (String(control.value).trim() === '') || (String(control.value).length === v1) || (String(control.value).length === v2);
-      console.log('invalidCaseLen:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
+      console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
       ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
-      return !goodInnLen ? {'invalidCaseLen': {value: control.value}} : null;
+      return !goodInnLen ? {'invalidLength': {value: control.value}} : null;
     };
 }
 
@@ -46,6 +46,8 @@ export function caseLenValidator(v1: number, v2: number): ValidatorFn {
     private subscription: Subscription;
     private eventSubscriber: Subscription;
 
+    private onlyNumbersValidator: ValidatorFn = Validators.pattern('[0-9 ]*');
+
     constructor(private fb: FormBuilder,
                 private eventManager: JhiEventManager,
                 private service: OrganizationsService,
@@ -68,17 +70,17 @@ export function caseLenValidator(v1: number, v2: number): ValidatorFn {
             isCommon: [data.isCommon],
             rmaSubscriberId: [data.rmaSubscriberId],
             flagServ: [data.flagServ],
-            inn: [data.inn, [caseLenValidator(10, 12), Validators.pattern('[0-9 ]*')]],
-            kpp: [data.kpp, [Validators.minLength(9), Validators.maxLength(9), Validators.pattern('[0-9 ]*')]],
-            okpo: [data.okpo, [caseLenValidator(8, 10), Validators.pattern('[0-9 ]*')]],
-            ogrn: [data.ogrn, [Validators.minLength(13), Validators.maxLength(13), Validators.pattern('[0-9 ]*')]],
+            inn: [data.inn, [caseLenValidator(10, 12), this.onlyNumbersValidator]],
+            kpp: [data.kpp, [Validators.minLength(9), Validators.maxLength(9), this.onlyNumbersValidator]],
+            okpo: [data.okpo, [caseLenValidator(8, 10), this.onlyNumbersValidator]],
+            ogrn: [data.ogrn, [Validators.minLength(13), Validators.maxLength(13), this.onlyNumbersValidator]],
             legalAddress: [data.legalAddress],
             factAddress: [data.factAddress],
             postAddress: [data.postAddress],
-            reqAccount: [data.reqAccount, [Validators.minLength(20), Validators.maxLength(20)]],
+            reqAccount: [data.reqAccount, [caseLenValidator(20, 20), this.onlyNumbersValidator]],
             reqBankName: [data.reqBankName],
-            reqCorrAccount: [data.reqCorrAccount, [Validators.maxLength(20)]],
-            reqBik: [data.reqBik, [Validators.maxLength(9)]],
+            reqCorrAccount: [data.reqCorrAccount, [caseLenValidator(20, 20), this.onlyNumbersValidator]],
+            reqBik: [data.reqBik, [caseLenValidator(9, 9), Validators.maxLength(9), this.onlyNumbersValidator]],
             contactPhone: [data.contactPhone, [Validators.maxLength(12)]],
             contactPhone2: [data.contactPhone2, [Validators.maxLength(12)]],
             contactPhone3: [data.contactPhone3, [Validators.maxLength(12)]],

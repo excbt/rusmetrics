@@ -1,8 +1,3 @@
-.edit-container {
-    // display: flex;
-    // flex-direction: column;
-}
-
 .example-form {
     min-width: 150px;
     max-width: 500px;
@@ -31,4 +26,21 @@
 input.right-no-spin::-webkit-outer-spin-button,
 input.right-no-spin::-webkit-inner-spin-button {
   display: none;
+}
+
+.id-width {
+    width: 6em;
+    flex: none;
+}
+
+.organization-name {
+    width: 26em;
+}
+
+.account-width {
+    width: 28em;
+}
+
+.reqBankName-width {
+    width: 45em;
 }

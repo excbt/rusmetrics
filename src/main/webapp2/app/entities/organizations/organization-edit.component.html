@@ -1,19 +1,20 @@
-<div *ngIf="organization" class="edit-container">
+<div *ngIf="organization" >
     <h2>
         <span jhiTranslate="organization.edit.title">Organization Edit</span>
     </h2>
     <hr>
-    <form class="edit-container" [formGroup]="organizationForm">
-
-        <div class="id-padding">
-            <mat-form-field>
-                <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
-            </mat-form-field>
-        </div>
+    <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
-            <div class="ui-g-6">
-                <mat-form-field>
+            <div class="ui-g-6 ui-g-nopad">
+                <mat-form-field class="id-padding id-width">
+                    <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
+                </mat-form-field>
+                <br>
+                <mat-form-field class="organization-name">
                     <input matInput formControlName="organizationName" placeholder="{{'organization.organizationName' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                        <input matInput formControlName="organizationTypeId" placeholder="{{'organization.organizationTypeId' | translate}}">
                 </mat-form-field>
                 <br>
                 <div class="flex-column">
@@ -29,7 +30,7 @@
                     <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('invalidCaseLen') && !organizationForm.controls['inn'].hasError('pattern')">
+                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('invalidLength') && !organizationForm.controls['inn'].hasError('pattern')">
                             {{'organization.form.errors.inn' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -44,7 +45,7 @@
                     <mat-error *ngIf="organizationForm.controls['okpo'].hasError('pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('invalidCaseLen') && !organizationForm.controls['okpo'].hasError('pattern')">
+                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('invalidLength') && !organizationForm.controls['okpo'].hasError('pattern')">
                             {{'organization.form.errors.okpo' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -62,12 +63,9 @@
                         </textarea>
                     </mat-form-field>
                 </div>
-                <br>                                        
-                <mat-form-field>
-                        <input matInput formControlName="organizationTypeId" placeholder="{{'organization.organizationTypeId' | translate}}">
-                </mat-form-field>
             </div>
-            <div class="ui-lg-6">
+
+            <div class="ui-lg-6 ui-g-nopad">
                 <div class="flex-column">
                     <mat-form-field>
                         <input matInput formControlName="legalAddress" placeholder="{{'organization.legalAddress' | translate}}">
@@ -80,23 +78,25 @@
                     </mat-form-field>
                 </div>
                 <br>
-                <mat-form-field>
-                    <input matInput formControlName="contactPhone" placeholder="{{'organization.contactPhone' | translate}}">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="contactEmail"  placeholder="{{'organization.contactEmail' | translate}}">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="siteUrl" placeholder="{{'organization.siteUrl' | translate}}">
-                </mat-form-field>
-                <br>
-                <mat-form-field>
-                    <input matInput formControlName="directorFio" placeholder="{{'organization.directorFio' | translate}}">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="chiefAccountantFio" placeholder="{{'organization.chiefAccountantFio' | translate}}">
-                </mat-form-field>
-                                
+                <div class="flex-column">
+                    <mat-form-field>
+                        <input matInput formControlName="directorFio" placeholder="{{'organization.directorFio' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="chiefAccountantFio" placeholder="{{'organization.chiefAccountantFio' | translate}}">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input matInput formControlName="contactPhone" placeholder="{{'organization.contactPhone' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="contactEmail"  placeholder="{{'organization.contactEmail' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="siteUrl" placeholder="{{'organization.siteUrl' | translate}}">
+                    </mat-form-field>
+                </div>
             </div>
             <div class="ui-lg-6 ui-g-nopad flex-column">
                 <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
@@ -106,20 +106,38 @@
                 <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
             </div>                
             <div class="ui-lg-6 ui-g-nopad">
-                <mat-form-field>
-                    <input matInput formControlName="reqAccount" placeholder="{{'organization.reqAccount' | translate}}">
+                <mat-form-field class="account-width">
+                    <input matInput formControlName="reqAccount" type="text" maxlength="20" placeholder="{{'organization.reqAccount' | translate}}">
+                    <mat-error *ngIf="organizationForm.controls['reqAccount'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="organizationForm.controls['reqAccount'].hasError('invalidLength') && !organizationForm.controls['reqAccount'].hasError('pattern')">
+                            {{'organization.form.errors.reqAccount' | translate}}
+                    </mat-error>
                 </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="reqBankName" placeholder="{{'organization.reqBankName' | translate}}">
+                <mat-form-field class="account-width">
+                    <input matInput formControlName="reqCorrAccount" type="text" maxlength="20" placeholder="{{'organization.reqCorrAccount' | translate}}">
+                    <mat-error *ngIf="organizationForm.controls['reqCorrAccount'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="organizationForm.controls['reqCorrAccount'].hasError('invalidLength') && !organizationForm.controls['reqCorrAccount'].hasError('pattern')">
+                            {{'organization.form.errors.reqCorrAccount' | translate}}
+                    </mat-error>
                 </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="reqCorrAccount" placeholder="{{'organization.reqCorrAccount' | translate}}">
-                </mat-form-field>
-                <mat-form-field>
-                    <input matInput formControlName="reqBik" placeholder="{{'organization.reqBik' | translate}}">
-                </mat-form-field>
-                
-
+                <div>
+                    <mat-form-field>
+                        <input matInput formControlName="reqBik" type="text" maxlength="9" placeholder="{{'organization.reqBik' | translate}}">
+                        <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('pattern')">
+                                {{'organization.form.errors.onlyNumbers' | translate}}
+                        </mat-error>
+                        <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('invalidLength') && !organizationForm.controls['reqBik'].hasError('pattern')">
+                                {{'organization.form.errors.reqBik' | translate}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="reqBankName-width">
+                        <input matInput formControlName="reqBankName" placeholder="{{'organization.reqBankName' | translate}}">
+                    </mat-form-field>
+                </div>
             </div>                
         </div>    
 
