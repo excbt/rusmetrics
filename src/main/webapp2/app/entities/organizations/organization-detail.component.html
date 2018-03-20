@@ -1,6 +1,6 @@
 <div *ngIf="organization">
     <h2>
-        <span jhiTranslate="organization.title">Organization Name</span> {{organization.organizationName}}</h2>
+        <span jhiTranslate="organization.organizationName">Organization Name</span> {{organization.organizationName}}</h2>
     <hr>
 
     <dl class="row-md jh-entity-details">
@@ -11,24 +11,25 @@
             <span>{{organization.id}}</span>
         </dd>
         <dt>
-            <span jhiTranslate="organization.name">Organization Name</span>
+            <span jhiTranslate="organization.organizationName">Organization Name</span>
         </dt>
         <dd>
             <span>{{organization.organizationName}}</span>
         </dd>
 
-        <span jhiTranslate="organization.fullName">Organization Name</span>
+        <dt>
+            <span jhiTranslate="organization.organizationFullName">Organization Name</span>
         </dt>
         <dd>
-            <span>{{organization.organizationName}}</span>
+            <span>{{organization.organizationFullName}}</span>
         </dd>
 
         </dd>
-
-        <span jhiTranslate="organization.fullName">Organization Name</span>
+        <dt>
+            <span jhiTranslate="organization.inn">INN</span>
         </dt>
         <dd>
-            <span>{{organization.organizationName}}</span>
+            <span>{{organization.inn}}</span>
         </dd>
 
 
@@ -50,5 +51,10 @@
         <span class="fa fa-pencil"></span>&nbsp;
         <span jhiTranslate="entity.action.edit"> Edit</span>
     </button>
+
+    <button mat-button [routerLink]="['/organizations/' + organization.id + '/edit']">
+        <mat-icon>edit</mat-icon>
+    </button>
+
 
 </div>

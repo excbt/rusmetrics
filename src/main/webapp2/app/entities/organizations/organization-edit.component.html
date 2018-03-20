@@ -1,0 +1,127 @@
+<div *ngIf="organization" class="edit-container">
+    <h2>
+        <span jhiTranslate="organization.edit.title">Organization Edit</span>
+    </h2>
+    <hr>
+    <form class="edit-container" [formGroup]="organizationForm">
+
+        <div class="id-padding">
+            <mat-form-field>
+                <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
+            </mat-form-field>
+        </div>
+        <div class="ui-g ui-g-nopad">
+            <div class="ui-g-6">
+                <mat-form-field>
+                    <input matInput formControlName="organizationName" placeholder="{{'organization.organizationName' | translate}}">
+                </mat-form-field>
+                <br>
+                <div class="flex-column">
+                    <mat-form-field>
+                        <input matInput formControlName="organizationFullName" placeholder="{{'organization.organizationFullName' | translate}}">
+                    </mat-form-field>
+                </div>
+                <br>
+                <mat-form-field > 
+                    <!-- hintLabel="{{'organization.edit.maxNchars' | translate:{n: 10} }}" -->
+                    <input matInput type="text" maxlength="12" formControlName="inn" placeholder="{{'organization.inn' | translate}}">
+                    <!-- <span>{{ organizationForm.value | json }} </span> !organizationForm.controls['inn'].hasError('pattern')-->
+                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('invalidCaseLen') && !organizationForm.controls['inn'].hasError('pattern')">
+                            {{'organization.form.errors.inn' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="9" formControlName="kpp" placeholder="{{'organization.kpp' | translate}}">
+                    <mat-error *ngIf="organizationForm.controls['kpp'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="10" formControlName="okpo" placeholder="{{'organization.okpo' | translate}}">
+                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('invalidCaseLen') && !organizationForm.controls['okpo'].hasError('pattern')">
+                            {{'organization.form.errors.okpo' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="13" formControlName="ogrn" placeholder="{{'organization.ogrn' | translate}}">
+                    <mat-error *ngIf="organizationForm.controls['ogrn'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <br>
+                <br>
+                <div class="flex-column">
+                    <mat-form-field>
+                        <textarea matInput formControlName="organizationDescription" placeholder="{{'organization.organizationDescription' | translate}}">
+                        </textarea>
+                    </mat-form-field>
+                </div>
+                <br>                                        
+                <mat-form-field>
+                        <input matInput formControlName="organizationTypeId" placeholder="{{'organization.organizationTypeId' | translate}}">
+                </mat-form-field>
+            </div>
+            <div class="ui-lg-6">
+                <div class="flex-column">
+                    <mat-form-field>
+                        <input matInput formControlName="legalAddress" placeholder="{{'organization.legalAddress' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="factAddress" placeholder="{{'organization.factAddress' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="postAddress" placeholder="{{'organization.postAddress' | translate}}">
+                    </mat-form-field>
+                </div>
+                <br>
+                <mat-form-field>
+                    <input matInput formControlName="contactPhone" placeholder="{{'organization.contactPhone' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="contactEmail"  placeholder="{{'organization.contactEmail' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="siteUrl" placeholder="{{'organization.siteUrl' | translate}}">
+                </mat-form-field>
+                <br>
+                <mat-form-field>
+                    <input matInput formControlName="directorFio" placeholder="{{'organization.directorFio' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="chiefAccountantFio" placeholder="{{'organization.chiefAccountantFio' | translate}}">
+                </mat-form-field>
+                                
+            </div>
+            <div class="ui-lg-6 ui-g-nopad flex-column">
+                <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
+                <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">{{'organization.flagManagement' | translate}}</mat-checkbox>
+                <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">{{'organization.flagRma' | translate}}</mat-checkbox>
+                <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
+                <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
+            </div>                
+            <div class="ui-lg-6 ui-g-nopad">
+                <mat-form-field>
+                    <input matInput formControlName="reqAccount" placeholder="{{'organization.reqAccount' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="reqBankName" placeholder="{{'organization.reqBankName' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="reqCorrAccount" placeholder="{{'organization.reqCorrAccount' | translate}}">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput formControlName="reqBik" placeholder="{{'organization.reqBik' | translate}}">
+                </mat-form-field>
+                
+
+            </div>                
+        </div>    
+
+    </form>
+</div>    
