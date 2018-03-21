@@ -23,9 +23,10 @@ import {
     MatCheckboxModule,
     ErrorStateMatcher,
     ShowOnDirtyErrorStateMatcher } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { CardModule } from 'primeng/card';
-import { MatSelectModule } from '@angular/material/select';
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -46,7 +47,8 @@ import { entityState } from './';
         MatIconModule,
         CardModule,
         MatCheckboxModule,
-        MatSelectModule
+        MatSelectModule,
+        MatTooltipModule
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [

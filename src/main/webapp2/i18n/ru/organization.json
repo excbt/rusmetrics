@@ -61,7 +61,11 @@
         "chiefAccountantFio": "Гл.бухгалтер",
         "organizationTypeId": "organizationTypeId",
         "organizationTypeName": "Форма организации",
-        "organizationType_None": "нет"
+        "organizationType_None": "нет",
+        "flagRsoDesription": "Ресурсоснабжающая организация",
+        "flagManagementDesription": "Управляющая компания",
+        "flagRmaDesription": "Региональный партнер"
+
     }
     
 }

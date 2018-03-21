@@ -116,9 +116,22 @@
                 <!-- BLOCK 3 -->
                 <div class="ui-lg-6 ui-g-nopad">
                     <div class="ui-g-3 flex-column">
-                        <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
-                        <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">{{'organization.flagManagement' | translate}}</mat-checkbox>
-                        <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">{{'organization.flagRma' | translate}}</mat-checkbox>
+                        <!-- <div matTooltip="{{'organization.flagRsoDesription' | translate}}" matTooltipPosition=above > -->
+                            <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">
+                                {{'organization.flagRso' | translate}}
+                                ( {{'organization.flagRsoDesription' | translate}} )
+                            </mat-checkbox>
+                        <!-- </div> -->
+                        <!-- <div matTooltip="{{'organization.flagManagementDesription' | translate}}" matTooltipPosition=above > -->
+                            <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">
+                                {{'organization.flagManagement' | translate}} ({{'organization.flagManagementDesription' | translate}})
+                            </mat-checkbox>
+                        <!-- </div> -->
+                        <!-- <div matTooltip="{{'organization.flagRmaDesription' | translate}}" matTooltipPosition=above > -->
+                            <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
+                                {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
+                            </mat-checkbox>
+                        <!-- </div>     -->
                     </div>
                     <!-- <div class="ui-g-3 flex-column">
                         <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
