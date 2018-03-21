@@ -38,31 +38,34 @@
                     <!-- hintLabel="{{'organization.edit.maxNchars' | translate:{n: 10} }}" -->
                     <input matInput type="text" maxlength="12" formControlName="inn" placeholder="{{'organization.inn' | translate}}">
                     <!-- <span>{{ organizationForm.value | json }} </span> !organizationForm.controls['inn'].hasError('pattern')-->
-                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('inn', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['inn'].hasError('invalidLength') && !organizationForm.controls['inn'].hasError('pattern')">
+                    <!-- <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error> -->
+                    <mat-error *ngIf="checkFormControl('inn', 'invalidLength', ['pattern'])">
                             {{'organization.form.errors.inn' | translate}}
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput type="text" maxlength="9" formControlName="kpp" placeholder="{{'organization.kpp' | translate}}">
-                    <mat-error *ngIf="organizationForm.controls['kpp'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('kpp' ,'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput type="text" maxlength="10" formControlName="okpo" placeholder="{{'organization.okpo' | translate}}">
-                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('okpo', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['okpo'].hasError('invalidLength') && !organizationForm.controls['okpo'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('okpo', 'invalidLength', ['pattern'])">
                             {{'organization.form.errors.okpo' | translate}}
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput type="text" maxlength="13" formControlName="ogrn" placeholder="{{'organization.ogrn' | translate}}">
-                    <mat-error *ngIf="organizationForm.controls['ogrn'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('ogrn', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -144,30 +147,30 @@
                 <!-- BLOCK 4 -->
                 <mat-form-field class="account-width">
                     <input matInput formControlName="reqAccount" type="text" maxlength="20" placeholder="{{'organization.reqAccount' | translate}}">
-                    <mat-error *ngIf="organizationForm.controls['reqAccount'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('reqAccount', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['reqAccount'].hasError('invalidLength') && !organizationForm.controls['reqAccount'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('reqAccount', 'invalidLength', ['pattern'])">
                             {{'organization.form.errors.reqAccount' | translate}}
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field class="account-width">
                     <input matInput formControlName="reqCorrAccount" type="text" maxlength="20" placeholder="{{'organization.reqCorrAccount' | translate}}">
-                    <mat-error *ngIf="organizationForm.controls['reqCorrAccount'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="organizationForm.controls['reqCorrAccount'].hasError('invalidLength') && !organizationForm.controls['reqCorrAccount'].hasError('pattern')">
+                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'invalidLength', ['pattern'] )">
                             {{'organization.form.errors.reqCorrAccount' | translate}}
                     </mat-error>
                 </mat-form-field>
                 <div>
                     <mat-form-field>
                         <input matInput formControlName="reqBik" type="text" maxlength="9" placeholder="{{'organization.reqBik' | translate}}">
-                        <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('pattern')">
+                        <mat-error *ngIf="checkFormControl('reqBik', 'pattern')">
                         <!-- <mat-error *ngIf="checkFormError(organizationForm, newControlCheck('reqBik', 'pattern'))"> -->
                                 {{'organization.form.errors.onlyNumbers' | translate}}
                         </mat-error>
-                        <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('invalidLength') && !organizationForm.controls['reqBik'].hasError('pattern')">
+                        <mat-error *ngIf="checkFormControl('reqBik', 'invalidLength', ['pattern'])">
                                 {{'organization.form.errors.reqBik' | translate}}
                         </mat-error>
                     </mat-form-field>

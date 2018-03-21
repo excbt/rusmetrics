@@ -4,7 +4,7 @@ import { slideInDownAnimation } from '../animations';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
 import { FormBuilder, FormGroup, AbstractControl, ValidatorFn } from '@angular/forms';
-import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
+import { FormControl, FormGroupDirective, NgForm, Validators, ValidationErrors } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 
 import { Organization } from './organization.model';
@@ -246,13 +246,15 @@ export class FormControlCheck {
         return saveOrganization;
     }
 
-    // checkFormError(frm: FormGroup, controlName: string, error: string): boolean {
-    //     // const c: FormControlCheck = new FormControlCheck('123', 'edk;f');
-    //     return frm.controls[controlName].hasError(error);
-    // }
-
-    // newControlCheck(c: string, e: string): FormControlCheck {
-    //     return new FormControlCheck(c, e);
-    // }
+    checkFormControl(controlName: string, errorName: string, errorNameMask?: string[] | null): boolean {
+        const control: AbstractControl = this.organizationForm.controls[controlName];
+        let mask = false;
+        if (errorNameMask != null) {
+            errorNameMask.forEach((i) => {
+                mask = mask || control.hasError(i);
+            });
+        }
+        return mask ? false : control.hasError(errorName);
+    }
 
 }
