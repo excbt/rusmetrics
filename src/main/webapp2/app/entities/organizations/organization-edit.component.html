@@ -1,11 +1,10 @@
 <div *ngIf="organization" >
-    <h2>
-        <span jhiTranslate="organization.edit.title">Organization Edit</span>
-    </h2>
+    <jhi-top-header headerTitle="organization.edit.title"></jhi-top-header>
     <hr>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">
+                <!-- BLOCK 1 -->
                 <mat-form-field class="id-padding id-width">
                     <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
                 </mat-form-field>
@@ -63,9 +62,11 @@
                         </textarea>
                     </mat-form-field>
                 </div>
+                <!-- end of BLOCK 1 -->
             </div>
 
             <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 2 -->
                 <div class="flex-column">
                     <mat-form-field>
                         <input matInput formControlName="legalAddress" placeholder="{{'organization.legalAddress' | translate}}">
@@ -97,8 +98,10 @@
                         <input matInput formControlName="siteUrl" placeholder="{{'organization.siteUrl' | translate}}">
                     </mat-form-field>
                 </div>
+                <!-- end of BLOCK 2 -->
             </div>
             <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 3 -->
                 <div class="ui-lg-6 ui-g-nopad">
                     <div class="ui-g-3 flex-column">
                         <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">{{'organization.flagRso' | translate}}</mat-checkbox>
@@ -110,8 +113,10 @@
                         <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
                     </div>
                 </div>   
+                <!-- end of BLOCK 3 -->
             </div>                
             <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 4 -->
                 <mat-form-field class="account-width">
                     <input matInput formControlName="reqAccount" type="text" maxlength="20" placeholder="{{'organization.reqAccount' | translate}}">
                     <mat-error *ngIf="organizationForm.controls['reqAccount'].hasError('pattern')">
@@ -134,6 +139,7 @@
                     <mat-form-field>
                         <input matInput formControlName="reqBik" type="text" maxlength="9" placeholder="{{'organization.reqBik' | translate}}">
                         <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('pattern')">
+                        <!-- <mat-error *ngIf="checkFormError(organizationForm, newControlCheck('reqBik', 'pattern'))"> -->
                                 {{'organization.form.errors.onlyNumbers' | translate}}
                         </mat-error>
                         <mat-error *ngIf="organizationForm.controls['reqBik'].hasError('invalidLength') && !organizationForm.controls['reqBik'].hasError('pattern')">
@@ -144,24 +150,10 @@
                         <input matInput formControlName="reqBankName" placeholder="{{'organization.reqBankName' | translate}}">
                     </mat-form-field>
                 </div>
+                <!-- enf of BLOCK 4 -->
             </div>                
         </div>    
-        <hr>
-        <button mat-raised-button (click)="previousState()">
-            <span class="fa fa-arrow-left"></span>&nbsp;
-            <span jhiTranslate="entity.action.back"> Back</span>
-        </button>
-
-        <button mat-raised-button (click)="revertForm()"  [disabled]="organizationForm.pristine">
-                <span class="fa fa-ban"></span>&nbsp;
-                <span jhiTranslate="entity.action.revert"> Revert</span>
-        </button>
-            
-        <button mat-raised-button [routerLink]="['/', { outlets: { popup: 'organizations/'+ organization.id + '/edit'} }]" replaceUrl="true"
-            color="primary" [disabled]="organizationForm.pristine">
-            <span class="fa fa-save"></span>&nbsp;
-            <span jhiTranslate="entity.action.save"> Edit</span>
-        </button>
-                
+        <!-- FORM BUTTONS -->
+        <jhi-form-edit-buttons [formGroup]="organizationForm" (revertAction)="revertForm()"></jhi-form-buttons>
     </form>
 </div>    

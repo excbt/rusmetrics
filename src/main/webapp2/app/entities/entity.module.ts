@@ -8,6 +8,7 @@ import { OrganizationDetailComponent } from './organizations/organization-detail
 import { OrganizationEditComponent } from './organizations/organization-edit.component';
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
+import { TopHeaderComponent, FormEditButtonsComponent } from './blocks/form-blocks';
 
 import {
     MatGridListModule,
@@ -50,7 +51,9 @@ import { entityState } from './';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
-        OrganizationsWidgetComponent
+        OrganizationsWidgetComponent,
+        TopHeaderComponent,
+        FormEditButtonsComponent
     ],
     entryComponents: [
     ],

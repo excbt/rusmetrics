@@ -20,10 +20,17 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export function caseLenValidator(v1: number, v2: number): ValidatorFn {
     return (control: AbstractControl): {[key: string]: any} => {
       const goodInnLen = (String(control.value).trim() === '') || (String(control.value).length === v1) || (String(control.value).length === v2);
-      console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
-      ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
+    //   console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
+    //   ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
       return !goodInnLen ? {'invalidLength': {value: control.value}} : null;
     };
+}
+
+export class FormControlCheck {
+    constructor(
+        public c: string,
+        public e: string
+    ) {}
 }
 
 @Component({
@@ -164,5 +171,14 @@ export function caseLenValidator(v1: number, v2: number): ValidatorFn {
     previousState() {
         window.history.back();
     }
+
+    // checkFormError(frm: FormGroup, controlName: string, error: string): boolean {
+    //     // const c: FormControlCheck = new FormControlCheck('123', 'edk;f');
+    //     return frm.controls[controlName].hasError(error);
+    // }
+
+    // newControlCheck(c: string, e: string): FormControlCheck {
+    //     return new FormControlCheck(c, e);
+    // }
 
 }
