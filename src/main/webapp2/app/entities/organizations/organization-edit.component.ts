@@ -200,7 +200,10 @@ export class FormControlCheck {
             catchError(() => of([])),
             finalize(() => this.loading = false)
         )
-        .subscribe( (organizations) => this.loading = false);
+        .subscribe( (data: Organization) => {
+            this.loading = false;
+            this.createForm(this.organization = data);
+        });
     }
 
     presaveOrganization(): Organization {
@@ -241,7 +244,8 @@ export class FormControlCheck {
             siteUrl: formModel.siteUrl as string,
             directorFio: formModel.directorFio as string,
             chiefAccountantFio: formModel.chiefAccountantFio as string,
-            organizationTypeId: formModel.organizationTypeId as number
+            organizationTypeId: formModel.organizationTypeId as number,
+            version: this.organization.version
         };
         return saveOrganization;
     }

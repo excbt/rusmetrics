@@ -20,9 +20,10 @@ export class OrganizationsService {
         return this.http.get<Organization>(this.resourceUrl.concat('' + id));
     }
 
-    update(organization: Organization): Observable<boolean> {
+    update(organization: Organization): Observable<Organization> {
         // dsd
-        console.log('save');
-        return Observable.of(true);
+        return this.http.put<Organization>(this.resourceUrl, organization);
+        // console.log('save');
+        // return Observable.of(true);
     }
 }
