@@ -6,12 +6,12 @@ import { SERVER_API_URL } from '../../app.constants';
 import { OrganizationType } from './organization-type.model';
 
 @Injectable()
-export class OrganizationsService {
+export class OrganizationTypeService {
 
     private resourceUrl = SERVER_API_URL + 'api/organization-types/';
     constructor(private http: HttpClient) { }
 
-    findAll(sortField: string, sortOrder: string): Observable<OrganizationType[]> {
+    findAll(): Observable<OrganizationType[]> {
         return this.http.get<OrganizationType[]>(this.resourceUrl);
     }
 

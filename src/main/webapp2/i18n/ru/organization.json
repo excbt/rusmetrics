@@ -60,7 +60,8 @@
         "directorFio": "Генеральный директор",
         "chiefAccountantFio": "Гл.бухгалтер",
         "organizationTypeId": "organizationTypeId",
-        "organizationTypeName": "Форма организации"
+        "organizationTypeName": "Форма организации",
+        "organizationType_None": "нет"
     }
     
 }

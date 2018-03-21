@@ -9,11 +9,23 @@
                     <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
                 </mat-form-field>
                 <br>
+                <div class="flex-column">
+                    <mat-form-field>
+                            <mat-select placeholder="{{'organization.organizationTypeName' | translate}}" formControlName="organizationTypeId">
+                                <mat-option>
+                                    {{'organization.organizationType_None' | translate}}
+                                </mat-option>
+                                <mat-option *ngFor="let organizationType of organizationTypes" [value]="organizationType.id">
+                                    {{organizationType.typeName}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>-->
+                            <!-- <mat-hint>{{animalControl.value?.sound}}</mat-hint>  -->
+                    </mat-form-field>                
+                </div>
+                <br>
                 <mat-form-field class="organization-name">
                     <input matInput formControlName="organizationName" placeholder="{{'organization.organizationName' | translate}}">
-                </mat-form-field>
-                <mat-form-field>
-                        <input matInput formControlName="organizationTypeId" placeholder="{{'organization.organizationTypeId' | translate}}">
                 </mat-form-field>
                 <br>
                 <div class="flex-column">
@@ -108,10 +120,10 @@
                         <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">{{'organization.flagManagement' | translate}}</mat-checkbox>
                         <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">{{'organization.flagRma' | translate}}</mat-checkbox>
                     </div>
-                    <div class="ui-g-3 flex-column">
+                    <!-- <div class="ui-g-3 flex-column">
                         <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
                         <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
-                    </div>
+                    </div> -->
                 </div>   
                 <!-- end of BLOCK 3 -->
             </div>                

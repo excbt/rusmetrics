@@ -1,13 +1,16 @@
 import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { OrganizationsService } from './organizations.service';
 import { slideInDownAnimation } from '../animations';
-import { Organization } from './organization.model';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
 import { FormBuilder, FormGroup, AbstractControl, ValidatorFn } from '@angular/forms';
 import { FormControl, FormGroupDirective, NgForm, Validators } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+
+import { Organization } from './organization.model';
+import { OrganizationType } from '../organization-types/organization-type.model';
+import { OrganizationsService } from './organizations.service';
+import { OrganizationTypeService } from '../organization-types/organization-type.service';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -48,6 +51,8 @@ export class FormControlCheck {
     organizationForm: FormGroup;
     organization: Organization;
 
+    organizationTypes: OrganizationType[];
+
     matcher = new MyErrorStateMatcher();
 
     private subscription: Subscription;
@@ -58,7 +63,23 @@ export class FormControlCheck {
     constructor(private fb: FormBuilder,
                 private eventManager: JhiEventManager,
                 private service: OrganizationsService,
+                private organizationTypeService: OrganizationTypeService,
                 private route: ActivatedRoute) {
+    }
+
+    ngOnInit() {
+        console.log('Edit load');
+        this.subscription = this.route.params.subscribe((params) => {
+            this.load(params['id']);
+        });
+        this.registerChangeInOrganization();
+        this.loadOrganizationTypes();
+    }
+
+    loadOrganizationTypes() {
+        this.organizationTypeService.findAll().subscribe((data) => {
+            this.organizationTypes = data;
+        });
     }
 
     createForm(data: Organization) {
@@ -138,14 +159,6 @@ export class FormControlCheck {
 
     revertForm() {
       this.createForm(this.organization);
-    }
-
-    ngOnInit() {
-        console.log('Edit load');
-        this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
-        });
-        this.registerChangeInOrganization();
     }
 
     ngOnDestroy() {

@@ -8,6 +8,7 @@ import { OrganizationDetailComponent } from './organizations/organization-detail
 import { OrganizationEditComponent } from './organizations/organization-edit.component';
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
+import { OrganizationTypeService } from './organization-types/organization-type.service';
 import { TopHeaderComponent, FormEditButtonsComponent } from './blocks/form-blocks';
 
 import {
@@ -23,8 +24,8 @@ import {
     ErrorStateMatcher,
     ShowOnDirtyErrorStateMatcher } from '@angular/material';
 
-    import { CardModule } from 'primeng/card';
-
+import { CardModule } from 'primeng/card';
+import { MatSelectModule } from '@angular/material/select';
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -44,7 +45,8 @@ import { entityState } from './';
         MatButtonModule,
         MatIconModule,
         CardModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        MatSelectModule
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
@@ -59,6 +61,7 @@ import { entityState } from './';
     ],
     providers: [
         OrganizationsService,
+        OrganizationTypeService,
         {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
