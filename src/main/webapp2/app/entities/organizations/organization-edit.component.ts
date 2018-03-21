@@ -11,6 +11,8 @@ import { Organization } from './organization.model';
 import { OrganizationType } from '../organization-types/organization-type.model';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
+import { catchError, finalize } from 'rxjs/operators';
+import {of} from 'rxjs/observable/of';
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
@@ -54,6 +56,8 @@ export class FormControlCheck {
     organizationTypes: OrganizationType[];
 
     matcher = new MyErrorStateMatcher();
+
+    loading: boolean;
 
     private subscription: Subscription;
     private eventSubscriber: Subscription;
@@ -161,6 +165,10 @@ export class FormControlCheck {
       this.createForm(this.organization);
     }
 
+    saveForm() {
+        this.updateOrganization(this.organizationForm);
+    }
+
     ngOnDestroy() {
         this.subscription.unsubscribe();
         this.eventManager.destroy(this.eventSubscriber);
@@ -183,6 +191,59 @@ export class FormControlCheck {
 
     previousState() {
         window.history.back();
+    }
+
+    updateOrganization(formGroup: FormGroup) {
+        this.organization = this.presaveOrganization();
+        this.loading = true;
+        this.service.update(this.organization).pipe(
+            catchError(() => of([])),
+            finalize(() => this.loading = false)
+        )
+        .subscribe( (organizations) => this.loading = false);
+    }
+
+    presaveOrganization(): Organization {
+        const formModel = this.organizationForm.value;
+
+        const saveOrganization: Organization = {
+            id: formModel.id as number,
+            organizationName: formModel.organizationName as string,
+            organizationFullName: formModel.organizationFullName as string,
+            organizationFullAddress: formModel.organizationFullAddress as string,
+            exCode: this.organization.exCode,
+            exSystem: this.organization.exSystem,
+            flagRso: formModel.flagRso as boolean,
+            flagManagement: formModel.flagManagement as boolean,
+            flagRma: formModel.flagRma as boolean,
+            keyname: formModel.keyname as string,
+            isDevMode: this.organization.isDevMode,
+            flagCm: formModel.flagCm as boolean,
+            organizationDescription: formModel.organizationDescription as string,
+            isCommon: formModel.isCommon as boolean,
+            rmaSubscriberId: formModel.rmaSubscriberId as number,
+            flagServ: formModel.flagServ as boolean,
+            inn: formModel.inn as string,
+            kpp: formModel.kpp as string,
+            okpo: formModel.okpo as string,
+            ogrn: formModel.ogrn as string,
+            legalAddress: formModel.legalAddress as string,
+            factAddress: formModel.factAddress as string,
+            postAddress: formModel.postAddress as string,
+            reqAccount: formModel.reqAccount as string,
+            reqBankName: formModel.reqBankName as string,
+            reqCorrAccount: formModel.reqCorrAccount as string,
+            reqBik: formModel.reqBik as string,
+            contactPhone: formModel.contactPhone as string,
+            contactPhone2: formModel.contactPhone2 as string,
+            contactPhone3: formModel.contactPhone3 as string,
+            contactEmail: formModel.contactEmail as string,
+            siteUrl: formModel.siteUrl as string,
+            directorFio: formModel.directorFio as string,
+            chiefAccountantFio: formModel.chiefAccountantFio as string,
+            organizationTypeId: formModel.organizationTypeId as number
+        };
+        return saveOrganization;
     }
 
     // checkFormError(frm: FormGroup, controlName: string, error: string): boolean {
