@@ -10,13 +10,17 @@ import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
  */
 @Mapper(componentModel = "spring")
 
-public interface OrganizationMapper {
+public interface OrganizationMapper //extends EntityMapper<OrganizationDTO, Organization>
+{
 
     @Mapping(target = "organizationTypeId", source = "organizationType.id")
     @Mapping(target = "organizationTypeName", source = "organizationType.typeName")
     OrganizationDTO toDTO(Organization organization);
 
-    Organization.OrganizationInfo toShortInfo(Organization organization);
+    @Mapping(target = "organizationType", ignore = true)
+    Organization toEntity(OrganizationDTO dto);
+
+//    Organization.OrganizationInfo toShortInfo(Organization organization);
 
 
     /**

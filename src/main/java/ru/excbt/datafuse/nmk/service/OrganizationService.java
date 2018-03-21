@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -154,6 +155,13 @@ public class OrganizationService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization saveOrganization(Organization entity) {
 		return organizationRepository.saveAndFlush(entity);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public OrganizationDTO saveOrganization(OrganizationDTO dto) {
+	    Organization organization = organizationMapper.toEntity(dto);
+		return organizationMapper.toDTO(organizationRepository.saveAndFlush(organization));
 	}
 
 	/**
