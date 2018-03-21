@@ -19,8 +19,7 @@ export const organizationDetailRoute: Route = {
     path: 'organizations/:id',
     component: OrganizationDetailComponent,
     data: {
-        pageTitle: 'organization.detail',
-        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
+        pageTitle: 'organization.detail.title'
     },
     canActivate: [UserRouteAccessService]
 };

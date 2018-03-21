@@ -9,7 +9,11 @@ import { OrganizationEditComponent } from './organizations/organization-edit.com
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 import { OrganizationTypeService } from './organization-types/organization-type.service';
-import { TopHeaderComponent, FormEditButtonsComponent } from './blocks/form-blocks';
+import {
+    TopHeaderComponent,
+    FormEditButtonsComponent,
+    FormDetailFieldComponent,
+    FormTemplateComponent } from './blocks/form-blocks';
 
 import {
     MatGridListModule,
@@ -57,7 +61,9 @@ import { entityState } from './';
         OrganizationEditComponent,
         OrganizationsWidgetComponent,
         TopHeaderComponent,
-        FormEditButtonsComponent
+        FormEditButtonsComponent,
+        FormDetailFieldComponent,
+        FormTemplateComponent
     ],
     entryComponents: [
     ],

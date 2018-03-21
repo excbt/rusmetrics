@@ -15,6 +15,11 @@
     padding-right: 2em;
 }
 
+.flex-column-nopad {
+    display: flex;
+    flex-direction: column;
+}
+
 .column-full-width {
     width: 100%;
   }

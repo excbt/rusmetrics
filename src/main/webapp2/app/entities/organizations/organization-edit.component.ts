@@ -41,14 +41,14 @@ export class FormControlCheck {
 @Component({
     selector: 'jhi-organization-edit',
     templateUrl: './organization-edit.component.html',
-    animations: [ slideInDownAnimation ],
-    styleUrls: ['./organization-edit.scss']
+    styleUrls: ['./organization-edit.component.scss'],
+    // animations: [ slideInDownAnimation ]
   })
   export class OrganizationEditComponent implements OnInit, OnDestroy {
 
-    @HostBinding('@routeAnimation') routeAnimation = true;
-    @HostBinding('style.display')   display = 'block';
-    @HostBinding('style.position')  position = 'absolute';
+    // @HostBinding('@routeAnimation') routeAnimation = true;
+    // @HostBinding('style.display')   display = 'block';
+    // @HostBinding('style.position')  position = 'absolute';
 
     organizationForm: FormGroup;
     organization: Organization;

@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
+import { ViewEncapsulation } from '@angular/core';
 import {
     FormControl,
     FormGroupDirective,
@@ -6,6 +7,7 @@ import {
     NgForm,
     Validators
 } from '@angular/forms';
+import { slideInDownAnimation } from '../animations';
 
 @Component({
     selector: 'jhi-top-header',
@@ -39,4 +41,26 @@ export class FormEditButtonsComponent {
     revert() {
         this.revertAction.emit(null);
     }
+}
+
+@Component({
+    selector: 'jhi-form-detail-field',
+    templateUrl: `./form-detail-field.component.html`,
+    styleUrls: ['./form-detail-field.component.scss']
+})
+export class FormDetailFieldComponent {
+    @Input() placeholder: string;
+    @Input() fieldValue: string;
+}
+
+@Component({
+    selector: 'jhi-form-template',
+    templateUrl: `./form-template.component.html`,
+    animations: [ slideInDownAnimation ],
+    styleUrls: ['./form-template.component.scss']
+})
+export class FormTemplateComponent {
+    @HostBinding('@routeAnimation') routeAnimation = true;
+    @HostBinding('style.display')   display = 'block';
+    @HostBinding('style.position')  position = 'absolute';
 }

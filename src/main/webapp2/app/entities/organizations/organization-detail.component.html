@@ -1,44 +1,59 @@
 <div *ngIf="organization">
-    <h2>
-        <span jhiTranslate="organization.organizationName">Organization Name</span> {{organization.organizationName}}</h2>
-    <hr>
+    <jhi-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}"></jhi-top-header>
+    <div class="ui-g ui-g-nopad">
+        <div class="ui-g-6 ui-g-nopad">
+            <!-- BLOCK 1 -->
+            <jhi-form-detail-field placeholder="{{'organization.id' | translate}}" fieldValue="{{organization.id}}"></jhi-form-detail-field>
+            <br>
+            <div class="flex-column">
+                <jhi-form-detail-field placeholder="{{'organization.organizationTypeName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
+            </div>
+            <jhi-form-detail-field placeholder="{{'organization.organizationName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
+            <br>
+            <div class="flex-column">
+                <jhi-form-detail-field placeholder="{{'organization.organizationFullName' | translate}}" fieldValue="{{organization.organizationFullName}}"></jhi-form-detail-field>
+            </div>
+            <br>
+            <jhi-form-detail-field placeholder="{{'organization.inn' | translate}}" fieldValue="{{organization.inn}}"></jhi-form-detail-field>
+            <jhi-form-detail-field placeholder="{{'organization.kpp' | translate}}" fieldValue="{{organization.kpp}}"></jhi-form-detail-field>
+            <jhi-form-detail-field placeholder="{{'organization.okpo' | translate}}" fieldValue="{{organization.okpo}}"></jhi-form-detail-field>
+            <jhi-form-detail-field placeholder="{{'organization.ogrn' | translate}}" fieldValue="{{organization.ogrn}}"></jhi-form-detail-field>
+            <div class="flex-column">
+                <jhi-form-detail-field placeholder="{{'organization.organizationDescription' | translate}}" fieldValue="{{organization.organizationDescription}}"></jhi-form-detail-field>
+            </div>
+            <!-- end of BLOCK 1 -->
+        </div>
 
-    <dl class="row-md jh-entity-details">
-        <dt>
-            <span jhiTranslate="organization.id">id</span>
-        </dt>
-        <dd>
-            <span>{{organization.id}}</span>
-        </dd>
-        <dt>
-            <span jhiTranslate="organization.organizationName">Organization Name</span>
-        </dt>
-        <dd>
-            <span>{{organization.organizationName}}</span>
-        </dd>
+        <div class="ui-lg-6 ui-g-nopad">
+            <!-- BLOCK 2 -->
+            <div class="flex-column-nopad">
+                <jhi-form-detail-field placeholder="{{'organization.legalAddress' | translate}}" fieldValue="{{organization.legalAddress}}"></jhi-form-detail-field>
+            </div>
+            <div class="flex-column-nopad">
+                <jhi-form-detail-field placeholder="{{'organization.factAddress' | translate}}" fieldValue="{{organization.factAddress}}"></jhi-form-detail-field>
+            </div>
+            <div class="flex-column-nopad">
+                <jhi-form-detail-field placeholder="{{'organization.postAddress' | translate}}" fieldValue="{{organization.postAddress}}"></jhi-form-detail-field>
+            </div>
+            <!-- end of BLOCK 2 -->
+        </div>
+        <div class="ui-lg-6 ui-g-nopad">
+            <!-- BLOCK 3 -->
+            <div class="ui-lg-6 ui-g-nopad">
+                <div class="ui-g-3 flex-column">
+                </div>
+            </div>
+            <!-- end of BLOCK 3 -->
+        </div>
+        <div class="ui-lg-6 ui-g-nopad">
+            <!-- BLOCK 4 -->
+            <div>
+            </div>
+            <!-- enf of BLOCK 4 -->
+        </div>
+    </div>
 
-        <dt>
-            <span jhiTranslate="organization.organizationFullName">Organization Name</span>
-        </dt>
-        <dd>
-            <span>{{organization.organizationFullName}}</span>
-        </dd>
 
-        </dd>
-        <dt>
-            <span jhiTranslate="organization.inn">INN</span>
-        </dt>
-        <dd>
-            <span>{{organization.inn}}</span>
-        </dd>
-
-
-    </dl>
-
-    <!-- <button mat-button [routerLink]="['/organizations', organization.id]"  type="submit">
-        <mat-icon>edit</mat-icon>
-    </button>
- -->
 
     <hr>
     <button mat-raised-button (click)="previousState()">

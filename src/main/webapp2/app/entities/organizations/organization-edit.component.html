@@ -1,6 +1,5 @@
-<div *ngIf="organization" >
-    <jhi-top-header headerTitle="organization.edit.title"></jhi-top-header>
-    <hr>
+<jhi-form-template>
+    <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}"></jhi-top-header>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">
@@ -184,4 +183,4 @@
         <!-- FORM BUTTONS -->
         <jhi-form-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-form-buttons>
     </form>
-</div>    
+</jhi-form-template>    
