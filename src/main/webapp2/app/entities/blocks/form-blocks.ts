@@ -52,11 +52,21 @@ export class FormEditButtonsComponent {
 @Component({
     selector: 'jhi-form-detail-field',
     templateUrl: `./form-detail-field.component.html`,
-    styleUrls: ['./form-detail-field.component.scss']
+    styleUrls: ['./form-detail-field.component.scss'],
+    // encapsulation: ViewEncapsulation.Native
 })
 export class FormDetailFieldComponent {
     @Input() placeholder: string;
-    @Input() fieldValue: string;
+    @Input() fieldValue: any;
+    @Input() fieldType = 'text';
+
+    isTextField(): boolean {
+        return this.fieldType === 'text';
+    }
+
+    isCheckboxField(): boolean {
+        return this.fieldType === 'check';
+    }
 }
 
 @Component({
