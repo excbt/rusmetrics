@@ -49,6 +49,9 @@
                     <mat-error *ngIf="checkFormControl('kpp' ,'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
+                    <mat-error *ngIf="checkFormControl('kpp', 'invalidLength', ['pattern'])">
+                            {{'organization.form.errors.kpp' | translate}}
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput type="text" maxlength="10" formControlName="okpo" placeholder="{{'organization.okpo' | translate}}">

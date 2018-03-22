@@ -119,7 +119,7 @@ export class FormControlCheck {
             rmaSubscriberId: [data.rmaSubscriberId],
             flagServ: [data.flagServ],
             inn: [data.inn, [caseLenValidator(10, 12), this.onlyNumbersValidator]],
-            kpp: [data.kpp, [Validators.minLength(9), Validators.maxLength(9), this.onlyNumbersValidator]],
+            kpp: [data.kpp, [caseLenValidator(9, 9), this.onlyNumbersValidator]],
             okpo: [data.okpo, [caseLenValidator(8, 10), this.onlyNumbersValidator]],
             ogrn: [data.ogrn, [Validators.minLength(13), Validators.maxLength(13), this.onlyNumbersValidator]],
             legalAddress: [data.legalAddress],

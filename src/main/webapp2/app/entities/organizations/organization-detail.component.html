@@ -80,15 +80,15 @@
         <span jhiTranslate="entity.action.back"> Back</span>
     </button>
 
-    <button mat-raised-button [routerLink]="['/', { outlets: { popup: 'organizations/'+ organization.id + '/edit'} }]" replaceUrl="true"
+    <button mat-raised-button [routerLink]="['/organizations/' + organization.id + '/edit']"
         color="primary">
         <span class="fa fa-pencil"></span>&nbsp;
         <span jhiTranslate="entity.action.edit"> Edit</span>
     </button>
 
-    <button mat-button [routerLink]="['/organizations/' + organization.id + '/edit']">
+    <!-- <button mat-button [routerLink]="['/organizations/' + organization.id + '/edit']">
         <mat-icon>edit</mat-icon>
-    </button>
+    </button> -->
 
 
 </jhi-form-template>
