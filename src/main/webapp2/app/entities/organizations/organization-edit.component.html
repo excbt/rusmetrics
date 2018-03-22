@@ -1,14 +1,15 @@
 <jhi-form-template>
     <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}"></jhi-top-header>
+    <div>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">
-                <!-- BLOCK 1 -->
+                <!-- BLOCK 1 left -->
                 <mat-form-field class="id-padding id-width">
                     <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
                 </mat-form-field>
                 <br>
-                <div class="flex-column">
+                <div class="flex-column-rpad">
                     <mat-form-field>
                             <mat-select placeholder="{{'organization.organizationTypeName' | translate}}" formControlName="organizationTypeId">
                                 <mat-option>
@@ -27,7 +28,7 @@
                     <input matInput formControlName="organizationName" placeholder="{{'organization.organizationName' | translate}}">
                 </mat-form-field>
                 <br>
-                <div class="flex-column">
+                <div class="flex-column-rpad">
                     <mat-form-field>
                         <input matInput formControlName="organizationFullName" placeholder="{{'organization.organizationFullName' | translate}}">
                     </mat-form-field>
@@ -70,7 +71,7 @@
                 </mat-form-field>
                 <br>
                 <br>
-                <div class="flex-column">
+                <div class="flex-column-rpad">
                     <mat-form-field>
                         <textarea matInput formControlName="organizationDescription" placeholder="{{'organization.organizationDescription' | translate}}">
                         </textarea>
@@ -80,7 +81,7 @@
             </div>
 
             <div class="ui-lg-6 ui-g-nopad">
-                <!-- BLOCK 2 -->
+                <!-- BLOCK 2 right -->
                 <div class="flex-column">
                     <mat-form-field>
                         <input matInput formControlName="legalAddress" placeholder="{{'organization.legalAddress' | translate}}">
@@ -115,35 +116,25 @@
                 <!-- end of BLOCK 2 -->
             </div>
             <div class="ui-lg-6 ui-g-nopad">
-                <!-- BLOCK 3 -->
+                <!-- BLOCK 3 left -->
                 <div class="ui-lg-6 ui-g-nopad">
-                    <div class="ui-g-3 flex-column">
-                        <!-- <div matTooltip="{{'organization.flagRsoDesription' | translate}}" matTooltipPosition=above > -->
-                            <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">
-                                {{'organization.flagRso' | translate}}
-                                ( {{'organization.flagRsoDesription' | translate}} )
-                            </mat-checkbox>
-                        <!-- </div> -->
-                        <!-- <div matTooltip="{{'organization.flagManagementDesription' | translate}}" matTooltipPosition=above > -->
-                            <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">
-                                {{'organization.flagManagement' | translate}} ({{'organization.flagManagementDesription' | translate}})
-                            </mat-checkbox>
-                        <!-- </div> -->
-                        <!-- <div matTooltip="{{'organization.flagRmaDesription' | translate}}" matTooltipPosition=above > -->
-                            <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
-                                {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
-                            </mat-checkbox>
-                        <!-- </div>     -->
+                    <div class="ui-g-3 flex-column-rnopad">
+                        <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">
+                            {{'organization.flagRso' | translate}}
+                            ( {{'organization.flagRsoDesription' | translate}} )
+                        </mat-checkbox>
+                        <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">
+                            {{'organization.flagManagement' | translate}} ({{'organization.flagManagementDesription' | translate}})
+                        </mat-checkbox>
+                        <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
+                            {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
+                        </mat-checkbox>
                     </div>
-                    <!-- <div class="ui-g-3 flex-column">
-                        <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">{{'organization.flagCm' | translate}}</mat-checkbox>
-                        <mat-checkbox  id="flagServ" type="checkbox" formControlName="flagServ">{{'organization.flagServ' | translate}}</mat-checkbox>
-                    </div> -->
                 </div>   
                 <!-- end of BLOCK 3 -->
             </div>                
             <div class="ui-lg-6 ui-g-nopad">
-                <!-- BLOCK 4 -->
+                <!-- BLOCK 4 right -->
                 <mat-form-field class="account-width">
                     <input matInput formControlName="reqAccount" type="text" maxlength="20" placeholder="{{'organization.reqAccount' | translate}}">
                     <mat-error *ngIf="checkFormControl('reqAccount', 'pattern')">
@@ -166,11 +157,10 @@
                     <mat-form-field>
                         <input matInput formControlName="reqBik" type="text" maxlength="9" placeholder="{{'organization.reqBik' | translate}}">
                         <mat-error *ngIf="checkFormControl('reqBik', 'pattern')">
-                        <!-- <mat-error *ngIf="checkFormError(organizationForm, newControlCheck('reqBik', 'pattern'))"> -->
-                                {{'organization.form.errors.onlyNumbers' | translate}}
+                            {{'organization.form.errors.onlyNumbers' | translate}}
                         </mat-error>
                         <mat-error *ngIf="checkFormControl('reqBik', 'invalidLength', ['pattern'])">
-                                {{'organization.form.errors.reqBik' | translate}}
+                            {{'organization.form.errors.reqBik' | translate}}
                         </mat-error>
                     </mat-form-field>
                     <mat-form-field class="reqBankName-width">
@@ -183,4 +173,5 @@
         <!-- FORM BUTTONS -->
         <jhi-form-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-form-buttons>
     </form>
+    </div>
 </jhi-form-template>    

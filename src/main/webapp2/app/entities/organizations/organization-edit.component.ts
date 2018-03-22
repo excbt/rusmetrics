@@ -74,10 +74,26 @@ export class FormControlCheck {
     ngOnInit() {
         console.log('Edit load');
         this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
+            this.loadOrganization(params['id']);
         });
+        this.initForm();
         this.registerChangeInOrganization();
         this.loadOrganizationTypes();
+    }
+
+    registerChangeInOrganization() {
+        this.eventSubscriber = this.eventManager.subscribe(
+            'organizationModification',
+            (response) => this.loadOrganization(this.organization.id)
+        );
+    }
+
+    loadOrganization(id) {
+        this.service.find(id).subscribe((data) => {
+            this.organization = data;
+            console.log('loaded organization id:' + this.organization.id);
+            this.createForm(data);
+        });
     }
 
     loadOrganizationTypes() {
@@ -89,7 +105,7 @@ export class FormControlCheck {
     createForm(data: Organization) {
         this.organizationForm = this.fb.group({
 
-            id: [data.id, [Validators.required]],
+            id: [data.id],
             organizationName: [data.organizationName],
             organizationFullName: [data.organizationFullName],
             organizationFullAddress: [data.organizationFullAddress],
@@ -126,7 +142,7 @@ export class FormControlCheck {
 
     initForm() {
         this.organizationForm = this.fb.group({
-            id: ['', [Validators.required]],
+            id: [''],
             organizationName: '',
             organizationFullName: '',
             organizationFullAddress: '',
@@ -173,21 +189,6 @@ export class FormControlCheck {
         this.subscription.unsubscribe();
         this.eventManager.destroy(this.eventSubscriber);
     }
-
-    load(id) {
-        this.service.find(id).subscribe((data) => {
-            this.organization = data;
-            console.log('id:' + this.organization.id);
-            this.createForm(data);
-        });
-    }
-
-    registerChangeInOrganization() {
-          this.eventSubscriber = this.eventManager.subscribe(
-              'organizationModification',
-              (response) => this.load(this.organization.id)
-          );
-      }
 
     previousState() {
         window.history.back();

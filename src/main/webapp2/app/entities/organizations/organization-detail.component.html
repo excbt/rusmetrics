@@ -1,16 +1,16 @@
-<div *ngIf="organization">
+<jhi-form-template>
     <jhi-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}"></jhi-top-header>
     <div class="ui-g ui-g-nopad">
         <div class="ui-g-6 ui-g-nopad">
-            <!-- BLOCK 1 -->
+            <!-- BLOCK 1 left -->
             <jhi-form-detail-field placeholder="{{'organization.id' | translate}}" fieldValue="{{organization.id}}"></jhi-form-detail-field>
             <br>
-            <div class="flex-column">
+            <div class="flex-column-rpad">
                 <jhi-form-detail-field placeholder="{{'organization.organizationTypeName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
             </div>
             <jhi-form-detail-field placeholder="{{'organization.organizationName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
             <br>
-            <div class="flex-column">
+            <div class="flex-column-rpad">
                 <jhi-form-detail-field placeholder="{{'organization.organizationFullName' | translate}}" fieldValue="{{organization.organizationFullName}}"></jhi-form-detail-field>
             </div>
             <br>
@@ -18,27 +18,27 @@
             <jhi-form-detail-field placeholder="{{'organization.kpp' | translate}}" fieldValue="{{organization.kpp}}"></jhi-form-detail-field>
             <jhi-form-detail-field placeholder="{{'organization.okpo' | translate}}" fieldValue="{{organization.okpo}}"></jhi-form-detail-field>
             <jhi-form-detail-field placeholder="{{'organization.ogrn' | translate}}" fieldValue="{{organization.ogrn}}"></jhi-form-detail-field>
-            <div class="flex-column">
+            <div class="flex-column-rpad">
                 <jhi-form-detail-field placeholder="{{'organization.organizationDescription' | translate}}" fieldValue="{{organization.organizationDescription}}"></jhi-form-detail-field>
             </div>
             <!-- end of BLOCK 1 -->
         </div>
 
         <div class="ui-lg-6 ui-g-nopad">
-            <!-- BLOCK 2 -->
-            <div class="flex-column-nopad">
+            <!-- BLOCK 2 right -->
+            <div class="flex-column">
                 <jhi-form-detail-field placeholder="{{'organization.legalAddress' | translate}}" fieldValue="{{organization.legalAddress}}"></jhi-form-detail-field>
             </div>
-            <div class="flex-column-nopad">
+            <div class="flex-column">
                 <jhi-form-detail-field placeholder="{{'organization.factAddress' | translate}}" fieldValue="{{organization.factAddress}}"></jhi-form-detail-field>
             </div>
-            <div class="flex-column-nopad">
+            <div class="flex-column">
                 <jhi-form-detail-field placeholder="{{'organization.postAddress' | translate}}" fieldValue="{{organization.postAddress}}"></jhi-form-detail-field>
             </div>
             <!-- end of BLOCK 2 -->
         </div>
         <div class="ui-lg-6 ui-g-nopad">
-            <!-- BLOCK 3 -->
+            <!-- BLOCK 3 left -->
             <div class="ui-lg-6 ui-g-nopad">
                 <div class="ui-g-3 flex-column">
                 </div>
@@ -52,8 +52,6 @@
             <!-- enf of BLOCK 4 -->
         </div>
     </div>
-
-
 
     <hr>
     <button mat-raised-button (click)="previousState()">
@@ -72,4 +70,4 @@
     </button>
 
 
-</div>
+</jhi-form-template>
