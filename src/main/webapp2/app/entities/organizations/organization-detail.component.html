@@ -1,10 +1,8 @@
 <jhi-form-template>
-    <jhi-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}"></jhi-top-header>
+    <jhi-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}" headerId="{{organization.id}}"></jhi-top-header>
     <div class="ui-g ui-g-nopad">
         <div class="ui-g-6 ui-g-nopad">
             <!-- BLOCK 1 left -->
-            <jhi-form-detail-field placeholder="{{'organization.id' | translate}}" fieldValue="{{organization.id}}"></jhi-form-detail-field>
-            <br>
             <div class="flex-column-rpad">
                 <jhi-form-detail-field placeholder="{{'organization.organizationTypeName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
             </div>

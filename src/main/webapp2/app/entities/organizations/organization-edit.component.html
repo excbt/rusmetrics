@@ -1,14 +1,10 @@
 <jhi-form-template>
-    <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}"></jhi-top-header>
+    <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}" headerId="{{organization.id}}"></jhi-top-header>
     <div>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">
                 <!-- BLOCK 1 left -->
-                <mat-form-field class="id-padding id-width">
-                    <input matInput placeholder="{{'organization.id' | translate}}" formControlName="id" readonly>
-                </mat-form-field>
-                <br>
                 <div class="flex-column-rpad">
                     <mat-form-field>
                             <mat-select placeholder="{{'organization.organizationTypeName' | translate}}" formControlName="organizationTypeId">

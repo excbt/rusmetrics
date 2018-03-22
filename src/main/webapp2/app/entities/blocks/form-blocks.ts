@@ -7,6 +7,7 @@ import {
     NgForm,
     Validators
 } from '@angular/forms';
+import { DEBUG_INFO_ENABLED } from '../../app.constants';
 import { slideInDownAnimation } from '../animations';
 
 @Component({
@@ -15,6 +16,11 @@ import { slideInDownAnimation } from '../animations';
 })
 export class TopHeaderComponent {
     @Input() headerTitle: string;
+    @Input() headerId: any = null;
+
+    showId(): boolean {
+        return DEBUG_INFO_ENABLED;
+    }
 }
 
 @Component({
