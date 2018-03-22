@@ -11,7 +11,7 @@ import { JhiEventManager  } from 'ng-jhipster';
   templateUrl: './organization-detail.component.html',
   animations: [ slideInDownAnimation ],
 //   animations: [ slideInDownAnimation ],
-  styleUrls: ['./organization-edit.component.scss']
+  styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
 

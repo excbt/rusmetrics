@@ -1,43 +1,3 @@
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 100%;
-  }
-
-.edit-row {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-column {
-    display: flex;
-    flex-direction: column;
-}
-
-.flex-column-rpad {
-    display: flex;
-    flex-direction: column;
-    padding-right: 2em;    
-}
-
-.column-full-width {
-    width: 100%;
-  }
-
-.ng-invalid:not(form) {
-    border-left: 0px;
-}
-
-input.right-no-spin::-webkit-outer-spin-button,
-input.right-no-spin::-webkit-inner-spin-button {
-  display: none;
-}
-
-.id-width {
-    width: 6em;
-    flex: none;
-}
-
 .organization-name {
     width: 26em;
 }
@@ -48,4 +8,9 @@ input.right-no-spin::-webkit-inner-spin-button {
 
 .reqBankName-width {
     width: 45em;
+}
+
+.id-width {
+    width: 6em;
+    flex: none;
 }

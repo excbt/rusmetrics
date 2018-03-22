@@ -41,7 +41,7 @@ export class FormControlCheck {
 @Component({
     selector: 'jhi-organization-edit',
     templateUrl: './organization-edit.component.html',
-    styleUrls: ['./organization-edit.component.scss'],
+    styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
     // animations: [ slideInDownAnimation ]
   })
   export class OrganizationEditComponent implements OnInit, OnDestroy {
