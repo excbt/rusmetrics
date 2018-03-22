@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.support.TestConstants;
+import ru.excbt.datafuse.nmk.service.OrganizationService;
 
 import java.util.Optional;
 

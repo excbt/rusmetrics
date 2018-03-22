@@ -1,9 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -12,11 +10,13 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
+import ru.excbt.datafuse.nmk.domain.OrganizationType;
 
 /**
  * Организация
@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
  *
  */
 @Entity
-@Table(name = "organization")
+@Table(schema = Constants.DB_SCHEME_PORTAL, name = "organization")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -108,5 +108,69 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 
 	@Column(name = "flag_serv")
 	private Boolean flagServ;
+
+    @Column(name = "inn")
+    @Size(min = 10, max = 20)
+    private String inn;
+
+    @Column(name = "kpp")
+    @Size(min = 9, max = 9)
+    private String kpp;
+
+    @Column(name = "okpo")
+    @Size(min = 8, max = 10)
+    private String okpo;
+
+    @Column(name = "ogrn")
+    private String ogrn;
+
+    @Column(name = "legal_address")
+    private String legalAddress;
+
+    @Column(name = "fact_address")
+    private String factAddress;
+
+    @Column(name = "post_address")
+    private String postAddress;
+
+    @Column(name = "req_account")
+    @Size(min = 20, max = 20)
+    private String reqAccount;
+
+    @Column(name = "req_bank_name")
+    private String reqBankName;
+
+    @Column(name = "req_corr_account")
+    @Size(min = 20, max = 20)
+    private String reqCorrAccount;
+
+    @Column(name = "req_bik")
+    @Size(min = 9, max = 9)
+    private String reqBik;
+
+    @Column(name = "contact_phone")
+    private String contactPhone;
+
+    @Column(name = "contact_phone2")
+    private String contactPhone2;
+
+    @Column(name = "contact_phone3")
+    private String contactPhone3;
+
+    @Column(name = "contact_email")
+    private String contactEmail;
+
+    @Column(name = "site_url")
+    private String siteUrl;
+
+    @Column(name = "director_fio")
+    private String directorFio;
+
+    @Column(name = "chief_accountant_fio")
+    private String chiefAccountantFio;
+
+    @ManyToOne
+    @JoinColumn(name = "organization_type_id")
+    private OrganizationType organizationType;
 
 }
