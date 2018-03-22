@@ -13,23 +13,7 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
 import { catchError, finalize } from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-      const isSubmitted = form && form.submitted;
-      return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
-    }
-}
-
-export function caseLenValidator(v1: number, v2: number): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} => {
-      const goodInnLen = (String(control.value).trim() === '') || (String(control.value).length === v1) || (String(control.value).length === v2);
-    //   console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
-    //   ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
-      return !goodInnLen ? {'invalidLength': {value: control.value}} : null;
-    };
-}
+import { CustomValidators, FormControlChecker } from '../blocks/form-blocks';
 
 export class FormControlCheck {
     constructor(
@@ -46,23 +30,15 @@ export class FormControlCheck {
   })
   export class OrganizationEditComponent implements OnInit, OnDestroy {
 
-    // @HostBinding('@routeAnimation') routeAnimation = true;
-    // @HostBinding('style.display')   display = 'block';
-    // @HostBinding('style.position')  position = 'absolute';
-
     organizationForm: FormGroup;
     organization: Organization;
 
     organizationTypes: OrganizationType[];
 
-    matcher = new MyErrorStateMatcher();
-
     loading: boolean;
 
     private subscription: Subscription;
     private eventSubscriber: Subscription;
-
-    private onlyNumbersValidator: ValidatorFn = Validators.pattern('[0-9 ]*');
 
     constructor(private fb: FormBuilder,
                 private eventManager: JhiEventManager,
@@ -118,17 +94,17 @@ export class FormControlCheck {
             isCommon: [data.isCommon],
             rmaSubscriberId: [data.rmaSubscriberId],
             flagServ: [data.flagServ],
-            inn: [data.inn, [caseLenValidator(10, 12), this.onlyNumbersValidator]],
-            kpp: [data.kpp, [caseLenValidator(9, 9), this.onlyNumbersValidator]],
-            okpo: [data.okpo, [caseLenValidator(8, 10), this.onlyNumbersValidator]],
-            ogrn: [data.ogrn, [Validators.minLength(13), Validators.maxLength(13), this.onlyNumbersValidator]],
+            inn: [data.inn, [CustomValidators.valueLength([10, 12]), CustomValidators.onlyNumbersPattern()]],
+            kpp: [data.kpp, [CustomValidators.valueLength(9), CustomValidators.onlyNumbersPattern()]],
+            okpo: [data.okpo, [CustomValidators.valueLength([8, 10]), CustomValidators.onlyNumbersPattern()]],
+            ogrn: [data.ogrn, [CustomValidators.valueLength(13), CustomValidators.onlyNumbersPattern()]],
             legalAddress: [data.legalAddress],
             factAddress: [data.factAddress],
             postAddress: [data.postAddress],
-            reqAccount: [data.reqAccount, [caseLenValidator(20, 20), this.onlyNumbersValidator]],
+            reqAccount: [data.reqAccount, [CustomValidators.valueLength(20), CustomValidators.onlyNumbersPattern()]],
             reqBankName: [data.reqBankName],
-            reqCorrAccount: [data.reqCorrAccount, [caseLenValidator(20, 20), this.onlyNumbersValidator]],
-            reqBik: [data.reqBik, [caseLenValidator(9, 9), Validators.maxLength(9), this.onlyNumbersValidator]],
+            reqCorrAccount: [data.reqCorrAccount, [CustomValidators.valueLength(20), CustomValidators.onlyNumbersPattern()]],
+            reqBik: [data.reqBik, [CustomValidators.valueLength(9), CustomValidators.onlyNumbersPattern()]],
             contactPhone: [data.contactPhone, [Validators.maxLength(12)]],
             contactPhone2: [data.contactPhone2, [Validators.maxLength(12)]],
             contactPhone3: [data.contactPhone3, [Validators.maxLength(12)]],
@@ -253,13 +229,7 @@ export class FormControlCheck {
 
     checkFormControl(controlName: string, errorName: string, errorNameMask?: string[] | null): boolean {
         const control: AbstractControl = this.organizationForm.controls[controlName];
-        let mask = false;
-        if (errorNameMask != null) {
-            errorNameMask.forEach((i) => {
-                mask = mask || control.hasError(i);
-            });
-        }
-        return mask ? false : control.hasError(errorName);
+        return FormControlChecker.checkControlError(control, errorName, errorNameMask);
     }
 
 }
