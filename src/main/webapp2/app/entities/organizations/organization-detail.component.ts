@@ -10,14 +10,9 @@ import { JhiEventManager  } from 'ng-jhipster';
   selector: 'jhi-organization-detail',
   templateUrl: './organization-detail.component.html',
   animations: [ slideInDownAnimation ],
-//   animations: [ slideInDownAnimation ],
   styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
-
-    // @HostBinding('@routeAnimation') routeAnimation = true;
-    // @HostBinding('style.display')   display = 'block';
-    // @HostBinding('style.position')  position = 'absolute';
 
     organization: Organization;
 

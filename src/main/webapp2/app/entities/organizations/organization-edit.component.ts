@@ -219,6 +219,7 @@ export class FormControlCheck {
             directorFio: formModel.directorFio as string,
             chiefAccountantFio: formModel.chiefAccountantFio as string,
             organizationTypeId: formModel.organizationTypeId as number,
+            organizationTypeName: null,
             version: this.organization.version
         };
         return saveOrganization;

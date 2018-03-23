@@ -35,6 +35,7 @@ export class Organization {
         public directorFio: string,
         public chiefAccountantFio: string,
         public organizationTypeId: number,
+        public organizationTypeName: string,
         public version: number
     ) { }
 }
