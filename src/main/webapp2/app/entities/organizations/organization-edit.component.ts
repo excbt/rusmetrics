@@ -1,11 +1,9 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { slideInDownAnimation } from '../animations';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
-import { FormBuilder, FormGroup, AbstractControl, ValidatorFn } from '@angular/forms';
-import { FormControl, FormGroupDirective, NgForm, Validators, ValidationErrors } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { FormBuilder, FormGroup, AbstractControl} from '@angular/forms';
+import { Validators} from '@angular/forms';
 
 import { Organization } from './organization.model';
 import { OrganizationType } from '../organization-types/organization-type.model';
@@ -26,7 +24,6 @@ export class FormControlCheck {
     selector: 'jhi-organization-edit',
     templateUrl: './organization-edit.component.html',
     styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
-    // animations: [ slideInDownAnimation ]
   })
   export class OrganizationEditComponent implements OnInit, OnDestroy {
 

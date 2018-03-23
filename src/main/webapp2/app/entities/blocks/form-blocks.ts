@@ -1,10 +1,6 @@
 import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
-import { ViewEncapsulation } from '@angular/core';
 import {
-    FormControl,
-    FormGroupDirective,
     FormGroup,
-    NgForm,
     Validators,
     AbstractControl,
     ValidatorFn
