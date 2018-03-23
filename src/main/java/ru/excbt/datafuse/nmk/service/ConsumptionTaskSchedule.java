@@ -38,7 +38,7 @@ public class ConsumptionTaskSchedule {
             return;
         }
 
-        log.info("Process Schedule  Tasks");
+        log.debug("Process Schedule Tasks");
 
         if (!taskActive.compareAndSet(false, true)) {
             log.warn("Task processing already running");
@@ -47,7 +47,7 @@ public class ConsumptionTaskSchedule {
 
         try {
             consumptionTaskService.processTaskQueue(i -> {
-                log.info("Process task UUID {}, DataType: {}, dateFrom: {}, dateTo:{}", i.getTaskUUID(), i.getDataType(), i.getDateFrom(), i.getDateTo());
+                log.debug("Process task UUID {}, DataType: {}, dateFrom: {}, dateTo:{}", i.getTaskUUID(), i.getDataType(), i.getDateFrom(), i.getDateTo());
                 consumptionService.processUniversal(i);
             } );
         } finally {
@@ -57,7 +57,7 @@ public class ConsumptionTaskSchedule {
                 log.error("Running flag is not set");
             }
         }
-        log.info("Processing Schedule complete. OK");
+        log.debug("Processing Schedule complete. OK");
 
     }
 
