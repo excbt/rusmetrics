@@ -6,6 +6,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +18,7 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class OrganizationType extends AbstractPersistableEntity<Long> {
+public class OrganizationType extends AbstractPersistableEntity<Long> implements PersistableBuilder<OrganizationType, Long> {
 
     @Column(name = "type_keyname")
     private String typeKeyname;

@@ -8,16 +8,15 @@ import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 /**
  * Created by kovtonyk on 13.07.2017.
  */
-@Mapper(componentModel = "spring")
-
-public interface OrganizationMapper //extends EntityMapper<OrganizationDTO, Organization>
+@Mapper(componentModel = "spring", uses = { OrganizationTypeMapper.class})
+public interface OrganizationMapper // extends EntityMapper<OrganizationDTO, Organization>
 {
 
     @Mapping(target = "organizationTypeId", source = "organizationType.id")
     @Mapping(target = "organizationTypeName", source = "organizationType.typeName")
     OrganizationDTO toDTO(Organization organization);
 
-    @Mapping(target = "organizationType", ignore = true)
+    @Mapping(target = "organizationType", source = "organizationTypeId")
     Organization toEntity(OrganizationDTO dto);
 
 //    Organization.OrganizationInfo toShortInfo(Organization organization);

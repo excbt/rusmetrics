@@ -98,5 +98,5 @@ public class OrganizationDTO {
 
     private Long organizationTypeId;
 
-    private Long organizationTypeName;
+    private String organizationTypeName;
 }
