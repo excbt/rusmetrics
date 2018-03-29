@@ -8,7 +8,7 @@
     function chartJsProviderConfig(ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
-            chartColors: ['#ef473a', '#FDB45C', '#46BFBD', '#803690', '#337ab7'],
+            chartColors: ['#ef473a', '#FDB45C', '#6e7b90', '#46BFBD', '#803690', '#337ab7'],
             responsive: true
         });
     }    
@@ -30,6 +30,7 @@
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.contObjectStateShowFlag = false;
+        ctrl.svc = contObjectMonitorComponentService;
         
 //        function getRandomColor () {
 //            var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
@@ -118,7 +119,7 @@
             var elm = $('.nmc-cont-object-control-main-div').get(0);
             console.log(elm);
             if (elm !== null) {
-                elm.style.height = "49vh";//css("height", "45vh");
+                elm.style.height = "43vh";//css("height", "45vh");
             }
         }
         
@@ -145,13 +146,14 @@
             }*/
         };
         
-        var doughuntColors = ["#ef473a", "#FDB45C", "#46BFBD"];
+        var doughuntColors = ["#ef473a", "#FDB45C", "#6e7b90"];
+        ctrl.doughuntColors = doughuntColors;
         
         ctrl.$onInit = function () {
             console.log("contObjectMonitorComponentController Init!");
             //polar graph
-            ctrl.labels = ["Критические", "Некритические", "Зеленые", "Остальные"];
-            ctrl.data = [111, 178, 48, 1024];
+            ctrl.labels = ["Критические", "Некритические", "Остальные"];
+            ctrl.data = [111, 178, 1024];
             ctrl.options = {
                 responsive: true
             };
@@ -186,6 +188,21 @@
             
             ctrl.doughnutClick = segmentClick;
         };
+        
+        function initCommonChart() {
+            ctrl.svc.loadCommonData()
+                .then(function (resp) {
+                ctrl.data = [];
+            }, 
+                      function (err) {
+                console.log(err);
+                
+            });
+        }
+        
+        function initResourceChart() {
+            
+        }
         
     }
     

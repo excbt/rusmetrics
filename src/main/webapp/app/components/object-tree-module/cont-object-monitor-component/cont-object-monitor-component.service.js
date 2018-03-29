@@ -14,13 +14,27 @@
     /* @ngInject */
     function Service($http, objectTreeService, $rootScope, contObjectService) {
         
+        var DATA_URL = "";
+        
         var svc = this;
         svc.exampleFunc = exampleFunc;
+        svc.loadCommonData = loadCommonData;
+        svc.loadResourceData = loadResourceData;
+        
+        ////////////////////////////////////////////////////////////////
         
         function exampleFunc() {
             var greeting = "This is example func!";
             console.log(greeting);
             return greeting;
+        }
+        
+        function loadCommonData() {
+            
+        }
+        
+        function loadResourceData() {
+            
         }
 
     }
