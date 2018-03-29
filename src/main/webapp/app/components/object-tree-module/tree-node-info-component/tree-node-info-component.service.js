@@ -38,11 +38,11 @@
                 caption: "Контроль",
                 stateName: "objectsPTree.treeNodeInfo.contObjectControl"
             },
-            {
+            /*{
                 keyname: "NOTIFICATION",
                 caption: "Уведомления",
                 stateName: "objectsPTree.treeNodeInfo.nodeNotifications"
-            },
+            },*/
             {
                 keyname: "MONITORING",
                 caption: "Мониторинг",
