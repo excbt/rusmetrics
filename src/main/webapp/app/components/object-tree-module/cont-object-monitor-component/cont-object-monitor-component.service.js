@@ -14,27 +14,23 @@
     /* @ngInject */
     function Service($http, objectTreeService, $rootScope, contObjectService) {
         
-        var DATA_URL = "";
+        var COMMON_DATA_URL = "components/object-tree-module/cont-object-monitor-component/testdata/commondata.json",
+            RESOURCE_DATA_URL = "components/object-tree-module/cont-object-monitor-component/testdata/{resource}data.json";
         
         var svc = this;
-        svc.exampleFunc = exampleFunc;
         svc.loadCommonData = loadCommonData;
         svc.loadResourceData = loadResourceData;
         
         ////////////////////////////////////////////////////////////////
         
-        function exampleFunc() {
-            var greeting = "This is example func!";
-            console.log(greeting);
-            return greeting;
-        }
-        
         function loadCommonData() {
-            
+            var url = COMMON_DATA_URL;
+            return $http.get(url);
         }
         
-        function loadResourceData() {
-            
+        function loadResourceData(resource) {
+            var url = RESOURCE_DATA_URL.replace("{resource}", resource);
+            return $http.get(url);
         }
 
     }
