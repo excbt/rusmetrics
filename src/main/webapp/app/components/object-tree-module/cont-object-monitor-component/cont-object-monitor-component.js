@@ -31,6 +31,11 @@
         var ctrl = this;
         ctrl.contObjectStateShowFlag = false;
         ctrl.svc = contObjectMonitorComponentService;
+        ctrl.$onInit = initCmpnt;
+        ctrl.doughnuts = {};
+        
+        var labels = ["Критические", "Некритические", "Остальные"];
+                
         
 //        function getRandomColor () {
 //            var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
@@ -110,7 +115,19 @@
 //                return text.join('');
 //        }
         
-        function segmentClick() {
+        function segmentClick(points, arg2, arg3, arg4) {
+console.log(points);
+            if (!angular.isArray(points) || points.length === 0) {
+                return false;
+            }
+        if (angular.isArray(points) && points.length > 0) {            
+console.log(points[0]._index);
+console.log(labels[points[0]._index]);
+        }
+//console.log(arg2);
+//console.log(arg3);
+//console.log(arg3._index);
+//console.log(arg4);
             ctrl.contObjectStateShowFlag = false;
             $timeout(function () {
                 ctrl.contObjectStateShowFlag = true;
@@ -129,8 +146,12 @@
             legend: {
                 display: true,
                 position: "right",
-                onClick: function () {
+                onClick: function (ev, label, arg3) {                    
                     console.log("Label click!");
+                    console.log(ev);
+                    console.log(label);
+                    console.log(label.index);
+                    console.log(arg3);
                 },
                 labels: {
                     fontSize: 10,
@@ -149,10 +170,50 @@
         var doughuntColors = ["#ef473a", "#FDB45C", "#6e7b90"];
         ctrl.doughuntColors = doughuntColors;
         
-        ctrl.$onInit = function () {
+        ctrl.doughnutTemplate = {};
+        ctrl.doughnutTemplate.data = [];
+        ctrl.doughnutTemplate.labels = labels;            
+        ctrl.doughnutTemplate.colors = doughuntColors;
+        ctrl.doughnutTemplate.options = doughuntOpts;
+        
+        function initCommonChart() {
+            ctrl.svc.loadCommonData()
+                .then(function (resp) {
+//console.log(resp);
+                if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
+                    console.warn("Common data is empty", resp);
+                    return false;
+                }
+                ctrl.data = [resp.data.red, resp.data.yellow, resp.data.green];
+            }, 
+                      function (err) {
+                console.log(err);
+                
+            });
+        }
+        
+        function initResourceChart(resource) {
+            ctrl.svc.loadResourceData(resource)
+                .then(function (resp) {
+//console.log(resp);
+                if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
+                    console.warn("Resource data: " + resource + " is empty", resp);
+                    return false;
+                }
+                ctrl.doughnuts[resource] = Object.assign({}, ctrl.doughnutTemplate); // angular.copy(ctrl.doughnutTemplate);
+                ctrl.doughnuts[resource].data = [resp.data.red, resp.data.yellow, resp.data.green];
+                ctrl.doughnuts[resource].allCount = resp.data.red + resp.data.yellow + resp.data.green;
+            }, 
+                      function (err) {
+                console.log(err);
+                
+            });
+        }
+        
+        function initCmpnt() {
             console.log("contObjectMonitorComponentController Init!");
             //polar graph
-            ctrl.labels = ["Критические", "Некритические", "Остальные"];
+            ctrl.labels = labels;
             ctrl.data = [111, 178, 1024];
             ctrl.options = {
                 responsive: true
@@ -166,42 +227,33 @@
 //            ];
             
             //bublic 1 (doughnut 1)
-            ctrl.doughnut = {};
-            ctrl.doughnut.data = [33, 66, 100];
-            ctrl.doughnut.labels = ["Критические (" + ctrl.doughnut.data[0]+")", "Некритические (" + ctrl.doughnut.data[1]+")", "Остальные (" + ctrl.doughnut.data[2]+")"];            
-            ctrl.doughnut.colors = doughuntColors;
-            ctrl.doughnut.options = doughuntOpts;
+//            ctrl.doughnut = {};
+//            ctrl.doughnut.data = [33, 66, 100];
+//            ctrl.doughnut.labels = ["Критические (" + ctrl.doughnut.data[0]+")", "Некритические (" + ctrl.doughnut.data[1]+")", "Остальные (" + ctrl.doughnut.data[2]+")"];            
+//            ctrl.doughnut.colors = doughuntColors;
+//            ctrl.doughnut.options = doughuntOpts;
             
              //bublic 2 (doughnut 1)
-            ctrl.doughnut2 = {};
-            ctrl.doughnut2.data = [11, 0, 1000];
-            ctrl.doughnut2.labels = ["Критические (" + ctrl.doughnut2.data[0]+")", "Некритические (" + ctrl.doughnut2.data[1]+")", "Остальные (" + ctrl.doughnut2.data[2]+")"];            
-            ctrl.doughnut2.colors = doughuntColors;
-            ctrl.doughnut2.options = doughuntOpts;
+//            ctrl.doughnut2 = {};
+//            ctrl.doughnut2.data = [11, 0, 1000];
+//            ctrl.doughnut2.labels = ["Критические (" + ctrl.doughnut2.data[0]+")", "Некритические (" + ctrl.doughnut2.data[1]+")", "Остальные (" + ctrl.doughnut2.data[2]+")"];            
+//            ctrl.doughnut2.colors = doughuntColors;
+//            ctrl.doughnut2.options = doughuntOpts;
             
                          //bublic 3 (doughnut 3)
-            ctrl.doughnut3 = {};
-            ctrl.doughnut3.data = [1, 123, 0];
-            ctrl.doughnut3.labels = ["Критические (" + ctrl.doughnut3.data[0]+")", "Некритические (" + ctrl.doughnut3.data[1]+")", "Остальные (" + ctrl.doughnut3.data[2]+")"];            
-            ctrl.doughnut3.colors = doughuntColors;
-            ctrl.doughnut3.options = doughuntOpts;
+//            ctrl.doughnut3 = {};
+//            ctrl.doughnut3.data = [1, 123, 0];
+//            ctrl.doughnut3.labels = ["Критические (" + ctrl.doughnut3.data[0]+")", "Некритические (" + ctrl.doughnut3.data[1]+")", "Остальные (" + ctrl.doughnut3.data[2]+")"];            
+//            ctrl.doughnut3.colors = doughuntColors;
+//            ctrl.doughnut3.options = doughuntOpts;
             
             ctrl.doughnutClick = segmentClick;
-        };
-        
-        function initCommonChart() {
-            ctrl.svc.loadCommonData()
-                .then(function (resp) {
-                ctrl.data = [];
-            }, 
-                      function (err) {
-                console.log(err);
-                
-            });
-        }
-        
-        function initResourceChart() {
             
+            initCommonChart();
+            var resources = ['heat', 'hw', 'cw', 'el'];
+            for (var res in resources) {
+                initResourceChart(resources[res]);
+            }
         }
         
     }

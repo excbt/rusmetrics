@@ -1,46 +1,3 @@
-<!--<div style = "min-width: 1000px; display: none;">-->
-<!--    Cont object monitor view-->
-<!--Мониторинг-->
-<!--
-   <div style = "position: relative; height: 300px; width: 300px; border: 1px solid black;">
-        <canvas id = "polar-area" 
-        class = "chart chart-polar-area"
-        chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
-        chart-options = "$ctrl.options"
-        
-        >
--->
-<!--        chart-colors = "$ctrl.colours"-->
-<!--
-        </canvas>
-    </div>
-    
-</div>
--->
-
-
-<!--
-<div class = "container-fluid" style = "display: none;">
-   <div class = "row">
-        <div class = "col-xs-3">
-            <canvas id = "polar-area" 
-                class = "chart chart-polar-area"
-                chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
-                chart-options = "$ctrl.options"
-                >
--->
-            <!--        chart-colors = "$ctrl.colours"-->
-<!--
-            </canvas>
-        </div>
-        <div class = "col-xs-9">
-          
-        </div>
-   </div>
-    
-</div>
--->
-
 <!--<div style = "min-width: 1400px;">-->
     
     <div layout = "column" class = "nmc-cont-object-monitor-div">
@@ -64,221 +21,86 @@
                     </canvas>
                 </div>
             </div>
-            <div flex = "75">
-        <!--         style = "background-color: brown">-->
+            
+            <div flex = "75">        
                 <div layout = "column">
-        <!--           style = "background-color: indianred">-->
                    <div flex = "20">
-<!--
-                      <div layout = "row">
-                          <div flex = "25">                          
-                               <canvas id="doughnut"
-                                   style = "height: 130px;  width: 250px;"
-                                    class="chart chart-doughnut" 
-                                    chart-data="$ctrl.doughnut3.data"
-                                    chart-labels="$ctrl.doughnut3.labels"                              
-                                    chart-options="$ctrl.doughnut3.options"
-                                    chart-click = "$ctrl.doughnutClick"
-                                    chart-colors = "$ctrl.doughnut3.colors"
-                                    >
-                               </canvas>
-                               <div style = "position: relative; top: -90px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\db26.png"
-                                       style = "margin-bottom: 5px; margin-left: 2px;"
-                                   />
-                                   <p style = "font-size: 18px; margin-left: -2px;">124</p>
-                               </div>                                 
-                          </div>
-                          <div flex = "25">
 
-                               <canvas id="doughnut"
-                                        style = "height: 130px;  width: 250px;"
-                                        class="chart chart-doughnut" 
-                                        chart-data="$ctrl.doughnut2.data"
-                                        chart-labels="$ctrl.doughnut2.labels"                              
-                                        chart-options="$ctrl.doughnut2.options"
-                                        chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut2.colors"
-                                        >
-                                </canvas>
-
-                               <div style = "position: relative; top: -90px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\device26.png"
-                                       style = "margin-bottom: 5px; margin-left: 0px;"
-                                   />
-                                   <p style = "font-size: 18px; margin-left: -5px;">1011</p>
-                               </div>                                 
-                          </div>
-                       </div>
--->
                         <div layout = "row">
                            <div flex = "25">
-    <!--                          Тепло (Х)-->
-    <!--
-                               <div style = "text-align: center;">
-                                  <img style = "height: 14px; width: 14px;" src = "components\object-tree-module\cont-object-monitor-component\heat.png"/> (123)
-                               </div>
-    -->
                                <canvas id="doughnut"
 style = "height: 130px;  width: 250px;"                                                                               
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
+                                        chart-data="$ctrl.doughnuts['heat'].data"
+                                        chart-labels="$ctrl.doughnuts['heat'].labels"                              
+                                        chart-options="$ctrl.doughnuts['heat'].options"
                                         chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
+                                        chart-colors = "$ctrl.doughnuts['heat'].colors"
                                         >
                                 </canvas>
-    <!--
-                                <div style = "position: relative; top: -80px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\heat.png"/>
-                                   <p>199</p>
-                               </div>
-    -->
                                <div class = "nmc-cont-object-monitor-doug-center">
                                    <img src = "components\object-tree-module\cont-object-monitor-component\heat.png"
                                        
                                    />
-                                   <p >199</p>
+                                   <p >{{$ctrl.doughnuts['heat'].allCount}}</p>
                                </div>
                            </div>
                            <div flex = "25">
-    <!--                          ГВС (У)-->
-    <!--
-                              <div style = "text-align: center;">
-                                  <img style = "height: 14px; width: 14px;" src = "components\object-tree-module\cont-object-monitor-component\hw.png"/> (231)
-                               </div>
-    -->
                                <canvas id="doughnut"
     style = "height: 130px;  width: 250px;"
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
+                                        chart-data="$ctrl.doughnuts['hw'].data"
+                                        chart-labels="$ctrl.doughnuts['hw'].labels"                              
+                                        chart-options="$ctrl.doughnuts['hw'].options"
                                         chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
+                                        chart-colors = "$ctrl.doughnuts['hw'].colors"
                                         >
                                 </canvas>
-    <!--
-                                <div style = "position: relative; top: -80px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\hw26.png"/>
-                                   <p>199</p>
-                               </div>
-    -->
                                <div  class = "nmc-cont-object-monitor-doug-center">
                                    <img src = "components\object-tree-module\cont-object-monitor-component\hw26.png"
                                        
                                    />
-                                   <p >199</p>
+                                   <p >{{$ctrl.doughnuts['hw'].allCount}}</p>
                                </div>
                            </div>
                        </div>
                    </div>
                     <div flex = "20">
-        <!-- style = "background-color: beige">-->
-        <!--               flex = 40 at column-->
                        <div layout = "row">
-<!--
                            <div flex = "25">
-
-                               <canvas id="doughnut"
-                                        style = "height: 130px;  width: 250px;"
-                                        class="chart chart-doughnut" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
-                                        chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
-                                        >
-                                </canvas>
-                               <div style = "position: relative; top: -90px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\heat.png"
-                                       style = "margin-bottom: 5px; margin-left: 2px;"
-                                   />
-                                   <p style = "font-size: 18px; margin-left: -2px;">199</p>
-                               </div>
-                           </div>
--->
-                           
-<!--
-                           <div flex = "25">
-                               <canvas id="doughnut"
-    style = "height: 130px;  width: 250px;"
-                                        class="chart chart-doughnut" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
-                                        chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
-                                        >
-                                </canvas>
-                               <div style = "position: relative; top: -90px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\hw26.png"
-                                       style = "margin-bottom: 5px; margin-left: 2px;"
-                                   />
-                                   <p style = "font-size: 18px; margin-left: -2px;">199</p>
-                               </div>
-                           </div>
--->
-                           <div flex = "25">
-        <!--                      Электроэнергия (Зед)-->
-    <!--                          Электроэнергия (Зед)-->
-    <!--
-                              <div style = "text-align: center;">
-                                  <img style = "height: 14px; width: 14px;" src = "components\object-tree-module\cont-object-monitor-component\el.png"/> (321)
-                               </div>
-    -->
                                <canvas id="doughnut"
     style = "height: 130px;  width: 250px;"                                   
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
+                                        chart-data="$ctrl.doughnuts['cw'].data"
+                                        chart-labels="$ctrl.doughnuts['cw'].labels"                              
+                                        chart-options="$ctrl.doughnuts['cw'].options"
                                         chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
+                                        chart-colors = "$ctrl.doughnuts['cw'].colors"
                                         >
                                 </canvas>
-    <!--
-                                <div style = "position: relative; top: -80px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\el.png"/>
-                                   <p>199</p>
-                               </div>
-    -->
-                               <div  class = "nmc-cont-object-monitor-doug-center">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\el.png"
-                                       
-                                   />
-                                   <p >199</p>
-                               </div>
-                           </div>
-                           <div flex = "25">
-    <!--                          ХВС (Эн)-->
-    <!--
-                              <div style = "text-align: center;">
-                                  <img style = "height: 14px; width: 14px;" src = "components\object-tree-module\cont-object-monitor-component\cw.png"/> (12)
-                               </div>
-    -->
-                               <canvas id="doughnut"
-     style = "height: 130px;  width: 250px;"                                      
-                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
-                                        chart-data="$ctrl.doughnut.data"
-                                        chart-labels="$ctrl.doughnut.labels"                              
-                                        chart-options="$ctrl.doughnut.options"
-                                        chart-click = "$ctrl.doughnutClick"
-                                        chart-colors = "$ctrl.doughnut.colors"
-                                        >
-                                </canvas>
-    <!--
-                                <div style = "position: relative; top: -80px; left: 70px;">
-                                   <img src = "components\object-tree-module\cont-object-monitor-component\cw26.png"/>
-                                   <p>199</p>
-                               </div>
-    -->
                                <div  class = "nmc-cont-object-monitor-doug-center">
                                    <img src = "components\object-tree-module\cont-object-monitor-component\cw26.png"
                                        
                                    />
-                                   <p >199</p>
+                                   <p >{{$ctrl.doughnuts['cw'].allCount}}</p>
+                               </div>
+                           </div>
+                           <div flex = "25">
+                               <canvas id="doughnut"
+     style = "height: 130px;  width: 250px;"                                      
+                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
+                                        chart-data="$ctrl.doughnuts['el'].data"
+                                        chart-labels="$ctrl.doughnuts['el'].labels"                              
+                                        chart-options="$ctrl.doughnuts['el'].options"
+                                        chart-click = "$ctrl.doughnutClick"
+                                        chart-colors = "$ctrl.doughnuts['el'].colors"
+                                        >
+                                </canvas>
+                               <div  class = "nmc-cont-object-monitor-doug-center">
+                                   <img src = "components\object-tree-module\cont-object-monitor-component\el.png"
+                                       
+                                   />
+                                   <p >{{$ctrl.doughnuts['el'].allCount}}</p>
                                </div>
                            </div>
                        </div>
