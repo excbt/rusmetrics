@@ -1,4 +1,4 @@
-<div>
+<jhi-form-template>
 
     <h1 jhiTranslate="organizations.title">
         Organization Title
@@ -203,4 +203,7 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
     </mat-table>
-</div>
+
+    <mat-paginator [length]="rowCount" [pageSize]="3"
+                   [pageSizeOptions]="[3, 5, 10]"></mat-paginator>    
+</jhi-form-template>

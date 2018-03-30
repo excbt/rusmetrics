@@ -5,14 +5,20 @@ import {OrganizationsService} from './organizations.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
+import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
 
 export class OrganizationsDataSource implements DataSource<Organization> {
 
-    private lessonsSubject = new BehaviorSubject<Organization[]>([]);
+    private organizationSubject = new BehaviorSubject<Organization[]>([]);
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
+    private totalElements = new BehaviorSubject<number>(0);
+    private totalPages = new BehaviorSubject<number>(0);
+
     public loading$ = this.loadingSubject.asObservable();
+    public totalElements$ = this.totalElements.asObservable();
+    public totalPages$ = this.totalPages.asObservable();
 
     constructor(private organizationsService: OrganizationsService) {
 
@@ -25,15 +31,40 @@ export class OrganizationsDataSource implements DataSource<Organization> {
                 catchError(() => of([])),
                 finalize(() => this.loadingSubject.next(false))
             )
-            .subscribe( (organizations) => this.lessonsSubject.next(organizations));
+            .subscribe( (organizations) => this.organizationSubject.next(organizations));
+    }
+
+    findAllPaged(pageSorting: ExcPageSorting, pageSize: ExcPageSize) {
+        this.loadingSubject.next(true);
+
+        this.organizationsService.findAllPaged(pageSorting, pageSize).pipe(
+                catchError(() => of([])),
+                finalize(() => this.loadingSubject.next(false))
+            )
+            .subscribe( (organizations) => this.organizationSubject.next(organizations));
+    }
+
+    findAllPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize) {
+        this.loadingSubject.next(true);
+
+        this.organizationsService.findAllPage(pageSorting, pageSize).pipe(
+                catchError(() => of([])),
+                finalize(() => this.loadingSubject.next(false))
+            )
+            .subscribe( (page: ExcPage<Organization>) => {
+                this.organizationSubject.next(page.content);
+                console.log('Get Total Elements' + page.totalElements);
+                this.totalElements.next(page.totalElements);
+                this.totalPages.next(page.totalPages);
+            });
     }
 
     connect(collectionViewer: CollectionViewer): Observable<Organization[]> {
-        return this.lessonsSubject.asObservable();
+        return this.organizationSubject.asObservable();
     }
 
     disconnect(collectionViewer: CollectionViewer): void {
-        this.lessonsSubject.complete();
+        this.organizationSubject.complete();
         this.loadingSubject.complete();
     }
 

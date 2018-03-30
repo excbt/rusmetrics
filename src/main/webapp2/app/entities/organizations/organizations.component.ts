@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization } from './organization.model';
 import { merge } from 'rxjs/observable/merge';
+import { ExcPageSize, ExcPageSorting } from '../shared/';
 import {
     // debounceTime,
     // distinctUntilChanged,
@@ -26,10 +28,13 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   displayedColumns = ['id', 'inn', 'organizationName', 'ogrn', 'edit'];
   // dataSource = new MatTableDataSource(ELEMENT_DATA);
 
+  rowCount = 10;
+
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(
-      private organizationService: OrganizationsService
+      private organizationService: OrganizationsService,
   ) {
         const initialSelection = [];
         const allowMultiSelect = false;
@@ -39,19 +44,28 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // this.organizationService.findAll().subscribe((organizations) => this.organizations = organizations);
     this.dataSource = new OrganizationsDataSource(this.organizationService);
-    this.dataSource.findAll();
+    this.dataSource.findAllPage();
+    this.dataSource.totalElements$.subscribe( (d) => {
+        console.log('totalElements: ' + d);
+    });
   }
 
   ngAfterViewInit() {
-    merge(this.sort.sortChange)
-            .pipe(
-                tap(() => this.loadOrganization())
-            )
-            .subscribe();
+
+    this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+    merge(this.sort.sortChange, this.paginator.page)
+    .pipe(
+        tap(() => this.loadOrganization())
+    )
+    .subscribe();
   }
 
   loadOrganization() {
-    this.dataSource.findAll(this.sort.active, this.sort.direction);
+    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
+    const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
+    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+    //  this.dataSource.findAllPaged (sorting, pageSize);
+    this.dataSource.findAllPage (sorting, pageSize);
   }
 
 }
