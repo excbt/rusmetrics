@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
@@ -132,6 +134,14 @@ public class OrganizationService implements SecuredRoles {
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
                 .map(organizationMapper::toDTO).collect(Collectors.toList());
 		return organizations;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(PortalUserIds userids, Pageable pageable) {
+	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
+		Page<OrganizationDTO> page = organizationRepository.findOrganizationsOfRma(searchSubscriberId, pageable)
+            .map(organizationMapper::toDTO);
+		return page;
 	}
 
 	/**

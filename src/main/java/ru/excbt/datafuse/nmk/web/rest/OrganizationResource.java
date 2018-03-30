@@ -4,7 +4,10 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+import ru.excbt.datafuse.nmk.web.util.PaginationUtil;
 
 import java.util.List;
 
@@ -41,9 +45,17 @@ public class OrganizationResource {
      */
     @RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<OrganizationDTO> organizationsGet(Sort sort) {
-        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(portalUserIdsService.getCurrentIds(), sort);
-        return new ResponseEntity(organizations, HttpStatus.OK);
+    public ResponseEntity<OrganizationDTO> organizationsGet(Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organizations");
+        return new ResponseEntity(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/page", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), pageable);
+        return new ResponseEntity(page, HttpStatus.OK);
     }
 
     /**

@@ -36,7 +36,7 @@ public class OrganizationDTO {
 
     private int version;
 
-    private int deleted;
+//    private int deleted;
 
     private String exSystem;
 

@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -90,7 +91,8 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	private String keyname;
 
 	@Column(name = "is_dev_mode", insertable = false, updatable = false)
-	private Boolean isDevMode;
+    @NotNull
+	private Boolean isDevMode = false;
 
 	@Column(name = "deleted")
 	private int deleted;
