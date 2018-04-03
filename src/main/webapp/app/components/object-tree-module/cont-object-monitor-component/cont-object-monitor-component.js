@@ -29,6 +29,7 @@
     function contObjectMonitorComponentController($scope, $element, $attrs, contObjectMonitorComponentService, $stateParams, contObjectService, $filter, $timeout) {
         /*jshint validthis: true*/
         var ctrl = this;
+        ctrl.nodeId = null;
         ctrl.contObjectStateShowFlag = false;
         ctrl.svc = contObjectMonitorComponentService;
         ctrl.$onInit = initCmpnt;
@@ -176,15 +177,30 @@ console.log(labels[points[0]._index]);
         ctrl.doughnutTemplate.colors = doughuntColors;
         ctrl.doughnutTemplate.options = doughuntOpts;
         
-        function initCommonChart() {
-            ctrl.svc.loadCommonData()
+        function initCommonChart(nodeId) {
+            ctrl.svc.loadCommonData(nodeId)
                 .then(function (resp) {
 //console.log(resp);
                 if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
                     console.warn("Common data is empty", resp);
                     return false;
                 }
-                ctrl.data = [resp.data.red, resp.data.yellow, resp.data.green];
+                ctrl.data = [0, 0, 0];
+                resp.data.forEach(function (colorObj) {
+                    switch (colorObj.levelColor) {
+                        case "RED": case "red":
+                            ctrl.data[0] = colorObj.contObjectCount;
+                            break;
+                        case "YELLOW": case "yellow":
+                            ctrl.data[1] = colorObj.contObjectCount;
+                            break;
+                        case "GREEN": case "green":
+                            ctrl.data[2] = colorObj.contObjectCount;
+                            break;
+                    }
+                });
+//                ctrl.data = [resp.data.red, resp.data.yellow, resp.data.green];
+//                console.log(ctrl.data);
             }, 
                       function (err) {
                 console.log(err);
@@ -192,17 +208,31 @@ console.log(labels[points[0]._index]);
             });
         }
         
-        function initResourceChart(resource) {
-            ctrl.svc.loadResourceData(resource)
+        function initResourceChart(nodeId, resource) {
+            ctrl.svc.loadResourceData(nodeId, resource)
                 .then(function (resp) {
-//console.log(resp);
+console.log(resp);
                 if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
                     console.warn("Resource data: " + resource + " is empty", resp);
                     return false;
                 }
                 ctrl.doughnuts[resource] = Object.assign({}, ctrl.doughnutTemplate); // angular.copy(ctrl.doughnutTemplate);
-                ctrl.doughnuts[resource].data = [resp.data.red, resp.data.yellow, resp.data.green];
-                ctrl.doughnuts[resource].allCount = resp.data.red + resp.data.yellow + resp.data.green;
+                ctrl.doughnuts[resource].data = [0, 0, 0];
+                ctrl.doughnuts[resource].allCount = 0;
+                resp.data.forEach(function (colorObj) {
+                    ctrl.doughnuts[resource].allCount += colorObj.contObjectCount;
+                    switch (colorObj.levelColor) {
+                        case "RED": case "red":
+                            ctrl.doughnuts[resource].data[0] = colorObj.contObjectCount;
+                            break;
+                        case "YELLOW": case "yellow":
+                            ctrl.doughnuts[resource].data[1] = colorObj.contObjectCount;
+                            break;
+                        case "GREEN": case "green":
+                            ctrl.doughnuts[resource].data[2] = colorObj.contObjectCount;
+                            break;
+                    }
+                });                 
             }, 
                       function (err) {
                 console.log(err);
@@ -212,6 +242,23 @@ console.log(labels[points[0]._index]);
         
         function initCmpnt() {
             console.log("contObjectMonitorComponentController Init!");
+            console.log("$stateParams", $stateParams);
+            console.log("node", ctrl.node);
+            if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
+                if (angular.isDefined($stateParams.node) && $stateParams.node !== null) {
+                    ctrl.node = $stateParams.node;
+                }
+            }
+            if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
+                console.warn("Node is empty.", ctrl.node);
+                return false;
+            }
+            if (ctrl.node.hasOwnProperty("_id") && ctrl.node._id !== null) {
+                ctrl.nodeId = ctrl.node._id;
+            } else if (ctrl.node.hasOwnProperty("nodeObject") && ctrl.node.nodeObject !== null) {
+                ctrl.nodeId = ctrl.node.nodeObject.id;
+            }
+console.log(ctrl.nodeId);
             //polar graph
             ctrl.labels = labels;
             ctrl.data = [111, 178, 1024];
@@ -249,10 +296,10 @@ console.log(labels[points[0]._index]);
             
             ctrl.doughnutClick = segmentClick;
             
-            initCommonChart();
+            initCommonChart(ctrl.nodeId);
             var resources = ['heat', 'hw', 'cw', 'el'];
             for (var res in resources) {
-                initResourceChart(resources[res]);
+                initResourceChart(ctrl.nodeId, resources[res]);
             }
         }
         
