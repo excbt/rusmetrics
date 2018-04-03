@@ -24,8 +24,11 @@
 .nmc-cont-object-monitor-doug-center {
     position: relative; 
     top: -90px; 
-    left: 72px;
+/*    left: 72px;*/
     width: 70px;
+    
+    left: 55px;
+    text-align: center;
 }
 .nmc-cont-object-monitor-doug-center img {
     margin-bottom: 5px; 
