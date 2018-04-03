@@ -44,7 +44,7 @@
                     vm.loadObjects(nodeId);
                 } else {
                     var filteredArray = [];
-console.log(vm.filterArray);                          
+//console.log(vm.filterArray);                          
                     if (angular.isArray(vm.filterArray)) {                  
                         nodeObjects.forEach(function (elm) {
                             vm.filterArray.some(function (filter) {

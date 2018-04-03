@@ -144,17 +144,18 @@
                 .then(function (resp) {
                     console.log(resp);
                     ctrl.contObjectFilterArray = resp.data.contObjectIds;
-console.log(ctrl.contObjectFilterArray);
+//console.log(ctrl.contObjectFilterArray);
                     ctrl.contObjectStateShowFlag = false;
                     $timeout(function () {
                         ctrl.contObjectStateShowFlag = true;
+                    
+    //                    console.log($('.nmc-cont-object-control-main-div'));
+                        var elm = $('.nmc-cont-object-control-main-div').get(0);
+    //                    console.log(elm);
+                        if (angular.isDefined(elm) && elm !== null) {
+                            elm.style.height = "43vh";//css("height", "45vh");
+                        }
                     }, 1000);
-        //            console.log($('.nmc-cont-object-control-main-div'));
-                    var elm = $('.nmc-cont-object-control-main-div').get(0);
-        //            console.log(elm);
-                    if (elm !== null) {
-                        elm.style.height = "43vh";//css("height", "45vh");
-                    }
             }, function (err) {
                 console.error(err);
             });
