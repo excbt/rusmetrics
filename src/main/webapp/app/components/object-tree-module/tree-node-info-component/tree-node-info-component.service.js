@@ -55,12 +55,12 @@
                 keyname: "CONTOBJECT_CONTROL",
                 caption: "Контроль",
                 stateName: "objectsPTree.treeNodeInfo.contObjectControl"
-            },
+            }/*,
             {
                 keyname: "MONITORING",
                 caption: "Мониторинг",
                 stateName: "objectsPTree.treeNodeInfo.contObjectMonitor"
-            }
+            }*/
         ]; 
         
         var zpointNodeWidgets = [
