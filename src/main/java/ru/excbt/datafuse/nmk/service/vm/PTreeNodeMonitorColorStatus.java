@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PTreeNodeMonitorColorStats {
+public class PTreeNodeMonitorColorStatus {
 
     private String levelColor;
     private Integer contObjectCount;
@@ -14,12 +14,12 @@ public class PTreeNodeMonitorColorStats {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String contServiceTypeKeyname;
 
-    public PTreeNodeMonitorColorStats(String levelColor, Integer contObjectCount) {
+    public PTreeNodeMonitorColorStatus(String levelColor, Integer contObjectCount) {
         this.levelColor = levelColor;
         this.contObjectCount = contObjectCount;
     }
 
-    public PTreeNodeMonitorColorStats(String levelColor) {
+    public PTreeNodeMonitorColorStatus(String levelColor) {
         this.levelColor = levelColor;
         this.contObjectCount = 0;
     }
