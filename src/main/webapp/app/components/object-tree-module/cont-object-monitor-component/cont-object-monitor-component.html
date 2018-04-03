@@ -5,9 +5,9 @@
        <div layout = "row">
            <h3 class = "nmc-cont-object-monitor-h3">Общая диаграмма монитора объектов и точек учета</h3>
        </div>
-        <div layout = "row" class = "nmc-cont-object-monitor-data-row">
+        <div layout = "row" class = "nmc-cont-object-monitor-data-row" layout-align = "center center">
         <!--    style = "background-color: aqua">-->
-            <div flex = "25">
+            <div flex = "40" style = "text-align: -webkit-right;">
         <!--        style = "background-color: blueviolet">-->
                <div class = "nmc-cont-object-monitor-polar-div">
                 <canvas id = "polar-area" 
@@ -22,12 +22,12 @@
                 </div>
             </div>
             
-            <div flex = "75">        
+            <div flex = "60">        
                 <div layout = "column">
-                   <div flex = "20">
+                   <div flex = "50">
 
                         <div layout = "row">
-                           <div flex = "25">
+                           <div flex = "30">
                                <canvas id="doughnut"
 style = "height: 130px;  width: 250px;"                                                                               
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
@@ -46,7 +46,7 @@ style = "height: 130px;  width: 250px;"
                                    <p >{{$ctrl.doughnuts['heat'].allCount}}</p>
                                </div>
                            </div>
-                           <div flex = "25">
+                           <div flex = "30">
                                <canvas id="doughnut"
     style = "height: 130px;  width: 250px;"
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
@@ -66,9 +66,9 @@ style = "height: 130px;  width: 250px;"
                            </div>
                        </div>
                    </div>
-                    <div flex = "20">
+                    <div flex = "50">
                        <div layout = "row">
-                           <div flex = "25">
+                           <div flex = "30">
                                <canvas id="doughnut"
     style = "height: 130px;  width: 250px;"                                   
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
@@ -86,7 +86,7 @@ style = "height: 130px;  width: 250px;"
                                    <p >{{$ctrl.doughnuts['cw'].allCount}}</p>
                                </div>
                            </div>
-                           <div flex = "25">
+                           <div flex = "30">
                                <canvas id="doughnut"
      style = "height: 130px;  width: 250px;"                                      
                                         class="chart chart-doughnut nmc-cont-object-monitor-doug" 
@@ -123,7 +123,7 @@ style = "height: 130px;  width: 250px;"
     <!--        style = "height: 400px; max-height: 400px;">-->
             <div flex>
     <!--            Cont object and zpoint montitor state.-->
-                <node-control-component node = "{id: 1}"></node-control-component>
+                <node-control-component node = "{id: $ctrl.nodeId}"></node-control-component>
 
             </div>
         </div>

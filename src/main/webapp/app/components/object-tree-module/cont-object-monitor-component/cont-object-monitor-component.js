@@ -211,7 +211,7 @@ console.log(labels[points[0]._index]);
         function initResourceChart(nodeId, resource) {
             ctrl.svc.loadResourceData(nodeId, resource)
                 .then(function (resp) {
-console.log(resp);
+//console.log(resp);
                 if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
                     console.warn("Resource data: " + resource + " is empty", resp);
                     return false;
@@ -241,9 +241,9 @@ console.log(resp);
         }
         
         function initCmpnt() {
-            console.log("contObjectMonitorComponentController Init!");
-            console.log("$stateParams", $stateParams);
-            console.log("node", ctrl.node);
+//            console.log("contObjectMonitorComponentController Init!");
+//            console.log("$stateParams", $stateParams);
+//            console.log("node", ctrl.node);
             if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
                 if (angular.isDefined($stateParams.node) && $stateParams.node !== null) {
                     ctrl.node = $stateParams.node;
@@ -258,10 +258,10 @@ console.log(resp);
             } else if (ctrl.node.hasOwnProperty("nodeObject") && ctrl.node.nodeObject !== null) {
                 ctrl.nodeId = ctrl.node.nodeObject.id;
             }
-console.log(ctrl.nodeId);
+//console.log(ctrl.nodeId);
             //polar graph
             ctrl.labels = labels;
-            ctrl.data = [111, 178, 1024];
+            ctrl.data = [0, 0, 0]; //init polar chart data
             ctrl.options = {
                 responsive: true
             };
