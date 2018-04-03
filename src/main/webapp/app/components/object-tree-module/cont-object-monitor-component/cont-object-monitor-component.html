@@ -119,11 +119,11 @@ style = "height: 130px;  width: 250px;"
 <!--                <p style = "height: 16px; width: 32px; background-color: #803690; display: inline-block; margin: 5px 10px 0 5px;"></p>Фиолетовый-->
             </div>
         </div>
-        <div layout = "row" ng-show = "$ctrl.contObjectStateShowFlag">
+        <div layout = "row" ng-if = "$ctrl.contObjectStateShowFlag">
     <!--        style = "height: 400px; max-height: 400px;">-->
             <div flex>
     <!--            Cont object and zpoint montitor state.-->
-                <node-control-component node = "{id: $ctrl.nodeId}"></node-control-component>
+                <node-control-component node = "{id: $ctrl.nodeId}" filter-array = "$ctrl.contObjectFilterArray"></node-control-component>
 
             </div>
         </div>

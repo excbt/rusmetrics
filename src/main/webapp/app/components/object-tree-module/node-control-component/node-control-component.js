@@ -6,7 +6,8 @@
         .module('objectTreeModule')
         .component('nodeControlComponent', {
             bindings: {
-                node: '<'
+                node: '<',
+                filterArray: '<'
             },
             templateUrl: "components/object-tree-module/node-control-component/node-control-component.html",
             controller: nodeControlComponentController
@@ -42,10 +43,25 @@
                     vm.objectsLoading = true;
                     vm.loadObjects(nodeId);
                 } else {
-                    nodeObjects.forEach(function (elm) {
+                    var filteredArray = [];
+console.log(vm.filterArray);                          
+                    if (angular.isArray(vm.filterArray)) {                  
+                        nodeObjects.forEach(function (elm) {
+                            vm.filterArray.some(function (filter) {
+                                if (filter === elm.id) {
+                                    filteredArray.push(elm);
+                                    return true;
+                                }
+                            });
+                        });
+                    } else {
+                        filteredArray = nodeObjects;
+                    }
+                    filteredArray.forEach(function (elm) {
                         elm.loading = true;
                     });
-                    vm.nodeObjects = nodeObjects;
+                    vm.nodeObjects = filteredArray;
+                    
                     vm.objectsLoading = false;
                 }
             }

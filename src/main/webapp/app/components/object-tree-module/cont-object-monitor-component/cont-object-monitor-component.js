@@ -27,15 +27,20 @@
     contObjectMonitorComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectMonitorComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
     
     function contObjectMonitorComponentController($scope, $element, $attrs, contObjectMonitorComponentService, $stateParams, contObjectService, $filter, $timeout) {
+        
+        var resources = ['heat', 'hw', 'cw', 'el'];
+        var labels = ["Критические", "Некритические", "Остальные"];
+        var labelsKeyname = ["RED", "YELLOW", "GREEN"];
+        
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.nodeId = null;
+        ctrl.contObjectFilterArray = null;
         ctrl.contObjectStateShowFlag = false;
         ctrl.svc = contObjectMonitorComponentService;
         ctrl.$onInit = initCmpnt;
-        ctrl.doughnuts = {};
+        ctrl.doughnuts = {};        
         
-        var labels = ["Критические", "Некритические", "Остальные"];
                 
         
 //        function getRandomColor () {
@@ -117,28 +122,42 @@
 //        }
         
         function segmentClick(points, arg2, arg3, arg4) {
-console.log(points);
+//console.log(points);
             if (!angular.isArray(points) || points.length === 0) {
                 return false;
             }
-        if (angular.isArray(points) && points.length > 0) {            
-console.log(points[0]._index);
-console.log(labels[points[0]._index]);
-        }
+//        if (angular.isArray(points) && points.length > 0) {            
+//console.log(points[0]._index);
+//console.log(labelsKeyname[points[0]._index]);
+//        }
 //console.log(arg2);
 //console.log(arg3);
 //console.log(arg3._index);
 //console.log(arg4);
-            ctrl.contObjectStateShowFlag = false;
-            $timeout(function () {
-                ctrl.contObjectStateShowFlag = true;
-            }, 1000);
-            console.log($('.nmc-cont-object-control-main-div'));
-            var elm = $('.nmc-cont-object-control-main-div').get(0);
-            console.log(elm);
-            if (elm !== null) {
-                elm.style.height = "43vh";//css("height", "45vh");
+            
+            //filtered objects by request
+            var resourceName = null;
+            if (angular.isDefined(points[0]._chart.config.options.name)) {
+                resourceName = points[0]._chart.config.options.name;
             }
+            ctrl.svc.loadNodeColorStatusDetails(ctrl.nodeId, labelsKeyname[points[0]._index], resourceName)
+                .then(function (resp) {
+                    console.log(resp);
+                    ctrl.contObjectFilterArray = resp.data.contObjectIds;
+console.log(ctrl.contObjectFilterArray);
+                    ctrl.contObjectStateShowFlag = false;
+                    $timeout(function () {
+                        ctrl.contObjectStateShowFlag = true;
+                    }, 1000);
+        //            console.log($('.nmc-cont-object-control-main-div'));
+                    var elm = $('.nmc-cont-object-control-main-div').get(0);
+        //            console.log(elm);
+                    if (elm !== null) {
+                        elm.style.height = "43vh";//css("height", "45vh");
+                    }
+            }, function (err) {
+                console.error(err);
+            });
         }
         
         var doughuntOpts = {
@@ -217,6 +236,8 @@ console.log(labels[points[0]._index]);
                     return false;
                 }
                 ctrl.doughnuts[resource] = Object.assign({}, ctrl.doughnutTemplate); // angular.copy(ctrl.doughnutTemplate);
+                ctrl.doughnuts[resource].options = Object.assign({}, ctrl.doughnutTemplate.options);
+                ctrl.doughnuts[resource].options.name = resource;
                 ctrl.doughnuts[resource].data = [0, 0, 0];
                 ctrl.doughnuts[resource].allCount = 0;
                 resp.data.forEach(function (colorObj) {
@@ -296,8 +317,7 @@ console.log(labels[points[0]._index]);
             
             ctrl.doughnutClick = segmentClick;
             
-            initCommonChart(ctrl.nodeId);
-            var resources = ['heat', 'hw', 'cw', 'el'];
+            initCommonChart(ctrl.nodeId);            
             for (var res in resources) {
                 initResourceChart(ctrl.nodeId, resources[res]);
             }

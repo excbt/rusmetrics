@@ -450,7 +450,7 @@ return;
         }
         
         ctrl.$onInit = function () {
-//console.log(ctrl);
+console.log(ctrl);
             getContObjects();
             ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {

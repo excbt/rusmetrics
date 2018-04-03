@@ -18,11 +18,12 @@
 //            RESOURCE_DATA_URL = "components/object-tree-module/cont-object-monitor-component/testdata/{resource}data.json";
         
         var COMMON_DATA_URL = "../api/p-tree-node-monitor/node-color-status/{nodeId}",
-            RESOURCE_DATA_URL = "components/object-tree-module/cont-object-monitor-component/testdata/{resource}data.json";
+            NODE_STATUS_DETAILS_URL = "../api/p-tree-node-monitor/node-color-status/{nodeId}/status-details/{levelColorKeyname}";
         
         var svc = this;
         svc.loadCommonData = loadCommonData;
         svc.loadResourceData = loadResourceData;
+        svc.loadNodeColorStatusDetails = loadNodeColorStatusDetails;
         
         ////////////////////////////////////////////////////////////////
         
@@ -31,10 +32,18 @@
             return $http.get(url);
         }
         
-        function loadResourceData(nodeId, resource) {
+        function loadResourceData(nodeId, resourceName) {
 //            var url = RESOURCE_DATA_URL.replace("{resource}", resource);
             var url = COMMON_DATA_URL.replace("{nodeId}", nodeId);
-            url += "?contServiceType=" + resource;
+            url += "?contServiceType=" + resourceName;
+            return $http.get(url);
+        }
+        
+        function loadNodeColorStatusDetails(nodeId, levelColor, resourceName) {
+            var url = NODE_STATUS_DETAILS_URL.replace("{nodeId}", nodeId).replace("{levelColorKeyname}", levelColor);
+            if (angular.isDefined(resourceName) && resourceName !== null) {
+                url += "?contServiceType=" + resourceName;
+            }
             return $http.get(url);
         }
 
