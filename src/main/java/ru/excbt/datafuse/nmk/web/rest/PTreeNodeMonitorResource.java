@@ -9,10 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
-import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStats;
+import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatus;
+import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatusDetails;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
@@ -100,9 +102,37 @@ public class PTreeNodeMonitorResource {
             }
         }
 
-        List<PTreeNodeMonitorColorStats> resultColorStatusList = pTreeNodeMonitorService.findNodeColorStatus(portalUserIdsService.getCurrentIds(), nodeId, contServiceTypeKey);
+        List<PTreeNodeMonitorColorStatus> resultColorStatusList = pTreeNodeMonitorService.findNodeColorStatus(portalUserIdsService.getCurrentIds(), nodeId, contServiceTypeKey);
 
         return ResponseEntity.ok(resultColorStatusList);
+    }
+
+    @GetMapping("/node-color-status/{nodeId}/status-details/{levelColorKeyname}")
+    @ApiOperation("Get all monitor status of cont objects")
+    @Timed
+    public ResponseEntity getNodeColorStatusDetails(
+        @ApiParam("nodeId") @PathVariable("nodeId") Long nodeId,
+        @ApiParam("levelColorKeyname") @PathVariable("levelColorKeyname") String levelColorKeyname,
+        @ApiParam("ContServiceType: CW, HW, HEAT ...") @RequestParam(name = "contServiceType", required = false) String contServiceTypeKeyname) {
+
+
+        Optional<ContEventLevelColorKeyV2> contEventLevelColorKey = KeyEnumTool.searchKey(ContEventLevelColorKeyV2.class, levelColorKeyname.toUpperCase());
+
+        if (!contEventLevelColorKey.isPresent()) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        Optional<ContServiceTypeKey> contServiceTypeKey = Optional.empty();
+        if (contServiceTypeKeyname != null) {
+            contServiceTypeKey = KeyEnumTool.searchName(ContServiceTypeKey.class, contServiceTypeKeyname.toUpperCase());
+            if (!contServiceTypeKey.isPresent()) {
+                return ApiResponse.responseBadRequest();
+            }
+        }
+
+        PTreeNodeMonitorColorStatusDetails resultColorStatsDetails = pTreeNodeMonitorService.findNodeStatusDetails(portalUserIdsService.getCurrentIds(), nodeId, contEventLevelColorKey.get(), contServiceTypeKey);
+
+        return ResponseEntity.ok(resultColorStatsDetails);
     }
 
 }

@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.PTreeNodeMonitorService;
@@ -90,7 +91,7 @@ public class PTreeNodeMonitorResourceTest {
     }
 
     @Test
-    public void getNodeCompleteColorStatus() throws Exception {
+    public void getNodeNodeColorStatus() throws Exception {
 
         restPortalContObjectMockMvc.perform(
             get("/api/p-tree-node-monitor/node-color-status/{nodeId}", NODE_ID))
@@ -101,7 +102,7 @@ public class PTreeNodeMonitorResourceTest {
     }
 
     @Test
-    public void getNodeCompleteColorStatusInvalidContServiceType() throws Exception {
+    public void getNodeNodeColorStatus_InvalidContServiceType() throws Exception {
 
         restPortalContObjectMockMvc.perform(
             get("/api/p-tree-node-monitor/node-color-status/{nodeId}", NODE_ID)
@@ -112,7 +113,7 @@ public class PTreeNodeMonitorResourceTest {
     }
 
     @Test
-    public void getNodeCompleteColorStatusContServiceType() throws Exception {
+    public void getNodeNodeColorStatus_ContServiceType() throws Exception {
 
         restPortalContObjectMockMvc.perform(
             get("/api/p-tree-node-monitor/node-color-status/{nodeId}", NODE_ID)
@@ -122,5 +123,30 @@ public class PTreeNodeMonitorResourceTest {
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
 
     }
+
+    @Test
+    public void getNodeNodeColorStatusDetails_Red() throws Exception {
+
+        restPortalContObjectMockMvc.perform(
+            get("/api/p-tree-node-monitor/node-color-status/{nodeId}/status-details/{levelColorKey}", NODE_ID,
+                ContEventLevelColorKeyV2.RED.getKeyname()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
+
+    }
+
+    @Test
+    public void getNodeNodeColorStatusDetails_Green() throws Exception {
+
+        restPortalContObjectMockMvc.perform(
+            get("/api/p-tree-node-monitor/node-color-status/{nodeId}/status-details/{levelColorKey}", NODE_ID,
+                ContEventLevelColorKeyV2.GREEN.getKeyname()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
+
+    }
+
 
 }
