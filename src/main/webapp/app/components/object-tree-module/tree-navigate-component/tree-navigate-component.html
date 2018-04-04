@@ -164,9 +164,10 @@
 -->
                 <img class=""
                   ng-click = "$ctrl.showObjectWidget(object, $index)"
-                   ng-src = "components/object-tree-module/tree-navigate-component/images/buildings/{{$ctrl.getBuildingIcon($index)}}"
+                   ng-src = "{{$ctrl.getBuildingIcon(item.nodeObject.buildingTypeCategory)}}"
                    style = "margin-right: 5px; height: 16px; width: 16px;"
                    />
+<!--                   ng-src = "components/object-tree-module/tree-navigate-component/images/buildings/{{$ctrl.getBuildingIcon($index)}}"-->
                 {{item.nodeObject.fullName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
             <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">

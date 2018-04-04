@@ -8,9 +8,9 @@
             controller: treeNavigateComponentController
         });
     
-    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http', '$state', 'objectTreeService'];
+    treeNavigateComponentController.$inject = ['$scope', '$element', '$attrs', 'treeNavigateComponentService', '$cookies', '$timeout', '$rootScope', 'notificationFactory', '$http', '$state', 'objectTreeService', 'contObjectBuildingService'];
     
-    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http, $state, objectTreeService) {
+    function treeNavigateComponentController($scope, $element, $attrs, treeNavigateComponentService, $cookies, $timeout, $rootScope, notificationFactory, $http, $state, objectTreeService, contObjectBuildingService) {
         /*jshint validthis: true*/
         var ctrl = this;
         
@@ -669,7 +669,7 @@
             return result;
         };
         
-        ctrl.getBuildingIcon = function (ind) {
+        ctrl.getBuildingIconTest = function (ind) {
             var cls = "building24.png";
             var rn = ind % 12;
             switch (rn) {
@@ -711,6 +711,10 @@
                     break;
             }
             return cls;
+        };
+        
+        ctrl.getBuildingIcon = function (buildingType) {
+            return contObjectBuildingService.getBuildingTypeCategoryIcon16(buildingType);
         };
         
         ctrl.$onInit = function () {
