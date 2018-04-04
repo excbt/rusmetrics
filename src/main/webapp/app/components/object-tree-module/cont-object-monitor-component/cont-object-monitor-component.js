@@ -285,7 +285,12 @@
             ctrl.labels = labels;
             ctrl.data = [0, 0, 0]; //init polar chart data
             ctrl.options = {
-                responsive: true
+                responsive: true,
+                scale: {
+                    gridLines: {
+                        color: 'rgba(0, 255, 0, 1)'
+                    }
+                }
             };
 //            ctrl.colours = null;
 //            ctrl.colours = [getColor([239, 71, 58]), {
