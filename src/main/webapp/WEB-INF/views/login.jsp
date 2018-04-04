@@ -5,6 +5,7 @@
 <html id="ng-app" ng-app="nmk-p" ng-strict-di>
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 	href="bower_components/bootstrap/dist/css/bootstrap.css" />
@@ -131,7 +132,7 @@
 						delete body.rememberMe;
 						$http({
 								method: "POST",
-								url: url, 
+								url: url,
 								data: body,
 								headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 								transformRequest: function(obj) {
@@ -142,9 +143,9 @@
 							    }
 							})
 							.then(function () {
-								window.location.replace(window.location.pathname.replace("localLogin", "app"));
+								window.location.replace(window.location.pathname.replace("localLogin", ""));
 							}, function (error) {
-								window.location.replace(window.location.pathname);
+								window.location.replace(window.location.pathname.replace("localLogin", ""));
 							});
 					};
 
@@ -183,7 +184,7 @@
 // 				curSeason = "title_bg";
 // 			}
 
-			document.body.style = "background-image: url(../public/resources/images/" + curSeason + ".png)";
+			document.body.style = "background-image: url(/public/resources/images/" + curSeason + ".png)";
 		}
 
 //		setSeasonBackground();
