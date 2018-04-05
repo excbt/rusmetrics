@@ -114,7 +114,7 @@
                         ng-click = "$ctrl.setFilterBy(column.name)">
                     </i>
 -->
-                    <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
+                    <div  ng-if = "column.type === 'img'"
                        class="btn-group" style = "cursor: pointer;">
                         <i  ng-show = "!column.setFilterFlag"
                             title = "фильтр" 
@@ -264,9 +264,10 @@
                                    <div ng-switch-when = "contObjectType">
                                        <img class="pull-left"
                                           ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
-                                           ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
+                                          ng-src = "{{object.buildingTypeCategoryIconPath}}"                                           
                                            style = "height: 24px; width: 24px; cursor: pointer;"
                                        />
+<!--                                       ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"-->
                                    </div>
                                     <div ng-switch-when = "img" style = "padding-left: 10%;">
                                         <img ng-if = "object[column.name]"

@@ -529,7 +529,7 @@ console.log(ctrl);
             }
         };
         
-        ctrl.getIcon = function (ind) {
+        ctrl.getIconTest = function (ind) {
 //            if (ind % 2 == 0) {
 //                return "home-g.ico";
 //            } else if (ind % 3 == 0) {
@@ -578,7 +578,7 @@ console.log(ctrl);
         };
         //fill contObjectTypeFilterValues
         for (var i = 0; i < 11; i++) {
-            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIcon(i));
+            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIconTest(i));
         }
         
 //        ctrl.getTextShadow = function (ind) {
@@ -631,6 +631,10 @@ console.log(ctrl);
             obj.isSelected = !obj.isSelected;
             ctrl.selectedObject = obj;
         };
+        
+//        ctrl.getBuildingIcon = function (buildingType) {
+//            return contObjectBuildingService.getBuildingTypeCategoryIcon24(buildingType);
+//        };
     }
     
 }());

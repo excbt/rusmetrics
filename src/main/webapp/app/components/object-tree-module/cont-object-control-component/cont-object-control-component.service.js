@@ -9,10 +9,10 @@
         .module('objectTreeModule')
         .service('contObjectControlComponentService', Service);
 
-    Service.$inject = ['$http', 'objectTreeService', '$rootScope', 'contObjectService'];
+    Service.$inject = ['$http', 'objectTreeService', '$rootScope', 'contObjectService', 'contObjectBuildingService'];
 
     /* @ngInject */
-    function Service($http, objectTreeService, $rootScope, contObjectService) {
+    function Service($http, objectTreeService, $rootScope, contObjectService, contObjectBuildingService) {
         
         var P_TREE_NODE_URL = "../api/p-tree-node",
             P_TREE_NODE_MONITOR_URL = "../api/p-tree-node-monitor/all-linked-objects",            
@@ -141,6 +141,8 @@
                     }
                     contObject.caption = objShortInfo.contObjectName || objShortInfo.contObjectFullName || objShortInfo.id;
                     contObject.modeImgSrc = IMG_PATH_MODE_TEMPLATE + objShortInfo.currentSettingMode.toLowerCase() + IMG_EXT;
+                    contObject.buildingTypeCategory = objShortInfo.buildingTypeCategory;
+                    contObject.buildingTypeCategoryIconPath = contObjectBuildingService.getBuildingTypeCategoryIcon24(contObject.buildingTypeCategory);
                 });
             }
             nodes[nodeId] = resultContObjects;
