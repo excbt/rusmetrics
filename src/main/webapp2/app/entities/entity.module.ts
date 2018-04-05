@@ -31,6 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';
 import { ruPaginatorIntl } from './shared/ru-paginator-intl';
+import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
 import { CardModule } from 'primeng/card';
 import { entityState } from './';
@@ -73,7 +74,7 @@ import { entityState } from './';
         OrganizationsService,
         OrganizationTypeService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
-        { provide: MatPaginatorIntl, useValue: ruPaginatorIntl() }
+        { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
