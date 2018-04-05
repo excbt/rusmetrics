@@ -14,4 +14,9 @@ public class ContObjectShortInfoVM {
 
     private String currentSettingMode;
 
+    private String buildingType;
+
+    private String buildingTypeCategory;
+
+
 }
