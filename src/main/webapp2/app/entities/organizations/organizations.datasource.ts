@@ -34,15 +34,15 @@ export class OrganizationsDataSource implements DataSource<Organization> {
             .subscribe( (organizations) => this.organizationSubject.next(organizations));
     }
 
-    findAllPaged(pageSorting: ExcPageSorting, pageSize: ExcPageSize) {
-        this.loadingSubject.next(true);
+    // findAllPaged(pageSorting: ExcPageSorting, pageSize: ExcPageSize) {
+    //     this.loadingSubject.next(true);
 
-        this.organizationsService.findAllPaged(pageSorting, pageSize).pipe(
-                catchError(() => of([])),
-                finalize(() => this.loadingSubject.next(false))
-            )
-            .subscribe( (organizations) => this.organizationSubject.next(organizations));
-    }
+    //     this.organizationsService.findAllPaged(pageSorting, pageSize).pipe(
+    //             catchError(() => of([])),
+    //             finalize(() => this.loadingSubject.next(false))
+    //         )
+    //         .subscribe( (organizations) => this.organizationSubject.next(organizations));
+    // }
 
     findAllPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize) {
         this.loadingSubject.next(true);
@@ -53,7 +53,7 @@ export class OrganizationsDataSource implements DataSource<Organization> {
             )
             .subscribe( (page: ExcPage<Organization>) => {
                 this.organizationSubject.next(page.content);
-                console.log('Get Total Elements' + page.totalElements);
+                console.log('Get Total Elements: ' + page.totalElements);
                 this.totalElements.next(page.totalElements);
                 this.totalPages.next(page.totalPages);
             });

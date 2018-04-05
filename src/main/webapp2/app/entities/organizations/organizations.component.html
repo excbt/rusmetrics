@@ -204,6 +204,6 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
     </mat-table>
 
-    <mat-paginator [length]="rowCount" [pageSize]="3"
+    <mat-paginator [length]="rowCount" [pageSize]="defaultPageSize"
                    [pageSizeOptions]="[3, 5, 10]"></mat-paginator>    
 </jhi-form-template>

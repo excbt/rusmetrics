@@ -5,7 +5,8 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization } from './organization.model';
 import { merge } from 'rxjs/observable/merge';
-import { ExcPageSize, ExcPageSorting } from '../shared/';
+import { ExcPageSize, ExcPageSorting } from '../shared/pagination-tools';
+import { defaultPageSize, defaultPageOptions } from '../shared/pagination-tools';
 import {
     // debounceTime,
     // distinctUntilChanged,
@@ -42,12 +43,14 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
    }
 
   ngOnInit() {
-    // this.organizationService.findAll().subscribe((organizations) => this.organizations = organizations);
     this.dataSource = new OrganizationsDataSource(this.organizationService);
-    this.dataSource.findAllPage();
-    this.dataSource.totalElements$.subscribe( (d) => {
-        console.log('totalElements: ' + d);
-    });
+    this.dataSource.totalElements$.subscribe(
+      (count) => {
+        this.rowCount = count;
+      console.log('Next Count: ' + count);
+      }
+    );
+    this.loadOrganization();
   }
 
   ngAfterViewInit() {

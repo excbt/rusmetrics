@@ -29,6 +29,8 @@ import {
     ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorIntl } from '@angular/material';
+import { ruPaginatorIntl } from './shared/ru-paginator-intl';
 
 import { CardModule } from 'primeng/card';
 import { entityState } from './';
@@ -70,7 +72,8 @@ import { entityState } from './';
     providers: [
         OrganizationsService,
         OrganizationTypeService,
-        {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+        { provide: MatPaginatorIntl, useValue: ruPaginatorIntl() }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [

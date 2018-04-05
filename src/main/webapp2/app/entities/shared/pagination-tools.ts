@@ -1,14 +1,14 @@
 export class ExcPageSize {
     constructor(
-        public page: number,
-        public size: number
+        public page = 0,
+        public size = 20
     ) { }
 }
 
 export class ExcPageSorting {
     constructor(
-        public fieldName: string,
-        public fieldOrder: string
+        public fieldName = 'id',
+        public fieldOrder = 'asc'
     ) {}
 
     orderString(): string {
@@ -28,3 +28,6 @@ export class ExcPage<T> {
         public totalPages: number
     ) {}
 }
+
+export const defaultPageSize = 20;
+export const defaultPageOptions = [3, 5, 10];
