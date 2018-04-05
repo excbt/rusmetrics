@@ -71,4 +71,8 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
     this.dataSource.findAllPage (sorting, pageSize);
   }
 
+  showSearch(event) {
+    console.log('searchStr:' + event);
+  }
+
 }

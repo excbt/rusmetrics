@@ -1,12 +1,17 @@
 <jhi-form-template>
 
+    <jhi-form-search (searchAction)="showSearch($event)"></jhi-form-search>    
+
     <h1 jhiTranslate="organizations.title">
         Organization Title
     </h1>
 
+
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-        <mat-spinner></mat-spinner>
+        <mat-progress-bar  color="primary" mode="indeterminate">
+        </mat-progress-bar>
     </div>
+
 
     <mat-table class="organizations-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
         matSortDisableClear>
@@ -22,7 +27,6 @@
                 </button>
             </mat-cell>
         </ng-container>
-
 
 
         <ng-container matColumnDef="id">

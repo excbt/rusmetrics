@@ -13,13 +13,17 @@ import {
     TopHeaderComponent,
     FormEditButtonsComponent,
     FormDetailFieldComponent,
-    FormTemplateComponent } from './blocks/form-blocks';
+    FormTemplateComponent,
+    } from './blocks/form-blocks';
+
+import { FormSearchComponent } from './blocks/form-search.component';
 
 import {
     MatGridListModule,
     MatInputModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSortModule,
     MatTableModule,
     MatButtonModule,
@@ -34,6 +38,7 @@ import { ruPaginatorIntl } from './shared/ru-paginator-intl';
 import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
 import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -48,6 +53,7 @@ import { entityState } from './';
         MatInputModule,
         MatPaginatorModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule,
         MatSortModule,
         MatTableModule,
         MatButtonModule,
@@ -55,7 +61,8 @@ import { entityState } from './';
         CardModule,
         MatCheckboxModule,
         MatSelectModule,
-        MatTooltipModule
+        MatTooltipModule,
+        InputTextModule
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
@@ -66,7 +73,8 @@ import { entityState } from './';
         TopHeaderComponent,
         FormEditButtonsComponent,
         FormDetailFieldComponent,
-        FormTemplateComponent
+        FormTemplateComponent,
+        FormSearchComponent
     ],
     entryComponents: [
     ],
