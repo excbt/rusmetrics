@@ -13,7 +13,7 @@
     treeNodeInfoComponentController.$inject = ['$stateParams', 'treeNodeInfoComponentService', '$state'];
     
     function treeNodeInfoComponentController($stateParams, treeNodeInfoComponentService, $state) {
-        var DEFAULT_WIDGET = "MONITORING";
+        var DEFAULT_WIDGET = "CONTOBJECT_CONTROL";
         
         /*jshint validthis: true*/
         var ctrl = this;

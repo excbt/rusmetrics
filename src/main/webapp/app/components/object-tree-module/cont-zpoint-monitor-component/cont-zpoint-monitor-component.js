@@ -6,6 +6,7 @@
         .module('objectTreeModule')
         .component('contZpointMonitorComponent', {        
             bindings: {
+                contObjectId: '<',
                 contZpointId: '<',
                 contZpointName: '<',
                 contZpointType: '<'
@@ -14,10 +15,10 @@
             controller: contZpointMonitorComponentController
         });
 
-    contZpointMonitorComponentController.$inject = ['dateSvc'];
+    contZpointMonitorComponentController.$inject = ['dateSvc', 'contZpointMonitorComponentService'];
 
     /* @ngInject */
-    function contZpointMonitorComponentController(dateSvc) {
+    function contZpointMonitorComponentController(dateSvc, contZpointMonitorComponentService) {
         var MODES = {
             history: {
                 name: "history"
@@ -28,6 +29,7 @@
         };
         /*jshint validthis: true*/
         var vm = this;
+        vm.svc = contZpointMonitorComponentService;
         vm.MODES = MODES;
         vm.showSettingsFlag = false;
         vm.mode = vm.MODES.situations;
@@ -158,7 +160,7 @@
 //            vm.filterObjects();
         };
         
-        vm.events = events.concat(events).concat(events);        
+        vm.events = [];//events.concat(events).concat(events);        
         
         vm.toggleSettings = function () {
             vm.showSettingsFlag = !vm.showSettingsFlag;
@@ -173,6 +175,37 @@
         
         ////////////////////////////
         function initCmpnt() {
+            console.log(vm.contObjectId);
+            if (angular.isDefined(vm.contObjectId) && vm.contObjectId !== null) {
+                vm.svc.loadEvents(vm.contObjectId).then(function (resp) {
+                    console.log(resp);
+                    if (!angular.isArray(resp.data)) {
+                        console.warn("Event data is incorrect: ", resp);
+                        return false;
+                    }
+//                    status: "yellow",
+//                dateTimeString: "01.02.2018 23:59",
+//                dateTime: new Date("02.01.2018 23:59"),
+//                dateString: "01.02.2018",
+//                timeString: "23:59",
+//                event: "Наименование желтого события",
+//                rate: "Средняя"
+                    var events = [];
+                    resp.data.forEach(function (elm) {
+                        var event = {};
+                        event.status = elm.contEventLevelColorKeyname.toLowerCase();
+                        event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY HH:mm");
+                        event.dateString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
+                        event.timeString = dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                        event.event = elm.contEventType.name;
+                        events.push(event);
+                    });
+                    vm.events = events;
+console.log(vm.events);
+                }, function (err) {
+                    console.error(err);
+                });
+            }
 //            console.log("contZpointMonitorComponentController on Init.", vm);
 //            console.log("01.02.2018 23:59" > "01.02.2018 00:01");
 //            console.log(events);
@@ -218,6 +251,10 @@
         function setSituationsMode() {
             vm.mode = vm.MODES.situations;
         }
+        
+//        $scope.$watch('contObjectId', function (newVal) {
+//            console.log(newVal);
+//        });
         
     }
 })();

@@ -25,6 +25,7 @@
         ctrl.filter = '';
         ctrl.searchFlag = false;
         ctrl.contZpointFilterValue = null;
+        ctrl.viewEventWindowFlag = false;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-object-control-component/object-state-",
             IMG_PATH_BUILDING_TYPE = "components/object-tree-module/cont-object-control-component/buildings/",
@@ -60,8 +61,22 @@
             IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
         ];
         
-        var contObjectTypeFilterValues = [];        
+        var contObjectTypeFilterValues = [];
         
+        ctrl.resources = {
+            heat: {
+                caption: "Тепло"
+            },
+            hw: {
+                caption: "ГВС"
+            },
+            cw: {
+                caption: "ХВС"
+            },
+            el: {
+                caption: "Э/эн"
+            },
+        };
         ctrl.columns = [
             {
                 name: "contObjectType",
@@ -77,28 +92,28 @@
                 type: "text"
             }, {
                 name: "heat",
-                caption: "Тепло",
+                caption: ctrl.resources.heat.caption,
                 imgPath: IMG_PATH_WIDGETS + "heat22" + IMG_EXT,
                 headerClass: "col-xs-1",
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "hw",
-                caption: "ГВС",
+                caption: ctrl.resources.hw.caption,
                 headerClass: "col-xs-1",
                 imgPath: IMG_PATH_WIDGETS + "hw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "cw",
-                caption: "ХВС",
+                caption: ctrl.resources.cw.caption,
                 headerClass: "col-xs-1",
                 imgPath: IMG_PATH_WIDGETS + "cw22" + IMG_EXT,
                 type: "img",
                 filterValues: filterValues
             }, {
                 name: "el",
-                caption: "Э/эн",
+                caption: ctrl.resources.el.caption,
                 headerClass: "col-xs-1",
                 imgPath: IMG_PATH_WIDGETS + "el22" + IMG_EXT,
                 type: "img",
@@ -318,7 +333,8 @@
         ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
 //            console.log(obj);
 //            ctrl.selectedObject = obj;
-            $('#testWindowModal').modal();
+            ctrl.contZpointFilterValue = contZpointFilterVal;
+            $('#eventWindowModal').modal();
 //            ctrl.ngPopupConfig.title = "Информация по событиям на объекте " + obj.fullName;
 //            ctrl.ngPopupConfig.isShow = true;
             
@@ -624,6 +640,10 @@ console.log(ctrl);
 //        };
                 
         ctrl.selectObject = function (obj) {
+            ctrl.viewEventWindowFlag = false;
+            $timeout(function () {
+                ctrl.viewEventWindowFlag = true;
+            });
 //            console.log(obj);
             if (!ctrl.checkUndefinedNull(ctrl.selectedObject)) {
                 ctrl.selectedObject.isSelected = false;

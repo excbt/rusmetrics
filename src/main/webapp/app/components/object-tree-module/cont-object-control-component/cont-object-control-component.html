@@ -259,9 +259,14 @@
                             </td>
                             <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
                                style = "padding: 5px 0;">
-
+                              
                                <div ng-switch on = "column.type">
                                    <div ng-switch-when = "contObjectType">
+<!--
+<pre>
+    {{object | json}}
+</pre>
+-->
                                        <img class="pull-left"
                                           ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
                                           ng-src = "{{object.buildingTypeCategoryIconPath}}"                                           
@@ -274,8 +279,11 @@
                                         style = "cursor: pointer;"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"
-                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"                                        
+                                        ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, column.name, $event)"
+                                                                       
                                         />
+<!--                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"         -->
+<!--                                   {{column.name}}-->
                                     </div>
                                    <div ng-switch-default>
                                        <div ng-show = "object.loading" class="nmc-loading" style = "display: inline;">
@@ -286,10 +294,13 @@
                                 </div>
                             </td>
                        </tr>
+<!--
                        <tr ng-if = "object.showWidgetFlag"
                          style = "border-top: 1px solid rgb(95, 95, 95)"
                          >
-                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
+-->
+<!--                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">-->
+<!--
                               <div ng-if = "$ctrl.contZpointFilterValue === null">
                                   <cont-zpoint-monitor-component 
                                        cont-zpoint-id = "0"
@@ -298,10 +309,13 @@
                                    >                                                                          
                                    </cont-zpoint-monitor-component>
                               </div>
+-->
                              
+<!--
                               <div ng-if = "$ctrl.contZpointFilterValue !== null"
                                 ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">
+-->
 
 <!--
                                    <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
@@ -315,22 +329,24 @@
                                         </ng-widget>
                                    </div>
 -->
+<!--
                                    <cont-zpoint-monitor-component 
                                        cont-zpoint-id = "zpoint.id"
                                        cont-zpoint-name = "zpoint.customServiceName"
                                        cont-zpoint-type = "zpoint.contServiceTypeKeyname"
                                    >                                                                          
                                    </cont-zpoint-monitor-component>
+-->
 <!--
                                    <pre>
                                    {{zpoint | json}}
                                    </pre>
 -->
 
-                                 </div>
-                          </td>
+<!--                                 </div>-->
+<!--                          </td>-->
                            
-                       </tr>
+<!--                       </tr>-->
                    </table>
                 </td>
             </tr>
@@ -340,7 +356,7 @@
     </div>
     <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>
     
-    <div id="testWindowModal" 
+    <div id="eventWindowModal" 
          class="modal fade nmc-modal-window" 
          role="dialog"
          aria-labelledby="deleteLabel" 
@@ -352,12 +368,16 @@
             <div class="modal-header nmc-modal-header">
                 <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 id="deleteLabel" class="nmc-h3">
-                    {{$ctrl.selectedObject.caption}}
+                    {{$ctrl.selectedObject.caption}} <span ng-show = "$ctrl.contZpointFilterValue" class = "marginRight5">,</span>{{$ctrl.resources[$ctrl.contZpointFilterValue].caption}}
                 </h3>
             </div>
             <div class="modal-body nmc-modal-body"  style = "min-height: 250px; position: absolute; width: 100%; top: 19px;
                bottom: 15px;">
-                <cont-zpoint-monitor-component cont-zpoint-id = "0" cont-zpoint-name = "null" cont-zpoint-type = "null">
+                <cont-zpoint-monitor-component ng-if = "$ctrl.viewEventWindowFlag"
+                   cont-object-id = "$ctrl.selectedObject.id" 
+                   cont-zpoint-id = "0" 
+                   cont-zpoint-name = "null" 
+                   cont-zpoint-type = "null">
                     
                 </cont-zpoint-monitor-component>
             </div>

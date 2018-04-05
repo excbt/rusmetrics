@@ -153,11 +153,9 @@
 //                    }, 1);
                 
                     $timeout(function () {
-                        
-                    
-                        console.log($('.nmc-cont-object-control-main-div'));
+//                        console.log($('.nmc-cont-object-control-main-div'));
                         var elm = $('.nmc-cont-object-control-main-div').get(0);
-                        console.log(elm);
+//                        console.log(elm);
                         if (angular.isDefined(elm) && elm !== null) {
                             elm.style.height = "41vh";//css("height", "45vh");
                         }
