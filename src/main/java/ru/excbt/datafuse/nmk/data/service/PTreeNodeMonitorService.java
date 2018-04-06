@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepositor
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
-import ru.excbt.datafuse.nmk.service.ContObjectFilterUtil;
+import ru.excbt.datafuse.nmk.service.ContObjectQueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatus;
@@ -525,7 +525,7 @@ public class PTreeNodeMonitorService {
 
             // Get all ids for specified contServiceType
             List<Long> allNodeContObjectIdsFiltered = contServiceTypeKey
-                .map(k -> ContObjectFilterUtil.filterContObjectIdByContServiceType(queryDSLService.queryFactory(), nodeContObjectIds, k))
+                .map(k -> ContObjectQueryDSLUtil.filterContObjectIdByContServiceType(queryDSLService.queryFactory(), nodeContObjectIds, k))
                 .orElse(nodeContObjectIds);
 
             // Filter allNodeContObjectIdsFiltered by noGreenIds
