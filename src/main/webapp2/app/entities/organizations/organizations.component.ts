@@ -9,12 +9,13 @@ import { ExcPageSize, ExcPageSorting } from '../shared/pagination-tools';
 import { defaultPageSize, defaultPageOptions } from '../shared/pagination-tools';
 import {
     // debounceTime,
-    // distinctUntilChanged,
+    distinctUntilChanged,
     // startWith,
     tap
     // , delay
 } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
+import { FormSearchComponent } from '../blocks/form-search.component';
 
 @Component({
   selector: 'jhi-organizations',
@@ -31,8 +32,11 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   rowCount = 10;
 
+  private searchString: String;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(FormSearchComponent) formSearch: FormSearchComponent;
 
   constructor(
       private organizationService: OrganizationsService,
@@ -47,32 +51,43 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
     this.dataSource.totalElements$.subscribe(
       (count) => {
         this.rowCount = count;
-      console.log('Next Count: ' + count);
       }
     );
-    this.loadOrganization();
   }
 
   ngAfterViewInit() {
+    // server side search
+    this.formSearch.searchAction
+    .pipe(
+      distinctUntilChanged(),
+      tap((arg) => {
+        this.searchString = arg;
+        this.paginator.pageIndex = 0;
+        console.log('from search:', arg);
+      })
+    ).subscribe();
 
+    // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
+
+    // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page)
     .pipe(
-        tap(() => this.loadOrganization())
-    )
-    .subscribe();
+        tap(() => {
+          this.loadOrganization();
+          console.log('from change');
+        })
+    ).subscribe();
+
+    this.loadOrganization();
   }
 
-  loadOrganization() {
+  loadOrganization(searchString?: string) {
     console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
     const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     //  this.dataSource.findAllPaged (sorting, pageSize);
-    this.dataSource.findAllPage (sorting, pageSize);
-  }
-
-  showSearch(event) {
-    console.log('searchStr:' + event);
+    this.dataSource.findSearchPage (sorting, pageSize, searchString);
   }
 
 }

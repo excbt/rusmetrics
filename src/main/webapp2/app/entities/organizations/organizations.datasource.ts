@@ -53,10 +53,22 @@ export class OrganizationsDataSource implements DataSource<Organization> {
             )
             .subscribe( (page: ExcPage<Organization>) => {
                 this.organizationSubject.next(page.content);
-                console.log('Get Total Elements: ' + page.totalElements);
                 this.totalElements.next(page.totalElements);
                 this.totalPages.next(page.totalPages);
             });
+    }
+
+    findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
+        this.loadingSubject.next(true);
+        this.organizationsService.findSearchPage(pageSorting, pageSize, searchString).pipe(
+            catchError(() => of([])),
+            finalize(() => this.loadingSubject.next(false))
+        )
+        .subscribe( (page: ExcPage<Organization>) => {
+            this.organizationSubject.next(page.content);
+            this.totalElements.next(page.totalElements);
+            this.totalPages.next(page.totalPages);
+        });
     }
 
     connect(collectionViewer: CollectionViewer): Observable<Organization[]> {

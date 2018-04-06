@@ -37,6 +37,14 @@ export class OrganizationsService {
             .set('size', String(pageSize.size)) } );
     }
 
+    findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString: string): Observable<ExcPage<Organization>> {
+        return this.http.get<ExcPage<Organization>>(this.resourceUrl + 'page/', {params : new HttpParams()
+            .set('sort', pageSorting.orderString())
+            .set('page', String(pageSize.page))
+            .set('size', String(pageSize.size))
+            .set('searchString', searchString)} );
+    }
+
     find(id: number | string): Observable<Organization> {
         console.log('query');
         return this.http.get<Organization>(this.resourceUrl.concat('' + id));

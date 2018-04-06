@@ -15,8 +15,11 @@ import {
     ValidatorFn
 } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
 import { DEBUG_INFO_ENABLED } from '../../app.constants';
+
+const debounceTimeValue = 150;
 
 @Component({
   selector: 'jhi-form-search',
@@ -27,15 +30,22 @@ import { DEBUG_INFO_ENABLED } from '../../app.constants';
 export class FormSearchComponent implements AfterViewInit {
 
     @ViewChild('input') input: ElementRef;
-    @Output() searchAction: EventEmitter<String> = new EventEmitter();
+    @Output() readonly searchAction: EventEmitter<String> = new EventEmitter();
+
+    // public searchAction$ = this.searchAction.asObservable;
+
+    // private searchString = new BehaviorSubject<String>(null);
+    // public searchString$ = this.searchString.asObservable();
 
     ngAfterViewInit() {
         Observable.fromEvent(this.input.nativeElement, 'keyup')
         .pipe(
-            debounceTime(150),
+            debounceTime(debounceTimeValue),
             distinctUntilChanged(),
-                tap(() => {
-                    this.searchAction.emit(this.input.nativeElement.value);
+            tap(() => {
+                    const val = this.input.nativeElement.value;
+                    this.searchAction.emit(val);
+                    // this.searchString.next(val);
             })
         ).subscribe();
     }
