@@ -11,11 +11,14 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
 
+/**
+ * TODO remove JpaSpecificationExecutor
+ */
 public interface DeviceObjectPkeWarnRepository
 		extends PagingAndSortingRepository<DeviceObjectPkeWarn, Long>, JpaSpecificationExecutor<DeviceObjectPkeWarn> {
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param beginDate
 	 * @param endDate

@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * Repository для SubscrContObject
- *
+ * TODO remove JpaSpecificationExecutor
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015

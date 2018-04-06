@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -19,9 +20,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
  * @since 25.06.2015
  *
  */
-public interface SubscrContEventNotificationRepository
-		extends PagingAndSortingRepository<SubscrContEventNotification, Long>,
-		JpaSpecificationExecutor<SubscrContEventNotification> {
+public interface SubscrContEventNotificationRepository extends PagingAndSortingRepository<SubscrContEventNotification, Long>,
+		        QueryDslPredicateExecutor<SubscrContEventNotification> {
 
 	/**
 	 *
