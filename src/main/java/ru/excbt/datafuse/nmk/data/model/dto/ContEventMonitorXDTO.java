@@ -36,6 +36,8 @@ public class ContEventMonitorXDTO {
 
     private Boolean isScalar;
 
+    private String contServiceType;
+
     public ContEventMonitorXDTO() {
 
     }
@@ -117,5 +119,18 @@ public class ContEventMonitorXDTO {
 
     public Boolean getScalar() {
         return isScalar;
+    }
+
+    public String getContServiceType() {
+        return contServiceType;
+    }
+
+    public void setContServiceType(String contServiceType) {
+        this.contServiceType = contServiceType;
+    }
+
+    ContEventMonitorXDTO contServiceType(String contServiceType) {
+        this.contServiceType = contServiceType;
+        return this;
     }
 }
