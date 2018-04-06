@@ -153,7 +153,7 @@ public class SubscrContEventNotificationService {
 		}
 
 		boolean checkValidInterval() {
-		    return dateInterval == null || dateInterval.isInvalidEq();
+		    return dateInterval != null && dateInterval.isValidEq();
         }
 
         boolean checkContObjectIds() {
