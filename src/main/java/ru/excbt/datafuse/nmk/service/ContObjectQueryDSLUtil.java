@@ -11,13 +11,21 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.PTreeNodeMonitorService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class ContObjectFilterUtil {
+public class ContObjectQueryDSLUtil {
 
-    private ContObjectFilterUtil() {
+    private ContObjectQueryDSLUtil() {
     }
 
+    /**
+     *
+     * @param queryFactory
+     * @param inContObjectIds
+     * @param contServiceTypeKey
+     * @return
+     */
     public static List<Long> filterContObjectIdByContServiceType(final JPAQueryFactory queryFactory,
                                                                  final List<Long> inContObjectIds,
                                                                  final ContServiceTypeKey contServiceTypeKey) {
@@ -26,7 +34,7 @@ public class ContObjectFilterUtil {
 
         // Take contZPointId of requested contServiceType
         List<Long> filteredContObjectIds = queryFactory
-            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname).from(qContZPoint).where(qContZPoint.id.in(inContObjectIds))
+            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname).from(qContZPoint).where(qContZPoint.contObjectId.in(inContObjectIds))
             .fetch().stream()
             .filter(t -> contServiceTypeKey.getKeyname().equals(t.get(qContZPoint.contServiceTypeKeyname)))
             .map(t -> t.get(qContZPoint.contObjectId))
@@ -35,5 +43,21 @@ public class ContObjectFilterUtil {
         return filteredContObjectIds;
     }
 
+
+    /**
+     *
+     * @param queryFactory
+     * @param inContZPointIds
+     * @return
+     */
+    public static Map<Long, String> getContZPointServiceTypes(final JPAQueryFactory queryFactory,
+                                                              final List<Long> inContZPointIds) {
+        QContZPoint qContZPoint = QContZPoint.contZPoint;
+        return queryFactory
+            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname)
+            .from(qContZPoint).where(qContZPoint.id.in(inContZPointIds))
+            .fetch().stream()
+            .collect(Collectors.toMap(x -> x.get(qContZPoint.id), y -> y.get(qContZPoint.contServiceTypeKeyname)));
+    }
 
 }

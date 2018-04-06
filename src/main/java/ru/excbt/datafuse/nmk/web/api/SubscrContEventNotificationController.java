@@ -502,7 +502,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	}
 
 	/**
-	 *
+	 * TODO contServiceType feature
 	 * @param contObjectId
 	 * @return
 	 */
@@ -523,6 +523,8 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		List<ContEventMonitorXDTO> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
 			.collect(Collectors.toList());
+
+        filteredResultList = contEventMonitorV3Service.enhanceWithContServiceType(filteredResultList);
 
 		return ResponseEntity.ok(filteredResultList);
 	}
