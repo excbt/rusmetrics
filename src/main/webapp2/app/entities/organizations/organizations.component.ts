@@ -64,6 +64,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
         this.searchString = arg;
         this.paginator.pageIndex = 0;
         console.log('from search:', arg);
+        this.loadOrganization(arg);
       })
     ).subscribe();
 
@@ -87,7 +88,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
     const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     //  this.dataSource.findAllPaged (sorting, pageSize);
-    this.dataSource.findSearchPage (sorting, pageSize, searchString);
+    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
   }
 
 }

@@ -38,11 +38,13 @@ export class OrganizationsService {
     }
 
     findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString: string): Observable<ExcPage<Organization>> {
-        return this.http.get<ExcPage<Organization>>(this.resourceUrl + 'page/', {params : new HttpParams()
+        return this.http.get<ExcPage<Organization>>(this.resourceUrl + 'page/', {
+            params : new HttpParams()
             .set('sort', pageSorting.orderString())
             .set('page', String(pageSize.page))
             .set('size', String(pageSize.size))
-            .set('searchString', searchString)} );
+            .set('searchString', String(searchString))
+        } );
     }
 
     find(id: number | string): Observable<Organization> {

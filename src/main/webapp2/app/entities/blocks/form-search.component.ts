@@ -30,7 +30,7 @@ const debounceTimeValue = 150;
 export class FormSearchComponent implements AfterViewInit {
 
     @ViewChild('input') input: ElementRef;
-    @Output() readonly searchAction: EventEmitter<String> = new EventEmitter();
+    @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
 
     // public searchAction$ = this.searchAction.asObservable;
 
