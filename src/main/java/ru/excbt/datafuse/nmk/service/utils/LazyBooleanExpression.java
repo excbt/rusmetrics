@@ -1,4 +1,10 @@
 package ru.excbt.datafuse.nmk.service.utils;
 
-public interface LazyBooleanExpression {
+
+import com.querydsl.core.types.dsl.BooleanExpression;
+
+@FunctionalInterface
+public interface LazyBooleanExpression
+{
+    BooleanExpression get();
 }

@@ -5,6 +5,9 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.QOrganization;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
@@ -24,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 /**
  * Сервис для работы с организациями
@@ -35,6 +40,8 @@ import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
  */
 @Service
 public class OrganizationService implements SecuredRoles {
+
+    private static final Logger log = LoggerFactory.getLogger(OrganizationService.class);
 
 	private final OrganizationRepository organizationRepository;
 
@@ -136,11 +143,38 @@ public class OrganizationService implements SecuredRoles {
 		return organizations;
 	}
 
+    /**
+     *
+     * @param userids
+     * @param searchStringOptional
+     * @param pageable
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(PortalUserIds userids, Pageable pageable) {
+	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(PortalUserIds userids, Optional<String> searchStringOptional, Pageable pageable) {
 	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
-		Page<OrganizationDTO> page = organizationRepository.findOrganizationsOfRma(searchSubscriberId, pageable)
-            .map(organizationMapper::toDTO);
+
+        QOrganization qOrganization = QOrganization.organization;
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(qOrganization.rmaSubscriberId.eq(searchSubscriberId).or(qOrganization.isCommon.isTrue()))
+            .and(qOrganization.deleted.eq(0))
+            .and(qOrganization.isDevMode.isNull().or(qOrganization.isDevMode.isFalse()));
+
+        searchStringOptional.ifPresent(s -> {
+            if (s.isEmpty())
+                return;
+
+            BooleanExpression searchCond = qOrganization.inn.like(s)
+                .or(qOrganization.ogrn.like(s))
+                .or(qOrganization.organizationName.like(s));
+            log.info("search Cond: {}", searchCond.toString());
+            where.and(searchCond);
+        });
+
+        log.info("where: {}", where.toString());
+
+        Page<OrganizationDTO> page = organizationRepository.findAll(where, pageable).map(organizationMapper::toDTO);
 		return page;
 	}
 

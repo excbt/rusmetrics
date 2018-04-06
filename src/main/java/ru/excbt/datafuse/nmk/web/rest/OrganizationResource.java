@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.util.PaginationUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/organizations")
@@ -46,15 +47,15 @@ public class OrganizationResource {
     @RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<OrganizationDTO> organizationsGet(Pageable pageable) {
-        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), pageable);
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.empty(), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organizations");
         return new ResponseEntity(page.getContent(), headers, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/page", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(Pageable pageable) {
-        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), pageable);
+    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) String searchString, Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.ofNullable(searchString), pageable);
         return new ResponseEntity(page, HttpStatus.OK);
     }
 

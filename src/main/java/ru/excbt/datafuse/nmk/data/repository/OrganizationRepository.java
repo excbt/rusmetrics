@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -20,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
  * @since 19.03.2015
  *
  */
-public interface OrganizationRepository extends JpaRepository<Organization, Long> {
+public interface OrganizationRepository extends JpaRepository<Organization, Long>, QueryDslPredicateExecutor<Organization> {
 
 	/**
 	 *
@@ -70,7 +71,7 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 	List<Organization> findOrganizationsOfRma(@Param("rmaSubscriberId") Long rmaSubscriberId, Sort sort);
 
     /**
-     * 
+     *
      * @param rmaSubscriberId
      * @param pageable
      * @return
