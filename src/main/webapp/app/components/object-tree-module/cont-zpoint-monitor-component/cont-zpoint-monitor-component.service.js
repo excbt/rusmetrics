@@ -51,7 +51,7 @@
             return $http.get(url, httpOptions);
         }
         
-        function loadNotifications(startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew) {
+        function loadNotifications(startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew, contZpointTypeArray) {
             var url = NOTIFICATIONS_URL;
             var params = {
                 fromDate: startDate,
@@ -59,7 +59,8 @@
                 contEventTypeIds: eventTypeArray,
                 contEventCategories: categoriesArray,
                 contEventDeviations: deviationsArray,
-                contObjectIds: objectArray
+                contObjectIds: objectArray,
+                contServiceTypes: contZpointTypeArray
             };
             if (angular.isDefined(isNew) && isNew !== null) {
                 params.isNew = isNew;

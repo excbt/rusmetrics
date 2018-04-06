@@ -278,8 +278,8 @@ console.log(resp);
 //console.log("SYSTEM_DATE_FORMAT", SYSTEM_DATE_FORMAT);
             var startDate = vm.daterange.startDate.format(SYSTEM_DATE_FORMAT),
                 endDate = vm.daterange.endDate.format(SYSTEM_DATE_FORMAT);
-            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew)
-            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null)
+            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew, contServiceTypesArray)
+            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null, [vm.contZpointType])
                 .then(successLoadNotificationsCallback, 
                       function (err) {
                         console.error(err);
