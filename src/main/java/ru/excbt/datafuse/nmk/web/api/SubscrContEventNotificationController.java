@@ -52,7 +52,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/subscr/contEvent")
-public class SubscrContEventNotificationController extends AbstractSubscrApiResource {
+public class SubscrContEventNotificationController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventNotificationController.class);
 
@@ -78,8 +78,10 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 	private final SubscrContEventNotificationMapper mapper;
 
+	private final PortalUserIdsService portalUserIdsService;
+
 	@Autowired
-    public SubscrContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper) {
+    public SubscrContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper, PortalUserIdsService portalUserIdsService) {
         this.subscrContEventNotifiicationService = subscrContEventNotifiicationService;
         this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
         this.contEventMonitorService = contEventMonitorService;
@@ -90,6 +92,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
         this.subscrContEventNotifiicationStatusV2Service = subscrContEventNotifiicationStatusV2Service;
         this.objectAccessService = objectAccessService;
         this.mapper = mapper;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -106,7 +109,12 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 	}
 
-	/**
+    protected long getCurrentSubscriberId() {
+	    Long id = portalUserIdsService.getCurrentIds().getSubscriberId();
+        return id != null ? id : 0;
+    }
+
+    /**
 	 *
 	 * @param fromDateStr
 	 * @param toDateStr
@@ -125,6 +133,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			@RequestParam(value = "contEventDeviations", required = false) String[] contEventDeviations,
 			@RequestParam(value = "isNew", required = false) Boolean isNew,
 			@RequestParam(value = "sortDesc", required = false, defaultValue = "true") Boolean sortDesc,
+            @RequestParam(value = "contServiceTypes", required = false) String[] contServiceTypes,
 			@PageableDefault(size = ApiConst.DEFAULT_PAGE_SIZE, page = 0) Pageable pageable) {
 
 		List<Long> contObjectIdList = contObjectIds == null ? null : Arrays.asList(contObjectIds);
@@ -158,9 +167,11 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		searchConditions.initContEventTypes(contEventTypeIdPairList);
 		searchConditions.initContEventCategories(contEventCategoryList);
 		searchConditions.initContEventDeviations(contEventDeviations);
+        searchConditions.initContServiceTypes(contServiceTypes);
+
 		// TODO query upgrade
 		Page<SubscrContEventNotificationDTO> resultPage = subscrContEventNotifiicationService
-				.selectNotificationByConditions(searchConditions, pageRequest).map(mapper::toDto);
+				.selectNotificationByConditionsDSL(searchConditions, pageRequest).map(mapper::toDto);
 
 		return ResponseEntity.ok(new PageInfoList<>(resultPage));
 
@@ -202,7 +213,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		ApiActionVoidProcess process = () -> {
 			if (notificationIds != null && notificationIds.length > 0) {
-				subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+				subscrContEventNotifiicationService.updateNotificationsRevisions(portalUserIdsService.getCurrentIds(),
 						Arrays.asList(notificationIds), isNew);
 			}
 		};
@@ -211,7 +222,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 			@Override
 			public void process() {
 				if (notificationIds != null && notificationIds.length > 0) {
-					subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+					subscrContEventNotifiicationService.updateNotificationsRevisions(portalUserIdsService.getCurrentIds(),
 							Arrays.asList(notificationIds), isNew);
 				}
 			}
@@ -236,7 +247,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		ApiActionVoidProcess process = () -> {
 			if (notificationIds != null && notificationIds.length > 0) {
-				subscrContEventNotifiicationService.updateNotificationsRevisions(getSubscriberParam(),
+				subscrContEventNotifiicationService.updateNotificationsRevisions(portalUserIdsService.getCurrentIds(),
 						Arrays.asList(notificationIds), isNew);
 			}
 		};
@@ -297,7 +308,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		final LocalDatePeriod actionDP = requestDatePeriod;
 
 		ApiActionVoidProcess process = () -> {
-			subscrContEventNotifiicationService.updateRevisionByConditionsFast(getSubscriberParam(), actionDP,
+			subscrContEventNotifiicationService.updateRevisionByConditionsFast(portalUserIdsService.getCurrentIds(), actionDP,
 					contObjectList, contEventTypeIdPairList, revisionIsNew);
 		};
 
@@ -381,10 +392,10 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
+		List<ContObject> contObjects = objectAccessService.findContObjects(getCurrentSubscriberId());
 
 		List<MonitorContEventNotificationStatus> resultList = subscrContEventNotifiicationStatusService
-				.selectMonitorContEventNotificationStatusCollapse(getSubscriberParam(), contObjects,
+				.selectMonitorContEventNotificationStatusCollapse(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(resultList);
@@ -413,10 +424,10 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(getCurrentSubscriberId(), contGroupId);
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
-				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
+				.selectCityMonitoryContEventsStatus(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
@@ -445,10 +456,10 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 					String.format("Invalid parameters fromDate:{} is greater than toDate:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId(), contGroupId);
+		List<ContObject> contObjects = objectAccessService.findContObjects(getCurrentSubscriberId(), contGroupId);
 
 		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
-				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
+				.selectCityMonitoryContEventsStatusV2(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
 		return ResponseEntity.ok(result);
@@ -478,7 +489,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 		}
 
 		List<MonitorContEventTypeStatus> resultList = subscrContEventNotifiicationStatusService
-				.selectMonitorContEventTypeStatusCollapse(getSubscriberParam(), contObjectId,
+				.selectMonitorContEventTypeStatusCollapse(portalUserIdsService.getCurrentIds(), contObjectId,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 		return ResponseEntity.ok(resultList);
@@ -502,7 +513,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 	}
 
 	/**
-	 *
+	 * TODO contServiceType feature
 	 * @param contObjectId
 	 * @return
 	 */
@@ -523,6 +534,8 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 
 		List<ContEventMonitorXDTO> filteredResultList = resultList.stream().filter(i -> i.getContEventLevel() != null)
 			.collect(Collectors.toList());
+
+        filteredResultList = contEventMonitorV3Service.enhanceWithContServiceType(filteredResultList);
 
 		return ResponseEntity.ok(filteredResultList);
 	}
@@ -574,7 +587,7 @@ public class SubscrContEventNotificationController extends AbstractSubscrApiReso
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 
 				Page<SubscrContEventNotificationDTO> pageResult = subscrContEventNotifiicationService
-						.selectNotificationByConditions(searchConditions, PAGE_LIMIT_1).map(mapper::toDto);
+						.selectNotificationByConditionsDSL(searchConditions, PAGE_LIMIT_1).map(mapper::toDto);
 
 				if (pageResult.getTotalElements() > 0) {
 					monitorColor = contEventLevelColorService.getEventColorCached(ContEventLevelColorKey.YELLOW);

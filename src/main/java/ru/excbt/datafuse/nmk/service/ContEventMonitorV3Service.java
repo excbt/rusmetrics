@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
+import ru.excbt.datafuse.nmk.data.model.dto.ContEventMonitorXDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV3Repository;
@@ -31,9 +32,12 @@ public class ContEventMonitorV3Service {
 
     private final ContEventService contEventService;
 
-    public ContEventMonitorV3Service(ContEventMonitorV3Repository contEventMonitorV3Repository, ContEventService contEventService) {
+    private final QueryDSLService queryDSLService;
+
+    public ContEventMonitorV3Service(ContEventMonitorV3Repository contEventMonitorV3Repository, ContEventService contEventService, QueryDSLService queryDSLService) {
         this.contEventMonitorV3Repository = contEventMonitorV3Repository;
         this.contEventService = contEventService;
+        this.queryDSLService = queryDSLService;
     }
 
     public final static Comparator<ContEventMonitorX> CMP_BY_COLOR_RANK = Comparator.comparingInt(e -> e.getContEventLevelColorKeyname() == null ? -1 :
@@ -181,4 +185,22 @@ public class ContEventMonitorV3Service {
         return sortWorseColor(mon);
     }
 
+
+    /**
+     *
+     * @param inData
+     * @return
+     */
+    public List<ContEventMonitorXDTO> enhanceWithContServiceType (List<ContEventMonitorXDTO> inData) {
+
+        List<Long> contPointIds = inData.stream().map(ContEventMonitorXDTO::getContZPointId).filter(Objects::nonNull).distinct().collect(Collectors.toList());
+
+        Map<Long, String> contServiceTypeMap = ContObjectQueryDSLUtil.getContZPointServiceTypes(queryDSLService.queryFactory(), contPointIds);
+
+        inData.forEach(x -> {
+            x.setContServiceType(contServiceTypeMap.get(x.getContZPointId()));
+        });
+
+        return inData;
+    }
 }

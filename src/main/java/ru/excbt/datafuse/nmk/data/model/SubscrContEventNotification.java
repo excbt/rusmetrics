@@ -109,4 +109,7 @@ public class SubscrContEventNotification extends AbstractAuditableModel implemen
 	@NotNull
 	private Short monitorVersion = 3;
 
+    @Column(name = "cont_zpoint_id")
+	private Long contZPointId;
+
 }
