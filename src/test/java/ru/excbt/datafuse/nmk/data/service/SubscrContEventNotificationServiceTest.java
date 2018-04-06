@@ -87,7 +87,7 @@ public class SubscrContEventNotificationServiceTest extends JpaSupportTest {
 		searchConditions.initContEventTypes(contEventTypeIdList);
 		searchConditions.initContEventCategories(contEventTypeCategoryList);
 
-		Page<?> result = subscrContEventNotifiicationService.selectNotificationByConditions(searchConditions, request);
+		Page<?> result = subscrContEventNotifiicationService.selectNotificationByConditionsDSL(searchConditions, request);
 
 		assertNotNull(result);
 	}

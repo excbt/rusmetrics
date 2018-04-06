@@ -1,49 +1,33 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
+import ru.excbt.datafuse.nmk.data.model.QSubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
-import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification_;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.repository.SubscrContEventNotificationRepository;
+import ru.excbt.datafuse.nmk.service.ContObjectQueryDSLUtil;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
-import ru.excbt.datafuse.nmk.service.utils.DBSpecUtil;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+
+import javax.persistence.PersistenceException;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис для работы с уведомлениями для абонентов
@@ -66,13 +50,24 @@ public class SubscrContEventNotificationService {
 	public final static List<String> AVAILABLE_SORT_FIELD_LIST = Collections
 			.unmodifiableList(Arrays.asList(AVAILABLE_SORT_FIELDS));
 
-	@Autowired
-	private SubscrContEventNotificationRepository subscrContEventNotificationRepository;
+	private final SubscrContEventNotificationRepository subscrContEventNotificationRepository;
+
+	private final ContEventService contEventService;
+
+	private final ObjectAccessService objectAccessService;
+
+	private final QueryDSLService queryDSLService;
 
 	@Autowired
-	private ContEventService contEventService;
+    public SubscrContEventNotificationService(SubscrContEventNotificationRepository subscrContEventNotificationRepository, ContEventService contEventService, ObjectAccessService objectAccessService, QueryDSLService queryDSLService) {
+        this.subscrContEventNotificationRepository = subscrContEventNotificationRepository;
+        this.contEventService = contEventService;
+        this.objectAccessService = objectAccessService;
+        this.queryDSLService = queryDSLService;
+    }
 
-	/**
+
+    /**
 	 *
 	 *
 	 * @author A.Kovtonyuk
@@ -89,6 +84,7 @@ public class SubscrContEventNotificationService {
 		private final List<Long> contEventTypeList = new ArrayList<>();
 		private final List<String> contEventCategoryList = new ArrayList<>();
 		private final List<String> contEventDeviationList = new ArrayList<>();
+		private final List<String> contServiceTypes = new ArrayList<>();
 
 		public SearchConditions(long subscriberId, DateInterval dateInterval) {
 			this.subscriberId = subscriberId;
@@ -137,6 +133,13 @@ public class SubscrContEventNotificationService {
 			}
 		}
 
+		public void initContServiceTypes(String[] contServiceTypes) {
+			this.contServiceTypes.clear();
+			if (contServiceTypes != null) {
+				this.contServiceTypes.addAll(Arrays.asList(contServiceTypes));
+			}
+		}
+
 		public long getSubscriberId() {
 			return subscriberId;
 		}
@@ -148,6 +151,30 @@ public class SubscrContEventNotificationService {
 		public Boolean getIsNew() {
 			return isNew;
 		}
+
+		boolean checkValidInterval() {
+		    return dateInterval == null || dateInterval.isInvalidEq();
+        }
+
+        boolean checkContObjectIds() {
+		    return contObjectIdList.size() > 0;
+        }
+
+        boolean checkContEventTypes() {
+		    return contEventTypeList.size() > 0;
+        }
+
+        boolean checkContEventCategory() {
+		    return contEventCategoryList.size() > 0;
+        }
+
+        boolean checkContEventDeviation() {
+		    return contEventDeviationList.size() > 0;
+        }
+
+        boolean checkContServiceTypes() {
+		    return contServiceTypes.size() > 0;
+        }
 	}
 
 	/**
@@ -163,8 +190,14 @@ public class SubscrContEventNotificationService {
 
 		Pageable pageRequest = setupPageRequest(pageable);
 
-		Page<SubscrContEventNotification> resultPage = subscrContEventNotificationRepository
-				.findAll(Specifications.where(specSubscriberId(subscriberId)).and(specIsNew(isNew)), pageRequest);
+        QSubscrContEventNotification qSubscrContEventNotification = QSubscrContEventNotification.subscrContEventNotification;
+
+		BooleanExpression expr = qSubscrContEventNotification.subscriberId.eq(subscriberId);
+		if (isNew != null) {
+		    expr.and(qSubscrContEventNotification.isNew.eq(isNew));
+        }
+        Page<SubscrContEventNotification> resultPage = subscrContEventNotificationRepository
+				.findAll(expr, pageRequest);
 
 		initContEvent(resultPage.getContent());
 		contEventService.loadContEventTypeModel(resultPage.getContent());
@@ -173,52 +206,54 @@ public class SubscrContEventNotificationService {
 
 	}
 
-	/**
-	 *
-	 * @param specs
-	 * @return
-	 */
-	//	private <T> Specifications<T> andFilterBuild(List<Specification<T>> specList) {
-	//		if (specList == null) {
-	//			return null;
-	//		}
-	//		Specifications<T> result = null;
-	//		for (Specification<T> i : specList) {
-	//			if (i == null) {
-	//				continue;
-	//			}
-	//			result = result == null ? Specifications.where(i) : result.and(i);
-	//		}
-	//
-	//		return result;
-	//	}
-
-	/**
-	 *
-	 * @param searchConditions
-	 * @param pageable
-	 * @return
-	 */
+    /**
+     *
+     * @param searchConditions
+     * @param pageable
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscrContEventNotification> selectNotificationByConditions(SearchConditions searchConditions,
+	public Page<SubscrContEventNotification> selectNotificationByConditionsDSL(SearchConditions searchConditions,
 			final Pageable pageable) {
 
-		checkNotNull(searchConditions.subscriberId);
+        Pageable pageRequest = setupPageRequest(pageable);
 
-		Pageable pageRequest = setupPageRequest(pageable);
+        QSubscrContEventNotification qSubscrContEventNotification = QSubscrContEventNotification.subscrContEventNotification;
 
-		List<Specification<SubscrContEventNotification>> andFilter = Arrays.asList( //
-				specSubscriberId(searchConditions.subscriberId), //
-				specContEventDate(searchConditions.dateInterval), //
-				specIsNew(searchConditions.isNew), //
-				specContObjectId(searchConditions.contObjectIdList), //
-				specContEventTypeId(searchConditions.contEventTypeList), //
-				specContEventCategory(searchConditions.contEventCategoryList), //
-				specContEventDevation(searchConditions.contEventDeviationList));
+        List<BooleanExpression> booleanExpressions = new ArrayList<>();
 
-		Specifications<SubscrContEventNotification> specs = DBSpecUtil.specsAndFilterBuild(andFilter);
+        booleanExpressions.addAll(
+            Arrays.asList(
+            qSubscrContEventNotification.subscriberId.eq(searchConditions.subscriberId),
+            searchConditions.checkValidInterval() ? qSubscrContEventNotification.contEventTime
+                .between(searchConditions.dateInterval.getFromDate(), searchConditions.dateInterval.getToDate()) : null,
+            searchConditions.isNew != null ? qSubscrContEventNotification.isNew.eq(searchConditions.isNew) : null,
+            searchConditions.checkContObjectIds() ? qSubscrContEventNotification.contObjectId.in(searchConditions.contObjectIdList) : null,
+            searchConditions.checkContEventTypes() ? qSubscrContEventNotification.contEventTypeId.in(searchConditions.contEventTypeList) : null,
+            searchConditions.checkContEventCategory() ? qSubscrContEventNotification.contEventCategoryKeyname.in(searchConditions.contEventCategoryList) : null,
+            searchConditions.checkContEventDeviation() ? qSubscrContEventNotification.contEventDeviationKeyname.in(searchConditions.contEventDeviationList) : null
+        ));
 
-		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(specs, pageRequest);
+
+        if (searchConditions.checkContServiceTypes()) {
+            List<Long> contZPointIds = objectAccessService.findAllContZPointIds(searchConditions.subscriberId);
+            List<Long> filteredContZPointIds = ContObjectQueryDSLUtil.filterContZPointIdByContServiceType(queryDSLService.queryFactory(), contZPointIds, searchConditions.contServiceTypes);
+            if (!filteredContZPointIds.isEmpty()) {
+                booleanExpressions.add(qSubscrContEventNotification.contZPointId.in(filteredContZPointIds));
+            } else {
+                return new PageImpl<>(Collections.EMPTY_LIST);
+            }
+        }
+
+
+        BooleanBuilder builder = new BooleanBuilder();
+        booleanExpressions.stream().forEach(i -> {
+            if (i != null) {
+                builder.and(i);
+            }
+        });
+
+		Page<SubscrContEventNotification> result = subscrContEventNotificationRepository.findAll(builder, pageRequest);
 
 		initContEvent(result.getContent());
 		contEventService.loadContEventTypeModel(result.getContent());
@@ -229,7 +264,7 @@ public class SubscrContEventNotificationService {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param dateInterval
      * @param contObjectList
      * @param contEventTypeList
@@ -238,51 +273,57 @@ public class SubscrContEventNotificationService {
      * @param revisionSubscrUserId
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditions(final SubscriberParam subscriberParam, final DateInterval dateInterval,
+	public void updateRevisionByConditions(final PortalUserIds portalUserIds, final DateInterval dateInterval,
 			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
 
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 
-		Specifications<SubscrContEventNotification> specs = Specifications
-				.where(specSubscriberId(subscriberParam.getSubscriberId()))
-				.and(specContEventDate(dateInterval.getFromDate(), dateInterval.getToDate())).and(specIsNew(isNew))
-				.and(specContObjectId(contObjectList)).and(specContEventTypeId(contEventTypeList));
+		QSubscrContEventNotification qSubscrContEventNotification = QSubscrContEventNotification.subscrContEventNotification;
 
-		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository.findAll(specs);
+        BooleanExpression expr = qSubscrContEventNotification.subscriberId.eq(portalUserIds.getSubscriberId());
+        expr.and(qSubscrContEventNotification.contEventTime.between(dateInterval.getFromDate(), dateInterval.getToDate()));
+        if (isNew != null) {
+            expr.and(qSubscrContEventNotification.isNew.eq(isNew));
+        }
+        if (!contEventTypeList.isEmpty()) {
+            expr.and(qSubscrContEventNotification.contEventTypeId.in(contEventTypeList));
+        }
+
+		Iterable<SubscrContEventNotification> updateCandidates = subscrContEventNotificationRepository.findAll(expr);
 		for (SubscrContEventNotification n : updateCandidates) {
-			updateNotificationRevision(subscriberParam, n, revisionIsNew);
+			updateNotificationRevision(portalUserIds, n, revisionIsNew);
 		}
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param datePeriod
      * @param contObjectIds
      * @param contEventTypeIds
      * @param revisionIsNew
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateRevisionByConditionsFast(SubscriberParam subscriberParam, final DateInterval datePeriod,
+	public void updateRevisionByConditionsFast(PortalUserIds portalUserIds, final DateInterval datePeriod,
 			final List<Long> contObjectIds, final List<Long> contEventTypeIds, final Boolean revisionIsNew) {
 
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 
 		if ((contObjectIds == null || contObjectIds.isEmpty())
 				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
-			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId());
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(portalUserIds.getSubscriberId(),
+					portalUserIds.getUserId());
 		} else // another case
 		if ((contObjectIds != null && !contObjectIds.isEmpty())
 				&& (contEventTypeIds == null || contEventTypeIds.isEmpty())) {
-			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), contObjectIds);
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(portalUserIds.getSubscriberId(),
+					portalUserIds.getUserId(), contObjectIds);
 		} else // another case
 		if ((contObjectIds != null && !contObjectIds.isEmpty())
 				&& (contEventTypeIds != null && !contEventTypeIds.isEmpty())) {
-			subscrContEventNotificationRepository.updateAllSubscriberRevisions(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), contObjectIds, contEventTypeIds);
+			subscrContEventNotificationRepository.updateAllSubscriberRevisions(portalUserIds.getSubscriberId(),
+					portalUserIds.getUserId(), contObjectIds, contEventTypeIds);
 		}
 
 	}
@@ -358,133 +399,6 @@ public class SubscrContEventNotificationService {
 		return result;
 	}
 
-    /**
-     *
-     * @param isNew
-     * @return
-     */
-	private static Specification<SubscrContEventNotification> specIsNew(final Boolean isNew) {
-		return (root, query, cb) -> {
-			if (isNew == null) {
-				return null;
-			}
-			return cb.equal(root.<Boolean> get(SubscrContEventNotification_.isNew), Boolean.TRUE);
-		};
-
-	}
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	private static Specification<SubscrContEventNotification> specSubscriberId(final Long subscriberId) {
-		return (root, query, cb) -> {
-			if (subscriberId == null) {
-				return null;
-			}
-			return cb.equal(root.get(SubscrContEventNotification_.subscriberId), subscriberId);
-		};
-	}
-
-    /**
-     *
-     * @param fromDate
-     * @param toDate
-     * @return
-     */
-	private static Specification<SubscrContEventNotification> specContEventDate(final Date fromDate,
-			final Date toDate) {
-		return (root, query, cb) -> {
-			if (fromDate == null || toDate == null) {
-				return null;
-			}
-			return cb.and(
-					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), fromDate),
-					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime), toDate));
-		};
-	}
-
-    /**
-     *
-     * @param interval
-     * @return
-     */
-	private static Specification<SubscrContEventNotification> specContEventDate(final DateInterval interval) {
-		return (root, query, cb) -> {
-			if (interval == null || interval.isInvalidEq()) {
-				return null;
-			}
-			return cb.and(
-					cb.greaterThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
-                        interval.getFromDate()),
-					cb.lessThanOrEqualTo(root.get(SubscrContEventNotification_.contEventTime),
-                        interval.getToDate()));
-		};
-	}
-
-	/**
-	 *
-	 * @param contObjectIdList
-	 * @return
-	 */
-	private static Specification<SubscrContEventNotification> specContObjectId(final List<Long> contObjectIdList) {
-		return (root, query, cb) -> {
-			if (contObjectIdList == null || contObjectIdList.size() == 0) {
-				return null;
-			}
-			return root.get(SubscrContEventNotification_.contObjectId).in(contObjectIdList);
-		};
-	}
-
-	/**
-	 *
-	 * @param contEventTypeIdList
-	 * @return
-	 */
-	private static Specification<SubscrContEventNotification> specContEventTypeId(
-			final List<Long> contEventTypeIdList) {
-		return (root, query, cb) -> {
-			if (contEventTypeIdList == null || contEventTypeIdList.size() == 0) {
-				return null;
-			}
-			//return root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-			//		.in(contEventTypeIdList);
-			return root.get(SubscrContEventNotification_.contEventTypeId).in(contEventTypeIdList);
-		};
-	}
-
-	/**
-	 *
-	 * @param contEventCategoryList
-	 * @return
-	 */
-	private static Specification<SubscrContEventNotification> specContEventCategory(
-			final List<String> contEventCategoryList) {
-		return (root, query, cb) -> {
-			if (contEventCategoryList == null || contEventCategoryList.size() == 0) {
-				return null;
-			}
-
-			return cb.or(root.get(SubscrContEventNotification_.contEventCategoryKeyname).in(contEventCategoryList));
-			//. (ContEvent_.contEventType)
-			//.get(ContEventType_.contEventCategory).in(contEventCategoryList));
-			//return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventType)
-			//		.get(ContEventType_.contEventCategory).in(contEventCategoryList));
-		};
-	}
-
-	private static Specification<SubscrContEventNotification> specContEventDevation(
-			final List<String> contEventDeviationList) {
-		return (root, query, cb) -> {
-			if (contEventDeviationList == null || contEventDeviationList.size() == 0) {
-				return null;
-			}
-			return cb.or(root.get(SubscrContEventNotification_.contEventDeviationKeyname).in(contEventDeviationList));
-			//			return cb.or(root.get(SubscrContEventNotification_.contEvent).get(ContEvent_.contEventDeviationKeyname)
-			//					.in(contEventDeviationList));
-		};
-	}
 
 	/**
 	 *
@@ -505,7 +419,7 @@ public class SubscrContEventNotificationService {
 	 */
 	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrContEventNotification updateNotificationRevision(final SubscriberParam subscriberParam,
+	public SubscrContEventNotification updateNotificationRevision(final PortalUserIds portalUserIds,
 			final Boolean isNew, final Long subscrContEventNotificationId) {
 
 		checkNotNull(isNew);
@@ -517,20 +431,20 @@ public class SubscrContEventNotificationService {
 					subscrContEventNotificationId));
 		}
 
-		return updateNotificationRevision(subscriberParam, updateCandidate, isNew);
+		return updateNotificationRevision(portalUserIds, updateCandidate, isNew);
 
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrContEventNotification
      * @param isNew
      * @return
      */
 	@Deprecated
 	//@Transactional(value = TxConst.TX_DEFAULT)
-	private SubscrContEventNotification updateNotificationRevision(SubscriberParam subscriberParam,
+	private SubscrContEventNotification updateNotificationRevision(PortalUserIds portalUserIds,
 			SubscrContEventNotification subscrContEventNotification, Boolean isNew) {
 
 		checkNotNull(subscrContEventNotification);
@@ -541,7 +455,7 @@ public class SubscrContEventNotificationService {
 
 		subscrContEventNotification.setRevisionTime(revisionDate);
 		subscrContEventNotification.setRevisionTimeTZ(revisionDate);
-		subscrContEventNotification.setRevisionSubscrUserId(subscriberParam.getSubscrUserId());
+		subscrContEventNotification.setRevisionSubscrUserId(portalUserIds.getUserId());
 		SubscrContEventNotification result = subscrContEventNotificationRepository.save(subscrContEventNotification);
 		initContEvent(result);
 		return result;
@@ -549,18 +463,18 @@ public class SubscrContEventNotificationService {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param notificationIds
      * @param isNew
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Long> updateNotificationsRevisions(SubscriberParam subscriberParam, List<Long> notificationIds,
-			Boolean isNew) {
+	public List<Long> updateNotificationsRevisions(PortalUserIds portalUserIds, List<Long> notificationIds,
+                                                   Boolean isNew) {
 
 		if (notificationIds != null && !notificationIds.isEmpty()) {
-			subscrContEventNotificationRepository.updateSubscriberRevisions(subscriberParam.getSubscriberId(),
-					subscriberParam.getSubscrUserId(), notificationIds, isNew);
+			subscrContEventNotificationRepository.updateSubscriberRevisions(portalUserIds.getSubscriberId(),
+                portalUserIds.getUserId(), notificationIds, isNew);
 
 		}
 
@@ -573,12 +487,12 @@ public class SubscrContEventNotificationService {
 	 */
 	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public void updateNotificationRevision(SubscriberParam subscriberParam, Boolean isNew, List<Long> notificationIds) {
+	public void updateNotificationRevision(PortalUserIds portalUserIds, Boolean isNew, List<Long> notificationIds) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 		for (Long id : notificationIds) {
-			updateNotificationRevision(subscriberParam, isNew, id);
+			updateNotificationRevision(portalUserIds, isNew, id);
 		}
 	}
 

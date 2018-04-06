@@ -10,8 +10,10 @@ import ru.excbt.datafuse.nmk.data.model.QContZPoint;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.service.PTreeNodeMonitorService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ContObjectQueryDSLUtil {
@@ -38,6 +40,28 @@ public class ContObjectQueryDSLUtil {
             .fetch().stream()
             .filter(t -> contServiceTypeKey.getKeyname().equals(t.get(qContZPoint.contServiceTypeKeyname)))
             .map(t -> t.get(qContZPoint.contObjectId))
+            .collect(Collectors.toList());
+
+        return filteredContObjectIds;
+    }
+
+
+    public static List<Long> filterContZPointIdByContServiceType(final JPAQueryFactory queryFactory,
+                                                                 final List<Long> inContZPointId,
+                                                                 final List<String> contServiceTypeKeynameList) {
+
+        Objects.requireNonNull(contServiceTypeKeynameList);
+
+        if (inContZPointId.isEmpty()) return Collections.emptyList();
+
+        QContZPoint qContZPoint = QContZPoint.contZPoint;
+
+        // Take contZPointId of requested contServiceType
+        List<Long> filteredContObjectIds = queryFactory
+            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname).from(qContZPoint).where(qContZPoint.id.in(inContZPointId))
+            .fetch().stream()
+            .filter(t -> contServiceTypeKeynameList.contains(t.get(qContZPoint.contServiceTypeKeyname)))
+            .map(t -> t.get(qContZPoint.id))
             .collect(Collectors.toList());
 
         return filteredContObjectIds;
