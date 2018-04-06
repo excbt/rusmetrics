@@ -29,7 +29,7 @@
     function contObjectMonitorComponentController($scope, $element, $attrs, contObjectMonitorComponentService, $stateParams, contObjectService, $filter, $timeout) {
         
         var resources = ['heat', 'hw', 'cw', 'el'];
-        var labels = ["Критические", "Некритические", "Остальные"];
+        var labels = ["Критические", "Некритические", "Штатные"];
         var labelsKeyname = ["RED", "YELLOW", "GREEN"];
         
         /*jshint validthis: true*/
@@ -179,7 +179,7 @@
                     console.log(arg3);
                 },
                 labels: {
-                    fontSize: 10,
+                    fontSize: 14,
                     generateLabels: generateLabels
                 },                    
             }/*,

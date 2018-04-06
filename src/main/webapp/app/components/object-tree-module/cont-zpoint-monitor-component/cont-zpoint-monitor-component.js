@@ -71,14 +71,14 @@
         vm.columns = [
             {
                 name: "contServiceTypeIcon",
-                headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
+                headerClass: "paddingLeft20I nmc-zp-monitor-type-th",
                 caption: "",
                 type: "img",
                 filterValues: null
             },
             {
                 name: "statusIcon",
-                headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
+                headerClass: "nmc-zp-monitor-status-th",
                 caption: "",
                 type: "img",
                 filterValues: stateFilterValues
@@ -278,8 +278,12 @@ console.log(resp);
 //console.log("SYSTEM_DATE_FORMAT", SYSTEM_DATE_FORMAT);
             var startDate = vm.daterange.startDate.format(SYSTEM_DATE_FORMAT),
                 endDate = vm.daterange.endDate.format(SYSTEM_DATE_FORMAT);
+            var contServiceTypes = null;
+            if (angular.isDefined(vm.contZpointType) && vm.contZpointType !== null) {
+                contServiceTypes = [vm.contZpointType];
+            }
             // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew, contServiceTypesArray)
-            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null, [vm.contZpointType])
+            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null, contServiceTypes)
                 .then(successLoadNotificationsCallback, 
                       function (err) {
                         console.error(err);

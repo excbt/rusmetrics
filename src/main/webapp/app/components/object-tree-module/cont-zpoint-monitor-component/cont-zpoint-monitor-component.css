@@ -48,8 +48,16 @@ tr.nmc-zp-monitor-table-header > th {
 }
 
 
+.nmc-zp-monitor-type-th {
+    width: 43px;
+    max-width: 50px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
 .nmc-zp-monitor-status-th {
-    width: 48px;
+    width: 30px;
     max-width: 50px;
     display: table-cell;
     vertical-align: middle;
