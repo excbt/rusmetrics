@@ -1,21 +1,18 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
+
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.data.repository.query.Param;
-
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
-
-/**
- * TODO remove JpaSpecificationExecutor
- */
 public interface DeviceObjectPkeWarnRepository
-		extends PagingAndSortingRepository<DeviceObjectPkeWarn, Long>, JpaSpecificationExecutor<DeviceObjectPkeWarn> {
+		extends PagingAndSortingRepository<DeviceObjectPkeWarn, Long>,
+            QueryDslPredicateExecutor<DeviceObjectPkeWarn> {
 
 	/**
 	 *

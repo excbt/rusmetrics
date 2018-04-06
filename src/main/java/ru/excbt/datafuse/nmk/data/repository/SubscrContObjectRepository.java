@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -15,14 +15,14 @@ import java.util.List;
 
 /**
  * Repository для SubscrContObject
- * TODO remove JpaSpecificationExecutor
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.10.2015
  *
  */
-public interface SubscrContObjectRepository
-		extends CrudRepository<SubscrContObject, Long>, JpaSpecificationExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
+public interface SubscrContObjectRepository extends CrudRepository<SubscrContObject, Long>,
+    QueryDslPredicateExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
 
 
 
