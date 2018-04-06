@@ -36,11 +36,13 @@
                             src = "components\object-tree-module\cont-zpoint-monitor-component\three_color24_light.png"                
                             ng-click = "$ctrl.setSituationsMode()"
                         />
+<!--
                         <i class = "glyphicon glyphicon-print"
                         style = "margin-right: 10px; margin-left: 5px; font-size: 20px; color: #34495e"
                         title = "Печать"
                         >
                         </i>
+-->
 <!--                    </i>-->
             <div ng-if = "$ctrl.mode === $ctrl.MODES.history"
                 style="display: inline-block; width: 100%;">
@@ -162,7 +164,7 @@
                            >
                         </i>
                         
-                        <div  ng-if = "column.type === 'img'"
+                        <div  ng-if = "column.type === 'img' && column.filterValues"
                            class="btn-group" style = "cursor: pointer;">
                             <i  ng-show = "!column.setFilterFlag"
                                 title = "фильтр" 
@@ -241,8 +243,8 @@
                     style = "position: relative; top: 25%; transform: translateY(-25%)"
                      >
                       <span ng-switch-when = "img">
-                           <img style = "height: 16px; width: 16px;"
-                           ng-src = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-{{row[column.name]}}.png"/>
+                           <img ng-if = "row[column.name]" style = "height: 16px; width: 16px;"
+                           ng-src = "{{row[column.name]}}"/>
                       </span>
                       <span ng-switch-default>
                            {{row[column.name]}}

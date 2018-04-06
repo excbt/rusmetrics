@@ -129,6 +129,10 @@
         ctrl.checkEmptyObject = contObjectCtrlSvc.checkEmptyObject;
         ctrl.EVENTS = contObjectCtrlSvc.EVENTS;
         
+        ctrl.isSystemuser = function () {
+            return true;
+        };
+        
         ctrl.orderBy = {field: 'caption', asc: false};
 //console.log('ctrl.orderBy: ', ctrl.orderBy);
         
@@ -312,23 +316,23 @@
             contObjectCtrlSvc.loadZpointsByObjectId(objId).then(successLoadZpointsCallback, errorCallback);
         };
         
-        function scrollTableElementToTop(index) {
-            $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
-        }
+//        function scrollTableElementToTop(index) {
+//            $scope.$broadcast(ctrl.EVENTS.OBJECT_CLICK, {index: index});
+//        }
         
-        ctrl.ngPopupConfig = {
-            title: "Информация по событиям",
-            width: 810,
-            /*height: 350,*/
-            height: "66%",
-            template: "<div><cont-zpoint-monitor-component cont-zpoint-id = \"0\" cont-zpoint-name = \"null\" cont-zpoint-type = \"null\"></cont-zpoint-monitor-component></div>",
-            resizable: false,
-            draggable: true,
-            pinned: true,
-            hasTitleBar: true, 
-            position: {top: 100, left: 300},
-            isShow: false
-        };
+//        ctrl.ngPopupConfig = {
+//            title: "Информация по событиям",
+//            width: 810,
+//            /*height: 350,*/
+//            height: "66%",
+//            template: "<div><cont-zpoint-monitor-component cont-zpoint-id = \"0\" cont-zpoint-name = \"null\" cont-zpoint-type = \"null\"></cont-zpoint-monitor-component></div>",
+//            resizable: false,
+//            draggable: true,
+//            pinned: true,
+//            hasTitleBar: true, 
+//            position: {top: 100, left: 300},
+//            isShow: false
+//        };
         
         ctrl.showObjectWidgetAtDialog = function (obj, index, contZpointFilterVal, ev) {
 //            console.log(obj);
@@ -355,26 +359,26 @@
 //            });
         };
         
-        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
-            if (obj.hasOwnProperty('showWidgetFlag')) {
-                obj.showWidgetFlag = !obj.showWidgetFlag;
-            } else {
-                obj.showWidgetFlag = true;
-            }
-            
-            //load cont object zpoints
-            if (obj.showWidgetFlag) {
-                ctrl.contZpointFilterValue = contZpointFilterVal;
-                ctrl.loadZpointsByObjectId(obj.id);
-                // close all objects besides current
-                ctrl.objects.forEach(function (elmObj) {
-                    if (elmObj.id != obj.id) {
-                        elmObj.showWidgetFlag = false;
-                    }
-                });
-                scrollTableElementToTop(index);
-            }
-        };
+//        ctrl.showObjectWidget = function (obj, index, contZpointFilterVal) {            
+//            if (obj.hasOwnProperty('showWidgetFlag')) {
+//                obj.showWidgetFlag = !obj.showWidgetFlag;
+//            } else {
+//                obj.showWidgetFlag = true;
+//            }
+//            
+//            //load cont object zpoints
+//            if (obj.showWidgetFlag) {
+//                ctrl.contZpointFilterValue = contZpointFilterVal;
+//                ctrl.loadZpointsByObjectId(obj.id);
+//                // close all objects besides current
+//                ctrl.objects.forEach(function (elmObj) {
+//                    if (elmObj.id != obj.id) {
+//                        elmObj.showWidgetFlag = false;
+//                    }
+//                });
+//                scrollTableElementToTop(index);
+//            }
+//        };
         
         function successLoadZpointWidgetListCallback(resp) {
             var widgetList = [], wkey, defaultWidgets = {};

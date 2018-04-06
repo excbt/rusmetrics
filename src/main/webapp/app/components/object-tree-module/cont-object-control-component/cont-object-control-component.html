@@ -182,7 +182,8 @@
     </table>
     <div id="divWithContObjectControlTable" class="nmc-cont-object-control-main-div" when-scrolled="$ctrl.addMoreObjectsOnPage()">
         <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
-            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}">
+            >
+<!--            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}"-->
             
             <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
@@ -289,7 +290,7 @@
                                        <div ng-show = "object.loading" class="nmc-loading" style = "display: inline;">
                                             <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
                                        </div>
-                                        {{object[column.name]}}
+                                        {{object[column.name]}} <span ng-if = "$ctrl.isSystemuser()"> (id = {{object['id']}})</span>
                                    </div>
                                 </div>
                             </td>
@@ -354,7 +355,7 @@
         </table>
 
     </div>
-    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>
+<!--    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>-->
     
     <div id="eventWindowModal" 
          class="modal fade nmc-modal-window" 
@@ -377,7 +378,7 @@
                    cont-object-id = "$ctrl.selectedObject.id" 
                    cont-zpoint-id = "0" 
                    cont-zpoint-name = "null" 
-                   cont-zpoint-type = "null">
+                   cont-zpoint-type = "$ctrl.contZpointFilterValue">
                     
                 </cont-zpoint-monitor-component>
             </div>

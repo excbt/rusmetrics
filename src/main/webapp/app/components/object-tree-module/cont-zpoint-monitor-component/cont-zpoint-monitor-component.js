@@ -37,6 +37,7 @@
         vm.$onInit = initCmpnt;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-",
+            IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/",
             IMG_EXT = ".png",
             OBJECTS_PER_PAGE = 100,
             USER_DATE_TIME_FORMAT = dateSvc.getUserDateTimeFormat(),
@@ -69,7 +70,14 @@
         
         vm.columns = [
             {
-                name: "status",
+                name: "contServiceTypeIcon",
+                headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
+                caption: "",
+                type: "img",
+                filterValues: null
+            },
+            {
+                name: "statusIcon",
                 headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
                 caption: "",
                 type: "img",
@@ -180,10 +188,17 @@
         
         function performEvents(eventsRaw) {
             var events = [];
-            eventsRaw.forEach(function (elm) {
+            eventsRaw.forEach(function (elm) {                
+
+                if (angular.isDefined(vm.contZpointType) && vm.contZpointType !== null && elm.hasOwnProperty("contServiceType") && elm.contServiceType !== vm.contZpointType) {
+                    return false;
+                }
                 var event = {};
+                event.contServiceType = elm.contServiceType;
+                event.contServiceTypeIcon = IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE + elm.contServiceType + IMG_EXT;
                 if (elm.hasOwnProperty("contEventLevelColorKeyname")) { 
                     event.status = elm.contEventLevelColorKeyname.toLowerCase();
+                    event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColorKeyname.toLowerCase() + IMG_EXT;
                 }
                 event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
                 event.dateString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
@@ -204,6 +219,7 @@ console.log(vm.events);
                 var event = {};
                 if (elm.hasOwnProperty("contEventLevelColor")) {
                     event.status = elm.contEventLevelColor.toLowerCase();
+                    event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColor.toLowerCase() + IMG_EXT;
                 }
                 event.dateTimeString = moment(elm.contEventTime).format(USER_DATE_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
                 event.dateString = moment(elm.contEventTime).format("DD.MM.YYYY"); // dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
