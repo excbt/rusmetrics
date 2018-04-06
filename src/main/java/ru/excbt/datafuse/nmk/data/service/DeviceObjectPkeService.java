@@ -6,12 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.jpa.domain.Specification;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn_;
 import ru.excbt.datafuse.nmk.data.model.QDeviceObjectPkeWarn;
 import ru.excbt.datafuse.nmk.data.model.keyname.DeviceObjectPkeType;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -134,49 +133,5 @@ public class DeviceObjectPkeService {
 		return resultPage.getContent();
 	}
 
-	/**
-	 *
-	 * @param deviceObjectId
-	 * @return
-	 */
-	private static Specification<DeviceObjectPkeWarn> specDeviceObjectId(final long deviceObjectId) {
-		return (root, query, cb) -> {
-			return cb.equal(root.get(DeviceObjectPkeWarn_.deviceObjectId), deviceObjectId);
-		};
-	}
-
-	/**
-	 *
-	 * @param period
-	 * @return
-	 */
-	private static Specification<DeviceObjectPkeWarn> specDatePeriod(final LocalDatePeriod period) {
-		return (root, query, cb) -> {
-
-			if (period == null || period.isInvalidEq()) {
-				return null;
-			}
-
-			return cb.or(
-					cb.between(root.get(DeviceObjectPkeWarn_.warnStartDate), period.getDateFrom(), period.getDateTo()),
-					cb.between(root.get(DeviceObjectPkeWarn_.warnEndDate), period.getDateFrom(), period.getDateTo()));
-		};
-	}
-
-	/**
-	 *
-	 * @param pkeTypeKeynames
-	 * @return
-	 */
-	private static Specification<DeviceObjectPkeWarn> specPkeTypes(final List<String> pkeTypeKeynames) {
-		return (root, query, cb) -> {
-
-			if (pkeTypeKeynames == null || pkeTypeKeynames.isEmpty()) {
-				return null;
-			}
-
-			return root.get(DeviceObjectPkeWarn_.deviceObjectPkeTypeKeyname).in(pkeTypeKeynames);
-		};
-	}
 
 }
