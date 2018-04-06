@@ -12,7 +12,8 @@
     function Service($http, $q) {
         
         var EVENTS_URL = "../api/subscr/contEvent/notifications/contObject/{objectId}/monitorEventsV2",
-            NOTIFICATIONS_URL = "../api/subscr/contEvent/notifications";
+            NOTIFICATIONS_URL = "../api/subscr/contEvent/notifications/paged?page=0&size=100";
+//        /notifications/contObject/{contObjectId}/monitorEventsV2/byContZPoint/{contZPointId}
         
         var requestCanceler = null;
         var httpOptions = null;
@@ -50,7 +51,8 @@
             return $http.get(url, httpOptions);
         }
         
-        function loadNotifications(table, startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew) {
+        function loadNotifications(startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew) {
+            var url = NOTIFICATIONS_URL;
             var params = {
                 fromDate: startDate,
                 toDate: endDate,
@@ -64,7 +66,7 @@
             }
             //return $resource(table, {}, {'get': {method:'GET', params:params, cancellable: true}});
             return $http({
-                url: table,
+                url: url,
                 method: "GET",
                 params: params
             });

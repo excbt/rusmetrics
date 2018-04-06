@@ -9,7 +9,8 @@
                 contObjectId: '<',
                 contZpointId: '<',
                 contZpointName: '<',
-                contZpointType: '<'
+                contZpointType: '<',
+                requestMode: '<'
             },
             templateUrl: "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.html",
             controller: contZpointMonitorComponentController
@@ -37,7 +38,9 @@
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-",
             IMG_EXT = ".png",
-            OBJECTS_PER_PAGE = 100;
+            OBJECTS_PER_PAGE = 100,
+            USER_DATE_TIME_FORMAT = dateSvc.getUserDateTimeFormat(),
+            SYSTEM_DATE_FORMAT = dateSvc.getSystemDateFormat();
         
         var stateFilterValues = [
             IMG_PATH_MONITOR_TEMPLATE + "red" + IMG_EXT,
@@ -174,15 +177,53 @@
 //        vm.$onChanges = changeCmpnt;
         
         ////////////////////////////
-        function initCmpnt() {
-            console.log(vm.contObjectId);
-            if (angular.isDefined(vm.contObjectId) && vm.contObjectId !== null) {
-                vm.svc.loadEvents(vm.contObjectId).then(function (resp) {
-                    console.log(resp);
-                    if (!angular.isArray(resp.data)) {
-                        console.warn("Event data is incorrect: ", resp);
-                        return false;
-                    }
+        
+        function performEvents(eventsRaw) {
+            var events = [];
+            eventsRaw.forEach(function (elm) {
+                var event = {};
+                if (elm.hasOwnProperty("contEventLevelColorKeyname")) { 
+                    event.status = elm.contEventLevelColorKeyname.toLowerCase();
+                }
+                event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
+                event.dateString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
+                event.timeString = dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                event.event = elm.contEventType.name;
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
+                    event.event += ": " + elm.contEvent.message;
+                }
+                events.push(event);
+            });
+            vm.events = events;
+console.log(vm.events);
+        }
+        
+        function performNotifications(eventsRaw) {
+            var events = [];
+            eventsRaw.forEach(function (elm) {
+                var event = {};
+                if (elm.hasOwnProperty("contEventLevelColor")) {
+                    event.status = elm.contEventLevelColor.toLowerCase();
+                }
+                event.dateTimeString = moment(elm.contEventTime).format(USER_DATE_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
+                event.dateString = moment(elm.contEventTime).format("DD.MM.YYYY"); // dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
+                event.timeString = moment(elm.contEventTime).format("HH:mm"); // dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                event.event = elm.contEventType.name;
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
+                    event.event += ": " + elm.contEvent.message;
+                }
+                events.push(event);
+            });
+            vm.events = events;
+console.log(vm.events);
+        }
+        
+        function successLoadEventsCallback(resp) {
+console.log(resp);
+            if (!angular.isArray(resp.data)) {
+                console.warn("Event data is incorrect: ", resp);
+                return false;
+            }
 //                    status: "yellow",
 //                dateTimeString: "01.02.2018 23:59",
 //                dateTime: new Date("02.01.2018 23:59"),
@@ -190,22 +231,49 @@
 //                timeString: "23:59",
 //                event: "Наименование желтого события",
 //                rate: "Средняя"
-                    var events = [];
-                    resp.data.forEach(function (elm) {
-                        var event = {};
-                        event.status = elm.contEventLevelColorKeyname.toLowerCase();
-                        event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY HH:mm");
-                        event.dateString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
-                        event.timeString = dateSvc.dateFormating(elm.contEventTime, "HH:mm");
-                        event.event = elm.contEventType.name;
-                        events.push(event);
-                    });
-                    vm.events = events;
-console.log(vm.events);
-                }, function (err) {
-                    console.error(err);
+            performEvents(resp.data);
+        }
+        
+        function successLoadNotificationsCallback(resp) {
+console.log(resp);
+            if (angular.isUndefined(resp.data) || resp.data === null || !angular.isArray(resp.data.objects)) {
+                console.warn("Notification data is incorrect: ", resp);
+                return false;
+            }            
+            performNotifications(resp.data.objects);
+        }
+        
+        function loadEvents() {
+            console.log(vm.contObjectId);
+            if (angular.isDefined(vm.contObjectId) && vm.contObjectId !== null) {
+                vm.svc.loadEvents(vm.contObjectId)
+                    .then(successLoadEventsCallback, 
+                          function (err) {
+                            console.error(err);
                 });
             }
+        }
+        
+        function loadNotifications() {
+            var objectArray = null;
+//console.log("vm.daterange.startDate", vm.daterange.startDate);  
+//console.log("vm.daterange.endDate", vm.daterange.endDate); 
+//console.log("USER_DATE_TIME_FORMAT", USER_DATE_TIME_FORMAT);
+//console.log("SYSTEM_DATE_FORMAT", SYSTEM_DATE_FORMAT);
+            var startDate = vm.daterange.startDate.format(SYSTEM_DATE_FORMAT),
+                endDate = vm.daterange.endDate.format(SYSTEM_DATE_FORMAT);
+            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew)
+            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null)
+                .then(successLoadNotificationsCallback, 
+                      function (err) {
+                        console.error(err);
+            });
+        }
+        
+        function initCmpnt() {
+console.log(moment());            
+console.log(moment().format(USER_DATE_TIME_FORMAT));
+            loadEvents();
 //            console.log("contZpointMonitorComponentController on Init.", vm);
 //            console.log("01.02.2018 23:59" > "01.02.2018 00:01");
 //            console.log(events);
@@ -215,13 +283,14 @@ console.log(vm.events);
             vm.daterangeOpts.timePicker = true;
             vm.daterangeOpts.timePickerIncrement = 1;
             vm.daterangeOpts.timePicker24Hour = true;
-            vm.daterangeOpts.locale.format = 'DD.MM.YYYY HH:mm';
+            vm.daterangeOpts.locale.format = USER_DATE_TIME_FORMAT;
             vm.daterangeOpts.separator = " - ";
             vm.daterangeOpts.eventHandlers = {
                 'apply.daterangepicker': function (ev, picker) {
                     console.log(ev);
                     console.log(picker);
                     console.log(vm.daterange);
+                    loadNotifications();
                 }
             };
             
@@ -234,9 +303,9 @@ console.log(vm.events);
             //init date
             vm.daterange = {
                 startDate: moment().startOf('Day'),
-                startDateStr: moment().startOf('Day').format("DD.MM.YYYY HH:mm"),
+                startDateStr: moment().startOf('Day').format(USER_DATE_TIME_FORMAT),
                 endDate: moment().endOf('Day'),
-                endDateStr: moment().endOf('Day').format("DD.MM.YYYY HH:mm")
+                endDateStr: moment().endOf('Day').format(USER_DATE_TIME_FORMAT)
             };
         }
         
@@ -245,11 +314,17 @@ console.log(vm.events);
 //        }
         
         function setHistoryMode() {
-            vm.mode = vm.MODES.history;            
+            vm.mode = vm.MODES.history;
+            // load notifications
+            vm.events = [];
+            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew)
+            loadNotifications();
         }
         
         function setSituationsMode() {
             vm.mode = vm.MODES.situations;
+            vm.events = [];
+            loadEvents();
         }
         
 //        $scope.$watch('contObjectId', function (newVal) {
