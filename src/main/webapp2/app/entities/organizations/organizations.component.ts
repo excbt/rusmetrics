@@ -16,6 +16,7 @@ import {
 } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormSearchComponent } from '../blocks/form-search.component';
+import { FormListTemplateComponent } from '../blocks/form-blocks';
 
 @Component({
   selector: 'jhi-organizations',
@@ -27,8 +28,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
   selection: SelectionModel<Organization>;
   dataSource: OrganizationsDataSource;
 
-  displayedColumns = ['id', 'inn', 'organizationName', 'ogrn', 'edit'];
-  // dataSource = new MatTableDataSource(ELEMENT_DATA);
+  displayedColumns = ['id', 'inn', 'okpo', 'ogrn', 'organizationName',  'edit'];
 
   rowCount = 10;
 
@@ -48,6 +48,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.dataSource = new OrganizationsDataSource(this.organizationService);
+    this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
         this.rowCount = count;
@@ -57,30 +58,27 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // server side search
-    this.formSearch.searchAction
-    .pipe(
-      distinctUntilChanged(),
-      tap((arg) => {
-        this.searchString = arg;
-        this.paginator.pageIndex = 0;
-        console.log('from search:', arg);
-        this.loadOrganization(arg);
-      })
-    ).subscribe();
+    this.formSearch.searchAction.pipe(
+          distinctUntilChanged(),
+          tap((arg) => {
+            this.searchString = arg;
+            this.paginator.pageIndex = 0;
+            console.log('from search:', arg);
+            this.loadOrganization(arg);
+          })
+        ).subscribe();
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
     // on sort or paginate events, load a new page
-    merge(this.sort.sortChange, this.paginator.page)
-    .pipe(
-        tap(() => {
-          this.loadOrganization();
-          console.log('from change');
-        })
-    ).subscribe();
+    merge(this.sort.sortChange, this.paginator.page).pipe(
+          tap(() => {
+            this.loadOrganization();
+            console.log('from change');
+          })
+      ).subscribe();
 
-    this.loadOrganization();
   }
 
   loadOrganization(searchString?: string) {
@@ -89,6 +87,12 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
     const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     //  this.dataSource.findAllPaged (sorting, pageSize);
     this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
+  }
+
+  initSearch() {
+    const sorting = new ExcPageSorting();
+    const pageSize: ExcPageSize = new ExcPageSize(0, defaultPageOptions[0]);
+    this.dataSource.findSearchPage (sorting, pageSize, '');
   }
 
 }

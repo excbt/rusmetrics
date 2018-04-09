@@ -14,6 +14,7 @@ import {
     FormEditButtonsComponent,
     FormDetailFieldComponent,
     FormTemplateComponent,
+    FormListTemplateComponent
     } from './blocks/form-blocks';
 
 import { FormSearchComponent } from './blocks/form-search.component';
@@ -74,6 +75,7 @@ import { entityState } from './';
         FormEditButtonsComponent,
         FormDetailFieldComponent,
         FormTemplateComponent,
+        FormListTemplateComponent,
         FormSearchComponent
     ],
     entryComponents: [

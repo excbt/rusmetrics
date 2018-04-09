@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, HostBinding } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostBinding, ViewChild } from '@angular/core';
 import {
     FormGroup,
     Validators,
@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { DEBUG_INFO_ENABLED } from '../../app.constants';
 import { slideInDownAnimation } from '../animations';
+import { FormSearchComponent } from './form-search.component';
 
 @Component({
     selector: 'jhi-top-header',
@@ -67,6 +68,9 @@ export class FormDetailFieldComponent {
     }
 }
 
+// ****************************************************************
+// Form Template
+// ****************************************************************
 @Component({
     selector: 'jhi-form-template',
     templateUrl: `./form-template.component.html`,
@@ -79,6 +83,26 @@ export class FormTemplateComponent {
     @HostBinding('style.position')  position = 'absolute';
 }
 
+// ****************************************************************
+// Form List Template
+// ****************************************************************
+@Component({
+    selector: 'jhi-form-list-template',
+    templateUrl: `./form-list-template.component.html`,
+    animations: [ slideInDownAnimation ],
+    styleUrls: ['./form-list-template.component.scss']
+})
+export class FormListTemplateComponent {
+    @HostBinding('@routeAnimation') routeAnimation = true;
+    @HostBinding('style.display')   display = 'block';
+    @HostBinding('style.position')  position = 'absolute';
+
+    @ViewChild(FormSearchComponent) formSearch: FormSearchComponent;
+}
+
+// ****************************************************************
+// Validators for form
+// ****************************************************************
 export class CustomValidators {
 
     static numValueValidatorOld(v1: number, v2: number): ValidatorFn {
