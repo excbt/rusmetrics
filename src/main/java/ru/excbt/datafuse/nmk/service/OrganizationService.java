@@ -2,8 +2,8 @@ package ru.excbt.datafuse.nmk.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
@@ -143,6 +143,7 @@ public class OrganizationService implements SecuredRoles {
 		return organizations;
 	}
 
+
     /**
      *
      * @param userids
@@ -165,14 +166,11 @@ public class OrganizationService implements SecuredRoles {
             if (s.isEmpty())
                 return;
 
-            BooleanExpression searchCond = qOrganization.inn.like(s)
-                .or(qOrganization.ogrn.like(s))
-                .or(qOrganization.organizationName.like(s));
-            log.info("search Cond: {}", searchCond.toString());
+            BooleanExpression searchCond = qOrganization.inn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
+                .or(qOrganization.ogrn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
+                .or(qOrganization.organizationName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)));
             where.and(searchCond);
         });
-
-        log.info("where: {}", where.toString());
 
         Page<OrganizationDTO> page = organizationRepository.findAll(where, pageable).map(organizationMapper::toDTO);
 		return page;
