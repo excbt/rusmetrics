@@ -1,20 +1,35 @@
 
 .portal-card {
     padding: 1%;
-    padding-top: 1em;
-    margin-top: 0%;
+    // padding-top: 0 !important;
+    margin-top: 0% !important;
     margin-left: 0%;
     border: none;
     height: 92vh;
     border-top: 1px solid black;
-    border-radius: 0 !important;            
+    border-radius: 0 !important;    
+    width: 100%;
+    background-color: #fff;
+    position: relative;
+    // display: flex;
+    // flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-clip: border-box;
+    
 }
 
 .portal-container {
+    margin-top: 0%;
+    padding-top: 0%;
     padding-left: 0%;
     padding-right: 0%;
+    // border-top: 0;
 }
 
 .portal-headerbar {
-    height: 6.5vh;
+    // height: 6vh;
+    height: auto;
+    margin-bottom: 0;
+
 }
