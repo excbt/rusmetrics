@@ -49,24 +49,24 @@
             IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
         ];
         
-        var dateFilterValues = [
-            "01.02.2018",
-            "31.01.2018"
-        ];
-        
-        var timeFilterValues = [
-            "23:59",
-            "23:00",
-            "22:00",
-            "21:00",
-            "00:01"
-        ];
-        
-        var eventFilterValues = [
-            "Наименование желтого события",
-            "Наименование красного события",
-            "Наименование зеленого события"
-        ];
+//        var dateFilterValues = [
+//            "01.02.2018",
+//            "31.01.2018"
+//        ];
+//        
+//        var timeFilterValues = [
+//            "23:59",
+//            "23:00",
+//            "22:00",
+//            "21:00",
+//            "00:01"
+//        ];
+//        
+//        var eventFilterValues = [
+//            "Наименование желтого события",
+//            "Наименование красного события",
+//            "Наименование зеленого события"
+//        ];
         
         vm.columns = [
             {
@@ -88,21 +88,21 @@
                 headerClass: "nmc-zp-monitor-date-th",
                 caption: "Дата",
                 type: "datetext",
-                filterValues: dateFilterValues
+                filterValues: null
             },
             {
                 name: "timeString",
                 headerClass: "noPadding nmc-zp-monitor-time-th",
                 caption: "Время",
                 type: "timetext",
-                filterValues: timeFilterValues
+                filterValues: null
             },
             {
                 name: "event",
                 headerClass: "nmc-zp-monitor-event-th",
                 caption: "Событие",
                 type: "text",
-                filterValues: eventFilterValues
+                filterValues: null
             }/*,
             {
                 name: "rate",
@@ -112,57 +112,57 @@
             },*/
         ];
         
-        var events = [
-            {
-                status: "yellow",
-                dateTimeString: "01.02.2018 23:59",
-                dateTime: new Date("02.01.2018 23:59"),
-                dateString: "01.02.2018",
-                timeString: "23:59",
-                event: "Наименование желтого события",
-                rate: "Средняя"
-            },
-            {
-                status: "red",
-                dateTimeString: "01.02.2018 23:00",
-                dateTime: new Date("02.01.2018 23:00"),
-                dateString: "01.02.2018",
-                timeString: "23:00",
-                event: "Наименование красного события. Очень длинное описание красного события, такое что не влазит на экран целиком.",
-                rate: "Высокая"
-            },
-            {
-                status: "green",
-                dateTimeString: "01.02.2018 00:01",
-                dateTime: new Date("02.01.2018 00:01"),
-                dateString: "01.02.2018",
-                timeString: "00:01",
-                event: "Наименование зеленого события",
-                rate: "Нет"
-            },
-            {
-                status: "yellow",
-                dateTimeString: "31.01.2018 22:00",
-                dateTime: new Date("01.31.2018 22:00"),
-                dateString: "31.01.2018",
-                timeString: "22:00",
-                event: "Наименование желтого события.",
-                rate: "Средняя"
-            },
-            {
-                status: "yellow",
-                dateTimeString: "31.01.2018 21:00",
-                dateTime: new Date("01.31.2018 21:00"),
-                dateString: "31.01.2018",
-                timeeString: "21:00",
-                event: "Наименование желтого события. Очень длинное описание желтого события, такое что не влазит на экран целиком.",
-                rate: "Средняя"
-            }
-        ];
+//        var events = [
+//            {
+//                status: "yellow",
+//                dateTimeString: "01.02.2018 23:59",
+//                dateTime: new Date("02.01.2018 23:59"),
+//                dateString: "01.02.2018",
+//                timeString: "23:59",
+//                event: "Наименование желтого события",
+//                rate: "Средняя"
+//            },
+//            {
+//                status: "red",
+//                dateTimeString: "01.02.2018 23:00",
+//                dateTime: new Date("02.01.2018 23:00"),
+//                dateString: "01.02.2018",
+//                timeString: "23:00",
+//                event: "Наименование красного события. Очень длинное описание красного события, такое что не влазит на экран целиком.",
+//                rate: "Высокая"
+//            },
+//            {
+//                status: "green",
+//                dateTimeString: "01.02.2018 00:01",
+//                dateTime: new Date("02.01.2018 00:01"),
+//                dateString: "01.02.2018",
+//                timeString: "00:01",
+//                event: "Наименование зеленого события",
+//                rate: "Нет"
+//            },
+//            {
+//                status: "yellow",
+//                dateTimeString: "31.01.2018 22:00",
+//                dateTime: new Date("01.31.2018 22:00"),
+//                dateString: "31.01.2018",
+//                timeString: "22:00",
+//                event: "Наименование желтого события.",
+//                rate: "Средняя"
+//            },
+//            {
+//                status: "yellow",
+//                dateTimeString: "31.01.2018 21:00",
+//                dateTime: new Date("01.31.2018 21:00"),
+//                dateString: "31.01.2018",
+//                timeeString: "21:00",
+//                event: "Наименование желтого события. Очень длинное описание желтого события, такое что не влазит на экран целиком.",
+//                rate: "Средняя"
+//            }
+//        ];
         
         vm.orderBy = {field: 'dateTime', asc: true};
-        vm.periodStart = "31.01.2018 21:00";
-        vm.periodEnd = "01.02.2018 23:59";
+//        vm.periodStart = "31.01.2018 21:00";
+//        vm.periodEnd = "01.02.2018 23:59";
         
         vm.setOrderBy = function (field) {
             vm.orderBy.asc = !vm.orderBy.asc;
