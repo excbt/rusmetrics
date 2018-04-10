@@ -126,7 +126,7 @@
 -->
 <!--                  ng-src = "{{$ctrl.data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || $ctrl.data.currentPTreeMonitorDefault}}"-->
 
-          <i ng-if = "!$ctrl.isDeviceNode(item)" 
+          <i ng-if = "!$ctrl.isDeviceNode(item) && !$ctrl.isContZpointNode(item)" 
             class="btn btn-xs glyphicon"
              ng-class="{'glyphicon-menu-right': $ctrl.isChevronRight(collapsed, item), 'glyphicon-menu-down': $ctrl.isChevronDown(collapsed, item), 'glyphicon-menu-right nmc-button-disabled': $ctrl.isChevronDisabled(collapsed, item)}"
              data-nodrag ng-click="toggle(this)"
@@ -192,10 +192,12 @@
                ></i>
                 {{item.nodeObject.customServiceName}}<span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
+<!--
             <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle" style = "margin-left: 25px;">
                 <img class=""                  
                    ng-src = "components/object-tree-module/tree-navigate-component/images/device.png"
                    style = "height: 16px; width: 16px; margin-right: 5px;"/>
+-->
 <!--
                 <i class = "glyphicon glyphicon-scale text-warning" style = "margin-right: 5px; color: white; text-shadow: -1px 0 #8a6d3b, 0 1px #8a6d3b, 1px 0 #8a6d3b, 0 -1px #8a6d3b;"                    
                 
@@ -203,11 +205,13 @@
                 ></i>
 -->
               
+<!--
                <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
                <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
                <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
                <span ng-show="$ctrl.isSystemuser()">(id = {{item.nodeObject.id}})</span>
             </span>
+-->
 <!--
             <span class="nmc-valign-middle">                
                 <p ng-if = "(item.linkedNodeObjectsOnPage.length > 0 || item.childNodesOnPage.length > 0) && !collapsed"
