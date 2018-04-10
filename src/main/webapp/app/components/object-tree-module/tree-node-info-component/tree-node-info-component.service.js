@@ -64,6 +64,12 @@
         ]; 
         
         var zpointNodeWidgets = [
+            
+            {
+                keyname: "CONT_ZPOINT_CONS_WIDGET",
+                caption: "Точка учета",
+                stateName: "objectsPTree.treeNodeInfo.contZpointConsWidget"
+            },
             {
                 keyname: "INDICATOR_VIEW",
                 caption: "Показания",
