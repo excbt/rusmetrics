@@ -42,7 +42,14 @@
               </div>
               <md-button class = "md-icon-button nmc-md-ltb-btn nmc-md-main-search-btn" aria-label = "Поиск" 
                      ng-click = "$ctrl.startSearch()">
-                  <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+                  <md-icon ng-if = "!$ctrl.searchFlag" md-font-set = "fa fa-lg">&#xf002;</md-icon>
+                  
+                  <i ng-if = "$ctrl.searchFlag"
+                       class = "btn btn-lg glyphicon glyphicon-remove"
+                       style = "color: rgb(95, 95, 95); margin-top: -18px; margin-left: -15px;"
+                     >
+                         
+                     </i>
               </md-button>
               <md-menu md-offset = "0 40">
                   <md-button class = "md-icon-button nmc-md-ltb-btn nmc-md-main-user-btn"
