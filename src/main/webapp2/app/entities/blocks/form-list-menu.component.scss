@@ -1,3 +1,9 @@
+@mixin fa-icon-size($size: 24px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+}
+
 .search1 {
   width: 50em;
 }
@@ -6,7 +12,7 @@
   display: inline;
   padding-top: 0;
   border-width: 0;
-  font-size: 2.5rem;
+  font-size: 2.1rem;
   font-weight: 300;
   position: absolute;
   left: 2em;
@@ -17,4 +23,8 @@
   border-style: solid;
   border-color: gray;
   border-width: 1px;
+}
+
+.menu-bars-size {
+  @include fa-icon-size(40px);
 }
