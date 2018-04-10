@@ -11,7 +11,7 @@
 
 
 .headerbar-profile-menu-icon {
-    @include md-icon-size(24px);
+    @include md-icon-size(40px);
 }
 
 .headerbar-profile-font {
@@ -48,9 +48,25 @@
     font-feature-settings: 'liga';
   }
 
-#top-right
-{
-    right: 0;
-    top: 0;
-    position: absolute;
+// #top-right
+// {
+//     right: 0;
+//     top: 0;
+//     position: absolute;
+// }
+
+.toolbar-container {
+    //padding-top: 1em;
+    height: 30px;    
+    // padding: 0%,0%,0%,0%;
+}
+
+.toolbar-row .ui-corner-all {
+    height: 2.5em;
+    border-radius: 0 !important;    
+}
+
+.img-vertical-align {
+    line-height: 20px !important;
+    vertical-align: middle;
 }

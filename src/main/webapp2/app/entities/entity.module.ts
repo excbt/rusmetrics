@@ -14,10 +14,11 @@ import {
     FormEditButtonsComponent,
     FormDetailFieldComponent,
     FormTemplateComponent,
-    FormListTemplateComponent
+    FormListTemplateComponent,
     } from './blocks/form-blocks';
 
 import { FormSearchComponent } from './blocks/form-search.component';
+import { FormListMenuComponent } from './blocks/form-list-menu.component';
 
 import {
     MatGridListModule,
@@ -38,8 +39,13 @@ import { MatPaginatorIntl } from '@angular/material';
 import { ruPaginatorIntl } from './shared/ru-paginator-intl';
 import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
+// PRIME NG
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
+import { MenuItem } from 'primeng/api';
+
+// Etc
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -63,7 +69,9 @@ import { entityState } from './';
         MatCheckboxModule,
         MatSelectModule,
         MatTooltipModule,
-        InputTextModule
+        InputTextModule,
+        // PRIME NG
+        MenubarModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
@@ -76,7 +84,8 @@ import { entityState } from './';
         FormDetailFieldComponent,
         FormTemplateComponent,
         FormListTemplateComponent,
-        FormSearchComponent
+        FormSearchComponent,
+        FormListMenuComponent
     ],
     entryComponents: [
     ],

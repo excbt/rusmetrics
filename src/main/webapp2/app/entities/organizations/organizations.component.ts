@@ -16,6 +16,7 @@ import {
 } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
 import { FormSearchComponent } from '../blocks/form-search.component';
+import { FormListMenuComponent } from '../blocks/form-list-menu.component';
 import { FormListTemplateComponent } from '../blocks/form-blocks';
 
 @Component({
@@ -36,7 +37,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(FormSearchComponent) formSearch: FormSearchComponent;
+  @ViewChild(FormListMenuComponent) formMenu: FormListMenuComponent;
 
   constructor(
       private organizationService: OrganizationsService,
@@ -58,7 +59,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     // server side search
-    this.formSearch.searchAction.pipe(
+    this.formMenu.searchAction.pipe(
           distinctUntilChanged(),
           tap((arg) => {
             this.searchString = arg;

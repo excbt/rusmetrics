@@ -10,6 +10,7 @@ import { JhiEventManager } from 'ng-jhipster';
 // PRIME NG
 import { SidebarModule } from 'primeng/sidebar';
 import { PanelModule } from 'primeng/panel';
+import { ToolbarModule } from 'primeng/toolbar';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -52,7 +53,9 @@ import {
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         // UI modules
         MatMenuModule,
+        // Prime NG
         SidebarModule,
+        ToolbarModule,
         PanelModule,
         MatToolbarModule,
         MatButtonModule,

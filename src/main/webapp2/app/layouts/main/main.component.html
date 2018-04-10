@@ -1,6 +1,8 @@
-<div>
+<div class="portal-headerbar">
    <router-outlet name="headerbar"></router-outlet>
-   <router-outlet name="mainmenu"></router-outlet>
+</div>
+<div>
+    <router-outlet name="mainmenu"></router-outlet>
 </div>
 <!-- <jhi-headerbar></jhi-headerbar>
 <jhi-left-main-menu></jhi-left-main-menu> -->
@@ -9,7 +11,7 @@
 <!-- <div>
     <router-outlet name="mainmenu"></router-outlet>
 </div> -->
-<div class="container-fluid">
+<div class="container-fluid portal-container">
     <div class="card portal-card">
         <router-outlet></router-outlet>
         <router-outlet name="popup"></router-outlet>

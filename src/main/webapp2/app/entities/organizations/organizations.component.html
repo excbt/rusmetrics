@@ -1,11 +1,7 @@
 <jhi-form-template>
+    <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-form-search></jhi-form-search>    
-
-    <h1 jhiTranslate="organizations.title">
-        Organization Title
-    </h1>
-
+    <jhi-form-list-menu headerString="{{'organizations.title' | translate}}"></jhi-form-list-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
         <mat-progress-bar  color="primary" mode="indeterminate">
