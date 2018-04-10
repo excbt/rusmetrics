@@ -171,7 +171,8 @@
 //            vm.filterObjects();
         };
         
-        vm.events = [];//events.concat(events).concat(events);        
+        vm.events = [];//events.concat(events).concat(events);
+        vm.eventsOnPage = [];
         
         vm.toggleSettings = function () {
             vm.showSettingsFlag = !vm.showSettingsFlag;
@@ -210,6 +211,7 @@
                 events.push(event);
             });
             vm.events = events;
+            vm.eventsOnPage = angular.copy(events);
 console.log(vm.events);
         }
         
@@ -231,6 +233,7 @@ console.log(vm.events);
                 events.push(event);
             });
             vm.events = events;
+            vm.eventsOnPage = angular.copy(events);
 console.log(vm.events);
         }
         
@@ -345,6 +348,7 @@ console.log(vm.daterangeOpts);
             vm.mode = vm.MODES.history;
             // load notifications
             vm.events = [];
+            vm.eventsOnPage = [];
             // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew)
             loadNotifications();
         }
@@ -352,12 +356,36 @@ console.log(vm.daterangeOpts);
         function setSituationsMode() {
             vm.mode = vm.MODES.situations;
             vm.events = [];
+            vm.eventsOnPage = [];
             loadEvents();
         }
         
 //        $scope.$watch('contObjectId', function (newVal) {
 //            console.log(newVal);
 //        });
+        
+        
+        vm.setColorFilter = function (column, colorPath) {
+            //need column: name, colorPath
+            
+            var filteredObjects = []; //$filter('filter')(ctrl.objects, ctrl.filter);
+            vm.events.forEach(function (obj) {
+                if (obj[column.name] === colorPath) {
+                    filteredObjects.push(obj);
+                }
+            });
+            vm.eventsOnPage = filteredObjects;
+            vm.columns.forEach(function (clmn) {
+                clmn.setFilterFlag = false;
+            });
+            column.setFilterFlag = true;
+        };
+        
+        vm.removeColorFilter = function(column) {
+            column.setFilterFlag = false;
+            vm.eventsOnPage = vm.events;
+//            vm.addMoreObjectsOnPage();
+        };
         
     }
 })();
