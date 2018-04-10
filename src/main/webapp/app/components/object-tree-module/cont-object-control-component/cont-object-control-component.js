@@ -659,6 +659,19 @@ console.log(ctrl);
 //        ctrl.getBuildingIcon = function (buildingType) {
 //            return contObjectBuildingService.getBuildingTypeCategoryIcon24(buildingType);
 //        };
+        
+        ctrl.getMonitorStatusFromIconPath = function (iconPath) {
+            if (angular.isUndefined(iconPath) || iconPath === null) {
+                return null;
+            }
+            if (iconPath.indexOf("red.png") !== -1) {
+                return "RED";
+            }
+            if (iconPath.indexOf("yellow.png") !== -1) {
+                return "YELLOW";
+            }
+            return "GREEN";
+        };
     }
     
 }());

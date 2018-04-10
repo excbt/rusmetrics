@@ -10,7 +10,7 @@
                 contZpointId: '<',
                 contZpointName: '<',
                 contZpointType: '<',
-                requestMode: '<'
+                monitorStatus: '<'
             },
             templateUrl: "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.html",
             controller: contZpointMonitorComponentController
@@ -33,7 +33,7 @@
         vm.svc = contZpointMonitorComponentService;
         vm.MODES = MODES;
         vm.showSettingsFlag = false;
-        vm.mode = vm.MODES.situations;
+        vm.mode = null;
         vm.$onInit = initCmpnt;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-",
@@ -293,7 +293,9 @@ console.log(resp);
         function initCmpnt() {
 console.log(moment());            
 console.log(moment().format(USER_DATE_TIME_FORMAT));
-            loadEvents();
+console.log(vm.monitorStatus);                        
+//            vm.mode = vm.MODES.situations;
+//            loadEvents();
 //            console.log("contZpointMonitorComponentController on Init.", vm);
 //            console.log("01.02.2018 23:59" > "01.02.2018 00:01");
 //            console.log(events);
@@ -318,7 +320,7 @@ console.log(moment().format(USER_DATE_TIME_FORMAT));
 //                return "nmc-date-class";
 //            };
 
-            console.log(vm.daterangeOpts);            
+console.log(vm.daterangeOpts);            
             
             //init date
             vm.daterange = {
@@ -327,6 +329,12 @@ console.log(moment().format(USER_DATE_TIME_FORMAT));
                 endDate: moment().endOf('Day'),
                 endDateStr: moment().endOf('Day').format(USER_DATE_TIME_FORMAT)
             };
+            
+            if (vm.monitorStatus === 'GREEN' || vm.monitorStatus === 'green') {
+                vm.setHistoryMode();
+            } else {
+                vm.setSituationsMode();                
+            }
         }
         
 //        function changeCmpnt(changes) {

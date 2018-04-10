@@ -378,7 +378,9 @@
                    cont-object-id = "$ctrl.selectedObject.id" 
                    cont-zpoint-id = "0" 
                    cont-zpoint-name = "null" 
-                   cont-zpoint-type = "$ctrl.contZpointFilterValue">
+                   cont-zpoint-type = "$ctrl.contZpointFilterValue"
+                   monitor-status = "$ctrl.getMonitorStatusFromIconPath($ctrl.selectedObject[$ctrl.contZpointFilterValue])"
+                   >
                     
                 </cont-zpoint-monitor-component>
             </div>
