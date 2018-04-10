@@ -236,7 +236,7 @@
 <!--              style = "display: flex; flex-direction: row; align-items: stretch;"-->
                <div ng-repeat = "column in $ctrl.columns track by $index"
                 ng-class = "column.headerClass"
-                 style = "padding: 7px;"
+                 style = "padding: 7px 0px;"
                  ng-style = "{'background-color': rowIndex % 2 === 0 ? '#f9f9f9' : 'white'}"
                  >
                   <div ng-switch on = "column.type"
