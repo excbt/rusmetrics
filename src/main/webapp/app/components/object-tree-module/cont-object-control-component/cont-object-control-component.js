@@ -15,9 +15,9 @@
             controller: contObjectControlComponentController
         });
     
-    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout', '$mdDialog'];
+    contObjectControlComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectControlComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout', '$mdDialog', 'objectTreeService'];
     
-    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout, $mdDialog) {
+    function contObjectControlComponentController($scope, $element, $attrs, contObjectControlComponentService, $stateParams, contObjectService, $filter, $timeout, $mdDialog, objectTreeService) {
         /*jshint validthis: true*/
         var ctrl = this;
         ctrl.objects = [];        
@@ -129,9 +129,7 @@
         ctrl.checkEmptyObject = contObjectCtrlSvc.checkEmptyObject;
         ctrl.EVENTS = contObjectCtrlSvc.EVENTS;
         
-        ctrl.isSystemuser = function () {
-            return true;
-        };
+        ctrl.isSystemuser = objectTreeService.isSystemuser;
         
         ctrl.orderBy = {field: 'caption', asc: false};
 //console.log('ctrl.orderBy: ', ctrl.orderBy);
