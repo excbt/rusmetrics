@@ -12,6 +12,7 @@
     function Service() {
         var BUILDING_TYPE_CATEGORY_ICONS_PATH = "components/shared/cont-object-module/buildings/",
             DEFAULT_ICON = "building24.png",
+            DEFAULT_ICON_16 = "building16.png",
             //icons for size 24x24            
             APT_BUILDING_ICON = "mkd26.png",
             COT_BUILDING_ICON = "cot16.png",
@@ -75,7 +76,7 @@
             IND_HOUSES_ICON_16 = "dom16.png",
             LAND_PLOT_ICON_16 = "dom16.png",
             TEMP_STAY_ICON_16 = "hotel16.png",
-            HEALTH_ICON_16 = "hospital24.png",
+            HEALTH_ICON_16 = "hospital16.png",
             GOV_BUILDINGS_ICON_16 = "gos16.png",
             SPORT_ICON_16 = "stadium16.png",
             BUILDING_TYPE_CATEGORY_ICONS_16 = {
@@ -138,7 +139,7 @@
         function getBuildingTypeCategoryIcon16(buildingTypeCategory) {
 //console.log(buildingTypeCategory);            
 //console.log(BUILDING_TYPE_CATEGORY_ICONS_16[buildingTypeCategory] || BUILDING_TYPE_CATEGORY_ICONS_PATH + DEFAULT_ICON);            
-            return BUILDING_TYPE_CATEGORY_ICONS_16[buildingTypeCategory] || BUILDING_TYPE_CATEGORY_ICONS_PATH + DEFAULT_ICON;
+            return BUILDING_TYPE_CATEGORY_ICONS_16[buildingTypeCategory] || BUILDING_TYPE_CATEGORY_ICONS_PATH + DEFAULT_ICON_16;
         }
     }
 })();
