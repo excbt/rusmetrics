@@ -33,3 +33,13 @@ export const organizationEditRoute: Route = {
     },
     canActivate: [UserRouteAccessService]
 };
+
+export const organizationNewRoute: Route = {
+    path: 'organizations/new/edit',
+    component: OrganizationEditComponent,
+    data: {
+        pageTitle: 'organization.edit.title',
+        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
+    },
+    canActivate: [UserRouteAccessService]
+};

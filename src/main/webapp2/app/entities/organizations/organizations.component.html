@@ -2,7 +2,8 @@
     <!-- <jhi-form-search></jhi-form-search>     -->
 
     <jhi-exc-form-list-menu headerString="{{'organizations.title' | translate}}" 
-        [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false">
+        [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+        (createAction)="newRecord()">
     </jhi-exc-form-list-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
@@ -28,8 +29,8 @@
 
 
         <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'global.field.id' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.id}} </mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let organization" class="id-column-width"> {{organization.id}} </mat-cell>
         </ng-container>
         
         <ng-container matColumnDef="organizationName">

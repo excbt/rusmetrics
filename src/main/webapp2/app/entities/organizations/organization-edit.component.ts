@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
 import { FormBuilder, FormGroup, AbstractControl} from '@angular/forms';
@@ -34,20 +34,27 @@ export class FormControlCheck {
 
     loading: boolean;
 
-    private subscription: Subscription;
+    // private subscription: Subscription;
     private eventSubscriber: Subscription;
+    private newFlag: boolean;
 
     constructor(private fb: FormBuilder,
                 private eventManager: JhiEventManager,
                 private service: OrganizationsService,
                 private organizationTypeService: OrganizationTypeService,
-                private route: ActivatedRoute) {
+                private router: Router,
+                private activatedRoute: ActivatedRoute) {
     }
 
     ngOnInit() {
         console.log('Edit load');
-        this.subscription = this.route.params.subscribe((params) => {
-            this.loadOrganization(params['id']);
+        // this.subscription =
+        this.activatedRoute.params.subscribe((params) => {
+            if (params['id'] && params['id'] !== 'new') {
+                this.loadOrganization(params['id']);
+            } else {
+                this.newFlag = true;
+            }
         });
         this.initForm();
         this.registerChangeInOrganization();
@@ -62,6 +69,7 @@ export class FormControlCheck {
     }
 
     loadOrganization(id) {
+        console.log('Load Organization');
         this.service.find(id).subscribe((data) => {
             this.organization = data;
             console.log('loaded organization id:' + this.organization.id);
@@ -89,7 +97,6 @@ export class FormControlCheck {
             flagCm: [data.flagCm],
             organizationDescription: [data.organizationDescription],
             isCommon: [data.isCommon],
-            rmaSubscriberId: [data.rmaSubscriberId],
             flagServ: [data.flagServ],
             inn: [data.inn, [ExcCustomValidators.valueLength([10, 12]), ExcCustomValidators.onlyNumbersPattern()]],
             kpp: [data.kpp, [ExcCustomValidators.valueLength(9), ExcCustomValidators.onlyNumbersPattern()]],
@@ -115,38 +122,38 @@ export class FormControlCheck {
 
     initForm() {
         this.organizationForm = this.fb.group({
-            id: [''],
-            organizationName: '',
-            organizationFullName: '',
-            organizationFullAddress: '',
+            id: null,
+            organizationName: null,
+            organizationFullName: null,
+            organizationFullAddress: null,
             flagRso: false,
             flagManagement: false,
             flagRma: false,
-            keyname: '',
+            keyname: null,
             flagCm: false,
-            organizationDescription: '',
+            organizationDescription: null,
             isCommon: false,
-            rmaSubscriberId: '',
+            rmaSubscriberId: null,
             flagServ: false,
-            inn: ['', [Validators.minLength(8), Validators.maxLength(12)]],
-            kpp: ['', [Validators.maxLength(9)]],
-            okpo: ['', [Validators.maxLength(10)]],
-            ogrn: ['', [Validators.maxLength(13)]],
-            legalAddress: '',
-            factAddress: '',
-            postAddress: '',
-            reqAccount: ['', [Validators.maxLength(20)]],
-            reqBankName: '',
-            reqCorrAccount: ['', [Validators.maxLength(20)]],
-            reqBik: ['', [Validators.maxLength(9)]],
-            contactPhone: ['', [Validators.maxLength(12)]],
-            contactPhone2: ['', [Validators.maxLength(12)]],
-            contactPhone3: ['', [Validators.maxLength(12)]],
-            contactEmail: ['', [Validators.maxLength(60)]],
-            siteUrl: '',
-            directorFio: '',
-            chiefAccountantFio: '',
-            organizationTypeId: ''
+            inn: [null, [Validators.minLength(8), Validators.maxLength(12)]],
+            kpp: [null, [Validators.maxLength(9)]],
+            okpo: [null, [Validators.maxLength(10)]],
+            ogrn: [null, [Validators.maxLength(13)]],
+            legalAddress: null,
+            factAddress: null,
+            postAddress: null,
+            reqAccount: [null, [Validators.maxLength(20)]],
+            reqBankName: null,
+            reqCorrAccount: [null, [Validators.maxLength(20)]],
+            reqBik: [null, [Validators.maxLength(9)]],
+            contactPhone: [null, [Validators.maxLength(12)]],
+            contactPhone2: [null, [Validators.maxLength(12)]],
+            contactPhone3: [null, [Validators.maxLength(12)]],
+            contactEmail: [null, [Validators.maxLength(60)]],
+            siteUrl: null,
+            directorFio: null,
+            chiefAccountantFio: null,
+            organizationTypeId: null
         });
     }
 
@@ -159,8 +166,10 @@ export class FormControlCheck {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
-        this.eventManager.destroy(this.eventSubscriber);
+        // this.subscription.unsubscribe();
+        if (this.eventSubscriber) {
+            this.eventManager.destroy(this.eventSubscriber);
+        }
     }
 
     previousState() {
@@ -176,52 +185,55 @@ export class FormControlCheck {
         )
         .subscribe( (data: Organization) => {
             this.loading = false;
-            this.createForm(this.organization = data);
+            if (data['id']) {
+                if (this.newFlag) {
+                    this.router.navigate(['/organizations']);
+                } else {
+                    this.createForm(this.organization = data);
+                }
+            }
         });
+    }
+
+    checkEmpty(val: any) {
+        return (val === '') ? null : val;
     }
 
     presaveOrganization(): Organization {
         const formModel = this.organizationForm.value;
 
         const saveOrganization: Organization = {
-            id: formModel.id as number,
-            organizationName: formModel.organizationName as string,
-            organizationFullName: formModel.organizationFullName as string,
-            organizationFullAddress: formModel.organizationFullAddress as string,
-            exCode: this.organization.exCode,
-            exSystem: this.organization.exSystem,
-            flagRso: formModel.flagRso as boolean,
-            flagManagement: formModel.flagManagement as boolean,
-            flagRma: formModel.flagRma as boolean,
-            keyname: formModel.keyname as string,
-            isDevMode: this.organization.isDevMode,
-            flagCm: formModel.flagCm as boolean,
-            organizationDescription: formModel.organizationDescription as string,
-            isCommon: formModel.isCommon as boolean,
-            rmaSubscriberId: formModel.rmaSubscriberId as number,
-            flagServ: formModel.flagServ as boolean,
-            inn: formModel.inn as string,
-            kpp: formModel.kpp as string,
-            okpo: formModel.okpo as string,
-            ogrn: formModel.ogrn as string,
-            legalAddress: formModel.legalAddress as string,
-            factAddress: formModel.factAddress as string,
-            postAddress: formModel.postAddress as string,
-            reqAccount: formModel.reqAccount as string,
-            reqBankName: formModel.reqBankName as string,
-            reqCorrAccount: formModel.reqCorrAccount as string,
-            reqBik: formModel.reqBik as string,
-            contactPhone: formModel.contactPhone as string,
-            contactPhone2: formModel.contactPhone2 as string,
-            contactPhone3: formModel.contactPhone3 as string,
-            contactEmail: formModel.contactEmail as string,
-            siteUrl: formModel.siteUrl as string,
-            directorFio: formModel.directorFio as string,
-            chiefAccountantFio: formModel.chiefAccountantFio as string,
-            organizationTypeId: formModel.organizationTypeId as number,
-            organizationTypeName: null,
-            version: this.organization.version
-        };
+            id: this.checkEmpty(formModel.id as number),
+            organizationName: this.checkEmpty(formModel.organizationName as string),
+            organizationFullName: this.checkEmpty(formModel.organizationFullName as string),
+            organizationFullAddress: this.checkEmpty(formModel.organizationFullAddress as string),
+            flagRso: this.checkEmpty(formModel.flagRso as boolean),
+            flagManagement: this.checkEmpty(formModel.flagManagement as boolean),
+            flagRma: this.checkEmpty(formModel.flagRma as boolean),
+            keyname: this.checkEmpty(formModel.keyname as string),
+            flagCm: this.checkEmpty(formModel.flagCm as boolean),
+            organizationDescription: this.checkEmpty(formModel.organizationDescription as string),
+            isCommon: this.checkEmpty(formModel.isCommon as boolean),
+            flagServ: this.checkEmpty(formModel.flagServ as boolean),
+            inn: this.checkEmpty(formModel.inn as string),
+            kpp: this.checkEmpty(formModel.kpp as string),
+            okpo: this.checkEmpty(formModel.okpo as string),
+            ogrn: this.checkEmpty(formModel.ogrn as string),
+            legalAddress: this.checkEmpty(formModel.legalAddress as string),
+            factAddress: this.checkEmpty(formModel.factAddress as string),
+            postAddress: this.checkEmpty(formModel.postAddress as string),
+            reqAccount: this.checkEmpty(formModel.reqAccount as string),
+            reqBankName: this.checkEmpty(formModel.reqBankName as string),
+            reqCorrAccount: this.checkEmpty(formModel.reqCorrAccount as string),
+            reqBik: this.checkEmpty(formModel.reqBik as string),
+            contactPhone: this.checkEmpty(formModel.contactPhone as string),
+            contactPhone2: this.checkEmpty(formModel.contactPhone2 as string),
+            contactPhone3: this.checkEmpty(formModel.contactPhone3 as string),
+            contactEmail: this.checkEmpty(formModel.contactEmail as string),
+            siteUrl: this.checkEmpty(formModel.siteUrl as string),
+            directorFio: this.checkEmpty(formModel.directorFio as string),
+            chiefAccountantFio: this.checkEmpty(formModel.chiefAccountantFio as string),
+            organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),        };
         return saveOrganization;
     }
 
