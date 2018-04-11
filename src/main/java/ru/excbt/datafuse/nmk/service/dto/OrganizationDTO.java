@@ -56,8 +56,6 @@ public class OrganizationDTO {
 
     private Boolean isCommon;
 
-    private Long rmaSubscriberId;
-
     private Boolean flagServ;
 
     private String inn;

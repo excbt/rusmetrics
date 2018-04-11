@@ -1,14 +1,9 @@
 package ru.excbt.datafuse.nmk.data.model;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.config.Constants;
@@ -18,6 +13,9 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 import ru.excbt.datafuse.nmk.data.model.markers.DevModeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 import ru.excbt.datafuse.nmk.domain.OrganizationType;
+
+import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 /**
  * Организация
@@ -91,7 +89,6 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
 	private String keyname;
 
 	@Column(name = "is_dev_mode", insertable = false, updatable = false)
-    @NotNull
 	private Boolean isDevMode = false;
 
 	@Column(name = "deleted")
@@ -175,4 +172,10 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
     @JoinColumn(name = "organization_type_id")
     private OrganizationType organizationType;
 
+    @ManyToOne
+    @JoinColumn(name = "subscriber_id")
+    private Subscriber subscriber;
+
+    @Column(name = "subscriber_id", insertable = false, updatable = false)
+    private Long subscriberId;
 }

@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.QOrganization;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
@@ -158,7 +159,9 @@ public class OrganizationService implements SecuredRoles {
         QOrganization qOrganization = QOrganization.organization;
 
         WhereClauseBuilder where = new WhereClauseBuilder()
-            .and(qOrganization.rmaSubscriberId.eq(searchSubscriberId).or(qOrganization.isCommon.isTrue()))
+            .and(qOrganization.rmaSubscriberId.eq(searchSubscriberId)
+                .or(qOrganization.isCommon.isTrue())
+                .or(qOrganization.subscriberId.eq(userids.getSubscriberId())))
             .and(qOrganization.deleted.eq(0))
             .and(qOrganization.isDevMode.isNull().or(qOrganization.isDevMode.isFalse()));
 
@@ -199,10 +202,16 @@ public class OrganizationService implements SecuredRoles {
 		return organizationRepository.saveAndFlush(entity);
 	}
 
+
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public OrganizationDTO saveOrganization(OrganizationDTO dto) {
+	public OrganizationDTO saveOrganization(OrganizationDTO dto, PortalUserIds currentIds) {
 	    Organization organization = organizationMapper.toEntity(dto);
+	    organization.setSubscriber(new Subscriber().id(currentIds.getSubscriberId()));
+
+	    if (organization.getId() != null) {
+
+        }
 		return organizationMapper.toDTO(organizationRepository.saveAndFlush(organization));
 	}
 

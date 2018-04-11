@@ -17,6 +17,7 @@ public interface OrganizationMapper // extends EntityMapper<OrganizationDTO, Org
     OrganizationDTO toDTO(Organization organization);
 
     @Mapping(target = "organizationType", source = "organizationTypeId")
+    @Mapping(target = "subscriber", ignore = true)
     Organization toEntity(OrganizationDTO dto);
 
 //    Organization.OrganizationInfo toShortInfo(Organization organization);

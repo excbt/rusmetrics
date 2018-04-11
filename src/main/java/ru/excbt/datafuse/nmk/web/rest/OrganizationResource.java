@@ -77,7 +77,7 @@ public class OrganizationResource {
     @ApiOperation("")
     @Timed
     public ResponseEntity<?> putOrganization(@RequestBody OrganizationDTO organizationDTO) {
-        OrganizationDTO savedDTO = organizationService.saveOrganization(organizationDTO);
+        OrganizationDTO savedDTO = organizationService.saveOrganization(organizationDTO, portalUserIdsService.getCurrentIds());
         return ResponseEntity.ok(savedDTO);
     }
 
