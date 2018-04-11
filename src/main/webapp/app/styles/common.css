@@ -1003,7 +1003,7 @@ tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
     min-width: 46px;
-    width: 3%;
+    width: 4%;
 }
 
 .nmc-td-for-buttons {
