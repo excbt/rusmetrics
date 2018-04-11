@@ -13,7 +13,7 @@
               <div flex ng-show = "$ctrl.searchFlag == true" >
                                                
                   <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
-                      <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+                      <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter" aria-label = "Поиск"/>
                       <div class="button-group">
 <!--
                          <md-button class = "nmc-md-ltb-btn" aria-label = "Найти" 
@@ -60,17 +60,17 @@
                   </md-button>
                   <md-menu-content>                     
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Написать в техподдержку">
+                          <md-button class = "md-icon-button" title = "Написать в техподдержку" aria-label = "Написать в техподдержку">
                              <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>
                           </md-button>
                       </md-menu-item>
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Партнерская лента">
+                          <md-button class = "md-icon-button" title = "Партнерская лента" aria-label = "Партнерская лента">
                              <img class = "nmc-img-user-menu" src = "images/partner_rss.png"/>
                           </md-button>
                       </md-menu-item>
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Техническая лента">
+                          <md-button class = "md-icon-button" title = "Техническая лента" aria-label = "Техническая лента">
                              <img class = "nmc-img-user-menu" src = "images/tech_rss.png"/>
                           </md-button>
                       </md-menu-item>

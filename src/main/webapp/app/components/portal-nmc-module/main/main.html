@@ -15,7 +15,9 @@
                        ng-class="{'nmc-hide': !mainVm.isCabinet(), 'nmc-show': mainVm.isCabinet()}"
                        href="#/"
                        data-toggle="offcanvas"
-                       ng-click="mainVm.clickMenu('object_menu_item'); mainVm.showAdminSettings = false;">
+                       ng-click="mainVm.clickMenu('object_menu_item'); mainVm.showAdminSettings = false;"
+                       aria-label = "Объекты"
+                       >
                         <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                            title="Объекты">
                         </i>
@@ -28,7 +30,9 @@
                        ng-class="{'nmc-show': mainVm.isCabinet()}"
                        href="#/objects/newlist/"
                        data-toggle="offcanvas"
-                       ng-click="mainVm.clickMenu('object_new_menu_item'); mainVm.showAdminSettings = false;">
+                       ng-click="mainVm.clickMenu('object_new_menu_item'); mainVm.showAdminSettings = false;"
+                       aria-label = "Мониторинг"
+                       >
                         <i class="glyphicon glyphicon-list nmc-main-menu-item-icon nmc-color"
                            title="Объекты (NEW!)">
                         </i>
@@ -41,7 +45,9 @@
                        ng-class=""
                        href="#/reports/"
                        data-toggle="offcanvas"
-                       ng-click="mainVm.clickMenu('report_menu_item')">
+                       ng-click="mainVm.clickMenu('report_menu_item')"
+                       aria-label = "Отчеты"
+                       >
                        <i class="glyphicon glyphicon-file nmc-main-menu-item-icon nmc-color" title="Отчеты">
 
                        </i>
@@ -58,6 +64,7 @@
                        href = "#/log/session-log/"
                        data-toggle = "offcanvas"
                        ng-click = "mainVm.clickMenu('log_menu_item')"
+                       aria-label = "Журналы"
                        ng-cloak>
                         <i class = "glyphicon glyphicon-list-alt nmc-main-menu-item-icon nmc-color" title="Журнал"></i>
                         <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">
@@ -73,6 +80,7 @@
                        href="#/documents/energo-passports/"
                        data-toggle="offcanvas"
                        ng-click="mainVm.clickMenu('energy_menu_item')"
+                       aria-label = "Энергоэффективность"
                        ng-cloak>
                         <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon nmc-color" title="Энергоэффективность"></i>
                         <span ng-if="mainVm.mainCtrlSettings.showFullMenuFlag">
@@ -84,7 +92,9 @@
                     <md-button id = "setting_main_menu_item"
                        class = "nmc-md-main-menu-item nmc-hide"
                        ng-class = ""
-                       href = "#/settings/paramsets/" data-toggle="offcanvas" ng-click="mainVm.clickMenu('setting_menu_item')">
+                       href = "#/settings/paramsets/" data-toggle="offcanvas" ng-click="mainVm.clickMenu('setting_menu_item')"
+                       aria-label = "Настройки"
+                       >
                        <i class = "glyphicon glyphicon-cog nmc-main-menu-item-icon nmc-color" title="Настройки"></i>
                        <span ng-if = "mainVm.mainCtrlSettings.showFullMenuFlag">Настройки</span>
                     </md-button>
@@ -95,7 +105,9 @@
                        ng-class = "{'nmc-hide': !mainVm.isRma(), 'nmc-show': mainVm.isRma()}"
                        href = "#/management/objects/"
                        data-toggle = "offcanvas"
-                       ng-click = "mainVm.clickMenu('admin_menu_item'); mainVm.showAdminSettings = true">
+                       ng-click = "mainVm.clickMenu('admin_menu_item'); mainVm.showAdminSettings = true"
+                       aria-label = "Управление"
+                       >
                         <i class = "glyphicon glyphicon-wrench nmc-main-menu-item-icon nmc-color"
                            title = "Управление">
                         </i>
@@ -105,7 +117,9 @@
                 <md-divider></md-divider>
                 <md-list-item>
                     <md-button 
-                       class = "nmc-md-main-menu-item">           
+                       class = "nmc-md-main-menu-item"
+                       aria-label = "Скрыть"
+                       >           
                         <i class = "glyphicon glyphicon-chevron-left nmc-main-menu-item-icon nmc-color"
                            title = "Скрыть">
                         </i>
