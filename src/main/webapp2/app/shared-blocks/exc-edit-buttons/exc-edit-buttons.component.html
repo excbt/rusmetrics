@@ -1,0 +1,19 @@
+<div>
+    <h3>New Buttons</h3>
+
+    <button mat-raised-button type="button" (click)="previousState()">
+        <span class="fa fa-arrow-left"></span>&nbsp;
+        <span jhiTranslate="entity.action.back"> Back</span>
+    </button>
+    
+    <button mat-raised-button (click)="revert()" type="button" [disabled]="formGroup.pristine">
+        <span class="fa fa-ban"></span>&nbsp;
+        <span jhiTranslate="entity.action.revert"> Revert</span>
+    </button>
+    
+    <button mat-raised-button color="primary" type="button" (click)="save()" [disabled]="formGroup.pristine">
+        <span class="fa fa-save"></span>&nbsp;
+        <span jhiTranslate="entity.action.save"> Edit</span>
+    </button>
+    
+</div>

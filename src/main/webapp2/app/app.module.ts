@@ -29,6 +29,8 @@ import { PortalClassifiersModule } from './classifiers/classifiers.module';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
 import { PortalEntityModule } from './entities/entity.module';
+import { PortalSharedBlocksModule } from './shared-blocks/shared-blocks.module';
+
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from './shared/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
@@ -69,6 +71,7 @@ import {
         // JhipsterAccountModule,
         PortalClassifiersModule,
         PortalEntityModule,
+        PortalSharedBlocksModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [

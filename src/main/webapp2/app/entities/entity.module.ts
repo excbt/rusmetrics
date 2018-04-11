@@ -20,6 +20,8 @@ import {
 import { FormSearchComponent } from './blocks/form-search.component';
 import { FormListMenuComponent } from './blocks/form-list-menu.component';
 
+import { PortalSharedBlocksModule } from '../shared-blocks/shared-blocks.module';
+
 import {
     MatGridListModule,
     MatInputModule,
@@ -53,6 +55,7 @@ import { entityState } from './';
     imports: [
         BrowserAnimationsModule,
         JhipsterSharedModule,
+        PortalSharedBlocksModule,
         RouterModule.forChild(entityState),
         FormsModule,
         ReactiveFormsModule,
