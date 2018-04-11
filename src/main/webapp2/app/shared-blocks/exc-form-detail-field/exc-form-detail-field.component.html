@@ -1,11 +1,3 @@
-<!-- <div>
-    <div>
-        <span *ngIf="fieldValue">{{placeholder}}</span>
-    </div>
-    <div class="row-md jh-entity-details">
-        <span>{{fieldValue}}</span>
-    </div>
-</div> -->
 <div *ngIf="isTextField()">
     <mat-form-field class="detail-field">
         <input type="text" matInput placeholder="{{placeholder}}" value="{{fieldValue}}" readonly>

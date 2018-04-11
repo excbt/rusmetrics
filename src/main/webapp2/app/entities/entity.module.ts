@@ -10,10 +10,6 @@ import { OrganizationsWidgetComponent } from './organizations/organizations-widg
 import { OrganizationsService } from './organizations/organizations.service';
 import { OrganizationTypeService } from './organization-types/organization-type.service';
 import {
-    TopHeaderComponent,
-    FormEditButtonsComponent,
-    FormDetailFieldComponent,
-    FormTemplateComponent,
     FormListTemplateComponent,
     } from './blocks/form-blocks';
 
@@ -84,10 +80,6 @@ import { entityState } from './';
         OrganizationDetailComponent,
         OrganizationEditComponent,
         OrganizationsWidgetComponent,
-        TopHeaderComponent,
-        FormEditButtonsComponent,
-        FormDetailFieldComponent,
-        FormTemplateComponent,
         FormListTemplateComponent,
         FormSearchComponent,
         FormListMenuComponent

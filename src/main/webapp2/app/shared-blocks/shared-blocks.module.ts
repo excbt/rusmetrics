@@ -5,6 +5,9 @@ import { JhipsterSharedModule } from '../shared';
 
 import { ExcEditButtonsComponent } from './exc-edit-buttons/exc-edit-buttons.component';
 import { ExcFormTemplateComponent } from './exc-form-template/exc-form-template.component';
+import { ExcTopHeaderComponent } from './exc-top-header/exc-top-header.component';
+import { ExcFormDetailFieldComponent } from './exc-form-detail-field/exc-form-detail-field.component';
+import { ExcCustomValidators, ExcFormControlChecker } from './exc-validators/exc.validators';
 
 import {
   MatGridListModule,
@@ -38,7 +41,9 @@ import {
   ],
   declarations: [
     ExcEditButtonsComponent,
-    ExcFormTemplateComponent
+    ExcFormTemplateComponent,
+    ExcFormDetailFieldComponent,
+    ExcTopHeaderComponent
   ],
   entryComponents: [
   ],
@@ -47,7 +52,9 @@ import {
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
     ExcEditButtonsComponent,
-    ExcFormTemplateComponent
+    ExcFormTemplateComponent,
+    ExcFormDetailFieldComponent,
+    ExcTopHeaderComponent
   ]
 })
 export class PortalSharedBlocksModule {}

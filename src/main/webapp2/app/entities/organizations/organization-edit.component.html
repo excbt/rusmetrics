@@ -1,5 +1,5 @@
-<jhi-form-template>
-    <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}" headerId="{{organization?.id}}"></jhi-top-header>
+<jhi-exc-form-template>
+    <jhi-exc-top-header headerTitle="{{ 'organization.edit.title' | translate }}" headerId="{{organization?.id}}"></jhi-exc-top-header>
     <div>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
@@ -170,9 +170,7 @@
             </div>                
         </div>    
         <!-- FORM BUTTONS -->
-        <jhi-form-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-form-buttons>
-            <span>DIVIDER</span>
         <jhi-exc-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-exc-edit-buttons>            
     </form>
     </div>
-</jhi-form-template>    
+</jhi-exc-form-template>    

@@ -1,23 +1,23 @@
-<jhi-form-template>
-    <jhi-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}" headerId="{{organization.id}}"></jhi-top-header>
+<jhi-exc-form-template>
+    <jhi-exc-top-header headerTitle="{{'organization.detail.title' | translate}} {{organization.organizationName}}" headerId="{{organization.id}}"></jhi-exc-top-header>
     <div class="ui-g ui-g-nopad">
         <div class="ui-g-6 ui-g-nopad">
             <!-- BLOCK 1 left -->
             <div class="flex-column-rpad">
-                <jhi-form-detail-field placeholder="{{'organization.organizationTypeName' | translate}}" fieldValue="{{organization.organizationTypeName}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.organizationTypeName' | translate}}" fieldValue="{{organization.organizationTypeName}}"></jhi-exc-form-detail-field>
             </div>
-            <jhi-form-detail-field placeholder="{{'organization.organizationName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-form-detail-field>
+            <jhi-exc-form-detail-field placeholder="{{'organization.organizationName' | translate}}" fieldValue="{{organization.organizationName}}"></jhi-exc-form-detail-field>
             <br>
             <div class="flex-column-rpad">
-                <jhi-form-detail-field placeholder="{{'organization.organizationFullName' | translate}}" fieldValue="{{organization.organizationFullName}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.organizationFullName' | translate}}" fieldValue="{{organization.organizationFullName}}"></jhi-exc-form-detail-field>
             </div>
             <br>
-            <jhi-form-detail-field placeholder="{{'organization.inn' | translate}}" fieldValue="{{organization.inn}}"></jhi-form-detail-field>
-            <jhi-form-detail-field placeholder="{{'organization.kpp' | translate}}" fieldValue="{{organization.kpp}}"></jhi-form-detail-field>
-            <jhi-form-detail-field placeholder="{{'organization.okpo' | translate}}" fieldValue="{{organization.okpo}}"></jhi-form-detail-field>
-            <jhi-form-detail-field placeholder="{{'organization.ogrn' | translate}}" fieldValue="{{organization.ogrn}}"></jhi-form-detail-field>
+            <jhi-exc-form-detail-field placeholder="{{'organization.inn' | translate}}" fieldValue="{{organization.inn}}"></jhi-exc-form-detail-field>
+            <jhi-exc-form-detail-field placeholder="{{'organization.kpp' | translate}}" fieldValue="{{organization.kpp}}"></jhi-exc-form-detail-field>
+            <jhi-exc-form-detail-field placeholder="{{'organization.okpo' | translate}}" fieldValue="{{organization.okpo}}"></jhi-exc-form-detail-field>
+            <jhi-exc-form-detail-field placeholder="{{'organization.ogrn' | translate}}" fieldValue="{{organization.ogrn}}"></jhi-exc-form-detail-field>
             <div class="flex-column-rpad">
-                <jhi-form-detail-field placeholder="{{'organization.organizationDescription' | translate}}" fieldValue="{{organization.organizationDescription}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.organizationDescription' | translate}}" fieldValue="{{organization.organizationDescription}}"></jhi-exc-form-detail-field>
             </div>
             <!-- end of BLOCK 1 -->
         </div>
@@ -25,18 +25,18 @@
         <div class="ui-lg-6 ui-g-nopad">
             <!-- BLOCK 2 right -->
             <div class="flex-column">
-                <jhi-form-detail-field placeholder="{{'organization.legalAddress' | translate}}" fieldValue="{{organization.legalAddress}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.factAddress' | translate}}" fieldValue="{{organization.factAddress}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.postAddress' | translate}}" fieldValue="{{organization.postAddress}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.legalAddress' | translate}}" fieldValue="{{organization.legalAddress}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.factAddress' | translate}}" fieldValue="{{organization.factAddress}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.postAddress' | translate}}" fieldValue="{{organization.postAddress}}"></jhi-exc-form-detail-field>
             </div>
             <div class="flex-column">
-                <jhi-form-detail-field placeholder="{{'organization.directorFio' | translate}}" fieldValue="{{organization.directorFio}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.chiefAccountantFio' | translate}}" fieldValue="{{organization.chiefAccountantFio}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.directorFio' | translate}}" fieldValue="{{organization.directorFio}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.chiefAccountantFio' | translate}}" fieldValue="{{organization.chiefAccountantFio}}"></jhi-exc-form-detail-field>
             </div>
             <div>
-                <jhi-form-detail-field placeholder="{{'organization.contactPhone' | translate}}" fieldValue="{{organization.contactPhone}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.contactEmail' | translate}}" fieldValue="{{organization.contactEmail}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.siteUrl' | translate}}" fieldValue="{{organization.siteUrl}}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.contactPhone' | translate}}" fieldValue="{{organization.contactPhone}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.contactEmail' | translate}}" fieldValue="{{organization.contactEmail}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.siteUrl' | translate}}" fieldValue="{{organization.siteUrl}}"></jhi-exc-form-detail-field>
             </div>
             <!-- end of BLOCK 2 -->
         </div>
@@ -44,18 +44,18 @@
             <!-- BLOCK 3 left -->
             <div class="ui-lg-6 ui-g-nopad">
                 <div class="ui-g-3 flex-column">
-                    <jhi-form-detail-field 
+                    <jhi-exc-form-detail-field 
                         placeholder="{{'organization.flagRso' | translate}} ({{'organization.flagRso' | translate}})" 
                         fieldType="check" fieldValue="{{organization.flagRso}}">
-                    </jhi-form-detail-field>
-                    <jhi-form-detail-field 
+                    </jhi-exc-form-detail-field>
+                    <jhi-exc-form-detail-field 
                         placeholder="{{'organization.flagCm' | translate}} ({{'organization.flagCmDesription' | translate}})" 
                         fieldType="check" fieldValue="{{organization.flagCm}}">
-                    </jhi-form-detail-field>
-                    <jhi-form-detail-field 
+                    </jhi-exc-form-detail-field>
+                    <jhi-exc-form-detail-field 
                         placeholder="{{'organization.flagRma' | translate}} ({{'organization.flagRma' | translate}})" 
                         fieldType="check" fieldValue="{{organization.flagRma}}">
-                    </jhi-form-detail-field>
+                    </jhi-exc-form-detail-field>
                 </div>
             </div>
             <!-- end of BLOCK 3 -->
@@ -63,12 +63,12 @@
         <div class="ui-lg-6 ui-g-nopad">
             <!-- BLOCK 4 -->
             <div>
-                <jhi-form-detail-field placeholder="{{'organization.reqAccount' | translate}}" fieldValue="{{organization.reqAccount}}" [ngClass]="{'account-width': true}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.reqCorrAccount' | translate}}" fieldValue="{{organization.reqCorrAccount}}" [ngClass]="{'account-width': true}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.reqAccount' | translate}}" fieldValue="{{organization.reqAccount}}" [ngClass]="{'account-width': true}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.reqCorrAccount' | translate}}" fieldValue="{{organization.reqCorrAccount}}" [ngClass]="{'account-width': true}"></jhi-exc-form-detail-field>
             </div>
             <div>
-                <jhi-form-detail-field placeholder="{{'organization.reqBik' | translate}}" fieldValue="{{organization.reqBik}}"></jhi-form-detail-field>
-                <jhi-form-detail-field placeholder="{{'organization.reqBankName' | translate}}" fieldValue="{{organization.reqBankName}}" [ngClass]="{'reqBankName-width': true}"></jhi-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.reqBik' | translate}}" fieldValue="{{organization.reqBik}}"></jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field placeholder="{{'organization.reqBankName' | translate}}" fieldValue="{{organization.reqBankName}}" [ngClass]="{'reqBankName-width': true}"></jhi-exc-form-detail-field>
             </div>
             <!-- enf of BLOCK 4 -->
         </div>
@@ -91,4 +91,4 @@
     </button> -->
 
 
-</jhi-form-template>
+</jhi-exc-form-template>
