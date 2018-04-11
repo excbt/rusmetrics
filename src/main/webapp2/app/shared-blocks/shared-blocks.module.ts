@@ -2,7 +2,9 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { JhipsterSharedModule } from '../shared';
+
 import { ExcEditButtonsComponent } from './exc-edit-buttons/exc-edit-buttons.component';
+import { ExcFormTemplateComponent } from './exc-form-template/exc-form-template.component';
 
 import {
   MatGridListModule,
@@ -35,7 +37,8 @@ import {
       MatCheckboxModule,
   ],
   declarations: [
-    ExcEditButtonsComponent
+    ExcEditButtonsComponent,
+    ExcFormTemplateComponent
   ],
   entryComponents: [
   ],
@@ -43,7 +46,8 @@ import {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
-    ExcEditButtonsComponent
+    ExcEditButtonsComponent,
+    ExcFormTemplateComponent
   ]
 })
 export class PortalSharedBlocksModule {}

@@ -59,6 +59,7 @@ import { entityState } from './';
         RouterModule.forChild(entityState),
         FormsModule,
         ReactiveFormsModule,
+        // Angular Material
         MatGridListModule,
         MatInputModule,
         MatPaginatorModule,
@@ -68,12 +69,13 @@ import { entityState } from './';
         MatTableModule,
         MatButtonModule,
         MatIconModule,
-        CardModule,
         MatCheckboxModule,
         MatSelectModule,
         MatTooltipModule,
-        InputTextModule,
+
         // PRIME NG
+        CardModule,
+        InputTextModule,
         MenubarModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
