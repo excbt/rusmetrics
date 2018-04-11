@@ -12,11 +12,15 @@
     function Service() {
         var DEFAULT_USER_DATE_FORMAT = 'DD.MM.YYYY HH:mm:ss',
             DEFAULT_USER_DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm',
+            DEFAULT_USER_SHORT_DATE_FORMAT = 'DD.MM.YYYY',
+            DEFAULT_USER_TIME_FORMAT = 'HH:mm',
             DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD';
         this.dateFormating = dateFormating;
         this.getDaterangeOptions = getDaterangeOptions;
         this.getSystemDateFormat = getSystemDateFormat;
         this.getUserDateTimeFormat = getUserDateTimeFormat;
+        this.getUserShortDateFormat = getUserShortDateFormat;
+        this.getUserTimeFormat = getUserTimeFormat;
         
         var dateOptsRu = {
             applyClass : 'btn-primary nmc-drp-ctrl-btns',
@@ -97,6 +101,14 @@
         
         function getUserDateTimeFormat() {
             return DEFAULT_USER_DATE_TIME_FORMAT;
+        }
+        
+        function getUserShortDateFormat() {
+            return DEFAULT_USER_SHORT_DATE_FORMAT;
+        }
+        
+        function getUserTimeFormat() {
+            return DEFAULT_USER_TIME_FORMAT;
         }
     }
 })();

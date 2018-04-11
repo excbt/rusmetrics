@@ -41,6 +41,8 @@
             IMG_EXT = ".png",
             OBJECTS_PER_PAGE = 100,
             USER_DATE_TIME_FORMAT = dateSvc.getUserDateTimeFormat(),
+            USER_SHORT_DATE_FORMAT = dateSvc.getUserShortDateFormat(),
+            USER_TIME_FORMAT = dateSvc.getUserTimeFormat(),
             SYSTEM_DATE_FORMAT = dateSvc.getSystemDateFormat();
         
         var stateFilterValues = [
@@ -202,8 +204,8 @@
                     event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColorKeyname.toLowerCase() + IMG_EXT;
                 }
                 event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
-                event.dateString = dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
-                event.timeString = dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                event.dateString = dateSvc.dateFormating(elm.contEventTime, USER_SHORT_DATE_FORMAT);
+                event.timeString = dateSvc.dateFormating(elm.contEventTime, USER_TIME_FORMAT);
                 event.event = elm.contEventType.name;
                 if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
                     event.event += ": " + elm.contEvent.message;
@@ -224,8 +226,8 @@ console.log(vm.events);
                     event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColor.toLowerCase() + IMG_EXT;
                 }
                 event.dateTimeString = moment(elm.contEventTime).format(USER_DATE_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
-                event.dateString = moment(elm.contEventTime).format("DD.MM.YYYY"); // dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
-                event.timeString = moment(elm.contEventTime).format("HH:mm"); // dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                event.dateString = moment(elm.contEventTime).format(USER_SHORT_DATE_FORMAT); // dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
+                event.timeString = moment(elm.contEventTime).format(USER_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, "HH:mm");
                 event.event = elm.contEventType.name;
                 if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
                     event.event += ": " + elm.contEvent.message;
