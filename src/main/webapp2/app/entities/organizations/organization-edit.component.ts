@@ -11,7 +11,7 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
 import { catchError, finalize } from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import { CustomValidators, FormControlChecker } from '../blocks/form-blocks';
+import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
 
 export class FormControlCheck {
     constructor(
@@ -91,17 +91,17 @@ export class FormControlCheck {
             isCommon: [data.isCommon],
             rmaSubscriberId: [data.rmaSubscriberId],
             flagServ: [data.flagServ],
-            inn: [data.inn, [CustomValidators.valueLength([10, 12]), CustomValidators.onlyNumbersPattern()]],
-            kpp: [data.kpp, [CustomValidators.valueLength(9), CustomValidators.onlyNumbersPattern()]],
-            okpo: [data.okpo, [CustomValidators.valueLength([8, 10]), CustomValidators.onlyNumbersPattern()]],
-            ogrn: [data.ogrn, [CustomValidators.valueLength(13), CustomValidators.onlyNumbersPattern()]],
+            inn: [data.inn, [ExcCustomValidators.valueLength([10, 12]), ExcCustomValidators.onlyNumbersPattern()]],
+            kpp: [data.kpp, [ExcCustomValidators.valueLength(9), ExcCustomValidators.onlyNumbersPattern()]],
+            okpo: [data.okpo, [ExcCustomValidators.valueLength([8, 10]), ExcCustomValidators.onlyNumbersPattern()]],
+            ogrn: [data.ogrn, [ExcCustomValidators.valueLength(13), ExcCustomValidators.onlyNumbersPattern()]],
             legalAddress: [data.legalAddress],
             factAddress: [data.factAddress],
             postAddress: [data.postAddress],
-            reqAccount: [data.reqAccount, [CustomValidators.valueLength(20), CustomValidators.onlyNumbersPattern()]],
+            reqAccount: [data.reqAccount, [ExcCustomValidators.valueLength(20), ExcCustomValidators.onlyNumbersPattern()]],
             reqBankName: [data.reqBankName],
-            reqCorrAccount: [data.reqCorrAccount, [CustomValidators.valueLength(20), CustomValidators.onlyNumbersPattern()]],
-            reqBik: [data.reqBik, [CustomValidators.valueLength(9), CustomValidators.onlyNumbersPattern()]],
+            reqCorrAccount: [data.reqCorrAccount, [ExcCustomValidators.valueLength(20), ExcCustomValidators.onlyNumbersPattern()]],
+            reqBik: [data.reqBik, [ExcCustomValidators.valueLength(9), ExcCustomValidators.onlyNumbersPattern()]],
             contactPhone: [data.contactPhone, [Validators.maxLength(12)]],
             contactPhone2: [data.contactPhone2, [Validators.maxLength(12)]],
             contactPhone3: [data.contactPhone3, [Validators.maxLength(12)]],
@@ -227,7 +227,7 @@ export class FormControlCheck {
 
     checkFormControl(controlName: string, errorName: string, errorNameMask?: string[] | null): boolean {
         const control: AbstractControl = this.organizationForm.controls[controlName];
-        return FormControlChecker.checkControlError(control, errorName, errorNameMask);
+        return ExcFormControlChecker.checkControlError(control, errorName, errorNameMask);
     }
 
 }
