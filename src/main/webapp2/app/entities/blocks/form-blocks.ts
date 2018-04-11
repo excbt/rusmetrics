@@ -7,24 +7,6 @@ import {
 } from '@angular/forms';
 import { DEBUG_INFO_ENABLED } from '../../app.constants';
 import { slideInDownAnimation } from '../animations';
-import { FormSearchComponent } from './form-search.component';
-
-// ****************************************************************
-// Form List Template
-// ****************************************************************
-@Component({
-    selector: 'jhi-form-list-template',
-    templateUrl: `./form-list-template.component.html`,
-    animations: [ slideInDownAnimation ],
-    styleUrls: ['./form-list-template.component.scss']
-})
-export class FormListTemplateComponent {
-    @HostBinding('@routeAnimation') routeAnimation = true;
-    @HostBinding('style.display')   display = 'block';
-    @HostBinding('style.position')  position = 'absolute';
-
-    @ViewChild(FormSearchComponent) formSearch: FormSearchComponent;
-}
 
 // ****************************************************************
 // Validators for form

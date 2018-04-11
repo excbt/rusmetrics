@@ -9,12 +9,6 @@ import { OrganizationEditComponent } from './organizations/organization-edit.com
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 import { OrganizationTypeService } from './organization-types/organization-type.service';
-import {
-    FormListTemplateComponent,
-    } from './blocks/form-blocks';
-
-import { FormSearchComponent } from './blocks/form-search.component';
-import { FormListMenuComponent } from './blocks/form-list-menu.component';
 
 import { PortalSharedBlocksModule } from '../shared-blocks/shared-blocks.module';
 
@@ -79,10 +73,7 @@ import { entityState } from './';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
-        OrganizationsWidgetComponent,
-        FormListTemplateComponent,
-        FormSearchComponent,
-        FormListMenuComponent
+        OrganizationsWidgetComponent
     ],
     entryComponents: [
     ],

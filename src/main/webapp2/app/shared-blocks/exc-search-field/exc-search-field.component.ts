@@ -1,41 +1,27 @@
 import {
     Component,
-    Input,
     Output,
     EventEmitter,
-    HostBinding,
     ViewChild,
     ElementRef,
     AfterViewInit
 } from '@angular/core';
-import {
-    FormGroup,
-    Validators,
-    AbstractControl,
-    ValidatorFn
-} from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import { DEBUG_INFO_ENABLED } from '../../app.constants';
 
 const debounceTimeValue = 150;
 
 @Component({
-  selector: 'jhi-form-search',
-  templateUrl: `./form-search.component.html`,
-  styleUrls: ['./form-search.component.scss'],
-  // encapsulation: ViewEncapsulation.Native
+  selector: 'jhi-exc-search-field',
+  templateUrl: `./exc-search-field.component.html`,
+  styleUrls: ['./exc-search-field.component.scss'],
 })
-export class FormSearchComponent implements AfterViewInit {
+export class ExcSearchFieldComponent implements AfterViewInit {
 
     @ViewChild('input') input: ElementRef;
     @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
-
-    // public searchAction$ = this.searchAction.asObservable;
-
-    // private searchString = new BehaviorSubject<String>(null);
-    // public searchString$ = this.searchString.asObservable();
 
     ngAfterViewInit() {
         Observable.fromEvent(this.input.nativeElement, 'keyup')
@@ -45,7 +31,6 @@ export class FormSearchComponent implements AfterViewInit {
             tap(() => {
                     const val = this.input.nativeElement.value;
                     this.searchAction.emit(val);
-                    // this.searchString.next(val);
             })
         ).subscribe();
     }

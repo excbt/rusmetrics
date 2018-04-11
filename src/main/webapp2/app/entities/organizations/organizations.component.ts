@@ -15,9 +15,7 @@ import {
     // , delay
 } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
-import { FormSearchComponent } from '../blocks/form-search.component';
-import { FormListMenuComponent } from '../blocks/form-list-menu.component';
-import { FormListTemplateComponent } from '../blocks/form-blocks';
+import { ExcFormListMenuComponent } from '../../shared-blocks';
 
 @Component({
   selector: 'jhi-organizations',
@@ -37,7 +35,7 @@ export class OrganizationsComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(FormListMenuComponent) formMenu: FormListMenuComponent;
+  @ViewChild(ExcFormListMenuComponent) formMenu: ExcFormListMenuComponent;
 
   constructor(
       private organizationService: OrganizationsService,
