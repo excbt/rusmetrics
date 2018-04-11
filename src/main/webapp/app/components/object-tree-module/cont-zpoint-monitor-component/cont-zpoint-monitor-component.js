@@ -230,6 +230,11 @@ console.log(vm.events);
                 if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
                     event.event += ": " + elm.contEvent.message;
                 }
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("contServiceType")) {
+                    event.contServiceType = elm.contEvent.contServiceType;
+                    event.contServiceTypeIcon = IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE + elm.contEvent.contServiceType + IMG_EXT;
+                }
+                
                 events.push(event);
             });
             vm.events = events;
