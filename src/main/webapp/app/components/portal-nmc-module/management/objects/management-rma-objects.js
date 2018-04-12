@@ -59,7 +59,7 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     
     $scope.addManyObjectsEnabled = function () {        
         return $scope.isSystemuser() && $scope.getModeState();
-    }
+    };
 //    $scope.$on(settingModeService.EVENTS.settingModeChanged, function () {
 //        
 //    });
