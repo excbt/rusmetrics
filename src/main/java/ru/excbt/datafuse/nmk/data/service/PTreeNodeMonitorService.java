@@ -7,7 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
+import ru.excbt.datafuse.nmk.data.model.QContEventMonitorV3;
+import ru.excbt.datafuse.nmk.data.model.QContZPoint;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
@@ -19,7 +22,6 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepositor
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
 import ru.excbt.datafuse.nmk.data.util.GroupUtil;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
-import ru.excbt.datafuse.nmk.service.ContObjectQueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatus;
@@ -384,11 +386,9 @@ public class PTreeNodeMonitorService {
     /**
      *
      * @param monitorContObjectData
-     * @param monitorContObjectIds
      * @return
      */
-    private List<PTreeNodeMonitorColorStatus> processMonitorData(List<PTreeNodeMonitorContObjectData> monitorContObjectData,
-                                                                 List<Long> monitorContObjectIds) {
+    private List<PTreeNodeMonitorColorStatus> processMonitorData(List<PTreeNodeMonitorContObjectData> monitorContObjectData) {
 
         Map<Long, List<PTreeNodeMonitorContObjectData>> colorMapList = GroupUtil.makeIdMap(monitorContObjectData, PTreeNodeMonitorContObjectData::getContObjectId);
 
@@ -429,7 +429,8 @@ public class PTreeNodeMonitorService {
 
         // Take contZPointId of requested contServiceType
         List<Long> filteredContZPointId = queryDSLService.queryFactory()
-            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname).from(qContZPoint).where(qContZPoint.id.in(contZPointIds))
+            .select(qContZPoint.id, qContZPoint.contServiceTypeKeyname).from(qContZPoint)
+            .where(qContZPoint.id.in(contZPointIds).and(qContZPoint.deleted.eq(0)))
             .fetch().stream()
             .filter(t -> contServiceTypeKey.getKeyname().equals(t.get(qContZPoint.contServiceTypeKeyname)))
             .map(t -> t.get(qContZPoint.id))
@@ -488,14 +489,22 @@ public class PTreeNodeMonitorService {
             .distinct().sorted()
             .collect(Collectors.toList());
 
-        List<PTreeNodeMonitorContObjectData> workData = contServiceTypeKey
-            .map(key -> filterMonitorContObjectData(monitorContObjectData, key)).orElse(monitorContObjectData);
+        List<Long> monitorContZPointIds = monitorContObjectData.stream()
+            .map(PTreeNodeMonitorContObjectData::getContZPointId)
+            .filter(Objects::nonNull)
+            .distinct().sorted()
+            .collect(Collectors.toList());
 
         List<Long> filteredNodeContObjectIds = contServiceTypeKey
             .map(key -> filterContObjectIdByContServiceType(queryDSLService.queryFactory(), nodeContObjectIds, key))
             .orElse(nodeContObjectIds);
 
-        List<PTreeNodeMonitorColorStatus> colorStatsList = processMonitorData(workData, filteredNodeContObjectIds);
+        List<PTreeNodeMonitorContObjectData> workData = contServiceTypeKey
+            .map(key -> filterMonitorContObjectData(monitorContObjectData, key)).orElse(monitorContObjectData);
+
+//        List<PTreeNodeMonitorContObjectData> workData = monitorContObjectData.stream().filter(i -> filteredNodeContObjectIds.contains(i.contObjectId)).collect(Collectors.toList());
+
+        List<PTreeNodeMonitorColorStatus> colorStatsList = processMonitorData(workData);
 
         List<Long> greenMonitorIds = filteredNodeContObjectIds.stream().distinct().filter(i -> !monitorContObjectIds.contains(i)).collect(Collectors.toList());
         colorStatsList.add(new PTreeNodeMonitorColorStatus(ContEventLevelColorKeyV2.GREEN.getKeyname(), greenMonitorIds.size()));
@@ -526,37 +535,36 @@ public class PTreeNodeMonitorService {
 
         List<PTreeNodeMonitorContObjectData> monitorContObjectData = loadMonitorData(nodeContObjectIds);
 
-//        List<Long> monitorContObjectIds = monitorContObjectData.stream()
-//            .map(PTreeNodeMonitorContObjectData::getContObjectId)
-//            .filter(Objects::nonNull)
-//            .distinct().sorted()
-//            .collect(Collectors.toList());
+        List<Long> monitorContObjectIds = monitorContObjectData.stream()
+            .map(PTreeNodeMonitorContObjectData::getContObjectId)
+            .filter(Objects::nonNull)
+            .distinct().sorted()
+            .collect(Collectors.toList());
+
+        List<Long> filteredNodeContObjectIds = contServiceTypeKey
+            .map(k -> filterContObjectIdByContServiceType(queryDSLService.queryFactory(), nodeContObjectIds, k))
+            .orElse(nodeContObjectIds);
 
 
         List<Long> contObjectIds;
 
         if (ContEventLevelColorKeyV2.GREEN.equals(levelColorKey)) {
-            // Get No Green Ids
-            List<Long> noGreenIds = monitorContObjectData.stream()
-                .map(PTreeNodeMonitorContObjectData::getContObjectId)
-                .filter(Objects::nonNull)
-                .distinct().sorted().collect(Collectors.toList());
-
-            // Get all ids for specified contServiceType
-            List<Long> allNodeContObjectIdsFiltered = contServiceTypeKey
-                .map(k -> filterContObjectIdByContServiceType(queryDSLService.queryFactory(), nodeContObjectIds, k))
-                .orElse(nodeContObjectIds);
-
             // Filter allNodeContObjectIdsFiltered by noGreenIds
-            contObjectIds = allNodeContObjectIdsFiltered.stream().filter(id -> !noGreenIds.contains(id)).sorted().collect(Collectors.toList());
+            contObjectIds = filteredNodeContObjectIds.stream().filter(id -> !monitorContObjectIds.contains(id)).sorted().collect(Collectors.toList());
         } else {
-            List<PTreeNodeMonitorContObjectData> filteredMonitorContObjectData =
-                contServiceTypeKey.map(k -> filterMonitorContObjectData(monitorContObjectData, k)).orElse(monitorContObjectData);
 
-            contObjectIds = filteredMonitorContObjectData.stream()
+//
+//
+//            List<PTreeNodeMonitorContObjectData> filteredMonitorContObjectData =
+//                monitorContObjectData.stream().filter(i -> filteredNodeContObjectIds.contains(i.contObjectId)).collect(Collectors.toList());
+
+            List<PTreeNodeMonitorContObjectData> workData = contServiceTypeKey
+                .map(key -> filterMonitorContObjectData(monitorContObjectData, key)).orElse(monitorContObjectData);
+
+
+            contObjectIds = workData.stream()
                 .filter(i -> levelColorKey.equals(i.contEventLevelColorKey))
                 .map(PTreeNodeMonitorContObjectData::getContObjectId).distinct().sorted().collect(Collectors.toList());
-
         }
 
         return new PTreeNodeMonitorColorStatusDetails(contObjectIds);

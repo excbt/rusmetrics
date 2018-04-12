@@ -141,7 +141,20 @@ public class PTreeNodeMonitorResourceTest {
 
         restPortalContObjectMockMvc.perform(
             get("/api/p-tree-node-monitor/node-color-status/{nodeId}/status-details/{levelColorKey}", 130091912,
-                ContEventLevelColorKeyV2.GREEN.getKeyname()))
+                ContEventLevelColorKeyV2.GREEN.getKeyname())
+                .param("contServiceType","heat"))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk())
+            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
+    }
+
+    @Test
+    public void getNodeNodeColorStatusDetails_Red1() throws Exception {
+
+        restPortalContObjectMockMvc.perform(
+            get("/api/p-tree-node-monitor/node-color-status/{nodeId}/status-details/{levelColorKey}", 130091912,
+                ContEventLevelColorKeyV2.RED.getKeyname())
+                .param("contServiceType","heat"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
