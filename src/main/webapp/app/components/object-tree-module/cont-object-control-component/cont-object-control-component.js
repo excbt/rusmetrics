@@ -468,7 +468,7 @@ return;
         }
         
         ctrl.$onInit = function () {
-console.log(ctrl);
+//console.log(ctrl);
             getContObjects();
             ctrl.zpointWidgetList = contObjectCtrlSvc.getWidgetList();
             if (ctrl.checkUndefinedNull(ctrl.zpointWidgetList) || ctrl.checkEmptyObject(ctrl.zpointWidgetList)) {
@@ -547,7 +547,7 @@ console.log(ctrl);
             }
         };
         
-        ctrl.getIconTest = function (ind) {
+//        ctrl.getIconTest = function (ind) {
 //            if (ind % 2 == 0) {
 //                return "home-g.ico";
 //            } else if (ind % 3 == 0) {
@@ -555,49 +555,50 @@ console.log(ctrl);
 //            } else {
 //                return "home-y.ico";
 //            }
-            var cls = "building24.png";
-            var rn = ind % 11;
-            switch (rn) {
-                case 0:
-                    cls = "building24.png";
-                    break;
-                case 1:
-                    cls = "childhome24.png";
-                    break;
-                case 2:
-                    cls = "hospital24.png";
-                    break;
-                case 3:
-                    cls = "hotel26.png";
-                    break;
-                case 4:
-                    cls = "mkd26.png";
-                    break;
-                case 5:
-                    cls = "school24.png";
-                    break;
-                case 6:
-                    cls = "gos26.png";
-                    break;
-                case 7:
-                    cls = "prod32.png";
-                    break;
-                case 8:
-                    cls = "cot16.png";
-                    break;
-                case 9:
-                    cls = "dom26.png";
-                    break;                
-                default:
-                    cls = "stadium24.png";
-                    break;
-            }
-            return cls;
-        };
+            
+//            var cls = "building24.png";
+//            var rn = ind % 11;
+//            switch (rn) {
+//                case 0:
+//                    cls = "building24.png";
+//                    break;
+//                case 1:
+//                    cls = "childhome24.png";
+//                    break;
+//                case 2:
+//                    cls = "hospital24.png";
+//                    break;
+//                case 3:
+//                    cls = "hotel26.png";
+//                    break;
+//                case 4:
+//                    cls = "mkd26.png";
+//                    break;
+//                case 5:
+//                    cls = "school24.png";
+//                    break;
+//                case 6:
+//                    cls = "gos26.png";
+//                    break;
+//                case 7:
+//                    cls = "prod32.png";
+//                    break;
+//                case 8:
+//                    cls = "cot16.png";
+//                    break;
+//                case 9:
+//                    cls = "dom26.png";
+//                    break;                
+//                default:
+//                    cls = "stadium24.png";
+//                    break;
+//            }
+//            return cls;
+//        };
         //fill contObjectTypeFilterValues
-        for (var i = 0; i < 11; i++) {
-            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIconTest(i));
-        }
+//        for (var i = 0; i < 11; i++) {
+//            contObjectTypeFilterValues.push(IMG_PATH_BUILDING_TYPE + ctrl.getIconTest(i));
+//        }
         
 //        ctrl.getTextShadow = function (ind) {
 //            var clr = "rgb(95, 95, 95)";

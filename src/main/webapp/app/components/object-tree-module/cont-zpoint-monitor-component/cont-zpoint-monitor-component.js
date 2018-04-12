@@ -214,7 +214,7 @@
             });
             vm.events = events;
             vm.eventsOnPage = angular.copy(events);
-console.log(vm.events);
+//console.log(vm.events);
         }
         
         function performNotifications(eventsRaw) {
@@ -241,11 +241,11 @@ console.log(vm.events);
             });
             vm.events = events;
             vm.eventsOnPage = angular.copy(events);
-console.log(vm.events);
+//console.log(vm.events);
         }
         
         function successLoadEventsCallback(resp) {
-console.log(resp);
+//console.log(resp);
             if (!angular.isArray(resp.data)) {
                 console.warn("Event data is incorrect: ", resp);
                 return false;
@@ -261,7 +261,7 @@ console.log(resp);
         }
         
         function successLoadNotificationsCallback(resp) {
-console.log(resp);
+//console.log(resp);
             if (angular.isUndefined(resp.data) || resp.data === null || !angular.isArray(resp.data.objects)) {
                 console.warn("Notification data is incorrect: ", resp);
                 return false;
@@ -301,9 +301,9 @@ console.log(resp);
         }
         
         function initCmpnt() {
-console.log(moment());            
-console.log(moment().format(USER_DATE_TIME_FORMAT));
-console.log(vm.monitorStatus);                        
+//console.log(moment());            
+//console.log(moment().format(USER_DATE_TIME_FORMAT));
+//console.log(vm.monitorStatus);                        
 //            vm.mode = vm.MODES.situations;
 //            loadEvents();
 //            console.log("contZpointMonitorComponentController on Init.", vm);
@@ -319,9 +319,9 @@ console.log(vm.monitorStatus);
             vm.daterangeOpts.separator = " - ";
             vm.daterangeOpts.eventHandlers = {
                 'apply.daterangepicker': function (ev, picker) {
-                    console.log(ev);
-                    console.log(picker);
-                    console.log(vm.daterange);
+//                    console.log(ev);
+//                    console.log(picker);
+//                    console.log(vm.daterange);
                     loadNotifications();
                 }
             };
@@ -330,7 +330,7 @@ console.log(vm.monitorStatus);
 //                return "nmc-date-class";
 //            };
 
-console.log(vm.daterangeOpts);            
+//console.log(vm.daterangeOpts);            
             
             //init date
             vm.daterange = {

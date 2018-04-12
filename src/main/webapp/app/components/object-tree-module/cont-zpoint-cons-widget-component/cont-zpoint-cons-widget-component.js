@@ -28,8 +28,8 @@
         ////////////////
 
         function initCmpnt() {
-console.log(vm.node);            
-console.log($stateParams.node);
+//console.log(vm.node);            
+//console.log($stateParams.node);
             if (angular.isDefined($stateParams.node) && $stateParams.node !== null) {
                 vm.contObjectId = $stateParams.node.nodeObject.contObjectId;
                 vm.zpointId = $stateParams.node.nodeObject.id;

@@ -33,7 +33,7 @@
         ctrl.data = {};
         ctrl.objectCtrlSettings = {};
         ctrl.messages = {
-            treeMenuHeader: "Wazzzuuuup"
+            treeMenuHeader: "Иерархии"
         };
         ctrl.ELEMENTS_PER_NODE = 25;
         
@@ -625,93 +625,93 @@
             $mdMenu.open(ev);
         };
         
-        ctrl.getItemCssClass = function (item) {
-            var result = "";
-            switch (item.nodeObject.contServiceTypeKeyname) {
-                case "hw":
-                    result += "fa fa-shower";
-                    break;
-                case "heat":
-                    result += "fab fa-hotjar";
-                    break;
-                case "cw":
-                    result += "fa fa-tint";
-                    break;
-                case "el":
-                    result += "fab fa-medapps";
-                    break;
-                default:
-                    result += "glyphicon glyphicon-map-marker text-info";
-                    break;
-            }
-            return result;
-        };
+//        ctrl.getItemCssClass = function (item) {
+//            var result = "";
+//            switch (item.nodeObject.contServiceTypeKeyname) {
+//                case "hw":
+//                    result += "fa fa-shower";
+//                    break;
+//                case "heat":
+//                    result += "fab fa-hotjar";
+//                    break;
+//                case "cw":
+//                    result += "fa fa-tint";
+//                    break;
+//                case "el":
+//                    result += "fab fa-medapps";
+//                    break;
+//                default:
+//                    result += "glyphicon glyphicon-map-marker text-info";
+//                    break;
+//            }
+//            return result;
+//        };
         
-        ctrl.getItemImg = function (item) {
-            var result = "";
-            switch (item.nodeObject.contServiceTypeKeyname) {
-                case "hw":
-                    result += "hw-r.png";
-                    break;
-                case "heat":
-                    result += "heat1-r.png";
-                    break;
-                case "cw":
-                    result += "cw1-g.png";
-                    break;
-                case "el":
-                    result += "el-y.png";
-                    break;
-                default:
-                    result += "snowflake.png";
-                    break;
-            }
-            return result;
-        };
+//        ctrl.getItemImg = function (item) {
+//            var result = "";
+//            switch (item.nodeObject.contServiceTypeKeyname) {
+//                case "hw":
+//                    result += "hw-r.png";
+//                    break;
+//                case "heat":
+//                    result += "heat1-r.png";
+//                    break;
+//                case "cw":
+//                    result += "cw1-g.png";
+//                    break;
+//                case "el":
+//                    result += "el-y.png";
+//                    break;
+//                default:
+//                    result += "snowflake.png";
+//                    break;
+//            }
+//            return result;
+//        };
         
-        ctrl.getBuildingIconTest = function (ind) {
-            var cls = "building24.png";
-            var rn = ind % 12;
-            switch (rn) {
-                case 0:
-                    cls = "building24.png";
-                    break;
-                case 1:
-                    cls = "childhome16.png";
-                    break;
-                case 2:
-                    cls = "hospital24.png";
-                    break;
-                case 3:
-                    cls = "hotel16.png";
-                    break;
-                case 4:
-                    cls = "mkd3_16.png";
-                    break;
-                case 5:
-                    cls = "school16.png";
-                    break;
-                case 6:
-                    cls = "gos2_16.png";
-                    break;
-                case 7:
-                    cls = "prod1_16.png";
-                    break;
-                case 8:
-                    cls = "cot16.png";
-                    break;
-                case 9:
-                    cls = "stadium16.png";
-                    break;
-                case 10:
-                    cls = "dom2_16.png";
-                    break;
-                default:
-                    cls = "dom1_16.png";
-                    break;
-            }
-            return cls;
-        };
+//        ctrl.getBuildingIconTest = function (ind) {
+//            var cls = "building24.png";
+//            var rn = ind % 12;
+//            switch (rn) {
+//                case 0:
+//                    cls = "building24.png";
+//                    break;
+//                case 1:
+//                    cls = "childhome16.png";
+//                    break;
+//                case 2:
+//                    cls = "hospital24.png";
+//                    break;
+//                case 3:
+//                    cls = "hotel16.png";
+//                    break;
+//                case 4:
+//                    cls = "mkd3_16.png";
+//                    break;
+//                case 5:
+//                    cls = "school16.png";
+//                    break;
+//                case 6:
+//                    cls = "gos2_16.png";
+//                    break;
+//                case 7:
+//                    cls = "prod1_16.png";
+//                    break;
+//                case 8:
+//                    cls = "cot16.png";
+//                    break;
+//                case 9:
+//                    cls = "stadium16.png";
+//                    break;
+//                case 10:
+//                    cls = "dom2_16.png";
+//                    break;
+//                default:
+//                    cls = "dom1_16.png";
+//                    break;
+//            }
+//            return cls;
+//        };
         
         ctrl.getBuildingIcon = function (buildingType) {
             return contObjectBuildingService.getBuildingTypeCategoryIcon16(buildingType);
