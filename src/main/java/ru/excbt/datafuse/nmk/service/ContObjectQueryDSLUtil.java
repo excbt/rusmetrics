@@ -36,12 +36,14 @@ public class ContObjectQueryDSLUtil {
 
         // Take contZPointId of requested contServiceType
         List<Long> filteredContObjectIds = queryFactory
-            .select(qContZPoint.id, qContZPoint.contObjectId, qContZPoint.contServiceTypeKeyname).from(qContZPoint).where(qContZPoint.contObjectId.in(inContObjectIds))
+            .select(qContZPoint.id, qContZPoint.contObjectId, qContZPoint.contServiceTypeKeyname).from(qContZPoint)
+            .where(qContZPoint.contObjectId.in(inContObjectIds).and(qContZPoint.deleted.eq(0)))
             .fetch().stream()
             .filter(t -> contServiceTypeKey.getKeyname().equals(t.get(qContZPoint.contServiceTypeKeyname)))
             .map(t -> t.get(qContZPoint.contObjectId))
             .filter(Objects::nonNull)
             .distinct()
+            .sorted()
             .collect(Collectors.toList());
 
         return filteredContObjectIds;
