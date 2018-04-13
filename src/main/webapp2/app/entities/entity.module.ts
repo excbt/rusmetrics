@@ -5,7 +5,7 @@ import { JhipsterSharedModule } from '../shared';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { OrganizationsComponent } from './organizations/organizations.component';
 import { OrganizationDetailComponent } from './organizations/organization-detail.component';
-import { OrganizationEditComponent } from './organizations/organization-edit.component';
+import { OrganizationEditComponent, OrganizationEdit22Component } from './organizations/organization-edit.component';
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 import { OrganizationTypeService } from './organization-types/organization-type.service';
@@ -73,6 +73,7 @@ import { entityState } from './';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
+        OrganizationEdit22Component,
         OrganizationsWidgetComponent
     ],
     entryComponents: [

@@ -9,6 +9,7 @@ import { ExcTopHeaderComponent } from './exc-top-header/exc-top-header.component
 import { ExcFormDetailFieldComponent } from './exc-form-detail-field/exc-form-detail-field.component';
 import { ExcFormListMenuComponent } from './exc-form-list-menu/exc-form-list-menu.component';
 import { ExcSearchFieldComponent } from './exc-search-field/exc-search-field.component';
+import { ExcEditFormComponent } from './exc-edit-form/exc-edit-form.component';
 
 import { ExcCustomValidators, ExcFormControlChecker } from './exc-validators/exc.validators';
 
