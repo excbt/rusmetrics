@@ -11,7 +11,7 @@ const debounceTimeValue = 150;
 @Component({
   selector: 'jhi-exc-form-list-menu',
   templateUrl: './exc-form-list-menu.component.html',
-  styleUrls: ['./exc-form-list-menu.component.scss']
+  styleUrls: ['./exc-form-list-menu.component.scss', '../shared-blocks.scss']
 })
 export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
   @Input() headerString: string;

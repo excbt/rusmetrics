@@ -12,6 +12,7 @@ export class ExcEditButtonsComponent {
   @Input() formGroup: FormGroup;
   @Output() saveAction: EventEmitter<any> = new EventEmitter();
   @Output() revertAction: EventEmitter<any> = new EventEmitter();
+  @Output() deleteAction: EventEmitter<any> = new EventEmitter();
 
   constructor() {
 
@@ -27,5 +28,9 @@ export class ExcEditButtonsComponent {
 
   revert() {
       this.revertAction.emit(null);
+  }
+
+  delete() {
+      this.deleteAction.emit(null);
   }
 }

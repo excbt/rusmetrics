@@ -1,24 +1,16 @@
 <div>
-    <h3>New Buttons</h3>
 
-    <button mat-raised-button type="button" (click)="previousState()">
-        <span class="fa fa-arrow-left"></span>&nbsp;
-        <span jhiTranslate="entity.action.back"> Back</span>
-    </button>
-    
-    <button mat-raised-button (click)="revert()" type="button" [disabled]="formGroup.pristine">
-        <span class="fa fa-ban"></span>&nbsp;
-        <span jhiTranslate="entity.action.revert"> Revert</span>
-    </button>
-    
-    <button mat-raised-button color="primary" type="button" (click)="save()" [disabled]="formGroup.pristine">
-        <span class="fa fa-save"></span>&nbsp;
-        <span jhiTranslate="entity.action.save"> Edit</span>
-    </button>
+    <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" (click)="previousState()"
+        icon="fa-arrow-left"></button>
 
-    <button mat-raised-button color="primary" type="button">
-        <span class="fa fa-delete"></span>&nbsp;
-        <span jhiTranslate="entity.action.delete"> Delete</span>
-    </button>
-    
+    <button pButton type="button" label="{{'entity.action.revert' | translate}}" class="ui-button-secondary" (click)="revert()"
+        icon="fa-arrow-ban" [disabled]="formGroup.pristine"></button>
+
+    <button pButton type="button" label="{{'entity.action.save' | translate}}" class="ui-button-primary" (click)="save()"
+        icon="fa-minus-square" [disabled]="formGroup.pristine"></button>
+
+
+    <button pButton type="button" label="{{'entity.action.delete' | translate}}" class="ui-button-danger search1" (click)="delete()"
+        icon="fa-minus-square" [disabled]="!formGroup.pristine"></button>
+
 </div>

@@ -10,21 +10,11 @@ eg $input-color: red;
 // Import Bootstrap source files from node_modules
 @import 'node_modules/bootstrap/scss/bootstrap';
 @import 'node_modules/font-awesome/scss/font-awesome';
+@import '~primeng/resources/themes/omega/theme.css';
 @import '~primeng/resources/primeng.min.css';
-@import '~primeng/resources/themes/bootstrap/theme.css';
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+// @import '~primeng/resources/themes/bootstrap/theme.css';
+
 
 /* jhipster-needle-scss-add-vendor JHipster will add new css style */
 
-.menu1 .ui-menuitem-text {
-  font-size: 1em;
-}
-
-.menu1 .ui-submenu-icon {
-  display: none;
-}
-
-.toolbar-container .ui-corner-all {
-  border-radius: 0;
-  height: 2.8em;
-}

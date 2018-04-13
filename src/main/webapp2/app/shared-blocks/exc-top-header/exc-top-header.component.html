@@ -1,0 +1,12 @@
+<p-menubar styleClass="menu1" [model]="items" [autoDisplay]="false">
+    <div class="menu1-header" >
+            <span>{{headerString}}</span>
+            <span *ngIf="headerId && showId()"> {{'global.field.id' | translate}}: <b>{{headerId}}</b></span>
+    </div>
+</p-menubar>
+
+<!-- <h2>
+    <span>{{ headerTitle }}</span>
+    <span *ngIf="headerId && showId()">- {{'global.field.id' | translate}}: <b>{{ headerId }}</b></span>
+</h2>
+<hr> -->

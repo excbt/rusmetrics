@@ -30,6 +30,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   imports: [
@@ -50,6 +51,7 @@ import { MenuItem } from 'primeng/api';
       CardModule,
       InputTextModule,
       MenubarModule,
+      ButtonModule
   ],
   declarations: [
     ExcEditButtonsComponent,
