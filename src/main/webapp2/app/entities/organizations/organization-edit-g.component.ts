@@ -14,79 +14,25 @@ import {of} from 'rxjs/observable/of';
 import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 
-export class FormControlCheck {
-    constructor(
-        public c: string,
-        public e: string
-    ) {}
-}
-
 @Component({
-    selector: 'jhi-organization-edit',
-    templateUrl: './organization-edit.component.html',
-    styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
-  })
-  export class OrganizationEditComponent implements OnInit, OnDestroy {
+  selector: 'jhi-organization-edit-g',
+  templateUrl: './organization-edit-g.component.html',
+  styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
+})
+export class OrganizationEditGComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
-    organizationForm: FormGroup;
-    organization: Organization;
+    constructor(
+        eventManager: JhiEventManager,
+        router: Router,
+        activatedRoute: ActivatedRoute,
+        private fb: FormBuilder,
+        private service: OrganizationsService,
+        private organizationTypeService: OrganizationTypeService) {
+            super(eventManager, router, activatedRoute);
+        }
 
-    organizationTypes: OrganizationType[];
-
-    loading: boolean;
-
-    // private subscription: Subscription;
-    private eventSubscriber: Subscription;
-    private newFlag: boolean;
-
-    constructor(private fb: FormBuilder,
-                private eventManager: JhiEventManager,
-                private service: OrganizationsService,
-                private organizationTypeService: OrganizationTypeService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute) {
-    }
-
-    ngOnInit() {
-        console.log('Edit load');
-        // this.subscription =
-        this.activatedRoute.params.subscribe((params) => {
-            if (params['id'] && params['id'] !== 'new') {
-                this.loadOrganization(params['id']);
-            } else {
-                this.newFlag = true;
-            }
-        });
-        this.initForm();
-        this.registerChangeInOrganization();
-        this.loadOrganizationTypes();
-    }
-
-    registerChangeInOrganization() {
-        this.eventSubscriber = this.eventManager.subscribe(
-            'organizationModification',
-            (response) => this.loadOrganization(this.organization.id)
-        );
-    }
-
-    loadOrganization(id) {
-        console.log('Load Organization');
-        this.service.find(id).subscribe((data) => {
-            this.organization = data;
-            console.log('loaded organization id:' + this.organization.id);
-            this.createForm(data);
-        });
-    }
-
-    loadOrganizationTypes() {
-        this.organizationTypeService.findAll().subscribe((data) => {
-            this.organizationTypes = data;
-        });
-    }
-
-    createForm(data: Organization) {
-        this.organizationForm = this.fb.group({
-
+    createForm(data: Organization): FormGroup {
+        const form = this.fb.group({
             id: [data.id],
             organizationName: [data.organizationName],
             organizationFullName: [data.organizationFullName],
@@ -119,10 +65,12 @@ export class FormControlCheck {
             chiefAccountantFio: [data.chiefAccountantFio],
             organizationTypeId: [data.organizationTypeId],
         });
+
+        return form;
     }
 
     initForm() {
-        this.organizationForm = this.fb.group({
+        const form = this.fb.group({
             id: null,
             organizationName: null,
             organizationFullName: null,
@@ -156,52 +104,11 @@ export class FormControlCheck {
             chiefAccountantFio: null,
             organizationTypeId: null
         });
+        return form;
     }
 
-    revertForm() {
-      this.createForm(this.organization);
-    }
-
-    saveForm() {
-        this.updateOrganization(this.organizationForm);
-    }
-
-    ngOnDestroy() {
-        // this.subscription.unsubscribe();
-        if (this.eventSubscriber) {
-            this.eventManager.destroy(this.eventSubscriber);
-        }
-    }
-
-    previousState() {
-        window.history.back();
-    }
-
-    updateOrganization(formGroup: FormGroup) {
-        this.organization = this.presaveOrganization();
-        this.loading = true;
-        this.service.update(this.organization).pipe(
-            catchError(() => of([])),
-            finalize(() => this.loading = false)
-        )
-        .subscribe( (data: Organization) => {
-            this.loading = false;
-            if (data['id']) {
-                if (this.newFlag) {
-                    this.router.navigate(['/organizations']);
-                } else {
-                    this.createForm(this.organization = data);
-                }
-            }
-        });
-    }
-
-    checkEmpty(val: any) {
-        return (val === '') ? null : val;
-    }
-
-    presaveOrganization(): Organization {
-        const formModel = this.organizationForm.value;
+    prepareEntity(): Organization {
+        const formModel = this.entityForm.value;
 
         const saveOrganization: Organization = {
             id: this.checkEmpty(formModel.id as number),
@@ -238,9 +145,11 @@ export class FormControlCheck {
         return saveOrganization;
     }
 
-    checkFormControl(controlName: string, errorName: string, errorNameMask?: string[] | null): boolean {
-        const control: AbstractControl = this.organizationForm.controls[controlName];
-        return ExcFormControlChecker.checkControlError(control, errorName, errorNameMask);
+    loadEntity(id: number): Observable<Organization> {
+        return this.service.find(id);
     }
 
+    updateEntity(data: Organization): Observable<Organization> {
+        return this.service.update(data);
+    }
 }

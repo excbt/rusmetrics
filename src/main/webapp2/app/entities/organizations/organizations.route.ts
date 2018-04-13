@@ -2,7 +2,8 @@ import { Route } from '@angular/router';
 
 import { OrganizationsComponent } from './organizations.component';
 import { OrganizationDetailComponent } from './organization-detail.component';
-import { OrganizationEditComponent, OrganizationEdit22Component } from './organization-edit.component';
+import { OrganizationEditComponent } from './organization-edit.component';
+import { OrganizationEditGComponent } from './organization-edit-g.component';
 import { UserRouteAccessService } from '../../shared';
 
 export const organizationsRoute: Route = {
@@ -35,8 +36,8 @@ export const organizationEditRoute: Route = {
 };
 
 export const organizationEdit22Route: Route = {
-    path: 'organizations/:id/edit22',
-    component: OrganizationEdit22Component,
+    path: 'organizations/:id/edit-g',
+    component: OrganizationEditGComponent,
     data: {
         pageTitle: 'organization.edit.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
