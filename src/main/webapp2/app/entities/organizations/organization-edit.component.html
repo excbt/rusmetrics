@@ -1,5 +1,6 @@
-<jhi-form-template>
-    <jhi-top-header headerTitle="{{ 'organization.edit.title' | translate }}" headerId="{{organization.id}}"></jhi-top-header>
+<jhi-exc-form-template>
+    <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{organization?.id}}"></jhi-exc-top-header>
+    <br>
     <div>
     <form [formGroup]="organizationForm">
         <div class="ui-g ui-g-nopad">
@@ -40,7 +41,7 @@
                     <!-- <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error> -->
-                    <mat-error *ngIf="checkFormControl('inn', 'invalidLength', ['pattern'])">
+                    <mat-error *ngIf="checkFormControl('inn', 'valueLength', ['pattern'])">
                             {{'organization.form.errors.inn' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -49,13 +50,16 @@
                     <mat-error *ngIf="checkFormControl('kpp' ,'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
+                    <mat-error *ngIf="checkFormControl('kpp', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.kpp' | translate}}
+                    </mat-error>
                 </mat-form-field>
                 <mat-form-field>
                     <input matInput type="text" maxlength="10" formControlName="okpo" placeholder="{{'organization.okpo' | translate}}">
                     <mat-error *ngIf="checkFormControl('okpo', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="checkFormControl('okpo', 'invalidLength', ['pattern'])">
+                    <mat-error *ngIf="checkFormControl('okpo', 'valueLength', ['pattern'])">
                             {{'organization.form.errors.okpo' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -119,8 +123,8 @@
                             {{'organization.flagRso' | translate}}
                             ( {{'organization.flagRsoDesription' | translate}} )
                         </mat-checkbox>
-                        <mat-checkbox  id="flagManagement" type="checkbox" formControlName="flagManagement">
-                            {{'organization.flagManagement' | translate}} ({{'organization.flagManagementDesription' | translate}})
+                        <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">
+                            {{'organization.flagCm' | translate}} ({{'organization.flagManagementDesription' | translate}})
                         </mat-checkbox>
                         <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
                             {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
@@ -136,7 +140,7 @@
                     <mat-error *ngIf="checkFormControl('reqAccount', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="checkFormControl('reqAccount', 'invalidLength', ['pattern'])">
+                    <mat-error *ngIf="checkFormControl('reqAccount', 'valueLength', ['pattern'])">
                             {{'organization.form.errors.reqAccount' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -145,7 +149,7 @@
                     <mat-error *ngIf="checkFormControl('reqCorrAccount', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                     </mat-error>
-                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'invalidLength', ['pattern'] )">
+                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'valueLength', ['pattern'] )">
                             {{'organization.form.errors.reqCorrAccount' | translate}}
                     </mat-error>
                 </mat-form-field>
@@ -155,7 +159,7 @@
                         <mat-error *ngIf="checkFormControl('reqBik', 'pattern')">
                             {{'organization.form.errors.onlyNumbers' | translate}}
                         </mat-error>
-                        <mat-error *ngIf="checkFormControl('reqBik', 'invalidLength', ['pattern'])">
+                        <mat-error *ngIf="checkFormControl('reqBik', 'valueLength', ['pattern'])">
                             {{'organization.form.errors.reqBik' | translate}}
                         </mat-error>
                     </mat-form-field>
@@ -167,7 +171,7 @@
             </div>                
         </div>    
         <!-- FORM BUTTONS -->
-        <jhi-form-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-form-buttons>
+        <jhi-exc-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-exc-edit-buttons>            
     </form>
     </div>
-</jhi-form-template>    
+</jhi-exc-form-template>    

@@ -4,8 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Type;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
+import ru.excbt.datafuse.nmk.domain.datatype.SortableData;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +20,8 @@ import javax.persistence.Table;
 @Getter
 @Setter
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
-public class OrganizationType extends AbstractPersistableEntity<Long> {
+public class OrganizationType extends AbstractPersistableEntity<Long> implements PersistableBuilder<OrganizationType, Long>,
+    SortableData {
 
     @Column(name = "type_keyname")
     private String typeKeyname;
@@ -31,4 +35,10 @@ public class OrganizationType extends AbstractPersistableEntity<Long> {
     @Column(name = "deleted")
     private int deleted;
 
+    @Column(name = "sort_order")
+    private Integer sortOrder;
+
+    @Column(name = "flex_ui")
+    @Type(type = "JsonbAsString")
+    private String flexUI;
 }

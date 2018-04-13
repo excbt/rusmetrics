@@ -1,0 +1,11 @@
+{
+    "paginator" : {
+        "ITEMS_PER_PAGE": "Количество на странице",
+        "NEXT_PAGE": "След страница",
+        "PREVIOUS_PAGE" : "Пред страница",
+        "OF_LABEL": ""
+    },
+    "form-search" : {
+        "title" : "Поиск"
+    }
+}

@@ -9,17 +9,15 @@ import { OrganizationEditComponent } from './organizations/organization-edit.com
 import { OrganizationsWidgetComponent } from './organizations/organizations-widget.component';
 import { OrganizationsService } from './organizations/organizations.service';
 import { OrganizationTypeService } from './organization-types/organization-type.service';
-import {
-    TopHeaderComponent,
-    FormEditButtonsComponent,
-    FormDetailFieldComponent,
-    FormTemplateComponent } from './blocks/form-blocks';
+
+import { PortalSharedBlocksModule } from '../shared-blocks/shared-blocks.module';
 
 import {
     MatGridListModule,
     MatInputModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatProgressBarModule,
     MatSortModule,
     MatTableModule,
     MatButtonModule,
@@ -29,8 +27,17 @@ import {
     ShowOnDirtyErrorStateMatcher } from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatPaginatorIntl } from '@angular/material';
+import { ruPaginatorIntl } from './shared/ru-paginator-intl';
+import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
+// PRIME NG
 import { CardModule } from 'primeng/card';
+import { InputTextModule } from 'primeng/inputtext';
+import { MenubarModule } from 'primeng/menubar';
+import { MenuItem } from 'primeng/api';
+
+// Etc
 import { entityState } from './';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -38,39 +45,43 @@ import { entityState } from './';
     imports: [
         BrowserAnimationsModule,
         JhipsterSharedModule,
+        PortalSharedBlocksModule,
         RouterModule.forChild(entityState),
         FormsModule,
         ReactiveFormsModule,
+        // Angular Material
         MatGridListModule,
         MatInputModule,
         MatPaginatorModule,
         MatProgressSpinnerModule,
+        MatProgressBarModule,
         MatSortModule,
         MatTableModule,
         MatButtonModule,
         MatIconModule,
-        CardModule,
         MatCheckboxModule,
         MatSelectModule,
-        MatTooltipModule
+        MatTooltipModule,
+
+        // PRIME NG
+        CardModule,
+        InputTextModule,
+        MenubarModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
-        OrganizationsWidgetComponent,
-        TopHeaderComponent,
-        FormEditButtonsComponent,
-        FormDetailFieldComponent,
-        FormTemplateComponent
+        OrganizationsWidgetComponent
     ],
     entryComponents: [
     ],
     providers: [
         OrganizationsService,
         OrganizationTypeService,
-        {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}
+        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+        { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [

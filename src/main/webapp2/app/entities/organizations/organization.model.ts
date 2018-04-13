@@ -1,20 +1,16 @@
 export class Organization {
     constructor(
-        public id: number,
-        public organizationName: string,
-        public organizationFullName: string,
-        public organizationFullAddress: string,
-        public exCode: string,
-        public exSystem: string,
-        public flagRso: boolean,
-        public flagManagement: boolean,
-        public flagRma: boolean,
-        public keyname: string,
-        public isDevMode: boolean,
-        public flagCm: boolean,
-        public organizationDescription: string,
-        public isCommon: boolean,
-        public rmaSubscriberId: number,
+        public id: number,        // ID. Первичный ключ
+        public organizationName: string,        // Наименование организации
+        public organizationFullName: string,        // Полное наименование организации
+        public organizationFullAddress: string,        // Полный адрес организации
+        public flagRso: boolean,        // Признак "РСО"
+        public flagManagement: boolean,        // deprecated Признак "УК"
+        public flagRma: boolean,        // Признак "РМА"
+        public keyname: string,        // Ключевое наименование. Первичный ключ
+        public flagCm: boolean,        // Признак "УК"
+        public organizationDescription: string,        // Описание организации
+        public isCommon: boolean,        // Признак "глобальный"
         public flagServ: boolean,
         public inn: string,
         public kpp: string,
@@ -34,8 +30,7 @@ export class Organization {
         public siteUrl: string,
         public directorFio: string,
         public chiefAccountantFio: string,
-        public organizationTypeId: number,
-        public version: number
+        public organizationTypeId: number
     ) { }
 }
 

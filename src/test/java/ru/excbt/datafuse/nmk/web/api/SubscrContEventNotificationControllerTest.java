@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscrContEventNotificationDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContEventMonitorV2Repository;
 import ru.excbt.datafuse.nmk.data.repository.ContEventRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -30,11 +31,10 @@ import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.rest.TestUtil;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
@@ -102,6 +102,35 @@ public class SubscrContEventNotificationControllerTest extends AnyControllerTest
 			b.param("page", "0").param("size", "100");
 			b.param("sortDesc", "false");
 			b.param("contEventCategories", TestUtils.listToString(contEventTypeCategoryList));
+		};
+
+		_testGetJson("/api/subscr/contEvent/notifications/paged", params);
+
+	}
+
+	@Test
+    @Transactional
+	public void testNotificationGetContServiceTypes() throws Exception {
+
+		List<Long> contObjectList = objectAccessService.findContObjectIds(currentSubscriberService.getSubscriberId());
+
+		List<Long> contEventTypeIdList = contEventTypeService.selectBaseContEventTypes().stream()
+				.map(cet -> cet.getId()).collect(Collectors.toList());
+
+		List<String> contEventTypeCategoryList = Arrays.asList("LEAK_WARNING");
+		List<String> contServiceTypes = new ArrayList<>();
+        EnumSet.allOf(ContServiceTypeKey.class).forEach(i -> {
+            contServiceTypes.add(i.getKeyname());
+        });
+
+		RequestExtraInitializer params = (b) -> {
+			b.param("fromDate", "2015-06-01").param("toDate", "2015-06-30");
+			b.param("contObjectIds", TestUtils.listToString(contObjectList));
+			b.param("contEventTypeIds", TestUtils.listToString(contEventTypeIdList));
+			b.param("page", "0").param("size", "100");
+			b.param("sortDesc", "false");
+			b.param("contEventCategories", TestUtils.listToString(contEventTypeCategoryList));
+			b.param("contServiceTypes", TestUtils.listToString(contServiceTypes));
 		};
 
 		_testGetJson("/api/subscr/contEvent/notifications/paged", params);

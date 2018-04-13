@@ -16,7 +16,7 @@
             "maxNchars": "Максимально {{n}} символов"
         },
         "detail": {
-            "title": "Просмотр организации"
+            "title": "Организация"
         },
         "form": {
             "errors": {
@@ -34,10 +34,10 @@
         "organizationFullName": "Полное наименование",
         "organizationFullAddress": "organizationFullAddress-N/A",
         "flagRso": "РСО",
-        "flagManagement": "УК",
+        "flagManagement": "flagManagement",
         "flagRma": "РМА",
         "keyname": "keyname",
-        "flagCm": "flagCm",
+        "flagCm": "УК",
         "organizationDescription": "Описание",
         "isCommon": "",
         "rmaSubscriberId": "",
@@ -64,7 +64,8 @@
         "organizationTypeName": "Форма организации",
         "organizationType_None": "нет",
         "flagRsoDesription": "Ресурсоснабжающая организация",
-        "flagManagementDesription": "Управляющая компания",
+        "flagManagementDesription": "flagManagement",
+        "flagCmDesription": "Управляющая компания",
         "flagRmaDesription": "Региональный партнер"
 
     }

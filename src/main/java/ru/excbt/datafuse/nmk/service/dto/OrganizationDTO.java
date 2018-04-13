@@ -36,7 +36,7 @@ public class OrganizationDTO {
 
     private int version;
 
-    private int deleted;
+//    private int deleted;
 
     private String exSystem;
 
@@ -55,8 +55,6 @@ public class OrganizationDTO {
     private String organizationDescription;
 
     private Boolean isCommon;
-
-    private Long rmaSubscriberId;
 
     private Boolean flagServ;
 
@@ -98,5 +96,5 @@ public class OrganizationDTO {
 
     private Long organizationTypeId;
 
-    private Long organizationTypeName;
+    private String organizationTypeName;
 }

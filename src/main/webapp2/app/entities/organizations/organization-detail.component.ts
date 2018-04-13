@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { OrganizationsService } from './organizations.service';
 import { slideInDownAnimation } from '../animations';
@@ -10,14 +10,9 @@ import { JhiEventManager  } from 'ng-jhipster';
   selector: 'jhi-organization-detail',
   templateUrl: './organization-detail.component.html',
   animations: [ slideInDownAnimation ],
-//   animations: [ slideInDownAnimation ],
   styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
 export class OrganizationDetailComponent implements OnInit, OnDestroy {
-
-    // @HostBinding('@routeAnimation') routeAnimation = true;
-    // @HostBinding('style.display')   display = 'block';
-    // @HostBinding('style.position')  position = 'absolute';
 
     organization: Organization;
 
@@ -31,7 +26,9 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.subscription = this.route.params.subscribe((params) => {
-            this.load(params['id']);
+            if (params['id']) {
+                this.load(params['id']);
+            }
         });
         this.registerChangeInOrganization();
     }
