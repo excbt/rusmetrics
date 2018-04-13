@@ -37,14 +37,9 @@ public class AccountResource {
     @GetMapping("/account")
     @Timed
     public UserDTO getAccount() {
-
-        if (SecurityUtils.isSystemUser()) {
-            return portalUserIdsService.getSystemUserWithAuthorities().map(UserDTO::new)
-                .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
-        } else {
-            return portalUserIdsService.getSubscrUserWithAuthorities().map(UserDTO::new)
-                .orElseThrow(() -> new InternalServerErrorException("User could not be found"));
-        }
+        return portalUserIdsService.getSystemUserWithAuthorities().map(UserDTO::new)
+            .orElse(portalUserIdsService.getSubscrUserWithAuthorities().map(UserDTO::new)
+                .orElseThrow(() -> new InternalServerErrorException("User could not be found")));
     }
 
 }

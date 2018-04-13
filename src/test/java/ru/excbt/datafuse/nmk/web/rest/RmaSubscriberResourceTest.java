@@ -7,7 +7,7 @@ import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;

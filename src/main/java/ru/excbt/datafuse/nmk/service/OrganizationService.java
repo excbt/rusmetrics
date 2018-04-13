@@ -1,10 +1,12 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +14,12 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
 
@@ -116,7 +119,18 @@ public class OrganizationService implements SecuredRoles {
             .stream()
                 .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
                 .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
-                .map(organizationMapper::otganizationToDTO).collect(Collectors.toList());
+                .map(organizationMapper::toDTO).collect(Collectors.toList());
+		return organizations;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids, Sort sort) {
+	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
+		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(searchSubscriberId, sort)
+            .stream()
+                .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+                .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
+                .map(organizationMapper::toDTO).collect(Collectors.toList());
 		return organizations;
 	}
 
@@ -141,6 +155,13 @@ public class OrganizationService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization saveOrganization(Organization entity) {
 		return organizationRepository.saveAndFlush(entity);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public OrganizationDTO saveOrganization(OrganizationDTO dto) {
+	    Organization organization = organizationMapper.toEntity(dto);
+		return organizationMapper.toDTO(organizationRepository.saveAndFlush(organization));
 	}
 
 	/**

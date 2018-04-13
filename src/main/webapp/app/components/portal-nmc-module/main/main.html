@@ -1,5 +1,6 @@
 <!--<div>{{mainVm.isCabinet()}}</div>-->
 <div layout = "column" style = "height: 100vh;">
+<!--    style = "height: 100vh;">-->
     <header></header>
     <div flex layout = "row"> 
         <md-sidenav class = "md-whiteframe-z2" ng-click = "mainVm.menuToggleList()" md-component-id="left-main-menu">
@@ -115,39 +116,47 @@
 
         </md-sidenav>
 
-    <md-content flex id = "content" style = "overflow-y: hidden">
+    <md-content flex id = "content">
+<!--     style = "overflow-y: hidden">-->
 
 
-        <div>
-            <div id="wrap" class="wrap">                    
+<!--        <div>-->
+<!--            <div id="wrap" class="wrap">                    -->
 
-                <div class="container-fluid noMargin" >
+<!--                <div class="container-fluid" >-->
 
-                <div class="row row-offcanvas row-offcanvas-left">
+<!--                    <div class="row">-->
+<!--                         row-offcanvas row-offcanvas-left">-->
 
-                    <!-- Side bar menu -->
+                        <!-- Side bar menu -->
 
 
-                    <div id="div-main-area" class="col-xs-12 well mainarea nmc-main-workspace nmc-main-workspace-maximize" ng-cloak>
-            <!--             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>-->
+                        <div id="div-main-area" class="col-xs-12 nmc-main-workspace" ng-cloak >
+<!--                    well mainarea nmc-main-workspace-maximize" ng-cloak>-->
+                <!--             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>-->
 
-                                <div id="main" ui-view></div>
-            <!--					<div id="main" ng-view></div>-->
-            <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
-                    </div>
+                                    <div id="main" ui-view></div>
+                <!--					<div id="main" ng-view></div>-->
+                <!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
+                        </div>
 
-                 </div>
-                </div>
+<!--                     </div>-->
+<!--                   end Row  -->
+<!--                </div>-->
+<!--              end  Container fluid-->
 
-            </div> <!-- end id=wrap -->
+<!--            </div> -->
+              <!-- end id=wrap -->
 
+<!--
               <div class="navbar-fixed-bottom row-fluid nmc-main-footer nmc-hide" >
                   <div class="container-fluid" >
                       <div class="row">
                       </div>
                   </div>
               </div>
-        </div>
+-->
+<!--        </div>-->
         </md-content>
     </div>
 </div>

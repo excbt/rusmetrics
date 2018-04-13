@@ -1,0 +1,72 @@
+{
+    "organizations": {
+        "title": "Организации",
+        "one": {
+            "id": "Код",
+            "name": "Название"
+        },
+        "widget": {
+            "list": "Показать все"
+        }
+    },
+
+    "organization": {
+        "edit": {
+            "title": "Редактирование организации",
+            "maxNchars": "Максимально {{n}} символов"
+        },
+        "detail": {
+            "title": "Просмотр организации"
+        },
+        "form": {
+            "errors": {
+                "inn": "ИНН должен содержать 10 или 12 символов",
+                "kpp": "КПП должен содержать 9 символов",    
+                "okpo": "КПП должен содержать 8 или 10 символов",    
+                "onlyNumbers": "Допускаются только цифры",
+                "reqAccount": "Рассчетный счет должен содержать 20 цифр",
+                "reqCorrAccount": "Корр. счет должен содержать 20 цифр",
+                "reqBik": "БИК должен содержать 9 цифр"
+            }
+        },
+        "id": "Код",
+        "organizationName": "Краткое наименование",
+        "organizationFullName": "Полное наименование",
+        "organizationFullAddress": "organizationFullAddress-N/A",
+        "flagRso": "РСО",
+        "flagManagement": "УК",
+        "flagRma": "РМА",
+        "keyname": "keyname",
+        "flagCm": "flagCm",
+        "organizationDescription": "Описание",
+        "isCommon": "",
+        "rmaSubscriberId": "",
+        "flagServ": "flagServ",
+        "inn": "ИНН",
+        "kpp": "КПП",
+        "okpo": "ОКПО",
+        "ogrn": "ОГРН",
+        "legalAddress": "Адрес юридический",
+        "factAddress": "Адрес фактического местонахождения",
+        "postAddress": "Адрес почтовый",
+        "reqAccount": "Расчетный счет",
+        "reqBankName": "Наименование банка",
+        "reqCorrAccount": "Корр. счет",
+        "reqBik": "БИК",
+        "contactPhone": "Конт. тел.",
+        "contactPhone2": "Конт. тел. 2",
+        "contactPhone3": "Конт. тел. 3",
+        "contactEmail": "e-mail",
+        "siteUrl": "Сайт организации",
+        "directorFio": "Генеральный директор",
+        "chiefAccountantFio": "Гл.бухгалтер",
+        "organizationTypeId": "organizationTypeId",
+        "organizationTypeName": "Форма организации",
+        "organizationType_None": "нет",
+        "flagRsoDesription": "Ресурсоснабжающая организация",
+        "flagManagementDesription": "Управляющая компания",
+        "flagRmaDesription": "Региональный партнер"
+
+    }
+    
+}

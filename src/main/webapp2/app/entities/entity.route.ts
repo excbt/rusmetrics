@@ -1,10 +1,13 @@
 import { Routes } from '@angular/router';
 import { organizationsRoute} from './organizations/organizations.route';
-
-import { UserRouteAccessService } from '../shared';
+import { organizationDetailRoute} from './organizations/organizations.route';
+import { organizationEditRoute} from './organizations/organizations.route';
+// import { UserRouteAccessService } from '../shared';
 
 const ENTITY_ROUTES = [
-    organizationsRoute
+    organizationsRoute,
+    organizationDetailRoute,
+    organizationEditRoute
 ];
 
 export const entityState: Routes = [{

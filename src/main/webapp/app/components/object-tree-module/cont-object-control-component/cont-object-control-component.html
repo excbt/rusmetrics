@@ -23,7 +23,9 @@
 </md-toolbar>
 -->
 <!--    Cont object controller view-->
-   <div class = "container-fluid" style = "position: absolute; top: -28px; left: 0px; right: 0px; width: 93%; z-index: 2; margin-left: 50px;">
+   <div id = "nmc-ctrl-cmp-toolbarheader-id" 
+       class = "container-fluid" style = "position: absolute; top: -28px; left: 0px; right: 0px; width: 96.4%; z-index: 2; margin-left: 50px;">
+<!--     margin-left: 50px;-->
       <div class = "row">
           <div class = "col-xs-12 noPadding">
             <div class = "input-group filter nmc-search-form" style = "width: 100%;">   
@@ -32,14 +34,20 @@
                     <i class = "glyphicon glyphicon-search nmc-search-form-button"></i>
                 </span>
 -->
-                <input title = "Введите текст для поиска" 
+                <input ng-if = "$ctrl.searchFlag"
+                id = "nmc-ctrl-cmp-search-btn-id"
+                title = "Введите текст для поиска" 
                 type = "text" 
                 class = "form-control nmc-text-input-form" 
                 ng-model = "$ctrl.filter"
                 ng-change = "$ctrl.filterObjects($ctrl.filter)"
                 style = "border-color: rgb(95, 95, 95); border-radius: 0;">
-                <span class = "input-group-addon" style = "background: transparent; border: none;">
-                    <i class = "glyphicon glyphicon-search nmc-search-form-button"></i>
+                <span class = "input-group-addon" style = "background: transparent; border: none; padding: 0 3px 6px 3px">
+                    <i class = "btn btn-xs glyphicon glyphicon-search nmc-ctrl-cmp-search-btn"
+                        ng-class = "{'glyphicon-search': !$ctrl.searchFlag, 'glyphicon-remove': $ctrl.searchFlag}"
+                    
+                        ng-click = "$ctrl.toggleSearch()"
+                    ></i>
                 </span>
             </div>
           </div>
@@ -65,7 +73,7 @@
     
     <!--    Непрокручиваямая шапка -->
     <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
-            <tr class="nmc-main-table-header">
+            <tr class="nmc-ctrl-cmp-table-header">
                 <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                    Режим-->
                 </th>
@@ -75,7 +83,8 @@
                     <span ng-click = "$ctrl.setOrderBy(column.name)">{{column.caption}}</span>
                     <i class = "glyphicon" 
                        ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
-                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'">
+                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
+                       ng-click = "$ctrl.setOrderBy(column.name)">
                     </i>
 <!--
                     <i ng-if = "true"
@@ -103,7 +112,8 @@
 -->
                         </i>
                       <ul
-                        class="dropdown-menu" >
+                        class="dropdown-menu" 
+                        style = "margin-top: 5px; min-width: 20px;">
 <!--                        <li style="color: rgb(95, 95, 95)">test IMG</li>-->
                         <li ng-repeat = "fvalue in column.filterValues track by $index">
                             <a href=""
@@ -135,11 +145,11 @@
                 </th>
             </tr>
     </table>
-    <div id="divWithContObjectControlTable" class="nmc-data-sources-main-div" when-scrolled="$ctrl.addMoreObjectsOnPage()">
+    <div id="divWithContObjectControlTable" class="nmc-cont-object-control-main-div" when-scrolled="$ctrl.addMoreObjectsOnPage()">
         <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
             scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}">
             
-            <tr class = "nmc-main-table-header nmc-hide">
+            <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
                 <th class = "col-xs-1 nmc-td-for-button-object-control">
 <!--                        Режим-->
@@ -160,15 +170,41 @@
                </td>
 -->
                <td>
-                   <table>
+                   <table style = "width: 100%;">
                        <tr>
-                            <td class = "col-xs-1 nmc-td-for-button-object-control">                  
-                               <i class = "btn glyphicon pull-right"
-                                 ng-class = "{'glyphicon-chevron-right': !object.showWidgetFlag, 'glyphicon-chevron-down': object.showWidgetFlag}"
+                            <td class = "col-xs-1 nmc-td-for-button-object-control"
+                              >
+<!--
+                         <i ng-class = "$ctrl.getIconCssClass($index)"
+                                 
                                   ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 20px; padding-left: 12px; color: white"
+                                  ng-style = "{'text-shadow': $ctrl.getTextShadow($index)}"
                                   >
-                                   
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
                                </i>
+-->
+
+                              <img class="pull-right"
+                              ng-click = "$ctrl.showObjectWidget(object, $index)"
+                               ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon($index)}}"
+                               style = "padding-left: 12px; height: 24px; width: 36px;"
+                               />
+                              
+<!--
+                               <i class = "btn btn-xs glyphicon glyphicon-home pull-right"
+                                 
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 14px; padding-left: 12px; color: #80a3c1"
+                                  ng-style = "{'color': $even ? '#ffc000' : '#ff0000'}"
+                                  >
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
+                               </i>
+-->
 <!--
                                 <img class = "marginRight2 pull-right" 
                                 height = "12"
@@ -178,10 +214,11 @@
 -->
                                 <img class = "marginRight2 nmc-p-tree-status-img pull-right" 
                                 ng-src = "{{object.modeImgSrc}}"
-                                style = "margin-top: 10px;">
+                                style = "margin-top: 7px;">
 
                             </td>
-                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
+                               style = "padding: 7px 0;">
 
                                <div ng-switch on = "column.type">
                                     <div ng-switch-when = "img">

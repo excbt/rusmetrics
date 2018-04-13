@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from '../../app.constants';
@@ -11,8 +11,19 @@ export class OrganizationsService {
     private resourceUrl = SERVER_API_URL + 'api/organizations/';
     constructor(private http: HttpClient) { }
 
-    findAll(): Observable<Organization[]> {
-        return this.http.get<Organization[]>(this.resourceUrl);
+    findAll(sortField: string, sortOrder: string): Observable<Organization[]> {
+        return this.http.get<Organization[]>(this.resourceUrl, {params : new HttpParams().set('sort', sortField.concat(',', sortOrder))});
     }
 
+    find(id: number | string): Observable<Organization> {
+        console.log('query');
+        return this.http.get<Organization>(this.resourceUrl.concat('' + id));
+    }
+
+    update(organization: Organization): Observable<Organization> {
+        // dsd
+        return this.http.put<Organization>(this.resourceUrl, organization);
+        // console.log('save');
+        // return Observable.of(true);
+    }
 }
