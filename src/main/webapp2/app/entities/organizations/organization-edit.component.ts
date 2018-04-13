@@ -234,7 +234,9 @@ export class FormControlCheck {
             siteUrl: this.checkEmpty(formModel.siteUrl as string),
             directorFio: this.checkEmpty(formModel.directorFio as string),
             chiefAccountantFio: this.checkEmpty(formModel.chiefAccountantFio as string),
-            organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),        };
+            organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),
+            version: this.organization.version
+           };
         return saveOrganization;
     }
 

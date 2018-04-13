@@ -17,8 +17,20 @@ import { JhiEventManager  } from 'ng-jhipster';
 
 import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
 
-export interface EntityProvider<T> {
+export interface ExcEditFormEntityProvider<T> {
   load: (id: any) => Observable<T>;
+  update: (id: any) => Observable<T>;
+}
+
+export interface FormGroupInitializer<T> {
+  initForm: () => FormGroup;
+  createForm: (data: T) => FormGroup;
+}
+
+export interface ExcEditFormParams {
+  modificationEventName?: string;
+  backUrl?: string;
+  onSaveUrl?: string;
 }
 
 // @Component({
@@ -38,14 +50,15 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   entity: T;
 
   constructor(
+    private params: ExcEditFormParams,
+    private entityProvider: ExcEditFormEntityProvider<T>,
+    // private formGroupInitializer: FormGroupInitializer<T>,
     private eventManager: JhiEventManager,
     private router: Router,
     private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
-    // this.subscription =
-    console.log('Start Init');
     this.activatedRoute.params.subscribe((params) => {
         if (params['id'] && params['id'] !== 'new') {
           this.entityId = params['id'];
@@ -55,19 +68,19 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
         }
     });
     this.entityForm = this.initForm();
-    // this.registerChangeInOrganization();
-    // this.loadOrganizationTypes();
+    this.registerChangeInOrganization();
   }
 
   registerChangeInOrganization() {
-    this.eventSubscriber = this.eventManager.subscribe(
-        'organizationModification',
-        (response) => this.loadEntity(this.entityId)
-    );
+    if (this.params.modificationEventName) {
+        this.eventSubscriber = this.eventManager.subscribe(
+          this.params.modificationEventName,
+          (response) => this.loadData(this.entityId)
+      );
+    }
   }
 
   ngOnDestroy() {
-    // this.subscription.unsubscribe();
     if (this.eventSubscriber) {
         this.eventManager.destroy(this.eventSubscriber);
     }
@@ -75,9 +88,6 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
 
   abstract createForm(data: T): FormGroup;
   abstract initForm(): FormGroup;
-
-  abstract loadEntity(id: number): Observable<T>;
-  abstract updateEntity(data: T): Observable<T>;
   abstract prepareEntity(form: FormGroup);
 
   revertForm() {
@@ -89,7 +99,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   }
 
   private loadData(id: any) {
-    this.loadEntity(id).subscribe((data) => {
+    this.entityProvider.load(id).subscribe((data) => {
       this.entity = data;
       this.entityForm = this.createForm(this.entity);
     });
@@ -100,17 +110,21 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     this.loadingSubject.next(true);
     this.entity = this.prepareEntity(this.entityForm);
 
-    this.updateEntity(this.entity).pipe(
+    this.entityProvider.update(this.entity).pipe(
         catchError(() => of([])),
         finalize(() => this.loadingSubject.next(false))
     )
     .subscribe( (data: T) => {
         this.loadingSubject.next(false);
         if (data['id']) {
-            if (this.newFlag) {
-                this.router.navigate(['/organizations']);
+            if (this.newFlag && this.params.onSaveUrl) {
+              this.router.navigate([this.params.onSaveUrl]);
             } else {
-              this.entityForm = this.createForm(this.entity = data);
+              if (this.params.onSaveUrl) {
+                this.router.navigate([this.params.onSaveUrl]);
+              } else {
+                this.entityForm = this.createForm(this.entity = data);
+              }
             }
         }
     });

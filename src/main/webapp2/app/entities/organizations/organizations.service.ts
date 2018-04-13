@@ -5,6 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
 import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
+import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 
 @Injectable()
 export class OrganizationsService {
@@ -57,5 +58,11 @@ export class OrganizationsService {
         return this.http.put<Organization>(this.resourceUrl, organization);
         // console.log('save');
         // return Observable.of(true);
+    }
+
+    entityProvider(): ExcEditFormEntityProvider<Organization> {
+        return {
+            load: (id) => this.find(id),
+            update: (data) => this.update(data)};
     }
 }

@@ -13,6 +13,8 @@ import { catchError, finalize } from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
+import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
+import { FormGroupInitializer } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 
 @Component({
   selector: 'jhi-organization-edit-g',
@@ -21,6 +23,8 @@ import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit
 })
 export class OrganizationEditGComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
+    organizationTypes: OrganizationType[];
+
     constructor(
         eventManager: JhiEventManager,
         router: Router,
@@ -28,8 +32,23 @@ export class OrganizationEditGComponent extends ExcEditFormComponent<Organizatio
         private fb: FormBuilder,
         private service: OrganizationsService,
         private organizationTypeService: OrganizationTypeService) {
-            super(eventManager, router, activatedRoute);
+            super(
+                {   modificationEventName: 'organizationModification',
+                    backUrl: '/organizations',
+                    onSaveUrl: '/organizations'
+                },
+                service.entityProvider(),
+                eventManager,
+                router,
+                activatedRoute);
+            this.loadOrganizationTypes();
         }
+
+    loadOrganizationTypes() {
+        this.organizationTypeService.findAll().subscribe((data) => {
+            this.organizationTypes = data;
+        });
+    }
 
     createForm(data: Organization): FormGroup {
         const form = this.fb.group({
@@ -141,15 +160,10 @@ export class OrganizationEditGComponent extends ExcEditFormComponent<Organizatio
             siteUrl: this.checkEmpty(formModel.siteUrl as string),
             directorFio: this.checkEmpty(formModel.directorFio as string),
             chiefAccountantFio: this.checkEmpty(formModel.chiefAccountantFio as string),
-            organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),        };
+            organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),
+            version: this.entity.version
+        };
         return saveOrganization;
     }
 
-    loadEntity(id: number): Observable<Organization> {
-        return this.service.find(id);
-    }
-
-    updateEntity(data: Organization): Observable<Organization> {
-        return this.service.update(data);
-    }
 }
