@@ -1,4 +1,4 @@
-/*global Chart*/
+/*global Chart, Image, console, document*/
 (function () {
     'use strict';
     
@@ -34,12 +34,18 @@
 //                textX = Math.round((height + 30 - ctx.measureText(text).width) / 2);
 //            }
 //            ctx.fillText(text, textX, textY);
-//            var img =new Image();
-//            img.src = "components/object-tree-module/cont-object-monitor-component/db.png";
+//            var img = new Image();
+//            
+//            img.src = "components\\object-tree-module\\cont-object-monitor-component\\heat.png";
 //            console.log("img", img);
+//            console.log(img);
 //            ctx.drawImage(img, textX, textY);
-            ctx.save();
             
+//            var img1 = document.getElementById('heatimg');
+//console.log(img1);            
+//            ctx.drawImage(img, 0, 0);
+            ctx.save();
+//console.log(ctx);            
         }
     });
     

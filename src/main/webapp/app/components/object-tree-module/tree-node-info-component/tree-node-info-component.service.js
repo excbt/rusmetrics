@@ -38,11 +38,11 @@
                 caption: "Контроль",
                 stateName: "objectsPTree.treeNodeInfo.contObjectControl"
             },
-            {
+            /*{
                 keyname: "NOTIFICATION",
                 caption: "Уведомления",
                 stateName: "objectsPTree.treeNodeInfo.nodeNotifications"
-            },
+            },*/
             {
                 keyname: "MONITORING",
                 caption: "Мониторинг",
@@ -55,15 +55,21 @@
                 keyname: "CONTOBJECT_CONTROL",
                 caption: "Контроль",
                 stateName: "objectsPTree.treeNodeInfo.contObjectControl"
-            },
+            }/*,
             {
                 keyname: "MONITORING",
                 caption: "Мониторинг",
                 stateName: "objectsPTree.treeNodeInfo.contObjectMonitor"
-            }
+            }*/
         ]; 
         
         var zpointNodeWidgets = [
+            
+            {
+                keyname: "CONT_ZPOINT_CONS_WIDGET",
+                caption: "Точка учета",
+                stateName: "objectsPTree.treeNodeInfo.contZpointConsWidget"
+            },
             {
                 keyname: "INDICATOR_VIEW",
                 caption: "Показания",

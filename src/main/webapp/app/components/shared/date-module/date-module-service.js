@@ -10,9 +10,17 @@
 
     /* @ngInject */
     function Service() {
-        var DEFAULT_USER_FORMAT = 'DD.MM.YYYY HH:mm:ss';
+        var DEFAULT_USER_DATE_FORMAT = 'DD.MM.YYYY HH:mm:ss',
+            DEFAULT_USER_DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm',
+            DEFAULT_USER_SHORT_DATE_FORMAT = 'DD.MM.YYYY',
+            DEFAULT_USER_TIME_FORMAT = 'HH:mm',
+            DEFAULT_SYSTEM_DATE_FORMAT = 'YYYY-MM-DD';
         this.dateFormating = dateFormating;
         this.getDaterangeOptions = getDaterangeOptions;
+        this.getSystemDateFormat = getSystemDateFormat;
+        this.getUserDateTimeFormat = getUserDateTimeFormat;
+        this.getUserShortDateFormat = getUserShortDateFormat;
+        this.getUserTimeFormat = getUserTimeFormat;
         
         var dateOptsRu = {
             applyClass : 'btn-primary nmc-drp-ctrl-btns',
@@ -21,7 +29,7 @@
                 applyLabel : "Применить",
                 fromLabel : "с",
                 toLabel : "по",
-                cancelLabel : 'Отмена',
+                cancelLabel : 'Отменить',
                 customRangeLabel : 'Произвольный период',
                 daysOfWeek : [ 'Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб' ],
                 firstDay : 1,
@@ -72,7 +80,7 @@
                 return null;
             }
             if (angular.isUndefined(formatString) || formatString === null) {
-                formatString = DEFAULT_USER_FORMAT;
+                formatString = DEFAULT_USER_DATE_FORMAT;
             }
             var result = null;            
             
@@ -85,6 +93,22 @@
         
         function getDaterangeOptions() {
             return angular.copy(dateOptsRu);
+        }
+        
+        function getSystemDateFormat() {
+            return DEFAULT_SYSTEM_DATE_FORMAT;
+        }
+        
+        function getUserDateTimeFormat() {
+            return DEFAULT_USER_DATE_TIME_FORMAT;
+        }
+        
+        function getUserShortDateFormat() {
+            return DEFAULT_USER_SHORT_DATE_FORMAT;
+        }
+        
+        function getUserTimeFormat() {
+            return DEFAULT_USER_TIME_FORMAT;
         }
     }
 })();

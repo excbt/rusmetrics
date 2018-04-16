@@ -2,7 +2,7 @@
 /*global angular, $, alert, moment*/
 'use strict';
 var app = angular.module('portalNMC');
-app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window) {
+app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$resource', '$cookies', '$compile', '$parse', 'crudGridDataFactory', 'notificationFactory', '$http', 'objectSvc', 'mainSvc', '$timeout', '$window', 'settingModeService', function ($scope, $rootScope, $routeParams, $resource, $cookies, $compile, $parse, crudGridDataFactory, notificationFactory, $http, objectSvc, mainSvc, $timeout, $window, settingModeService) {
     $rootScope.ctxId = "management_rma_objects_page";
 //console.log('Run Object management controller.');  
 //var timeDirStart = (new Date()).getTime();
@@ -54,6 +54,15 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.objectCtrlSettings.clientsUrl = "../api/rma/subscribers";
     $scope.objectCtrlSettings.subscrObjectsSuffix = "/subscrContObjects";
 //    $scope.objectCtrlSettings.tempSchBaseUrl = "../api/rma/temperatureCharts/byContObject";
+    
+    $scope.getModeState = settingModeService.getModeState;
+    
+    $scope.addManyObjectsEnabled = function () {        
+        return $scope.isSystemuser() && $scope.getModeState();
+    };
+//    $scope.$on(settingModeService.EVENTS.settingModeChanged, function () {
+//        
+//    });
                 
     var setVisibles = function () {
         var tmp = mainSvc.getContextIds();
@@ -1026,16 +1035,6 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
     $scope.addZpoint = function (object) {
         $scope.selectedItem(object);
         $scope.zpointSettings = {};
-
-//        if (!mainSvc.checkUndefinedNull($cookies.recentContServiceTypeKeyname)) {
-//            $scope.zpointSettings.contServiceTypeKeyname = $cookies.recentContServiceTypeKeyname;
-//            $scope.changeServiceType($scope.zpointSettings);
-//        }
-//        if (!mainSvc.checkUndefinedNull($cookies.recentRsoId)) {
-//            $scope.zpointSettings.rsoId = Number($cookies.recentRsoId);
-//        }
-//        $scope.getDevices(object, false);
-//        getTemperatureSchedulesByObjectForZpoint($scope.currentObject.id, $scope.zpointSettings);
 
         if (!mainSvc.checkUndefinedNull($cookies.get('recentContServiceTypeKeyname'))) {
             $scope.zpointSettings.contServiceTypeKeyname = $cookies.get('recentContServiceTypeKeyname');
@@ -2423,7 +2422,25 @@ app.controller('MngmtObjectsCtrl', ['$scope', '$rootScope', '$routeParams', '$re
 // ********************************************************************************************
                 //  end Building types
 //*********************************************************************************************                
-                
+    $scope.createObjects = function (objectParams) {
+        console.log(objectParams);        
+        var url = objectSvc.getRmaObjectsUrl();
+        if (angular.isDefined(objectParams.contManagementId) && (objectParams.contManagementId != null)) {
+            url += "/?cmOrganizationId=" + objectParams.contManagementId;
+        }
+        
+        for (var i = 1; i <= Number(objectParams.objectsCount); i++) {
+            var obj = {
+                fullName: objectParams.nameTemplate + i,
+                description: objectParams.description,
+                timezoneDefKeyname: objectParams.timezoneDefKeyname,
+                currentSettingMode: objectParams.currentSettingMode,
+                contManagementId: objectParams.contManagementId
+            };
+            obj._daDataSraw = null;            
+            crudGridDataFactory(url).save(obj, function (resp) {console.log("Object created: ", resp);}, function (e) {console.error(e);});
+        }
+    };
                 
     //set focus on first input element when window will be opened                
     $('#showTreeOptionModal').on('shown.bs.modal', function () {

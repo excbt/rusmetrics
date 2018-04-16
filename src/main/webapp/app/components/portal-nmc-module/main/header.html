@@ -13,7 +13,7 @@
               <div flex ng-show = "$ctrl.searchFlag == true" >
                                                
                   <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
-                      <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+                      <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter" aria-label = "Поиск"/>
                       <div class="button-group">
 <!--
                          <md-button class = "nmc-md-ltb-btn" aria-label = "Найти" 
@@ -42,7 +42,14 @@
               </div>
               <md-button class = "md-icon-button nmc-md-ltb-btn nmc-md-main-search-btn" aria-label = "Поиск" 
                      ng-click = "$ctrl.startSearch()">
-                  <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+                  <md-icon ng-if = "!$ctrl.searchFlag" md-font-set = "fa fa-lg">&#xf002;</md-icon>
+                  
+                  <i ng-if = "$ctrl.searchFlag"
+                       class = "btn btn-lg glyphicon glyphicon-remove"
+                       style = "color: rgb(95, 95, 95); margin-top: -18px; margin-left: -15px;"
+                     >
+                         
+                     </i>
               </md-button>
               <md-menu md-offset = "0 40">
                   <md-button class = "md-icon-button nmc-md-ltb-btn nmc-md-main-user-btn"
@@ -53,17 +60,17 @@
                   </md-button>
                   <md-menu-content>                     
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Написать в техподдержку">
+                          <md-button class = "md-icon-button" title = "Написать в техподдержку" aria-label = "Написать в техподдержку">
                              <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>
                           </md-button>
                       </md-menu-item>
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Партнерская лента">
+                          <md-button class = "md-icon-button" title = "Партнерская лента" aria-label = "Партнерская лента">
                              <img class = "nmc-img-user-menu" src = "images/partner_rss.png"/>
                           </md-button>
                       </md-menu-item>
                       <md-menu-item>
-                          <md-button class = "md-icon-button" title = "Техническая лента">
+                          <md-button class = "md-icon-button" title = "Техническая лента" aria-label = "Техническая лента">
                              <img class = "nmc-img-user-menu" src = "images/tech_rss.png"/>
                           </md-button>
                       </md-menu-item>

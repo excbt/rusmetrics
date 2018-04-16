@@ -13,7 +13,8 @@ tr.nmc-zp-monitor-table-header > th {
 /*    max-height: 250px;*/
 /*    max-height: 50vh;*/
     position: absolute;
-    bottom: 0;
+    bottom: 9px;
+/*    bottom: 0;*/
 /*    top: 55px;*/
     top: 42px;
     overflow: auto;
@@ -47,8 +48,16 @@ tr.nmc-zp-monitor-table-header > th {
 }
 
 
+.nmc-zp-monitor-type-th {
+    width: 43px;
+    max-width: 50px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
 .nmc-zp-monitor-status-th {
-    width: 48px;
+    width: 30px;
     max-width: 50px;
     display: table-cell;
     vertical-align: middle;
@@ -64,17 +73,17 @@ tr.nmc-zp-monitor-table-header > th {
 }
 
 .nmc-zp-monitor-time-th {
-    width: 48px;
-    max-width: 50px;
+    width: 68px;
+    max-width: 70px;
     display: table-cell;
     vertical-align: middle;
-    text-align: center;
+    text-align: left;
 }
 
 .nmc-zp-monitor-event-th {
     display: table-cell;
     vertical-align: middle;
-    padding-left: 7px;
+/*    padding-left: 7px;*/
 /*    text-align: center;*/
 /*
     position: absolute;

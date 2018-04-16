@@ -113,6 +113,15 @@
                     node: null
                 }
             },
+            {
+                name: 'objectsPTree.treeNodeInfo.contZpointConsWidget',
+                url: '/cont-zpoint-cons',
+                component: 'contZpointConsWidgetComponent',
+                params: {
+                    contObjectId: null,
+                    zpointId: null
+                }
+            },
 /*end 'component version'*/            
             {
                 name: 'demoMap',

@@ -9,22 +9,25 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.dto.PTreeNodeMonitorDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointIdPair;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.PTreeNodeMonitorService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
-import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
+import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatus;
+import ru.excbt.datafuse.nmk.service.vm.PTreeNodeMonitorColorStatusDetails;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = "/api/p-tree-node-monitor")
 public class PTreeNodeMonitorResource {
 
-    private final CurrentSubscriberService currentSubscriberServicel;
+
+    private final PortalUserIdsService portalUserIdsService;
 
     private final PTreeNodeMonitorService pTreeNodeMonitorService;
 
@@ -33,8 +36,8 @@ public class PTreeNodeMonitorResource {
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
     @Autowired
-    public PTreeNodeMonitorResource(CurrentSubscriberService currentSubscriberServicel, PTreeNodeMonitorService pTreeNodeMonitorService, ObjectAccessService objectAccessService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService) {
-        this.currentSubscriberServicel = currentSubscriberServicel;
+    public PTreeNodeMonitorResource(PortalUserIdsService portalUserIdsService, PTreeNodeMonitorService pTreeNodeMonitorService, ObjectAccessService objectAccessService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService) {
+        this.portalUserIdsService = portalUserIdsService;
         this.pTreeNodeMonitorService = pTreeNodeMonitorService;
         this.objectAccessService = objectAccessService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
@@ -50,7 +53,7 @@ public class PTreeNodeMonitorResource {
             return ApiResponse.responseNoContent();
         }
 
-        PortalUserIds portalUserIds = currentSubscriberServicel.getSubscriberParam().asPortalUserIds();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
 
 //        ObjectAccessUtil objectAccessUtil = objectAccessService.objectAccessUtil();
 
@@ -83,5 +86,53 @@ public class PTreeNodeMonitorResource {
         return ApiResponse.responseOK(() -> resultList);
     }
 
+    @GetMapping("/node-color-status/{nodeId}")
+    @ApiOperation("Get all monitor status of cont objects")
+    @Timed
+    public ResponseEntity getNodeColorStatus(
+        @ApiParam("NodeId") @PathVariable("nodeId") Long nodeId,
+        @ApiParam("ContServiceType: CW, HW, HEAT ...") @RequestParam(name = "contServiceType", required = false) String contServiceTypeKeyname) {
+
+
+        Optional<ContServiceTypeKey> contServiceTypeKey = Optional.empty();
+        if (contServiceTypeKeyname != null) {
+            contServiceTypeKey = KeyEnumTool.searchName(ContServiceTypeKey.class, contServiceTypeKeyname.toUpperCase());
+            if (!contServiceTypeKey.isPresent()) {
+                return ApiResponse.responseBadRequest();
+            }
+        }
+
+        List<PTreeNodeMonitorColorStatus> resultColorStatusList = pTreeNodeMonitorService.findNodeColorStatus(portalUserIdsService.getCurrentIds(), nodeId, contServiceTypeKey);
+
+        return ResponseEntity.ok(resultColorStatusList);
+    }
+
+    @GetMapping("/node-color-status/{nodeId}/status-details/{levelColorKeyname}")
+    @ApiOperation("Get all monitor status of cont objects")
+    @Timed
+    public ResponseEntity getNodeColorStatusDetails(
+        @ApiParam("nodeId") @PathVariable("nodeId") Long nodeId,
+        @ApiParam("levelColorKeyname") @PathVariable("levelColorKeyname") String levelColorKeyname,
+        @ApiParam("ContServiceType: CW, HW, HEAT ...") @RequestParam(name = "contServiceType", required = false) String contServiceTypeKeyname) {
+
+
+        Optional<ContEventLevelColorKeyV2> contEventLevelColorKey = KeyEnumTool.searchKey(ContEventLevelColorKeyV2.class, levelColorKeyname.toUpperCase());
+
+        if (!contEventLevelColorKey.isPresent()) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        Optional<ContServiceTypeKey> contServiceTypeKey = Optional.empty();
+        if (contServiceTypeKeyname != null) {
+            contServiceTypeKey = KeyEnumTool.searchName(ContServiceTypeKey.class, contServiceTypeKeyname.toUpperCase());
+            if (!contServiceTypeKey.isPresent()) {
+                return ApiResponse.responseBadRequest();
+            }
+        }
+
+        PTreeNodeMonitorColorStatusDetails resultColorStatsDetails = pTreeNodeMonitorService.findNodeStatusDetails(portalUserIdsService.getCurrentIds(), nodeId, contEventLevelColorKey.get(), contServiceTypeKey);
+
+        return ResponseEntity.ok(resultColorStatsDetails);
+    }
 
 }

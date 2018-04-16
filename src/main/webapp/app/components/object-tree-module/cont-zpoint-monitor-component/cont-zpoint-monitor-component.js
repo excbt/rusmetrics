@@ -6,26 +6,44 @@
         .module('objectTreeModule')
         .component('contZpointMonitorComponent', {        
             bindings: {
+                contObjectId: '<',
                 contZpointId: '<',
                 contZpointName: '<',
-                contZpointType: '<'
+                contZpointType: '<',
+                monitorStatus: '<'
             },
             templateUrl: "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.html",
             controller: contZpointMonitorComponentController
         });
 
-    contZpointMonitorComponentController.$inject = ['dateSvc'];
+    contZpointMonitorComponentController.$inject = ['dateSvc', 'contZpointMonitorComponentService'];
 
     /* @ngInject */
-    function contZpointMonitorComponentController(dateSvc) {
+    function contZpointMonitorComponentController(dateSvc, contZpointMonitorComponentService) {
+        var MODES = {
+            history: {
+                name: "history"
+            },
+            situations: {
+                name: "situations"
+            }
+        };
         /*jshint validthis: true*/
         var vm = this;
+        vm.svc = contZpointMonitorComponentService;
+        vm.MODES = MODES;
         vm.showSettingsFlag = false;
+        vm.mode = null;
         vm.$onInit = initCmpnt;
         
         var IMG_PATH_MONITOR_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/zpoint-state-",
+            IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE = "components/object-tree-module/cont-zpoint-monitor-component/",
             IMG_EXT = ".png",
-            OBJECTS_PER_PAGE = 100;
+            OBJECTS_PER_PAGE = 100,
+            USER_DATE_TIME_FORMAT = dateSvc.getUserDateTimeFormat(),
+            USER_SHORT_DATE_FORMAT = dateSvc.getUserShortDateFormat(),
+            USER_TIME_FORMAT = dateSvc.getUserTimeFormat(),
+            SYSTEM_DATE_FORMAT = dateSvc.getSystemDateFormat();
         
         var stateFilterValues = [
             IMG_PATH_MONITOR_TEMPLATE + "red" + IMG_EXT,
@@ -33,29 +51,36 @@
             IMG_PATH_MONITOR_TEMPLATE + "green" + IMG_EXT,
         ];
         
-        var dateFilterValues = [
-            "01.02.2018",
-            "31.01.2018"
-        ];
-        
-        var timeFilterValues = [
-            "23:59",
-            "23:00",
-            "22:00",
-            "21:00",
-            "00:01"
-        ];
-        
-        var eventFilterValues = [
-            "Наименование желтого события",
-            "Наименование красного события",
-            "Наименование зеленого события"
-        ];
+//        var dateFilterValues = [
+//            "01.02.2018",
+//            "31.01.2018"
+//        ];
+//        
+//        var timeFilterValues = [
+//            "23:59",
+//            "23:00",
+//            "22:00",
+//            "21:00",
+//            "00:01"
+//        ];
+//        
+//        var eventFilterValues = [
+//            "Наименование желтого события",
+//            "Наименование красного события",
+//            "Наименование зеленого события"
+//        ];
         
         vm.columns = [
             {
-                name: "status",
-                headerClass: "paddingLeft20I nmc-zp-monitor-status-th",
+                name: "contServiceTypeIcon",
+                headerClass: "paddingLeft20I nmc-zp-monitor-type-th",
+                caption: "",
+                type: "img",
+                filterValues: null
+            },
+            {
+                name: "statusIcon",
+                headerClass: "nmc-zp-monitor-status-th",
                 caption: "",
                 type: "img",
                 filterValues: stateFilterValues
@@ -65,21 +90,21 @@
                 headerClass: "nmc-zp-monitor-date-th",
                 caption: "Дата",
                 type: "datetext",
-                filterValues: dateFilterValues
+                filterValues: null
             },
             {
                 name: "timeString",
                 headerClass: "noPadding nmc-zp-monitor-time-th",
                 caption: "Время",
                 type: "timetext",
-                filterValues: timeFilterValues
+                filterValues: null
             },
             {
                 name: "event",
                 headerClass: "nmc-zp-monitor-event-th",
                 caption: "Событие",
                 type: "text",
-                filterValues: eventFilterValues
+                filterValues: null
             }/*,
             {
                 name: "rate",
@@ -89,57 +114,57 @@
             },*/
         ];
         
-        var events = [
-            {
-                status: "yellow",
-                dateTimeString: "01.02.2018 23:59",
-                dateTime: new Date("02.01.2018 23:59"),
-                dateString: "01.02.2018",
-                timeString: "23:59",
-                event: "Наименование желтого события",
-                rate: "Средняя"
-            },
-            {
-                status: "red",
-                dateTimeString: "01.02.2018 23:00",
-                dateTime: new Date("02.01.2018 23:00"),
-                dateString: "01.02.2018",
-                timeString: "23:00",
-                event: "Наименование красного события. Очень длинное описание красного события, такое что не влазит на экран целиком.",
-                rate: "Высокая"
-            },
-            {
-                status: "green",
-                dateTimeString: "01.02.2018 00:01",
-                dateTime: new Date("02.01.2018 00:01"),
-                dateString: "01.02.2018",
-                timeString: "00:01",
-                event: "Наименование зеленого события",
-                rate: "Нет"
-            },
-            {
-                status: "yellow",
-                dateTimeString: "31.01.2018 22:00",
-                dateTime: new Date("01.31.2018 22:00"),
-                dateString: "31.01.2018",
-                timeString: "22:00",
-                event: "Наименование желтого события.",
-                rate: "Средняя"
-            },
-            {
-                status: "yellow",
-                dateTimeString: "31.01.2018 21:00",
-                dateTime: new Date("01.31.2018 21:00"),
-                dateString: "31.01.2018",
-                timeeString: "21:00",
-                event: "Наименование желтого события. Очень длинное описание желтого события, такое что не влазит на экран целиком.",
-                rate: "Средняя"
-            }
-        ];
+//        var events = [
+//            {
+//                status: "yellow",
+//                dateTimeString: "01.02.2018 23:59",
+//                dateTime: new Date("02.01.2018 23:59"),
+//                dateString: "01.02.2018",
+//                timeString: "23:59",
+//                event: "Наименование желтого события",
+//                rate: "Средняя"
+//            },
+//            {
+//                status: "red",
+//                dateTimeString: "01.02.2018 23:00",
+//                dateTime: new Date("02.01.2018 23:00"),
+//                dateString: "01.02.2018",
+//                timeString: "23:00",
+//                event: "Наименование красного события. Очень длинное описание красного события, такое что не влазит на экран целиком.",
+//                rate: "Высокая"
+//            },
+//            {
+//                status: "green",
+//                dateTimeString: "01.02.2018 00:01",
+//                dateTime: new Date("02.01.2018 00:01"),
+//                dateString: "01.02.2018",
+//                timeString: "00:01",
+//                event: "Наименование зеленого события",
+//                rate: "Нет"
+//            },
+//            {
+//                status: "yellow",
+//                dateTimeString: "31.01.2018 22:00",
+//                dateTime: new Date("01.31.2018 22:00"),
+//                dateString: "31.01.2018",
+//                timeString: "22:00",
+//                event: "Наименование желтого события.",
+//                rate: "Средняя"
+//            },
+//            {
+//                status: "yellow",
+//                dateTimeString: "31.01.2018 21:00",
+//                dateTime: new Date("01.31.2018 21:00"),
+//                dateString: "31.01.2018",
+//                timeeString: "21:00",
+//                event: "Наименование желтого события. Очень длинное описание желтого события, такое что не влазит на экран целиком.",
+//                rate: "Средняя"
+//            }
+//        ];
         
         vm.orderBy = {field: 'dateTime', asc: true};
-        vm.periodStart = "31.01.2018 21:00";
-        vm.periodEnd = "01.02.2018 23:59";
+//        vm.periodStart = "31.01.2018 21:00";
+//        vm.periodEnd = "01.02.2018 23:59";
         
         vm.setOrderBy = function (field) {
             vm.orderBy.asc = !vm.orderBy.asc;
@@ -148,7 +173,8 @@
 //            vm.filterObjects();
         };
         
-        vm.events = events.concat(events).concat(events);        
+        vm.events = [];//events.concat(events).concat(events);
+        vm.eventsOnPage = [];
         
         vm.toggleSettings = function () {
             vm.showSettingsFlag = !vm.showSettingsFlag;
@@ -156,12 +182,130 @@
         vm.daterange = null;
         vm.daterangeOpts = null;
         
-        
+        vm.setHistoryMode = setHistoryMode;
+        vm.setSituationsMode = setSituationsMode;
 
 //        vm.$onChanges = changeCmpnt;
         
         ////////////////////////////
+        
+        function performEvents(eventsRaw) {
+            var events = [];
+            eventsRaw.forEach(function (elm) {                
+
+                if (angular.isDefined(vm.contZpointType) && vm.contZpointType !== null && elm.hasOwnProperty("contServiceType") && elm.contServiceType !== vm.contZpointType) {
+                    return false;
+                }
+                var event = {};
+                event.contServiceType = elm.contServiceType;
+                event.contServiceTypeIcon = IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE + elm.contServiceType + IMG_EXT;
+                if (elm.hasOwnProperty("contEventLevelColorKeyname")) { 
+                    event.status = elm.contEventLevelColorKeyname.toLowerCase();
+                    event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColorKeyname.toLowerCase() + IMG_EXT;
+                }
+                event.dateTimeString = dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
+                event.dateString = dateSvc.dateFormating(elm.contEventTime, USER_SHORT_DATE_FORMAT);
+                event.timeString = dateSvc.dateFormating(elm.contEventTime, USER_TIME_FORMAT);
+                event.event = elm.contEventType.name;
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
+                    event.event += ": " + elm.contEvent.message;
+                }
+                events.push(event);
+            });
+            vm.events = events;
+            vm.eventsOnPage = angular.copy(events);
+//console.log(vm.events);
+        }
+        
+        function performNotifications(eventsRaw) {
+            var events = [];
+            eventsRaw.forEach(function (elm) {
+                var event = {};
+                if (elm.hasOwnProperty("contEventLevelColor")) {
+                    event.status = elm.contEventLevelColor.toLowerCase();
+                    event.statusIcon = IMG_PATH_MONITOR_TEMPLATE + elm.contEventLevelColor.toLowerCase() + IMG_EXT;
+                }
+                event.dateTimeString = moment(elm.contEventTime).format(USER_DATE_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, USER_DATE_TIME_FORMAT);
+                event.dateString = moment(elm.contEventTime).format(USER_SHORT_DATE_FORMAT); // dateSvc.dateFormating(elm.contEventTime, "DD.MM.YYYY");
+                event.timeString = moment(elm.contEventTime).format(USER_TIME_FORMAT); // dateSvc.dateFormating(elm.contEventTime, "HH:mm");
+                event.event = elm.contEventType.name;
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("message")) {
+                    event.event += ": " + elm.contEvent.message;
+                }
+                if (elm.hasOwnProperty("contEvent") && elm.contEvent !== null && elm.contEvent.hasOwnProperty("contServiceType")) {
+                    event.contServiceType = elm.contEvent.contServiceType;
+                    event.contServiceTypeIcon = IMG_PATH_CONT_SERVICE_TYPE_TEMPLATE + elm.contEvent.contServiceType + IMG_EXT;
+                }
+                
+                events.push(event);
+            });
+            vm.events = events;
+            vm.eventsOnPage = angular.copy(events);
+//console.log(vm.events);
+        }
+        
+        function successLoadEventsCallback(resp) {
+//console.log(resp);
+            if (!angular.isArray(resp.data)) {
+                console.warn("Event data is incorrect: ", resp);
+                return false;
+            }
+//                    status: "yellow",
+//                dateTimeString: "01.02.2018 23:59",
+//                dateTime: new Date("02.01.2018 23:59"),
+//                dateString: "01.02.2018",
+//                timeString: "23:59",
+//                event: "Наименование желтого события",
+//                rate: "Средняя"
+            performEvents(resp.data);
+        }
+        
+        function successLoadNotificationsCallback(resp) {
+//console.log(resp);
+            if (angular.isUndefined(resp.data) || resp.data === null || !angular.isArray(resp.data.objects)) {
+                console.warn("Notification data is incorrect: ", resp);
+                return false;
+            }            
+            performNotifications(resp.data.objects);
+        }
+        
+        function loadEvents() {
+            console.log(vm.contObjectId);
+            if (angular.isDefined(vm.contObjectId) && vm.contObjectId !== null) {
+                vm.svc.loadEvents(vm.contObjectId)
+                    .then(successLoadEventsCallback, 
+                          function (err) {
+                            console.error(err);
+                });
+            }
+        }
+        
+        function loadNotifications() {
+            var objectArray = null;
+//console.log("vm.daterange.startDate", vm.daterange.startDate);  
+//console.log("vm.daterange.endDate", vm.daterange.endDate); 
+//console.log("USER_DATE_TIME_FORMAT", USER_DATE_TIME_FORMAT);
+//console.log("SYSTEM_DATE_FORMAT", SYSTEM_DATE_FORMAT);
+            var startDate = vm.daterange.startDate.format(SYSTEM_DATE_FORMAT),
+                endDate = vm.daterange.endDate.format(SYSTEM_DATE_FORMAT);
+            var contServiceTypes = null;
+            if (angular.isDefined(vm.contZpointType) && vm.contZpointType !== null) {
+                contServiceTypes = [vm.contZpointType];
+            }
+            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew, contServiceTypesArray)
+            vm.svc.loadNotifications(startDate, endDate, [vm.contObjectId], null, null, null, null, contServiceTypes)
+                .then(successLoadNotificationsCallback, 
+                      function (err) {
+                        console.error(err);
+            });
+        }
+        
         function initCmpnt() {
+//console.log(moment());            
+//console.log(moment().format(USER_DATE_TIME_FORMAT));
+//console.log(vm.monitorStatus);                        
+//            vm.mode = vm.MODES.situations;
+//            loadEvents();
 //            console.log("contZpointMonitorComponentController on Init.", vm);
 //            console.log("01.02.2018 23:59" > "01.02.2018 00:01");
 //            console.log(events);
@@ -171,13 +315,14 @@
             vm.daterangeOpts.timePicker = true;
             vm.daterangeOpts.timePickerIncrement = 1;
             vm.daterangeOpts.timePicker24Hour = true;
-            vm.daterangeOpts.locale.format = 'DD.MM.YYYY HH:mm';
+            vm.daterangeOpts.locale.format = USER_DATE_TIME_FORMAT;
             vm.daterangeOpts.separator = " - ";
             vm.daterangeOpts.eventHandlers = {
                 'apply.daterangepicker': function (ev, picker) {
-                    console.log(ev);
-                    console.log(picker);
-                    console.log(vm.daterange);
+//                    console.log(ev);
+//                    console.log(picker);
+//                    console.log(vm.daterange);
+                    loadNotifications();
                 }
             };
             
@@ -185,20 +330,69 @@
 //                return "nmc-date-class";
 //            };
 
-            console.log(vm.daterangeOpts);            
+//console.log(vm.daterangeOpts);            
             
             //init date
             vm.daterange = {
                 startDate: moment().startOf('Day'),
-                startDateStr: moment().startOf('Day').format("DD.MM.YYYY HH:mm"),
+                startDateStr: moment().startOf('Day').format(USER_DATE_TIME_FORMAT),
                 endDate: moment().endOf('Day'),
-                endDateStr: moment().endOf('Day').format("DD.MM.YYYY HH:mm")
+                endDateStr: moment().endOf('Day').format(USER_DATE_TIME_FORMAT)
             };
+            
+            if (vm.monitorStatus === 'GREEN' || vm.monitorStatus === 'green') {
+                vm.setHistoryMode();
+            } else {
+                vm.setSituationsMode();                
+            }
         }
         
 //        function changeCmpnt(changes) {
 //            console.log(changes);
 //        }
+        
+        function setHistoryMode() {
+            vm.mode = vm.MODES.history;
+            // load notifications
+            vm.events = [];
+            vm.eventsOnPage = [];
+            // (startDate, endDate, objectArray, eventTypeArray, categoriesArray, deviationsArray, isNew)
+            loadNotifications();
+        }
+        
+        function setSituationsMode() {
+            vm.mode = vm.MODES.situations;
+            vm.events = [];
+            vm.eventsOnPage = [];
+            loadEvents();
+        }
+        
+//        $scope.$watch('contObjectId', function (newVal) {
+//            console.log(newVal);
+//        });
+        
+        
+        vm.setColorFilter = function (column, colorPath) {
+            //need column: name, colorPath
+            
+            var filteredObjects = []; //$filter('filter')(ctrl.objects, ctrl.filter);
+            vm.events.forEach(function (obj) {
+                if (obj[column.name] === colorPath) {
+                    filteredObjects.push(obj);
+                }
+            });
+            vm.eventsOnPage = filteredObjects;
+            vm.columns.forEach(function (clmn) {
+                clmn.setFilterFlag = false;
+            });
+            column.setFilterFlag = true;
+        };
+        
+        vm.removeColorFilter = function(column) {
+            column.setFilterFlag = false;
+            vm.eventsOnPage = vm.events;
+//            vm.addMoreObjectsOnPage();
+        };
         
     }
 })();

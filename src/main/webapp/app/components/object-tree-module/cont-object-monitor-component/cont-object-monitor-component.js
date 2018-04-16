@@ -8,7 +8,7 @@
     function chartJsProviderConfig(ChartJsProvider) {
         // Configure all charts
         ChartJsProvider.setOptions({
-            chartColors: ['#ef473a', '#FDB45C', '#46BFBD', '#803690', '#337ab7'],
+            chartColors: ['#ef473a', '#FDB45C', '#6e7b90', '#46BFBD', '#803690', '#337ab7'],
             responsive: true
         });
     }    
@@ -27,9 +27,21 @@
     contObjectMonitorComponentController.$inject = ['$scope', '$element', '$attrs', 'contObjectMonitorComponentService', '$stateParams', 'contObjectService', '$filter', '$timeout'];
     
     function contObjectMonitorComponentController($scope, $element, $attrs, contObjectMonitorComponentService, $stateParams, contObjectService, $filter, $timeout) {
+        
+        var resources = ['heat', 'hw', 'cw', 'el'];
+        var labels = ["Критические", "Некритические", "Штатные"];
+        var labelsKeyname = ["RED", "YELLOW", "GREEN"];
+        
         /*jshint validthis: true*/
         var ctrl = this;
+        ctrl.nodeId = null;
+        ctrl.contObjectFilterArray = null;
         ctrl.contObjectStateShowFlag = false;
+        ctrl.svc = contObjectMonitorComponentService;
+        ctrl.$onInit = initCmpnt;
+        ctrl.doughnuts = {};        
+        
+                
         
 //        function getRandomColor () {
 //            var color = [getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255)];
@@ -109,17 +121,48 @@
 //                return text.join('');
 //        }
         
-        function segmentClick() {
-            ctrl.contObjectStateShowFlag = false;
-            $timeout(function () {
-                ctrl.contObjectStateShowFlag = true;
-            }, 1000);
-            console.log($('.nmc-cont-object-control-main-div'));
-            var elm = $('.nmc-cont-object-control-main-div').get(0);
-            console.log(elm);
-            if (elm !== null) {
-                elm.style.height = "49vh";//css("height", "45vh");
+        function segmentClick(points, arg2, arg3, arg4) {
+//console.log(points);
+            if (!angular.isArray(points) || points.length === 0) {
+                return false;
             }
+//        if (angular.isArray(points) && points.length > 0) {            
+//console.log(points[0]._index);
+//console.log(labelsKeyname[points[0]._index]);
+//        }
+//console.log(arg2);
+//console.log(arg3);
+//console.log(arg3._index);
+//console.log(arg4);
+            
+            //filtered objects by request
+            var resourceName = null;
+            if (angular.isDefined(points[0]._chart.config.options.name)) {
+                resourceName = points[0]._chart.config.options.name;
+            }
+            ctrl.contObjectStateShowFlag = false;
+            ctrl.svc.loadNodeColorStatusDetails(ctrl.nodeId, labelsKeyname[points[0]._index], resourceName)
+                .then(function (resp) {
+                    console.log(resp);
+                    ctrl.contObjectFilterArray = resp.data.contObjectIds;
+//console.log(ctrl.contObjectFilterArray);
+                    
+                    ctrl.contObjectStateShowFlag = true;
+//                    $timeout( function () {
+//                        ctrl.contObjectStateShowFlag = true;
+//                    }, 1);
+                
+                    $timeout(function () {
+//                        console.log($('.nmc-cont-object-control-main-div'));
+                        var elm = $('.nmc-cont-object-control-main-div').get(0);
+//                        console.log(elm);
+                        if (angular.isDefined(elm) && elm !== null) {
+                            elm.style.height = "41vh";//css("height", "45vh");
+                        }
+                    }, 1000);
+            }, function (err) {
+                console.error(err);
+            });
         }
         
         var doughuntOpts = {
@@ -128,11 +171,15 @@
             legend: {
                 display: true,
                 position: "right",
-                onClick: function () {
+                onClick: function (ev, label, arg3) {                    
                     console.log("Label click!");
+                    console.log(ev);
+                    console.log(label);
+                    console.log(label.index);
+                    console.log(arg3);
                 },
                 labels: {
-                    fontSize: 10,
+                    fontSize: 14,
                     generateLabels: generateLabels
                 },                    
             }/*,
@@ -145,15 +192,109 @@
             }*/
         };
         
-        var doughuntColors = ["#ef473a", "#FDB45C", "#46BFBD"];
+        var doughuntColors = ["#ef473a", "#FDB45C", "#6e7b90"];
+        ctrl.doughuntColors = doughuntColors;
         
-        ctrl.$onInit = function () {
-            console.log("contObjectMonitorComponentController Init!");
+        ctrl.doughnutTemplate = {};
+        ctrl.doughnutTemplate.data = [];
+        ctrl.doughnutTemplate.labels = labels;            
+        ctrl.doughnutTemplate.colors = doughuntColors;
+        ctrl.doughnutTemplate.options = doughuntOpts;
+        
+        function initCommonChart(nodeId) {
+            ctrl.svc.loadCommonData(nodeId)
+                .then(function (resp) {
+//console.log(resp);
+                if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
+                    console.warn("Common data is empty", resp);
+                    return false;
+                }
+                ctrl.data = [0, 0, 0];
+                resp.data.forEach(function (colorObj) {
+                    switch (colorObj.levelColor) {
+                        case "RED": case "red":
+                            ctrl.data[0] = colorObj.contObjectCount;
+                            break;
+                        case "YELLOW": case "yellow":
+                            ctrl.data[1] = colorObj.contObjectCount;
+                            break;
+                        case "GREEN": case "green":
+                            ctrl.data[2] = colorObj.contObjectCount;
+                            break;
+                    }
+                });
+//                ctrl.data = [resp.data.red, resp.data.yellow, resp.data.green];
+//                console.log(ctrl.data);
+            }, 
+                      function (err) {
+                console.log(err);
+                
+            });
+        }
+        
+        function initResourceChart(nodeId, resource) {
+            ctrl.svc.loadResourceData(nodeId, resource)
+                .then(function (resp) {
+//console.log(resp);
+                if (resp === null || angular.isUndefined(resp.data) || resp.data === null) {
+                    console.warn("Resource data: " + resource + " is empty", resp);
+                    return false;
+                }
+                ctrl.doughnuts[resource] = Object.assign({}, ctrl.doughnutTemplate); // angular.copy(ctrl.doughnutTemplate);
+                ctrl.doughnuts[resource].options = Object.assign({}, ctrl.doughnutTemplate.options);
+                ctrl.doughnuts[resource].options.name = resource;
+                ctrl.doughnuts[resource].data = [0, 0, 0];
+                ctrl.doughnuts[resource].allCount = 0;
+                resp.data.forEach(function (colorObj) {
+                    ctrl.doughnuts[resource].allCount += colorObj.contObjectCount;
+                    switch (colorObj.levelColor) {
+                        case "RED": case "red":
+                            ctrl.doughnuts[resource].data[0] = colorObj.contObjectCount;
+                            break;
+                        case "YELLOW": case "yellow":
+                            ctrl.doughnuts[resource].data[1] = colorObj.contObjectCount;
+                            break;
+                        case "GREEN": case "green":
+                            ctrl.doughnuts[resource].data[2] = colorObj.contObjectCount;
+                            break;
+                    }
+                });                 
+            }, 
+                      function (err) {
+                console.log(err);
+                
+            });
+        }
+        
+        function initCmpnt() {
+//            console.log("contObjectMonitorComponentController Init!");
+//            console.log("$stateParams", $stateParams);
+//            console.log("node", ctrl.node);
+            if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
+                if (angular.isDefined($stateParams.node) && $stateParams.node !== null) {
+                    ctrl.node = $stateParams.node;
+                }
+            }
+            if (angular.isUndefined(ctrl.node) || ctrl.node === null) {
+                console.warn("Node is empty.", ctrl.node);
+                return false;
+            }
+            if (ctrl.node.hasOwnProperty("_id") && ctrl.node._id !== null) {
+                ctrl.nodeId = ctrl.node._id;
+            } else if (ctrl.node.hasOwnProperty("nodeObject") && ctrl.node.nodeObject !== null) {
+                ctrl.nodeId = ctrl.node.nodeObject.id;
+            }
+//console.log(ctrl.nodeId);
             //polar graph
-            ctrl.labels = ["Критические", "Некритические", "Зеленые", "Остальные"];
-            ctrl.data = [111, 178, 48, 1024];
+            ctrl.labels = labels;
+            ctrl.data = [0, 0, 0]; //init polar chart data
             ctrl.options = {
-                responsive: true
+                responsive: true,
+                scale: {
+                    gridLines: {
+                        color: 'rgba(0, 255, 0, 1)'
+                    }
+                }
             };
 //            ctrl.colours = null;
 //            ctrl.colours = [getColor([239, 71, 58]), {
@@ -164,28 +305,33 @@
 //            ];
             
             //bublic 1 (doughnut 1)
-            ctrl.doughnut = {};
-            ctrl.doughnut.data = [33, 66, 100];
-            ctrl.doughnut.labels = ["Критические (" + ctrl.doughnut.data[0]+")", "Некритические (" + ctrl.doughnut.data[1]+")", "Остальные (" + ctrl.doughnut.data[2]+")"];            
-            ctrl.doughnut.colors = doughuntColors;
-            ctrl.doughnut.options = doughuntOpts;
+//            ctrl.doughnut = {};
+//            ctrl.doughnut.data = [33, 66, 100];
+//            ctrl.doughnut.labels = ["Критические (" + ctrl.doughnut.data[0]+")", "Некритические (" + ctrl.doughnut.data[1]+")", "Остальные (" + ctrl.doughnut.data[2]+")"];            
+//            ctrl.doughnut.colors = doughuntColors;
+//            ctrl.doughnut.options = doughuntOpts;
             
              //bublic 2 (doughnut 1)
-            ctrl.doughnut2 = {};
-            ctrl.doughnut2.data = [11, 0, 1000];
-            ctrl.doughnut2.labels = ["Критические (" + ctrl.doughnut2.data[0]+")", "Некритические (" + ctrl.doughnut2.data[1]+")", "Остальные (" + ctrl.doughnut2.data[2]+")"];            
-            ctrl.doughnut2.colors = doughuntColors;
-            ctrl.doughnut2.options = doughuntOpts;
+//            ctrl.doughnut2 = {};
+//            ctrl.doughnut2.data = [11, 0, 1000];
+//            ctrl.doughnut2.labels = ["Критические (" + ctrl.doughnut2.data[0]+")", "Некритические (" + ctrl.doughnut2.data[1]+")", "Остальные (" + ctrl.doughnut2.data[2]+")"];            
+//            ctrl.doughnut2.colors = doughuntColors;
+//            ctrl.doughnut2.options = doughuntOpts;
             
                          //bublic 3 (doughnut 3)
-            ctrl.doughnut3 = {};
-            ctrl.doughnut3.data = [1, 123, 0];
-            ctrl.doughnut3.labels = ["Критические (" + ctrl.doughnut3.data[0]+")", "Некритические (" + ctrl.doughnut3.data[1]+")", "Остальные (" + ctrl.doughnut3.data[2]+")"];            
-            ctrl.doughnut3.colors = doughuntColors;
-            ctrl.doughnut3.options = doughuntOpts;
+//            ctrl.doughnut3 = {};
+//            ctrl.doughnut3.data = [1, 123, 0];
+//            ctrl.doughnut3.labels = ["Критические (" + ctrl.doughnut3.data[0]+")", "Некритические (" + ctrl.doughnut3.data[1]+")", "Остальные (" + ctrl.doughnut3.data[2]+")"];            
+//            ctrl.doughnut3.colors = doughuntColors;
+//            ctrl.doughnut3.options = doughuntOpts;
             
             ctrl.doughnutClick = segmentClick;
-        };
+            
+            initCommonChart(ctrl.nodeId);            
+            for (var res in resources) {
+                initResourceChart(ctrl.nodeId, resources[res]);
+            }
+        }
         
     }
     

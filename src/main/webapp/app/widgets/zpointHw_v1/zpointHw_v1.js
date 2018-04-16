@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true, nomen: true*/
-/*global angular, moment, $*/
+/*global angular, moment, $, document*/
 'use strict';
 
 angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
@@ -234,8 +234,7 @@ angular.module('zpointHw_v1Widget', ['angularWidget', 'chart.js'])
                 var curDateFormatted = moment(elm.dataDateString, SERVER_DATE_FORMAT).format(SERVER_DATE_FORMAT_SHORT);
 //console.log(curDateFormatted);
 
-                if (moment(elm.dataDateString, SERVER_DATE_FORMAT) >= moment(curDateFormatted + " " + NIGHT_DEVIATION.startPeriod, SERVER_DATE_FORMAT)
-                        && moment(elm.dataDateString, SERVER_DATE_FORMAT) <= moment(curDateFormatted + " " + NIGHT_DEVIATION.endPeriod, SERVER_DATE_FORMAT)) {
+                if (moment(elm.dataDateString, SERVER_DATE_FORMAT) >= moment(curDateFormatted + " " + NIGHT_DEVIATION.startPeriod, SERVER_DATE_FORMAT) && moment(elm.dataDateString, SERVER_DATE_FORMAT) <= moment(curDateFormatted + " " + NIGHT_DEVIATION.endPeriod, SERVER_DATE_FORMAT)) {
 
                     $scope.lineChart.data[1].push(T_NORM + NIGHT_DEVIATION.deviation);
                     $scope.lineChart.data[2].push(T_NORM - NIGHT_DEVIATION.deviation);

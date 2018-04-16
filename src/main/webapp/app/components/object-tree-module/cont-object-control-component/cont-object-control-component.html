@@ -114,7 +114,7 @@
                         ng-click = "$ctrl.setFilterBy(column.name)">
                     </i>
 -->
-                    <div  ng-if = "column.type === 'img' || column.type === 'contObjectType'"
+                    <div  ng-if = "column.type === 'img'"
                        class="btn-group" style = "cursor: pointer;">
                         <i  ng-show = "!column.setFilterFlag"
                             title = "фильтр" 
@@ -182,7 +182,8 @@
     </table>
     <div id="divWithContObjectControlTable" class="nmc-cont-object-control-main-div" when-scrolled="$ctrl.addMoreObjectsOnPage()">
         <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
-            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}">
+            >
+<!--            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}"-->
             
             <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
                
@@ -259,36 +260,48 @@
                             </td>
                             <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
                                style = "padding: 5px 0;">
-
+                              
                                <div ng-switch on = "column.type">
                                    <div ng-switch-when = "contObjectType">
+<!--
+<pre>
+    {{object | json}}
+</pre>
+-->
                                        <img class="pull-left"
                                           ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
-                                           ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"
+                                          ng-src = "{{object.buildingTypeCategoryIconPath}}"                                           
                                            style = "height: 24px; width: 24px; cursor: pointer;"
                                        />
+<!--                                       ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"-->
                                    </div>
                                     <div ng-switch-when = "img" style = "padding-left: 10%;">
                                         <img ng-if = "object[column.name]"
                                         style = "cursor: pointer;"
                                         class = "marginRight2 nmc-p-tree-status-img" 
                                         ng-src = "{{object[column.name]}}"
-                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"                                        
+                                        ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, column.name, $event)"
+                                                                       
                                         />
+<!--                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"         -->
+<!--                                   {{column.name}}-->
                                     </div>
                                    <div ng-switch-default>
                                        <div ng-show = "object.loading" class="nmc-loading" style = "display: inline;">
                                             <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
                                        </div>
-                                        {{object[column.name]}}
+                                        {{object[column.name]}} <span ng-if = "$ctrl.isSystemuser()"> (id = {{object['id']}})</span>
                                    </div>
                                 </div>
                             </td>
                        </tr>
+<!--
                        <tr ng-if = "object.showWidgetFlag"
                          style = "border-top: 1px solid rgb(95, 95, 95)"
                          >
-                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">
+-->
+<!--                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">-->
+<!--
                               <div ng-if = "$ctrl.contZpointFilterValue === null">
                                   <cont-zpoint-monitor-component 
                                        cont-zpoint-id = "0"
@@ -297,10 +310,13 @@
                                    >                                                                          
                                    </cont-zpoint-monitor-component>
                               </div>
+-->
                              
+<!--
                               <div ng-if = "$ctrl.contZpointFilterValue !== null"
                                 ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
                                 class = "col-xs-6 paddingBottom15">
+-->
 
 <!--
                                    <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
@@ -314,22 +330,24 @@
                                         </ng-widget>
                                    </div>
 -->
+<!--
                                    <cont-zpoint-monitor-component 
                                        cont-zpoint-id = "zpoint.id"
                                        cont-zpoint-name = "zpoint.customServiceName"
                                        cont-zpoint-type = "zpoint.contServiceTypeKeyname"
                                    >                                                                          
                                    </cont-zpoint-monitor-component>
+-->
 <!--
                                    <pre>
                                    {{zpoint | json}}
                                    </pre>
 -->
 
-                                 </div>
-                          </td>
+<!--                                 </div>-->
+<!--                          </td>-->
                            
-                       </tr>
+<!--                       </tr>-->
                    </table>
                 </td>
             </tr>
@@ -337,9 +355,9 @@
         </table>
 
     </div>
-    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>
+<!--    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>-->
     
-    <div id="testWindowModal" 
+    <div id="eventWindowModal" 
          class="modal fade nmc-modal-window" 
          role="dialog"
          aria-labelledby="deleteLabel" 
@@ -351,12 +369,18 @@
             <div class="modal-header nmc-modal-header">
                 <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h3 id="deleteLabel" class="nmc-h3">
-                    {{$ctrl.selectedObject.caption}}
+                    {{$ctrl.selectedObject.caption}} <span ng-show = "$ctrl.contZpointFilterValue" class = "marginRight5">,</span>{{$ctrl.resources[$ctrl.contZpointFilterValue].caption}}
                 </h3>
             </div>
             <div class="modal-body nmc-modal-body"  style = "min-height: 250px; position: absolute; width: 100%; top: 19px;
                bottom: 15px;">
-                <cont-zpoint-monitor-component cont-zpoint-id = "0" cont-zpoint-name = "null" cont-zpoint-type = "null">
+                <cont-zpoint-monitor-component ng-if = "$ctrl.viewEventWindowFlag"
+                   cont-object-id = "$ctrl.selectedObject.id" 
+                   cont-zpoint-id = "0" 
+                   cont-zpoint-name = "null" 
+                   cont-zpoint-type = "$ctrl.contZpointFilterValue"
+                   monitor-status = "$ctrl.getMonitorStatusFromIconPath($ctrl.selectedObject[$ctrl.contZpointFilterValue])"
+                   >
                     
                 </cont-zpoint-monitor-component>
             </div>
@@ -367,14 +391,17 @@
                                 <input  
                                        type="submit" 
                                        class="btn btn-xs btn-primary nmc-save-button"                                       
-                                       value="Ok" />
+                                       value="Ok" 
+                                       data-dismiss="modal"/>
 <!--                            </div>-->
 
 <!--                            <div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">-->                            
+<!--
                                 <button class="btn btn-xs btn-default nmc-cancel-button" data-dismiss="modal"
                                     ng-click="exit();">
                                     Отменить
                                 </button>
+-->
 <!--                            </div>-->
 <!--                        </div>-->
 <!--                    </div>		-->
