@@ -5,10 +5,21 @@ import { OrganizationDetailComponent } from './organization-detail.component';
 import { OrganizationEditComponent } from './organization-edit.component';
 import { OrganizationEditGComponent } from './organization-edit-g.component';
 import { UserRouteAccessService } from '../../shared';
+import { OrganizationsGComponent } from './organizations-g.component';
 
 export const organizationsRoute: Route = {
     path: 'organizations',
     component: OrganizationsComponent,
+    data: {
+        pageTitle: 'organizations.title',
+        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
+    },
+    canActivate: [UserRouteAccessService]
+};
+
+export const organizationsGRoute: Route = {
+    path: 'organizations-g',
+    component: OrganizationsGComponent,
     data: {
         pageTitle: 'organizations.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
@@ -35,7 +46,7 @@ export const organizationEditRoute: Route = {
     canActivate: [UserRouteAccessService]
 };
 
-export const organizationEdit22Route: Route = {
+export const organizationEditGRoute: Route = {
     path: 'organizations/:id/edit-g',
     component: OrganizationEditGComponent,
     data: {

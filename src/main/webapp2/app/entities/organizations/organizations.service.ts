@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
-import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
+import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import { ExcEditFormEntityProvider } from '../../shared-blocks';
 
 @Injectable()
 export class OrganizationsService {

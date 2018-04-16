@@ -5,8 +5,8 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization } from './organization.model';
 import { merge } from 'rxjs/observable/merge';
-import { ExcPageSize, ExcPageSorting } from '../shared/pagination-tools';
-import { defaultPageSize, defaultPageOptions } from '../shared/pagination-tools';
+import { ExcPageSize, ExcPageSorting } from '../../shared-blocks';
+import { defaultPageSize, defaultPageOptions } from '../../shared-blocks';
 import {
     // debounceTime,
     distinctUntilChanged,

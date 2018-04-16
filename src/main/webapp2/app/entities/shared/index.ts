@@ -1,1 +1,1 @@
-export * from './pagination-tools';
+export * from './ru-paginator-intl';
