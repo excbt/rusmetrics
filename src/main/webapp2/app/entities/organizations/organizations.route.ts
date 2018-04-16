@@ -1,21 +1,10 @@
 import { Route } from '@angular/router';
 
-import { OrganizationsComponent } from './organizations.component';
 import { OrganizationDetailComponent } from './organization-detail.component';
 import { OrganizationEditComponent } from './organization-edit.component';
 import { OrganizationEditGComponent } from './organization-edit-g.component';
 import { UserRouteAccessService } from '../../shared';
 import { OrganizationsGComponent } from './organizations-g.component';
-
-export const organizationsRoute: Route = {
-    path: 'organizations',
-    component: OrganizationsComponent,
-    data: {
-        pageTitle: 'organizations.title',
-        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
-    },
-    canActivate: [UserRouteAccessService]
-};
 
 export const organizationsGRoute: Route = {
     path: 'organizations-g',
