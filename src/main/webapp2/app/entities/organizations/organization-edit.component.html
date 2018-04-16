@@ -1,8 +1,8 @@
 <jhi-exc-form-template>
-    <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{organization?.id}}"></jhi-exc-top-header>
+    <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header>
     <br>
     <div>
-    <form [formGroup]="organizationForm">
+    <form [formGroup]="entityForm">
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">
                 <!-- BLOCK 1 left -->
@@ -171,7 +171,8 @@
             </div>                
         </div>    
         <!-- FORM BUTTONS -->
-        <jhi-exc-edit-buttons [formGroup]="organizationForm" (saveAction)="saveForm()" (revertAction)="revertForm()"></jhi-exc-edit-buttons>            
+        <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
+            [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
     </form>
     </div>
 </jhi-exc-form-template>    

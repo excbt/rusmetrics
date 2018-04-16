@@ -5,8 +5,8 @@ import {OrganizationsService} from './organizations.service';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
-import {AnyModelDataSource} from '../shared/exc-datasource';
+import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import {AnyModelDataSource} from '../../shared-blocks';
 
 // ***************************************************************************
 //
@@ -28,4 +28,5 @@ export class OrganizationsDataSource extends AnyModelDataSource<Organization> {
             this.nextPage(page);
         });
     }
+
 }

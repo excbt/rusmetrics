@@ -10,7 +10,7 @@
         icon="fa-minus-square" [disabled]="formGroup.pristine"></button>
 
 
-    <button pButton type="button" label="{{'entity.action.delete' | translate}}" class="ui-button-danger search1" (click)="delete()"
+    <button *ngIf="!deleteDisabled" pButton type="button" label="{{'entity.action.delete' | translate}}" class="ui-button-danger" (click)="delete()"
         icon="fa-minus-square" [disabled]="!formGroup.pristine"></button>
 
 </div>

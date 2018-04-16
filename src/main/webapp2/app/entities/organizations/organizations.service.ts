@@ -4,8 +4,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
-import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
+import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import { ExcEditFormEntityProvider } from '../../shared-blocks';
 
 @Injectable()
 export class OrganizationsService {
@@ -60,9 +60,15 @@ export class OrganizationsService {
         // return Observable.of(true);
     }
 
+    delete(id: number): Observable<any> {
+        return this.http.delete(this.resourceUrl.concat('' + id));
+    }
+
     entityProvider(): ExcEditFormEntityProvider<Organization> {
         return {
             load: (id) => this.find(id),
-            update: (data) => this.update(data)};
+            update: (data) => this.update(data),
+            delete: (id) => this.delete(id)
+        };
     }
 }

@@ -3,7 +3,7 @@
 
     <jhi-exc-form-list-menu headerString="{{'organizations.title' | translate}}" 
         [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-        (createAction)="newRecord()">
+        (createAction)="newNavigate()">
     </jhi-exc-form-list-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
@@ -21,7 +21,7 @@
                 </mat-checkbox>
             </mat-header-cell>
             <mat-cell *matCellDef="let organization" class="edit-column-width">
-                <button mat-button [routerLink]="['/organizations', organization.id]">
+                <button mat-button (click)="editNavigate(organization.id)">
                     <mat-icon>edit</mat-icon>
                 </button>
             </mat-cell>

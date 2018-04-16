@@ -10,6 +10,7 @@ import {
 })
 export class ExcEditButtonsComponent {
   @Input() formGroup: FormGroup;
+  @Input() deleteDisabled: boolean;
   @Output() saveAction: EventEmitter<any> = new EventEmitter();
   @Output() revertAction: EventEmitter<any> = new EventEmitter();
   @Output() deleteAction: EventEmitter<any> = new EventEmitter();

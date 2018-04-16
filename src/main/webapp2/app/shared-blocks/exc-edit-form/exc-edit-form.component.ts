@@ -19,7 +19,8 @@ import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks'
 
 export interface ExcEditFormEntityProvider<T> {
   load: (id: any) => Observable<T>;
-  update: (id: any) => Observable<T>;
+  update: (data: T) => Observable<T>;
+  delete: (id: any) => Observable<T>;
 }
 
 export interface FormGroupInitializer<T> {
@@ -31,6 +32,7 @@ export interface ExcEditFormParams {
   modificationEventName?: string;
   backUrl?: string;
   onSaveUrl?: string;
+  onDeleteUrl?: string;
 }
 
 // @Component({
@@ -143,4 +145,20 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     }
   }
 
+  deleteEntity(id: any) {
+    this.entityProvider.delete(id).pipe(
+      catchError(() => of([])),
+      finalize(() => this.loadingSubject.next(false))
+    )
+    .subscribe( (data: any) => {
+        this.loadingSubject.next(false);
+        if (this.params.onDeleteUrl) {
+          this.router.navigate([this.params.onDeleteUrl]);
+        }
+    });
+  }
+
+  deleteAction() {
+    this.deleteEntity(this.entityId);
+  }
 }

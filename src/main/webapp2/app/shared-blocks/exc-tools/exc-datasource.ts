@@ -3,9 +3,9 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../shared';
+import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
 
-export class AnyModelDataSource<T> implements DataSource<T> {
+export abstract class AnyModelDataSource<T> implements DataSource<T> {
 
     modelSubject = new BehaviorSubject<T[]>([]);
 
@@ -41,4 +41,5 @@ export class AnyModelDataSource<T> implements DataSource<T> {
       this.loadingSubject.next(false);
     }
 
+    abstract findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string);
 }
