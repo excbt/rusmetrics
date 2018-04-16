@@ -60,9 +60,15 @@ export class OrganizationsService {
         // return Observable.of(true);
     }
 
+    delete(id: number): Observable<any> {
+        return this.http.delete(this.resourceUrl.concat('' + id));
+    }
+
     entityProvider(): ExcEditFormEntityProvider<Organization> {
         return {
             load: (id) => this.find(id),
-            update: (data) => this.update(data)};
+            update: (data) => this.update(data),
+            delete: (id) => this.delete(id)
+        };
     }
 }
