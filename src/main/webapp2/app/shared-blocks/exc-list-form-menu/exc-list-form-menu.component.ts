@@ -9,11 +9,11 @@ import { JhiEventManager } from 'ng-jhipster';
 const debounceTimeValue = 150;
 
 @Component({
-  selector: 'jhi-exc-form-list-menu',
-  templateUrl: './exc-form-list-menu.component.html',
-  styleUrls: ['./exc-form-list-menu.component.scss', '../shared-blocks.scss']
+  selector: 'jhi-exc-list-form-menu',
+  templateUrl: './exc-list-form-menu.component.html',
+  styleUrls: ['./exc-list-form-menu.component.scss', '../shared-blocks.scss']
 })
-export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
+export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   @Input() headerString: string;
   @ViewChild('input') input: ElementRef;
   @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();

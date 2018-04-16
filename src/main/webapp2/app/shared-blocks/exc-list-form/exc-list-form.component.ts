@@ -9,7 +9,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
 import { AnyModelDataSource } from '../exc-tools/exc-datasource';
-import { ExcFormListMenuComponent } from '..';
+import { ExcListFormMenuComponent } from '..';
 import {
   // debounceTime,
   distinctUntilChanged,
@@ -37,7 +37,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(ExcFormListMenuComponent) formMenu: ExcFormListMenuComponent;
+  @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
   selection: SelectionModel<T>;
 
