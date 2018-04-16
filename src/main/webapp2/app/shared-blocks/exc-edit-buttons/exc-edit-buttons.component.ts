@@ -14,6 +14,7 @@ export class ExcEditButtonsComponent {
   @Output() saveAction: EventEmitter<any> = new EventEmitter();
   @Output() revertAction: EventEmitter<any> = new EventEmitter();
   @Output() deleteAction: EventEmitter<any> = new EventEmitter();
+  @Output() backAction: EventEmitter<any> = new EventEmitter();
 
   constructor() {
 
@@ -21,6 +22,10 @@ export class ExcEditButtonsComponent {
 
   previousState() {
       window.history.back();
+  }
+
+  back() {
+    this.backAction.emit(null);
   }
 
   save() {

@@ -1,5 +1,9 @@
 <jhi-exc-form-template>
-    <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header>
+    <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
+    <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+        (createAction)="newNavigate()">
+    </jhi-exc-edit-form-menu>
+    
     <br>
     <div>
     <form [formGroup]="entityForm">
@@ -172,7 +176,7 @@
         </div>    
         <!-- FORM BUTTONS -->
         <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
-            [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
+            (backAction)="backNavigate()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
     </form>
     </div>
 </jhi-exc-form-template>    

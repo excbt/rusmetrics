@@ -7,7 +7,8 @@ import { ExcEditButtonsComponent } from './exc-edit-buttons/exc-edit-buttons.com
 import { ExcFormTemplateComponent } from './exc-form-template/exc-form-template.component';
 import { ExcTopHeaderComponent } from './exc-top-header/exc-top-header.component';
 import { ExcFormDetailFieldComponent } from './exc-form-detail-field/exc-form-detail-field.component';
-import { ExcListFormMenuComponent } from './exc-list-form-menu/exc-list-form-menu.component';
+import { ExcListFormMenuComponent } from './exc-form-menu/exc-list-form-menu.component';
+import { ExcEditFormMenuComponent } from './exc-form-menu/exc-edit-form-menu.component';
 import { ExcSearchFieldComponent } from './exc-search-field/exc-search-field.component';
 import { ExcEditFormComponent } from './exc-edit-form/exc-edit-form.component';
 
@@ -59,7 +60,8 @@ import { ButtonModule } from 'primeng/button';
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
     ExcTopHeaderComponent,
-    ExcListFormMenuComponent
+    ExcListFormMenuComponent,
+    ExcEditFormMenuComponent
   ],
   entryComponents: [
   ],
@@ -71,7 +73,8 @@ import { ButtonModule } from 'primeng/button';
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
     ExcTopHeaderComponent,
-    ExcListFormMenuComponent
+    ExcListFormMenuComponent,
+    ExcEditFormMenuComponent
   ]
 })
 export class PortalSharedBlocksModule {}
