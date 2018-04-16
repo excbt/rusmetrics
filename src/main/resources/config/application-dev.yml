@@ -103,7 +103,7 @@ spring:
 
 portal:
     datasource:
-        databaseName: test_datafuse
+        databaseName: datafuse_2018_01
         databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver

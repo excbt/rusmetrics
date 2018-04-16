@@ -1,6 +1,6 @@
 .spinner-container {
     height: 360px;
-    width: 390px;
+    width: 100%;
     position: fixed;
 }
 
@@ -25,3 +25,9 @@
     align-items: flex-start;
 }
 
+.id-column-width {
+    flex: none;
+    width: 10em;
+    // font-size: 10px;
+    // align-items: flex-start;
+}

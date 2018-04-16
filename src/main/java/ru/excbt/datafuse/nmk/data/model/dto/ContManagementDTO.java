@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 
 import java.util.Date;
 

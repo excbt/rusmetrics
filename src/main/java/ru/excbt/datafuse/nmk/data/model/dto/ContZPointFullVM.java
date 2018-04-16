@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.util.FlexDataToString;
 import ru.excbt.datafuse.nmk.data.model.support.MaxCheck;
 import ru.excbt.datafuse.nmk.data.model.support.TimeDetailLastDate;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;

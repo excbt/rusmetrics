@@ -1,0 +1,19 @@
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-column-rpad {
+    display: flex;
+    flex-direction: column;
+    padding-right: 2em;    
+}
+
+.ng-invalid:not(form) {
+    border-left: 0px;
+}
+
+input.right-no-spin::-webkit-outer-spin-button,
+input.right-no-spin::-webkit-inner-spin-button {
+  display: none;
+}

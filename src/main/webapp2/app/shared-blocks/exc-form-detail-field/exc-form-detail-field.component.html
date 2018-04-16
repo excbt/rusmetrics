@@ -1,0 +1,8 @@
+<div *ngIf="isTextField()">
+    <mat-form-field class="detail-field">
+        <input type="text" matInput placeholder="{{placeholder}}" value="{{fieldValue}}" readonly>
+    </mat-form-field>
+</div>
+<div *ngIf="isCheckboxField()">
+    <mat-checkbox  type="checkbox" checked="{{fieldValue}}" disabled >{{placeholder}}</mat-checkbox>
+</div>

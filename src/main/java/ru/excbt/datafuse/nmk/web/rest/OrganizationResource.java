@@ -1,23 +1,27 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.Organization;
-import ru.excbt.datafuse.nmk.data.model.dto.OrganizationDTO;
-import ru.excbt.datafuse.nmk.data.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+import ru.excbt.datafuse.nmk.web.util.PaginationUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/organizations")
@@ -40,10 +44,19 @@ public class OrganizationResource {
      *
      * @return
      */
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-    public ResponseEntity<OrganizationDTO> organizationsGet(Sort sort) {
-        List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(portalUserIdsService.getCurrentIds(), sort);
-        return new ResponseEntity(organizations, HttpStatus.OK);
+    @GetMapping(value = "", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity<OrganizationDTO> organizationsGet(Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.empty(), pageable);
+        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organizations");
+        return new ResponseEntity(page.getContent(), headers, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/page", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) String searchString, Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.ofNullable(searchString), pageable);
+        return new ResponseEntity(page, HttpStatus.OK);
     }
 
     /**
@@ -51,7 +64,8 @@ public class OrganizationResource {
      * @param organizationId
      * @return
      */
-    @RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<OrganizationDTO> organizationGet(@PathVariable("organizationId") Long organizationId) {
         OrganizationDTO organizationDTO = organizationService.findOneOrganization(organizationId)
             .map(organizationMapper::toDTO)
@@ -59,5 +73,24 @@ public class OrganizationResource {
         return new ResponseEntity<>(organizationDTO, HttpStatus.OK);
     }
 
+    @PutMapping()
+    @ApiOperation("")
+    @Timed
+    public ResponseEntity<?> putOrganization(@RequestBody OrganizationDTO organizationDTO) {
+        OrganizationDTO savedDTO = organizationService.saveOrganization(organizationDTO, portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok(savedDTO);
+    }
+
+    /**
+     *
+     * @param organizationId
+     * @return
+     */
+    @DeleteMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity organizationDelete(@PathVariable("organizationId") Long organizationId) {
+        organizationService.deleteOrganization(organizationId, portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok().build();
+    }
 
 }

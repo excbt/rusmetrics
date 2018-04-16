@@ -1,0 +1,178 @@
+<jhi-exc-form-template>
+    <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header>
+    <br>
+    <div>
+    <form [formGroup]="entityForm">
+        <div class="ui-g ui-g-nopad">
+            <div class="ui-g-6 ui-g-nopad">
+                <!-- BLOCK 1 left -->
+                <div class="flex-column-rpad">
+                    <mat-form-field>
+                            <mat-select placeholder="{{'organization.organizationTypeName' | translate}}" formControlName="organizationTypeId">
+                                <mat-option>
+                                    {{'organization.organizationType_None' | translate}}
+                                </mat-option>
+                                <mat-option *ngFor="let organizationType of organizationTypes" [value]="organizationType.id">
+                                    {{organizationType.typeName}}
+                                </mat-option>
+                            </mat-select>
+                            <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error>-->
+                            <!-- <mat-hint>{{animalControl.value?.sound}}</mat-hint>  -->
+                    </mat-form-field>                
+                </div>
+                <br>
+                <mat-form-field class="organization-name">
+                    <input matInput formControlName="organizationName" placeholder="{{'organization.organizationName' | translate}}">
+                </mat-form-field>
+                <br>
+                <div class="flex-column-rpad">
+                    <mat-form-field>
+                        <input matInput formControlName="organizationFullName" placeholder="{{'organization.organizationFullName' | translate}}">
+                    </mat-form-field>
+                </div>
+                <br>
+                <mat-form-field > 
+                    <!-- hintLabel="{{'organization.edit.maxNchars' | translate:{n: 10} }}" -->
+                    <input matInput type="text" maxlength="12" formControlName="inn" placeholder="{{'organization.inn' | translate}}">
+                    <!-- <span>{{ organizationForm.value | json }} </span> !organizationForm.controls['inn'].hasError('pattern')-->
+                    <mat-error *ngIf="checkFormControl('inn', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <!-- <mat-error *ngIf="organizationForm.controls['inn'].hasError('pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error> -->
+                    <mat-error *ngIf="checkFormControl('inn', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.inn' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="9" formControlName="kpp" placeholder="{{'organization.kpp' | translate}}">
+                    <mat-error *ngIf="checkFormControl('kpp' ,'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="checkFormControl('kpp', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.kpp' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="10" formControlName="okpo" placeholder="{{'organization.okpo' | translate}}">
+                    <mat-error *ngIf="checkFormControl('okpo', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="checkFormControl('okpo', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.okpo' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="text" maxlength="13" formControlName="ogrn" placeholder="{{'organization.ogrn' | translate}}">
+                    <mat-error *ngIf="checkFormControl('ogrn', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <br>
+                <br>
+                <div class="flex-column-rpad">
+                    <mat-form-field>
+                        <textarea matInput formControlName="organizationDescription" placeholder="{{'organization.organizationDescription' | translate}}">
+                        </textarea>
+                    </mat-form-field>
+                </div>
+                <!-- end of BLOCK 1 -->
+            </div>
+
+            <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 2 right -->
+                <div class="flex-column">
+                    <mat-form-field>
+                        <input matInput formControlName="legalAddress" placeholder="{{'organization.legalAddress' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="factAddress" placeholder="{{'organization.factAddress' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="postAddress" placeholder="{{'organization.postAddress' | translate}}">
+                    </mat-form-field>
+                </div>
+                <br>
+                <div class="flex-column">
+                    <mat-form-field>
+                        <input matInput formControlName="directorFio" placeholder="{{'organization.directorFio' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="chiefAccountantFio" placeholder="{{'organization.chiefAccountantFio' | translate}}">
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field>
+                        <input matInput formControlName="contactPhone" placeholder="{{'organization.contactPhone' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="contactEmail"  placeholder="{{'organization.contactEmail' | translate}}">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput formControlName="siteUrl" placeholder="{{'organization.siteUrl' | translate}}">
+                    </mat-form-field>
+                </div>
+                <!-- end of BLOCK 2 -->
+            </div>
+            <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 3 left -->
+                <div class="ui-lg-6 ui-g-nopad">
+                    <div class="ui-g-3 flex-column-rpad">
+                        <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">
+                            {{'organization.flagRso' | translate}}
+                            ( {{'organization.flagRsoDesription' | translate}} )
+                        </mat-checkbox>
+                        <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">
+                            {{'organization.flagCm' | translate}} ({{'organization.flagManagementDesription' | translate}})
+                        </mat-checkbox>
+                        <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
+                            {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
+                        </mat-checkbox>
+                    </div>
+                </div>   
+                <!-- end of BLOCK 3 -->
+            </div>                
+            <div class="ui-lg-6 ui-g-nopad">
+                <!-- BLOCK 4 right -->
+                <mat-form-field class="account-width">
+                    <input matInput formControlName="reqAccount" type="text" maxlength="20" placeholder="{{'organization.reqAccount' | translate}}">
+                    <mat-error *ngIf="checkFormControl('reqAccount', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="checkFormControl('reqAccount', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.reqAccount' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field class="account-width">
+                    <input matInput formControlName="reqCorrAccount" type="text" maxlength="20" placeholder="{{'organization.reqCorrAccount' | translate}}">
+                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="checkFormControl('reqCorrAccount', 'valueLength', ['pattern'] )">
+                            {{'organization.form.errors.reqCorrAccount' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <div>
+                    <mat-form-field>
+                        <input matInput formControlName="reqBik" type="text" maxlength="9" placeholder="{{'organization.reqBik' | translate}}">
+                        <mat-error *ngIf="checkFormControl('reqBik', 'pattern')">
+                            {{'organization.form.errors.onlyNumbers' | translate}}
+                        </mat-error>
+                        <mat-error *ngIf="checkFormControl('reqBik', 'valueLength', ['pattern'])">
+                            {{'organization.form.errors.reqBik' | translate}}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="reqBankName-width">
+                        <input matInput formControlName="reqBankName" placeholder="{{'organization.reqBankName' | translate}}">
+                    </mat-form-field>
+                </div>
+                <!-- enf of BLOCK 4 -->
+            </div>                
+        </div>    
+        <!-- FORM BUTTONS -->
+        <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
+            [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
+    </form>
+    </div>
+</jhi-exc-form-template>    

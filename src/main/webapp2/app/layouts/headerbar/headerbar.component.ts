@@ -11,9 +11,7 @@ import { VERSION } from '../../app.constants';
 @Component({
     selector: 'jhi-headerbar',
     templateUrl: './headerbar.component.html',
-    styleUrls: [
-        'headerbar.scss'
-    ]
+    styleUrls: ['./headerbar.component.scss']
 })
 export class HeaderbarComponent implements OnInit {
 

@@ -10,6 +10,7 @@ import { JhiEventManager } from 'ng-jhipster';
 // PRIME NG
 import { SidebarModule } from 'primeng/sidebar';
 import { PanelModule } from 'primeng/panel';
+import { ToolbarModule } from 'primeng/toolbar';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -29,6 +30,8 @@ import { PortalObjectTreeModule } from './components/object-tree';
 // import { JhipsterAdminModule } from './admin/admin.module';
 // import { JhipsterAccountModule } from './account/account.module';
 import { PortalEntityModule } from './entities/entity.module';
+import { PortalSharedBlocksModule } from './shared-blocks/shared-blocks.module';
+
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from './shared/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
@@ -53,7 +56,9 @@ import {
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-'}),
         // UI modules
         MatMenuModule,
+        // Prime NG
         SidebarModule,
+        ToolbarModule,
         PanelModule,
         MatToolbarModule,
         MatButtonModule,
@@ -67,7 +72,8 @@ import {
         // JhipsterAccountModule,
         PortalClassifiersModule,
         PortalEntityModule,
-        PortalObjectTreeModule
+        PortalObjectTreeModule,
+        PortalSharedBlocksModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
