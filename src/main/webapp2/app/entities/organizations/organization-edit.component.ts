@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
@@ -23,11 +23,13 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './organization-edit.component.html',
   styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
-export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
+export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
     @ViewChild(ExcEditFormMenuComponent) editMenu: ExcEditFormMenuComponent;
 
     organizationTypes: OrganizationType[];
+
+    private headerSubscription: Subscription;
 
     constructor(
         eventManager: JhiEventManager,
@@ -47,15 +49,21 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
                 eventManager,
                 router,
                 activatedRoute);
-            this.loadOrganizationTypes();
+                this.loadOrganizationTypes();
         }
 
-    ngAfterViewInit() {
-        this.enitityId$.flatMap((id) => {
+    ngOnInit() {
+        super.ngOnInit();
+        this.headerSubscription = this.enitityId$.flatMap((id) => {
             return this.translate.get(id > 0 ? 'organization.edit.title' : 'organization.new.title');
         }).subscribe((translation) => {
             this.editMenu.headerString = translation;
         });
+    }
+
+    ngOnDestroy() {
+        this.headerSubscription.unsubscribe();
+        super.ngOnDestroy();
     }
 
     loadOrganizationTypes() {
@@ -181,7 +189,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
     }
 
     newNavigate() {
-        this.router.navigate(['/organizations' + '/new/edit']);
+        this.router.navigate(['organizations', 'new', 'edit']);
     }
 
     backNavigate() {

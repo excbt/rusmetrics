@@ -60,6 +60,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
       this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
 
       this.routeData = this.activatedRoute.data.subscribe((data) => {
+        console.log('route data: ' + data);
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;
         }

@@ -66,8 +66,8 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe((params) => {
         if (params['id'] && params['id'] !== 'new') {
           this.entityId = params['id'];
-          this.entityIdSubject.next(this.entityId);
-          this.loadData(this.entityId);
+          this.entityIdSubject.next(params['id']);
+          this.loadData(params['id']);
         } else {
             this.newFlag = true;
         }
@@ -146,7 +146,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
               this.router.navigate([this.params.onSaveUrl]);
             } else {
               if (this.params.onSaveUrl) {
-                this.router.navigate([this.params.onSaveUrl]);
+                this.router.navigate([this.params.onSaveUrl, {id: data['id']}]);
               } else {
                 this.entityForm = this.createForm(this.entity = data);
               }
