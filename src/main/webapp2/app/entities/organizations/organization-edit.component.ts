@@ -35,7 +35,8 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
             super(
                 {   modificationEventName: 'organizationModification',
                     backUrl: '/organizations',
-                    onSaveUrl: '/organizations'
+                    onSaveUrl: '/organizations',
+                    onDeleteUrl: '/organizations'
                 },
                 service.entityProvider(),
                 eventManager,
@@ -161,7 +162,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
             directorFio: this.checkEmpty(formModel.directorFio as string),
             chiefAccountantFio: this.checkEmpty(formModel.chiefAccountantFio as string),
             organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),
-            version: this.entity.version
+            version: this.entity ? this.entity.version : 1
         };
         return saveOrganization;
     }
