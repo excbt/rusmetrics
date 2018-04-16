@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,6 +20,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
+import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -29,6 +32,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -119,4 +123,22 @@ public class OrganizationResourceIntTest {
 
     }
 
+
+    @Test
+    @Transactional
+    public void organizationDelete() throws Exception {
+        Organization org = new Organization();
+        org.setOrganizationName("Test Organization");
+        org.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
+        org = organizationRepository.save(org);
+
+        Assertions.assertThat(org).isNotNull();
+        Assertions.assertThat(org.getId()).isNotNull();
+
+        restPortalContObjectMockMvc.perform(
+            delete("/api/organizations/{organizationId}", org.getId()))
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().isOk());
+
+    }
 }

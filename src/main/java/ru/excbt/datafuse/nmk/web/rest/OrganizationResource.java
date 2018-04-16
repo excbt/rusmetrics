@@ -44,7 +44,7 @@ public class OrganizationResource {
      *
      * @return
      */
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<OrganizationDTO> organizationsGet(Pageable pageable) {
         Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.empty(), pageable);
@@ -52,7 +52,7 @@ public class OrganizationResource {
         return new ResponseEntity(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/page", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) String searchString, Pageable pageable) {
         Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.ofNullable(searchString), pageable);
@@ -64,7 +64,7 @@ public class OrganizationResource {
      * @param organizationId
      * @return
      */
-    @RequestMapping(value = "/{organizationId}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<OrganizationDTO> organizationGet(@PathVariable("organizationId") Long organizationId) {
         OrganizationDTO organizationDTO = organizationService.findOneOrganization(organizationId)
@@ -81,5 +81,16 @@ public class OrganizationResource {
         return ResponseEntity.ok(savedDTO);
     }
 
+    /**
+     *
+     * @param organizationId
+     * @return
+     */
+    @DeleteMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity organizationDelete(@PathVariable("organizationId") Long organizationId) {
+        organizationService.deleteOrganization(organizationId, portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok().build();
+    }
 
 }

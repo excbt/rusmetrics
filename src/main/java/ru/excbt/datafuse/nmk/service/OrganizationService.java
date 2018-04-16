@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.OrganizationMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 /**
@@ -241,8 +242,23 @@ public class OrganizationService implements SecuredRoles {
                 findOneOrganization(checkOrganizationId).ifPresent(o -> organizations.add(0, o));
 			}
 		}
-
 		//return organizations;
 	}
+
+	@Transactional
+    @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+	public void deleteOrganization(final Long organizationId, final PortalUserIds portalUserIds) {
+	    Organization org = organizationRepository.findOne(organizationId);
+       if (Boolean.TRUE.equals(org.getIsCommon())) {
+            DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
+        }
+
+        if (!portalUserIds.getSubscriberId().equals(org.getSubscriber().getId())) {
+            DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
+        }
+
+        org.setDeleted(1);
+	    organizationRepository.save(org);
+    }
 
 }
