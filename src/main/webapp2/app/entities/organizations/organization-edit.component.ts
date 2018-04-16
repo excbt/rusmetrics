@@ -17,11 +17,11 @@ import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc
 import { FormGroupInitializer } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 
 @Component({
-  selector: 'jhi-organization-edit-g',
-  templateUrl: './organization-edit-g.component.html',
+  selector: 'jhi-organization-edit',
+  templateUrl: './organization-edit.component.html',
   styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
-export class OrganizationEditGComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
+export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
     organizationTypes: OrganizationType[];
 
