@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import {
     organizationsGRoute,
     organizationDetailRoute,
-    organizationEditRoute,
     organizationEditGRoute,
     organizationNewRoute
  } from './organizations/organizations.route';
@@ -10,7 +9,6 @@ import {
 const ENTITY_ROUTES = [
     organizationsGRoute,
     organizationDetailRoute,
-    organizationEditRoute,
     organizationEditGRoute,
     organizationNewRoute
 ];

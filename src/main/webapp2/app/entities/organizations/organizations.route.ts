@@ -1,7 +1,6 @@
 import { Route } from '@angular/router';
 
 import { OrganizationDetailComponent } from './organization-detail.component';
-import { OrganizationEditComponent } from './organization-edit.component';
 import { OrganizationEditGComponent } from './organization-edit-g.component';
 import { UserRouteAccessService } from '../../shared';
 import { OrganizationsComponent } from './organizations.component';
@@ -25,16 +24,6 @@ export const organizationDetailRoute: Route = {
     canActivate: [UserRouteAccessService]
 };
 
-export const organizationEditRoute: Route = {
-    path: 'organizations/:id/edit',
-    component: OrganizationEditComponent,
-    data: {
-        pageTitle: 'organization.edit.title',
-        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
-    },
-    canActivate: [UserRouteAccessService]
-};
-
 export const organizationEditGRoute: Route = {
     path: 'organizations/:id/edit-g',
     component: OrganizationEditGComponent,
@@ -47,7 +36,7 @@ export const organizationEditGRoute: Route = {
 
 export const organizationNewRoute: Route = {
     path: 'organizations/new/edit',
-    component: OrganizationEditComponent,
+    component: OrganizationEditGComponent,
     data: {
         pageTitle: 'organization.edit.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
