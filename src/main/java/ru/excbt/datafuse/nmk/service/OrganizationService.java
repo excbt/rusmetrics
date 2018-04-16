@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +51,8 @@ public class OrganizationService implements SecuredRoles {
 	private final OrganizationMapper organizationMapper;
 
 	private final SubscriberService subscriberService;
+
+    private final static QOrganization qOrganization = QOrganization.organization;
 
     @Autowired
     public OrganizationService(OrganizationRepository organizationRepository, OrganizationMapper organizationMapper, SubscriberService subscriberService) {
@@ -154,31 +157,52 @@ public class OrganizationService implements SecuredRoles {
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(PortalUserIds userids, Optional<String> searchStringOptional, Pageable pageable) {
+	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(
+                                                            PortalUserIds userids,
+                                                            Optional<String> searchStringOptional,
+                                                            Optional<Boolean> masterFilter,
+                                                            Pageable pageable
+                                                            ) {
+
 	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
 
         QOrganization qOrganization = QOrganization.organization;
 
+        BooleanExpression subscriberFilter = masterFilter.map((v) -> v ?
+                qOrganization.rmaSubscriberId.eq(searchSubscriberId).or(qOrganization.isCommon.isTrue()) :
+                qOrganization.subscriberId.eq(userids.getSubscriberId()))
+            .orElse(
+                qOrganization.rmaSubscriberId.eq(searchSubscriberId)
+                    .or(qOrganization.isCommon.isTrue())
+                    .or(qOrganization.subscriberId.eq(userids.getSubscriberId()))
+            );
+
         WhereClauseBuilder where = new WhereClauseBuilder()
-            .and(qOrganization.rmaSubscriberId.eq(searchSubscriberId)
-                .or(qOrganization.isCommon.isTrue())
-                .or(qOrganization.subscriberId.eq(userids.getSubscriberId())))
-            .and(qOrganization.deleted.eq(0))
-            .and(qOrganization.isDevMode.isNull().or(qOrganization.isDevMode.isFalse()));
+            .and(subscriberFilter)
+            .and(baseConditions());
 
-        searchStringOptional.ifPresent(s -> {
-            if (s.isEmpty())
-                return;
-
-            BooleanExpression searchCond = qOrganization.inn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
-                .or(qOrganization.ogrn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
-                .or(qOrganization.organizationName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)));
-            where.and(searchCond);
-        });
+        searchStringOptional.ifPresent(s -> where.and(searchCondition(s)));
 
         Page<OrganizationDTO> page = organizationRepository.findAll(where, pageable).map(organizationMapper::toDTO);
 		return page;
 	}
+
+
+
+    private static BooleanExpression baseConditions() {
+        return qOrganization.deleted.eq(0)
+            .and(qOrganization.isDevMode.isNull().or(qOrganization.isDevMode.isFalse()));
+    }
+
+    private static BooleanExpression searchCondition(String s) {
+	    if (s.isEmpty()) {
+	        return null;
+        }
+	    return qOrganization.inn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
+            .or(qOrganization.ogrn.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
+            .or(qOrganization.organizationName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)));
+    }
+
 
 	/**
 	 *

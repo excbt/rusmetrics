@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/organizations")
+@RequestMapping("/api")
 public class OrganizationResource {
 
     private final PortalUserIdsService portalUserIdsService;
@@ -44,18 +44,20 @@ public class OrganizationResource {
      *
      * @return
      */
-    @GetMapping(value = "", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/organizations", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<OrganizationDTO> organizationsGet(Pageable pageable) {
-        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.empty(), pageable);
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.empty(), Optional.empty(), pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/organizations");
         return new ResponseEntity(page.getContent(), headers, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/page", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/organizations/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) String searchString, Pageable pageable) {
-        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), Optional.ofNullable(searchString), pageable);
+    public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                                      @RequestParam(name = "isMaster", required = false) Optional<Boolean> isMasterOpt,
+                                                                      Pageable pageable) {
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), searchString, isMasterOpt, pageable);
         return new ResponseEntity(page, HttpStatus.OK);
     }
 
@@ -64,7 +66,7 @@ public class OrganizationResource {
      * @param organizationId
      * @return
      */
-    @GetMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/organizations/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<OrganizationDTO> organizationGet(@PathVariable("organizationId") Long organizationId) {
         OrganizationDTO organizationDTO = organizationService.findOneOrganization(organizationId)
@@ -73,7 +75,7 @@ public class OrganizationResource {
         return new ResponseEntity<>(organizationDTO, HttpStatus.OK);
     }
 
-    @PutMapping()
+    @PutMapping(value = "/organizations")
     @ApiOperation("")
     @Timed
     public ResponseEntity<?> putOrganization(@RequestBody OrganizationDTO organizationDTO) {
@@ -86,7 +88,7 @@ public class OrganizationResource {
      * @param organizationId
      * @return
      */
-    @DeleteMapping(value = "/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @DeleteMapping(value = "/organizations/{organizationId}", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity organizationDelete(@PathVariable("organizationId") Long organizationId) {
         organizationService.deleteOrganization(organizationId, portalUserIdsService.getCurrentIds());
