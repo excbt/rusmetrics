@@ -21,11 +21,11 @@ import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list
 import { JhiEventManager } from 'ng-jhipster';
 
 @Component({
-  selector: 'jhi-organizations-g',
-  templateUrl: './organizations-g.component.html',
+  selector: 'jhi-organizations',
+  templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.scss']
 })
-export class OrganizationsGComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
+export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 
   displayedColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'edit'];
 

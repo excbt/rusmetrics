@@ -4,11 +4,11 @@ import { OrganizationDetailComponent } from './organization-detail.component';
 import { OrganizationEditComponent } from './organization-edit.component';
 import { OrganizationEditGComponent } from './organization-edit-g.component';
 import { UserRouteAccessService } from '../../shared';
-import { OrganizationsGComponent } from './organizations-g.component';
+import { OrganizationsComponent } from './organizations.component';
 
 export const organizationsGRoute: Route = {
-    path: 'organizations-g',
-    component: OrganizationsGComponent,
+    path: 'organizations',
+    component: OrganizationsComponent,
     data: {
         pageTitle: 'organizations.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']

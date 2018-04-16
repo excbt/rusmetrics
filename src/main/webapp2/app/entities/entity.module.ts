@@ -3,7 +3,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { JhipsterSharedModule } from '../shared';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
-import { OrganizationsGComponent } from './organizations/organizations-g.component';
+import { OrganizationsComponent } from './organizations/organizations.component';
 import { OrganizationDetailComponent } from './organizations/organization-detail.component';
 import { OrganizationEditComponent } from './organizations/organization-edit.component';
 import { OrganizationEditGComponent } from './organizations/organization-edit-g.component';
@@ -71,7 +71,7 @@ import { entityState } from './';
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
-        OrganizationsGComponent,
+        OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
         OrganizationEditGComponent,
