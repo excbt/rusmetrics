@@ -1,10 +1,10 @@
 <jhi-exc-form-template>
     <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-exc-form-list-menu headerString="{{'organizations.title' | translate}}" 
+    <jhi-exc-list-form-menu headerString="{{'organizations.title' | translate}}" 
         [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
         (createAction)="newNavigate()">
-    </jhi-exc-form-list-menu>
+    </jhi-exc-list-form-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
         <mat-progress-bar  color="primary" mode="indeterminate">

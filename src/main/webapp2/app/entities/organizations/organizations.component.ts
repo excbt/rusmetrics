@@ -15,7 +15,7 @@ import {
     // , delay
 } from 'rxjs/operators';
 import { SelectionModel } from '@angular/cdk/collections';
-import { ExcFormListMenuComponent } from '../../shared-blocks';
+import { ExcListFormMenuComponent } from '../../shared-blocks';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { JhiEventManager } from 'ng-jhipster';

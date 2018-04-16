@@ -5,15 +5,14 @@ import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/o
 import { MenuItem } from 'primeng/api';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
-
-const debounceTimeValue = 150;
+import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
 
 @Component({
-  selector: 'jhi-exc-form-list-menu',
-  templateUrl: './exc-form-list-menu.component.html',
-  styleUrls: ['./exc-form-list-menu.component.scss', '../shared-blocks.scss']
+  selector: 'jhi-exc-list-form-menu',
+  templateUrl: './exc-list-form-menu.component.html',
+  styleUrls: ['../shared-blocks.scss']
 })
-export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
+export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   @Input() headerString: string;
   @ViewChild('input') input: ElementRef;
   @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
@@ -44,7 +43,7 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
 
     this.items = [
       {
-        icon: 'fa-bars',
+        icon: 'fa-caret-down fa-2x',
         styleClass: 'menu-bars-size',
         items: [{
             icon: 'far fa-download',
@@ -78,7 +77,7 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
  ngAfterViewInit() {
     Observable.fromEvent(this.input.nativeElement, 'keyup')
     .pipe(
-        debounceTime(debounceTimeValue),
+        debounceTime(searchDebounceTimeValue),
         distinctUntilChanged(),
         tap(() => {
                 const val = this.input.nativeElement.value;
