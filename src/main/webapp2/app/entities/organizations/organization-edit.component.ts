@@ -199,7 +199,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
     }
 
     navigateBack() {
-        this.router.navigate(['organizations']);
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
     }
 
 }

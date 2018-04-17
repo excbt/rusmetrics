@@ -33,6 +33,7 @@ import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   imports: [
@@ -53,7 +54,8 @@ import { ButtonModule } from 'primeng/button';
       CardModule,
       InputTextModule,
       MenubarModule,
-      ButtonModule
+      ButtonModule,
+      CheckboxModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -78,7 +80,8 @@ import { ButtonModule } from 'primeng/button';
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     // NG module
-    ButtonModule
+    ButtonModule,
+    CheckboxModule
   ]
 })
 export class PortalSharedBlocksModule {}

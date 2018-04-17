@@ -17,10 +17,11 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
   @Output() reportAction: EventEmitter<any> = new EventEmitter();
   @Output() viewAction: EventEmitter<any> = new EventEmitter();
+  @Output() propertiesAction: EventEmitter<any> = new EventEmitter();
   @Output() createAction: EventEmitter<any> = new EventEmitter();
 
   @Input() reportEnabled: boolean;
-  @Input() viewEnabled: boolean;
+  @Input() propertiesEnabled: boolean;
   @Input() createEnabled: boolean;
 
   account: Account;
@@ -55,9 +56,9 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
           {
             icon: 'fa-eye',
             label: 'Свойства',
-            id: 'view',
+            id: 'properties',
             command: (event) => {
-              this.viewAction.next();
+              this.propertiesAction.next();
             }
           },
           {
@@ -96,7 +97,7 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
 
   updateMenuAvailability(account: Account) {
     this.updateMenuItemAvailability('create', this.createEnabled, 'ROLE_SUBSCR_ADMIN');
-    this.updateMenuItemAvailability('view', this.viewEnabled);
+    this.updateMenuItemAvailability('properties', this.propertiesEnabled);
     this.updateMenuItemAvailability('report', this.reportEnabled);
   }
 
