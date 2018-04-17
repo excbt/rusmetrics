@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'jhi-organizations-widget',
@@ -6,6 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class OrganizationsWidgetComponent implements OnInit {
+
+  @Input() masterFlag: boolean;
 
   constructor() { }
 

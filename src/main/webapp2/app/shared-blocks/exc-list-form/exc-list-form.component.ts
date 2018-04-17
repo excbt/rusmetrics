@@ -4,7 +4,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
 import { defaultPageSize, defaultPageOptions } from '../exc-tools/pagination-tools';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
@@ -23,7 +23,7 @@ import {
 // }
 
 export interface ExcListDatasourceProvider<T> {
-  newDataSource: () => AnyModelDataSource<T>;
+  getDataSource: () => AnyModelDataSource<T>;
 }
 
 export interface ExcListFormParams {
@@ -41,7 +41,10 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   selection: SelectionModel<T>;
 
-  routeData: Subscription;
+  private routeDataSubscription: Subscription;
+  // private routeUrlSubscription: Subscription;
+
+  // routeUrlSergments: UrlSegment[];
   dataSource: AnyModelDataSource<T>;
 
   public searchString: String;
@@ -50,25 +53,25 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   constructor(
     private params: ExcListFormParams,
-    private datasourceProvider: ExcListDatasourceProvider<T>,
-    // private entityProvider: ExcListFormEntityProvider<T>,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
+    readonly activatedRoute: ActivatedRoute,
   ) {
       const initialSelection = [];
       const allowMultiSelect = false;
       this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
 
-      this.routeData = this.activatedRoute.data.subscribe((data) => {
-        console.log('route data: ' + data);
+      this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;
         }
-    });
+      });
+      // this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => this.routeUrlSergments = data);
   }
 
+  abstract getDatasourceProvider(): ExcListDatasourceProvider<T>;
+
   ngOnInit() {
-    this.dataSource = this.datasourceProvider.newDataSource();
+    this.dataSource = this.getDatasourceProvider().getDataSource();
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
@@ -102,9 +105,8 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   ngOnDestroy() {
-    if (this.routeData) {
-      this.routeData.unsubscribe();
-    }
+    this.routeDataSubscription.unsubscribe();
+    // this.routeUrlSubscription.unsubscribe();
   }
 
   initSearch() {

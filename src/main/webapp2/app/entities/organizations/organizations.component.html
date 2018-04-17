@@ -1,8 +1,13 @@
 <jhi-exc-form-template>
     <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-exc-list-form-menu headerKey="organizations.title" 
+    <jhi-exc-list-form-menu *ngIf="isSubscriberMode" headerKey="organizations.subscriberTitle" 
         [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+        (createAction)="newNavigate()">
+    </jhi-exc-list-form-menu>
+
+    <jhi-exc-list-form-menu *ngIf="!isSubscriberMode" headerKey="organizations.masterTitle" 
+        [createEnabled]="false" [viewEnabled]="true" [reportEnabled]="false"
         (createAction)="newNavigate()">
     </jhi-exc-list-form-menu>
 
