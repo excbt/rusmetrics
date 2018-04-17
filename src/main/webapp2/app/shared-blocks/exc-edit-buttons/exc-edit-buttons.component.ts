@@ -1,7 +1,6 @@
 import { Component, Input, Output, EventEmitter} from '@angular/core';
 import {
     FormGroup,
-    Validators,
 } from '@angular/forms';
 
 @Component({

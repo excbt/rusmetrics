@@ -1,12 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
 import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/pagination-tools';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
 import { AnyModelDataSource } from '../exc-tools/exc-datasource';
 import { ExcListFormMenuComponent } from '..';

@@ -7,9 +7,8 @@ import {
     AfterViewInit
 } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
-import { DEBUG_INFO_ENABLED } from '../../app.constants';
+// import { DEBUG_INFO_ENABLED } from '../../app.constants';
 
 const debounceTimeValue = 150;
 

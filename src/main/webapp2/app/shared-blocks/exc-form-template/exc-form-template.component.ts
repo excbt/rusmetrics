@@ -1,7 +1,5 @@
 import {
   Component,
-  Input,
-  Output,
   HostBinding} from '@angular/core';
 import { excSlideInDownAnimation } from '../exc-animations';
 

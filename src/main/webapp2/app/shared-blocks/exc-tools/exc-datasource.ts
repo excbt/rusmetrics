@@ -1,9 +1,7 @@
-import {CollectionViewer, DataSource, } from '@angular/cdk/collections';
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {catchError, finalize} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import {ExcPageSize, ExcPageSorting, ExcPage} from '../../shared-blocks';
 
 export abstract class AnyModelDataSource<T> implements DataSource<T> {
 

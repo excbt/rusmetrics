@@ -1,11 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
+import { OnInit} from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
-import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
 
 export abstract class ExcAbstractMenuComponent implements OnInit  {
   account: Account;
