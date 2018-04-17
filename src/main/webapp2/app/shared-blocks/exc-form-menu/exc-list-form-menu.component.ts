@@ -43,7 +43,7 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
 
     this.items = [
       {
-        icon: 'fa-caret-down fa-2x',
+        icon: 'fa-caret-down',
         styleClass: 'menu-bars-size',
         items: [{
             icon: 'far fa-download',

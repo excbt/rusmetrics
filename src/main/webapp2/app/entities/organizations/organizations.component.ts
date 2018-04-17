@@ -29,7 +29,10 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 })
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 
-  displayedColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon', 'edit'];
+  private masterColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
+  private subscrColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon', 'edit'];
+
+  displayedColumns = this.subscrColumns;
 
   private routeUrlSubscription: Subscription;
   subscriberMode: boolean;
@@ -42,6 +45,7 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
           activatedRoute);
     this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
       this.subscriberMode = (data && (data[0].path ===  subscrUrlSuffix));
+      this.displayedColumns = this.subscriberMode ? this.subscrColumns : this.masterColumns;
     });
   }
 

@@ -34,7 +34,7 @@ export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implement
     super.ngOnInit();
     this.menuItems = [
       {
-        icon: 'fa-caret-down fa-2x',
+        icon: 'fa-caret-down',
         styleClass: 'menu-bars-size',
         items: [
           {

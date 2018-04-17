@@ -1,7 +1,7 @@
 <jhi-exc-form-template>
     <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscriberTitle" 
+    <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscrTitle" 
         [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
         (createAction)="newNavigate()">
     </jhi-exc-list-form-menu>
@@ -214,4 +214,20 @@
 
     <mat-paginator [length]="totalElements" [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+
+
+    <!-- Navigation -->
+    <div>
+
+        <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
+            icon="fa-arrow-left" routerLink="/classifiers"></button>
+    
+        <button *ngIf="subscriberMode" pButton type="button" label="{{'organizations.masterTitle' | translate}}" class="ui-button-info" 
+            icon="fa-arrow-ban" routerLink="/organizations"></button>
+
+        <button *ngIf="!subscriberMode" pButton type="button" label="{{'organizations.subscrTitle' | translate}}" class="ui-button-info" 
+            icon="fa-arrow-ban" routerLink="/subscr/organizations"></button>
+    
+    </div>
+                                                       
 </jhi-exc-form-template>

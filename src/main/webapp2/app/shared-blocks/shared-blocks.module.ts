@@ -74,7 +74,8 @@ import { ButtonModule } from 'primeng/button';
     ExcFormDetailFieldComponent,
     ExcTopHeaderComponent,
     ExcListFormMenuComponent,
-    ExcEditFormMenuComponent
+    ExcEditFormMenuComponent,
+    ButtonModule
   ]
 })
 export class PortalSharedBlocksModule {}

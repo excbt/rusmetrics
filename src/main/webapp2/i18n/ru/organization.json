@@ -1,7 +1,7 @@
 {
     "organizations": {
         "title": "Организации",
-        "subscriberTitle": "Организации абонента",
+        "subscrTitle": "Организации абонента",
         "masterTitle": "Все организации",
         "one": {
             "id": "Код",

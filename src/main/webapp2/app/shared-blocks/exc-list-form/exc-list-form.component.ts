@@ -111,14 +111,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     // this.routeUrlSubscription.unsubscribe();
   }
 
-  newNavigate() {
-    this.router.navigate([this.params.baseUrl + '/new/edit']);
-  }
-
-  editNavigate(entityId: any) {
-    this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
-  }
-
   initSearch() {
     const sorting = new ExcPageSorting();
     const pageSize: ExcPageSize = new ExcPageSize();
@@ -130,6 +122,18 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
     const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
+  }
+
+  previousState() {
+    window.history.back();
+  }
+
+  newNavigate() {
+    this.router.navigate([this.params.baseUrl + '/new/edit']);
+  }
+
+  editNavigate(entityId: any) {
+    this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
   }
 
 }
