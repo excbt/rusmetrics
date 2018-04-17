@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OrganizationsService } from './organizations.service';
 import { slideInDownAnimation } from '../animations';
 import { Organization } from './organization.model';
@@ -16,16 +16,17 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
 
     organization: Organization;
 
-    private subscription: Subscription;
+    private paramsSubscription: Subscription;
     private eventSubscriber: Subscription;
 
     constructor(
                 private eventManager: JhiEventManager,
                 private service: OrganizationsService,
-                private route: ActivatedRoute) { }
+                private router: Router,
+                private activatedRoute: ActivatedRoute) { }
 
     ngOnInit() {
-        this.subscription = this.route.params.subscribe((params) => {
+        this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
             if (params['id']) {
                 this.load(params['id']);
             }
@@ -34,7 +35,7 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        this.paramsSubscription.unsubscribe();
         this.eventManager.destroy(this.eventSubscriber);
     }
 
@@ -54,6 +55,10 @@ export class OrganizationDetailComponent implements OnInit, OnDestroy {
 
     previousState() {
         window.history.back();
+    }
+
+    navigateBack() {
+        this.router.navigate(['organizations']);
     }
 
 }
