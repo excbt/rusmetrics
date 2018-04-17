@@ -151,16 +151,6 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     });
   }
 
-  navigateNew() {
-      this.router.navigate([[this.params.onSaveUrl]]);
-  }
-
-  navigateOnSave(entityId?: any) {
-    if (this.params.onSaveUrl) {
-      this.router.navigate([this.params.onSaveUrl, entityId ? {id: entityId} : null]);
-    }
-  }
-
   checkEmpty(val: any) {
     return (val === '') ? null : val;
   }
@@ -181,13 +171,28 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     )
     .subscribe( (data: any) => {
         this.loadingSubject.next(false);
-        if (this.params.onDeleteUrl) {
-          this.router.navigate([this.params.onDeleteUrl]);
-        }
+        this.navigateOnDelete();
     });
   }
 
   deleteAction() {
     this.deleteEntity(this.entityId);
   }
+
+  navigateNew() {
+    this.router.navigate([[this.params.onSaveUrl]]);
+  }
+
+  navigateOnSave(entityId?: any) {
+    if (this.params.onSaveUrl) {
+      this.router.navigate([this.params.onSaveUrl, entityId ? {id: entityId} : null]);
+    }
+  }
+
+  navigateOnDelete() {
+    if (this.params.onDeleteUrl) {
+      this.router.navigate([this.params.onDeleteUrl]);
+    }
+  }
+
 }

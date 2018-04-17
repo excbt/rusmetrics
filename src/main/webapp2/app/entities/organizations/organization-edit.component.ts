@@ -198,6 +198,10 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
     }
 
+    navigateOnDelete() {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
     navigateBack() {
         this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
     }
