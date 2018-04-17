@@ -13,34 +13,24 @@
 -->
 
         <div class="float-left">
-                <button mat-icon-button [matMenuTriggerFor]="menu" 
-                      class="nmc-tree-nav-toolbar-btn"
-                       style = "">
+            <button mat-icon-button [matMenuTriggerFor]="menu" 
+                  class="nmc-tree-nav-toolbar-btn"
+                   style = "">
 <!--                        <mat-icon class="">more_vert</mat-icon>-->
-                    <mat-icon fontSet = "fa" fontIcon = "fa-sitemap"></mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                        <button mat-menu-item >
-                                <mat-icon class="">account_box</mat-icon>
-                                <span jhiTranslate="headerbar.login" class="">User profile</span>
-                        </button>
-                        <button mat-menu-item >
-                                <mat-icon class="">account_box</mat-icon>
-                                <span jhiTranslate="headerbar.userprofile" class="">User profile</span>
-                        </button>
-                        <button mat-menu-item >
-                                <mat-icon class="">exit_to_app</mat-icon>
-                                <span jhiTranslate="headerbar.logout" class="">Logout</span>
-                        </button>
-                        
-                </mat-menu>    
+                <mat-icon fontSet = "fa" fontIcon = "fa-sitemap"></mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngFor = "let subscrObjectTree of subscrObjectTreeList">
+                    <span >{{subscrObjectTree.objectName}}</span>
+                </button>                        
+            </mat-menu>    
         </div>
     </mat-toolbar-row>
 </mat-toolbar>
 <div>
-    Tree navigate component
+<!--    Tree navigate component-->
     
-    <p-tree [value] = "tree">
+    <p-tree [value] = "tree" (onNodeExpand) = "loadNode($event)">
         
     </p-tree>
 </div>
