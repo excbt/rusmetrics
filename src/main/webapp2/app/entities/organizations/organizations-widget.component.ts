@@ -7,8 +7,6 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class OrganizationsWidgetComponent implements OnInit {
 
-  @Input() masterFlag: boolean;
-
   constructor() { }
 
   ngOnInit() {

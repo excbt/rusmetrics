@@ -17,6 +17,7 @@ import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc
 import { FormGroupInitializer } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 import { ExcEditFormMenuComponent } from '../../shared-blocks/exc-form-menu/exc-edit-form-menu.component';
 import { TranslateService } from '@ngx-translate/core';
+import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
   selector: 'jhi-organization-edit',
@@ -30,6 +31,9 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
     organizationTypes: OrganizationType[];
 
     private headerSubscription: Subscription;
+
+    private routeUrlSubscription: Subscription;
+    subscriberMode: boolean;
 
     constructor(
         eventManager: JhiEventManager,
@@ -48,7 +52,12 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
                 eventManager,
                 router,
                 activatedRoute);
-                this.loadOrganizationTypes();
+
+            this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
+                this.subscriberMode = (data && (data[0].path ===  subscrUrlSuffix));
+            });
+            this.loadOrganizationTypes();
+
         }
 
     ngOnInit() {
@@ -60,6 +69,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
 
     ngOnDestroy() {
         this.headerSubscription.unsubscribe();
+        this.routeUrlSubscription.unsubscribe();
         super.ngOnDestroy();
     }
 
@@ -185,12 +195,16 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         return saveOrganization;
     }
 
-    newNavigate() {
-        this.router.navigate(['organizations', 'new', 'edit']);
+    navigateNew() {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', 'new', 'edit']);
     }
 
-    backNavigate() {
-        this.router.navigate(['/organizations']);
+    navigateOnSave(entityId?: any) {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
+    navigateBack() {
+        this.router.navigate(['organizations']);
     }
 
 }

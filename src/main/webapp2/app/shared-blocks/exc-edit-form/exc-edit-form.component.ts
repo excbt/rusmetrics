@@ -61,7 +61,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     private entityProvider: ExcEditFormEntityProvider<T>,
     private eventManager: JhiEventManager,
     readonly router: Router,
-    private activatedRoute: ActivatedRoute) {
+    readonly activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -142,10 +142,10 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
         this.loadingSubject.next(false);
         if (data['id']) {
             if (this.newFlag && this.params.onSaveUrl) {
-              this.router.navigate([this.params.onSaveUrl]);
+              this.navigateOnSave();
             } else {
               if (this.params.onSaveUrl) {
-                this.router.navigate([this.params.onSaveUrl, {id: data['id']}]);
+                this.navigateOnSave(data['id']);
               } else {
                 this.entityForm = this.createForm(this.entity = data);
               }
@@ -154,9 +154,15 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     });
   }
 
-navigateNew() {
-    this.router.navigate([[this.params.onSaveUrl]]);
-}
+  navigateNew() {
+      this.router.navigate([[this.params.onSaveUrl]]);
+  }
+
+  navigateOnSave(entityId?: any) {
+    if (this.params.onSaveUrl) {
+      this.router.navigate([this.params.onSaveUrl, entityId ? {id: entityId} : null]);
+    }
+  }
 
   checkEmpty(val: any) {
     return (val === '') ? null : val;

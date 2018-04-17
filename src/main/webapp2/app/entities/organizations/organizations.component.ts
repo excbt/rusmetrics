@@ -6,7 +6,7 @@ import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization } from './organization.model';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../../shared-blocks';
-import { defaultPageSize, defaultPageOptions } from '../../shared-blocks';
+import { defaultPageSize, defaultPageSizeOptions } from '../../shared-blocks';
 import {
     // debounceTime,
     distinctUntilChanged,
@@ -20,6 +20,7 @@ import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { JhiEventManager } from 'ng-jhipster';
 import { Subscription, BehaviorSubject } from 'rxjs';
+import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
   selector: 'jhi-organizations',
@@ -31,9 +32,7 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
   displayedColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon', 'edit'];
 
   private routeUrlSubscription: Subscription;
-  isSubscriberMode: boolean;
-  private subscriberMode: BehaviorSubject<boolean> = new BehaviorSubject(true);
-  public subscriberMode$ = this.subscriberMode.asObservable();
+  subscriberMode: boolean;
 
   constructor(private organizationService: OrganizationsService,
               router: Router,
@@ -42,12 +41,12 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
           router,
           activatedRoute);
     this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
-      this.subscriberMode.next(this.isSubscriberMode = (data && (data[0].path === 'subscr')));
+      this.subscriberMode = (data && (data[0].path ===  subscrUrlSuffix));
     });
   }
 
   getDatasourceProvider(): ExcListDatasourceProvider<Organization>  {
-    return {getDataSource: () => new OrganizationsDataSource(this.organizationService, this.isSubscriberMode)};
+    return {getDataSource: () => new OrganizationsDataSource(this.organizationService, this.subscriberMode)};
   }
 
   ngOnInit() {
@@ -58,4 +57,13 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
     this.routeUrlSubscription.unsubscribe();
     super.ngOnDestroy();
   }
+
+  editNavigate(entityId: any) {
+    this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', entityId, 'edit']);
+  }
+
+  newNavigate() {
+    this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', 'new', 'edit']);
+  }
+
 }

@@ -3,7 +3,7 @@ import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
-import { defaultPageSize, defaultPageOptions } from '../exc-tools/pagination-tools';
+import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/pagination-tools';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
@@ -49,11 +49,13 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   public searchString: String;
 
-  rowCount = 10;
+  totalElements: number;
+  pageSize = defaultPageSize;
+  pageSizeOptions = defaultPageSizeOptions;
 
   constructor(
     private params: ExcListFormParams,
-    private router: Router,
+    readonly router: Router,
     readonly activatedRoute: ActivatedRoute,
   ) {
       const initialSelection = [];
@@ -75,7 +77,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
-        this.rowCount = count;
+        this.totalElements = count;
       }
     );
   }
@@ -109,18 +111,18 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     // this.routeUrlSubscription.unsubscribe();
   }
 
-  initSearch() {
-    const sorting = new ExcPageSorting();
-    const pageSize: ExcPageSize = new ExcPageSize(0, defaultPageOptions[0]);
-    this.dataSource.findSearchPage (sorting, pageSize, '');
-  }
-
   newNavigate() {
     this.router.navigate([this.params.baseUrl + '/new/edit']);
   }
 
   editNavigate(entityId: any) {
     this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
+  }
+
+  initSearch() {
+    const sorting = new ExcPageSorting();
+    const pageSize: ExcPageSize = new ExcPageSize();
+    this.dataSource.findSearchPage (sorting, pageSize, '');
   }
 
   loadList(searchString?: string) {

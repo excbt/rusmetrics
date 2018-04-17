@@ -1,7 +1,10 @@
+export const defaultPageSizeOptions = [10, 20, 50];
+export const defaultPageSize = defaultPageSizeOptions[0];
+
 export class ExcPageSize {
     constructor(
         public page = 0,
-        public size = 20
+        public size = defaultPageSizeOptions[0]
     ) { }
 }
 
@@ -28,6 +31,3 @@ export class ExcPage<T> {
         public totalPages: number
     ) {}
 }
-
-export const defaultPageSize = 20;
-export const defaultPageOptions = [3, 5, 10];

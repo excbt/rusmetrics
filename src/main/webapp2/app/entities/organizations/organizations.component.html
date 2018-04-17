@@ -1,12 +1,12 @@
 <jhi-exc-form-template>
     <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-exc-list-form-menu *ngIf="isSubscriberMode" headerKey="organizations.subscriberTitle" 
+    <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscriberTitle" 
         [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
         (createAction)="newNavigate()">
     </jhi-exc-list-form-menu>
 
-    <jhi-exc-list-form-menu *ngIf="!isSubscriberMode" headerKey="organizations.masterTitle" 
+    <jhi-exc-list-form-menu *ngIf="!subscriberMode" headerKey="organizations.masterTitle" 
         [createEnabled]="false" [viewEnabled]="true" [reportEnabled]="false"
         (createAction)="newNavigate()">
     </jhi-exc-list-form-menu>
@@ -212,6 +212,6 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
     </mat-table>
 
-    <mat-paginator [length]="rowCount" [pageSize]="defaultPageSize"
-                   [pageSizeOptions]="[3, 5, 10]"></mat-paginator>    
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
 </jhi-exc-form-template>
