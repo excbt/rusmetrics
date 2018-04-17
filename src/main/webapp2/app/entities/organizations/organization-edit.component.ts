@@ -1,22 +1,16 @@
 import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs/Rx';
-import { JhiEventManager  } from 'ng-jhipster';
-import { FormBuilder, FormGroup, AbstractControl} from '@angular/forms';
+import { Subscription } from 'rxjs/Rx';
+import { JhiEventManager } from 'ng-jhipster';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators} from '@angular/forms';
-
 import { Organization } from './organization.model';
 import { OrganizationType } from '../organization-types/organization-type.model';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
-import { catchError, finalize } from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
+import { ExcCustomValidators } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
-import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
-import { FormGroupInitializer } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 import { ExcEditFormMenuComponent } from '../../shared-blocks/exc-form-menu/exc-edit-form-menu.component';
-import { TranslateService } from '@ngx-translate/core';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
@@ -40,7 +34,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        private service: OrganizationsService,
+        service: OrganizationsService,
         private organizationTypeService: OrganizationTypeService) {
             super(
                 {   modificationEventName: 'organizationModification',
@@ -190,7 +184,8 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
             directorFio: this.checkEmpty(formModel.directorFio as string),
             chiefAccountantFio: this.checkEmpty(formModel.chiefAccountantFio as string),
             organizationTypeId: this.checkEmpty(formModel.organizationTypeId as number),
-            version: this.entity ? this.entity.version : 1
+            version: this.entity ? this.entity.version : 1,
+            organizationTypeName: null
         };
         return saveOrganization;
     }

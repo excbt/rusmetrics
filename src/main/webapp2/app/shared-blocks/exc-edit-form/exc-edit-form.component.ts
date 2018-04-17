@@ -1,12 +1,9 @@
 import {
-  Component,
-  Input,
-  Output,
   OnInit,
   OnDestroy
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { FormBuilder, FormGroup, AbstractControl} from '@angular/forms';
+import { FormGroup, AbstractControl} from '@angular/forms';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
@@ -15,7 +12,7 @@ import {of} from 'rxjs/observable/of';
 
 import { JhiEventManager  } from 'ng-jhipster';
 
-import { ExcCustomValidators, ExcFormControlChecker } from '../../shared-blocks';
+import { ExcFormControlChecker } from '../../shared-blocks';
 
 export interface ExcEditFormEntityProvider<T> {
   load: (id: any) => Observable<T>;

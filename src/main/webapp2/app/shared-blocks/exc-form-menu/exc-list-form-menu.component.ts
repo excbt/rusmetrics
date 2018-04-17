@@ -1,7 +1,6 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';

@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
+import { Component, Input, OnInit} from '@angular/core';
 import { DEBUG_INFO_ENABLED } from '../../app.constants';
 import { MenuItem } from 'primeng/api';
 

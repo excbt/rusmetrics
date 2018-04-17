@@ -1,4 +1,5 @@
 export class Organization {
+
     constructor(
         public id: number,        // ID. Первичный ключ
         public organizationName: string,        // Наименование организации
@@ -31,8 +32,10 @@ export class Organization {
         public directorFio: string,
         public chiefAccountantFio: string,
         public organizationTypeId: number,
-        public version: number
-    ) { }
+        public version?: number,
+        public organizationTypeName?: string
+
+    ) {}
 }
 
 export class OrganizationSort {

@@ -1,13 +1,7 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
-import { MenuItem } from 'primeng/api';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
-import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
 import { ExcAbstractMenuComponent } from './exc-abstract-menu.component';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-exc-edit-form-menu',
@@ -24,8 +18,7 @@ export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implement
 
   constructor(
     principal: Principal,
-    eventManager: JhiEventManager,
-    private translateService: TranslateService
+    eventManager: JhiEventManager
   ) {
     super(principal, eventManager);
   }
