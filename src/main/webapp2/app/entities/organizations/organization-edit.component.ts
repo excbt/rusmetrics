@@ -37,8 +37,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private service: OrganizationsService,
-        private organizationTypeService: OrganizationTypeService,
-        private translate: TranslateService) {
+        private organizationTypeService: OrganizationTypeService) {
             super(
                 {   modificationEventName: 'organizationModification',
                     backUrl: '/organizations',
@@ -54,10 +53,8 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
 
     ngOnInit() {
         super.ngOnInit();
-        this.headerSubscription = this.enitityId$.flatMap((id) => {
-            return this.translate.get(id > 0 ? 'organization.edit.title' : 'organization.new.title');
-        }).subscribe((translation) => {
-            this.editMenu.headerString = translation;
+        this.headerSubscription = this.enitityId$.subscribe((id) => {
+            this.editMenu.headerKey = id ? 'organization.edit.title' : 'organization.new.title';
         });
     }
 

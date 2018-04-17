@@ -7,6 +7,7 @@ import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
 import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
 import { ExcAbstractMenuComponent } from './exc-abstract-menu.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'jhi-exc-edit-form-menu',
@@ -14,7 +15,7 @@ import { ExcAbstractMenuComponent } from './exc-abstract-menu.component';
   styleUrls: ['../shared-blocks.scss']
 })
 export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implements OnInit {
-  @Input() headerString: string;
+  @Input() headerKey: string;
   @Input() createEnabled: boolean;
   @Output() saveAction: EventEmitter<any> = new EventEmitter();
   @Output() createAction: EventEmitter<any> = new EventEmitter();
@@ -23,7 +24,8 @@ export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implement
 
   constructor(
     principal: Principal,
-    eventManager: JhiEventManager
+    eventManager: JhiEventManager,
+    private translateService: TranslateService
   ) {
     super(principal, eventManager);
   }
@@ -54,6 +56,7 @@ export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implement
         ]
       }
     ];
+    // this.translateService.get(this.headerStringKey);
   }
 
   updateMenuAvailability(account: Account) {

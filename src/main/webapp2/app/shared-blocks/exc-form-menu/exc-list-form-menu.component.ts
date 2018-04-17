@@ -13,7 +13,7 @@ import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
   styleUrls: ['../shared-blocks.scss']
 })
 export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
-  @Input() headerString: string;
+  @Input() headerKey: string;
   @ViewChild('input') input: ElementRef;
   @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
   @Output() reportAction: EventEmitter<any> = new EventEmitter();

@@ -46,11 +46,13 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   private newFlag: boolean;
   private entityId: number;
   private entityIdSubject = new BehaviorSubject<any>(null);
-  private navigationSubscription:  Subscription;
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   public loading$ = this.loadingSubject.asObservable();
   public enitityId$ = this.entityIdSubject.asObservable();
+
+  private navigationSubscription:  Subscription;
+  private paramsSubscription:  Subscription;
 
   entity: T;
 
@@ -63,7 +65,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params) => {
+    this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
         if (params['id'] && params['id'] !== 'new') {
           this.entityId = params['id'];
           this.entityIdSubject.next(params['id']);
@@ -102,12 +104,9 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.eventSubscriber) {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.eventManager.destroy(this.eventSubscriber);
+    this.navigationSubscription.unsubscribe();
+    this.paramsSubscription.unsubscribe();
   }
 
   abstract createForm(data: T): FormGroup;
