@@ -29,7 +29,7 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 
   private masterColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
-  private subscrColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon', 'edit'];
+  private subscrColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
 
   displayedColumns = this.subscrColumns;
 
