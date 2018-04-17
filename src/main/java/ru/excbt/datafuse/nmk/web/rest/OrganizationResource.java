@@ -55,9 +55,9 @@ public class OrganizationResource {
     @GetMapping(value = "/organizations/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<Page<OrganizationDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
-                                                                      @RequestParam(name = "isMaster", required = false) Optional<Boolean> isMasterOpt,
+                                                                      @RequestParam(name = "subscriberMode", required = false) Optional<Boolean> subscriberMode,
                                                                       Pageable pageable) {
-        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), searchString, isMasterOpt, pageable);
+        Page<OrganizationDTO> page = organizationService.findOrganizationsOfRmaPaged(portalUserIdsService.getCurrentIds(), searchString, subscriberMode, pageable);
         return new ResponseEntity(page, HttpStatus.OK);
     }
 

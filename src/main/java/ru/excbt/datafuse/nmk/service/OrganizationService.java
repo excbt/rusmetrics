@@ -160,7 +160,7 @@ public class OrganizationService implements SecuredRoles {
 	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(
                                                             PortalUserIds userids,
                                                             Optional<String> searchStringOptional,
-                                                            Optional<Boolean> masterFilter,
+                                                            Optional<Boolean> subscriberModeOpt,
                                                             Pageable pageable
                                                             ) {
 
@@ -168,9 +168,10 @@ public class OrganizationService implements SecuredRoles {
 
         QOrganization qOrganization = QOrganization.organization;
 
-        BooleanExpression subscriberFilter = masterFilter.map((v) -> v ?
-                qOrganization.rmaSubscriberId.eq(searchSubscriberId).or(qOrganization.isCommon.isTrue()) :
-                qOrganization.subscriberId.eq(userids.getSubscriberId()))
+        BooleanExpression subscriberFilter = subscriberModeOpt.map(val -> val ?
+                qOrganization.subscriberId.eq(userids.getSubscriberId()) :
+                qOrganization.rmaSubscriberId.eq(searchSubscriberId).or(qOrganization.isCommon.isTrue())
+                )
             .orElse(
                 qOrganization.rmaSubscriberId.eq(searchSubscriberId)
                     .or(qOrganization.isCommon.isTrue())
@@ -277,7 +278,7 @@ public class OrganizationService implements SecuredRoles {
             DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
         }
 
-        if (!portalUserIds.getSubscriberId().equals(org.getSubscriber().getId())) {
+        if (org.getSubscriber() != null && !portalUserIds.getSubscriberId().equals(org.getSubscriber().getId())) {
             DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
         }
 
