@@ -3,8 +3,8 @@ import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
-import { defaultPageSize, defaultPageOptions } from '../exc-tools/pagination-tools';
-import { ActivatedRoute, Router } from '@angular/router';
+import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/pagination-tools';
+import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
@@ -23,7 +23,7 @@ import {
 // }
 
 export interface ExcListDatasourceProvider<T> {
-  newDataSource: () => AnyModelDataSource<T>;
+  getDataSource: () => AnyModelDataSource<T>;
 }
 
 export interface ExcListFormParams {
@@ -41,37 +41,43 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   selection: SelectionModel<T>;
 
-  routeData: Subscription;
+  private routeDataSubscription: Subscription;
+  // private routeUrlSubscription: Subscription;
+
+  // routeUrlSergments: UrlSegment[];
   dataSource: AnyModelDataSource<T>;
 
   public searchString: String;
 
-  rowCount = 10;
+  totalElements: number;
+  pageSize = defaultPageSize;
+  pageSizeOptions = defaultPageSizeOptions;
 
   constructor(
     private params: ExcListFormParams,
-    private datasourceProvider: ExcListDatasourceProvider<T>,
-    // private entityProvider: ExcListFormEntityProvider<T>,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
+    readonly router: Router,
+    readonly activatedRoute: ActivatedRoute,
   ) {
       const initialSelection = [];
       const allowMultiSelect = false;
       this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
 
-      this.routeData = this.activatedRoute.data.subscribe((data) => {
+      this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;
         }
-    });
+      });
+      // this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => this.routeUrlSergments = data);
   }
 
+  abstract getDatasourceProvider(): ExcListDatasourceProvider<T>;
+
   ngOnInit() {
-    this.dataSource = this.datasourceProvider.newDataSource();
+    this.dataSource = this.getDatasourceProvider().getDataSource();
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
-        this.rowCount = count;
+        this.totalElements = count;
       }
     );
   }
@@ -101,15 +107,25 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   ngOnDestroy() {
-    if (this.routeData) {
-      this.routeData.unsubscribe();
-    }
+    this.routeDataSubscription.unsubscribe();
+    // this.routeUrlSubscription.unsubscribe();
   }
 
   initSearch() {
     const sorting = new ExcPageSorting();
-    const pageSize: ExcPageSize = new ExcPageSize(0, defaultPageOptions[0]);
+    const pageSize: ExcPageSize = new ExcPageSize();
     this.dataSource.findSearchPage (sorting, pageSize, '');
+  }
+
+  loadList(searchString?: string) {
+    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
+    const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
+    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
+  }
+
+  previousState() {
+    window.history.back();
   }
 
   newNavigate() {
@@ -118,13 +134,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   editNavigate(entityId: any) {
     this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
-  }
-
-  loadList(searchString?: string) {
-    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
-    const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
-    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
-    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
   }
 
 }

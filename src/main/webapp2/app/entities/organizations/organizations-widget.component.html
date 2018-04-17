@@ -1,7 +1,12 @@
 <p-card title="{{'organizations.title' | translate}}">
+    <button mat-button routerLink="/subscr/organizations">
+        <mat-icon class="headerbar-mat-menu-icon">list</mat-icon>
+        <span jhiTranslate="organizations.subscrTitle">Organizations</span>
+    </button>
+    <br>
     <button mat-button routerLink="/organizations">
         <mat-icon class="headerbar-mat-menu-icon">list</mat-icon>
-        <span jhiTranslate="organizations.widget.list">Organizations</span>
+        <span jhiTranslate="organizations.masterTitle">Organizations</span>
     </button>
         
 </p-card>

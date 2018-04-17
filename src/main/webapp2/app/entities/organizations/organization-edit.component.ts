@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
@@ -17,17 +17,23 @@ import { ExcEditFormEntityProvider } from '../../shared-blocks/exc-edit-form/exc
 import { FormGroupInitializer } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 import { ExcEditFormMenuComponent } from '../../shared-blocks/exc-form-menu/exc-edit-form-menu.component';
 import { TranslateService } from '@ngx-translate/core';
+import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
   selector: 'jhi-organization-edit',
   templateUrl: './organization-edit.component.html',
   styleUrls: ['../blocks/form-edit.scss', './organization-edit.component.scss']
 })
-export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
+export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
     @ViewChild(ExcEditFormMenuComponent) editMenu: ExcEditFormMenuComponent;
 
     organizationTypes: OrganizationType[];
+
+    private headerSubscription: Subscription;
+
+    private routeUrlSubscription: Subscription;
+    subscriberMode: boolean;
 
     constructor(
         eventManager: JhiEventManager,
@@ -35,8 +41,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         private service: OrganizationsService,
-        private organizationTypeService: OrganizationTypeService,
-        private translate: TranslateService) {
+        private organizationTypeService: OrganizationTypeService) {
             super(
                 {   modificationEventName: 'organizationModification',
                     backUrl: '/organizations',
@@ -47,15 +52,25 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
                 eventManager,
                 router,
                 activatedRoute);
+
+            this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
+                this.subscriberMode = (data && (data[0].path ===  subscrUrlSuffix));
+            });
             this.loadOrganizationTypes();
+
         }
 
-    ngAfterViewInit() {
-        this.enitityId$.flatMap((id) => {
-            return this.translate.get(id > 0 ? 'organization.edit.title' : 'organization.new.title');
-        }).subscribe((translation) => {
-            this.editMenu.headerString = translation;
+    ngOnInit() {
+        super.ngOnInit();
+        this.headerSubscription = this.enitityId$.subscribe((id) => {
+            this.editMenu.headerKey = id ? 'organization.edit.title' : 'organization.new.title';
         });
+    }
+
+    ngOnDestroy() {
+        this.headerSubscription.unsubscribe();
+        this.routeUrlSubscription.unsubscribe();
+        super.ngOnDestroy();
     }
 
     loadOrganizationTypes() {
@@ -180,12 +195,16 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         return saveOrganization;
     }
 
-    newNavigate() {
-        this.router.navigate(['/organizations' + '/new/edit']);
+    navigateNew() {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', 'new', 'edit']);
     }
 
-    backNavigate() {
-        this.router.navigate(['/organizations']);
+    navigateOnSave(entityId?: any) {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
+    navigateBack() {
+        this.router.navigate(['organizations']);
     }
 
 }

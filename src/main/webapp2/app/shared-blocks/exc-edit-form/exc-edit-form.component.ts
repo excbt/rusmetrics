@@ -46,11 +46,13 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   private newFlag: boolean;
   private entityId: number;
   private entityIdSubject = new BehaviorSubject<any>(null);
-  private navigationSubscription:  Subscription;
   private loadingSubject = new BehaviorSubject<boolean>(false);
 
   public loading$ = this.loadingSubject.asObservable();
   public enitityId$ = this.entityIdSubject.asObservable();
+
+  private navigationSubscription:  Subscription;
+  private paramsSubscription:  Subscription;
 
   entity: T;
 
@@ -59,15 +61,15 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     private entityProvider: ExcEditFormEntityProvider<T>,
     private eventManager: JhiEventManager,
     readonly router: Router,
-    private activatedRoute: ActivatedRoute) {
+    readonly activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params) => {
+    this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
         if (params['id'] && params['id'] !== 'new') {
           this.entityId = params['id'];
-          this.entityIdSubject.next(this.entityId);
-          this.loadData(this.entityId);
+          this.entityIdSubject.next(params['id']);
+          this.loadData(params['id']);
         } else {
             this.newFlag = true;
         }
@@ -102,12 +104,9 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.eventSubscriber) {
-        this.eventManager.destroy(this.eventSubscriber);
-    }
-    if (this.navigationSubscription) {
-      this.navigationSubscription.unsubscribe();
-    }
+    this.eventManager.destroy(this.eventSubscriber);
+    this.navigationSubscription.unsubscribe();
+    this.paramsSubscription.unsubscribe();
   }
 
   abstract createForm(data: T): FormGroup;
@@ -143,10 +142,10 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
         this.loadingSubject.next(false);
         if (data['id']) {
             if (this.newFlag && this.params.onSaveUrl) {
-              this.router.navigate([this.params.onSaveUrl]);
+              this.navigateOnSave();
             } else {
               if (this.params.onSaveUrl) {
-                this.router.navigate([this.params.onSaveUrl]);
+                this.navigateOnSave(data['id']);
               } else {
                 this.entityForm = this.createForm(this.entity = data);
               }
@@ -155,9 +154,15 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     });
   }
 
-navigateNew() {
-    this.router.navigate([[this.params.onSaveUrl]]);
-}
+  navigateNew() {
+      this.router.navigate([[this.params.onSaveUrl]]);
+  }
+
+  navigateOnSave(entityId?: any) {
+    if (this.params.onSaveUrl) {
+      this.router.navigate([this.params.onSaveUrl, entityId ? {id: entityId} : null]);
+    }
+  }
 
   checkEmpty(val: any) {
     return (val === '') ? null : val;

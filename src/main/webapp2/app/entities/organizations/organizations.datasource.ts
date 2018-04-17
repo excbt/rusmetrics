@@ -13,20 +13,22 @@ import {AnyModelDataSource} from '../../shared-blocks';
 // ***************************************************************************
 export class OrganizationsDataSource extends AnyModelDataSource<Organization> {
 
-    constructor(private organizationsService: OrganizationsService) {
-        super();
-   }
+    private subscriberMode: boolean;
 
-   findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
-    this.startLoading();
-    this.organizationsService.findSearchPage(pageSorting, pageSize, searchString)
-        .pipe(
-            catchError(() => of([])),
-            finalize(() => this.finishLoading())
-        )
-        .subscribe( (page: ExcPage<Organization>) => {
-            this.nextPage(page);
-        });
+    constructor(private organizationsService: OrganizationsService, subscriberMode?: boolean) {
+        super();
+        this.subscriberMode = (subscriberMode === true);
     }
 
+     findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
+     this.startLoading();
+     this.organizationsService.findSearchPage(pageSorting, pageSize, searchString, this.subscriberMode)
+         .pipe(
+             catchError(() => of([])),
+             finalize(() => this.finishLoading())
+         )
+         .subscribe( (page: ExcPage<Organization>) => {
+             this.nextPage(page);
+         });
+     }
 }
