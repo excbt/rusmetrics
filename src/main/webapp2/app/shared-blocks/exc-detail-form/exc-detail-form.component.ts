@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Rx';
+import { Subscription, BehaviorSubject } from 'rxjs/Rx';
 import { JhiEventManager  } from 'ng-jhipster';
 
 export interface ExcDetailFormEntityProvider<T> {
@@ -21,6 +21,11 @@ export abstract class ExcDetailFormComponent implements OnInit, OnDestroy {
     private paramsSubscription: Subscription;
     private eventSubscriber: Subscription;
 
+    private entityIdSubject = new BehaviorSubject<any>(null);
+    private loadingSubject = new BehaviorSubject<boolean>(false);
+    public loading$ = this.loadingSubject.asObservable();
+    public enitityId$ = this.entityIdSubject.asObservable();
+
     constructor(
                 private params: ExcDetailFormParams,
                 private eventManager: JhiEventManager,
@@ -31,6 +36,7 @@ export abstract class ExcDetailFormComponent implements OnInit, OnDestroy {
         this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {
             if (params['id']) {
                 this.entityId = params['id'];
+                this.entityIdSubject.next(params['id']);
                 this.load(params['id']);
             }
         });
