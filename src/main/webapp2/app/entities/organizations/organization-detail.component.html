@@ -76,18 +76,12 @@
         </div>
     </div>
 
-    <hr>
-    <button mat-raised-button (click)="previousState()">
-        <span class="fa fa-arrow-left"></span>&nbsp;
-        <span jhiTranslate="entity.action.back"> Back</span>
-    </button>
-
-    <button mat-raised-button [routerLink]="['/organizations/' + organization?.id + '/edit-g']"
-        color="primary">
-        <span class="fa fa-pencil"></span>&nbsp;
-        <span jhiTranslate="entity.action.edit"> Edit</span>
-    </button>
-
+    <div>
+        <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
+            icon="fa-arrow-left" (click)="navigateBack()"></button>
+        
+    </div>
+        
     <!-- <button mat-button [routerLink]="['/organizations/' + organization.id + '/edit']">
         <mat-icon>edit</mat-icon>
     </button> -->

@@ -1,7 +1,7 @@
 <jhi-exc-form-template>
     <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
     <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-        (createAction)="navigateNew()">
+        (createAction)="navigateNew()" headerKey="{{ menuHeaderKey }}">
     </jhi-exc-edit-form-menu>
     
     <br>

@@ -6,6 +6,7 @@ import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
 import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
 import { ExcEditFormEntityProvider } from '../../shared-blocks';
+import { ExcDetailFormEntityProvider } from '../../shared-blocks/exc-detail-form/exc-detail-form.component';
 
 @Injectable()
 export class OrganizationsService {
@@ -72,4 +73,11 @@ export class OrganizationsService {
             delete: (id) => this.delete(id)
         };
     }
+
+    entityProvider2(): ExcDetailFormEntityProvider<Organization> {
+        return {
+            load: (id) => this.find(id),
+        };
+    }
+
 }

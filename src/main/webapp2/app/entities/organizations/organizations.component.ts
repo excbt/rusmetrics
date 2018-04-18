@@ -28,8 +28,8 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 })
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 
-  private masterColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
-  private subscrColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon', 'edit'];
+  private masterColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
+  private subscrColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn', 'isCommon' ];
 
   displayedColumns = this.subscrColumns;
 
@@ -65,8 +65,18 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
     this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', entityId, 'edit']);
   }
 
-  newNavigate() {
+  navigateNew() {
     this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', 'new', 'edit']);
+  }
+
+  navigateEdit() {
+    if (!this.selection.isEmpty()) {
+      if (this.subscriberMode) {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selection.selected[0].id, 'edit']);
+      } else {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selection.selected[0].id]);
+      }
+    }
   }
 
 }
