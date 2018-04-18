@@ -10,7 +10,6 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
 import { ExcCustomValidators } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
-import { ExcEditFormMenuComponent } from '../../shared-blocks/exc-form-menu/exc-edit-form-menu.component';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
@@ -20,14 +19,13 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 })
 export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
-    @ViewChild(ExcEditFormMenuComponent) editMenu: ExcEditFormMenuComponent;
-
     organizationTypes: OrganizationType[];
 
     private headerSubscription: Subscription;
 
     private routeUrlSubscription: Subscription;
     subscriberMode: boolean;
+    menuHeaderKey: string;
 
     constructor(
         eventManager: JhiEventManager,
@@ -57,7 +55,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
     ngOnInit() {
         super.ngOnInit();
         this.headerSubscription = this.enitityId$.subscribe((id) => {
-            this.editMenu.headerKey = id ? 'organization.edit.title' : 'organization.new.title';
+            this.menuHeaderKey = id ? 'organization.edit.title' : 'organization.new.title';
         });
     }
 
