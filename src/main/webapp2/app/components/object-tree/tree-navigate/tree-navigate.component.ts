@@ -48,7 +48,14 @@ console.log(resp);
 console.log(event);
         if (event.node) {
             const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
-            this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => event.node.parent.children = resp);
+            this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => this.successLoadNode(event, resp));
+        }
+    }
+    
+    successLoadNode(event, resp) {
+console.log(resp);
+        if (resp.length > 0) {
+            event.node.children = resp[0].children;
         }
     }
 
