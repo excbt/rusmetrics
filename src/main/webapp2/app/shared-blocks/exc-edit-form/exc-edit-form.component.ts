@@ -101,7 +101,9 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.eventManager.destroy(this.eventSubscriber);
+    if (this.eventSubscriber) {
+      this.eventManager.destroy(this.eventSubscriber);
+    }
     this.navigationSubscription.unsubscribe();
     this.paramsSubscription.unsubscribe();
   }

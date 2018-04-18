@@ -1,6 +1,6 @@
 import { Route } from '@angular/router';
 
-import { OrganizationDetailComponent } from './organization-detail.component';
+import { OrganizationDetail2Component } from './organization-detail2.component';
 import { OrganizationEditComponent } from './organization-edit.component';
 import { UserRouteAccessService } from '../../shared';
 import { OrganizationsComponent } from './organizations.component';
@@ -27,7 +27,7 @@ export const subscrOrganizationsRoute: Route = {
 
 export const organizationDetailRoute: Route = {
     path: 'organizations/:id',
-    component: OrganizationDetailComponent,
+    component: OrganizationDetail2Component,
     data: {
         pageTitle: 'organization.detail.title'
     },
