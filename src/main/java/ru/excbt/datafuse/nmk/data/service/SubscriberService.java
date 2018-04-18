@@ -17,6 +17,8 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -278,6 +280,20 @@ public class SubscriberService implements SecuredRoles {
 	public List<Subscriber> selectChildSubscribers(Long parentSubscriberId) {
 		List<Subscriber> result = subscriberRepository.selectChildSubscribers(parentSubscriberId);
 		return ObjectFilters.deletedFilter(result);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public List<SubscriberDTO> selectSubscribers(PortalUserIds userIds) {
+		List<Subscriber> result = subscriberRepository.selectSubscribers(userIds.getSubscriberId());
+        return result.stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(subscriberMapper::toDto).collect(Collectors.toList());
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Page<SubscriberDTO> selectSubscribers(PortalUserIds userIds, Pageable pageable) {
+		Page<Subscriber> result = subscriberRepository.selectSubscribers(userIds.getSubscriberId(), pageable);
+        return result.map(subscriberMapper::toDto);
 	}
 
 	/**

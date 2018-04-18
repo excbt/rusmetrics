@@ -48,7 +48,7 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
     });
   }
 
-  getDatasourceProvider(): ExcListDatasourceProvider<Organization>  {
+  getDataSourceProvider(): ExcListDatasourceProvider<Organization>  {
     return {getDataSource: () => new OrganizationsDataSource(this.organizationService, this.subscriberMode)};
   }
 

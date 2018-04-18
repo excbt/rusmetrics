@@ -1,0 +1,33 @@
+{
+    "subscribers" : {
+        "partners": "Партнеры",
+        "customers": "Абоненты"
+    },
+    "subscriber": {
+        "id": "id",
+        "organizationId": "organizationId",
+        "subscriberName": "Имя",
+        "subscriberInfo": "subscriberInfo",
+        "subscriberComment": "subscriberComment",
+        "timezoneDef": "timezoneDef",
+        "subscriberUuid": "subscriberUuid",
+        "parentSubscriberId": "parentSubscriberId",
+        "isRma": "isRma",
+        "rmaSubscriberId": "rmaSubscriberId",
+        "ghostSubscriberId": "ghostSubscriberId",
+        "isGhostMode": "isGhostMode",
+        "skipServiceFilter": "skipServiceFilter",
+        "rmaLdapOu": "rmaLdapOu",
+        "mapCenterLat": "mapCenterLat",
+        "mapCenterLng": "mapCenterLng",
+        "mapZoom": "mapZoom",
+        "mapZoomDetail": "mapZoomDetail",
+        "subscrType": "subscrType",
+        "canCreateChild": "canCreateChild",
+        "isChild": "isChild",
+        "childLdapOu": "childLdapOu",
+        "subscrCabinetNr": "subscrCabinetNr",
+        "contactEmail": "contactEmail",
+        "subscrCabinetSeq": "subscrCabinetSeq"
+    }
+}

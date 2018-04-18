@@ -69,10 +69,10 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
       // this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => this.routeUrlSergments = data);
   }
 
-  abstract getDatasourceProvider(): ExcListDatasourceProvider<T>;
+  abstract getDataSourceProvider(): ExcListDatasourceProvider<T>;
 
   ngOnInit() {
-    this.dataSource = this.getDatasourceProvider().getDataSource();
+    this.dataSource = this.getDataSourceProvider().getDataSource();
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
