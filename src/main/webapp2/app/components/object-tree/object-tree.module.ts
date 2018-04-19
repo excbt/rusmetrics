@@ -3,9 +3,9 @@ import { JhipsterSharedModule } from '../../shared';
 // import { PortalObjectTreeComponent } from './object-tree.component';
 import { PTreeNodeService } from './object-tree.service';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
-import { UserRouteAccessService } from '../../shared';
+// import { UserRouteAccessService } from '../../shared';
 
 import { objectTreeState,
         PortalObjectTreeComponent,

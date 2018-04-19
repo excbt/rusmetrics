@@ -51,7 +51,7 @@ console.log(event);
             this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => this.successLoadNode(event, resp));
         }
     }
-    
+
     successLoadNode(event, resp) {
 console.log(resp);
         if (resp.length > 0) {

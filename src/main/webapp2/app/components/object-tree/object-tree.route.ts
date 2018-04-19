@@ -1,4 +1,4 @@
-import { Routes, Route } from '@angular/router';
+import { Routes } from '@angular/router';
 import { PortalObjectTreeComponent } from './';
 import { UserRouteAccessService } from '../../shared';
 

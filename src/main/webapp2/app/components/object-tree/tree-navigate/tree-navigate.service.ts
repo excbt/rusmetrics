@@ -18,11 +18,11 @@ export class TreeNavigateService {
 
     constructor(private http: HttpClient) {}
 
-    getTree() {
-        return this.http.get<any>('http://192.168.84.239:8089/testTree.json')
-            .toPromise()
-            .then((res) => <TreeNode[]> res.data);
-    }
+//    getTree() {
+//        return this.http.get<any>('http://192.168.84.239:8089/testTree.json')
+//            .toPromise()
+//            .then((res) => <TreeNode[]> res.data);
+//    }
 
     loadSubscrTrees(): Observable<SubscrObjectTree[]> {
         return this.http.get<SubscrObjectTree[]>(this.SUBSCR_TREES_URL);
