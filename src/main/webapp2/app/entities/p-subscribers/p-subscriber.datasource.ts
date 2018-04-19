@@ -1,10 +1,10 @@
 import { PSubscriber } from './p-subscriber.model';
-import { AnyModelDataSource, ExcPageSorting, ExcPageSize, ExcPage } from '../../shared-blocks';
+import { ExcAbstractDataSource, ExcPageSorting, ExcPageSize, ExcPage } from '../../shared-blocks';
 import { PSubscriberService } from './p-subscriber.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-export class PSubscriberDataSource extends AnyModelDataSource<PSubscriber> {
+export class PSubscriberDataSource extends ExcAbstractDataSource<PSubscriber> {
 
     constructor( private pSubscriberService: PSubscriberService) {
         super();

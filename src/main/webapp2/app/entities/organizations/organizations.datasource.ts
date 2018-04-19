@@ -3,12 +3,12 @@ import {OrganizationsService} from './organizations.service';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
-import {AnyModelDataSource} from '../../shared-blocks';
+import {ExcAbstractDataSource} from '../../shared-blocks';
 
 // ***************************************************************************
 //
 // ***************************************************************************
-export class OrganizationsDataSource extends AnyModelDataSource<Organization> {
+export class OrganizationsDataSource extends ExcAbstractDataSource<Organization> {
 
     private subscriberMode: boolean;
 

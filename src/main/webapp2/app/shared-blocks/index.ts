@@ -7,5 +7,5 @@ export * from './exc-top-header/exc-top-header.component';
 export * from './exc-search-field/exc-search-field.component';
 export * from './exc-validators/exc.validators';
 export * from './shared-blocks.module';
-export * from './exc-tools/pagination-tools';
+export * from './exc-tools/exc-pagination';
 export * from './exc-tools/exc-abstract-datasource';

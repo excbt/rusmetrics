@@ -2,12 +2,12 @@ import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
-import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
-import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/pagination-tools';
+import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
+import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
-import { AnyModelDataSource } from '../exc-tools/exc-abstract-datasource';
+import { ExcAbstractDataSource } from '../exc-tools/exc-abstract-datasource';
 import { ExcListFormMenuComponent } from '..';
 import {
   // debounceTime,
@@ -22,7 +22,7 @@ import {
 // }
 
 export interface ExcListDatasourceProvider<T> {
-  getDataSource: () => AnyModelDataSource<T>;
+  getDataSource: () => ExcAbstractDataSource<T>;
 }
 
 export interface ExcListFormParams {
@@ -44,7 +44,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   // private routeUrlSubscription: Subscription;
 
   // routeUrlSergments: UrlSegment[];
-  dataSource: AnyModelDataSource<T>;
+  dataSource: ExcAbstractDataSource<T>;
 
   public searchString: String;
 

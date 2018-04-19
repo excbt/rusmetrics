@@ -31,3 +31,12 @@ export class ExcPage<T> {
         public totalPages: number
     ) {}
 }
+
+export interface ExcPageParams {
+    pageSorting?: ExcPageSorting;
+    pageSize?: ExcPageSize;
+    searchString?: string;
+    extraParams?: {
+        [key: string]: string;
+    };
+}
