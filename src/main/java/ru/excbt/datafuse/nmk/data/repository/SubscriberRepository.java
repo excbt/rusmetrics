@@ -2,6 +2,8 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -90,4 +92,9 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
 	@Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId and s.isChild = true ORDER BY s.id ")
 	public List<Subscriber> selectChildSubscribers(@Param("parentSubscriberId") Long parentSubscriberId);
 
+    @Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId ORDER BY s.id ")
+    List<Subscriber> selectSubscribers(@Param("parentSubscriberId") Long parentSubscriberId);
+
+    @Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId")
+    Page<Subscriber> selectSubscribers(@Param("parentSubscriberId") Long parentSubscriberId, Pageable pageable);
 }

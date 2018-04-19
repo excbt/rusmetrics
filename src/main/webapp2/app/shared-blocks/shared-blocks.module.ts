@@ -1,17 +1,18 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule } from '@angular/router';
+// import { RouterModule } from '@angular/router';
 import { JhipsterSharedModule } from '../shared';
 
 import { ExcEditButtonsComponent } from './exc-edit-buttons/exc-edit-buttons.component';
 import { ExcFormTemplateComponent } from './exc-form-template/exc-form-template.component';
 import { ExcTopHeaderComponent } from './exc-top-header/exc-top-header.component';
 import { ExcFormDetailFieldComponent } from './exc-form-detail-field/exc-form-detail-field.component';
-import { ExcFormListMenuComponent } from './exc-form-list-menu/exc-form-list-menu.component';
+import { ExcListFormMenuComponent } from './exc-form-menu/exc-list-form-menu.component';
+import { ExcEditFormMenuComponent } from './exc-form-menu/exc-edit-form-menu.component';
 import { ExcSearchFieldComponent } from './exc-search-field/exc-search-field.component';
-import { ExcEditFormComponent } from './exc-edit-form/exc-edit-form.component';
+// import { ExcEditFormComponent } from './exc-edit-form/exc-edit-form.component';
 
-import { ExcCustomValidators, ExcFormControlChecker } from './exc-validators/exc.validators';
+// import { ExcCustomValidators, ExcFormControlChecker } from './exc-validators/exc.validators';
 
 import {
   MatGridListModule,
@@ -24,14 +25,15 @@ import {
   MatButtonModule,
   MatIconModule,
   MatCheckboxModule,
-  ErrorStateMatcher,
-  ShowOnDirtyErrorStateMatcher } from '@angular/material';
+  // ErrorStateMatcher,
+  // ShowOnDirtyErrorStateMatcher
+} from '@angular/material';
 
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   imports: [
@@ -52,14 +54,17 @@ import { ButtonModule } from 'primeng/button';
       CardModule,
       InputTextModule,
       MenubarModule,
-      ButtonModule
+      ButtonModule,
+      CheckboxModule
   ],
   declarations: [
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
     ExcTopHeaderComponent,
-    ExcFormListMenuComponent
+    ExcListFormMenuComponent,
+    ExcEditFormMenuComponent,
+    ExcSearchFieldComponent
   ],
   entryComponents: [
   ],
@@ -71,7 +76,12 @@ import { ButtonModule } from 'primeng/button';
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
     ExcTopHeaderComponent,
-    ExcFormListMenuComponent
+    ExcListFormMenuComponent,
+    ExcEditFormMenuComponent,
+    ExcSearchFieldComponent,
+    // NG module
+    ButtonModule,
+    CheckboxModule
   ]
 })
 export class PortalSharedBlocksModule {}

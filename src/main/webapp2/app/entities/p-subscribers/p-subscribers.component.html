@@ -1,0 +1,150 @@
+<jhi-exc-form-template>
+
+    <jhi-exc-list-form-menu headerKey="subscribers.partners.title" 
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false">
+    </jhi-exc-list-form-menu>
+    
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-progress-bar  color="primary" mode="indeterminate">
+        </mat-progress-bar>
+    </div>
+
+    <mat-table class="organizations-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+        matSortDisableClear>
+
+
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.id}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="organizationId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.organizationId' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.organizationId}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberName">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberName' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberName}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberInfo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberInfo' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberInfo}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberComment">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberComment' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberComment}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="timezoneDef">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.timezoneDef' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.timezoneDef}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberUuid">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberUuid' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberUuid}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="parentSubscriberId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.parentSubscriberId' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.parentSubscriberId}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="isRma">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.isRma' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.isRma}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="rmaSubscriberId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.rmaSubscriberId' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.rmaSubscriberId}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="ghostSubscriberId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.ghostSubscriberId' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.ghostSubscriberId}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="isGhostMode">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.isGhostMode' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.isGhostMode}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="skipServiceFilter">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.skipServiceFilter' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.skipServiceFilter}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="rmaLdapOu">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.rmaLdapOu' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.rmaLdapOu}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="mapCenterLat">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.mapCenterLat' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.mapCenterLat}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="mapCenterLng">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.mapCenterLng' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.mapCenterLng}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="mapZoom">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.mapZoom' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.mapZoom}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="mapZoomDetail">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.mapZoomDetail' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.mapZoomDetail}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscrType">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscrType' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscrType}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="canCreateChild">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.canCreateChild' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.canCreateChild}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="isChild">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.isChild' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.isChild}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="childLdapOu">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.childLdapOu' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.childLdapOu}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscrCabinetNr">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscrCabinetNr' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscrCabinetNr}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="contactEmail">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.contactEmail' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.contactEmail}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscrCabinetSeq">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscrCabinetSeq' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscrCabinetSeq}} </mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+
+    </mat-table>    
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+    
+
+</jhi-exc-form-template>

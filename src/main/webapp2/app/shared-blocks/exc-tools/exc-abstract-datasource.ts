@@ -1,11 +1,11 @@
-import {CollectionViewer, DataSource, } from '@angular/cdk/collections';
-import {Observable} from 'rxjs/Observable';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {catchError, finalize} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import { CollectionViewer, DataSource } from '@angular/cdk/collections';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
-export abstract class AnyModelDataSource<T> implements DataSource<T> {
+export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
 
     modelSubject = new BehaviorSubject<T[]>([]);
 
@@ -41,5 +41,18 @@ export abstract class AnyModelDataSource<T> implements DataSource<T> {
       this.loadingSubject.next(false);
     }
 
-    abstract findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string);
+    abstract findPage(params: ExcPageParams);
+
+    wrapPageService(anyService: Observable<ExcPage<T>>) {
+        this.startLoading();
+        anyService
+            .pipe(
+                catchError(() => of([])),
+                finalize(() => this.finishLoading())
+            )
+            .subscribe( (page: ExcPage<T>) => {
+                this.finishLoading();
+                this.nextPage(page);
+            });
+    }
 }

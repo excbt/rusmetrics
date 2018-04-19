@@ -1,7 +1,10 @@
+export const defaultPageSizeOptions = [10, 20, 50];
+export const defaultPageSize = defaultPageSizeOptions[0];
+
 export class ExcPageSize {
     constructor(
         public page = 0,
-        public size = 20
+        public size = defaultPageSizeOptions[0]
     ) { }
 }
 
@@ -29,5 +32,15 @@ export class ExcPage<T> {
     ) {}
 }
 
-export const defaultPageSize = 20;
-export const defaultPageOptions = [3, 5, 10];
+export interface ExcPageParams {
+    pageSorting?: ExcPageSorting;
+    pageSize?: ExcPageSize;
+    searchString?: string;
+    // extraParams?: {
+    //     [key: string]: string;
+    // };
+}
+
+export interface ExcApiParams {
+    [key: string]: string;
+}

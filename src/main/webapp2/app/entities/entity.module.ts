@@ -28,17 +28,18 @@ import {
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';
-import { ruPaginatorIntl } from './shared/ru-paginator-intl';
 import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
 // PRIME NG
 import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuItem } from 'primeng/api';
 
 // Etc
 import { entityState } from './';
+import { PSubscriberService } from './p-subscribers/p-subscriber.service';
+import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
+import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -73,19 +74,23 @@ import { entityState } from './';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
-        OrganizationsWidgetComponent
+        PSubscribersComponent,
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent
     ],
     entryComponents: [
     ],
     providers: [
         OrganizationsService,
         OrganizationTypeService,
+        PSubscriberService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
-        OrganizationsWidgetComponent
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent
     ]
 })
 export class PortalEntityModule {}

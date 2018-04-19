@@ -1,28 +1,27 @@
-import { Component, OnInit, ViewChild, AfterViewInit, ViewEncapsulation, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { debounceTime, distinctUntilChanged, startWith, tap, delay} from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap} from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
-
-const debounceTimeValue = 150;
+import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
 
 @Component({
-  selector: 'jhi-exc-form-list-menu',
-  templateUrl: './exc-form-list-menu.component.html',
-  styleUrls: ['./exc-form-list-menu.component.scss', '../shared-blocks.scss']
+  selector: 'jhi-exc-list-form-menu',
+  templateUrl: './exc-list-form-menu.component.html',
+  styleUrls: ['../shared-blocks.scss']
 })
-export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
-  @Input() headerString: string;
+export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
+  @Input() headerKey: string;
   @ViewChild('input') input: ElementRef;
   @Output() readonly searchAction: EventEmitter<string> = new EventEmitter();
   @Output() reportAction: EventEmitter<any> = new EventEmitter();
   @Output() viewAction: EventEmitter<any> = new EventEmitter();
+  @Output() propertiesAction: EventEmitter<any> = new EventEmitter();
   @Output() createAction: EventEmitter<any> = new EventEmitter();
 
   @Input() reportEnabled: boolean;
-  @Input() viewEnabled: boolean;
+  @Input() propertiesEnabled: boolean;
   @Input() createEnabled: boolean;
 
   account: Account;
@@ -44,7 +43,7 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
 
     this.items = [
       {
-        icon: 'fa-bars',
+        icon: 'fa-caret-down',
         styleClass: 'menu-bars-size',
         items: [{
             icon: 'far fa-download',
@@ -57,9 +56,9 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
           {
             icon: 'fa-eye',
             label: 'Свойства',
-            id: 'view',
+            id: 'properties',
             command: (event) => {
-              this.viewAction.next();
+              this.propertiesAction.next();
             }
           },
           {
@@ -78,7 +77,7 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
  ngAfterViewInit() {
     Observable.fromEvent(this.input.nativeElement, 'keyup')
     .pipe(
-        debounceTime(debounceTimeValue),
+        debounceTime(searchDebounceTimeValue),
         distinctUntilChanged(),
         tap(() => {
                 const val = this.input.nativeElement.value;
@@ -98,7 +97,7 @@ export class ExcFormListMenuComponent implements OnInit, AfterViewInit  {
 
   updateMenuAvailability(account: Account) {
     this.updateMenuItemAvailability('create', this.createEnabled, 'ROLE_SUBSCR_ADMIN');
-    this.updateMenuItemAvailability('view', this.viewEnabled);
+    this.updateMenuItemAvailability('properties', this.propertiesEnabled);
     this.updateMenuItemAvailability('report', this.reportEnabled);
   }
 

@@ -1,16 +1,22 @@
 import { Routes } from '@angular/router';
 import {
-    organizationsGRoute,
+    organizationsRoute,
+    subscrOrganizationsRoute,
     organizationDetailRoute,
-    organizationEditGRoute,
+    organizationEditRoute,
+    subscrOrganizationEditRoute,
     organizationNewRoute
  } from './organizations/organizations.route';
+import { pSubscribersRoute } from './p-subscribers/p-subscribers.route';
 
 const ENTITY_ROUTES = [
-    organizationsGRoute,
+    organizationsRoute,
+    subscrOrganizationsRoute,
     organizationDetailRoute,
-    organizationEditGRoute,
-    organizationNewRoute
+    organizationEditRoute,
+    subscrOrganizationEditRoute,
+    organizationNewRoute,
+    pSubscribersRoute
 ];
 
 export const entityState: Routes = [{

@@ -1,15 +1,14 @@
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
-import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
-import { defaultPageSize, defaultPageOptions } from '../exc-tools/pagination-tools';
+import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
+import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
-import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Rx';
-import { AnyModelDataSource } from '../exc-tools/exc-datasource';
-import { ExcFormListMenuComponent } from '..';
+import { ExcAbstractDataSource } from '../exc-tools/exc-abstract-datasource';
+import { ExcListFormMenuComponent } from '..';
 import {
   // debounceTime,
   distinctUntilChanged,
@@ -23,7 +22,7 @@ import {
 // }
 
 export interface ExcListDatasourceProvider<T> {
-  newDataSource: () => AnyModelDataSource<T>;
+  getDataSource: () => ExcAbstractDataSource<T>;
 }
 
 export interface ExcListFormParams {
@@ -37,41 +36,47 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(ExcFormListMenuComponent) formMenu: ExcFormListMenuComponent;
+  @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
   selection: SelectionModel<T>;
 
-  routeData: Subscription;
-  dataSource: AnyModelDataSource<T>;
+  private routeDataSubscription: Subscription;
+  // private routeUrlSubscription: Subscription;
+
+  // routeUrlSergments: UrlSegment[];
+  dataSource: ExcAbstractDataSource<T>;
 
   public searchString: String;
 
-  rowCount = 10;
+  totalElements: number;
+  pageSize = defaultPageSize;
+  pageSizeOptions = defaultPageSizeOptions;
 
   constructor(
     private params: ExcListFormParams,
-    private datasourceProvider: ExcListDatasourceProvider<T>,
-    // private entityProvider: ExcListFormEntityProvider<T>,
-    private router: Router,
-    private activatedRoute: ActivatedRoute,
+    readonly router: Router,
+    readonly activatedRoute: ActivatedRoute,
   ) {
       const initialSelection = [];
       const allowMultiSelect = false;
       this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
 
-      this.routeData = this.activatedRoute.data.subscribe((data) => {
+      this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;
         }
-    });
+      });
+      // this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => this.routeUrlSergments = data);
   }
 
+  abstract getDataSourceProvider(): ExcListDatasourceProvider<T>;
+
   ngOnInit() {
-    this.dataSource = this.datasourceProvider.newDataSource();
+    this.dataSource = this.getDataSourceProvider().getDataSource();
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
-        this.rowCount = count;
+        this.totalElements = count;
       }
     );
   }
@@ -101,15 +106,23 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   ngOnDestroy() {
-    if (this.routeData) {
-      this.routeData.unsubscribe();
-    }
+    this.routeDataSubscription.unsubscribe();
+    // this.routeUrlSubscription.unsubscribe();
   }
 
   initSearch() {
-    const sorting = new ExcPageSorting();
-    const pageSize: ExcPageSize = new ExcPageSize(0, defaultPageOptions[0]);
-    this.dataSource.findSearchPage (sorting, pageSize, '');
+    this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
+  }
+
+  loadList(search?: string) {
+    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
+    const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
+    const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.findPage ({pageSorting: sorting, pageSize: pSize, searchString: search});
+  }
+
+  previousState() {
+    window.history.back();
   }
 
   newNavigate() {
@@ -118,13 +131,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   editNavigate(entityId: any) {
     this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
-  }
-
-  loadList(searchString?: string) {
-    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
-    const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
-    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
-    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
   }
 
 }

@@ -1,32 +1,35 @@
-import {CollectionViewer, DataSource, } from '@angular/cdk/collections';
-import {Observable} from 'rxjs/Observable';
 import {Organization} from './organization.model';
 import {OrganizationsService} from './organizations.service';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {catchError, finalize} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
-import {AnyModelDataSource} from '../../shared-blocks';
+import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
+import {ExcAbstractDataSource} from '../../shared-blocks';
 
 // ***************************************************************************
 //
 // ***************************************************************************
-export class OrganizationsDataSource extends AnyModelDataSource<Organization> {
+export class OrganizationsDataSource extends ExcAbstractDataSource<Organization> {
 
-    constructor(private organizationsService: OrganizationsService) {
+    private subscriberMode: boolean;
+
+    constructor(private organizationsService: OrganizationsService, subscriberMode?: boolean) {
         super();
-   }
-
-   findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
-    this.startLoading();
-    this.organizationsService.findSearchPage(pageSorting, pageSize, searchString)
-        .pipe(
-            catchError(() => of([])),
-            finalize(() => this.finishLoading())
-        )
-        .subscribe( (page: ExcPage<Organization>) => {
-            this.nextPage(page);
-        });
+        this.subscriberMode = (subscriberMode === true);
     }
 
+    //  findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
+    //  this.startLoading();
+    //  this.organizationsService.findSearchPage(pageSorting, pageSize, searchString, this.subscriberMode)
+    //      .pipe(
+    //          catchError(() => of([])),
+    //          finalize(() => this.finishLoading())
+    //      )
+    //      .subscribe( (page: ExcPage<Organization>) => {
+    //          this.nextPage(page);
+    //      });
+    //  }
+
+     findPage(pageParams: ExcPageParams) {
+        this.wrapPageService(this.organizationsService.findPageSubscriber(pageParams, this.subscriberMode));
+     }
 }
