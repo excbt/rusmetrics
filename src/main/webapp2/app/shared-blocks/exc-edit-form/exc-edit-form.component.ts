@@ -182,7 +182,9 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     }
 
     navigateNew() {
-        this.router.navigate([[this.params.onSaveUrl]]);
+        if (this.params.onSaveUrl) {
+            this.router.navigate([this.params.onSaveUrl]);
+        }
     }
 
     navigateOnSave(entityId?: any) {

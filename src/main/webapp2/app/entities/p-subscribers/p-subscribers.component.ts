@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -12,6 +12,8 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
 })
 export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> {
 
+    @Input() mode: string;
+
     displayedColumns = ['id', 'subscriberName'];
 
     constructor(
@@ -19,10 +21,11 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> {
         router: Router,
         activatedRoute: ActivatedRoute,
     ) {
-        super({baseUrl: 'p-subscr'}, router, activatedRoute);
+        super({modificationEventName: 'subscriberModification'}, router, activatedRoute);
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {
         return {getDataSource: () => new PSubscriberDataSource(this.pSubscriberService)};
     }
+
 }

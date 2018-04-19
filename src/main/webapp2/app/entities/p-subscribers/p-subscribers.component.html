@@ -1,7 +1,7 @@
 <jhi-exc-form-template>
 
     <jhi-exc-list-form-menu headerKey="subscribers.partners.title" 
-        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false">
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()">
     </jhi-exc-list-form-menu>
     
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">

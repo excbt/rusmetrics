@@ -3,7 +3,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 // import { MatPaginator } from '@angular/material/paginator';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
-import { Organization } from './organization.model';
+import { Organization, organizationModification } from './organization.model';
 // import { merge } from 'rxjs/observable/merge';
 // import { ExcPageSize, ExcPageSorting } from '../../shared-blocks';
 // import { defaultPageSize, defaultPageSizeOptions } from '../../shared-blocks';
@@ -39,7 +39,7 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
   constructor(private organizationService: OrganizationsService,
               router: Router,
               activatedRoute: ActivatedRoute) {
-    super({baseUrl: '/organizations'},
+    super({modificationEventName: organizationModification},
           router,
           activatedRoute);
     this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
