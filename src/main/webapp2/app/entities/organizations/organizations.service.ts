@@ -10,7 +10,7 @@ import { ExcDetailFormEntityProvider } from '../../shared-blocks/exc-detail-form
 import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
 @Injectable()
-export class OrganizationsService extends ExcAbstractService<|Organization> {
+export class OrganizationsService extends ExcAbstractService<Organization> {
 
     constructor(http: HttpClient) {
         super({apiUrl: 'api/organizations/'}, http);

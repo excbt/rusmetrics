@@ -10,10 +10,6 @@ export class PSubscriberDataSource extends ExcAbstractDataSource<PSubscriber> {
         super();
     }
 
-    // findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) {
-    //     this.wrapPageService(this.pSubscriberService.findPage(pageSorting, pageSize, searchString));
-    // }
-
     findPage(pageParams: ExcPageParams) {
         this.wrapPageService(this.pSubscriberService.findPage(pageParams));
     }

@@ -41,8 +41,6 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
       this.loadingSubject.next(false);
     }
 
-    // abstract findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string);
-
     abstract findPage(params: ExcPageParams);
 
     wrapPageService(anyService: Observable<ExcPage<T>>) {

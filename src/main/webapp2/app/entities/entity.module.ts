@@ -39,6 +39,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { entityState } from './';
 import { PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
+import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -74,7 +75,8 @@ import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
         OrganizationDetailComponent,
         OrganizationEditComponent,
         PSubscribersComponent,
-        OrganizationsWidgetComponent
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent
     ],
     entryComponents: [
     ],
@@ -87,7 +89,8 @@ import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
-        OrganizationsWidgetComponent
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent
     ]
 })
 export class PortalEntityModule {}

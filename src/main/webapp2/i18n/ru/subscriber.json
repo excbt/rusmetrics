@@ -1,7 +1,12 @@
 {
     "subscribers" : {
-        "partners": "Партнеры",
-        "customers": "Абоненты"
+        "partners": {
+            "title" : "Партнеры",
+            "listTitle" : "Список партнеров"
+        },
+        "customers": {
+            "title" : "Абоненты"
+        }
     },
     "subscriber": {
         "id": "id",
