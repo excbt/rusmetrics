@@ -34,45 +34,45 @@ describe('Component Tests', () => {
             comp = fixture.componentInstance;
         });
 
-        it('calls activate.get with the key from params',
-            inject([TreeNavigateService],
-                fakeAsync((service: TreeNavigateService) => {
-                    spyOn(service, 'get').and.returnValue(Observable.of());
+        // it('calls activate.get with the key from params',
+        //     inject([TreeNavigateService],
+        //         fakeAsync((service: TreeNavigateService) => {
+        //             spyOn(service, 'get').and.returnValue(Observable.of());
 
-                    comp.ngOnInit();
-                    tick();
+        //             comp.ngOnInit();
+        //             tick();
 
-                    expect(service.get).toHaveBeenCalledWith('ABC123');
-                })
-            )
-        );
+        //             expect(service.get).toHaveBeenCalledWith('ABC123');
+        //         })
+        //     )
+        // );
 
-        xit('should set set success to OK upon successful activation',
-            inject([TreeNavigateService],
-                fakeAsync((service: TreeNavigateService) => {
-                    spyOn(service, 'get').and.returnValue(Observable.of({}));
+        // xit('should set set success to OK upon successful activation',
+        //     inject([TreeNavigateService],
+        //         fakeAsync((service: TreeNavigateService) => {
+        //             spyOn(service, 'get').and.returnValue(Observable.of({}));
 
-                    comp.ngOnInit();
-                    tick();
+        //             comp.ngOnInit();
+        //             tick();
 
-                    expect(comp.error).toBe(null);
-                    expect(comp.success).toEqual('OK');
-                })
-            )
-        );
+        //             expect(comp.error).toBe(null);
+        //             expect(comp.success).toEqual('OK');
+        //         })
+        //     )
+        // );
 
-        xit('should set set error to ERROR upon activation failure',
-            inject([ActivateService],
-                fakeAsync((service: ActivateService) => {
-                    spyOn(service, 'get').and.returnValue(Observable.throw('ERROR'));
+        // xit('should set set error to ERROR upon activation failure',
+        //     inject([ActivateService],
+        //         fakeAsync((service: ActivateService) => {
+        //             spyOn(service, 'get').and.returnValue(Observable.throw('ERROR'));
 
-                    comp.ngOnInit();
-                    tick();
+        //             comp.ngOnInit();
+        //             tick();
 
-                    expect(comp.error).toBe('ERROR');
-                    expect(comp.success).toEqual(null);
-                })
-            )
-        );
+        //             expect(comp.error).toBe('ERROR');
+        //             expect(comp.success).toEqual(null);
+        //         })
+        //     )
+        // );
     });
 });
