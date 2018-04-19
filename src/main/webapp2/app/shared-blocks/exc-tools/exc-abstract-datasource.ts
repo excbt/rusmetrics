@@ -1,7 +1,7 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
@@ -41,7 +41,9 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
       this.loadingSubject.next(false);
     }
 
-    abstract findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string);
+    // abstract findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string);
+
+    abstract findPage(params: ExcPageParams);
 
     wrapPageService(anyService: Observable<ExcPage<T>>) {
         this.startLoading();
@@ -51,6 +53,7 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
                 finalize(() => this.finishLoading())
             )
             .subscribe( (page: ExcPage<T>) => {
+                this.finishLoading();
                 this.nextPage(page);
             });
     }

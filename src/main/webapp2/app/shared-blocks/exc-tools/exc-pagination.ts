@@ -36,7 +36,11 @@ export interface ExcPageParams {
     pageSorting?: ExcPageSorting;
     pageSize?: ExcPageSize;
     searchString?: string;
-    extraParams?: {
-        [key: string]: string;
-    };
+    // extraParams?: {
+    //     [key: string]: string;
+    // };
+}
+
+export interface ExcApiParams {
+    [key: string]: string;
 }

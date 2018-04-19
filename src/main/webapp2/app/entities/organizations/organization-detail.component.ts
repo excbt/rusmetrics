@@ -29,7 +29,7 @@ export class OrganizationDetailComponent extends ExcDetailFormComponent {
     }
 
     load(id) {
-        this.organizationService.find(id).subscribe((data) => {
+        this.organizationService.findOne(id).subscribe((data) => {
             this.organization = data;
         });
     }

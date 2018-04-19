@@ -4,80 +4,29 @@ import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
+import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
 import { ExcEditFormEntityProvider } from '../../shared-blocks';
 import { ExcDetailFormEntityProvider } from '../../shared-blocks/exc-detail-form/exc-detail-form.component';
+import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
 @Injectable()
-export class OrganizationsService {
+export class OrganizationsService extends ExcAbstractService<|Organization> {
 
-    private resourceUrl = SERVER_API_URL + 'api/organizations/';
-    constructor(private http: HttpClient) { }
+    constructor(http: HttpClient) {
+        super({apiUrl: 'api/organizations/'}, http);
+     }
 
-    findAll(sortField: string, sortOrder: string): Observable<Organization[]> {
-        return this.http.get<Organization[]>(this.resourceUrl, {params : new HttpParams().set('sort', sortField.concat(',', sortOrder))});
-    }
-
-    findAllPaged(pageSorting: ExcPageSorting, pageSize: ExcPageSize): Observable<Organization[]> {
-        return this.http.get<Organization[]>(this.resourceUrl, {params : new HttpParams()
-            .set('sort', pageSorting ? pageSorting.orderString() : '')
-            .set('page', pageSize ? String(pageSize.page) : '')
-            .set('size',  pageSize ? String(pageSize.size) : '') } );
-    }
-
-    findAllResponce(pageSorting: ExcPageSorting, pageSize: ExcPageSize): Observable<Organization[]> {
-        return this.http.get<Organization[]>(this.resourceUrl, {params : new HttpParams()
-            .set('sort', pageSorting.orderString())
-            .set('page', String(pageSize.page))
-            .set('size', String(pageSize.size)) } );
-    }
-
-    findAllPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize): Observable<ExcPage<Organization>> {
-        return this.http.get<ExcPage<Organization>>(this.resourceUrl + 'page/', {params : new HttpParams()
-            .set('sort', pageSorting.orderString())
-            .set('page', String(pageSize.page))
-            .set('size', String(pageSize.size)) } );
-    }
-
-    findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString: string, subscriberMode: boolean): Observable<ExcPage<Organization>> {
+     findPageSubscriber(pageParams: ExcPageParams, subscrMode: boolean): Observable<ExcPage<Organization>> {
         return this.http.get<ExcPage<Organization>>(this.resourceUrl + 'page/', {
-            params : new HttpParams()
-            .set('sort', pageSorting.orderString())
-            .set('page', String(pageSize.page))
-            .set('size', String(pageSize.size))
-            .set('searchString', String(searchString))
-            .set('subscriberMode', String(subscriberMode))
+            params : this.defaultPageParams(pageParams, {subscriberMode: subscrMode.toString()})
         } );
-    }
-
-    find(id: number | string): Observable<Organization> {
-        console.log('query');
-        return this.http.get<Organization>(this.resourceUrl.concat('' + id));
-    }
-
-    update(organization: Organization): Observable<Organization> {
-        // dsd
-        return this.http.put<Organization>(this.resourceUrl, organization);
-        // console.log('save');
-        // return Observable.of(true);
-    }
-
-    delete(id: number): Observable<any> {
-        return this.http.delete(this.resourceUrl.concat('' + id));
     }
 
     entityProvider(): ExcEditFormEntityProvider<Organization> {
         return {
-            load: (id) => this.find(id),
+            load: (id) => this.findOne(id),
             update: (data) => this.update(data),
             delete: (id) => this.delete(id)
         };
     }
-
-    entityProvider2(): ExcDetailFormEntityProvider<Organization> {
-        return {
-            load: (id) => this.find(id),
-        };
-    }
-
 }

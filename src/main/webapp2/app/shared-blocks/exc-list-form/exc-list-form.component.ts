@@ -111,16 +111,14 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   initSearch() {
-    const sorting = new ExcPageSorting();
-    const pageSize: ExcPageSize = new ExcPageSize();
-    this.dataSource.findSearchPage (sorting, pageSize, '');
+    this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
   }
 
-  loadList(searchString?: string) {
+  loadList(search?: string) {
     console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
-    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
-    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
+    const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.findPage ({pageSorting: sorting, pageSize: pSize, searchString: search});
   }
 
   previousState() {

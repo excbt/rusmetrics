@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from './';
+import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams, ExcApiParams } from './';
 
 export interface ServiceParams {
     apiUrl: string;
@@ -16,33 +16,41 @@ export class ExcAbstractService<T> {
 
     constructor(
         readonly params: ServiceParams,
-        private http: HttpClient) { }
+        readonly http: HttpClient) { }
 
-    findSearchPage(pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString: string): Observable<ExcPage<T>> {
-        return this.http.get<ExcPage<T>>(this.resourceUrl + defaultPageSuffix, {
-            params : this.defaultPageParams({ pageSorting, pageSize, searchString })
+    findPage(pageParams: ExcPageParams, pageSuffix: string = defaultPageSuffix): Observable<ExcPage<T>> {
+        return this.http.get<ExcPage<T>>(this.resourceUrl + pageSuffix, {
+            params : this.defaultPageParams(pageParams)
         } );
     }
 
-    findPage(params: ExcPageParams, pageSuffix: string = defaultPageSuffix): Observable<ExcPage<T>> {
-        return this.http.get<ExcPage<T>>(this.resourceUrl + pageSuffix, {
-            params : this.defaultPageParams(params)
-        } );
+    findAll(): Observable<T[]> {
+        return this.http.get<T[]>(this.resourceUrl);
     }
 
     findOne(id: any): Observable<T> {
-        return this.http.get<T>(this.params.apiUrl + id);
+        return this.http.get<T>(this.resourceUrl + id);
     }
 
-    defaultPageParams(pp: ExcPageParams): HttpParams {
-        const params = new HttpParams()
-            .set('sort', pp.pageSorting ? pp.pageSorting.orderString() : null)
-            .set('page', pp.pageSize && pp.pageSize.page ? pp.pageSize.page.toString() : null)
-            .set('size', pp.pageSize && pp.pageSize.size ? pp.pageSize.size.toString() : null)
-            .set('searchString', pp.searchString ? pp.searchString.toString() : null);
+    update(data: T): Observable<T> {
+        return this.http.put<T>(this.resourceUrl, data);
+    }
 
-        if (pp.extraParams) {
-            Object.keys(pp.extraParams).forEach((k) => params.set(k, pp.extraParams[k]));
+    delete(id: any): Observable<any> {
+        return this.http.delete(this.resourceUrl + id);
+    }
+
+    defaultPageParams(pp: ExcPageParams, apiParams?: ExcApiParams): HttpParams {
+        let params = new HttpParams()
+            .set('sort', pp.pageSorting ? pp.pageSorting.orderString() : '')
+            .set('page', pp.pageSize && pp.pageSize.page ? pp.pageSize.page.toString() : '')
+            .set('size', pp.pageSize && pp.pageSize.size ? pp.pageSize.size.toString() : '')
+            .set('searchString', pp.searchString ? pp.searchString.toString() : '');
+
+        if (apiParams) {
+            Object.keys(apiParams).forEach((k) => {
+                params = params.set(k, apiParams[k]);
+            });
         }
 
         return params;
