@@ -5,7 +5,7 @@ import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-export abstract class AnyModelDataSource<T> implements DataSource<T> {
+export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
 
     modelSubject = new BehaviorSubject<T[]>([]);
 
