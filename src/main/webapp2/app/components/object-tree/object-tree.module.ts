@@ -27,7 +27,7 @@ import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
     imports: [
         JhipsterSharedModule,
-        RouterModule.forRoot(objectTreeState),
+        RouterModule.forChild(objectTreeState),
         ResizableModule,
         AngularSplitModule,
         TreeModule,
