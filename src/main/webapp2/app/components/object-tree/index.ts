@@ -6,4 +6,7 @@ export * from './object-tree.route';
 export * from './tree-navigate/tree-navigate.component';
 export * from './tree-navigate/tree-navigate.service';
 
+export * from './subscr-tree';
+export * from './subscr-pref';
+
 export * from './object-tree.module';

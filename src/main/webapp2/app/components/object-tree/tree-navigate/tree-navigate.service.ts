@@ -7,16 +7,28 @@ import { TreeNode } from 'primeng/api';
 import { Observable } from 'rxjs/Observable';
 
 import { PTreeNode } from '../models/p-tree-node.model';
-import { SubscrObjectTree } from '../models/subscr-object-tree.model';
+// import { SubscrObjectTree } from '../models/subscr-object-tree.model';
+
+import { SubscrPrefService, SubscrPrefValue } from '../subscr-pref';
+import { SubscrTreeService, SubscrContObjectTreeType1 } from '../subscr-tree';
 
 @Injectable()
 export class TreeNavigateService {
 
-    private SUBSCR_TREES_URL = '../api/subscr/subscrObjectTree/contObjectTreeType1';
-    private DEFAULT_TREE_SETTING_URL = '../api/subscr/subscrPrefValue?subscrPrefKeyname=SUBSCR_OBJECT_TREE_CONT_OBJECTS';
+//    private SUBSCR_TREES_URL = '../api/subscr/subscrObjectTree/contObjectTreeType1';
+//    private DEFAULT_TREE_SETTING_URL = '../api/subscr/subscrPrefValue?subscrPrefKeyname=SUBSCR_OBJECT_TREE_CONT_OBJECTS';
+
+    private SUBSCR_OBJECT_TREE_CONT_OBJECTS = 'SUBSCR_OBJECT_TREE_CONT_OBJECTS';
     private P_TREE_NODE_URL = '../api/p-tree-node/';
 
-    constructor(private http: HttpClient) {}
+    private currentTree: TreeNode[];
+    private subscrObjectTreeList: SubscrContObjectTreeType1[];
+    private defaultTreeSetting: SubscrPrefValue;
+
+    constructor(private http: HttpClient,
+                 private subscrTreeService: SubscrTreeService,
+                 private subscrPrefService: SubscrPrefService
+                ) {}
 
 //    getTree() {
 //        return this.http.get<any>('http://192.168.84.239:8089/testTree.json')
@@ -24,12 +36,38 @@ export class TreeNavigateService {
 //            .then((res) => <TreeNode[]> res.data);
 //    }
 
-    loadSubscrTrees(): Observable<SubscrObjectTree[]> {
-        return this.http.get<SubscrObjectTree[]>(this.SUBSCR_TREES_URL);
+    getCurrentTree(): TreeNode[] {
+        return this.currentTree;
     }
 
-    loadSubscrDefaultTreeSetting(): Observable<any> {
-        return this.http.get(this.DEFAULT_TREE_SETTING_URL);
+    setCurrentTree(curTree: TreeNode[]) {
+        this.currentTree = curTree;
+    }
+
+    getSubscrObjectTreeList(): SubscrContObjectTreeType1[] {
+        return this.subscrObjectTreeList;
+    }
+
+    setSubscrObjectTreeList(subscrTreeList: SubscrContObjectTreeType1[]) {
+        this.subscrObjectTreeList = subscrTreeList;
+    }
+
+    getDefaultTreeSetting(): SubscrPrefValue {
+        return this.defaultTreeSetting;
+    }
+
+    setDefaultTreeSetting(defTreeSet: SubscrPrefValue) {
+        this.defaultTreeSetting = defTreeSet;
+    }
+
+    loadSubscrTrees(): Observable<SubscrContObjectTreeType1[]> {
+        return this.subscrTreeService.loadAll();
+//        return this.http.get<SubscrObjectTree[]>(this.SUBSCR_TREES_URL);
+    }
+
+    loadSubscrDefaultTreeSetting(): Observable<SubscrPrefValue> {
+        return this.subscrPrefService.loadValue(this.SUBSCR_OBJECT_TREE_CONT_OBJECTS);
+//        return this.http.get(this.DEFAULT_TREE_SETTING_URL);
     }
 
     loadPTree(treeId, childLvl = 0): Observable<any> {
@@ -38,11 +76,27 @@ export class TreeNavigateService {
             .map((ptree: any) => this.convertPTreeToPrimeNGTreeNode(ptree));
     }
 
+    initTreeNavigate() {
+        return Observable
+            .forkJoin(this.loadSubscrTrees(), this.loadSubscrDefaultTreeSetting())
+            .switchMap((res) => this.performResAndLoadPTree(res));
+    }
+
+    performResAndLoadPTree(res) {
+console.log(res);
+//        let trees = res[0];
+        this.setSubscrObjectTreeList(res[0]);
+        this.setDefaultTreeSetting(res[1]);
+//        let treeSetting = res[1];
+        return this.loadPTree(this.getDefaultTreeSetting().value);
+    }
+
     convertPTreeToPrimeNGTreeNode(ptree) {
         const expanded = true;
         const convertedTree = this.convertPTreeNodeToPrimeNGTreeNode(ptree, expanded);
+        this.setCurrentTree([convertedTree]);
 // console.log(convertedTree);
-        return [ convertedTree ];
+        return this.getCurrentTree();
     }
 
     convertPTreeNodeToPrimeNGTreeNode(ptreeNode, isExpanded = false) {

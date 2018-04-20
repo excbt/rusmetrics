@@ -10,7 +10,9 @@ import { RouterModule } from '@angular/router';
 import { objectTreeState,
         PortalObjectTreeComponent,
         TreeNavigateComponent,
-        TreeNavigateService
+        TreeNavigateService,
+        SubscrTreeService,
+        SubscrPrefService
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -45,7 +47,9 @@ import { MatMenuModule } from '@angular/material/menu';
     providers: [
         PTreeNodeService,
         PTreeNodeLinkedObjectService,
-        TreeNavigateService
+        TreeNavigateService,
+        SubscrTreeService,
+        SubscrPrefService
     ],
     exports: [
         PortalObjectTreeComponent

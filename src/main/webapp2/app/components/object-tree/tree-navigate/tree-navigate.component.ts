@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { TreeNavigateService } from './tree-navigate.service';
 
-import { SubscrObjectTree } from '../models/subscr-object-tree.model';
+// import { SubscrObjectTree } from '../models/subscr-object-tree.model';
+
+import { SubscrContObjectTreeType1 } from '../subscr-tree';
+// import { SubscrPrefValue } from '../subscr-pref';
 
 @Component({
     selector: 'jhi-tree-navigate',
@@ -14,35 +17,45 @@ import { SubscrObjectTree } from '../models/subscr-object-tree.model';
 })
 export class TreeNavigateComponent implements OnInit {
     tree: TreeNode[];
-    subscrObjectTreeList: SubscrObjectTree[];
-    currentTree: SubscrObjectTree;
+    subscrObjectTreeList: SubscrContObjectTreeType1[];
+//    currentTree: subscrContObjectTreeType1;
 
-    constructor(private treeNavService: TreeNavigateService) {
-    }
+    constructor(private treeNavService: TreeNavigateService) {}
 
     ngOnInit() {
 //        this.treeNavService.getTree().then((tree) => this.tree = tree);
-        this.treeNavService.loadSubscrTrees().subscribe((trees) => this.successLoadTrees(trees));
+//        this.treeNavService.loadSubscrTrees().subscribe((trees) => this.successLoadTrees(trees));
+        this.treeNavService.initTreeNavigate().subscribe((res) => this.successInit(res));
     }
 
-    successLoadTrees(data) {
+    successInit(res) {
+        this.tree = this.treeNavService.getCurrentTree();
+        this.subscrObjectTreeList = this.treeNavService.getSubscrObjectTreeList();
+//        this.tree = this.treeNavService.getTree();
+    }
+
+//    successLoadTrees(data) {
 // console.log('successLoadTrees', data);
-        this.subscrObjectTreeList = data;
-        this.treeNavService.loadSubscrDefaultTreeSetting().subscribe((treeSetting) => this.successLoadDefaultTreeSetting(treeSetting));
-    }
+//        this.subscrObjectTreeList = data;
+//        this.treeNavService.loadSubscrDefaultTreeSetting().subscribe((treeSetting) => this.successLoadDefaultTreeSetting(treeSetting));
+//    }
 
-    successLoadDefaultTreeSetting(treeSetting) {
+//    successLoadDefaultTreeSetting(treeSetting: SubscrPrefValue) {
 // console.log('successLoadDefaultTree', treeSetting);
-        this.currentTree = this.subscrObjectTreeList.filter((objectTree) => objectTree.id === Number(treeSetting.value))[0];
+// console.log('instanceof treeSettings: ', treeSetting instanceof SubscrPrefValue);
+// let spv: SubscrPrefValue = new SubscrPrefValue(treeSetting);
+// console.log('spv', spv);
+// console.log('instanceof spv: ', spv instanceof SubscrPrefValue);
+//        this.currentTree = this.subscrObjectTreeList.filter((objectTree) => objectTree.id === Number(treeSetting.getValue()))[0];
 // console.log('Current tree: ', this.currentTree);
         // load default tree with childLevel = 0 - zero lvl of tree
-        this.treeNavService.loadPTree(this.currentTree.id, 0).subscribe((resp) => this.successLoadPTree(resp));
-    }
+//        this.treeNavService.loadPTree(this.currentTree.id, 0).subscribe((resp) => this.successLoadPTree(resp));
+//    }
 
-    successLoadPTree(resp) {
-console.log(resp);
-        this.tree = resp;
-    }
+//    successLoadPTree(resp) {
+// console.log(resp);
+//        this.tree = resp;
+//    }
 
     loadNode(event) {
 console.log(event);
