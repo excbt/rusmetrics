@@ -53,7 +53,7 @@ public class EnergyPassportServiceTest extends JpaSupportTest {
     @Test
     public void testUpdatingPassportFromTemplate() throws Exception {
         EnergyPassportTemplateDTO energyPassportTemplateDTO = energyPassportTemplateService.createNewDTO_401();
-        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION);
+        energyPassportTemplateDTO.setKeyname(EnergyPassport401_2014_Add.ENERGY_DECLARATION_1);
         EnergyPassportTemplateDTO resultPassportTemplateDTO = energyPassportTemplateService.saveEnergyPassportTemplate(energyPassportTemplateDTO);
         log.info("PassportTemplateId = {}", resultPassportTemplateDTO.getId());
         energyPassportService.updateExistingEnergyPassportsFromTemplate(resultPassportTemplateDTO.getId());

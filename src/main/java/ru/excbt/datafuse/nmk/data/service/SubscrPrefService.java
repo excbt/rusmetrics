@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
-import ru.excbt.datafuse.nmk.data.model.SubscrTypePref;
+import ru.excbt.datafuse.nmk.domain.SubscrTypePref;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;

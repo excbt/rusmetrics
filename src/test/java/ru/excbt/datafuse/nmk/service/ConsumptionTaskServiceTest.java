@@ -133,7 +133,7 @@ public class ConsumptionTaskServiceTest {
     @Test
     @Transactional
     public void testSendDay() throws InterruptedException {
-        //DayConsumptionTask day = DayConsumptionTask.builder().
+        //DayConsumptionTask day = DayConsumptionTask.requestBuilder().
         //DayConsumptionTask.dayBuilder().
             ConsumptionTask ta = ConsumptionTask.builder().build();
             //ta.se

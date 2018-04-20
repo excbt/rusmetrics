@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,7 @@ public class SubscrObjectPTreeNodeServiceTest extends JpaSupportTest implements 
     private SubscrObjectPTreeNodeService subscrObjectPTreeNodeService;
 
     @Test
+    @Ignore
     public void readSubscrObjectTree() throws Exception {
 
         PTreeNode pTreeNode = subscrObjectPTreeNodeService.readSubscrObjectTree(129634385L);

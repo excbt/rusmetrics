@@ -177,6 +177,7 @@ public class ConsumptionServiceTest {
 
     @Test
     @Transactional
+    @Ignore
     public void processElOne() {
 
         ContZPoint contZPoint = contZPointRepository.findOne(128551676L);
@@ -233,6 +234,7 @@ public class ConsumptionServiceTest {
 
     @Test
     @Transactional
+    @Ignore
     public void processImpulseOne() {
 
         ContZPoint contZPoint = contZPointRepository.findOne(128794022L);

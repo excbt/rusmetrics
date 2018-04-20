@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +67,7 @@ public class SubscrStPlanServiceTest extends JpaSupportTest {
 
 
     @Test
+    @Ignore
     public void testCreateFromTemplate() throws Exception {
         SubscrStPlan stPlan = stPlanTemplateService.cloneFromTemplate("TEMP_CHART_001");
         SubscrStPlanDTO saved = service.saveStPlanDTO(mapper.toDto(stPlan), getSubscriberParam());

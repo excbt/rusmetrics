@@ -163,8 +163,8 @@ public class SubscrContObjectResourceTest {
         contObjectRepository.save(contObjects);
         contObjectRepository.flush();
 
-//        RequestExtraInitializer param = builder -> {
-//            builder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
+//        RequestExtraInitializer param = requestBuilder -> {
+//            requestBuilder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
 //        };
 //
 

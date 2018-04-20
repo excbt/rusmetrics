@@ -83,6 +83,10 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
         log.info("SibscriberId:{}. Size of cabinetMessages before: {}", portalUserIds.getSubscriberId(), databaseSizeBeforeCreate);
 
+        if (databaseSizeBeforeCreate == 0) {
+            return;
+        }
+
         Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, CABINET_REQUEST, PAGE);
         list.getContent().stream().filter(i -> i.getFromPortalSubscriberId() != null).limit(1).map(i -> {
             CabinetMessageDTO cabinetMessageResponseDTO = new CabinetMessageDTO();

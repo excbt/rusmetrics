@@ -294,8 +294,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
 		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo");
 
-//		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-//			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
+//		RequestExtraInitializer requestExtraInitializer = (requestBuilder) -> {
+//			requestBuilder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
 //					"2015-07-31");
 //		};
 
@@ -317,8 +317,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
 		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/city");
 
-//		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-//			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01")
+//		RequestExtraInitializer requestExtraInitializer = (requestBuilder) -> {
+//			requestBuilder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01")
 //					.param("dateTo", "2015-07-31").param("cityFias", "deb1d05a-71ce-40d1-b726-6ba85d70d58f");
 //		};
 //
@@ -346,8 +346,8 @@ public class SubscrContServiceDataHWaterResourceTest extends AnyControllerTest {
 
 		String urlStr = UrlUtils.apiSubscrUrl("/service/hwater/contObjects/serviceTypeInfo/" + ids.get(0));
 
-//		RequestExtraInitializer requestExtraInitializer = (builder) -> {
-//			builder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
+//		RequestExtraInitializer requestExtraInitializer = (requestBuilder) -> {
+//			requestBuilder.contentType(MediaType.APPLICATION_JSON).param("dateFrom", "2015-07-01").param("dateTo",
 //					"2015-07-31");
 //		};
 

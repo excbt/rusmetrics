@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.rest.widgets;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -140,6 +141,10 @@ public class ContEventMonitorWidgetResourceTest {
 
 
     @Test
+    @Ignore
+    /**
+     * TODO
+     */
     public void testGetContObjectNodeStats() throws Exception {
 
         restPortalContObjectMockMvc.perform(
@@ -150,6 +155,10 @@ public class ContEventMonitorWidgetResourceTest {
     }
 
     @Test
+    @Ignore
+    /**
+     * TODO id
+     */
     public void testGetContObjectNodeStatsNested() throws Exception {
 
         restPortalContObjectMockMvc.perform(

@@ -22,7 +22,7 @@ import java.util.function.Consumer;
 public class EnergyPassport401_2014_Add {
 
 
-    public final static String ENERGY_DECLARATION = "ENERGY_DECLARATION";
+//    public final static String ENERGY_DECLARATION = "ENERGY_DECLARATION";
     public final static String ENERGY_DECLARATION_1 = "ENERGY_DECLARATION_1";
     public final static String ENERGY_DECLARATION_2 = "ENERGY_DECLARATION_2";
 

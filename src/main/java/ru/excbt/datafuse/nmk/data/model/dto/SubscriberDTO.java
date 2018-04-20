@@ -52,4 +52,6 @@ public class SubscriberDTO {
 
     private String contactEmail;
 
+    private String subscrType;
+
 }
