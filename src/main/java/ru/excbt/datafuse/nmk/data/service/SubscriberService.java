@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
+import javafx.beans.binding.BooleanExpression;
 import org.apache.commons.lang3.ArrayUtils;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -28,18 +29,23 @@ import com.google.common.collect.Lists;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.QSubscriber;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
+import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
@@ -57,6 +63,13 @@ public class SubscriberService implements SecuredRoles {
 
 	private final static String LDAP_DESCRIPTION_SUFFIX_PARAM = "LDAP_CABINETS_DESCRIPTION_SUFFIX";
 	private final static String LDAP_DESCRIPTION_SUFFIX_DEFAULT = "Cabinets-";
+
+    public enum SubscriberMode {
+        NORMAL,
+        RMA;
+    }
+
+    private static QSubscriber qSubscriber = QSubscriber.subscriber;
 
     @PersistenceContext(unitName = "nmk-p")
     protected EntityManager em;
@@ -284,15 +297,41 @@ public class SubscriberService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscriberDTO> selectSubscribers(PortalUserIds userIds) {
-		List<Subscriber> result = subscriberRepository.selectSubscribers(userIds.getSubscriberId());
+
+
+        List<Subscriber> result = subscriberRepository.selectSubscribers(userIds.getSubscriberId());
         return result.stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
             .map(subscriberMapper::toDto).collect(Collectors.toList());
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Page<SubscriberDTO> selectSubscribers(PortalUserIds userIds, Pageable pageable) {
-		Page<Subscriber> result = subscriberRepository.selectSubscribers(userIds.getSubscriberId(), pageable);
+    private static com.querydsl.core.types.dsl.BooleanExpression searchCondition(String s) {
+        if (s.isEmpty()) {
+            return null;
+        }
+        return qSubscriber.subscriberName.like(QueryDSLUtil.upperCaseLikeStr.apply(s));
+    }
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public Page<SubscriberDTO> selectSubscribers(PortalUserIds userIds,
+                                                 SubscriberMode subscriberMode,
+                                                 Optional<String> searchStringOptional,
+                                                 Pageable pageable) {
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()))
+            .and(qSubscriber.deleted.eq(0));
+
+//        if (subscriberMode == SubscriberMode.RMA) {
+//            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
+//        } else {
+//            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
+//        }
+
+        searchStringOptional.ifPresent(s -> where.and(searchCondition(s)));
+
+        Page<Subscriber> result = subscriberRepository.findAll(where, pageable);
         return result.map(subscriberMapper::toDto);
 	}
 

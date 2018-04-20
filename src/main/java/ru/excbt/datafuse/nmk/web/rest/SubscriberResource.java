@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
 import java.util.List;
@@ -39,8 +40,17 @@ public class SubscriberResource {
     @GetMapping(value = "/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<Page<SubscriberDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                                    @RequestParam(name = "subscriberMode", required = false) Optional<String> subscriberMode,
                                                                     Pageable pageable) {
-        Page<SubscriberDTO> page = subscriberService.selectSubscribers(portalUserIdsService.getCurrentIds(), pageable);
+
+        Page<SubscriberDTO> page = subscriberService
+            .selectSubscribers(
+                portalUserIdsService.getCurrentIds(),
+                KeyEnumTool.searchName(SubscriberService.SubscriberMode.class,
+                        subscriberMode.map(String::toUpperCase).orElse(null)
+                ).orElse(SubscriberService.SubscriberMode.NORMAL),
+                searchString,
+                pageable);
         return new ResponseEntity(page, HttpStatus.OK);
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'jhi-p-subscribers-widget',
@@ -6,6 +6,11 @@ import { Component, OnInit } from '@angular/core';
   styles: []
 })
 export class PSubscribersWidgetComponent implements OnInit {
+
+  @Input() subscrMode: string;
+
+  readonly partnerMode = 'partner';
+  readonly customerMode = 'customer';
 
   constructor() { }
 

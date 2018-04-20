@@ -1,11 +1,12 @@
 {
     "subscribers" : {
-        "partners": {
+        "partner": {
             "title" : "Партнеры",
             "listTitle" : "Список партнеров"
         },
-        "customers": {
-            "title" : "Абоненты"
+        "customer": {
+            "title" : "Абоненты",
+            "listTitle" : "Список абонентов"
         }
     },
     "subscriber": {

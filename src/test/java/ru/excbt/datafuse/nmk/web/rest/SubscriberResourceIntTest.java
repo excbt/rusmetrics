@@ -74,7 +74,7 @@ public class SubscriberResourceIntTest extends PortalApiTest {
     @Transactional
     public void getSubscribersPage() throws Exception {
         restPortalContObjectMockMvc.perform(
-            get("/api/subscribers/page"))
+            get("/api/subscribers/page").param("subscriberMode", "RMA"))
             .andDo(MockMvcResultHandlers.print())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
             .andExpect(status().isOk());

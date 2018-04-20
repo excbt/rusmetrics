@@ -1,6 +1,10 @@
 <jhi-exc-form-template>
 
-    <jhi-exc-list-form-menu headerKey="subscribers.partners.title" 
+    <jhi-exc-list-form-menu *ngIf="customerMode" headerKey="subscribers.customer.title" 
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()">
+    </jhi-exc-list-form-menu>
+
+    <jhi-exc-list-form-menu *ngIf="!customerMode" headerKey="subscribers.partner.title" 
         [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()">
     </jhi-exc-list-form-menu>
     
