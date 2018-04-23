@@ -114,26 +114,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         return portalUserIdsService.getCurrentIds().getSubscriberId();
     }
 
-    private void _testCreate(EnergyPassportVM vm) throws Exception {
-        restPortalContObjectMockMvc.perform(
-            post("/api/subscr/energy-passports")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(vm)))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk())
-            .andDo(jsonLogger);
-    }
-
-    private void _testUpdate(EnergyPassportVM vm) throws Exception {
-        restPortalContObjectMockMvc.perform(
-            put("/api/subscr/energy-passports")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(vm)))
-            .andDo(MockMvcResultHandlers.print())
-            .andExpect(status().isOk())
-            .andDo(jsonLogger);
-    }
-
     @Test
     @Transactional
     public void testCreatePassport() throws Exception {
@@ -152,16 +132,13 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo(jsonLogger);
-
     }
-
 
     @Test
     @Transactional
     public void testCreatePassport_1() throws Exception {
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").templateKeyname("ENERGY_DECLARATION_1").build();
         mockMvcWrapper.restRequest("/api/subscr/energy-passports").testPost(vm);
-//        _testCreate(vm);
     }
 
     @Test
@@ -169,8 +146,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
     public void testCreatePassport_2() throws Exception {
         EnergyPassportVM vm = EnergyPassportVM.builder().passportName("bla-bla-bla").templateKeyname("ENERGY_DECLARATION_2").build();
         mockMvcWrapper.restRequest("/api/subscr/energy-passports").testPost(vm);
-
-//        _testCreate(vm);
     }
 
     @Test
@@ -182,15 +157,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         mockMvcWrapper.restRequest("/api/subscr/energy-passports")
             .requestBuilder(b -> b.param("templateKeyname", EnergyPassport401_2014_Add.ENERGY_DECLARATION_1))
             .testPost(vm);
-//        restPortalContObjectMockMvc.perform(
-//            post("/api/subscr/energy-passports")
-//                .param("templateKeyname", EnergyPassport401_2014_Add.ENERGY_DECLARATION_1)
-//                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-//                .content(TestUtil.convertObjectToJsonBytes(vm)))
-//            .andDo(MockMvcResultHandlers.print())
-//            .andExpect(status().isOk())
-//            .andDo(jsonLogger);
-//
     }
 
 
@@ -203,11 +169,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         energyPassportRepository.flush();
 
         mockMvcWrapper.restRequest("/api/subscr/energy-passports/{id}", passportDTO.getId()).testGet();
-//        restPortalContObjectMockMvc.perform(
-//            get("/api/subscr/energy-passports/{id}", passportDTO.getId()))
-//            .andDo(MockMvcResultHandlers.print())
-//            .andExpect(status().isOk())
-//            .andDo(jsonLogger);
 
     }
 
@@ -225,7 +186,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         vm.setPassportDate(LocalDate.now());
 
         mockMvcWrapper.restRequest("/api/subscr/energy-passports").testPut(vm);
-//        _testUpdate(vm);
 
         EnergyPassport energyPassport = energyPassportRepository.findOne(passportDTO.getId());
         Assert.assertEquals(vm.getDescription(), energyPassport.getDescription());
@@ -286,7 +246,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
             try {
                 mockMvcWrapper.restRequest("/api/subscr/energy-passports/{id}/data", passportDTO.getId())
                     .testPut(i);
-//                _testUpdateJson("/api/subscr/energy-passports/" + passportDTO.getId() + "/data", i);
                 List<EnergyPassportDataValue> sectionValues = energyPassportDataValueRepository.findByPassportIdAndSectionKey(passportDTO.getId(), i.getSectionKey());
                 Assert.assertTrue(sectionValues.size() > 0);
             } catch (Exception e) {
@@ -345,7 +304,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         passportDTO.getSections().forEach((i) -> log.debug("section:{}", i));
 
         Optional<EnergyPassportSectionDTO> sectionDTO = passportDTO.getSections().stream().filter(EnergyPassportSectionDTO::isHasEntries).findFirst();
-        //Optional<EnergyPassportSectionDTO> sectionDTO = Optional.of(passportDTO.getSections().get(0));
         Assert.assertTrue(sectionDTO.isPresent());
 
         for (int i = 0; i < 2; i++) {
@@ -521,9 +479,6 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
         energyPassportDataRepository.flush();
 
         vm = EnergyPassportVM.builder().passportName("bla-bla-bla").passportDate(LocalDate.now()).id(dto.getId()).build();
-
-        RequestExtraInitializer param = (b) -> {
-        };
 
         mockMvcWrapper.restRequest("/api/subscr/energy-passports/cont-objects/{id1}", contObjectIds.get(0)).testPut(vm);
 
