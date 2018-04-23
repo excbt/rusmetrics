@@ -114,6 +114,10 @@ public class MockMvcRestWrapper {
             return resultActions;
         }
 
+        public ResultActions testGetAndReturn() throws Exception {
+            return testGetAndReturn(Optional.empty());
+        }
+
         public RestRequest testGet() throws Exception {
             testGetAndReturn(Optional.empty());
             return this;
@@ -154,21 +158,21 @@ public class MockMvcRestWrapper {
          * @return
          * @throws Exception
          */
-        public ResultActions testPostAndReturn(Object obj) throws Exception {
+        public ResultActions testPostAndReturn(Object obj, Optional<ResultMatcher> resultMatcherOptional) throws Exception {
 
             MockHttpServletRequestBuilder requestBuilder = post(urlTemplate, uriVars)
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
                 .content(TestUtil.convertObjectToJsonBytes(obj));
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
-            ResultActions resultActions = perform(requestBuilder);
+            ResultActions resultActions = perform(requestBuilder, resultMatcherOptional);
             this.saveResultActions(resultActions);
 
             return resultActions;
         }
 
         public RestRequest testPost(Object obj) throws Exception {
-            testPostAndReturn(obj);
+            testPostAndReturn(obj, Optional.of(status().is2xxSuccessful()));
             return this;
         }
 
@@ -224,6 +228,10 @@ public class MockMvcRestWrapper {
             }
             return Long.valueOf(result);
         }
+
+        public String getStringContent() {
+            return getLatestResult().map(s -> getActionResultStringContent(s).orElse(null)).orElse(null);
+        }
     }
 
     public MockMvcRestWrapper(MockMvc mockMvc) {
@@ -266,6 +274,20 @@ public class MockMvcRestWrapper {
 
         return result;
     }
+
+    private static Optional<String> getActionResultStringContent(ResultActions resultActions) {
+        Optional<String> result;
+            try {
+                String content = resultActions.andReturn().getResponse().getContentAsString();
+                result = Optional.of(content);
+            } catch (UnsupportedEncodingException e) {
+                log.error("getLastId error: {}", e);
+                result = Optional.empty();
+            }
+        return result;
+    }
+
+
 
     public Long getLastResponseId() throws UnsupportedEncodingException {
         Integer result = getLatestItemList(this.requestResultActionsList)

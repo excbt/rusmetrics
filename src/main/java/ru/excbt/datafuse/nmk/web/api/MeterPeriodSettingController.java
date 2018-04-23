@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.service.MeterPeriodSettingService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -31,10 +32,16 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class MeterPeriodSettingController extends AbstractSubscrApiResource {
+public class MeterPeriodSettingController  {
 
-	@Autowired
-	private MeterPeriodSettingService meterPeriodSettingService;
+	private final MeterPeriodSettingService meterPeriodSettingService;
+
+	private final PortalUserIdsService portalUserIdsService;
+
+    public MeterPeriodSettingController(MeterPeriodSettingService meterPeriodSettingService, PortalUserIdsService portalUserIdsService) {
+        this.meterPeriodSettingService = meterPeriodSettingService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
 
     /**
      *
@@ -111,7 +118,7 @@ public class MeterPeriodSettingController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/meter-period-settings", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getMeterPeriodSetting() {
-		List<MeterPeriodSettingDTO> result = meterPeriodSettingService.findBySubscriberId(getSubscriberParam());
+		List<MeterPeriodSettingDTO> result = meterPeriodSettingService.findBySubscriberId(portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(result);
 	}
 

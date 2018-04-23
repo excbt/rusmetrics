@@ -41,6 +41,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
+@org.springframework.transaction.annotation.Transactional
 public class ContZPointSettingModeControllerTest extends PortalApiTest {
 
 	private static final String URL_TEMPLATE = "/api/subscr/contObjects/%s/"
