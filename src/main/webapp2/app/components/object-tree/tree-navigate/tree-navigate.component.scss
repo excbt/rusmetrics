@@ -1,4 +1,4 @@
-.nmc-tree-nav-toolbar {
+mat-toolbar.nmc-tree-nav-toolbar {
     min-height: 32px; 
     background-color: rgb(231, 235, 245);
     border-top: 1px solid #41719c;
@@ -13,4 +13,9 @@
     height: 31px; 
     width: 31px; 
     line-height: 31px;
+}
+
+.nmc-tree-nav-green-element {
+    color: white;
+    text-shadow: rgb(110, 123, 144) -1px 0, rgb(110, 123, 144) 0 1px, rgb(110, 123, 144) 1px 0, rgb(110, 123, 144) 0 -1px;
 }

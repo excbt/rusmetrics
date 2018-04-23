@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { TreeNavigateService } from './tree-navigate.service';
 
@@ -6,13 +6,15 @@ import { TreeNavigateService } from './tree-navigate.service';
 
 import { SubscrContObjectTreeType1 } from '../subscr-tree';
 // import { SubscrPrefValue } from '../subscr-pref';
+// '../../../../content/fonts/bootstrap/fonts/glyphicons-halflings-regular.ttf'
 
 @Component({
     selector: 'jhi-tree-navigate',
     templateUrl: './tree-navigate.component.html',
     styleUrls: [
         './tree-navigate.component.scss'
-    ]
+    ],
+    encapsulation: ViewEncapsulation.None
 
 })
 export class TreeNavigateComponent implements OnInit {
@@ -60,6 +62,9 @@ export class TreeNavigateComponent implements OnInit {
     loadNode(event) {
 console.log(event);
         if (event.node) {
+            if (event.node.data.nodeType !== 'ELEMENT') {
+                return;
+            }
             const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
             this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => this.successLoadNode(event, resp));
         }
@@ -70,6 +75,11 @@ console.log(resp);
         if (resp.length > 0) {
             event.node.children = resp[0].children;
         }
+    }
+
+    changeTree(subscrObjectTree: SubscrContObjectTreeType1) {
+        this.treeNavService.loadPTree(subscrObjectTree.id)
+            .subscribe(() => this.tree = this.treeNavService.getCurrentTree());
     }
 
 }
