@@ -6,14 +6,14 @@ import { of } from 'rxjs/observable/of';
 
 export class PSubscriberDataSource extends ExcAbstractDataSource<PSubscriber> {
 
-    private customerMode: boolean;
+    private subscriberMode: string;
 
-    constructor( private pSubscriberService: PSubscriberService, customerMode?: boolean) {
+    constructor( private pSubscriberService: PSubscriberService, subscriberMode?: string) {
         super();
-        this.customerMode = customerMode ? customerMode === true : false;
+        this.subscriberMode = subscriberMode ? subscriberMode : 'NORMAL';
     }
 
     findPage(pageParams: ExcPageParams) {
-        this.wrapPageService(this.pSubscriberService.findPage(pageParams));
+        this.wrapPageService(this.pSubscriberService.findPageMode(pageParams, this.subscriberMode));
     }
 }

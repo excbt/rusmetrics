@@ -16,7 +16,7 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> imp
     displayedColumns = ['id', 'subscriberName'];
 
     private routeUrlSubscription: Subscription;
-    customerMode: boolean;
+    subscriberMode: string;
 
     constructor(
         private pSubscriberService: PSubscriberService,
@@ -25,12 +25,17 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> imp
     ) {
         super({modificationEventName: 'subscriberModification'}, router, activatedRoute);
         this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
-            this.customerMode = (data && (data[0].path ===  'customers'));
+            if (data && (data[0].path ===  'customers')) {
+                this.subscriberMode = 'NORMAL';
+            }
+            if (data && (data[0].path ===  'partners')) {
+                this.subscriberMode = 'RMA';
+            }
         });
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {
-        return {getDataSource: () => new PSubscriberDataSource(this.pSubscriberService, this.customerMode)};
+        return {getDataSource: () => new PSubscriberDataSource(this.pSubscriberService, this.subscriberMode)};
     }
 
     ngOnDestroy() {
