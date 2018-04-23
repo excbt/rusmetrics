@@ -457,4 +457,6 @@ public class SubscriberService implements SecuredRoles {
             .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, portalUserIds.getSubscriberId()));
 	    return s.getIsRma() ? s.getId() : s.getRmaSubscriberId();
     }
+
+    //public void
 }
