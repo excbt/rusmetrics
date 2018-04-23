@@ -12,6 +12,8 @@ import { PTreeNode } from '../models/p-tree-node.model';
 import { SubscrPrefService, SubscrPrefValue } from '../subscr-pref';
 import { SubscrTreeService, SubscrContObjectTreeType1 } from '../subscr-tree';
 
+import { SERVER_API_URL } from '../../../app.constants';
+
 @Injectable()
 export class TreeNavigateService {
 
@@ -19,7 +21,7 @@ export class TreeNavigateService {
 //    private DEFAULT_TREE_SETTING_URL = '../api/subscr/subscrPrefValue?subscrPrefKeyname=SUBSCR_OBJECT_TREE_CONT_OBJECTS';
 
     private SUBSCR_OBJECT_TREE_CONT_OBJECTS = 'SUBSCR_OBJECT_TREE_CONT_OBJECTS';
-    private P_TREE_NODE_URL = '../api/p-tree-node/';
+    private P_TREE_NODE_URL = SERVER_API_URL + 'api/p-tree-node/';
 
     private currentTree: TreeNode[];
     private subscrObjectTreeList: SubscrContObjectTreeType1[];
