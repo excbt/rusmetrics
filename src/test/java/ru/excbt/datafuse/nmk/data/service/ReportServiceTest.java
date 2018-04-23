@@ -10,6 +10,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.time.LocalDateTime;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -111,6 +112,7 @@ public class ReportServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testReportEventsBody() throws IOException {
 		testReportBody(EVENT_TEST_PARAMSET_ID, "jasper_reports/nmk_event_report.jasper", ReportTypeKey.EVENT_REPORT);
 	}
@@ -128,6 +130,7 @@ public class ReportServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testReportConsT2Body() throws IOException {
 		testReportBody(CONS_T2_TEST_PARAMSET_ID, "jasper_reports/nmk_consolidated_report_2.jasper",
 				ReportTypeKey.CONS_T2_REPORT);

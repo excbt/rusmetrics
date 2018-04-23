@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,8 +73,13 @@ public class DeviceObjectServiceTest extends JpaSupportTest {
 
 	}
 
+    /**
+     * TODO invalid deviceObjectId
+     * @throws Exception
+     */
     @Test
     @Transactional
+    @Ignore
     public void testFindDeviceObjectDTO() throws Exception {
 	    final DeviceObject deviceObject = deviceObjectService.selectDeviceObject(128729223L);
         DeviceObjectDTO deviceObjectDTO = deviceObjectService.findDeviceObjectDTO(128729223L);
