@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import static org.junit.Assert.*;
@@ -47,6 +48,8 @@ public class SubscriberResourceIntTest extends PortalApiTest {
 
     private SubscriberResource subscriberResource;
 
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -57,26 +60,36 @@ public class SubscriberResourceIntTest extends PortalApiTest {
         this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(subscriberResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
+
+        this.mockMvcRestWrapper = new MockMvcRestWrapper(this.restPortalContObjectMockMvc);
     }
 
 
     @Test
     @Transactional
     public void getSubscribers() throws Exception {
-        restPortalContObjectMockMvc.perform(
-            get("/api/subscribers"))
-            .andDo(MockMvcResultHandlers.print())
-            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
-            .andExpect(status().isOk());
+        mockMvcRestWrapper.restRequest("/api/subscribers")
+            .testGet();
+//        restPortalContObjectMockMvc.perform(
+//            get("/api/subscribers"))
+//            .andDo(MockMvcResultHandlers.print())
+//            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
+//            .andExpect(status().isOk());
     }
 
     @Test
     @Transactional
-    public void getSubscribersPage() throws Exception {
-        restPortalContObjectMockMvc.perform(
-            get("/api/subscribers/page").param("subscriberMode", "RMA"))
-            .andDo(MockMvcResultHandlers.print())
-            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
-            .andExpect(status().isOk());
+    public void getSubscribersRMAPage() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscribers/page")
+            .requestBuilder(b -> b.param("subscriberMode", "RMA"))
+            .testGet();
+    }
+
+    @Test
+    @Transactional
+    public void getSubscribersRMAPageSearch() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscribers/page")
+            .requestBuilder(b -> b.param("subscriberMode", "RMA").param("searchString", "ижевск"))
+            .testGet();
     }
 }

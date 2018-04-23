@@ -54,4 +54,6 @@ public class SubscriberDTO {
 
     private String subscrType;
 
+    private Long parentSubscriberId;
+
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultHandler;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import ru.excbt.datafuse.nmk.web.rest.TestUtil;
@@ -27,6 +28,8 @@ public class MockMvcRestWrapper {
     private Logger logger = log;
 
     private List<ResultActions> requestResultActionsList = new ArrayList<>();
+
+    private Optional<ResultActions> prevResultAction = Optional.empty();
 
     public class RestRequest {
 
@@ -78,17 +81,22 @@ public class MockMvcRestWrapper {
          * @return
          * @throws Exception
          */
-        private ResultActions perform(MockHttpServletRequestBuilder requestBuilder) throws Exception {
+        private ResultActions perform(MockHttpServletRequestBuilder requestBuilder, Optional<ResultMatcher> resultMatcherOptional) throws Exception {
             ResultActions resultActions = mockMvc.perform(
                 requestBuilder);
             if (!noPrintRequest) {
                 resultActions.andDo(MockMvcResultHandlers.print());
             }
-            resultActions.andExpect(status().isOk());
+            ResultMatcher matcher = resultMatcherOptional.orElse(status().isOk());
+            resultActions.andExpect(matcher);
             if (!noJsonOutput) {
                 resultActions.andDo(jsonLogger);
             }
             return resultActions;
+        }
+
+        private ResultActions perform(MockHttpServletRequestBuilder requestBuilder) throws Exception {
+            return this.perform(requestBuilder, Optional.of(status().isOk()));
         }
 
         /**
@@ -96,18 +104,23 @@ public class MockMvcRestWrapper {
          * @return
          * @throws Exception
          */
-        public ResultActions testGetAndReturn() throws Exception {
+        public ResultActions testGetAndReturn(Optional<ResultMatcher> resultMatcherOptional) throws Exception {
 
             MockHttpServletRequestBuilder requestBuilder = get(urlTemplate, uriVars);
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
-            ResultActions resultActions = perform(requestBuilder);
+            ResultActions resultActions = perform(requestBuilder, resultMatcherOptional);
             this.saveResultActions(resultActions);
             return resultActions;
         }
 
         public RestRequest testGet() throws Exception {
-            testGetAndReturn();
+            testGetAndReturn(Optional.empty());
+            return this;
+        }
+
+        public RestRequest testGet(ResultMatcher resultMatcher) throws Exception {
+            testGetAndReturn(Optional.ofNullable(resultMatcher));
             return this;
         }
 
@@ -219,6 +232,7 @@ public class MockMvcRestWrapper {
 
     public MockMvcRestWrapper(MockMvcRestWrapper src) {
         this.mockMvc = src.mockMvc;
+        this.prevResultAction = src.getLatestItemList(src.requestResultActionsList);
     }
 
     public MockMvcRestWrapper logger(Logger arg) {

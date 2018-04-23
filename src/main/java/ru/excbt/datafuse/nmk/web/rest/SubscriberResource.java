@@ -39,7 +39,7 @@ public class SubscriberResource {
 
     @GetMapping(value = "/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<Page<SubscriberDTO>> organizationsGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+    public ResponseEntity<Page<SubscriberDTO>> subscribersGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
                                                                     @RequestParam(name = "subscriberMode", required = false) Optional<String> subscriberMode,
                                                                     Pageable pageable) {
 

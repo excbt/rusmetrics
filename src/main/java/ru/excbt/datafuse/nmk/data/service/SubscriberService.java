@@ -27,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
+import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.QSubscriber;
@@ -66,7 +68,8 @@ public class SubscriberService implements SecuredRoles {
 
     public enum SubscriberMode {
         NORMAL,
-        RMA;
+        RMA,
+        CABINET
     }
 
     private static QSubscriber qSubscriber = QSubscriber.subscriber;
@@ -309,7 +312,7 @@ public class SubscriberService implements SecuredRoles {
         if (s.isEmpty()) {
             return null;
         }
-        return qSubscriber.subscriberName.like(QueryDSLUtil.upperCaseLikeStr.apply(s));
+        return qSubscriber.subscriberName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s));
     }
 
 
@@ -319,15 +322,21 @@ public class SubscriberService implements SecuredRoles {
                                                  Optional<String> searchStringOptional,
                                                  Pageable pageable) {
 
-        WhereClauseBuilder where = new WhereClauseBuilder()
-            .and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()))
-            .and(qSubscriber.deleted.eq(0));
+        QAbstractPersistableEntity qPersistableEntity = new QAbstractPersistableEntity(qSubscriber);
 
-//        if (subscriberMode == SubscriberMode.RMA) {
-//            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
-//        } else {
-//            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
-//        }
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(qSubscriber.deleted.eq(0))
+            .and(qPersistableEntity.id.ne(userIds.getSubscriberId()));
+
+        if (subscriberMode == SubscriberMode.RMA) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
+        } else if (subscriberMode == SubscriberMode.NORMAL) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
+            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+        } else if (subscriberMode == SubscriberMode.CABINET) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.CABINET.getKeyname()));
+            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+        }
 
         searchStringOptional.ifPresent(s -> where.and(searchCondition(s)));
 
