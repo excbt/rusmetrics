@@ -11,6 +11,7 @@ import { PTreeNode } from '../models/p-tree-node.model';
 
 import { SubscrPrefService, SubscrPrefValue } from '../subscr-pref';
 import { SubscrTreeService, SubscrContObjectTreeType1 } from '../subscr-tree';
+import { PTreeNodeMonitorService, PTreeNodeMonitor } from '../p-tree-node-monitor';
 
 import { SERVER_API_URL } from '../../../app.constants';
 
@@ -22,6 +23,7 @@ export class TreeNavigateService {
 
     private SUBSCR_OBJECT_TREE_CONT_OBJECTS = 'SUBSCR_OBJECT_TREE_CONT_OBJECTS';
     private P_TREE_NODE_URL = SERVER_API_URL + 'api/p-tree-node/';
+    private RADIX = 10;
 
     private currentTree: TreeNode[];
     private subscrObjectTreeList: SubscrContObjectTreeType1[];
@@ -29,7 +31,8 @@ export class TreeNavigateService {
 
     constructor(private http: HttpClient,
                  private subscrTreeService: SubscrTreeService,
-                 private subscrPrefService: SubscrPrefService
+                 private subscrPrefService: SubscrPrefService,
+                 private pTreeNodeMonitorService: PTreeNodeMonitorService
                 ) {}
 
 //    getTree() {
@@ -90,6 +93,9 @@ export class TreeNavigateService {
         this.setSubscrObjectTreeList(res[0]);
         this.setDefaultTreeSetting(res[1]);
 //        let treeSetting = res[1];
+        this.pTreeNodeMonitorService
+            .loadPTreeNodeMonitor(parseInt(this.getDefaultTreeSetting().value, this.RADIX))
+            .subscribe((resp) => console.log(resp));
         return this.loadPTree(this.getDefaultTreeSetting().value);
     }
 
