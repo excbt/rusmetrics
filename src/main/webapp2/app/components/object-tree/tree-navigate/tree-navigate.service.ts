@@ -70,10 +70,10 @@ export class TreeNavigateService {
 //        return this.http.get(this.DEFAULT_TREE_SETTING_URL);
     }
 
-    loadPTree(treeId, childLvl = 0): Observable<any> {
+    loadPTree(treeId, childLvl = 0): Observable<TreeNode[]> {
         return this.http.get<PTreeNode>(this.P_TREE_NODE_URL + treeId, {params : new HttpParams()
             .set('childLevel', childLvl.toString()) })
-            .map((ptree: any) => this.convertPTreeToPrimeNGTreeNode(ptree));
+            .map((ptree: PTreeNode) => this.convertPTreeToPrimeNGTreeNode(ptree));
     }
 
     initTreeNavigate() {
@@ -83,7 +83,7 @@ export class TreeNavigateService {
     }
 
     performResAndLoadPTree(res) {
-console.log(res);
+// console.log(res);
 //        let trees = res[0];
         this.setSubscrObjectTreeList(res[0]);
         this.setDefaultTreeSetting(res[1]);
@@ -91,7 +91,7 @@ console.log(res);
         return this.loadPTree(this.getDefaultTreeSetting().value);
     }
 
-    convertPTreeToPrimeNGTreeNode(ptree) {
+    convertPTreeToPrimeNGTreeNode(ptree: PTreeNode) {
         const expanded = true;
         const convertedTree = this.convertPTreeNodeToPrimeNGTreeNode(ptree, expanded);
         this.setCurrentTree([convertedTree]);
@@ -99,27 +99,51 @@ console.log(res);
         return this.getCurrentTree();
     }
 
-    convertPTreeNodeToPrimeNGTreeNode(ptreeNode, isExpanded = false) {
+    convertPTreeNodeToPrimeNGTreeNode(inpPtreeNode: PTreeNode, isExpanded = false) {
+// console.log(inpPtreeNode);
+//        let ptreeNode = new PTreeNode(inpPtreeNode);
+
+//         public id: number,
+//         public nodeName: string,
+//         public nodeType: string,
+//         public nodeObject: any,
+//         public linkedNodeObjects: PTreeNode[],
+//         public childNodes: PTreeNode[],
+//         public dataType: string,   // STUB or FULL
+//         public lazyNode: boolean
+        const ptreeNode = new PTreeNode(inpPtreeNode._id,
+                                      inpPtreeNode.nodeName,
+                                      inpPtreeNode.nodeType,
+                                      inpPtreeNode.nodeObject,
+                                      inpPtreeNode.linkedNodeObjects,
+                                      inpPtreeNode.childNodes,
+                                      inpPtreeNode.dataType,
+                                      inpPtreeNode.lazyNode
+                                     );
 // console.log(ptreeNode);
+
+//        let treeNode1: TreeNode = new TreeNode();
+
         const treeNode: TreeNode = <TreeNode> {
             data: ptreeNode,
-            label: this.createTreeNodeLabel(ptreeNode),
-            expandedIcon: 'fa-folder-open',
-            collapsedIcon: 'fa-folder',
+            label: ptreeNode.createTreeNodeLabel(),
+            expandedIcon: 'fa-folder-open nmc-tree-nav-green-element',
+            collapsedIcon: 'fa-folder nmc-tree-nav-green-element',
+            /*collapsedIcon: 'glyphicon glyphicon-folder',*/
             expanded: isExpanded,
             children: [],
-            leaf: this.isDeviceNode(ptreeNode)
+            leaf: ptreeNode.isContZpointNode()
         };
 //        treeNode.id = ptreeNode._id || ptreeNode.id || ptreeNode.nodeObject.id;
 //        treeNode.data = ptreeNode;
 //        treeNode.label = ptreeNode.nodeName;
 //        treeNode.children = ptreeNode.childNodes ? ptreeNode.childNodes : [];
-        if (ptreeNode.childNodes) {
+        if (ptreeNode.childNodes && !ptreeNode.isContZpointNode()) {
             ptreeNode.childNodes.map((childNode) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(childNode));
             });
         }
-        if (ptreeNode.linkedNodeObjects) {
+        if (ptreeNode.linkedNodeObjects && !ptreeNode.isContZpointNode()) {
 //            treeNode.children = treeNode.children.concat(ptreeNode.linkedNodeObjects);
             ptreeNode.linkedNodeObjects.map((nodeObject) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(nodeObject));
@@ -130,38 +154,5 @@ console.log(res);
 //        arr.push(treeNode);
 // console.log('treeNode: ', treeNode);
         return treeNode;
-    }
-
-    isElementNode(ptreeNode) {
-        return ptreeNode.nodeType === 'ELEMENT';
-    }
-
-    isConObjectNode(ptreeNode) {
-// console.log('ptreeNode', ptreeNode);
-// console.log('ptreeNode.nodeType === CONT_OBJECT', ptreeNode.nodeType === 'CONT_OBJECT');
-        return ptreeNode.nodeType === 'CONT_OBJECT';
-    }
-
-    isContZpointNode(ptreeNode) {
-        return ptreeNode.nodeType === 'CONT_ZPOINT';
-    }
-
-    isDeviceNode(ptreeNode) {
-        return ptreeNode.nodeType === 'DEVICE_OBJECT';
-    }
-
-    createTreeNodeLabel(ptreeNode): string {
-        let label = ''; // ptreeNode.nodeName || ptreeNode.nodeObject.fullName || ptreeNode.nodeObject.customServiceName || ptreeNode.nodeObject.number;
-        if (this.isElementNode(ptreeNode)) {
-            label = ptreeNode.nodeName;
-        } else if (this.isConObjectNode(ptreeNode)) {
-            label = ptreeNode.nodeObject.fullName;
-        } else if (this.isContZpointNode(ptreeNode)) {
-            label = ptreeNode.nodeObject.customServiceName;
-        } else if (this.isDeviceNode(ptreeNode)) {
-            label = ptreeNode.nodeObject.number;
-        }
-// console.log('label: ', label);
-        return label;
     }
 }
