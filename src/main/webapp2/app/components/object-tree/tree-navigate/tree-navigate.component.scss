@@ -15,7 +15,29 @@ mat-toolbar.nmc-tree-nav-toolbar {
     line-height: 31px;
 }
 
-.nmc-tree-nav-green-element {
+.nmc-tree-nav-green-node {
     color: white;
     text-shadow: rgb(110, 123, 144) -1px 0, rgb(110, 123, 144) 0 1px, rgb(110, 123, 144) 1px 0, rgb(110, 123, 144) 0 -1px;
+}
+
+.nmc-tree-nav-red-node {
+    color: white;
+    text-shadow: rgb(239, 71, 58) -1px 0, rgb(239, 71, 58) 0 1px, rgb(239, 71, 58) 1px 0, rgb(239, 71, 58) 0 -1px;
+}
+
+.nmc-tree-nav-yellow-node {
+    color: white;
+    text-shadow: rgb(253, 180, 92) -1px 0, rgb(253, 180, 92) 0 1px, rgb(253, 180, 92) 1px 0, rgb(253, 180, 92) 0 -1px;
+}
+
+.nmc-tree-nav-zpoint-red-node {
+    color: rgb(239, 71, 58);
+}
+
+.nmc-tree-nav-zpoint-yellow-node {
+    color: rgb(253, 180, 92);
+}
+
+.nmc-tree-nav-zpoint-green-node {
+    color: rgb(110, 123, 144);
 }

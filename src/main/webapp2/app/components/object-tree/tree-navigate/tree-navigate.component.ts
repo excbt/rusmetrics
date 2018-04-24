@@ -78,7 +78,7 @@ console.log(resp);
     }
 
     changeTree(subscrObjectTree: SubscrContObjectTreeType1) {
-        this.treeNavService.loadPTree(subscrObjectTree.id)
+        this.treeNavService.loadPTreeMonitorAndPTree(subscrObjectTree.id)
             .subscribe(() => this.tree = this.treeNavService.getCurrentTree());
     }
 

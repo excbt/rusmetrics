@@ -1,6 +1,10 @@
 import { PTreeNode } from './p-tree-node.model';
+import { PTreeNodeMonitor } from '../p-tree-node-monitor';
 
 export class PTreeNodeWrapper {
+
+    private ptreeNodeMonitor: PTreeNodeMonitor;
+
     constructor(private ptreeNode: PTreeNode) {}
 
     getPTreeNode(): PTreeNode {
@@ -23,6 +27,19 @@ export class PTreeNodeWrapper {
 
     isDeviceNode() {
         return this.ptreeNode.nodeType === 'DEVICE_OBJECT';
+    }
+
+    getPTreeNodeId(): number {
+        let nodeId: number;
+        if (this.ptreeNode._id && this.ptreeNode._id != null) {
+            nodeId = this.ptreeNode._id;
+        } else if (this.ptreeNode.nodeObject && this.ptreeNode.nodeObject != null) {
+            nodeId = this.ptreeNode.nodeObject.id;
+        } else {
+            console.error('PtreeNode error: ', this.getPTreeNode());
+            throw new Error('Wrong PTreeNode');
+        }
+        return nodeId;
     }
 
 //    <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
@@ -48,5 +65,44 @@ export class PTreeNodeWrapper {
         }
 // console.log('label: ', label);
         return label;
+    }
+
+    getExpandedTypeIcon() {
+        let color = 'green';
+        if (this.ptreeNodeMonitor && this.ptreeNodeMonitor.colorKey) {
+            color = this.ptreeNodeMonitor.colorKey.toLowerCase();
+        }
+        if (this.isElementNode()) {
+            return 'fa-folder-open' + ' ' + 'nmc-tree-nav-' + color + '-node';
+        } else if (this.isContZpointNode()) {
+            return 'fa-map-marker' + ' ' + 'nmc-tree-nav-zpoint-' + color + '-node';
+        } else if (this.isConObjectNode()) {
+            return this.getContObjectBuildingIcon();
+        }
+    }
+
+    getContObjectBuildingIcon() {
+        // get building category
+
+        return 'nmc-building-default-16';
+    }
+
+    setExpandedIcon(): string {
+        return this.getExpandedTypeIcon();
+    }
+
+    setCollapsedIcon(): string {
+        return this.getExpandedTypeIcon();
+    }
+
+    setPTreeMonitor(ptreeMon: PTreeNodeMonitor) {
+        this.ptreeNodeMonitor = ptreeMon;
+    }
+
+    isLeaf() {
+        return this.isContZpointNode();
+//        return this.isContZpointNode() ||
+//            (this.ptreeNode.childNodes && this.ptreeNode.childNodes.length === 0 &&
+//             this.ptreeNode.linkedNodeObjects && this.ptreeNode.linkedNodeObjects.length === 0);
     }
 }

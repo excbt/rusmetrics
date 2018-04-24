@@ -29,18 +29,13 @@ export class TreeNavigateService {
     private currentTree: TreeNode[];
     private subscrObjectTreeList: SubscrContObjectTreeType1[];
     private defaultTreeSetting: SubscrPrefValue;
+    private ptreeNodeMonitor: PTreeNodeMonitor[];
 
     constructor(private http: HttpClient,
                  private subscrTreeService: SubscrTreeService,
                  private subscrPrefService: SubscrPrefService,
                  private pTreeNodeMonitorService: PTreeNodeMonitorService
                 ) {}
-
-//    getTree() {
-//        return this.http.get<any>('http://192.168.84.239:8089/testTree.json')
-//            .toPromise()
-//            .then((res) => <TreeNode[]> res.data);
-//    }
 
     getCurrentTree(): TreeNode[] {
         return this.currentTree;
@@ -76,7 +71,7 @@ export class TreeNavigateService {
 //        return this.http.get(this.DEFAULT_TREE_SETTING_URL);
     }
 
-    loadPTree(treeId, childLvl = 0): Observable<TreeNode[]> {
+    loadPTree(treeId: number, childLvl = 0): Observable<TreeNode[]> {
         return this.http.get<PTreeNode>(this.P_TREE_NODE_URL + treeId, {params : new HttpParams()
             .set('childLevel', childLvl.toString()) })
             .map((ptree: PTreeNode) => this.convertPTreeToPrimeNGTreeNode(ptree));
@@ -85,20 +80,68 @@ export class TreeNavigateService {
     initTreeNavigate() {
         return Observable
             .forkJoin(this.loadSubscrTrees(), this.loadSubscrDefaultTreeSetting())
-            .switchMap((res) => this.performResAndLoadPTree(res));
+            .switchMap((res) => this.performTreesAndLoadDefaultPTree(res));
     }
 
-    performResAndLoadPTree(res) {
+    loadPTreeMonitor(ptreeId) {
+        return this.pTreeNodeMonitorService
+            .loadPTreeNodeMonitor(ptreeId)
+            .map((resp) => this.ptreeNodeMonitor = resp);
+    }
+
+    performTreesAndLoadDefaultPTree(res) {
 // console.log(res);
 //        let trees = res[0];
         this.setSubscrObjectTreeList(res[0]);
         this.setDefaultTreeSetting(res[1]);
+        let defaultTreeId: number;
+        if (this.getDefaultTreeSetting() && this.getDefaultTreeSetting().value) {
+            defaultTreeId = parseInt(this.getDefaultTreeSetting().value, this.RADIX);
+        } else {
+            defaultTreeId = this.getSubscrObjectTreeList()[0].id;
+        }
 //        let treeSetting = res[1];
-        this.pTreeNodeMonitorService
-            .loadPTreeNodeMonitor(parseInt(this.getDefaultTreeSetting().value, this.RADIX))
-            .subscribe((resp) => console.log(resp));
-        return this.loadPTree(this.getDefaultTreeSetting().value);
+//        this.pTreeNodeMonitorService
+//            .loadPTreeNodeMonitor(defaultTreeId)
+//            .subscribe((resp) => this.ptreeNodeMonitor = resp);
+        return this.loadPTreeMonitorAndPTree(defaultTreeId); // this.loadPTreeMonitor(defaultTreeId).switchMap((resp) => this.loadPTree(defaultTreeId));
+
+//        return Observable
+//            .forkJoin(this.loadPTreeMonitor(defaultTreeId),
+//                     this.loadPTree(defaultTreeId))
+//            .switchMap((resp) => this.performMonitorAndPTree(resp));
+
+//        return this.loadPTree(this.getDefaultTreeSetting().value);
     }
+
+    loadPTreeMonitorAndPTree(treeId: number) {
+        return this.loadPTreeMonitor(treeId).switchMap((resp) => this.loadPTree(treeId));
+    }
+
+    performMonitorAndPTree(resp) {
+        console.log(resp);
+        const monitor: PTreeNodeMonitor[] = resp[0];
+        const tree: TreeNode[] = resp[1];
+        this.updateTreeView(tree[0], monitor);
+        return resp;
+    }
+
+    updateTreeView(tree: TreeNode, monitor: PTreeNodeMonitor[]) {
+        const ptreeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(tree.data);
+        const ptreeMonitor: PTreeNodeMonitor = monitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === ptreeWrapper.getPTreeNodeId());
+        ptreeWrapper.setPTreeMonitor(ptreeMonitor);
+
+//        expandedIcon: 'fa-folder-open nmc-tree-nav-green-element',
+//            collapsedIcon: 'fa-folder nmc-tree-nav-green-element',
+        tree.expandedIcon = ptreeWrapper.setExpandedIcon();
+        tree.collapsedIcon = ptreeWrapper.setCollapsedIcon();
+        tree.children.map((child) => this.updateTreeView(child, monitor));
+// console.log(tree);
+    }
+
+//    findPTreeNodeMonitor(monitor: PTreeNodeMonitor[], id: number): PTreeNodeMonitor {
+//        monitor.find( elm: PTreeNodeMonitor => elm.monitorObjectId === id);
+//    }
 
     convertPTreeToPrimeNGTreeNode(ptree: PTreeNode) {
         const expanded = true;
@@ -108,64 +151,37 @@ export class TreeNavigateService {
         return this.getCurrentTree();
     }
 
-    convertPTreeNodeToPrimeNGTreeNode(inpPtreeNode: PTreeNode, isExpanded = false) {
-// console.log(inpPtreeNode);
-//        let ptreeNode = new PTreeNode(inpPtreeNode);
-
-//         public id: number,
-//         public nodeName: string,
-//         public nodeType: string,
-//         public nodeObject: any,
-//         public linkedNodeObjects: PTreeNode[],
-//         public childNodes: PTreeNode[],
-//         public dataType: string,   // STUB or FULL
-//         public lazyNode: boolean
-//        const ptreeNode = new PTreeNode(inpPtreeNode._id,
-//                                      inpPtreeNode.nodeName,
-//                                      inpPtreeNode.nodeType,
-//                                      inpPtreeNode.nodeObject,
-//                                      inpPtreeNode.linkedNodeObjects,
-//                                      inpPtreeNode.childNodes,
-//                                      inpPtreeNode.dataType,
-//                                      inpPtreeNode.lazyNode
-//                                     );
-
-//        const ptreeNode: PTreeNode = inpPtreeNode; // new PTreeNodeWrapper(inpPtreeNode);
+    convertPTreeNodeToPrimeNGTreeNode(inpPtreeNode: PTreeNode, isExpanded = false): TreeNode {
         const ptreeNodeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(inpPtreeNode);
-
-// console.log(ptreeNode);
+        if (this.ptreeNodeMonitor && this.ptreeNodeMonitor !== null) {
+            const ptreeMonitor: PTreeNodeMonitor = this.ptreeNodeMonitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === ptreeNodeWrapper.getPTreeNodeId());
+            ptreeNodeWrapper.setPTreeMonitor(ptreeMonitor);
+        }
 
 //        let treeNode1: TreeNode = new TreeNode();
 
         const treeNode: TreeNode = <TreeNode> {
             data: ptreeNodeWrapper.getPTreeNode(),
             label: ptreeNodeWrapper.createTreeNodeLabel(),
-            expandedIcon: 'fa-folder-open nmc-tree-nav-green-element',
-            collapsedIcon: 'fa-folder nmc-tree-nav-green-element',
+            expandedIcon: ptreeNodeWrapper.setExpandedIcon(), /* 'fa-folder-open nmc-tree-nav-green-element', */
+            collapsedIcon: ptreeNodeWrapper.setCollapsedIcon(), /* 'fa-folder nmc-tree-nav-green-element', */
             /*collapsedIcon: 'glyphicon glyphicon-folder',*/
             expanded: isExpanded,
             children: [],
-            leaf: ptreeNodeWrapper.isContZpointNode()
+            leaf: ptreeNodeWrapper.isLeaf()
         };
-//        treeNode.id = ptreeNode._id || ptreeNode.id || ptreeNode.nodeObject.id;
-//        treeNode.data = ptreeNode;
-//        treeNode.label = ptreeNode.nodeName;
-//        treeNode.children = ptreeNode.childNodes ? ptreeNode.childNodes : [];
+
         if (ptreeNodeWrapper.getPTreeNode().childNodes && !ptreeNodeWrapper.isContZpointNode()) {
             ptreeNodeWrapper.getPTreeNode().childNodes.map((childNode) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(childNode));
             });
         }
         if (ptreeNodeWrapper.getPTreeNode().linkedNodeObjects && !ptreeNodeWrapper.isContZpointNode()) {
-//            treeNode.children = treeNode.children.concat(ptreeNode.linkedNodeObjects);
             ptreeNodeWrapper.getPTreeNode().linkedNodeObjects.map((nodeObject) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(nodeObject));
             });
         }
 
-//        let arr = new Array();
-//        arr.push(treeNode);
-// console.log('treeNode: ', treeNode);
         return treeNode;
     }
 }
