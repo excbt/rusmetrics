@@ -36,7 +36,9 @@ import ru.excbt.datafuse.nmk.web.ResultActionsTester;
 
 
 
-// TODO remove unused reports
+/**
+ * TODO FIX
+ */
 @Transactional
 public class ReportServiceControllerTest extends AnyControllerTest {
 

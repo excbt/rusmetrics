@@ -35,6 +35,9 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 
+/**
+ * TODO FIX
+ */
 
 @Transactional
 public class ReportParamsetControllerTest extends AnyControllerTest {

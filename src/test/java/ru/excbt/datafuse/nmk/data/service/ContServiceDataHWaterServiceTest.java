@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ public class ContServiceDataHWaterServiceTest extends JpaConfigTest {
 	private ContServiceDataHWaterService contServiceDataHWaterService;
 
 	@Test
+    @Ignore
 	public void testLastDataDate() throws Exception {
 		List<TimeDetailLastDate> result = contServiceDataHWaterService.selectTimeDetailLastDate(111551183);
 		assertTrue(!result.isEmpty());

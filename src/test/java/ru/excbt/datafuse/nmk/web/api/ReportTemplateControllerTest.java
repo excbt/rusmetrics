@@ -25,7 +25,9 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
-
+/**
+ * TODO FIX
+ */
 @Transactional
 public class ReportTemplateControllerTest extends AnyControllerTest {
 

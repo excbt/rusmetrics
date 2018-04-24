@@ -39,6 +39,9 @@ import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 
 
+/**
+ * TODO FIX
+ */
 @Transactional
 public class ReportSheduleControllerTest extends AnyControllerTest {
 

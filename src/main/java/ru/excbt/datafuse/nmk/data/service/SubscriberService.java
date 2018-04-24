@@ -344,6 +344,35 @@ public class SubscriberService implements SecuredRoles {
         return result.map(subscriberMapper::toDto);
 	}
 
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public <T> Page<T> selectSubscribers2(PortalUserIds userIds,
+                                                 SubscriberMode subscriberMode,
+                                                 Optional<String> searchStringOptional,
+                                                 Function<Subscriber, T> mapper,
+                                                 Pageable pageable) {
+
+        QAbstractPersistableEntity qPersistableEntity = new QAbstractPersistableEntity(qSubscriber);
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(qSubscriber.deleted.eq(0))
+            .and(qPersistableEntity.id.ne(userIds.getSubscriberId()));
+
+        if (subscriberMode == SubscriberMode.RMA) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
+        } else if (subscriberMode == SubscriberMode.NORMAL) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
+            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+        } else if (subscriberMode == SubscriberMode.CABINET) {
+            where.and(qSubscriber.subscrType.eq(SubscrTypeKey.CABINET.getKeyname()));
+            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+        }
+
+        searchStringOptional.ifPresent(s -> where.and(searchCondition(s)));
+
+        Page<Subscriber> result = subscriberRepository.findAll(where, pageable);
+        return result.map(mapper::apply);
+	}
+
 	/**
 	 *
 	 * @param subscriber
