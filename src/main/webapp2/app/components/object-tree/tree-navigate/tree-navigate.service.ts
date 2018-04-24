@@ -7,6 +7,7 @@ import { TreeNode } from 'primeng/api';
 import { Observable } from 'rxjs/Observable';
 
 import { PTreeNode } from '../models/p-tree-node.model';
+import { PTreeNodeWrapper } from '../models/p-tree-node-wrapper.model';
 // import { SubscrObjectTree } from '../models/subscr-object-tree.model';
 
 import { SubscrPrefService, SubscrPrefValue } from '../subscr-pref';
@@ -119,41 +120,45 @@ export class TreeNavigateService {
 //         public childNodes: PTreeNode[],
 //         public dataType: string,   // STUB or FULL
 //         public lazyNode: boolean
-        const ptreeNode = new PTreeNode(inpPtreeNode._id,
-                                      inpPtreeNode.nodeName,
-                                      inpPtreeNode.nodeType,
-                                      inpPtreeNode.nodeObject,
-                                      inpPtreeNode.linkedNodeObjects,
-                                      inpPtreeNode.childNodes,
-                                      inpPtreeNode.dataType,
-                                      inpPtreeNode.lazyNode
-                                     );
+//        const ptreeNode = new PTreeNode(inpPtreeNode._id,
+//                                      inpPtreeNode.nodeName,
+//                                      inpPtreeNode.nodeType,
+//                                      inpPtreeNode.nodeObject,
+//                                      inpPtreeNode.linkedNodeObjects,
+//                                      inpPtreeNode.childNodes,
+//                                      inpPtreeNode.dataType,
+//                                      inpPtreeNode.lazyNode
+//                                     );
+
+//        const ptreeNode: PTreeNode = inpPtreeNode; // new PTreeNodeWrapper(inpPtreeNode);
+        const ptreeNodeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(inpPtreeNode);
+
 // console.log(ptreeNode);
 
 //        let treeNode1: TreeNode = new TreeNode();
 
         const treeNode: TreeNode = <TreeNode> {
-            data: ptreeNode,
-            label: ptreeNode.createTreeNodeLabel(),
+            data: ptreeNodeWrapper.getPTreeNode(),
+            label: ptreeNodeWrapper.createTreeNodeLabel(),
             expandedIcon: 'fa-folder-open nmc-tree-nav-green-element',
             collapsedIcon: 'fa-folder nmc-tree-nav-green-element',
             /*collapsedIcon: 'glyphicon glyphicon-folder',*/
             expanded: isExpanded,
             children: [],
-            leaf: ptreeNode.isContZpointNode()
+            leaf: ptreeNodeWrapper.isContZpointNode()
         };
 //        treeNode.id = ptreeNode._id || ptreeNode.id || ptreeNode.nodeObject.id;
 //        treeNode.data = ptreeNode;
 //        treeNode.label = ptreeNode.nodeName;
 //        treeNode.children = ptreeNode.childNodes ? ptreeNode.childNodes : [];
-        if (ptreeNode.childNodes && !ptreeNode.isContZpointNode()) {
-            ptreeNode.childNodes.map((childNode) => {
+        if (ptreeNodeWrapper.getPTreeNode().childNodes && !ptreeNodeWrapper.isContZpointNode()) {
+            ptreeNodeWrapper.getPTreeNode().childNodes.map((childNode) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(childNode));
             });
         }
-        if (ptreeNode.linkedNodeObjects && !ptreeNode.isContZpointNode()) {
+        if (ptreeNodeWrapper.getPTreeNode().linkedNodeObjects && !ptreeNodeWrapper.isContZpointNode()) {
 //            treeNode.children = treeNode.children.concat(ptreeNode.linkedNodeObjects);
-            ptreeNode.linkedNodeObjects.map((nodeObject) => {
+            ptreeNodeWrapper.getPTreeNode().linkedNodeObjects.map((nodeObject) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(nodeObject));
             });
         }
