@@ -27,9 +27,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 
-//@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-//    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-//@Transactional
 @RunWith(SpringRunner.class)
 public class ContEventMonitorServiceTest extends PortalDataTest {
 
@@ -38,8 +35,6 @@ public class ContEventMonitorServiceTest extends PortalDataTest {
 	@Autowired
 	private ContEventMonitorService contEventMonitorService;
 
-//	@Autowired
-//	private SubscrContObjectService subscrContObjectService;
 
 	@Autowired
 	private ObjectAccessService objectAccessService;

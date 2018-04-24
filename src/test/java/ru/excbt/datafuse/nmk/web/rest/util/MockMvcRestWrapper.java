@@ -24,6 +24,9 @@ public class MockMvcRestWrapper {
 
     private static final Logger log = LoggerFactory.getLogger(MockMvcRestWrapper.class);
 
+    private static final boolean DEFAULT_NO_PRINT_REQUEST = false;
+    private static final boolean DEFAULT_NO_JSON_OUTPUT = false;
+
     private MockMvc mockMvc;
     private Logger logger = log;
 
@@ -43,9 +46,9 @@ public class MockMvcRestWrapper {
 
         private List<ResultActions> resultActionsList = new ArrayList<>();
 
-        private boolean noPrintRequest = false;
+        private boolean noPrintRequest = DEFAULT_NO_PRINT_REQUEST;
 
-        private boolean noJsonOutput = false;
+        private boolean noJsonOutput = DEFAULT_NO_JSON_OUTPUT;
 
         private ResultHandler jsonLogger = (i) -> logger.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i));
 
@@ -87,8 +90,11 @@ public class MockMvcRestWrapper {
             if (!noPrintRequest) {
                 resultActions.andDo(MockMvcResultHandlers.print());
             }
-            ResultMatcher matcher = resultMatcherOptional.orElse(status().isOk());
-            resultActions.andExpect(matcher);
+
+            if (resultMatcherOptional.isPresent()) {
+                resultActions.andExpect(resultMatcherOptional.get());
+            }
+
             if (!noJsonOutput) {
                 resultActions.andDo(jsonLogger);
             }
@@ -119,7 +125,7 @@ public class MockMvcRestWrapper {
         }
 
         public RestRequest testGet() throws Exception {
-            testGetAndReturn(Optional.empty());
+            testGetAndReturn(Optional.of(status().isOk()));
             return this;
         }
 

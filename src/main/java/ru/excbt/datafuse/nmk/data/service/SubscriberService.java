@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -191,6 +193,13 @@ public class SubscriberService implements SecuredRoles {
 	    Date date = getSubscriberCurrentTime(subscriberId);
         return LocalDateUtils.asLocalDateTime(date);
     }
+
+    @Transactional
+    public ZonedDateTime getSubscriberZonedDateTime(PortalUserIds portalUserIds) {
+        Date d = getSubscriberCurrentTime(portalUserIds.getSubscriberId());
+        return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
+    }
+
 
 
 	/**

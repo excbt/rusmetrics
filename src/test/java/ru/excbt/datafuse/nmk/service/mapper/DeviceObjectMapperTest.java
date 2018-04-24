@@ -9,13 +9,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 /**
  * Created by kovtonyk on 23.05.2017.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-public class DeviceObjectMapperTest {
+public class DeviceObjectMapperTest extends PortalDataTest {
 
     @Autowired
     private DeviceObjectMapper deviceObjectMapper;

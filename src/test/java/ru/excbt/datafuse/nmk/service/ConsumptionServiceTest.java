@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import java.time.LocalDate;
@@ -25,8 +26,7 @@ import java.time.LocalDate;
 import static ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-public class ConsumptionServiceTest {
+public class ConsumptionServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionServiceTest.class);
 

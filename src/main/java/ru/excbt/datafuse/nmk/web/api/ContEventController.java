@@ -1,10 +1,9 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
@@ -23,17 +22,20 @@ import java.util.List;
  * @since 25.06.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/contEvent")
 public class ContEventController {
 
-	@Autowired
-	private ContEventService contEventService;
+	private final ContEventService contEventService;
 
-	@Autowired
-	private ContEventTypeService contEventTypeService;
+	private final ContEventTypeService contEventTypeService;
 
-	/**
+    public ContEventController(ContEventService contEventService, ContEventTypeService contEventTypeService) {
+        this.contEventService = contEventService;
+        this.contEventTypeService = contEventTypeService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
