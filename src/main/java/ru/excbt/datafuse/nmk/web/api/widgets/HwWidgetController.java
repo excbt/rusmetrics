@@ -47,9 +47,9 @@ public class HwWidgetController extends WidgetController {
 	@Autowired
     public HwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service,
                               ContZPointService contZPointService,
-                              ContServiceDataHWaterService contServiceDataHWaterService,
                               ContObjectService contObjectService,
                               HwWidgetService hwWidgetService,
+                              ContServiceDataHWaterService contServiceDataHWaterService,
                               ObjectAccessService objectAccessService,
                               PortalUserIdsService portalUserIdsService,
                               SubscriberService subscriberService) {

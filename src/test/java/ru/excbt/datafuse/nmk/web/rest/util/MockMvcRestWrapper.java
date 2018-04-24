@@ -188,7 +188,7 @@ public class MockMvcRestWrapper {
 
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
-            ResultActions resultActions = perform(requestBuilder);
+            ResultActions resultActions = perform(requestBuilder, Optional.of(status().is2xxSuccessful()));
             this.saveResultActions(resultActions);
 
             return resultActions;

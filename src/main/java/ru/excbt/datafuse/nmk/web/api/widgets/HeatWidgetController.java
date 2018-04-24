@@ -43,8 +43,8 @@ public class HeatWidgetController extends WidgetController {
     @Autowired
 	public HeatWidgetController(ContEventMonitorV3Service contEventMonitorV3Service,
                                 ContZPointService contZPointService,
-                                HeatWidgetService heatWidgetService,
                                 ContObjectService contObjectService,
+                                HeatWidgetService heatWidgetService,
                                 ObjectAccessService objectAccessService,
                                 PortalUserIdsService portalUserIdsService,
                                 SubscriberService subscriberService) {
