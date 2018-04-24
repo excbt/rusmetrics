@@ -189,6 +189,11 @@ public final class SubscriberParam implements PortalUserIds {
             }
 
             @Override
+            public SubscrTypeKey getSubscrTypeKey() {
+                return subscrTypeKey;
+            }
+
+            @Override
             public Long getParentSubscriberId() {
                 return parentSubscriberId;
             }

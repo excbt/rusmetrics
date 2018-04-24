@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -18,12 +18,12 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,9 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 14.04.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/reportParamset")
-public class ReportParamsetController extends AbstractSubscrApiResource {
+public class ReportParamsetController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
@@ -57,12 +57,15 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
     private final PortalUserIdsService portalUserIdsService;
 
-    public ReportParamsetController(ReportParamsetService reportParamsetService, ReportTemplateService reportTemplateService, ReportTypeService reportTypeService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+    private final SubscrServiceAccessService subscrServiceAccessService;
+
+    public ReportParamsetController(ReportParamsetService reportParamsetService, ReportTemplateService reportTemplateService, ReportTypeService reportTypeService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscrServiceAccessService subscrServiceAccessService) {
         this.reportParamsetService = reportParamsetService;
         this.reportTemplateService = reportTemplateService;
         this.reportTypeService = reportTypeService;
         this.objectAccessService = objectAccessService;
         this.portalUserIdsService = portalUserIdsService;
+        this.subscrServiceAccessService = subscrServiceAccessService;
     }
 
 	/**
@@ -79,7 +82,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		}
 
 		return ApiResponse.responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
-				ReportConstants.IS_ACTIVE, currentSubscriberService.getSubscriberId()));
+				ReportConstants.IS_ACTIVE, portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 	}
 
@@ -116,7 +119,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		}
 
 		return ApiResponse.responseOK(() -> reportParamsetService.selectReportTypeParamsetList(reportTypeKey,
-				ReportConstants.IS_NOT_ACTIVE, currentSubscriberService.getSubscriberId()));
+				ReportConstants.IS_NOT_ACTIVE, portalUserIdsService.getCurrentIds().getSubscriberId()));
 	}
 
 	/**
@@ -245,7 +248,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(reportParamset.getId());
 		checkArgument(reportParamset.getId().equals(reportParamsetId));
 
-		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+		reportParamset.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		ApiAction action = new AbstractEntityApiAction<ReportParamset>(reportParamset) {
 			@Override
@@ -280,7 +283,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		}
 
 		reportParamset.setReportTemplate(reportTemplate);
-		reportParamset.setSubscriber(currentSubscriberService.getSubscriber());
+		reportParamset.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 		reportParamset.set_active(true);
 
 		try {
@@ -324,7 +327,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 			@Override
 			public ReportParamset processAndReturnResult() {
 				return reportParamsetService.createByTemplate(srcId, reportParamset, contObjectIds,
-						currentSubscriberService.getSubscriber());
+						new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 			}
 
 			@Override
@@ -368,7 +371,7 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 		checkNotNull(reportParamsetId);
 
 		return ApiResponse.responseOK(() -> reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
-				currentSubscriberService.getSubscriberId()));
+				portalUserIdsService.getCurrentIds().getSubscriberId()));
 	}
 
 	/**
@@ -486,10 +489,10 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 
 		ApiActionObjectProcess actionProcess = () -> {
 
-			List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(getSubscriberParam());
+			List<ReportParamset> xList = reportParamsetService.selectReportParamsetContextLaunch(portalUserIdsService.getCurrentIds());
 
 			List<ReportType> reportTypes = reportTypeService
-					.findAllReportTypes(currentSubscriberService.isSystemUser());
+					.findAllReportTypes(portalUserIdsService.isSystemUser());
 			reportTypes = filterObjectAccess(reportTypes);
 
 			final Set<String> reportTypeKeynames = reportTypes.stream()
@@ -522,5 +525,14 @@ public class ReportParamsetController extends AbstractSubscrApiResource {
 			return l.isEmpty() ? ApiResponse.responseBadRequest() : null;
 		});
 	}
+
+    protected <T> List<T> filterObjectAccess(List<T> objectList) {
+//        if (portalUserIdsService.isSystemUser()) {
+//            return new ArrayList<>(objectList);
+//        }
+        return subscrServiceAccessService.filterObjectAccess(objectList, portalUserIdsService.getCurrentIds());
+    }
+
+
 
 }

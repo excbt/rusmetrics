@@ -36,7 +36,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
 				"CABINET_USER" })
 @ActiveProfiles(value = {Constants.SPRING_PROFILE_TEST })
-public class AnyControllerTest extends AbstractControllerTest implements SubscriberUserInfo {
+public abstract class AnyControllerTest extends AbstractControllerTest implements SubscriberUserInfo {
 
 	private final static long TEST_AUDIT_USER = 1;
 	public static final long DEV_SUBSCR_ORG_ID = 728;
