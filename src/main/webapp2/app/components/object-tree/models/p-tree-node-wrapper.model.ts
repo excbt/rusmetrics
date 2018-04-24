@@ -83,7 +83,7 @@ export class PTreeNodeWrapper {
 
     getContObjectBuildingIcon() {
         // get building category
-
+        // TODO: Get building type icon by building category - how do it???   <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<=======
         return 'nmc-building-default-16';
     }
 
