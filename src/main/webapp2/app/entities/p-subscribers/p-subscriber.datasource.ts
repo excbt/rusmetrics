@@ -3,17 +3,15 @@ import { ExcAbstractDataSource, ExcPageSorting, ExcPageSize, ExcPage, ExcPagePar
 import { PSubscriberService } from './p-subscriber.service';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
 export class PSubscriberDataSource extends ExcAbstractDataSource<PSubscriber> {
 
-    private subscriberMode: string;
-
-    constructor( private pSubscriberService: PSubscriberService, subscriberMode?: string) {
+    constructor( private pSubscriberService: ExcAbstractService<PSubscriber>) {
         super();
-        this.subscriberMode = subscriberMode ? subscriberMode : 'NORMAL';
     }
 
     findPage(pageParams: ExcPageParams) {
-        this.wrapPageService(this.pSubscriberService.findPageMode(pageParams, this.subscriberMode));
+        this.wrapPageService(this.pSubscriberService.findPage(pageParams));
     }
 }

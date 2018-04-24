@@ -2,7 +2,9 @@
     "subscribers" : {
         "partner": {
             "title" : "Партнеры",
-            "listTitle" : "Список партнеров"
+            "listTitle" : "Список партнеров",
+            "editTitle" : "Редактирование партнера",
+            "newTitle" : "Добавление партнера"
         },
         "customer": {
             "title" : "Абоненты",

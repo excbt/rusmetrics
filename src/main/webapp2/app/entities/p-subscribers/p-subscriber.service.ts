@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PSubscriber } from './p-subscriber.model';
 import { ExcAbstractService, defaultPageSuffix } from '../../shared-blocks/exc-tools/exc-abstract-service';
-import { ExcPageParams, ExcPage } from '../../shared-blocks';
+import { ExcPageParams, ExcPage, ExcEditFormEntityProvider } from '../../shared-blocks';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()
@@ -17,5 +17,21 @@ export class PSubscriberService extends ExcAbstractService<PSubscriber> {
             params : this.defaultPageParams(pageParams).set('subscriberMode', subscriberMode)
         } );
     }
+}
+
+@Injectable()
+export class PSubscriberPartnerService extends ExcAbstractService<PSubscriber> {
+
+    constructor(http: HttpClient) {
+        super({apiUrl: 'api/subscribers/rma/'}, http);
+     }
+}
+
+@Injectable()
+export class PSubscriberCustomerService extends ExcAbstractService<PSubscriber> {
+
+    constructor(http: HttpClient) {
+        super({apiUrl: 'api/subscribers/normal/'}, http);
+     }
 
 }

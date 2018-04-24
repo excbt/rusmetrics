@@ -61,10 +61,6 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
     super.ngOnDestroy();
   }
 
-  editNavigate(entityId: any) {
-    this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', entityId, 'edit']);
-  }
-
   navigateNew() {
     this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', 'new', 'edit']);
   }

@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['id', 'subscriberName'];
+    displayedColumns = ['select', 'id', 'subscriberName'];
 
     private routeUrlSubscription: Subscription;
     subscriberMode: string;
@@ -35,11 +35,18 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> imp
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {
-        return {getDataSource: () => new PSubscriberDataSource(this.pSubscriberService, this.subscriberMode)};
+        return {getDataSource: () => new PSubscriberDataSource(this.pSubscriberService)};
     }
 
     ngOnDestroy() {
         this.routeUrlSubscription.unsubscribe();
         super.ngOnDestroy();
     }
+
+    navigateEdit() {
+        if (!this.selection.isEmpty()) {
+          this.router.navigate([this.subscriberMode === 'NORMAL' ? 'customers' : 'partners', this.selection.selected[0].id, 'edit']);
+        }
+      }
+
 }

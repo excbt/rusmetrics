@@ -22,11 +22,4 @@ export class OrganizationsService extends ExcAbstractService<Organization> {
         } );
     }
 
-    entityProvider(): ExcEditFormEntityProvider<Organization> {
-        return {
-            load: (id) => this.findOne(id),
-            update: (data) => this.update(data),
-            delete: (id) => this.delete(id)
-        };
-    }
 }
