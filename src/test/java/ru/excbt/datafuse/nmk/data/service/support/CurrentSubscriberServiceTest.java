@@ -1,31 +1,22 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
 import org.joda.time.LocalDateTime;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class)
 @Ignore
-public class CurrentSubscriberServiceTest extends JpaSupportTest {
+public class CurrentSubscriberServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberServiceTest.class);
 
