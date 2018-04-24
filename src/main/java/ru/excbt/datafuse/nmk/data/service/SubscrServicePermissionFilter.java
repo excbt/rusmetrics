@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
@@ -32,19 +33,19 @@ public class SubscrServicePermissionFilter {
 	private final List<SubscrServicePermission> permissionList = new ArrayList<>();
 	private final boolean isRma;
 
-	private final SubscriberParam subscriberParam;
+	private final PortalUserIds portalUserIds;
 
     /**
      *
      * @param permissionList
-     * @param subscriberParam
+     * @param portalUserIds
      */
 	public SubscrServicePermissionFilter(List<SubscrServicePermission> permissionList,
-			SubscriberParam subscriberParam) {
+			PortalUserIds portalUserIds) {
 		checkNotNull(permissionList);
 		this.permissionList.addAll(permissionList);
-		this.subscriberParam = subscriberParam;
-		this.isRma = subscriberParam.isRma();
+		this.portalUserIds = portalUserIds;
+		this.isRma = portalUserIds.isRma();
 	}
 
 	/**

@@ -6,8 +6,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.Date;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,11 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -28,15 +37,26 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class ReportParamsetServiceTest extends JpaSupportTest {
+@RunWith(SpringRunner.class)
+public class ReportParamsetServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetServiceTest.class);
 
 	private static final long TEMPLATE_PARAMSET_ID = 28344056;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
@@ -50,8 +70,6 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	@Autowired
 	private ReportPeriodService reportPeriodService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
     @Autowired
 	private ObjectAccessService objectAccessService;
@@ -59,7 +77,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	@Test
 	public void testSelectReportParamset() {
 		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportTypeParamsetList(
-				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
+				ReportTypeKey.COMMERCE_REPORT, true, portalUserIdsService.getCurrentIds().getSubscriberId());
 		assertTrue(reportParamsetList.size() > 0);
 		for (ReportParamset rp : reportParamsetList) {
 			logger.info("id : {}. {}", rp.getId(), rp.getReportTemplate().getReportTypeKeyname());
@@ -74,7 +92,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		// rp.setReportPeriod(reportPeriodService.findByKeyname(ReportPeriodKey.TODAY));
 		rp.setReportPeriodKey(ReportPeriodKey.TODAY);
 		ReportParamset result = reportParamsetService.createByTemplate(TEMPLATE_PARAMSET_ID, rp, null,
-				currentSubscriberService.getSubscriber());
+            new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 		assertNotNull(result);
 
 		testAddUnitToParamset(result);
@@ -87,7 +105,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	 * @param reportParamset
 	 */
 	private void testAddUnitToParamset(ReportParamset reportParamset) {
-		List<ContObject> contObjects = objectAccessService.findContObjects(getSubscriberId());
+		List<ContObject> contObjects = objectAccessService.findContObjects(portalUserIdsService.getCurrentIds().getSubscriberId());
 		assertTrue(contObjects.size() > 0);
 
 		ContObject co = contObjects.get(0);
@@ -106,9 +124,10 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testParamsetAvailableContObjectUnits() {
 		List<ReportTemplate> reportTemplates = reportTemplateService.selectSubscriberReportTemplates(
-				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
+				ReportTypeKey.COMMERCE_REPORT_M_V, true, portalUserIdsService.getCurrentIds().getSubscriberId());
 		assertTrue(reportTemplates.size() > 0);
 		ReportTemplate rt = reportTemplates.get(0);
 
@@ -119,7 +138,7 @@ public class ReportParamsetServiceTest extends JpaSupportTest {
 		// assertTrue(rpList.size() > 0);
 
 		List<ContObject> contObjects = reportParamsetService.selectParamsetAvailableContObjectUnits(-1,
-				currentSubscriberService.getSubscriberId());
+				portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		assertTrue(contObjects.size() > 0);
 		logger.info("Found {} Available ContObjects", contObjects.size());

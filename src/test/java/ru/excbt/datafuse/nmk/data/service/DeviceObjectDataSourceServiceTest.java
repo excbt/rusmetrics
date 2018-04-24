@@ -3,7 +3,12 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static org.junit.Assert.assertNotNull;
 
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -11,20 +16,32 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
+@RunWith(SpringRunner.class)
+public class DeviceObjectDataSourceServiceTest extends PortalDataTest {
 
 	private final static long TEST_DEVICE_OBJECT_ID = 65836845;
 	private final static long SUBSCR_USER_ID = 64166469; // manual-ex1
 	public static final long SUBSCR_ORG_ID = 64166467; // РМА-EXCBT
+
+    @Mock
+    private PortalUserIdsService portalUserIdsService;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+    }
+
 
 	@Autowired
 	private DeviceObjectService deviceObjectService;
@@ -35,8 +52,6 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	@Autowired
 	private SubscrDataSourceService subscrDataSourceService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
 
 	/**
 	 *
@@ -44,11 +59,12 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	 */
 	@Test
 	@Transactional
+    @Ignore
 	public void testDeviceObjectDataSource() throws Exception {
 		DeviceObject deviceObject = deviceObjectService.selectDeviceObject(TEST_DEVICE_OBJECT_ID);
 		assertNotNull(deviceObject);
 		SubscrDataSource subscrDataSource = subscrDataSourceService
-				.selectDataSourceByKeyname(currentSubscriberService.getSubscriberId(), "DEVICE_DEFAULT");// DEVICE_DEFAULT
+				.selectDataSourceByKeyname(portalUserIdsService.getCurrentIds().getSubscriberId(), "DEVICE_DEFAULT");// DEVICE_DEFAULT
 																																							// DEVICE_OPTION
 		assertNotNull(subscrDataSource);
 
@@ -67,7 +83,6 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	 *
 	 * @return
 	 */
-	@Override
 	public long getSubscriberId() {
 		return SUBSCR_ORG_ID;
 	}
@@ -76,7 +91,6 @@ public class DeviceObjectDataSourceServiceTest extends JpaConfigTest {
 	 *
 	 * @return
 	 */
-	@Override
 	public long getSubscrUserId() {
 		return SUBSCR_USER_ID;
 	}

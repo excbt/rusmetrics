@@ -7,8 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +31,17 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 
 //@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 //    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 //@Transactional
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-public class ContEventMonitorServiceTest {
+public class ContEventMonitorServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorServiceTest.class);
 
@@ -48,13 +54,20 @@ public class ContEventMonitorServiceTest {
 	@Autowired
 	private ObjectAccessService objectAccessService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
 
 	@Test
 	public void testMonitor() throws Exception {
 
-		List<ContObject> vList = objectAccessService.findContObjects(currentSubscriberService.getSubscriberId());
+		List<ContObject> vList = objectAccessService.findContObjects(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		for (ContObject co : vList) {
 			List<ContEventMonitor> monitorList = contEventMonitorService.findByContObject(co.getId());
@@ -78,7 +91,7 @@ public class ContEventMonitorServiceTest {
     @Transactional
 	public void testCityContObjectStatus() throws Exception {
 		Map<UUID, Long> result = contEventMonitorService
-				.selectCityContObjectMonitorEventCount(currentSubscriberService.getSubscriberId());
+				.selectCityContObjectMonitorEventCount(portalUserIdsService.getCurrentIds().getSubscriberId());
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 	}

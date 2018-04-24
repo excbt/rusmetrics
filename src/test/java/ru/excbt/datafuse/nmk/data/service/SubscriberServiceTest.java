@@ -7,8 +7,12 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +22,19 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class SubscriberServiceTest extends JpaSupportTest implements SecuredRoles {
+@RunWith(SpringRunner.class)
+public class SubscriberServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscriberServiceTest.class);
 
@@ -47,13 +53,20 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 	private PasswordService passwordService;
 
 	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
 	protected SubscrRoleService subscrRoleService;
 
 	@Autowired
 	private ReportParamsetService reportParamsetService;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
 
 	@Ignore
 	@Test
@@ -74,7 +87,7 @@ public class SubscriberServiceTest extends JpaSupportTest implements SecuredRole
 
 	@Test
 	public void testRmaOu() throws Exception {
-		Long id = currentSubscriberService.getSubscriberId();
+		Long id = portalUserIdsService.getCurrentIds().getSubscriberId();
 		logger.info("Check Ldap OU for: {}", id);
 		String ldapOu = subscriberService.getRmaLdapOu(id);
 		assertNotNull(ldapOu);

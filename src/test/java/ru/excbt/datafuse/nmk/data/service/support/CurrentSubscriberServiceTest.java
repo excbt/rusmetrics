@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
 @Transactional
+@Ignore
 public class CurrentSubscriberServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(CurrentSubscriberServiceTest.class);

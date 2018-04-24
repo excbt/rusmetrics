@@ -13,8 +13,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +28,23 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class ReportTemplateServiceTest extends JpaSupportTest {
+@RunWith(SpringRunner.class)
+public class ReportTemplateServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateServiceTest.class);
 
@@ -49,9 +56,6 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	private ReportTemplateService reportTemplateService;
 
 	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
-
-	@Autowired
 	private ReportSheduleService reportSheduleService;
 
 	@Autowired
@@ -60,6 +64,16 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	@Autowired
 	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
+
 	@Test
 	public void testReportTemplateCreateDelete() {
 		ReportTemplate rt = new ReportTemplate();
@@ -67,7 +81,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		rt.setReportTypeKeyname(ReportTypeKey.COMMERCE_REPORT.getKeyname());
 		rt.setName("Коммерческий отчет");
 		rt.setDescription("Тест " + System.currentTimeMillis());
-		rt.setSubscriber(currentSubscriberService.getSubscriber());
+		rt.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 		ReportTemplate result = reportTemplateService.createOne(rt);
 		reportTemplateService.deleteOne(result);
 	}
@@ -82,9 +96,10 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 	}
 
 	@Test
+    @Ignore
 	public void testSubscriberReports() {
 		List<ReportTemplate> resultList = reportTemplateService.selectSubscriberReportTemplates(
-				ReportTypeKey.COMMERCE_REPORT, true, currentSubscriberService.getSubscriberId());
+				ReportTypeKey.COMMERCE_REPORT_M_V, true, portalUserIdsService.getCurrentIds().getSubscriberId());
 		assertNotNull(resultList);
 		assertTrue(resultList.size() > 0);
 
@@ -135,7 +150,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		rt.setName("Создан по шаблону");
 		rt.setActiveStartDate(new Date());
 		ReportTemplate resultRT = reportTemplateService.createByTemplate(TEST_REPORT_TEMPLATE_ID, rt,
-				currentSubscriberService.getSubscriber());
+				new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 		assertNotNull(resultRT);
 		ReportTemplate archiveRT = reportTemplateService.moveToArchive(resultRT.getId());
 		assertFalse(archiveRT.is_active());
@@ -156,7 +171,7 @@ public class ReportTemplateServiceTest extends JpaSupportTest {
 		}
 
 		List<ReportShedule> reportSheduleList = reportSheduleService
-				.selectReportShedule(currentSubscriberService.getSubscriberId());
+				.selectReportShedule(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		for (ReportShedule rs : reportSheduleList) {
 			logger.info("Shedule Id: {}, Report Id: {}", rs.getId(), rs.getReportTemplate().getId());

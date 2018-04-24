@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffPlanRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
@@ -135,11 +136,11 @@ public class TariffPlanService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public TariffPlan updateOne(SubscriberParam subscriberParam, TariffPlan tariffPlan) {
+	public TariffPlan updateOne(PortalUserIds portalUserIds, TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
 		checkArgument(!tariffPlan.isNew());
 
-		if (!canModifyTariffPlanId(subscriberParam.getSubscriberId(), tariffPlan.getId())) {
+		if (!canModifyTariffPlanId(portalUserIds.getSubscriberId(), tariffPlan.getId())) {
 			throw new PersistenceException(
 					String.format("TariffPlan(id=%d) can not be modified by currentSubscriberId", tariffPlan.getId()));
 		}
@@ -158,7 +159,7 @@ public class TariffPlanService implements SecuredRoles {
 		tariffPlan.setSubscriberId(currentRec.getSubscriberId());
 
 		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
-			setOtherInactive(subscriberParam, tariffPlan.getId(), tariffPlan.getRso().getId(),
+			setOtherInactive(portalUserIds, tariffPlan.getId(), tariffPlan.getRso().getId(),
 					tariffPlan.getTariffType().getId());
 		}
 
@@ -268,9 +269,9 @@ public class TariffPlanService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT)
-	private void setOtherInactive(SubscriberParam subscriberParam, Long tariffPlanId, Long rsoOrganizationId,
+	private void setOtherInactive(PortalUserIds portalUserIds, Long tariffPlanId, Long rsoOrganizationId,
 			Long tariffTypeId) {
-		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(subscriberParam.getSubscriberId());
+		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(portalUserIds.getSubscriberId());
 		List<TariffPlan> modTariffs = allTariffs.stream()
 				.filter(i -> (tariffPlanId == null || !tariffPlanId.equals(i.getId()))
 						&& i.getRsoOrganizationId().equals(rsoOrganizationId)
