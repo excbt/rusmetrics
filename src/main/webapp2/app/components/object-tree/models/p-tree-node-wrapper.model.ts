@@ -3,9 +3,9 @@ import { PTreeNodeMonitor } from '../p-tree-node-monitor';
 
 export class PTreeNodeWrapper {
 
-    private ptreeNodeMonitor: PTreeNodeMonitor;
+//    private ptreeNodeMonitor: PTreeNodeMonitor;
 
-    constructor(private ptreeNode: PTreeNode) {}
+    constructor(private ptreeNode: PTreeNode, private ptreeNodeMonitor: PTreeNodeMonitor) {}
 
     getPTreeNode(): PTreeNode {
         return this.ptreeNode;
@@ -95,9 +95,9 @@ export class PTreeNodeWrapper {
         return this.getExpandedTypeIcon();
     }
 
-    setPTreeMonitor(ptreeMon: PTreeNodeMonitor) {
-        this.ptreeNodeMonitor = ptreeMon;
-    }
+//    setPTreeMonitor(ptreeMon: PTreeNodeMonitor) {
+//        this.ptreeNodeMonitor = ptreeMon;
+//    }
 
     isLeaf() {
         return this.isContZpointNode();

@@ -118,26 +118,27 @@ export class TreeNavigateService {
         return this.loadPTreeMonitor(treeId).switchMap((resp) => this.loadPTree(treeId));
     }
 
-    performMonitorAndPTree(resp) {
-        console.log(resp);
-        const monitor: PTreeNodeMonitor[] = resp[0];
-        const tree: TreeNode[] = resp[1];
-        this.updateTreeView(tree[0], monitor);
-        return resp;
-    }
+//    performMonitorAndPTree(resp) {
+//        console.log(resp);
+//        const monitor: PTreeNodeMonitor[] = resp[0];
+//        const tree: TreeNode[] = resp[1];
+//        this.updateTreeView(tree[0], monitor);
+//        return resp;
+//    }
 
-    updateTreeView(tree: TreeNode, monitor: PTreeNodeMonitor[]) {
-        const ptreeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(tree.data);
-        const ptreeMonitor: PTreeNodeMonitor = monitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === ptreeWrapper.getPTreeNodeId());
-        ptreeWrapper.setPTreeMonitor(ptreeMonitor);
+//    updateTreeView(tree: TreeNode, monitor: PTreeNodeMonitor[]) {
+//        const ptreeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(tree.data);
+//        const ptreeMonitor: PTreeNodeMonitor = monitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === ptreeWrapper.getPTreeNodeId());
+//        ptreeWrapper.setPTreeMonitor(ptreeMonitor);
 
 //        expandedIcon: 'fa-folder-open nmc-tree-nav-green-element',
 //            collapsedIcon: 'fa-folder nmc-tree-nav-green-element',
-        tree.expandedIcon = ptreeWrapper.setExpandedIcon();
-        tree.collapsedIcon = ptreeWrapper.setCollapsedIcon();
-        tree.children.map((child) => this.updateTreeView(child, monitor));
+
+//        tree.expandedIcon = ptreeWrapper.setExpandedIcon();
+//        tree.collapsedIcon = ptreeWrapper.setCollapsedIcon();
+//        tree.children.map((child) => this.updateTreeView(child, monitor));
 // console.log(tree);
-    }
+//    }
 
 //    findPTreeNodeMonitor(monitor: PTreeNodeMonitor[], id: number): PTreeNodeMonitor {
 //        monitor.find( elm: PTreeNodeMonitor => elm.monitorObjectId === id);
@@ -152,10 +153,14 @@ export class TreeNavigateService {
     }
 
     convertPTreeNodeToPrimeNGTreeNode(inpPtreeNode: PTreeNode, isExpanded = false): TreeNode {
-        const ptreeNodeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(inpPtreeNode);
+        let ptreeNodeWrapper: PTreeNodeWrapper; // = new PTreeNodeWrapper(inpPtreeNode);
         if (this.ptreeNodeMonitor && this.ptreeNodeMonitor !== null) {
-            const ptreeMonitor: PTreeNodeMonitor = this.ptreeNodeMonitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === ptreeNodeWrapper.getPTreeNodeId());
-            ptreeNodeWrapper.setPTreeMonitor(ptreeMonitor);
+            const nodeId = inpPtreeNode._id || inpPtreeNode.nodeObject.id;
+            const ptreeMonitor: PTreeNodeMonitor = this.ptreeNodeMonitor.find( (elm: PTreeNodeMonitor) => elm.monitorObjectId === nodeId);
+//            ptreeNodeWrapper.setPTreeMonitor(ptreeMonitor);
+            ptreeNodeWrapper = new PTreeNodeWrapper(inpPtreeNode, ptreeMonitor);
+        } else {
+            ptreeNodeWrapper = new PTreeNodeWrapper(inpPtreeNode, null);
         }
 
 //        let treeNode1: TreeNode = new TreeNode();
@@ -165,7 +170,7 @@ export class TreeNavigateService {
             label: ptreeNodeWrapper.createTreeNodeLabel(),
             expandedIcon: ptreeNodeWrapper.setExpandedIcon(), /* 'fa-folder-open nmc-tree-nav-green-element', */
             collapsedIcon: ptreeNodeWrapper.setCollapsedIcon(), /* 'fa-folder nmc-tree-nav-green-element', */
-            /*collapsedIcon: 'glyphicon glyphicon-folder',*/
+            /* collapsedIcon: 'glyphicon glyphicon-folder', */
             expanded: isExpanded,
             children: [],
             leaf: ptreeNodeWrapper.isLeaf()
