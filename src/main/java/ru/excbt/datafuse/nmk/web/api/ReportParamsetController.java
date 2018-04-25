@@ -527,9 +527,6 @@ public class ReportParamsetController  {
 	}
 
     protected <T> List<T> filterObjectAccess(List<T> objectList) {
-//        if (portalUserIdsService.isSystemUser()) {
-//            return new ArrayList<>(objectList);
-//        }
         return subscrServiceAccessService.filterObjectAccess(objectList, portalUserIdsService.getCurrentIds());
     }
 
