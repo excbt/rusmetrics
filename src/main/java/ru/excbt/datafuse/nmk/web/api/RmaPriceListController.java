@@ -1,44 +1,33 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang3.BooleanUtils;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с прайс листами для РМА
@@ -56,13 +45,19 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 	private final static Long MASTER_PRICE_LIST_SUBSCRIBER_ID = 0L;
 
-	@Autowired
-	private SubscrPriceListService subscrPriceListService;
+	private final SubscrPriceListService subscrPriceListService;
 
-	@Autowired
-	private RmaSubscriberService rmaSubscriberService;
+	private final RmaSubscriberService rmaSubscriberService;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+    public RmaPriceListController(SubscrPriceListService subscrPriceListService, RmaSubscriberService rmaSubscriberService, PortalUserIdsService portalUserIdsService) {
+        this.subscrPriceListService = subscrPriceListService;
+        this.rmaSubscriberService = rmaSubscriberService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @author kovtonyk
 	 *
@@ -379,7 +374,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return ApiResponse.responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
 		}
 
-		LocalDate startDate = currentSubscriberService.getSubscriberCurrentTime_Joda().toLocalDate();
+		LocalDate startDate = currentSubscriberService.getSubscriberCurrentLocalDate();
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrPriceList>() {
 
@@ -448,7 +443,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 					ApiResult.validationError("SubscrPriceList (id=%d) is not found", subscrPriceListId));
 		}
 
-		LocalDate localDate = getCurrentSubscriberLocalDate();
+		LocalDate localDate = getSubscriberLocalDate(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		ApiAction action = new ApiActionEntityAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
 

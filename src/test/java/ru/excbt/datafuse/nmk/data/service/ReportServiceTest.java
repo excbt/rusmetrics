@@ -1,7 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
 import org.apache.commons.io.IOUtils;
-import org.joda.time.LocalDateTime;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,6 +17,7 @@ import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.*;
 

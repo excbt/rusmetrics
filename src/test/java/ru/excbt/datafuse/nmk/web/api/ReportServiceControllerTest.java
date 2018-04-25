@@ -11,36 +11,47 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.google.common.primitives.Longs;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
-import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
-import ru.excbt.datafuse.nmk.data.service.ReportService;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 
-
-/**
- * TODO FIX
- */
-@Transactional
-public class ReportServiceControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class ReportServiceControllerTest extends PortalApiTest {
 
 	public final static String API_REPORT_URL = "/api/reportService";
 
@@ -53,20 +64,55 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	private static final Logger logger = LoggerFactory.getLogger(ReportServiceControllerTest.class);
 
 	@Autowired
-	private ReportParamsetService reportParamsetService;
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalContObjectMockMvc;
 
 	@Autowired
-	private ReportMakerParamService reportMakerParamService;
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
 
 	@Autowired
-	private ReportService reportService;
+	private ReportServiceController reportServiceController;
+    @Autowired
+	private SubscriberTimeService subscriberTimeService;
+    @Autowired
+    private ReportPeriodService reportPeriodService;
+    @Autowired
+    private ReportParamsetService reportParamsetService;
+    @Autowired
+    private ReportMakerParamService reportMakerParamService;
+    @Autowired
+    private ReportService reportService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        reportServiceController = new ReportServiceController(reportService, reportMakerParamService, reportPeriodService, portalUserIdsService, subscriberTimeService);
+
+	    this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(reportServiceController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        // .setMessageConverters(jacksonMessageConverter)
+            .build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalContObjectMockMvc);
+	}
+
+
 
 	private void redirectOption(ReportOutputFileType reportType) throws Exception {
 		assertNotNull(reportType);
 
 		String urlStr = String.format(API_REPORT_URL + "/commerce/%d/%s", 18811505, reportType.toLowerName());
 
-		ResultActions resultAction = mockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
+		ResultActions resultAction = restPortalContObjectMockMvc.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("beginDate", "2013-03-01").param("endDate", "2013-03-31").with(testSecurityContext()));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
@@ -89,7 +135,7 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 
-		ResultActions resultAction = mockMvc
+		ResultActions resultAction = restPortalContObjectMockMvc
 				.perform(get(urlStr).contentType(MediaType.APPLICATION_JSON).with(testSecurityContext()));
 
 		resultAction.andExpect(status().isOk()).andExpect(content().contentType(reportMakerParam.getMimeType()));
@@ -102,10 +148,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	@Test
     @Transactional
 	public void testEventDownloadGetPreview() throws Exception {
-		long reportParamsetId = TEST_PARAMSET_EVENT;
-		String urlStr = String.format("/api/reportService/event/%d/preview", reportParamsetId);
-
-		_testGetHtml(urlStr);
+        mockMvcRestWrapper.restRequest("/api/reportService/event/{id}/preview", TEST_PARAMSET_EVENT)
+            .noJsonOutput()
+            .testGetAndReturn()
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.TEXT_HTML));
+//		_testGetHtml(urlStr);
 
 	}
 
@@ -117,9 +165,13 @@ public class ReportServiceControllerTest extends AnyControllerTest {
     @Transactional
 	public void testConsT1DownloadGetPreview() throws Exception {
 		long reportParamsetId = TEST_PARAMSET_CONS_T1;
-		String urlStr = String.format("/api/reportService/cons_t1/%d/preview", reportParamsetId);
+        mockMvcRestWrapper.restRequest("/api/reportService/cons_t1/{id}/preview", TEST_PARAMSET_CONS_T1)
+            .noJsonOutput()
+            .testGetAndReturn()
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.TEXT_HTML));
 
-		_testGetHtml(urlStr);
+//		_testGetHtml(urlStr);
 
 	}
 
@@ -130,10 +182,16 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 	@Test
     @Transactional
 	public void testConsT2DownloadGetPreview() throws Exception {
-		long reportParamsetId = TEST_PARAMSET_CONS_T2;
-		String urlStr = String.format("/api/reportService/cons_t2/%d/preview", reportParamsetId);
+//		long reportParamsetId = TEST_PARAMSET_CONS_T2;
+//		String urlStr = String.format("/api/reportService/cons_t2/%d/preview", reportParamsetId);
+        mockMvcRestWrapper.restRequest("/api/reportService/cons_t2/{id}/preview", TEST_PARAMSET_CONS_T2)
+            .noJsonOutput()
+            .testGetAndReturn()
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.TEXT_HTML));
 
-		_testGetHtml(urlStr);
+
+//		_testGetHtml(urlStr);
 
 	}
 
@@ -163,8 +221,14 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		};
 
         ResultActionsTester tester = getResultActionsTester(reportMakerParam);
+        ResultActions resultActions =
+        mockMvcRestWrapper.restRequest(urlStr)
+            .requestBuilder(b -> b.param("contObjectIds", TestUtils.arrayToString(Longs.toArray(contObjectIds))))
+            .testPutAndReturn(reportMakerParam.getReportParamset());
 
-        _testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+        tester.testResultActions(resultActions);
+
+//        _testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -203,7 +267,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
         ResultActionsTester tester = getResultActionsTester(reportMakerParam);
 
-        _testGet(urlStr, null, tester);
+        ResultActions resultActions = mockMvcRestWrapper.restRequest(urlStr).testGetAndReturn();
+        tester.testResultActions(resultActions);
+
+//        _testGet(urlStr, null, tester);
 
 	}
 
@@ -219,10 +286,17 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 		ReportMakerParam reportMakerParam = reportMakerParamService.newReportMakerParam(reportParamsetId);
 		List<Long> contObjectIds = reportMakerParam.getReportContObjectIdList().subList(0, 1);
 
-		String urlStr = String.format("/api/reportService/commerce/%d/contextPreview/%d", reportParamsetId,
-				contObjectIds.get(0));
+//		String urlStr = String.format("/api/reportService/commerce/%d/contextPreview/%d", reportParamsetId,
+//				contObjectIds.get(0));
 
-		_testGetHtml(urlStr);
+        mockMvcRestWrapper.restRequest("/api/reportService/commerce/{id1}/contextPreview/{id2}", reportParamsetId, contObjectIds.get(0))
+            .noJsonOutput()
+            .noPrintRequest()
+            .testGetAndReturn()
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.TEXT_HTML));
+
+//		_testGetHtml(urlStr);
 
 	}
 
@@ -273,7 +347,12 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
 		};
 
-		_testUpdateJson(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
+
+		ResultActions resultActions = mockMvcRestWrapper.restRequest(urlStr)
+            .requestBuilder(b -> b.param("contObjectIds", TestUtils.arrayToString(Longs.toArray(contObjectIds))))
+            .testPutAndReturn(modReportMakerParam.getReportParamset());
+		tester.testResultActions(resultActions);
+//		_testUpdateJson(urlStr, modReportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -294,11 +373,8 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 
         } ;
 
-		ResultActionsTester tester = (resultActions) -> {
-				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
-		};
-
-		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+        mockMvcRestWrapper.restRequest(urlStr).testPutAndReturn(reportMakerParam.getReportParamset())
+            .andExpect(content().contentType(reportMakerParam.getMimeType()));
 
 	}
 
@@ -321,7 +397,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
 		};
 
-		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+        mockMvcRestWrapper.restRequest(urlStr).testPutAndReturn(reportMakerParam.getReportParamset())
+            .andExpect(content().contentType(reportMakerParam.getMimeType()));
+
+//		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 
@@ -340,7 +419,10 @@ public class ReportServiceControllerTest extends AnyControllerTest {
 				resultActions.andExpect(content().contentType(reportMakerParam.getMimeType()));
 		};
 
-		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
+        mockMvcRestWrapper.restRequest(urlStr).testPutAndReturn(reportMakerParam.getReportParamset())
+            .andExpect(content().contentType(reportMakerParam.getMimeType()));
+
+//		_testUpdateJson(urlStr, reportMakerParam.getReportParamset(), extraInitializer, tester);
 
 	}
 

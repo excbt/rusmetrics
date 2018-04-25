@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -40,24 +41,29 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessService.class);
 
-	@Autowired
-	private SubscrServiceAccessRepository subscrServiceAccessRepository;
 
-	@Autowired
-	private SubscrServiceItemRepository subscrServiceItemRepository;
+	private final SubscrServiceAccessRepository subscrServiceAccessRepository;
 
-	@Autowired
-	private SubscrServicePackRepository subscrServicePackRepository;
+	private final SubscrServiceItemRepository subscrServiceItemRepository;
 
-	@Autowired
-	private SubscrServicePermissionRepository subscrServicePermissionRepository;
+	private final SubscrServicePackRepository subscrServicePackRepository;
 
-	@Autowired
-	private SubscriberRepository subscriberRepository;
+	private final SubscrServicePermissionRepository subscrServicePermissionRepository;
 
-	private SubscriberService subscriberService;
+	private final SubscriberRepository subscriberRepository;
 
-	/**
+	private final SubscriberTimeService subscriberTimeService;
+
+    public SubscrServiceAccessService(SubscrServiceAccessRepository subscrServiceAccessRepository, SubscrServiceItemRepository subscrServiceItemRepository, SubscrServicePackRepository subscrServicePackRepository, SubscrServicePermissionRepository subscrServicePermissionRepository, SubscriberRepository subscriberRepository, SubscriberTimeService subscriberTimeService) {
+        this.subscrServiceAccessRepository = subscrServiceAccessRepository;
+        this.subscrServiceItemRepository = subscrServiceItemRepository;
+        this.subscrServicePackRepository = subscrServicePackRepository;
+        this.subscrServicePermissionRepository = subscrServicePermissionRepository;
+        this.subscriberRepository = subscriberRepository;
+        this.subscriberTimeService = subscriberTimeService;
+    }
+
+    /**
 	 *
 	 * @param subscriberId
 	 * @param accessDate
@@ -332,7 +338,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
     public  <T> List<T> filterObjectAccess(List<T> objectList, PortalUserIds portalUserIds) {
 
         List<T> resultObjects = filterObjectAccess(objectList, portalUserIds,
-            LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(portalUserIds.getSubscriberId())));
+            LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(portalUserIds.getSubscriberId())));
 
         return resultObjects;
     }

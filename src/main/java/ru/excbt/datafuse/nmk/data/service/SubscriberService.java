@@ -175,6 +175,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
+	@Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Date getSubscriberCurrentTime(Long subscriberId) {
 		checkNotNull(subscriberId);

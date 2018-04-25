@@ -1,6 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest.support;
 
-import org.joda.time.LocalDate;
+//import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,14 +149,14 @@ public abstract class AbstractSubscrApiResource {
 		return subscriber.getRmaSubscriberId();
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	protected LocalDate getCurrentSubscriberLocalDate() {
-		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
-		return new LocalDate(d);
-	}
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	protected LocalDate getCurrentSubscriberLocalDate() {
+//		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+//		return new LocalDate(d);
+//	}
 
 	/**
 	 *
@@ -177,15 +177,15 @@ public abstract class AbstractSubscrApiResource {
 		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).plusNanos(duration) : ZonedDateTime.now();
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	protected LocalDate getSubscriberLocalDateOld(Long subscriberId) {
-		Date d = subscriberService.getSubscriberCurrentTime(subscriberId);
-		return new LocalDate(d);
-	}
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	protected LocalDate getSubscriberLocalDateOld(Long subscriberId) {
+//		Date d = subscriberService.getSubscriberCurrentTime(subscriberId);
+//		return new LocalDate(d);
+//	}
 
 	/**
 	 *

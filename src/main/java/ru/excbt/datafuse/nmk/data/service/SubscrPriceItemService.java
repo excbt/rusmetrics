@@ -1,24 +1,11 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
@@ -28,6 +15,13 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceItemValueRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с элементами прайс листов абонентов
@@ -163,7 +157,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 				SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
 				itemValue.setSubcrPriceItem(i);
 				itemValue.setPriceValue(newValue.getPriceValue());
-				itemValue.setValueBeginDate(localDate.toDate());
+				itemValue.setValueBeginDate(LocalDateUtils.asDate(localDate));
 				priceItemValues.add(itemValue);
 			}
 		});
@@ -222,7 +216,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 				SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
 				itemValue.setSubcrPriceItem(i);
 				itemValue.setPriceValue(newValue.getPriceValue());
-				itemValue.setValueBeginDate(localDate.toDate());
+				itemValue.setValueBeginDate(LocalDateUtils.asDate(localDate));
 				priceItemValues.add(itemValue);
 			}
 		});
@@ -231,7 +225,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 			SubscrPriceItemValue itemValue = new SubscrPriceItemValue();
 			itemValue.setSubcrPriceItem(i);
 			itemValue.setPriceValue(i.getPriceValue());
-			itemValue.setValueBeginDate(localDate.toDate());
+			itemValue.setValueBeginDate(LocalDateUtils.asDate(localDate));
 			priceItemValues.add(itemValue);
 		});
 
@@ -274,7 +268,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 		modifiedPriceItemIds.forEach(i -> {
 			List<SubscrPriceItemValue> currentValues = servicePriceItemValueRepository.selectSubscrPriceItemValue(i);
 			currentValues.forEach(cv -> {
-				cv.setValueEndDate(endDate.toDate());
+				cv.setValueEndDate(LocalDateUtils.asDate(endDate));
 			});
 			allCurrentValues.addAll(allCurrentValues);
 		});

@@ -2,9 +2,9 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import org.joda.time.LocalDateTime;
-
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
+
+import java.time.LocalDateTime;
 
 /**
  * Утилиты для работы набором параметров отчета
@@ -28,23 +28,28 @@ public class ReportParamsetDateUtil {
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
-			result = reportDate.withMillisOfDay(0);
+			result = reportDate.toLocalDate().atStartOfDay();
+//			result = reportDate.withMillisOfDay(0);
 			break;
 		}
 		case YESTERDAY: {
-			result = reportDate.minusDays(1).withMillisOfDay(0);
+			result = reportDate.minusDays(1).toLocalDate().atStartOfDay();
+//			result = reportDate.minusDays(1).withMillisOfDay(0);
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case SETTLEMENT_MONTH: {
-			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.minusMonths(1).withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case INTERVAL: {
@@ -71,20 +76,24 @@ public class ReportParamsetDateUtil {
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
-			result = reportDate.withMillisOfDay(0);
+			result = reportDate.toLocalDate().atStartOfDay();
+//			result = reportDate.withMillisOfDay(0);
 			break;
 		}
 		case YESTERDAY: {
-			result = reportDate.minusDays(1).withMillisOfDay(0);
+			result = reportDate.minusDays(1).toLocalDate().atStartOfDay();
+//			result = reportDate.minusDays(1).withMillisOfDay(0);
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withMillisOfDay(0).plusMonths(1).withDayOfMonth(1).minusDays(1);
+			result = reportDate.toLocalDate().atStartOfDay().plusMonths(1).withDayOfMonth(1).minusDays(1);
+//			result = reportDate.withMillisOfDay(0).plusMonths(1).withDayOfMonth(1).minusDays(1);
 			;
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1);
+			result = reportDate.toLocalDate().atStartOfDay().withDayOfMonth(1).minusDays(1);
+//			result = reportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1);
 
 			break;
 		}
@@ -112,23 +121,28 @@ public class ReportParamsetDateUtil {
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
-			result = reportDate.withMillisOfDay(0);
+			result = reportDate.toLocalDate().atStartOfDay();
+//			result = reportDate.withMillisOfDay(0);
 			break;
 		}
 		case YESTERDAY: {
-			result = reportDate.minusDays(1).withMillisOfDay(0);
+			result = reportDate.minusDays(1).toLocalDate().atStartOfDay();
+//			result = reportDate.minusDays(1).withMillisOfDay(0);
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case SETTLEMENT_MONTH: {
-			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
+			result = reportDate.minusMonths(1).withDayOfMonth(1).toLocalDate().atStartOfDay();
+//			result = reportDate.minusMonths(1).withDayOfMonth(1).withMillisOfDay(0);
 			break;
 		}
 		case INTERVAL: {
@@ -155,28 +169,35 @@ public class ReportParamsetDateUtil {
 		LocalDateTime result = null;
 		switch (reportPeriodKey) {
 		case TODAY: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999);
+			result = result = reportDate.withHour(23).withMinute(59).withSecond(59).plusSeconds(1).minusNanos(1);
+//			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999);
 			break;
 		}
 		case YESTERDAY: {
-			result = reportDate.minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
-					.withMillisOfSecond(999);
+			result = reportDate.minusDays(1).withHour(23).withMinute(59).withSecond(59).plusSeconds(1).minusNanos(1);
+//			result = reportDate.minusDays(1).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+//					.withMillisOfSecond(999);
 			break;
 		}
 		case CURRENT_MONTH: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
-					.plusMonths(1).withDayOfMonth(1).minusDays(1);
+			result = reportDate.withHour(23).withMinute(59).withSecond(59).plusSeconds(1).minusNanos(1)
+                .withDayOfMonth(1).plusMonths(1).minusDays(1);
+//			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+//					.plusMonths(1).withDayOfMonth(1).minusDays(1);
 			break;
 		}
 		case SETTLEMENT_MONTH: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
-					.plusMonths(1).withDayOfMonth(1).minusDays(1);
+			result = reportDate.withHour(23).withMinute(59).withSecond(59).plusSeconds(1).minusNanos(1)
+                .withDayOfMonth(1).plusMonths(1).minusDays(1);
+//			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+//					.plusMonths(1).withDayOfMonth(1).minusDays(1);
 			break;
 		}
 		case LAST_MONTH: {
-			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+			result = reportDate.withHour(23).withMinute(59).withSecond(59).plusSeconds(1).minusNanos(1)
 					.withDayOfMonth(1).minusDays(1);
-
+//			result = reportDate.withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59).withMillisOfSecond(999)
+//					.withDayOfMonth(1).minusDays(1);
 			break;
 		}
 		case INTERVAL: {
