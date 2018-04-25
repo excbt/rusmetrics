@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,13 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,7 +120,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	private List<SubscrServiceAccess> subscriberServiceAccessList(Long subscriberId) {
-		LocalDate accessDate = new LocalDate(subscriberService.getSubscriberCurrentTime(subscriberId));
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(subscriberId));
 		List<SubscrServiceAccess> result = subscriberAccessService.selectSubscriberServiceAccess(subscriberId,
 				accessDate);
 
@@ -150,7 +150,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 			@Override
 			public void process() {
 				setResultEntity(
-						subscriberAccessService.processAccessList(subscriberId, LocalDate.now(), subscriberAccessList));
+						subscriberAccessService.processAccessList(subscriberId, java.time.LocalDate.now(), subscriberAccessList));
 
 			}
 		};
@@ -171,7 +171,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 
 			@Override
 			public void process() {
-				setResultEntity(subscriberAccessService.processAccessList(getCurrentSubscriberId(), LocalDate.now(),
+				setResultEntity(subscriberAccessService.processAccessList(getCurrentSubscriberId(), java.time.LocalDate.now(),
 						subscriberAccessList));
 
 			}
@@ -186,8 +186,10 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServicePermissions() {
+        java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId()));
+
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
-				.selectSubscriberPermissions(getCurrentSubscriberId(), getCurrentSubscriberLocalDate());
+				.selectSubscriberPermissions(getCurrentSubscriberId(), currentDate);
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
 		return ApiResponse.responseOK(result);

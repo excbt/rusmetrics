@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -95,7 +95,7 @@ public class SubscrServiceAccessServiceTest extends PortalDataTest {
 	public void testUpdateAccess() throws Exception {
 
 		List<SubscrServiceAccess> subscrServiceAccessList = subscrServiceAccessService
-				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, LocalDate.now());
+				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, java.time.LocalDate.now());
 
 		List<SubscrServiceAccess> newAccess = new ArrayList<>();
 
