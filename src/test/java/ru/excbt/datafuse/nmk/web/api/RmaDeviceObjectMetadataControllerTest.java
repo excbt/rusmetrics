@@ -2,20 +2,35 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 
-@Transactional
-public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
+@RunWith(SpringRunner.class)
+public class RmaDeviceObjectMetadataControllerTest extends PortalApiTest {
 
 	private final static long DEV_RMA_DEVICE_OBJECT_ID = 737;
 	private final static long DEV_RMA_CONT_OBJECT_ID = 725;
@@ -24,8 +39,39 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 	private final static long DEV_DEVICE_OBJECT_ID = 3;
 	private final static long DEV_CONT_OBJECT_ID = 725;
 
+
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@MockBean
+	private PortalUserIdsService portalUserIdsService;
+
+	@Autowired
+	private RmaDeviceObjectMetadataController rmaDeviceObjectMetadataController;
+
 	@Autowired
 	private DeviceObjectMetadataService deviceObjectMetadataService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaDeviceObjectMetadataController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
 
 	/**
 	 *
@@ -34,7 +80,7 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testMeasureUnitGet() throws Exception {
-		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/deviceObjects/metadata/measureUnits").testGet();
 	}
 
 	/**
@@ -44,11 +90,9 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testMeasureUnitSameGet() throws Exception {
-		RequestExtraInitializer param = (builder) -> {
-			builder.param("measureUnit", "p_mpa");
-		};
-
-		_testGet(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/measureUnits"), param);
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/deviceObjects/metadata/measureUnits")
+            .requestBuilder(b-> b.param("measureUnit", "p_mpa"))
+            .testGet();
 	}
 
 	/**
@@ -58,7 +102,7 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testContServiceTypesGet() throws Exception {
-        _testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects/metadata/contServiceTypes"));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/deviceObjects/metadata/contServiceTypes").testGet();
 	}
 
 	/**
@@ -68,9 +112,7 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testDeviceObjectMetadataGet() throws Exception {
-		String url = UrlUtils.apiRmaUrl(
-				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
-		_testGetJson(url);
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID).testGet();
 	}
 
 	/**
@@ -87,16 +129,13 @@ public class RmaDeviceObjectMetadataControllerTest extends RmaControllerTest {
 			i.setMetaComment("Comment by REST :" + System.currentTimeMillis());
 		});
 
-		String url = UrlUtils.apiRmaUrl(
-				String.format("/contObjects/%d/deviceObjects/%d/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID));
-		_testUpdateJson(url, metadata);
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/metadata", DEV_CONT_OBJECT_ID, DEV_DEVICE_OBJECT_ID).testPut(metadata);
 	}
 
 	@Test
     @Transactional
 	public void testDeviceObjectMetadataByContObject() throws Exception {
-		_testGetJson("/api/rma/contObjects/725/deviceObjects/byContZPoint/512084866/metadata");
-		///contObjects/{contObjectId}/deviceObjects/byContZPoint/{contZPointId}/metadata
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/725/deviceObjects/byContZPoint/{id1}/metadata", 512084866).testGet();
 	}
 
 }

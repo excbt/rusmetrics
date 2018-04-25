@@ -1,44 +1,83 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.ResultActionsTester;
+import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.ContObject;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
-import ru.excbt.datafuse.nmk.utils.TestUtils;
-import ru.excbt.datafuse.nmk.web.ResultActionsTester;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
-import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
-
-@Transactional
-public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
+@RunWith(SpringRunner.class)
+public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrObjectTreeControllerTest.class);
 
 	@Autowired
-	private SubscrObjectTreeService subscrObjectTreeService;
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
 
 	@Autowired
-	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@MockBean
+	private PortalUserIdsService portalUserIdsService;
+
+    @Autowired
+    private SubscrObjectTreeService subscrObjectTreeService;
+
+    @Autowired
+    private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
+
+    @Autowired
+    private RmaSubscrObjectTreeController rmaSubscrObjectTreeController;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrObjectTreeController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
 
 	/**
 	 *
@@ -47,7 +86,7 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Ignore
 	@Test
 	public void testSubscrObjectTreeGet() throws Exception {
-		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/1");
+//		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1/1");
 	}
 
 	/**
@@ -55,7 +94,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testSubscrObjectTreeListGet() throws Exception {
-		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
+        mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testGet();
+//		_testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
 	}
 
 	/**
@@ -64,7 +104,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	 * @throws Exception
 	 */
 	private List<SubscrObjectTreeTemplate> getTemplates() throws Exception {
-		String content = _testGetJson("/api/rma/subscrObjectTreeTemplates");
+
+		String content = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTreeTemplates").testGet().getStringContent();
+//            _testGetJson("/api/rma/subscrObjectTreeTemplates");
 
 		List<SubscrObjectTreeTemplate> templates = TestUtils.fromJSON(new TypeReference<List<SubscrObjectTreeTemplate>>() {
 		}, content);
@@ -98,11 +140,13 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		tree.setObjectName("Object 1");
 		tree.setTemplateId(templateId);
 
-		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+		Long id = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testPost(tree).getLastId();
+//            _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
 
 		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
+        mockMvcRestWrapper.restRequest(url).testDelete();
 
-		_testDeleteJson(url);
+//		_testDeleteJson(url);
 
 	}
 
@@ -117,11 +161,14 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		ObjectNameHolder tree = new ObjectNameHolder();
 		tree.setObjectName("Object 1");
 
-		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+		Long id = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testPost(tree).getLastId();
+//            _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
 
 		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
 
-		String content = _testGetJson(url);
+		String content = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//            _testGetJson(url);
+
 
 		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
@@ -130,9 +177,11 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		SubscrObjectTree floor2 = subscrObjectTreeService.addChildObject(tree1, "Этаж 2");
 		SubscrObjectTree floor3 = subscrObjectTreeService.addChildObject(tree1, "Этаж 3");
 
-		_testUpdateJson(url, tree1);
+        mockMvcRestWrapper.restRequest(url).testPut(tree1);
+//		_testUpdateJson(url, tree1);
 
-		content = _testGetJson(url);
+		content = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//            _testGetJson(url);
 		tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
@@ -150,9 +199,12 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 			subscrObjectTreeService.addChildObject(floor2, "Кв " + i);
 		}
 
-		_testUpdateJson(url, tree1);
+        mockMvcRestWrapper.restRequest(url)
+            .testPut(tree1)
+            .testDelete();
+//		_testUpdateJson(url, tree1);
 
-		_testDeleteJson(url);
+//		_testDeleteJson(url);
 
 	}
 
@@ -184,11 +236,13 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		tree.setObjectName("Поэтажный план 1");
 		tree.setTemplateId(template.getId());
 
-		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+		Long id = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testPost(tree).getLastId();
+//            _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
 
 		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
 
-		String content = _testGetJson(url);
+		String content = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//            _testGetJson(url);
 
 		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
@@ -205,9 +259,11 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		SubscrObjectTree floor3 = subscrObjectTreeService.addChildObject(tree1, "Этаж 3");
 		floor3.setTemplateItemId(itemlevel1.getId());
 
-		_testUpdateJson(url, tree1);
+        mockMvcRestWrapper.restRequest(url).testPut(tree1);
+//		_testUpdateJson(url, tree1);
 
-		content = _testGetJson(url);
+		content = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//        _testGetJson(url);
 		tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
 
@@ -227,9 +283,12 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 			apt.setTemplateItemId(itemlevel2.getId());
 		}
 
-		_testUpdateJson(url, tree1);
+        mockMvcRestWrapper.restRequest(url)
+            .testPut(tree1)
+            .testDelete();
+//		_testUpdateJson(url, tree1);
 
-		_testDeleteJson(url);
+//		_testDeleteJson(url);
 
 	}
 
@@ -247,11 +306,14 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		tree.setObjectName("Object 1");
 		tree.setTemplateId(templateId);
 
-		Long id = _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
+		Long id = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1")
+            .testPost(tree).getLastId();
+//            _testCreateJson("/api/rma/subscrObjectTree/contObjectTreeType1", tree);
 
 		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/" + id;
 
-		String content = _testGetJson(url);
+		String content = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//		_testGetJson(url);
 
 		SubscrObjectTree tree1 = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 		}, content);
@@ -263,9 +325,13 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 			resultActions.andExpect(status().is4xxClientError());
 		};
 
-		_testUpdateJson(url, tree1, null, tester);
+        mockMvcRestWrapper.restRequest(url).testPutAndReturn(tree1)
+            .andDo(MockMvcResultHandlers.print())
+            .andExpect(status().is4xxClientError());
+//		_testUpdateJson(url, tree1, null, tester);
 
-		_testDeleteJson(url);
+        mockMvcRestWrapper.restRequest(url).testDelete();
+//		_testDeleteJson(url);
 
 	}
 
@@ -276,7 +342,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Test
 	public void testSubscrObjectTreeContObjects() throws Exception {
 
-		String treeListContent = _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
+		String treeListContent = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testGet().getStringContent();
+//            _testGetJson("/api/rma/subscrObjectTree/contObjectTreeType1");
 		List<SubscrObjectTree> treeList = TestUtils.fromJSON(new TypeReference<List<SubscrObjectTree>>() {
 		}, treeListContent);
 
@@ -289,8 +356,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		Long treeNodeId = null;
 		for (SubscrObjectTree t : treeList) {
 			treeId = t.getId();
-			String treeContent = _testGetJson(
-					String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
+			String treeContent = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1/{id1}", treeId).testGet().getStringContent();
+//                _testGetJson(
+//					String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d", treeId));
 			SubscrObjectTree tree = TestUtils.fromJSON(new TypeReference<SubscrObjectTree>() {
 			}, treeContent);
 
@@ -304,8 +372,10 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		assertNotNull("There is no available nodes", treeNodeId);
 
-		String freeContent = _testGetJson(
-				String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/contObjects/free", treeId));
+		String freeContent = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1/{id1}/contObjects/free", treeId)
+            .testGet().getStringContent();
+//            _testGetJson(
+//				String.format("/api/rma/subscrObjectTree/contObjectTreeType1/%d/contObjects/free", treeId));
 
 		List<ContObject> freeContObjects = TestUtils.fromJSON(new TypeReference<List<ContObject>>() {
 		}, freeContent);
@@ -316,7 +386,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 		String contObjectsUrlAdd = contObjectsUrl + "/add";
 		String contObjectsUrlRemove = contObjectsUrl + "/remove";
 
-		String content = _testGetJson(contObjectsUrl);
+		String content = mockMvcRestWrapper.restRequest(contObjectsUrl).testGet().getStringContent();
+//            _testGetJson(contObjectsUrl);
 
 		List<ContObject> linkedContObjects = TestUtils.fromJSON(new TypeReference<List<ContObject>>() {
 		}, content);
@@ -331,7 +402,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				contObjectIds.add(contObject.getId());
 			}
 
-			_testUpdateJson(contObjectsUrlAdd, contObjectIds);
+            mockMvcRestWrapper.restRequest(contObjectsUrlAdd).testPut(contObjectIds);
+//			_testUpdateJson(contObjectsUrlAdd, contObjectIds);
 
 			logger.info("Found {} free contObjects", freeContObjects.size());
 			logger.info("Saved {} contObjects", contObjectIds.size());
@@ -343,7 +415,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 				ContObject contObject = linkedContObjects.get(i);
 				contObjectIds.add(contObject.getId());
 			}
-			_testUpdateJson(contObjectsUrlRemove, contObjectIds);
+            mockMvcRestWrapper.restRequest(contObjectsUrlRemove).testPut(contObjectIds);
+//			_testUpdateJson(contObjectsUrlRemove, contObjectIds);
 
 			logger.info("Found {} linked contObjects", linkedContObjects.size());
 			logger.info("Deleted {} contObjects", contObjectIds.size());
@@ -359,9 +432,9 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 	@Ignore
 	@Test
 	public void testDeleteChildNode() throws Exception {
-		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512134227";
-
-		_testDeleteJson(url);
+//		String url = "/api/rma/subscrObjectTree/contObjectTreeType1/512134227";
+        mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1/{id1}", 512134227).testDelete();
+//		_testDeleteJson(url);
 	}
 
 	@Ignore
@@ -371,7 +444,8 @@ public class RmaSubscrObjectTreeControllerTest extends RmaControllerTest {
 
 		List<Long> ids = Arrays.asList(488501788L);
 
-		_testDeleteJson(url, ids);
+        mockMvcRestWrapper.restRequest(url).testDelete(ids);
+//		_testDeleteJson(url, ids);
 	}
 
 }

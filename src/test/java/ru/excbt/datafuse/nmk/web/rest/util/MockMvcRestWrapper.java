@@ -142,9 +142,13 @@ public class MockMvcRestWrapper {
          */
         public ResultActions testPutAndReturn(Object obj) throws Exception {
 
-            MockHttpServletRequestBuilder requestBuilder = put(urlTemplate, uriVars)
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(obj));
+            MockHttpServletRequestBuilder requestBuilder = put(urlTemplate, uriVars);
+
+            if (obj != null) {
+                requestBuilder.contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(obj));
+            }
+
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
             ResultActions resultActions = perform(requestBuilder);
@@ -158,6 +162,11 @@ public class MockMvcRestWrapper {
             return this;
         }
 
+        public RestRequest testPut() throws Exception {
+            testPutAndReturn(null);
+            return this;
+        }
+
         /**
          *
          * @param obj
@@ -166,9 +175,11 @@ public class MockMvcRestWrapper {
          */
         public ResultActions testPostAndReturn(Object obj, Optional<ResultMatcher> resultMatcherOptional) throws Exception {
 
-            MockHttpServletRequestBuilder requestBuilder = post(urlTemplate, uriVars)
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(obj));
+            MockHttpServletRequestBuilder requestBuilder = post(urlTemplate, uriVars);
+            if (obj != null) {
+                requestBuilder.contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(obj));
+            }
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
             ResultActions resultActions = perform(requestBuilder, resultMatcherOptional);
@@ -182,9 +193,19 @@ public class MockMvcRestWrapper {
             return this;
         }
 
-        public ResultActions testDeleteAndReturn() throws Exception {
+        public RestRequest testPost() throws Exception {
+            testPostAndReturn(null, Optional.of(status().is2xxSuccessful()));
+            return this;
+        }
+
+
+        public ResultActions testDeleteAndReturn(Object obj) throws Exception {
 
             MockHttpServletRequestBuilder requestBuilder = delete(urlTemplate, uriVars);
+            if (obj != null) {
+                requestBuilder.contentType(TestUtil.APPLICATION_JSON_UTF8)
+                    .content(TestUtil.convertObjectToJsonBytes(obj));
+            }
 
             this.requestBuilder.ifPresent(b -> b.accept(requestBuilder));
 
@@ -195,7 +216,12 @@ public class MockMvcRestWrapper {
         }
 
         public RestRequest testDelete() throws Exception {
-            testDeleteAndReturn();
+            testDeleteAndReturn(null);
+            return this;
+        }
+
+        public RestRequest testDelete(Object obj) throws Exception {
+            testDeleteAndReturn(obj);
             return this;
         }
 
