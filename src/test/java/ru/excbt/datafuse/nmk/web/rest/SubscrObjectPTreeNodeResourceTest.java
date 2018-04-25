@@ -33,6 +33,8 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrObjectPTreeNodeResourceTest.class);
 
+    public static final Long NODE_ID = 173486397L; //129634385L;
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -69,7 +71,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     public void getPTreeNode() throws Exception {
 
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}", 129634385))
+            get("/api/p-tree-node/{nodeId}", NODE_ID))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
@@ -79,7 +81,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     public void getPTreeNodeChild() throws Exception {
 
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}", 129634394))
+            get("/api/p-tree-node/{nodeId}", NODE_ID))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
@@ -89,7 +91,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     public void getPTreeNodeLeveled() throws Exception {
 
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}", 129634385)
+            get("/api/p-tree-node/{nodeId}", NODE_ID)
                 .param("childLevel", Integer.valueOf(1).toString()))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
@@ -100,7 +102,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     @Test
     public void getPTreeNodeStub() throws Exception {
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}/stub", 129634385))
+            get("/api/p-tree-node/{nodeId}/stub", NODE_ID))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
@@ -110,7 +112,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     @Test
     public void getPTreeNodeChildStub() throws Exception {
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}/stub", 129634394))
+            get("/api/p-tree-node/{nodeId}/stub", NODE_ID))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));
@@ -120,7 +122,7 @@ public class SubscrObjectPTreeNodeResourceTest extends PortalApiTest {
     public void getPTreeNodeLeveledStub() throws Exception {
 
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node/{nodeId}/stub", 129634385)
+            get("/api/p-tree-node/{nodeId}/stub", NODE_ID)
                 .param("childLevel", Integer.valueOf(1).toString()))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
