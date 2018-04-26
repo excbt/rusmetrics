@@ -1,21 +1,20 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.LogSession;
+import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskLogRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskRepository;
 
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.LogSession;
-import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
-import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskLogRepository;
-import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskRepository;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class SubscrSessionTaskService {
@@ -86,14 +85,14 @@ public class SubscrSessionTaskService {
 
 	/**
 	 *
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 * @param task
 	 */
-	public void initTask(SubscriberParam subscriberParam, SubscrSessionTask task) {
-		checkNotNull(subscriberParam);
+	public void initTask(PortalUserIds portalUserIds, SubscrSessionTask task) {
+		checkNotNull(portalUserIds);
 		checkNotNull(task);
-		task.setSubscriberId(subscriberParam.getSubscriberId());
-		task.setSubscrUserId(subscriberParam.getSubscrUserId());
+		task.setSubscriberId(portalUserIds.getSubscriberId());
+		task.setSubscrUserId(portalUserIds.getUserId());
 	}
 
 	/**

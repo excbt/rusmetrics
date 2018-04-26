@@ -118,20 +118,20 @@ public class SubscrPrefService implements SecuredRoles {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param prefValueList
      * @return
      */
 	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrPrefValue> saveSubscrPrefValues(SubscriberParam subscriberParam,
+	public List<SubscrPrefValue> saveSubscrPrefValues(PortalUserIds portalUserIds,
 			List<SubscrPrefValue> prefValueList) {
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 		checkNotNull(prefValueList);
 
-		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberParam.getSubscriberId());
+		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(portalUserIds.getSubscriberId());
 
-		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
+		List<SubscrPrefValue> result = filterSubscriberPrefValues(portalUserIds.getSubscriberId(),
 				subscrTypeKey.getKeyname(), prefValueList);
 		return Lists.newArrayList(subscrPrefValueRepository.save(result));
 	}

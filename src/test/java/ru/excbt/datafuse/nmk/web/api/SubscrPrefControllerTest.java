@@ -3,19 +3,74 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
+import java.util.function.Consumer;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@Transactional
-public class SubscrPrefControllerTest extends RmaControllerTest {
+@RunWith(SpringRunner.class)
+public class SubscrPrefControllerTest extends PortalApiTest {
+
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    private MockMvc restPortalMockMvc;
+
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Mock
+    private PortalUserIdsService portalUserIdsService;
+
+    private SubscrPrefController subscrPrefController;
+    @Autowired
+    private SubscrPrefService subscrPrefService;
+    @Autowired
+    private SubscrObjectTreeService subscrObjectTreeService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        subscrPrefController = new SubscrPrefController(subscrPrefService, subscrObjectTreeService, portalUserIdsService);
+
+        this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrPrefController)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+    }
+
 
 	/**
 	 *
@@ -23,7 +78,7 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testSubscrPrefValuesGet() throws Exception {
-		_testGetJson("/api/subscr/subscrPrefValues");
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrPrefValues").testGet();
 	}
 
 	/**
@@ -32,10 +87,12 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testSubscrPrefValueGet() throws Exception {
-		RequestExtraInitializer param = (builder) -> {
+		Consumer<MockHttpServletRequestBuilder> params = (builder) -> {
 			builder.param("subscrPrefKeyname", "SUBSCR_OBJECT_TREE_CONT_OBJECTS");
 		};
-		_testGetJson("/api/subscr/subscrPrefValue", param);
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrPrefValue")
+            .requestBuilder(params)
+            .testGet();
 	}
 
 	/**
@@ -44,7 +101,9 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testSubscrPrefValuesSave() throws Exception {
-		String prefValuesContent = _testGetJson("/api/subscr/subscrPrefValues");
+		String prefValuesContent = mockMvcRestWrapper.restRequest("/api/subscr/subscrPrefValues")
+            .testGet().getStringContent();
+
 
 		List<SubscrPrefValue> prefValues = TestUtils.fromJSON(new TypeReference<List<SubscrPrefValue>>() {
 		}, prefValuesContent);
@@ -54,10 +113,10 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 		for (SubscrPrefValue v : prefValues) {
 			v.setValue("value_" + System.currentTimeMillis());
 			v.setSubscrPref(null);
-			v.setDevComment(EDITED_BY_REST);
+			v.setDevComment("Deleted By Rest");
 		}
 
-		_testUpdateJson("/api/subscr/subscrPrefValues", prefValues);
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrPrefValues").testPut(prefValues);
 	}
 
 	/**
@@ -66,10 +125,12 @@ public class SubscrPrefControllerTest extends RmaControllerTest {
 	 */
 	@Test
 	public void testSubscrPrefObjectTreeType() throws Exception {
-		RequestExtraInitializer param = (builder) -> {
+		Consumer<MockHttpServletRequestBuilder> params = (builder) -> {
 			builder.param("subscrPrefKeyname", "SUBSCR_OBJECT_TREE_CONT_OBJECTS");
 		};
-		_testGet("/api/subscr/subscrPrefValues/objectTreeTypes", param);
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrPrefValues/objectTreeTypes")
+            .requestBuilder(params)
+            .testGet();
 	}
 
 }

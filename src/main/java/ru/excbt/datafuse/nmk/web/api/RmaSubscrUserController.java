@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
+import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -36,6 +40,8 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 public class RmaSubscrUserController extends SubscrUserController {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserController.class);
+
+	private final SubscriberService subscriberService;
 
 	public class UsernameCheck {
 		private final boolean userValid;
@@ -55,7 +61,12 @@ public class RmaSubscrUserController extends SubscrUserController {
 		}
 	}
 
-	/**
+    public RmaSubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService);
+        this.subscriberService = subscriberService;
+    }
+
+    /**
 	 *
 	 * @param rSubscriberId
 	 * @return
@@ -64,13 +75,13 @@ public class RmaSubscrUserController extends SubscrUserController {
 	public ResponseEntity<?> getSubscrUsers(@PathVariable("rSubscriberId") Long rSubscriberId) {
 		checkNotNull(rSubscriberId);
 
-		if (!currentSubscriberService.isRma()) {
+		if (!portalUserIdsService.getCurrentIds().isRma()) {
 			ApiResponse.responseForbidden();
 		}
 
 		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
-				|| !subscriber.getRmaSubscriberId().equals(getCurrentSubscriberId())) {
+				|| !subscriber.getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -141,11 +152,11 @@ public class RmaSubscrUserController extends SubscrUserController {
 
 	}
 
-	/**
-	 *
-	 * @param rSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param username
+     * @return
+     */
 	@RequestMapping(value = "/subscrUsers/checkExists", method = RequestMethod.GET)
 	public ResponseEntity<?> getSubscrUsersCheck(@RequestParam("username") String username) {
 		checkNotNull(username);

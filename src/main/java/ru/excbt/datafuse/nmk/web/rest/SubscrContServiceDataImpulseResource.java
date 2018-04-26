@@ -64,7 +64,8 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 	private final WebAppPropsService webAppPropsService;
 
 	@Autowired
-    public SubscrContServiceDataImpulseResource(ContServiceDataImpulseService contServiceDataImpulseService, WebAppPropsService webAppPropsService) {
+    public SubscrContServiceDataImpulseResource(ContServiceDataImpulseService contServiceDataImpulseService,
+                                                WebAppPropsService webAppPropsService) {
         this.contServiceDataImpulseService = contServiceDataImpulseService;
         this.webAppPropsService = webAppPropsService;
     }

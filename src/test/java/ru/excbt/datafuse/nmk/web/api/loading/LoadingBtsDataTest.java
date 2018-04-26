@@ -3,6 +3,18 @@
  */
 package ru.excbt.datafuse.nmk.web.api.loading;
 
+import org.junit.Before;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -12,10 +24,13 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EditDataSourceDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.LoadingBtsData;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
 import ru.excbt.datafuse.nmk.utils.LoadingBtsData.BtsInfo;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -25,6 +40,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.web.api.RmaContZPointResource;
+import ru.excbt.datafuse.nmk.web.rest.RmaContObjectResource;
+import ru.excbt.datafuse.nmk.web.rest.RmaDeviceObjectResource;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -37,6 +57,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.*;
 import static org.junit.Assert.*;
@@ -48,16 +69,54 @@ import static org.junit.Assert.*;
  * @since 27.02.2017
  *
  */
-@WithMockUser(username = "rma-77-admin",
-roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
-		"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN" })
-public class LoadingBtsDataTest extends RmaControllerTest {
+@RunWith(SpringRunner.class)
+@Ignore
+public class LoadingBtsDataTest extends PortalApiTest {
 
 	/**
 	 *
 	 */
 
 	private static final Logger log = LoggerFactory.getLogger(LoadingBtsDataTest.class);
+
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@MockBean
+	private PortalUserIdsService portalUserIdsService;
+
+	@Autowired
+	private RmaContObjectResource rmaContObjectResource;
+
+    @Autowired
+	private RmaContZPointResource rmaContZPointResource;
+
+    @Autowired
+	private RmaDeviceObjectResource rmaDeviceObjectResource;
+
+    @Autowired
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaContObjectResource,
+            rmaContZPointResource, rmaDeviceObjectResource)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
 
 	private final long BTS_DATA_SOURCE_ID = 128908069;
 	private final long DEVICE_MODEL_ID = 128647057;
@@ -103,12 +162,16 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 			contObjectDTO.setTimezoneDefKeyname(TimezoneDefKey.MSK.getKeyname());
 			contObjectDTO.setCurrentSettingMode("summer");
 
-			RequestExtraInitializer params = (builder) -> {
+			Consumer<MockHttpServletRequestBuilder> params = (builder) -> {
 				builder.param("cmOrganizationId", String.valueOf(CM_ORGANIZARION_ID));
 			};
 
 			// Make ContObject
-			Long contObjectId = _testCreateJson("/api/rma/contObjects", contObjectDTO, params);
+			Long contObjectId = mockMvcRestWrapper.restRequest("/api/rma/contObjects")
+                .requestBuilder(params)
+                .testPost(contObjectDTO).getLastId();
+
+//                _testCreateJson("/api/rma/contObjects", contObjectDTO, params);
 			assertNotNull(contObjectId);
 			res.contObjectId = contObjectId;
 
@@ -129,8 +192,11 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				deviceObjectDTO.getEditDataSourceInfo().setSubscrDataSourceId(BTS_DATA_SOURCE_ID);
 				deviceObjectDTO.setNumber(info.getBtsNr() + "#" + i);
 
-				Long deviceObjectId = _testCreateJson(
-						String.format("/api/rma/contObjects/%d/deviceObjects", contObjectId), deviceObjectDTO);
+                Long deviceObjectId = mockMvcRestWrapper.restRequest("/api/rma/contObjects/%d/deviceObjects", contObjectId)
+                    .testPost(deviceObjectDTO).getLastId();
+
+//				Long deviceObjectId = _testCreateJson(
+//						String.format("/api/rma/contObjects/%d/deviceObjects", contObjectId), deviceObjectDTO);
 				assertNotNull(deviceObjectId);
 				deviceObjectIds[i - 1] = deviceObjectId;
 				res.deviceObjectIds.add(deviceObjectId);
@@ -150,10 +216,15 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 				contZPointVM.setStartDate(LocalDateUtils.asDate(LocalDate.now()));
 				contZPointVM.setRsoId(RSO_ORGANIZARION_ID);
                 //contZPoint.setDeviceObject();
-				Long contZpointId = _testCreateJson(String.format("/api/rma/contObjects/%d/zpoints", contObjectId),
-						contZPointVM);
-				assertNotNull(contZpointId);
-				res.contZPointIds.add(contZpointId);
+
+                Long contZPointId =
+                    mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id}/zpoints", contObjectId)
+                    .testPost(contZPointVM).getLastId();
+
+//				Long contZpointId = _testCreateJson(String.format("/api/rma/contObjects/%d/zpoints", contObjectId),
+//						contZPointVM);
+				assertNotNull(contZPointId);
+				res.contZPointIds.add(contZPointId);
 			}
 
 			loadingResults.add(res);
@@ -252,16 +323,22 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 		for (LoadingResult r : loadingResults) {
 			// Delete ContZpoints
 			for (int i = 0; i < r.contZPointIds.size(); i++) {
-				_testDeleteJson(String.format("/api/rma/contObjects/%d/zpoints/%d", r.contObjectId,
-						r.contZPointIds.get(i)));
+                mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/zpoints/{id2}",
+                    r.contObjectId,
+                    r.contZPointIds.get(i)).testDelete();
+//				_testDeleteJson(String.format("/api/rma/contObjects/%d/zpoints/%d", r.contObjectId,
+//						r.contZPointIds.get(i)));
 			}
 			// Delete DeviceObjects
 			for (int i = 0; i < r.deviceObjectIds.size(); i++) {
-				_testDeleteJson(String.format("/api/rma/contObjects/%d/deviceObjects/%d", r.contObjectId,
-						r.deviceObjectIds.get(i)));
+                mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}", r.contObjectId,
+                    r.deviceObjectIds.get(i)).testDelete();
+//				_testDeleteJson(String.format("/api/rma/contObjects/%d/deviceObjects/%d", r.contObjectId,
+//						r.deviceObjectIds.get(i)));
 			}
 			//
-			_testDeleteJson(String.format("/api/rma/contObjects/%d", r.contObjectId));
+            mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id}", r.contObjectId).testDelete();
+//			_testDeleteJson(String.format("/api/rma/contObjects/%d", r.contObjectId));
 		}
 	}
 
@@ -269,7 +346,6 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 	 *
 	 * @return
 	 */
-	@Override
 	public long getSubscriberId() {
 		return ROM_RMA_SUBSCRIBER_ID;
 	}
@@ -278,7 +354,6 @@ public class LoadingBtsDataTest extends RmaControllerTest {
 	 *
 	 * @return
 	 */
-	@Override
 	public long getSubscrUserId() {
 		return ROM_RMA_SUBSCRIBER_USER_ID;
 	}

@@ -493,14 +493,14 @@ public class SubscrObjectTreeService implements SecuredRoles {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrObjectTree> selectSubscrObjectTreeShort(final SubscriberParam subscriberParam) {
-		List<Object[]> results = subscriberParam.isRma()
-				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(subscriberParam.getSubscriberId())
-				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(subscriberParam.getSubscriberId());
+	public List<SubscrObjectTree> selectSubscrObjectTreeShort(final PortalUserIds portalUserIds) {
+		List<Object[]> results = portalUserIds.isRma()
+				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(portalUserIds.getSubscriberId())
+				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(portalUserIds.getSubscriberId());
 
 		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName");
 
