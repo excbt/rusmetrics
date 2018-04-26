@@ -90,7 +90,7 @@ public class UserDTO {
         this.lastModifiedBy = systemUser.getLastModifiedBy() != null ? systemUser.getLastModifiedBy().toString() : null;
         this.createdDate = systemUser.getCreatedDate();
         this.lastModifiedDate = systemUser.getLastModifiedDate();
-        this.authorities = AuthoritiesConstants.makeAdminSet();
+        this.authorities = AuthoritiesConstants.systemAuthorities();
     }
 
 

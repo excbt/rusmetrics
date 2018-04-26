@@ -3,12 +3,11 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeActionService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -32,14 +31,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 23.12.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping("/api/subscr/contEventType")
-public class SubscrContEventTypeActionController extends AbstractSubscrApiResource {
+public class SubscrContEventTypeActionController  {
 
-	@Autowired
-	private SubscrContEventTypeActionService subscrContEventTypeActionService;
+	private final SubscrContEventTypeActionService subscrContEventTypeActionService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrContEventTypeActionController(SubscrContEventTypeActionService subscrContEventTypeActionService, PortalUserIdsService portalUserIdsService) {
+        this.subscrContEventTypeActionService = subscrContEventTypeActionService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -79,7 +84,8 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 
 			@Override
 			public List<SubscrContEventTypeAction> processAndReturnResult() {
-				return subscrContEventTypeActionService.updateSubscrContEventTypeActions(getCurrentSubscriber(),
+				return subscrContEventTypeActionService.updateSubscrContEventTypeActions(
+				        new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()),
 						contEventType, actionList);
 			}
 		};
@@ -95,7 +101,7 @@ public class SubscrContEventTypeActionController extends AbstractSubscrApiResour
 	@RequestMapping(value = "/{contEventTypeId}/actions", method = RequestMethod.GET)
 	public ResponseEntity<?> getContEventTypeActions(@PathVariable(value = "contEventTypeId") Long contEventTypeId) {
 		List<SubscrContEventTypeAction> result = subscrContEventTypeActionService
-				.selectSubscrContEventTypeActions(getCurrentSubscriberId(), contEventTypeId);
+				.selectSubscrContEventTypeActions(portalUserIdsService.getCurrentIds().getSubscriberId(), contEventTypeId);
 		return ApiResponse.responseOK(result);
 	}
 

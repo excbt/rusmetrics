@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrVCookieRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 
@@ -29,25 +30,25 @@ public class SubscrVCookieService {
 
 	/**
 	 *
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrVCookie> selectSubscrVCookie(SubscriberParam subscriberParam) {
+	public List<SubscrVCookie> selectSubscrVCookie(PortalUserIds portalUserIds) {
 		List<SubscrVCookie> result = subscrVCookieRepository
-				.selectSubscrVCookie(subscriberParam.getSubscriberId());
+				.selectSubscrVCookie(portalUserIds.getSubscriberId());
 		return result;
 	}
 
 	/**
 	 *
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrVCookie> selectSubscrVCookieByUser(SubscriberParam subscriberParam) {
+	public List<SubscrVCookie> selectSubscrVCookieByUser(PortalUserIds portalUserIds) {
 		List<SubscrVCookie> result = subscrVCookieRepository
-				.selectSubscrVCookie(subscriberParam.getSubscriberId(), subscriberParam.getSubscrUserId());
+				.selectSubscrVCookie(portalUserIds.getSubscriberId(), portalUserIds.getUserId());
 		return result;
 	}
 

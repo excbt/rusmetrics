@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager } from 'ng-jhipster';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators} from '@angular/forms';
-import { Organization } from './organization.model';
+import { Organization, organizationModification } from './organization.model';
 import { OrganizationType } from '../organization-types/organization-type.model';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
@@ -35,7 +35,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         service: OrganizationsService,
         private organizationTypeService: OrganizationTypeService) {
             super(
-                {   modificationEventName: 'organizationModification',
+                {   modificationEventName: organizationModification,
                     backUrl: '/organizations',
                     onSaveUrl: '/organizations',
                     onDeleteUrl: '/organizations'

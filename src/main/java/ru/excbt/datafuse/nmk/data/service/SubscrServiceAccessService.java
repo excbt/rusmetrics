@@ -1,35 +1,32 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.persistence.PersistenceException;
-
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.repository.*;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+
+import javax.persistence.PersistenceException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.google.common.base.Preconditions.*;
 
 /**
  * Сервис для работы с доступом к услугам абонента
@@ -44,22 +41,29 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessService.class);
 
-	@Autowired
-	private SubscrServiceAccessRepository subscrServiceAccessRepository;
 
-	@Autowired
-	private SubscrServiceItemRepository subscrServiceItemRepository;
+	private final SubscrServiceAccessRepository subscrServiceAccessRepository;
 
-	@Autowired
-	private SubscrServicePackRepository subscrServicePackRepository;
+	private final SubscrServiceItemRepository subscrServiceItemRepository;
 
-	@Autowired
-	private SubscrServicePermissionRepository subscrServicePermissionRepository;
+	private final SubscrServicePackRepository subscrServicePackRepository;
 
-	@Autowired
-	private SubscriberRepository subscriberRepository;
+	private final SubscrServicePermissionRepository subscrServicePermissionRepository;
 
-	/**
+	private final SubscriberRepository subscriberRepository;
+
+	private final SubscriberTimeService subscriberTimeService;
+
+    public SubscrServiceAccessService(SubscrServiceAccessRepository subscrServiceAccessRepository, SubscrServiceItemRepository subscrServiceItemRepository, SubscrServicePackRepository subscrServicePackRepository, SubscrServicePermissionRepository subscrServicePermissionRepository, SubscriberRepository subscriberRepository, SubscriberTimeService subscriberTimeService) {
+        this.subscrServiceAccessRepository = subscrServiceAccessRepository;
+        this.subscrServiceItemRepository = subscrServiceItemRepository;
+        this.subscrServicePackRepository = subscrServicePackRepository;
+        this.subscrServicePermissionRepository = subscrServicePermissionRepository;
+        this.subscriberRepository = subscriberRepository;
+        this.subscriberTimeService = subscriberTimeService;
+    }
+
+    /**
 	 *
 	 * @param subscriberId
 	 * @param accessDate
@@ -68,7 +72,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServiceAccess> selectSubscriberServiceAccessFull(long subscriberId, LocalDate accessDate) {
 		checkNotNull(accessDate);
-		return subscrServiceAccessRepository.selectBySubscriberId(subscriberId, accessDate.toDate());
+		return subscrServiceAccessRepository.selectBySubscriberId(subscriberId, LocalDateUtils.asDate(accessDate));
 	}
 
 	/**
@@ -82,7 +86,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		checkNotNull(accessDate);
 
 		List<SubscrServiceAccess> accessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
-				accessDate.toDate());
+            LocalDateUtils.asDate(accessDate));
 
 		List<SubscrServiceAccess> result = accessList.stream().filter((i) -> i.getAccessEndDate() == null)
 				.collect(Collectors.toList());
@@ -111,7 +115,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		entity.setSubscriber(subscriber);
 
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository
-				.selectBySubscriberIdAndPackId(subscriberId, entity.getPackId(), accessDate.toDate());
+				.selectBySubscriberIdAndPackId(subscriberId, entity.getPackId(), LocalDateUtils.asDate(accessDate));
 
 		SubscrServiceAccess grantedAccess = grantPackItemAccess(subscriber, currentAccessList, entity.getPackId(),
 				entity.getItemId(), accessDate);
@@ -132,7 +136,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 			final List<SubscrServiceAccess> accessList) {
 		checkNotNull(accessDate, "accessDate is not set");
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
-				accessDate.toDate());
+				LocalDateUtils.asDate(accessDate));
 
 		final List<SubscrServiceAccess> extraAccessList = new ArrayList<>(accessList);
 
@@ -168,19 +172,19 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		addGrants.forEach((i) -> {
 			checkState(i.isNew());
 			i.setSubscriber(subscriber);
-			i.setAccessStartDate(accessDate.toDate());
+			i.setAccessStartDate(LocalDateUtils.asDate(accessDate));
 		});
 
 		removeGrants.forEach((c) -> {
 			checkState(!c.isNew());
-			c.setAccessEndDate(accessDate.toDate());
+			c.setAccessEndDate(LocalDateUtils.asDate(accessDate));
 		});
 
 		subscrServiceAccessRepository.save(addGrants);
 		subscrServiceAccessRepository.save(removeGrants);
 
 		List<SubscrServiceAccess> newAccessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
-				accessDate.toDate());
+            LocalDateUtils.asDate(accessDate));
 
 		return newAccessList;
 	}
@@ -210,7 +214,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 			newEntity.setSubscriber(subscriber);
 			newEntity.setPackId(packId);
 			newEntity.setItemId(itemId);
-			newEntity.setAccessStartDate(accessStartDate.toDate());
+			newEntity.setAccessStartDate(LocalDateUtils.asDate(accessStartDate));
 			return subscrServiceAccessRepository.save(newEntity);
 		}
 
@@ -219,7 +223,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		}
 
 		SubscrServiceAccess currentAccess = workAccessList.get(0);
-		if (currentAccess.getAccessStartDate().compareTo(accessStartDate.toDate()) <= 0) {
+		if (currentAccess.getAccessStartDate().compareTo(LocalDateUtils.asDate(accessStartDate)) <= 0) {
 			return currentAccess;
 		} else {
 			throw new IllegalArgumentException("accessStartDate is before actual accessStartDate");
@@ -254,13 +258,9 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, LocalDate accessDate) {
-		return selectSubscriberPermissions(subscriberId, accessDate.toDate());
-	}
-
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, java.time.LocalDate accessDate) {
 		return selectSubscriberPermissions(subscriberId, LocalDateUtils.asDate(accessDate));
 	}
+
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, Date accessDate) {
@@ -275,34 +275,19 @@ public class SubscrServiceAccessService implements SecuredRoles {
     /**
      *
      * @param objectList
-     * @param subscriberParam
+     * @param portalUserIds
      * @param accessDate
      * @param <T>
      * @return
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam, LocalDate accessDate) {
-		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberParam.getSubscriberId(),
+	public <T> List<T> filterObjectAccess(List<T> objectList, PortalUserIds portalUserIds, LocalDate accessDate) {
+		List<SubscrServicePermission> permissions = selectSubscriberPermissions(portalUserIds.getSubscriberId(),
 				accessDate);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, subscriberParam);
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, portalUserIds);
 		return filter.filterObjects(objectList);
 	}
 
-    /**
-     *
-     * @param objectList
-     * @param subscriberParam
-     * @param accessDate
-     * @param <T>
-     * @return
-     */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam, java.time.LocalDate accessDate) {
-		List<SubscrServicePermission> permissions = selectSubscriberPermissions(subscriberParam.getSubscriberId(),
-				accessDate);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, subscriberParam);
-		return filter.filterObjects(objectList);
-	}
 
 	/**
 	 *
@@ -348,5 +333,16 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		List<SubscrServiceAccess> serviceAccess = newSubscrServicePackAccessList(subscrServicePackList);
 		return serviceAccess;
 	}
+
+	@Transactional
+    public  <T> List<T> filterObjectAccess(List<T> objectList, PortalUserIds portalUserIds) {
+
+        List<T> resultObjects = filterObjectAccess(objectList, portalUserIds,
+            LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(portalUserIds.getSubscriberId())));
+
+        return resultObjects;
+    }
+
+
 
 }

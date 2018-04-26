@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -33,17 +34,23 @@ import static com.google.common.base.Preconditions.*;
  */
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryParamController extends AbstractSubscrApiResource {
+public class UDirectoryParamController {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryParamController.class);
 
-	@Autowired
-	private UDirectoryParamService directoryParamService;
+	private final UDirectoryParamService directoryParamService;
 
-	@Autowired
-	private UDirectoryService directoryService;
+	private final UDirectoryService directoryService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public UDirectoryParamController(UDirectoryParamService directoryParamService, UDirectoryService directoryService, PortalUserIdsService portalUserIdsService) {
+        this.directoryParamService = directoryParamService;
+        this.directoryService = directoryService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param directoryId
 	 * @return
@@ -83,7 +90,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 		checkNotNull(uDirectoryParam);
 		checkArgument(uDirectoryParam.getId().longValue() == id);
 
-		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 		checkNotNull(directory);
 
 		uDirectoryParam.setDirectory(directory);
@@ -112,7 +119,7 @@ public class UDirectoryParamController extends AbstractSubscrApiResource {
 
 		checkNotNull(uDirectoryParam);
 
-		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 		checkNotNull(directory);
 
 		uDirectoryParam.setDirectory(directory);

@@ -1,5 +1,5 @@
 package ru.excbt.datafuse.nmk.web;
 
-public class SubscrControllerTest extends AnyControllerTest {
+public abstract class SubscrControllerTest extends AnyControllerTest {
 
 }

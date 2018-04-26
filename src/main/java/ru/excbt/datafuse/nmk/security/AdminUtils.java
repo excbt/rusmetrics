@@ -1,6 +1,8 @@
 package ru.excbt.datafuse.nmk.security;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -20,37 +22,11 @@ public class AdminUtils {
 
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	public static List<GrantedAuthority> makeAdminAuths() {
-		List<GrantedAuthority> grantedAuths = new ArrayList<>();
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_USER));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ZPOINT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_CONT_OBJECT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_DEVICE_OBJECT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_SUBSCRIBER_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_RMA_ZPOINT_ADMIN));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_CREATE_CHILD));
-		grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_CREATE_CABINET));
-		return grantedAuths;
-	}
-
-
-    public static List<GrantedAuthority> makeSubscrAdminAuthsNoChild() {
+	public static List<GrantedAuthority> makeAuths(Collection<String> roles) {
         List<GrantedAuthority> grantedAuths = new ArrayList<>();
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR));
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_ADMIN));
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_SUBSCR_USER));
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_CONT_OBJECT_ADMIN));
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_ZPOINT_ADMIN));
-        grantedAuths.add(new SimpleGrantedAuthority(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN));
+        roles.forEach(r -> grantedAuths.add(new SimpleGrantedAuthority(r)));
         return grantedAuths;
     }
+
 
 }

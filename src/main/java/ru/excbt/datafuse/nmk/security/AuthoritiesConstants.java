@@ -34,9 +34,11 @@ public final class AuthoritiesConstants {
     private AuthoritiesConstants() {
     }
 
-    public static Set<String> makeAdminSet() {
+    public static Set<String> adminAuthorities() {
         Set<String> result = new HashSet<>();
         result.add(ADMIN);
+        result.add(USER);
+
         result.add(SUBSCR_ADMIN);
         result.add(SUBSCR_USER);
         result.add(CONT_OBJECT_ADMIN);
@@ -48,6 +50,43 @@ public final class AuthoritiesConstants {
         result.add(RMA_ZPOINT_ADMIN);
         result.add(SUBSCR_CREATE_CHILD);
         result.add(SUBSCR_CREATE_CABINET);
+        return result;
+    }
+
+
+    public static Set<String> systemAuthorities() {
+        Set<String> result = new HashSet<>();
+        result.add(ADMIN);
+        result.add(USER);
+
+        result.add(RMA);
+        result.add(RMA_CONT_OBJECT_ADMIN);
+        result.add(RMA_DEVICE_OBJECT_ADMIN);
+        result.add(RMA_SUBSCRIBER_ADMIN);
+        result.add(RMA_ZPOINT_ADMIN);
+
+
+        result.add(SUBSCR_ADMIN);
+        result.add(SUBSCR_USER);
+        result.add(CONT_OBJECT_ADMIN);
+        result.add(ZPOINT_ADMIN);
+        result.add(DEVICE_OBJECT_ADMIN);
+        result.add(SUBSCR_CREATE_CHILD);
+        result.add(SUBSCR_CREATE_CABINET);
+
+        return result;
+    }
+
+    public static Set<String> subscrAdminNoChild() {
+        Set<String> result = new HashSet<>();
+        result.add(SUBSCR);
+        result.add(USER);
+        result.add(SUBSCR_ADMIN);
+        result.add(SUBSCR_USER);
+        result.add(CONT_OBJECT_ADMIN);
+        result.add(ZPOINT_ADMIN);
+        result.add(DEVICE_OBJECT_ADMIN);
+
         return result;
     }
 

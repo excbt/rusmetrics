@@ -131,7 +131,7 @@ public class PortalUserAuthenticationProvider implements AuthenticationProvider 
 			return null;
 		}
 
-		List<GrantedAuthority> grantedAuths = AdminUtils.makeAdminAuths();
+		List<GrantedAuthority> grantedAuths = AdminUtils.makeAuths(AuthoritiesConstants.adminAuthorities());
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, password, grantedAuths);
 

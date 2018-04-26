@@ -40,6 +40,9 @@ import { entityState } from './';
 import { PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
 import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
+import { PSubscriberEditComponent } from './p-subscribers/p-subscriber-edit.component';
+import { PSubscriberCustomerService } from './p-subscribers/p-subscriber.service';
+import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -75,6 +78,7 @@ import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widge
         OrganizationDetailComponent,
         OrganizationEditComponent,
         PSubscribersComponent,
+        PSubscriberEditComponent,
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent
     ],
@@ -84,6 +88,8 @@ import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widge
         OrganizationsService,
         OrganizationTypeService,
         PSubscriberService,
+        PSubscriberCustomerService,
+        PSubscriberPartnerService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],

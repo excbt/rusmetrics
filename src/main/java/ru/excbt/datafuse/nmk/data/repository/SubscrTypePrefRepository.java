@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import ru.excbt.datafuse.nmk.data.model.SubscrTypePref;
+import ru.excbt.datafuse.nmk.domain.SubscrTypePref;
 
 public interface SubscrTypePrefRepository extends CrudRepository<SubscrTypePref, Long> {
 

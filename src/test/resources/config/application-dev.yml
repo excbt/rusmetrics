@@ -46,8 +46,8 @@ spring:
         database: POSTGRESQL
         properties:
             hibernate.hbm2ddl.auto: validate
-            hibernate.format_sql: false
-            hibernate.show_sql: false
+            hibernate.format_sql: true
+            hibernate.show_sql: true
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
             hibernate.generate_statistics: false
             hibernate.cache.use_query_cache: false
@@ -69,7 +69,7 @@ spring:
 portal:
     datasource:
         databaseName: datafuse_2018_01
-        databasePort: 6432
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
         url: jdbc:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}

@@ -1,29 +1,29 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class UDirectoryParamServiceTest extends JpaSupportTest {
+import java.util.List;
+
+import static org.junit.Assert.*;
+
+@RunWith(SpringRunner.class)
+@Ignore
+public class UDirectoryParamServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryParamServiceTest.class);
 
@@ -36,14 +36,25 @@ public class UDirectoryParamServiceTest extends JpaSupportTest {
 	@Autowired
 	private UDirectoryService directoryService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
 
 	@Test
+    @Ignore
 	public void testSaveDelete() {
 		logger.info("TEST_DIRECTORY_ID = {}", TEST_DIRECTORY_ID);
 
-		UDirectory n = directoryService.findOne(currentSubscriberService.getSubscriberId(), TEST_DIRECTORY_ID);
+        List<Long> ids = directoryService.selectAvailableDirectoryIds(portalUserIdsService.getCurrentIds().getSubscriberId());
+        assertFalse(ids.isEmpty());
+
+		UDirectory n = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), ids.get(0));
 
 		assertNotNull(n);
 

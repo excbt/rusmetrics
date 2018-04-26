@@ -5,11 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -24,17 +22,20 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
-@Controller
+@RestController
 @RequestMapping(value = "/api/rma/organizations")
-public class RmaOrganizationController extends AbstractSubscrApiResource {
+public class RmaOrganizationController {
 
 	private static final Logger log = LoggerFactory.getLogger(RmaOrganizationController.class);
 
-	@Autowired
-	private OrganizationService organizationService;
+	private final OrganizationService organizationService;
 
-    @Autowired
-	private PortalUserIdsService portalUserIdsService;
+	private final PortalUserIdsService portalUserIdsService;
+
+    public RmaOrganizationController(OrganizationService organizationService, PortalUserIdsService portalUserIdsService) {
+        this.organizationService = organizationService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
 
 
     /**
@@ -80,10 +81,10 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		SubscriberParam subscriberParam = getSubscriberParam();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
 
 		requestEntity.setRmaSubscriberId(
-				subscriberParam.isRma() ? subscriberParam.getSubscriberId() : subscriberParam.getRmaSubscriberId());
+            portalUserIds.isRma() ? portalUserIds.getSubscriberId() : portalUserIds.getRmaId());
 
 		if (organization.getRmaSubscriberId() == null
 				|| !organization.getRmaSubscriberId().equals(requestEntity.getRmaSubscriberId())) {
@@ -118,10 +119,10 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		SubscriberParam subscriberParam = getSubscriberParam();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
 
 		requestEntity.setRmaSubscriberId(
-				subscriberParam.isRma() ? subscriberParam.getSubscriberId() : subscriberParam.getRmaSubscriberId());
+            portalUserIds.isRma() ? portalUserIds.getSubscriberId() : portalUserIds.getRmaId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<Organization, Long>(requestEntity, request) {
 
@@ -158,7 +159,7 @@ public class RmaOrganizationController extends AbstractSubscrApiResource {
 		}
 
 		if (organizationOptional.get().getRmaSubscriberId() == null
-				|| !organizationOptional.get().getRmaSubscriberId().equals(getSubscriberParam().getRmaSubscriberId())) {
+				|| !organizationOptional.get().getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getRmaId())) {
 			return ApiResponse.responseForbidden();
 		}
 

@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
 import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams, ExcApiParams } from './';
+import { ExcEditFormEntityProvider } from '..';
 
 export interface ServiceParams {
     apiUrl: string;
@@ -55,4 +56,13 @@ export class ExcAbstractService<T> {
 
         return params;
     }
+
+    entityProvider(): ExcEditFormEntityProvider<T> {
+        return {
+            load: (id) => this.findOne(id),
+            update: (data) => this.update(data),
+            delete: (id) => this.delete(id)
+        };
+    }
+
 }

@@ -6,27 +6,44 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryParamService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@Transactional
-public class UDirectoryParamTest extends AnyControllerTest {
+import java.util.Optional;
+
+@RunWith(SpringRunner.class)
+@Ignore
+public class UDirectoryParamTest extends PortalApiTest {
 
 	public final static String DIRECTORY_URL_API = "/api/u_directory";
 	public final static long TEST_DIRECTORY_ID = 19748782;
@@ -41,18 +58,55 @@ public class UDirectoryParamTest extends AnyControllerTest {
 	@Autowired
 	private UDirectoryService directoryService;
 
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	private UDirectoryParamController uDirectoryParamController;
+	@Autowired
+    private UDirectoryParamService uDirectoryParamService;
+    @Autowired
+	private UDirectoryService uDirectoryService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        uDirectoryParamController = new UDirectoryParamController(uDirectoryParamService, uDirectoryService, portalUserIdsService);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(uDirectoryParamController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
+
 
 	@Test
 	public void testParamsGetAll() throws Exception {
-		_testGetJson(String.format(DIRECTORY_URL_API + "/%d/param",
-				TEST_DIRECTORY_ID));
+        mockMvcRestWrapper.restRequest("/api/u_directory/{id}/param", TEST_DIRECTORY_ID).testGet();
+//		_testGetJson(String.format(DIRECTORY_URL_API + "/%d/param",
+//				TEST_DIRECTORY_ID));
 	}
 
 	@Test
 	public void testParamsGetOne() throws Exception {
-		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
-				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);
-		_testGetJson(urlStr);
+//		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
+//				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);
+        mockMvcRestWrapper.restRequest("/api/u_directory/{id1}/param/id2", TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID).testGet();
+//		_testGetJson(urlStr);
 	}
 
 	@Test
@@ -71,7 +125,7 @@ public class UDirectoryParamTest extends AnyControllerTest {
 		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, TEST_DIRECTORY_PARAM_ID);
 
-		ResultActions resultActionsAll = mockMvc.perform(put(urlStr)
+		ResultActions resultActionsAll = restPortalMockMvc.perform(put(urlStr)
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonBody)
 				.with(testSecurityContext())
@@ -86,23 +140,25 @@ public class UDirectoryParamTest extends AnyControllerTest {
 	@Test
 	public void testParamsCreateDelete() throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		UDirectoryParam p = new UDirectoryParam();
+		UDirectoryParam param = new UDirectoryParam();
 
-		p.setParamName("TEST Param - Name " + System.currentTimeMillis());
-		p.setParamType(ParamType.BOOLEAN.name());
+		param.setParamName("TEST Param - Name " + System.currentTimeMillis());
+		param.setParamType(ParamType.BOOLEAN.name());
 
-		String jsonBody = mapper.writeValueAsString(p);
+		String jsonBody = mapper.writeValueAsString(param);
 
 		logger.info("New Directory Param Source JSON: {}", jsonBody);
 
 		String urlStr = String.format(DIRECTORY_URL_API + "/%d/param",
 				TEST_DIRECTORY_ID);
 
-		ResultActions resultAction = mockMvc.perform(post(urlStr)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(jsonBody)
-				.with(testSecurityContext())
-				.accept(MediaType.APPLICATION_JSON));
+        ResultActions resultAction = mockMvcRestWrapper.restRequest(urlStr).testPostAndReturn(param, Optional.empty());
+
+//		ResultActions resultAction = restPortalMockMvc.perform(post(urlStr)
+//				.contentType(MediaType.APPLICATION_JSON)
+//				.content(jsonBody)
+//				.with(testSecurityContext())
+//				.accept(MediaType.APPLICATION_JSON));
 
 		resultAction.andDo(MockMvcResultHandlers.print());
 
@@ -120,7 +176,8 @@ public class UDirectoryParamTest extends AnyControllerTest {
 		String urlStrDelete = String.format(DIRECTORY_URL_API + "/%d/param/%d",
 				TEST_DIRECTORY_ID, createdId);
 
-		_testDeleteJson(urlStrDelete);
+        mockMvcRestWrapper.restRequest(urlStrDelete).testDelete();
+//		_testDeleteJson(urlStrDelete);
 	}
 
 

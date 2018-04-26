@@ -12,35 +12,45 @@ import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDateTime;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import com.jayway.jsonpath.JsonPath;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
-import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
-import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
-import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportSheduleTypeKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 
-
-@Transactional
-public class ReportSheduleControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class ReportSheduleControllerTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleControllerTest.class);
 
@@ -56,16 +66,46 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalContObjectMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@MockBean
+	private PortalUserIdsService portalUserIdsService;
+
+    @Autowired
+	private ReportSheduleController reportScheduleController;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+	    this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(reportScheduleController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalContObjectMockMvc);
+	}
+
+
 	@Test
     @Transactional
 	public void testGetSheduleActive() throws Exception {
-		_testGetJson("/api/reportShedule/active");
+        mockMvcRestWrapper.restRequest("/api/reportShedule/active").testGet();
 	}
 
 	@Test
     @Transactional
 	public void testGetShedule() throws Exception {
-		_testGetJson("/api/reportShedule");
+        mockMvcRestWrapper.restRequest("/api/reportShedule").testGet();
 	}
 
 	@Test
@@ -81,8 +121,9 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 
 		assertTrue(reportSheduleList.size() > 0);
 		ReportShedule rs = reportSheduleList.get(0);
-		String urlStr = "/api/reportShedule/" + rs.getId().toString();
-		_testGetJson(urlStr);
+//		String urlStr = "/api/reportShedule/" + rs.getId().toString();
+        mockMvcRestWrapper.restRequest("/api/reportShedule/{id}", rs.getId()).testGet();
+//		_testGetJson(urlStr);
 	}
 
 	@Test
@@ -106,7 +147,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		String jsonBody = TestUtils.objectToJson(rs);
 
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
+			resultActionsAll = restPortalContObjectMockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
 					.param("reportTemplateId", rs.getReportTemplate().getId().toString())
 					.param("reportParamsetId", rs.getReportParamset().getId().toString())
 
@@ -155,7 +196,7 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 
 		String jsonBody = TestUtils.objectToJson(rs);
 
-		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
+		ResultActions resultAction = restPortalContObjectMockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("reportTemplateId", sReportTemplate.getId().toString())
 				.param("reportParamsetId", sReportParamset.getId().toString()).content(jsonBody)
 				.with(testSecurityContext()).accept(MediaType.APPLICATION_JSON));
@@ -169,7 +210,8 @@ public class ReportSheduleControllerTest extends AnyControllerTest {
 		logger.info("createdId: {}", createdId);
 
 		String urlStrDelete = "/api/reportShedule/" + String.valueOf(createdId);
-		_testDeleteJson(urlStrDelete);
+        mockMvcRestWrapper.restRequest(urlStrDelete).testDelete();
+//		_testDeleteJson(urlStrDelete);
 	}
 
 }

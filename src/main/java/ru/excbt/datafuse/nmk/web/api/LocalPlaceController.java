@@ -25,13 +25,16 @@ public class LocalPlaceController extends AbstractSubscrApiResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceController.class);
 
-	@Autowired
-	private LocalPlaceService localPlaceService;
+	private final LocalPlaceService localPlaceService;
 
-	@Autowired
-	private LocalPlaceTemperatureSstService localPlaceTemperatureSstService;
+	private final LocalPlaceTemperatureSstService localPlaceTemperatureSstService;
 
-	/**
+    public LocalPlaceController(LocalPlaceService localPlaceService, LocalPlaceTemperatureSstService localPlaceTemperatureSstService) {
+        this.localPlaceService = localPlaceService;
+        this.localPlaceTemperatureSstService = localPlaceTemperatureSstService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

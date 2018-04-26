@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.PTreeNodeMonitorService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -31,15 +32,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-@Transactional
-public class PTreeNodeMonitorResourceTest {
+public class PTreeNodeMonitorResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(PTreeNodeMonitorResourceTest.class);
 
     public static final String INVALID_CONT_SERVICE_TYPE = "invalidServiceType";
     public static final String CONT_SERVICE_TYPE = ContServiceTypeKey.HW.getKeyname();
-    public static final Long NODE_ID = 129634385L;
+    public static final Long NODE_ID = 173486397L; //129634385L;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -83,7 +82,7 @@ public class PTreeNodeMonitorResourceTest {
     public void getLinkedObjectsMonitor() throws Exception {
 
         restPortalContObjectMockMvc.perform(
-            get("/api/p-tree-node-monitor/all-linked-objects").param("nodeId", "129634385"))
+            get("/api/p-tree-node-monitor/all-linked-objects").param("nodeId", String.valueOf(NODE_ID)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)));

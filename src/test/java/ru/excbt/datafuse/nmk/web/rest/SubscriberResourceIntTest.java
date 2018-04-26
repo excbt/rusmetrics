@@ -12,19 +12,17 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 public class SubscriberResourceIntTest extends PortalApiTest {
@@ -45,7 +43,12 @@ public class SubscriberResourceIntTest extends PortalApiTest {
     @Autowired
     private SubscriberService subscriberService;
 
+    @Autowired
+    private SubscriberMapper subscriberMapper;
+
     private SubscriberResource subscriberResource;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
 
     @Before
     public void setUp() throws Exception {
@@ -53,30 +56,34 @@ public class SubscriberResourceIntTest extends PortalApiTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscriberResource = new SubscriberResource(portalUserIdsService, subscriberService);
+        subscriberResource = new SubscriberResource(portalUserIdsService, subscriberService, subscriberMapper);
         this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(subscriberResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
+
+        this.mockMvcRestWrapper = new MockMvcRestWrapper(this.restPortalContObjectMockMvc);
     }
 
 
+//    @Test
+//    @Transactional
+//    public void getSubscribers() throws Exception {
+//        mockMvcRestWrapper.restRequest("/api/subscribers")
+//            .testGet();
+//    }
+//
     @Test
     @Transactional
-    public void getSubscribers() throws Exception {
-        restPortalContObjectMockMvc.perform(
-            get("/api/subscribers"))
-            .andDo(MockMvcResultHandlers.print())
-            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
-            .andExpect(status().isOk());
+    public void getSubscribersRMAPage() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+            .testGet();
     }
 
     @Test
     @Transactional
-    public void getSubscribersPage() throws Exception {
-        restPortalContObjectMockMvc.perform(
-            get("/api/subscribers/page"))
-            .andDo(MockMvcResultHandlers.print())
-            .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.anyJsonBeatifyResult(i)))
-            .andExpect(status().isOk());
+    public void getSubscribersRMAPageSearch() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+            .requestBuilder(b -> b.param("searchString", "ижевск"))
+            .testGet();
     }
 }

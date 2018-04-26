@@ -7,26 +7,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.ContZPointSettingMode;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingModeService;
 import ru.excbt.datafuse.nmk.data.service.ContZPointSettingsModeServiceTest;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.transaction.Transactional;
 
-public class ContZPointSettingModeControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class ContZPointSettingModeControllerTest extends PortalApiTest {
 
 	private static final String URL_TEMPLATE = "/api/subscr/contObjects/%s/"
 			+ "zpoints/%s/settingMode/%s";
@@ -34,11 +49,43 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 	private static final Logger logger = LoggerFactory
 			.getLogger(ContZPointSettingModeControllerTest.class);
 
-	@Autowired
-	private ContZPointSettingModeService settingModeService;
 
 	@Autowired
-	private ContZPointService contZPointService;
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalContObjectMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	private SubscrContZPointSettingModeController subscrContZPointSettingModeController;
+
+    @Autowired
+    private ContZPointSettingModeService settingModeService;
+
+    @Autowired
+    private ContZPointService contZPointService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        subscrContZPointSettingModeController = new SubscrContZPointSettingModeController(settingModeService, contZPointService);
+
+	    this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(subscrContZPointSettingModeController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+	    this.mockMvcRestWrapper = new MockMvcRestWrapper(restPortalContObjectMockMvc);
+	}
+
 
 	/**
 	 *
@@ -70,11 +117,8 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 			settingMode
 					.setOv_BalanceM_ctrl(settingMode.getOv_BalanceM_ctrl() + 0.1);
 
-			String jsonBody = TestUtils.objectToJson(settingMode);
-            logger.info("Testing JSON: {}", jsonBody);
 
-
-            _testPutJson(urlStr, jsonBody);
+            mockMvcRestWrapper.restRequest(urlStr).testPut(settingMode);
 
 		}
 	}
@@ -82,8 +126,8 @@ public class ContZPointSettingModeControllerTest extends AnyControllerTest {
 	@Test
     @Transactional
 	public void testAAA() throws Exception {
-		_testGetJson("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode");
-
+        mockMvcRestWrapper.restRequest("/api/subscr/contObjects/18811505/zpoints/18811559/settingMode")
+            .testGet();
 	}
 
 }

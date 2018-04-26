@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.ReportWizardService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportColumnSettings;
@@ -34,13 +36,16 @@ public class ReportWizardController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportWizardController.class);
 
-	@Autowired
-	private ReportWizardService reportWizardService;
+	private final ReportWizardService reportWizardService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+    private final PortalUserIdsService portalUserIdsService;
 
-	/**
+    public ReportWizardController(ReportWizardService reportWizardService, PortalUserIdsService portalUserIdsService) {
+        this.reportWizardService = reportWizardService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -69,7 +74,7 @@ public class ReportWizardController {
 			@Override
 			public void process() {
 				setResultEntity(reportWizardService.createCommerceWizard(reportWizardParam.getReportTemplate(),
-						reportWizardParam.getReportColumnSettings(), currentSubscriberService.getSubscriber()));
+						reportWizardParam.getReportColumnSettings(), new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId())));
 			}
 		};
 

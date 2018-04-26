@@ -5,26 +5,37 @@ import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
-import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
-import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 import com.google.common.primitives.Longs;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@Transactional
-public class SubscrActionControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class SubscrActionControllerTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory
 			.getLogger(SubscrActionControllerTest.class);
@@ -38,13 +49,46 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	@Autowired
 	private CurrentSubscriberService currentSubscriberService;
 
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	private SubscrActionController subscrActionController;
+    @Autowired
+	private SubscrActionUserGroupService subscrActionUserGroupService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        subscrActionController = new SubscrActionController(subscrActionGroupService, subscrActionUserService, subscrActionUserGroupService, portalUserIdsService);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrActionController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
+
 	/**
 	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testGetGroup() throws Exception {
-		_testGetJson("/api/subscr/subscrAction/groups");
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrAction/groups").testGet();
 	}
 
 	/**
@@ -53,7 +97,7 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testGetUser() throws Exception {
-		_testGetJson("/api/subscr/subscrAction/users");
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrAction/users").testGet();
 	}
 
 
@@ -63,8 +107,6 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testCreateDeleteUser() throws Exception {
-
-		String urlStr = "/api/subscr/subscrAction/users";
 
 		List<SubscrActionGroup> groupList = subscrActionGroupService
 				.findAll(currentSubscriberService.getSubscriberId());
@@ -87,11 +129,14 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 			}
 		};
 
-		Long createdId = _testCreateJson(urlStr, user, extraInializer);
+        Long createdId = mockMvcRestWrapper.restRequest( "/api/subscr/subscrAction/users")
+            .requestBuilder(b -> b.param("subscrGroupIds",
+                TestUtils.arrayToString(Longs.toArray(groupIds))))
+            .testPost(user).getLastId();
 
 		assertTrue(createdId > 0);
 
-		_testDeleteJson(urlStr + "/" + createdId);
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrAction/users/{id}", createdId).testDelete();
 
 	}
 
@@ -101,8 +146,6 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testCreateDeleteGroup() throws Exception {
-		String urlStr = "/api/subscr/subscrAction/groups";
-
 		List<SubscrActionUser> userList = subscrActionUserService
 				.findAll(currentSubscriberService.getSubscriberId());
 		List<Long> userIds = new ArrayList<Long>();
@@ -114,18 +157,11 @@ public class SubscrActionControllerTest extends AnyControllerTest {
 		grp.setGroupName("Group 111");
 		grp.setGroupComment("created by rest");
 
+        Long createdId = mockMvcRestWrapper.restRequest("/api/subscr/subscrAction/groups")
+            .requestBuilder(b -> b.param("subscrUserIds", TestUtils.arrayToString(Longs.toArray(userIds))))
+            .testPost(grp).getLastId();
 
-		RequestExtraInitializer extraInitializer = new RequestExtraInitializer() {
-
-			@Override
-			public void doInit(MockHttpServletRequestBuilder builder) {
-				builder.param("subscrUserIds", TestUtils.arrayToString(Longs.toArray(userIds)));
-			}
-		};
-
-		Long createdId = _testCreateJson(urlStr, grp, extraInitializer);
-
-		_testDeleteJson(urlStr + "/" + createdId);
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrAction/groups/{id}", createdId).testDelete();
 	}
 
 }

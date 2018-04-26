@@ -95,7 +95,9 @@ public class KeyEnumTool {
      */
     public static <T extends Enum<T>> Optional<T> searchName(Class<T> enumType, String name) {
         Objects.requireNonNull(enumType);
-        Objects.requireNonNull(name);
+        if (name == null) {
+            return Optional.empty();
+        }
         Set<T> values = EnumSet.allOf(enumType);
         return values.stream().filter(i -> name.equals(i.name())).findFirst();
     }

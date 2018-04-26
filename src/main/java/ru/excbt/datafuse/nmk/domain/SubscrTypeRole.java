@@ -1,27 +1,33 @@
-package ru.excbt.datafuse.nmk.data.model;
+package ru.excbt.datafuse.nmk.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
+
+import java.io.Serializable;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_type_role")
 @Cache(usage = CacheConcurrencyStrategy.NONE)
 @Getter
 @Setter
-public class SubscrTypeRole extends JsonAbstractAuditableModel {
+public class SubscrTypeRole implements Serializable {
 
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 4889186302635036698L;
+
+    @Id
+    @SequenceGenerator(name = "subscrTypeRoleSeq", sequenceName = "seq_global_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscrTypeRoleSeq")
+    @Column
+    private Long id;
 
 	@Column(name = "subscr_type")
 	private String subscrType;

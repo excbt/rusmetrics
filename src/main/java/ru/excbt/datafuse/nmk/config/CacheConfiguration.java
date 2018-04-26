@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
 import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.domain.SubscrType;
 
 import javax.cache.CacheManager;
 import java.util.concurrent.TimeUnit;
@@ -59,7 +60,7 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrPrefCategory.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrType.class.getName());
+            createIfNotExists(cm, SubscrType.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SystemParam.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.TariffOption.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType.class.getName());

@@ -19,10 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -47,8 +45,15 @@ public class HwWidgetController extends WidgetController {
 	private final HwWidgetService hwWidgetService;
 
 	@Autowired
-    public HwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ContServiceDataHWaterService contServiceDataHWaterService, ContObjectService contObjectService, HwWidgetService hwWidgetService) {
-        super(contEventMonitorV3Service, contZPointService);
+    public HwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service,
+                              ContZPointService contZPointService,
+                              ContObjectService contObjectService,
+                              HwWidgetService hwWidgetService,
+                              ContServiceDataHWaterService contServiceDataHWaterService,
+                              ObjectAccessService objectAccessService,
+                              PortalUserIdsService portalUserIdsService,
+                              SubscriberService subscriberService) {
+        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberService);
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contObjectService = contObjectService;
         this.hwWidgetService = hwWidgetService;
@@ -62,7 +67,7 @@ public class HwWidgetController extends WidgetController {
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
-		if (!canAccessContZPoint(contZpointId)) {
+        if (!objectAccessService.checkContZPointId(contZpointId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 
@@ -74,7 +79,7 @@ public class HwWidgetController extends WidgetController {
 
 		//		contServiceDataHWaterService.selectLast
 
-		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
+		ZonedDateTime subscriberDateTime = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		List<ContServiceDataHWater> resultData = contServiceDataHWaterService.selectLastDataFromDate(contZpointId,
 				TimeDetailKey.TYPE_1H.getKeyname(), subscriberDateTime.truncatedTo(ChronoUnit.DAYS).toLocalDate());
@@ -104,7 +109,7 @@ public class HwWidgetController extends WidgetController {
 	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
-		if (!canAccessContZPoint(contZpointId)) {
+        if (!objectAccessService.checkContZPointId(contZpointId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 
@@ -112,7 +117,7 @@ public class HwWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
+		ZonedDateTime subscriberDateTime = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		ApiActionProcess<List<ContServiceDataHWater>> action = () -> hwWidgetService.selectChartData(contZpointId,
 				subscriberDateTime, mode.toUpperCase());

@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -34,26 +35,31 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/subscr")
-public class SubscrUserController extends AbstractSubscrApiResource {
+public class SubscrUserController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
 
 	protected final UsernameValidator usernameValidator = new UsernameValidator();
 
-	@Autowired
-	protected SubscrUserService subscrUserService;
+	protected final SubscrUserService subscrUserService;
 
-	@Autowired
-	protected SubscrRoleService subscrRoleService;
+	protected final SubscrRoleService subscrRoleService;
 
-	/**
-	 *
-	 * @param rSubscriberId
-	 * @return
-	 */
+    protected final PortalUserIdsService portalUserIdsService;
+
+    public SubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService) {
+        this.subscrUserService = subscrUserService;
+        this.subscrRoleService = subscrRoleService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
+     *
+     * @return
+     */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
@@ -72,7 +78,7 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(getCurrentSubscriberId());
+		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
 	}
 
@@ -89,7 +95,7 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
 
-		return createSubscrUserInternal(getCurrentSubscriber(), isAdmin, isReadonly, subscrUser, newPassword, request);
+		return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), isAdmin, isReadonly, subscrUser, newPassword, request);
 	}
 
 	/**
@@ -111,7 +117,7 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		return updateSubscrUserInternal(getCurrentSubscriber(), subscrUserId, isAdmin, isReadonly, subscrUser,
+		return updateSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), subscrUserId, isAdmin, isReadonly, subscrUser,
 				passwords);
 	}
 
@@ -125,55 +131,58 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> deleteCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
-		return deleteSubscrUserInternal(getCurrentSubscriberId(), subscrUserId, isPermanent);
+		return deleteSubscrUserInternal(portalUserIdsService.getCurrentIds().getSubscriberId(), subscrUserId, isPermanent);
 
 	}
 
-	/**
-	 * TODO Method has been moved to SubscrUserService
-	 * Should be deleted
-	 *
-	 * @param rmaSubscriber
-	 * @param subscrUser
-	 * @param isAdmin
-	 * @param isReadonly
-	 * @return
-	 */
-	@Deprecated
-	private List<SubscrRole> processSubscrRoles2(final Subscriber rmaSubscriber, final boolean isAdmin,
-			final boolean isReadonly) {
-		List<SubscrRole> subscrRoles = new ArrayList<>();
+//	/**
+//	 * TODO Method has been moved to SubscrUserService
+//	 * Should be deleted
+//	 *
+//	 * @param rmaSubscriber
+//	 * @param subscrUser
+//	 * @param isAdmin
+//	 * @param isReadonly
+//	 * @return
+//	 */
+//	@Deprecated
+//	private List<SubscrRole> processSubscrRoles2(final Subscriber rmaSubscriber, final boolean isAdmin,
+//			final boolean isReadonly) {
+//		List<SubscrRole> subscrRoles = new ArrayList<>();
+//
+//		if (Boolean.TRUE.equals(isReadonly)) {
+//			subscrRoles.addAll(subscrRoleService.subscrReadonlyRoles());
+//		} else {
+//			if (Boolean.TRUE.equals(isAdmin)) {
+//				subscrRoles.addAll(
+//						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
+//				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
+//					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
+//				}
+//			} else {
+//				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
+//			}
+//		}
+//
+//		Map<Long, SubscrRole> subscrRolesMap = new HashMap<>();
+//		for (SubscrRole r : subscrRoles) {
+//			subscrRolesMap.put(r.getId(), r);
+//		}
+//
+//		return new ArrayList<>(subscrRolesMap.values());
+//	}
+//
 
-		if (Boolean.TRUE.equals(isReadonly)) {
-			subscrRoles.addAll(subscrRoleService.subscrReadonlyRoles());
-		} else {
-			if (Boolean.TRUE.equals(isAdmin)) {
-				subscrRoles.addAll(
-						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
-				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
-					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
-				}
-			} else {
-				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
-			}
-		}
-
-		Map<Long, SubscrRole> subscrRolesMap = new HashMap<>();
-		for (SubscrRole r : subscrRoles) {
-			subscrRolesMap.put(r.getId(), r);
-		}
-
-		return new ArrayList<>(subscrRolesMap.values());
-	}
-
-	/**
-	 *
-	 * @param rSubscriberId
-	 * @param isAdmin
-	 * @param subscrUser
-	 * @param request
-	 * @return
-	 */
+    /**
+     *
+     * @param rmaSubscriber
+     * @param isAdmin
+     * @param isReadonly
+     * @param subscrUser
+     * @param password
+     * @param request
+     * @return
+     */
 	protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
 			final SubscrUser subscrUser, String password, HttpServletRequest request) {
 		checkNotNull(rmaSubscriber);
@@ -224,14 +233,16 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 		return ApiActionTool.processResponceApiActionCreate(action);
 	}
 
-	/**
-	 *
-	 * @param rSubscriberId
-	 * @param subscrUserId
-	 * @param isAdmin
-	 * @param subscrUser
-	 * @return
-	 */
+    /**
+     *
+     * @param rmaSubscriber
+     * @param subscrUserId
+     * @param isAdmin
+     * @param isReadonly
+     * @param subscrUser
+     * @param passwords
+     * @return
+     */
 	protected ResponseEntity<?> updateSubscrUserInternal(Subscriber rmaSubscriber, Long subscrUserId, Boolean isAdmin,
 			Boolean isReadonly, final SubscrUser subscrUser, String[] passwords) {
 
@@ -288,18 +299,14 @@ public class SubscrUserController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ApiAction action = new ApiActionAdapter() {
+		ApiAction action = (ApiActionAdapter) () -> {
+            if (Boolean.TRUE.equals(isPermanent)) {
+                subscrUserService.deleteSubscrUserPermanent(subscrUserId);
+            } else {
+                subscrUserService.deleteSubscrUser(subscrUserId);
+            }
 
-			@Override
-			public void process() {
-				if (Boolean.TRUE.equals(isPermanent)) {
-					subscrUserService.deleteSubscrUserPermanent(subscrUserId);
-				} else {
-					subscrUserService.deleteSubscrUser(subscrUserId);
-				}
-
-			}
-		};
+        };
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

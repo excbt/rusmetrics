@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.model.support.time.LocalDateTimePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,8 +18,7 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-public class ContZPointConsumptionServiceTest {
+public class ContZPointConsumptionServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContZPointConsumptionServiceTest.class);
 

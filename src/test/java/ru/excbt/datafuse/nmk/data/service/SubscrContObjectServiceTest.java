@@ -1,19 +1,20 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
-import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.persistence.Tuple;
 import java.util.Arrays;
@@ -23,12 +24,20 @@ import java.util.stream.Collectors;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
-@Transactional
-public class SubscrContObjectServiceTest extends JpaSupportTest {
+@RunWith(SpringRunner.class)
+public class SubscrContObjectServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectServiceTest.class);
+
+    @Mock
+    private PortalUserIdsService portalUserIdsService;
+
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+    }
 
 
     @Autowired
@@ -76,12 +85,12 @@ public class SubscrContObjectServiceTest extends JpaSupportTest {
 	public void testSubscrDeviceObjects() throws Exception {
 
 
-        logger.info("CurrentSubscriber: {}", getSubscriberParam().getSubscriberId());
+        logger.info("CurrentSubscriber: {}", portalUserIdsService.getCurrentIds().getSubscriberId());
 
 //        List<Tuple> resultRows = subscrContObjectRepository
 //				.selectSubscrDeviceObjectByNumber(getSubscriberParam().getSubscriberId(), Arrays.asList("104115"));
 
-		List<Tuple> resultRows2 = objectAccessService.findAllContZPointDeviceObjectsEx(getSubscriberId(), Arrays.asList("111214"));
+		List<Tuple> resultRows2 = objectAccessService.findAllContZPointDeviceObjectsEx(portalUserIdsService.getCurrentIds().getSubscriberId(), Arrays.asList("111214"));
 
 		assertFalse(resultRows2.isEmpty());
 

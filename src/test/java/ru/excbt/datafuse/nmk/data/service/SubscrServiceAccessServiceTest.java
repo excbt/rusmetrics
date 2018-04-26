@@ -1,25 +1,15 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
@@ -27,15 +17,32 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class SubscrServiceAccessServiceTest extends JpaSupportTest {
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(SpringRunner.class)
+public class SubscrServiceAccessServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrServiceAccessServiceTest.class);
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+	}
+
 
 	@Autowired
 	private SubscrServiceItemService subscrServiceItemService;
@@ -63,7 +70,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 
 	@Test
 	public void testServicePacks() throws Exception {
-		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList(getSubscriberParam());
+		List<SubscrServicePack> result = subscrServicePackService.selectServicePackList(portalUserIdsService.getCurrentIds());
 		assertNotNull(result);
 	}
 
@@ -88,7 +95,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 	public void testUpdateAccess() throws Exception {
 
 		List<SubscrServiceAccess> subscrServiceAccessList = subscrServiceAccessService
-				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, LocalDate.now());
+				.selectSubscriberServiceAccessFull(MANUAL_SUBSCRIBER_ID, java.time.LocalDate.now());
 
 		List<SubscrServiceAccess> newAccess = new ArrayList<>();
 
@@ -129,7 +136,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
 				.selectSubscriberPermissions(MANUAL_SUBSCRIBER_ID, LocalDate.now());
 		assertTrue(permissions.size() > 0);
-		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, getSubscriberParam());
+		SubscrServicePermissionFilter filter = new SubscrServicePermissionFilter(permissions, portalUserIdsService.getCurrentIds());
 		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
 		assertTrue(reportTypes.size() > 0);
 		List<ReportType> filteredReports = filter.filterObjects(reportTypes);
@@ -144,7 +151,7 @@ public class SubscrServiceAccessServiceTest extends JpaSupportTest {
 		// Long rmaSubscriberId = 37176875L;
 		Long rmaSubscriberId = TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
 
-		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList(getSubscriberParam());
+		List<SubscrServicePack> servicePackList = subscrServicePackService.selectServicePackList(portalUserIdsService.getCurrentIds());
 
 		servicePackList.forEach(i -> {
 			logger.info("Service Pack {}: {}", i.getId(), i.getPackName());

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -34,17 +35,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryNodeController extends AbstractSubscrApiResource {
+public class UDirectoryNodeController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryNodeController.class);
 
-	@Autowired
-	private UDirectoryNodeService directoryNodeService;
+	private final UDirectoryNodeService directoryNodeService;
 
-	@Autowired
-	private UDirectoryService directoryService;
+	private final UDirectoryService directoryService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public UDirectoryNodeController(UDirectoryNodeService directoryNodeService, UDirectoryService directoryService, PortalUserIdsService portalUserIdsService) {
+        this.directoryNodeService = directoryNodeService;
+        this.directoryService = directoryService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param directoryId
 	 * @return
@@ -54,7 +61,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 
 		logger.trace("getAll DirectoryNode ID {}", directoryId);
 
-		UDirectory directory = directoryService.findOne(getCurrentSubscriberId(), directoryId);
+		UDirectory directory = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 		if (directory == null) {
 			return ResponseEntity.notFound().build();
 		}
@@ -94,7 +101,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId));
+				setResultEntity(directoryNodeService.saveWithDictionary(portalUserIdsService.getCurrentIds().getSubscriberId(), entity, directoryId));
 			}
 		};
 
@@ -125,7 +132,7 @@ public class UDirectoryNodeController extends AbstractSubscrApiResource {
 
 			@Override
 			public UDirectoryNode processAndReturnResult() {
-				return directoryNodeService.saveWithDictionary(getCurrentSubscriberId(), entity, directoryId);
+				return directoryNodeService.saveWithDictionary(portalUserIdsService.getCurrentIds().getSubscriberId(), entity, directoryId);
 			}
 		};
 
