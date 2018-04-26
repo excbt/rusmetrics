@@ -29,7 +29,12 @@
              </jhi-tree-navigate>
          </split-area>
          <split-area size = "75">
-             Tree node component
+<!--             Tree node component -->
+             <jhi-tree-node-information-container
+             [treeNodeId] = "treeNodeId"
+             >                 
+             </jhi-tree-node-information-container>
+             <router-outlet name="treeNodeView"></router-outlet>
          </split-area>
      </split>
 </div>

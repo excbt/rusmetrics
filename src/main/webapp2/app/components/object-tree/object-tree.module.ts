@@ -13,7 +13,8 @@ import { objectTreeState,
         TreeNavigateService,
         SubscrTreeService,
         SubscrPrefService,
-        PTreeNodeMonitorService
+        PTreeNodeMonitorService,
+        TreeNodeInformationContainerComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -41,7 +42,8 @@ import { MatMenuModule } from '@angular/material/menu';
     ],
     declarations: [
         PortalObjectTreeComponent,
-        TreeNavigateComponent
+        TreeNavigateComponent,
+        TreeNodeInformationContainerComponent
     ],
     entryComponents: [
     ],

@@ -1,0 +1,30 @@
+<mat-toolbar class = "nmc-tree-nav-toolbar" style = "">  
+    <mat-toolbar-row 
+        style = "">
+<!--
+        <div class="float-left">
+            <button mat-icon-button (click)="toggleMainMenu()"
+             class ="nmc-toolbar-btn"
+              style = ""
+               >
+                <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>
+            </button>
+        </div>    
+-->
+
+        <div class="float-left">
+            <button mat-icon-button [matMenuTriggerFor]="menu" 
+                  class="nmc-tree-nav-toolbar-btn"
+                   style = "">
+<!--                        <mat-icon class="">more_vert</mat-icon>-->
+                <mat-icon fontSet = "fa" fontIcon = "fa-sitemap"></mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngFor = "let widget of widgetList" 
+                   (click) = "changeWidget(widget)">
+                    <span >{{widget.caption}}</span>
+                </button>                        
+            </mat-menu>    
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
