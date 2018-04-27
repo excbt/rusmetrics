@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -40,15 +41,16 @@ public class WidgetController  {
 
     protected final PortalUserIdsService portalUserIdsService;
 
-    protected final SubscriberService subscriberService;
+
+    protected final SubscriberTimeService subscriberTimeService;
 
 	@Autowired
-    public WidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService) {
+    public WidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberTimeService subscriberTimeService) {
         this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.contZPointService = contZPointService;
         this.objectAccessService = objectAccessService;
         this.portalUserIdsService = portalUserIdsService;
-        this.subscriberService = subscriberService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**

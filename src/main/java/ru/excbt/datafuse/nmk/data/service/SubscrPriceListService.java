@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceListRepository;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
@@ -56,11 +57,14 @@ public class SubscrPriceListService  {
 
 	private final SubscriberService subscriberService;
 
-    public SubscrPriceListService(SubscrPriceListRepository subscrPriceListRepository, RmaSubscriberService rmaSubscriberService, SubscrPriceItemService subscrPriceItemService, SubscriberService subscriberService) {
+	private final SubscriberTimeService subscriberTimeService;
+
+    public SubscrPriceListService(SubscrPriceListRepository subscrPriceListRepository, RmaSubscriberService rmaSubscriberService, SubscrPriceItemService subscrPriceItemService, SubscriberService subscriberService, SubscriberTimeService subscriberTimeService) {
         this.subscrPriceListRepository = subscrPriceListRepository;
         this.rmaSubscriberService = rmaSubscriberService;
         this.subscrPriceItemService = subscrPriceItemService;
         this.subscriberService = subscriberService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**
@@ -390,7 +394,7 @@ public class SubscrPriceListService  {
 			SubscrPriceList createdPriceList = createRmaPriceList(srcPriceListId,
 					subscriberService.selectSubscriber(id));
 			boolean isActive = activeIds != null && activeIds.contains(id);
-			LocalDate startDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(id));
+			LocalDate startDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(id));
 			if (isActive) {
 				activateRmaPriceList(createdPriceList.getId(), startDate);
 			}
@@ -465,7 +469,7 @@ public class SubscrPriceListService  {
 			SubscrPriceList createdPriceList = createSubscrPriceList(srcPriceListId,
 					subscriberService.selectSubscriber(id));
 			boolean isActive = activeIds != null && activeIds.contains(id);
-			LocalDate startDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(id));
+			LocalDate startDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(id));
 			if (isActive) {
 				activateSubscrPriceList(createdPriceList.getId(), startDate);
 			}
@@ -542,7 +546,7 @@ public class SubscrPriceListService  {
 				.filter(i -> i.getPriceListLevel() != null && i.getPriceListLevel() == PRICE_LEVEL_SUBSCRIBER)
 				.collect(Collectors.toList());
 
-		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+		Date rmaCurrentDate = subscriberTimeService.getSubscriberCurrentTime(rmaSubscriberId);
 
 		activePriceLists.forEach(i -> {
 			i.setFactEndDate(rmaCurrentDate);
@@ -584,7 +588,7 @@ public class SubscrPriceListService  {
 
 		List<SubscrPriceList> activePriceLists = selectActiveRmaPriceList(rmaSubscriberId, subscriberId);
 
-		Date rmaCurrentDate = rmaSubscriberService.getSubscriberCurrentTime(rmaSubscriberId);
+		Date rmaCurrentDate = subscriberTimeService.getSubscriberCurrentTime(rmaSubscriberId);
 
 		activePriceLists.forEach(i -> {
 			i.setFactEndDate(rmaCurrentDate);

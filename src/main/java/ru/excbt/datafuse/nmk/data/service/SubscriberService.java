@@ -47,6 +47,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
@@ -95,8 +96,10 @@ public class SubscriberService implements SecuredRoles {
 
     protected final SubscriberMapper subscriberMapper;
 
+    protected final SubscriberTimeService subscriberTimeService;
+
     @Autowired
-    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper) {
+    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper, SubscriberTimeService subscriberTimeService) {
         this.subscriberRepository = subscriberRepository;
         this.subscrUserRepository = subscrUserRepository;
         this.contZPointRepository = contZPointRepository;
@@ -105,6 +108,7 @@ public class SubscriberService implements SecuredRoles {
         this.systemParamService = systemParamService;
         this.organizationRepository = organizationRepository;
         this.subscriberMapper = subscriberMapper;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**
@@ -168,50 +172,6 @@ public class SubscriberService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Optional<Subscriber> findOneSubscriber(Long subscriberId) {
 		return Optional.ofNullable(subscriberRepository.findOne(subscriberId));
-	}
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public Date getSubscriberCurrentTime(Long subscriberId) {
-		checkNotNull(subscriberId);
-
-		Query q = em.createNativeQuery("SELECT get_subscriber_current_time(?1);");
-		Object dbResult = q.setParameter(1, subscriberId).getSingleResult();
-		if (dbResult == null) {
-			return null;
-		}
-		return (Date) dbResult;
-	}
-
-
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-    public LocalDateTime getSubscriberCurrentDateTime(Long subscriberId) {
-	    Date date = getSubscriberCurrentTime(subscriberId);
-        return LocalDateUtils.asLocalDateTime(date);
-    }
-
-    @Transactional
-    public ZonedDateTime getSubscriberZonedDateTime(PortalUserIds portalUserIds) {
-        Date d = getSubscriberCurrentTime(portalUserIds.getSubscriberId());
-        return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
-    }
-
-
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
-	public LocalDate getSubscriberCurrentDateJoda(Long subscriberId) {
-		Date currentDate = getSubscriberCurrentTime(subscriberId);
-		return new LocalDate(currentDate);
 	}
 
 	/**

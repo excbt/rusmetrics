@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 import javax.persistence.PersistenceException;
 
 import org.apache.commons.lang.BooleanUtils;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
@@ -31,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -56,10 +56,8 @@ public class RmaSubscriberService extends SubscriberService {
 	private final SubscrUserService subscrUserService;
 
 
-
-
-    public RmaSubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, ReportParamsetService reportParamsetService, OrganizationService organizationService, LdapService ldapService, SubscrUserService subscrUserService, SubscriberMapper subscriberMapper) {
-        super(subscriberRepository, subscrUserRepository, contZPointRepository, timezoneDefService, subscrServiceAccessService, systemParamService, organizationRepository, subscriberMapper);
+    public RmaSubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, ReportParamsetService reportParamsetService, OrganizationService organizationService, LdapService ldapService, SubscrUserService subscrUserService, SubscriberMapper subscriberMapper, SubscriberTimeService subscriberTimeService) {
+        super(subscriberRepository, subscrUserRepository, contZPointRepository, timezoneDefService, subscrServiceAccessService, systemParamService, organizationRepository, subscriberMapper, subscriberTimeService);
         this.reportParamsetService = reportParamsetService;
         this.organizationService = organizationService;
         this.ldapService = ldapService;
@@ -121,7 +119,7 @@ public class RmaSubscriberService extends SubscriberService {
 		}
 		// End of can Create Child LDAP action
 
-		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(getSubscriberCurrentTime(resultSubscriber.getId()));
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(resultSubscriber.getId()));
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
 
 		// Make default Report Paramset
@@ -166,7 +164,7 @@ public class RmaSubscriberService extends SubscriberService {
 		}
 		// End of can Create Child LDAP action
 
-		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(getSubscriberCurrentTime(resultSubscriber.getId()));
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(resultSubscriber.getId()));
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
 
 		// Make default Report Paramset

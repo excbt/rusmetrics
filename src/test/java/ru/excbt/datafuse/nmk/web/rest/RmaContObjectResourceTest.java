@@ -1,8 +1,5 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,10 +21,9 @@ import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.util.FlexDataFactory;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
-import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -86,7 +82,7 @@ public class RmaContObjectResourceTest extends PortalApiTest {
     @Autowired
     private SubscriberAccessService subscriberAccessService;
     @Autowired
-    private SubscriberService subscriberService;
+    private SubscriberTimeService subscriberTimeService;
 
     @Before
 	public void setUp() throws Exception {
@@ -103,8 +99,7 @@ public class RmaContObjectResourceTest extends PortalApiTest {
             portalUserIdsService,
             subscriberAccessService,
             objectAccessService,
-            subscriberService
-            );
+            subscriberTimeService);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaContObjectResource)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.widget.CwWidgetService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
@@ -58,7 +59,7 @@ public class CwWidgetControllerTest extends PortalApiTest {
     @Autowired
     private ContObjectService contObjectService;
     @Autowired
-    private SubscriberService subscriberService;
+    private SubscriberTimeService subscriberTimeService;
     @Autowired
     private ObjectAccessService objectAccessService;
 
@@ -77,7 +78,7 @@ public class CwWidgetControllerTest extends PortalApiTest {
             contObjectService,
             objectAccessService,
             portalUserIdsService,
-            subscriberService);
+            subscriberTimeService);
 
         this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(cwWidgetController)
             .setCustomArgumentResolvers(pageableArgumentResolver)

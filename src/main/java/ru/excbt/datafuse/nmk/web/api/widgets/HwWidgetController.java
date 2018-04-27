@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.widget.HwWidgetService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -52,8 +53,8 @@ public class HwWidgetController extends WidgetController {
                               ContServiceDataHWaterService contServiceDataHWaterService,
                               ObjectAccessService objectAccessService,
                               PortalUserIdsService portalUserIdsService,
-                              SubscriberService subscriberService) {
-        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberService);
+                              SubscriberTimeService subscriberTimeService) {
+        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberTimeService);
         this.contServiceDataHWaterService = contServiceDataHWaterService;
         this.contObjectService = contObjectService;
         this.hwWidgetService = hwWidgetService;
@@ -79,7 +80,7 @@ public class HwWidgetController extends WidgetController {
 
 		//		contServiceDataHWaterService.selectLast
 
-		ZonedDateTime subscriberDateTime = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
+		ZonedDateTime subscriberDateTime = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		List<ContServiceDataHWater> resultData = contServiceDataHWaterService.selectLastDataFromDate(contZpointId,
 				TimeDetailKey.TYPE_1H.getKeyname(), subscriberDateTime.truncatedTo(ChronoUnit.DAYS).toLocalDate());
@@ -117,7 +118,7 @@ public class HwWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime subscriberDateTime = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
+		ZonedDateTime subscriberDateTime = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		ApiActionProcess<List<ContServiceDataHWater>> action = () -> hwWidgetService.selectChartData(contZpointId,
 				subscriberDateTime, mode.toUpperCase());
