@@ -17,7 +17,7 @@ import ru.excbt.datafuse.nmk.config.MetricsConfiguration;
 import ru.excbt.datafuse.nmk.config.PortalProperties;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
+@EnableAutoConfiguration(exclude = {
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class,
     WebMvcAutoConfiguration.class, SecurityAutoConfiguration.class})
 @ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"},

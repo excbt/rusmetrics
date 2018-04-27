@@ -20,10 +20,11 @@ import org.hibernate.annotations.TypeDefs;
 import ru.excbt.datafuse.hibernate.types.StringJsonUserType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
 
 @Entity
-@Table(name="device_object_data_json")
+@Table(schema = DBMetadata.SCHEME_DATARAW, name="device_object_data_json")
 @Getter
 @Setter
 public class DeviceObjectDataJson implements Serializable {

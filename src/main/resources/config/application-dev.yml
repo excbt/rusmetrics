@@ -23,19 +23,19 @@ spring:
 #            enabled: false # we use gulp + BrowserSync for livereload
 #    jackson:
 #        serialization.indent_output: true
-#    datasource:
-#        type: com.zaxxer.hikari.HikariDataSource
-#        #driver-class-name: org.postgresql.Driver
-#        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
-#        name:
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        name: datasource
 #        jndi-name:
-#        username: postgres
-#        password: 12345
-#        hikari:
-#            #connection-test-query: SELECT 1 FROM DUAL
-#            minimum-idle: 3
-#            maximum-pool-size: 5
-#            pool-name: master
+        username: dbuser1
+        password: exbt_123456
+        hikari:
+            connection-test-query: SELECT 1
+            minimum-idle: 3
+            maximum-pool-size: 5
+            pool-name: master
 
     jackson:
         serialization.write_dates_as_timestamps: false
@@ -106,8 +106,8 @@ portal:
         databaseName: datafuse_2018_01
         databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        driverClassName: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -173,8 +173,8 @@ raw:
         databaseName: test_dataraw
         databasePort: 6432
         type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        driverClassName: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         name:
         jndi-name:

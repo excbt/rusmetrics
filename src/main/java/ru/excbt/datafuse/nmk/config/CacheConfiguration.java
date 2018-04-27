@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.domain.SubscrType;
@@ -26,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableCaching
 @AutoConfigureAfter(value = { MetricsConfiguration.class })
-@AutoConfigureBefore(value = { WebConfigurer.class, JpaConfigLocal.class, JpaRawConfigLocal.class})
+@AutoConfigureBefore(value = { WebConfigurer.class, DatabaseConfiguration.class})
 public class CacheConfiguration {
 
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;

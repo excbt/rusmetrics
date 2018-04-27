@@ -9,12 +9,10 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
@@ -24,8 +22,6 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.jms.ConnectionFactory;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 

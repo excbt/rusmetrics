@@ -33,7 +33,7 @@ import java.util.Collection;
  * @since 16.01.2017
  *
  */
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
+@EnableAutoConfiguration(exclude = {
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
 @ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"},
     excludeFilters = {
