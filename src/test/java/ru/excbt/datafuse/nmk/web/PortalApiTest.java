@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.web;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.web.conf.PortalApiTestConfiguration;
 
 @SpringBootTest(classes = PortalApiTestConfiguration.class)

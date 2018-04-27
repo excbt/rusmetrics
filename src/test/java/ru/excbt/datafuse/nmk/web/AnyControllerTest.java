@@ -5,15 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
-import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
+import ru.excbt.datafuse.nmk.web.conf.PortalApiTestConfiguration;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes= PortalApplicationTest.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes= PortalApiTestConfiguration.class)
 @WithMockUser(username = "admin", password = "admin",
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
