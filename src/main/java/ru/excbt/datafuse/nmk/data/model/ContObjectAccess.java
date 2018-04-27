@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 @Getter
 @Setter
 @IdClass(ContObjectAccess.PK.class)
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContObjectAccess {
 
     @Getter
