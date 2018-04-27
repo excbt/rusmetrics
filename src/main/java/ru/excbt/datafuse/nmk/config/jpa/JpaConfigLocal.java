@@ -29,8 +29,6 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = {"ru.excbt.datafuse.nmk.data.repository", "ru.excbt.datafuse.nmk.repository",
     "ru.excbt.datafuse.raw.data.repository"})
-@ComponentScan(basePackages = { "ru.excbt.datafuse.nmk.data", "ru.excbt.datafuse.nmk.slog","ru.excbt.datafuse.nmk.service",
-    "ru.excbt.datafuse.nmk.domain", "ru.excbt.datafuse.raw.data"})
 @EnableConfigurationProperties(value = {PortalProperties.class, SLogProperties.class})
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
 public class JpaConfigLocal {
@@ -40,24 +38,6 @@ public class JpaConfigLocal {
 	@Autowired
 	private Environment env;
 
-	/**
-	 *
-	 * @return
-	 */
-	@Primary
-	@Bean(name = "dataSource")
-	//@ConfigurationProperties("portal.datasource")
-    @Autowired
-	public DataSource dataSource(PortalProperties portalProperties) {
-        log.info("nmk-p url: {}", portalProperties.getDatasource().getUrl());
-        return //DataSourceBuilder.create().build();
-            DataSourceBuilder.create().driverClassName(portalProperties.getDatasource().getDriverClassName())
-                .url(portalProperties.getDatasource().getUrl())
-                .username(portalProperties.getDatasource().getUsername())
-                .password(portalProperties.getDatasource().getPassword()).build();
-            //.url(portalDBProps.url).username(portalDBProps.username).password(portalDBProps.password).build();
-	}
-
 	@Primary
 	@Bean(name = "entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory(EntityManagerFactoryBuilder builder,
@@ -66,16 +46,6 @@ public class JpaConfigLocal {
 		return builder.dataSource(dataSource).packages("ru.excbt.datafuse.nmk.data.model",
             "ru.excbt.datafuse.nmk.domain", "ru.excbt.datafuse.raw.data.model").persistenceUnit("nmk-p")
 				.build();
-	}
-
-
-
-	@Primary
-	@Bean(name = "transactionManager")
-	@Autowired
-	public PlatformTransactionManager transactionManager(
-			@Qualifier("entityManagerFactory") EntityManagerFactory entityManagerFactory) {
-		return new JpaTransactionManager(entityManagerFactory);
 	}
 
 	/**

@@ -24,6 +24,21 @@ spring:
 #            enabled: false # we use gulp + BrowserSync for livereload
 #    jackson:
 #        serialization.indent_output: true
+
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        name: datasource
+#        jndi-name:
+        username: dbuser1
+        password: exbt_123456
+        hikari:
+            connection-test-query: SELECT 1
+            minimum-idle: 3
+            maximum-pool-size: 5
+            pool-name: master
+
 #    datasource:
 #        type: com.zaxxer.hikari.HikariDataSource
 #        #driver-class-name: org.postgresql.Driver
