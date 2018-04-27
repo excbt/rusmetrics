@@ -8,18 +8,11 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import ru.excbt.datafuse.nmk.app.PortalApplication;
 import ru.excbt.datafuse.nmk.config.Constants;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
-import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
-import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
-import ru.excbt.datafuse.nmk.config.security.LocalSecurityConfig;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

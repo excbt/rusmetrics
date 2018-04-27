@@ -1,28 +1,22 @@
-package ru.excbt.datafuse.nmk.config.jpa;
+package ru.excbt.datafuse.nmk.config;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import ru.excbt.datafuse.nmk.config.PortalProperties;
-import ru.excbt.datafuse.nmk.config.SLogProperties;
+import ru.excbt.datafuse.nmk.config.jpa.JasperDatabaseConnectionSettings;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 @Configuration
@@ -31,9 +25,9 @@ import javax.sql.DataSource;
     "ru.excbt.datafuse.raw.data.repository"})
 @EnableConfigurationProperties(value = {PortalProperties.class, SLogProperties.class})
 @EnableJpaAuditing(auditorAwareRef = "auditorAwareImpl")
-public class JpaConfigLocal {
+public class DatabaseConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(JpaConfigLocal.class);
+    private static final Logger log = LoggerFactory.getLogger(DatabaseConfiguration.class);
 
 	@Autowired
 	private Environment env;
