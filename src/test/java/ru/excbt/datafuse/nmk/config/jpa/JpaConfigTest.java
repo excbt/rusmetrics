@@ -28,7 +28,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 //@ActiveProfiles(value = {Constants.SPRING_PROFILE_TEST })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Import(value = { JpaConfigLocal.class, JpaRawConfigLocal.class, LdapConfig.class,
+@Import(value = { JpaConfigLocal.class, LdapConfig.class,
     ActiveMQEmbConfiguration.class, CacheConfiguration.class})
 public class JpaConfigTest extends AbstractJpaConfigTest implements SubscriberUserInfo{
 

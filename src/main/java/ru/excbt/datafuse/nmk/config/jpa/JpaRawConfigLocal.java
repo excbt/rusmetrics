@@ -26,12 +26,12 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import lombok.Data;
 import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal.RawDBProps;
 
-@Configuration
-@EnableTransactionManagement
-@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository",
-		entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
-@ComponentScan(basePackages = { "ru.excbt.datafuse.raw" })
-@EnableConfigurationProperties(value = { RawDBProps.class })
+//@Configuration
+//@EnableTransactionManagement
+//@EnableJpaRepositories(basePackages = "ru.excbt.datafuse.raw.data.repository",
+//		entityManagerFactoryRef = "entityManagerFactoryRaw", transactionManagerRef = "transactionManagerRaw")
+//@ComponentScan(basePackages = { "ru.excbt.datafuse.raw" })
+//@EnableConfigurationProperties(value = { RawDBProps.class })
 public class JpaRawConfigLocal {
 
 	private static final Logger log = LoggerFactory.getLogger(JpaRawConfigLocal.class);

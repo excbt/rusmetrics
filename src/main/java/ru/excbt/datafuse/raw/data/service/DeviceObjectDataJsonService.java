@@ -18,14 +18,14 @@ import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
 import ru.excbt.datafuse.raw.data.repository.DeviceObjectDataJsonRepository;
 
 @Service
-@Transactional (value = TxConst.TX_RAW, readOnly = true)
+@Transactional (readOnly = true)
 public class DeviceObjectDataJsonService {
 
 	@Autowired
 	private DeviceObjectDataJsonRepository deviceObjectDataJsonRepository;
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param pageable
 	 * @return
@@ -41,7 +41,7 @@ public class DeviceObjectDataJsonService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @param pageable
 	 * @return
@@ -61,7 +61,7 @@ public class DeviceObjectDataJsonService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
