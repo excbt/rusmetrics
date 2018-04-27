@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;

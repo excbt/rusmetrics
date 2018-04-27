@@ -14,6 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -49,8 +51,10 @@ public class SubscriberServiceTest extends PortalDataTest {
 
 	@Mock
 	private PortalUserIdsService portalUserIdsService;
+	@Autowired
+    private SubscriberLdapService subscriberLdapService;
 
-	@Before
+    @Before
 	public void setUp() throws Exception {
 	    MockitoAnnotations.initMocks(this);
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
@@ -78,7 +82,7 @@ public class SubscriberServiceTest extends PortalDataTest {
 	public void testRmaOu() throws Exception {
 		Long id = portalUserIdsService.getCurrentIds().getSubscriberId();
 		logger.info("Check Ldap OU for: {}", id);
-		String ldapOu = subscriberService.getRmaLdapOu(id);
+		String ldapOu = subscriberLdapService.getRmaLdapOu(id);
 		assertNotNull(ldapOu);
 		logger.info("Rma LDAP ou={}", ldapOu);
 	}
@@ -99,7 +103,7 @@ public class SubscriberServiceTest extends PortalDataTest {
 
 		subscrUser.setUserName("rma-77-admin");
 		subscrUser.setUserNickname("rma-77-admin");
-		subscrUser.setSubscriberId(RMA_SUBSCRIBER);
+		subscrUser.setSubscriber(new Subscriber().id(RMA_SUBSCRIBER));
 		subscrUser.getSubscrRoles().clear();
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(false);

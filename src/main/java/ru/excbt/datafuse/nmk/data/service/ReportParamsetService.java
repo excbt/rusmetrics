@@ -37,11 +37,11 @@ import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemReposit
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**

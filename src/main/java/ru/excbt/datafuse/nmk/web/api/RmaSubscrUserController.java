@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 

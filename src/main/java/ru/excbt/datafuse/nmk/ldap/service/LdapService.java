@@ -1,8 +1,8 @@
 package ru.excbt.datafuse.nmk.ldap.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.naming.InvalidNameException;
 import javax.naming.Name;
@@ -29,7 +29,7 @@ import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 
 /**
  * Класс для работы с LDAP
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.08.2015
@@ -55,7 +55,7 @@ public class LdapService {
 	private LdapConfig ldapConfig;
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param oldPassword
 	 * @param newPassword
@@ -73,7 +73,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param oldPassword
 	 * @param newPassword
@@ -84,7 +84,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param newPassword
 	 * @return
@@ -110,7 +110,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @param newPassword
 	 * @return
@@ -120,7 +120,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param password
 	 * @return
@@ -138,7 +138,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param uid
 	 * @return
 	 */
@@ -161,7 +161,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @param email
 	 * @return
@@ -181,7 +181,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @throws InvalidNameException
 	 */
@@ -190,21 +190,21 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rmaOu
 	 * @param username
 	 * @return
 	 */
 	protected Name buildDn(String rmaOu, String username) {
-		checkNotNull(username);
-		checkNotNull(rmaOu);
+        Objects.requireNonNull(username);
+        Objects.requireNonNull(rmaOu);
 		return LdapNameBuilder.newInstance().add("ou", "people").add("ou", rmaOu).add("uid", username).build();
 
 	}
 
 	protected Name buildDn(LdapUserAccount user) {
-		checkNotNull(user.getUserName());
-		checkNotNull(user.getOrgUnits());
+        Objects.requireNonNull(user.getUserName());
+        Objects.requireNonNull(user.getOrgUnits());
 
 		LdapNameBuilder builder = LdapNameBuilder.newInstance().add("ou", "people");
 
@@ -217,12 +217,12 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
 	public LdapUserAccount createUser(LdapUserAccount user) {
-		checkNotNull(user);
+        Objects.requireNonNull(user);
 		Name dn = buildDn(user);
 		DirContextAdapter context = new DirContextAdapter(dn);
 
@@ -245,18 +245,19 @@ public class LdapService {
 		return user;
 	}
 
-	/**
-	 * 
-	 * @param user
-	 * @param ouName
-	 */
-	public void createOuIfNotExists(String[] subscriberOurgUnits, String ouName, String description) {
-		checkNotNull(subscriberOurgUnits);
-		checkNotNull(ouName);
+    /**
+     *
+     * @param OrgUnits
+     * @param ouName
+     * @param description
+     */
+	public void createOuIfNotExists(String[] OrgUnits, String ouName, String description) {
+        Objects.requireNonNull(OrgUnits);
+        Objects.requireNonNull(ouName);
 
 		LdapNameBuilder builder = LdapNameBuilder.newInstance().add("ou", "people");
 
-		for (String ou : subscriberOurgUnits) {
+		for (String ou : OrgUnits) {
 			builder.add("ou", ou);
 		}
 		builder.add("ou", ouName);
@@ -276,7 +277,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dn
 	 * @return
 	 */
@@ -290,18 +291,18 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 * @return
 	 */
 	public LdapUserAccount deleteUser(LdapUserAccount user) {
-		checkNotNull(user);
+        Objects.requireNonNull(user);
 		ldapTemplate.unbind(buildDn(user));
 		return user;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 */
 	public void blockLdapUser(LdapUserAccount user) {
@@ -314,7 +315,7 @@ public class LdapService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param user
 	 */
 	public void unblockLdapUser(LdapUserAccount user) {

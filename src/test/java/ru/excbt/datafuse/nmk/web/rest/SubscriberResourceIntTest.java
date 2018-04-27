@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;

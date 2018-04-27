@@ -92,13 +92,13 @@ public class DBExceptionUtil {
     }
 
 
-    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
+    public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
         return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
             (idKeyname ? "keyname" : "ID")
             + "=" + id + " is not found");
     }
 
-    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {
+    public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {
         return newEntityNotFoundException(clazz, id, false);
     }
 

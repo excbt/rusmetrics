@@ -6,16 +6,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
-import java.util.List;
 import java.util.Optional;
 
 @RestController

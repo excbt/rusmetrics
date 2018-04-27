@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 import java.util.Arrays;

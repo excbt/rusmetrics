@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 
 import javax.persistence.PersistenceException;
@@ -185,7 +186,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
-		subscrUser.setSubscriberId(newSubscriber.getId());
+//		subscrUser.setSubscriberId(newSubscriber.getId());
 		subscrUser.setSubscrRoles(subscrRoleService.subscrCabinetRoles());
 		subscrUser.setUserName(subscrCabinetUsername);
 		subscrUser.setUserNickname("Не задано");

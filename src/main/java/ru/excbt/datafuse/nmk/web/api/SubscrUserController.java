@@ -73,8 +73,8 @@ public class SubscrUserController  {
 		checkNotNull(subscrUserId);
 
 		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
-		if (subscrUser == null || subscrUser.getSubscriberId() == null
-				|| !subscrUser.getSubscriberId().equals(subscrUserId)) {
+		if (subscrUser == null || subscrUser.getSubscriber().getId() == null
+				|| !subscrUser.getSubscriber().getId().equals(subscrUserId)) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -204,7 +204,8 @@ public class SubscrUserController  {
 			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
-		subscrUser.setSubscriberId(rmaSubscriber.getId());
+        subscrUser.setSubscriber(new Subscriber().id(rmaSubscriber.getId()));
+//		subscrUser.setSubscriberId(rmaSubscriber.getId());
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(isReadonly);
 		if (isReadonly) {
@@ -250,9 +251,9 @@ public class SubscrUserController  {
 		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUserId);
 		checkNotNull(subscrUser);
-		checkNotNull(subscrUser.getSubscriberId());
+		checkNotNull(subscrUser.getSubscriber());
 
-		if (!subscrUser.getSubscriberId().equals(rmaSubscriber.getId())) {
+		if (!subscrUser.getSubscriber().getId().equals(rmaSubscriber.getId())) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -318,8 +319,8 @@ public class SubscrUserController  {
 	 * @return
 	 */
 	private boolean checkSubscrUserOwnerFail(Long rSubscriberId, SubscrUser subscrUser) {
-		return subscrUser == null || subscrUser.getSubscriberId() == null
-				|| !subscrUser.getSubscriberId().equals(rSubscriberId);
+		return subscrUser == null || subscrUser.getSubscriber().getId() == null
+				|| !subscrUser.getSubscriber().getId().equals(rSubscriberId);
 	}
 
 }

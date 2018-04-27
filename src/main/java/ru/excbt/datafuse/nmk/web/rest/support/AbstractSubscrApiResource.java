@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 

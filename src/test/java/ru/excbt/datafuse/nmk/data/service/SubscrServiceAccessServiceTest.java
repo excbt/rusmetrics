@@ -17,6 +17,8 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 

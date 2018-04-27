@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 import java.time.LocalDate;

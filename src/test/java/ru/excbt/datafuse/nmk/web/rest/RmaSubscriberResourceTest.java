@@ -20,10 +20,11 @@ import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberCreatorService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -50,6 +51,12 @@ public class RmaSubscriberResourceTest extends PortalApiTest {
     @Autowired
     private ObjectAccessService objectAccessService;
 
+    @Autowired
+    private SubscriberCreatorService subscriberCreatorService;
+
+    @Autowired
+    private SubscriberMapper subscriberMapper;
+
     private MockMvcRestWrapper mockMvcRestWrapper;
 
     @Before
@@ -58,7 +65,7 @@ public class RmaSubscriberResourceTest extends PortalApiTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        rmaSubscriberResource = new RmaSubscriberResource(objectAccessService, subscriberService, organizationService, rmaSubscriberService, portalUserIdsService);
+        rmaSubscriberResource = new RmaSubscriberResource(objectAccessService, subscriberService, organizationService, rmaSubscriberService, subscriberCreatorService, portalUserIdsService);
 
         this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscriberResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -106,7 +113,8 @@ public class RmaSubscriberResourceTest extends PortalApiTest {
 
         assertNotNull(org.getId());
 	    SubscriberDTO dto = SubscriberDTO.builder().subscriberName("Test Subscriber").organizationId(org.getId()).timezoneDefKeyname("MSK").build();
-	    Subscriber subscriber = rmaSubscriberService.createRmaSubscriber(dto, portalUserIdsService.getCurrentIds().getSubscriberId());
+
+	    Subscriber subscriber = subscriberCreatorService.createRmaSubscriber(subscriberMapper.toEntity(dto), portalUserIdsService.getCurrentIds().getSubscriberId());
 
 	    assertNotNull(subscriber.getId());
         mockMvcRestWrapper.restRequest("/api/rma/subscribers/{id}", subscriber.getId()).testGet();

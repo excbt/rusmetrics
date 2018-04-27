@@ -1,10 +1,7 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,11 +9,8 @@ import java.util.stream.Collectors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 
-import javafx.beans.binding.BooleanExpression;
 import org.apache.commons.lang3.ArrayUtils;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.domain.AbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -44,14 +37,12 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
+import ru.excbt.datafuse.nmk.data.service.SystemParamService;
+import ru.excbt.datafuse.nmk.data.service.TimezoneDefService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
-import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
-import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с абонентами
@@ -88,7 +79,6 @@ public class SubscriberService implements SecuredRoles {
 
 	protected final TimezoneDefService timezoneDefService;
 
-	protected final SubscrServiceAccessService subscrServiceAccessService;
 
 	private final SystemParamService systemParamService;
 
@@ -99,12 +89,11 @@ public class SubscriberService implements SecuredRoles {
     protected final SubscriberTimeService subscriberTimeService;
 
     @Autowired
-    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper, SubscriberTimeService subscriberTimeService) {
+    public SubscriberService(SubscriberRepository subscriberRepository, SubscrUserRepository subscrUserRepository, ContZPointRepository contZPointRepository, TimezoneDefService timezoneDefService, SystemParamService systemParamService, OrganizationRepository organizationRepository, SubscriberMapper subscriberMapper, SubscriberTimeService subscriberTimeService) {
         this.subscriberRepository = subscriberRepository;
         this.subscrUserRepository = subscrUserRepository;
         this.contZPointRepository = contZPointRepository;
         this.timezoneDefService = timezoneDefService;
-        this.subscrServiceAccessService = subscrServiceAccessService;
         this.systemParamService = systemParamService;
         this.organizationRepository = organizationRepository;
         this.subscriberMapper = subscriberMapper;
@@ -195,32 +184,32 @@ public class SubscriberService implements SecuredRoles {
 		return ids.size() == 1;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public String getRmaLdapOu(Long subscriberId) {
-		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-		if (subscriber == null) {
-			return null;
-		}
-		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
-			return subscriber.getRmaLdapOu();
-		}
-
-		if (subscriber.getRmaLdapOu() != null) {
-			return subscriber.getRmaLdapOu();
-		}
-
-		if (subscriber.getRmaSubscriberId() == null) {
-			return null;
-		}
-
-		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
-		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
-	}
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	public String getRmaLdapOu(Long subscriberId) {
+//		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+//		if (subscriber == null) {
+//			return null;
+//		}
+//		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
+//			return subscriber.getRmaLdapOu();
+//		}
+//
+//		if (subscriber.getRmaLdapOu() != null) {
+//			return subscriber.getRmaLdapOu();
+//		}
+//
+//		if (subscriber.getRmaSubscriberId() == null) {
+//			return null;
+//		}
+//
+//		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
+//		return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+//	}
 
 	/**
 	 *
@@ -343,36 +332,36 @@ public class SubscriberService implements SecuredRoles {
         return result.map(mapper::apply);
 	}
 
-	/**
-	 *
-	 * @param subscriber
-	 * @return
-	 */
-	public String[] buildSubscriberLdapOu(Subscriber subscriber) {
-		checkNotNull(subscriber);
-
-		String rmaOu = null;
-		String childLdapOu = null;
-		String[] orgUnits = null;
-
-		if (Boolean.TRUE.equals(subscriber.getIsChild())) {
-			rmaOu = getRmaLdapOu(subscriber.getParentSubscriberId());
-			Subscriber parentSubscriber = selectSubscriber(subscriber.getParentSubscriberId());
-			checkNotNull(parentSubscriber);
-
-			childLdapOu = parentSubscriber.getChildLdapOu();
-
-			orgUnits = new String[] { rmaOu, childLdapOu };
-
-		} else {
-			rmaOu = getRmaLdapOu(subscriber.getId());
-			orgUnits = new String[] { rmaOu };
-		}
-
-		checkNotNull(orgUnits);
-
-		return orgUnits;
-	}
+//	/**
+//	 *
+//	 * @param subscriber
+//	 * @return
+//	 */
+//	public String[] buildSubscriberLdapOu(Subscriber subscriber) {
+//		checkNotNull(subscriber);
+//
+//		String rmaOu = null;
+//		String childLdapOu = null;
+//		String[] orgUnits = null;
+//
+//		if (Boolean.TRUE.equals(subscriber.getIsChild())) {
+//			rmaOu = getRmaLdapOu(subscriber.getParentSubscriberId());
+//			Subscriber parentSubscriber = selectSubscriber(subscriber.getParentSubscriberId());
+//			checkNotNull(parentSubscriber);
+//
+//			childLdapOu = parentSubscriber.getChildLdapOu();
+//
+//			orgUnits = new String[] { rmaOu, childLdapOu };
+//
+//		} else {
+//			rmaOu = getRmaLdapOu(subscriber.getId());
+//			orgUnits = new String[] { rmaOu };
+//		}
+//
+//		checkNotNull(orgUnits);
+//
+//		return orgUnits;
+//	}
 
 	/**
 	 *

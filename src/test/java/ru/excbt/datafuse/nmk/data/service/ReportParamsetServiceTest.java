@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 

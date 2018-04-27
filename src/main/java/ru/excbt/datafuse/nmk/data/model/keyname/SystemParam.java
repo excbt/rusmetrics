@@ -7,12 +7,14 @@ import javax.persistence.Table;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 
 @Entity
 @Table(name = "system_param")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Getter
+@Immutable
 public class SystemParam extends AbstractKeynameEntity {
 
 	/**

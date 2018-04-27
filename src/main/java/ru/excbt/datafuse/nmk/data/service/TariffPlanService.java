@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 
 /**
  * Сервис для работы с тарифными планами

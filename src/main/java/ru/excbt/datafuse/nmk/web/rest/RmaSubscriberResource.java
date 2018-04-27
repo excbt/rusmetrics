@@ -8,15 +8,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberCreatorService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -47,12 +47,15 @@ public class RmaSubscriberResource {
 
 	private final RmaSubscriberService rmaSubscriberService;
 
+	private final SubscriberCreatorService subscriberCreatorService;
+
     private final PortalUserIdsService portalUserIdsService;
 
-    public RmaSubscriberResource(ObjectAccessService objectAccessService, SubscriberService subscriberService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService, PortalUserIdsService portalUserIdsService) {
+    public RmaSubscriberResource(ObjectAccessService objectAccessService, SubscriberService subscriberService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService, SubscriberCreatorService subscriberCreatorService, PortalUserIdsService portalUserIdsService) {
         this.subscriberService = subscriberService;
         this.organizationService = organizationService;
         this.rmaSubscriberService = rmaSubscriberService;
+        this.subscriberCreatorService = subscriberCreatorService;
         this.portalUserIdsService = portalUserIdsService;
     }
 
@@ -123,7 +126,7 @@ public class RmaSubscriberResource {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return rmaSubscriberService.createRmaSubscriber(entity, portalUserIdsService.getCurrentIds().getSubscriberId());
+				return subscriberCreatorService.createRmaSubscriber(entity, portalUserIdsService.getCurrentIds().getSubscriberId());
 			}
 		};
 
@@ -172,7 +175,7 @@ public class RmaSubscriberResource {
 
 		ApiAction action = (ApiActionAdapter) () -> {
             if (Boolean.TRUE.equals(isPermanent)) {
-                rmaSubscriberService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+                subscriberCreatorService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
             } else {
                 rmaSubscriberService.deleteRmaSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
             }

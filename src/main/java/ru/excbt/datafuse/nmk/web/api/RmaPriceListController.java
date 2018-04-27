@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;

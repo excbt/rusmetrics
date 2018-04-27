@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;

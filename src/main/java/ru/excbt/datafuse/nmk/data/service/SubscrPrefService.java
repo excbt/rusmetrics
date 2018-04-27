@@ -30,8 +30,8 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrPrefObjectTreeTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPrefValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrTypePrefRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SubscrPrefRepository;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 
 @Service
 public class SubscrPrefService implements SecuredRoles {
