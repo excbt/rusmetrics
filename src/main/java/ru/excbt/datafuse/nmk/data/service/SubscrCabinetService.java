@@ -229,7 +229,7 @@ public class SubscrCabinetService implements SecuredRoles {
 					cabinetSubscriber.getId(), cabinetSubscriber.getSubscrType()));
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(cabinetSubscriber.getId());
+		List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(cabinetSubscriber.getId());
 
 		List<Long> subscrUserIds = subscrUsers.stream().map(i -> i.getId()).collect(Collectors.toList());
 
@@ -309,7 +309,7 @@ public class SubscrCabinetService implements SecuredRoles {
 						.filter(i -> i.getId().equals(childSubscriberId)).findFirst();
 
 				if (optChildSubscriber.isPresent()) {
-					List<SubscrUser> childSubscrUsers = subscrUserService.selectBySubscriberId(childSubscriberId);
+					List<SubscrUser> childSubscrUsers = subscrUserRepository.selectBySubscriberId(childSubscriberId);
 					if (!childSubscrUsers.isEmpty()) {
 						subscrCabinetInfo = new SubscrCabinetInfo(optChildSubscriber.get(), childSubscrUsers.get(0),
 								childContObjectMap.get(optChildSubscriber.get().getId()));

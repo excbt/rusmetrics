@@ -1,8 +1,7 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,9 @@ import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
@@ -35,9 +35,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/subscr")
-public class SubscrUserController  {
+public class SubscrUserResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrUserResource.class);
 
 	protected final UsernameValidator usernameValidator = new UsernameValidator();
 
@@ -47,10 +47,13 @@ public class SubscrUserController  {
 
     protected final PortalUserIdsService portalUserIdsService;
 
-    public SubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService) {
+    protected final SubscrUserMapper subscrUserMapper;
+
+    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.portalUserIdsService = portalUserIdsService;
+        this.subscrUserMapper = subscrUserMapper;
     }
 
     /**
@@ -59,8 +62,8 @@ public class SubscrUserController  {
      */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**
@@ -78,13 +81,13 @@ public class SubscrUserController  {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**
 	 *
-	 * @param subscrUser
+	 * @param subscrUserDTO
 	 * @param request
 	 * @return
 	 */
@@ -93,9 +96,11 @@ public class SubscrUserController  {
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
-			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
+			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-		return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), isAdmin, isReadonly, subscrUser, newPassword, request);
+
+	    SubscrUser subscrUser = subscrUserMapper.toEntity(subscrUserDTO);
+	    return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), isAdmin, isReadonly, subscrUser, newPassword, request);
 	}
 
 	/**

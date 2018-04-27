@@ -25,6 +25,8 @@ import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -51,36 +53,37 @@ public class SubscrUserService implements SecuredRoles {
 		void doAction(LdapUserAccount user);
 	}
 
-	@Autowired
-	private SubscrUserRepository subscrUserRepository;
+	private final SubscrUserRepository subscrUserRepository;
 
-    @Autowired
-	private SystemUserRepository systemUserRepository;
+	private final SystemUserRepository systemUserRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberService subscriberService;
 
-	@Autowired
-	private LdapService ldapService;
+	private final LdapService ldapService;
 
-	@Autowired
-	private SubscrRoleService subscrRoleService;
+	private final SubscrRoleService subscrRoleService;
 
-    @Autowired
-    private UserPersistentTokenRepository persistentTokenRepository;
+    private final UserPersistentTokenRepository persistentTokenRepository;
 
     private final CacheManager cacheManager;
 
     private final SubscriberLdapService subscriberLdapService;
 
-    @Autowired
-    public SubscrUserService(CacheManager cacheManager, SubscriberLdapService subscriberLdapService) {
+    private final SubscrUserMapper subscrUserMapper;
+
+    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper) {
+        this.subscrUserRepository = subscrUserRepository;
+        this.systemUserRepository = systemUserRepository;
+        this.subscriberService = subscriberService;
+        this.ldapService = ldapService;
+        this.subscrRoleService = subscrRoleService;
+        this.persistentTokenRepository = persistentTokenRepository;
         this.cacheManager = cacheManager;
         this.subscriberLdapService = subscriberLdapService;
+        this.subscrUserMapper = subscrUserMapper;
     }
 
-
-	/**
+    /**
 	 *
 	 * @param subscrUserId
 	 * @return
@@ -103,6 +106,12 @@ public class SubscrUserService implements SecuredRoles {
 			i.getSubscriber().getId();
 		});
 		return resultList;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrUserDTO> findBySubscriberId(Long subscriberId) {
+		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
+		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(subscrUserMapper::toDto).collect(Collectors.toList());
 	}
 
 	/**

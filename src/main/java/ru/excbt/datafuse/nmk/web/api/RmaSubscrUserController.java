@@ -17,14 +17,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
+import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
@@ -37,7 +39,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscrUserController extends SubscrUserController {
+public class RmaSubscrUserController extends SubscrUserResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserController.class);
 
@@ -61,8 +63,8 @@ public class RmaSubscrUserController extends SubscrUserController {
 		}
 	}
 
-    public RmaSubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService) {
-        super(subscrUserService, subscrRoleService, portalUserIdsService);
+    public RmaSubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscrUserMapper subscrUserMapper) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper);
         this.subscriberService = subscriberService;
     }
 
@@ -85,8 +87,8 @@ public class RmaSubscrUserController extends SubscrUserController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(rSubscriberId);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(rSubscriberId);
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**

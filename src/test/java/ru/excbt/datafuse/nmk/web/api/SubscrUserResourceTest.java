@@ -16,16 +16,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
-import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -33,7 +31,7 @@ import java.util.function.Consumer;
 
 @RunWith(SpringRunner.class)
 @Ignore
-public class SubscrUserControllerTest extends PortalApiTest {
+public class SubscrUserResourceTest extends PortalApiTest {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
@@ -49,11 +47,13 @@ public class SubscrUserControllerTest extends PortalApiTest {
 	@Mock
 	private PortalUserIdsService portalUserIdsService;
 
-	private SubscrUserController subscrUserController;
+	private SubscrUserResource subscrUserController;
 	@Autowired
     private SubscrRoleService subscrRoleService;
 
     private MockMvcRestWrapper mockMvcRestWrapper;
+    @Autowired
+    private SubscrUserMapper subscrUserMapper;
 
     @Before
 	public void setUp() throws Exception {
@@ -61,7 +61,7 @@ public class SubscrUserControllerTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscrUserController = new SubscrUserController(subscrUserService, subscrRoleService, portalUserIdsService);
+        subscrUserController = new SubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrUserController)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)
