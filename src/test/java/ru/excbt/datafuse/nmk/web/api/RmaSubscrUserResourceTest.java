@@ -14,22 +14,22 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
-import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.RmaSubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 @RunWith(SpringRunner.class)
-public class RmaSubscrUserControllerTest extends PortalApiTest {
+public class RmaSubscrUserResourceTest extends PortalApiTest {
 
 	public static final int TEST_RMA_ID = 64166467;
 
@@ -47,14 +47,21 @@ public class RmaSubscrUserControllerTest extends PortalApiTest {
 	@Mock
 	private PortalUserIdsService portalUserIdsService;
 
-	private RmaSubscrUserController rmaSubscrUserController;
+	private RmaSubscrUserResource rmaSubscrUserResource;
 
 	@Autowired
     private SubscrRoleService subscrRoleService;
+
     @Autowired
 	private SubscriberService subscriberService;
 
     private MockMvcRestWrapper mockMvcRestWrapper;
+    @Autowired
+    private SubscrUserMapper subscrUserMapper;
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+    @Autowired
+    private SubscrUserManageService subscrUserManageService;
 
     @Before
 	public void setUp() throws Exception {
@@ -62,9 +69,9 @@ public class RmaSubscrUserControllerTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        rmaSubscrUserController = new RmaSubscrUserController(subscrUserService, subscrRoleService, portalUserIdsService, subscriberService);
+        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberRepository, subscrUserMapper, subscrUserManageService);
 
-	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserController)
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserResource)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)
 	        .setMessageConverters(jacksonMessageConverter).build();
 
@@ -77,7 +84,12 @@ public class RmaSubscrUserControllerTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/rma/{id}/subscrUsers", TEST_RMA_ID).testGet();
 	}
 
+    /**
+     * TODO FIX user creation
+     * @throws Exception
+     */
 	@Test
+//    @Ignore
 	public void testRSubscrUserCRUD() throws Exception {
 
 		SubscrUser subscrUser = new SubscrUser();

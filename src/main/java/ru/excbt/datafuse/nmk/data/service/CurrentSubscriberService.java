@@ -18,6 +18,8 @@ import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
@@ -43,13 +45,16 @@ public class CurrentSubscriberService {
 
 	private final CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
+	private final SubscriberTimeService subscriberTimeService;
 
-    public CurrentSubscriberService(SubscriberService subscriberService, MockSubscriberService mockSubscriberService, MockUserService mockUserService, V_FullUserInfoRepository fullUserInfoRepository, CurrentSubscriberUserDetailsService subscriberUserDetailsService) {
+
+    public CurrentSubscriberService(SubscriberService subscriberService, MockSubscriberService mockSubscriberService, MockUserService mockUserService, V_FullUserInfoRepository fullUserInfoRepository, CurrentSubscriberUserDetailsService subscriberUserDetailsService, SubscriberTimeService subscriberTimeService) {
         this.subscriberService = subscriberService;
         this.mockSubscriberService = mockSubscriberService;
         this.mockUserService = mockUserService;
         this.fullUserInfoRepository = fullUserInfoRepository;
         this.subscriberUserDetailsService = subscriberUserDetailsService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**
@@ -134,12 +139,12 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public LocalDateTime getSubscriberCurrentTime_Joda() {
-		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberTimeService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : new LocalDateTime(pre);
 	}
 
     public LocalDate getSubscriberCurrentLocalDate() {
-        Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+        Date pre = subscriberTimeService.getSubscriberCurrentTime(getSubscriberId());
         return LocalDateUtils.asLocalDate(pre);
     }
 
@@ -149,7 +154,7 @@ public class CurrentSubscriberService {
 	 * @return
 	 */
 	public Instant getSubscriberCurrentTimeInstant_JDK() {
-		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+		Date pre = subscriberTimeService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : pre.toInstant();
 	}
 

@@ -1,21 +1,21 @@
 package ru.excbt.datafuse.nmk.domain;
 
-import javax.persistence.*;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
+import org.hibernate.annotations.Immutable;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_type_role")
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Getter
-@Setter
+@Immutable
 public class SubscrTypeRole implements Serializable {
 
 	/**
@@ -24,13 +24,12 @@ public class SubscrTypeRole implements Serializable {
 	private static final long serialVersionUID = 4889186302635036698L;
 
     @Id
-    @SequenceGenerator(name = "subscrTypeRoleSeq", sequenceName = "seq_global_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "subscrTypeRoleSeq")
     @Column
     private Long id;
 
-	@Column(name = "subscr_type")
-	private String subscrType;
+    @ManyToOne
+	@JoinColumn(name = "subscr_type")
+	private SubscrType subscrType;
 
 	@Column(name = "subscr_role_name")
 	private String subscrRoleName;
@@ -41,4 +40,21 @@ public class SubscrTypeRole implements Serializable {
 	@Column(name = "deleted")
 	private int deleted;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SubscrTypeRole that = (SubscrTypeRole) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id);
+    }
+
+    public String toString() {
+        return "SubscrTypeRole(id=" + this.getId() + ", subscrRoleName=" + this.getSubscrRoleName() + ", version=" + this.getVersion() + ", deleted=" + this.getDeleted() + ")";
+    }
 }

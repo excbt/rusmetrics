@@ -19,10 +19,11 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 
 /**
  * Сервис для работы с универсальным справочником
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.03.2015
@@ -40,7 +41,7 @@ public class UDirectoryService implements SecuredRoles {
 	private SubscriberService subscriberService;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
@@ -58,7 +59,7 @@ public class UDirectoryService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -67,7 +68,7 @@ public class UDirectoryService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
@@ -77,7 +78,7 @@ public class UDirectoryService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 * @return
 	 */
@@ -88,7 +89,7 @@ public class UDirectoryService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
@@ -129,7 +130,7 @@ public class UDirectoryService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param directoryId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)

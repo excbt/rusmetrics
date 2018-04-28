@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -17,13 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -37,11 +39,11 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscrUserController extends SubscrUserController {
+public class RmaSubscrUserResource extends SubscrUserResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserResource.class);
 
-	private final SubscriberService subscriberService;
+	private final SubscriberRepository subscriberRepository;
 
 	public class UsernameCheck {
 		private final boolean userValid;
@@ -61,9 +63,9 @@ public class RmaSubscrUserController extends SubscrUserController {
 		}
 	}
 
-    public RmaSubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService) {
-        super(subscrUserService, subscrRoleService, portalUserIdsService);
-        this.subscriberService = subscriberService;
+    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
+        this.subscriberRepository = subscriberRepository;
     }
 
     /**
@@ -79,14 +81,14 @@ public class RmaSubscrUserController extends SubscrUserController {
 			ApiResponse.responseForbidden();
 		}
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
 				|| !subscriber.getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(rSubscriberId);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(rSubscriberId);
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**
@@ -100,14 +102,16 @@ public class RmaSubscrUserController extends SubscrUserController {
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
-			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
+			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
+        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
 
-		return createSubscrUserInternal(subscriber, isAdmin, isReadonly, subscrUser, newPassword, request);
+		return createSubscrUserInternal(subscriber, subscrUserDTO, newPassword, request);
 	}
 
 	/**
@@ -129,10 +133,11 @@ public class RmaSubscrUserController extends SubscrUserController {
 		//				: null;
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
+
 
 		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}

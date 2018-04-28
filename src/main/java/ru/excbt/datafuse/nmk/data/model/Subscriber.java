@@ -16,6 +16,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
@@ -31,9 +32,10 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(name = "subscriber")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
+@DynamicUpdate
 public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject, PersistableBuilder<Subscriber, Long> {
 
 	/**
@@ -57,14 +59,14 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	private String timezoneDefKeyname;
 
 	@JsonIgnore
-	@Column(name = "subscriber_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
+	@Column(name = "subscriber_uuid", updatable = false, columnDefinition = "uuid")
 	private UUID subscriberUUID;
 
 	@Version
 	private int version;
 
 	@Column(name = "is_rma", insertable = false, updatable = false)
-	private Boolean isRma;
+	private Boolean isRma = false;
 
 	@Column(name = "rma_subscriber_id", updatable = false)
 	private Long rmaSubscriberId;

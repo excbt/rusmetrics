@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.widget.HeatWidgetService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -47,8 +48,8 @@ public class HeatWidgetController extends WidgetController {
                                 HeatWidgetService heatWidgetService,
                                 ObjectAccessService objectAccessService,
                                 PortalUserIdsService portalUserIdsService,
-                                SubscriberService subscriberService) {
-        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberService);
+                                SubscriberTimeService subscriberTimeService) {
+        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberTimeService);
         this.heatWidgetService = heatWidgetService;
         this.contObjectService = contObjectService;
     }
@@ -70,7 +71,7 @@ public class HeatWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime d = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
+		ZonedDateTime d = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		ApiActionProcess<List<HeatWidgetTemperatureDto>> action = () -> heatWidgetService.selectChartData(contZpointId,
 				d, mode.toUpperCase());
@@ -96,7 +97,7 @@ public class HeatWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime subscriberDateTime = subscriberService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
+		ZonedDateTime subscriberDateTime = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId,
 				subscriberDateTime.toLocalDate());

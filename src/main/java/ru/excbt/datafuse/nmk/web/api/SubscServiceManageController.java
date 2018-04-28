@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
@@ -25,6 +26,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,6 +58,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
+
 
 	/**
 	 *
@@ -120,7 +123,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	private List<SubscrServiceAccess> subscriberServiceAccessList(Long subscriberId) {
-		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(subscriberId));
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(subscriberId));
 		List<SubscrServiceAccess> result = subscriberAccessService.selectSubscriberServiceAccess(subscriberId,
 				accessDate);
 
@@ -186,12 +189,12 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServicePermissions() {
-        java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId()));
+        java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(getCurrentSubscriberId()));
 
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
 				.selectSubscriberPermissions(getCurrentSubscriberId(), currentDate);
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
-				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
+				.sorted(Comparator.comparing(AbstractKeynameEntity::getKeyname)).collect(Collectors.toList());
 		return ApiResponse.responseOK(result);
 	}
 
@@ -205,7 +208,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService.selectSubscriberPermissions(subscriberId,
 				getSubscriberLocalDate(subscriberId));
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
-				.sorted((a, b) -> a.getKeyname().compareTo(b.getKeyname())).collect(Collectors.toList());
+				.sorted(Comparator.comparing(AbstractKeynameEntity::getKeyname)).collect(Collectors.toList());
 		return ApiResponse.responseOK(result);
 	}
 

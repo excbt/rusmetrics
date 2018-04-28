@@ -3,20 +3,24 @@ package ru.excbt.datafuse.nmk.domain;
 import javax.persistence.*;
 
 import lombok.Getter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "subscr_type")
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Getter
-public class SubscrType extends JsonAbstractKeynameEntity implements Serializable, KeynameObject {
+@Immutable
+public class SubscrType implements Serializable, KeynameObject {
 
     private static final long serialVersionUID = -8443196795614375881L;
 
@@ -50,6 +54,10 @@ public class SubscrType extends JsonAbstractKeynameEntity implements Serializabl
 
 	@Column(name = "deleted")
 	private int deleted;
+
+	@OneToMany(mappedBy = "subscrType")
+    @BatchSize(size = 10)
+    private List<SubscrTypeRole> subscrTypeRoles;
 
     @Override
     public boolean equals(Object o) {

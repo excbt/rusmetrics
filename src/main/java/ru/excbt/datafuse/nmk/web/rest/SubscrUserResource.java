@@ -1,26 +1,27 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
-import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.validators.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -35,9 +36,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/subscr")
-public class SubscrUserController  {
+public class SubscrUserResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SubscrUserResource.class);
 
 	protected final UsernameValidator usernameValidator = new UsernameValidator();
 
@@ -47,10 +48,16 @@ public class SubscrUserController  {
 
     protected final PortalUserIdsService portalUserIdsService;
 
-    public SubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService) {
+    protected final SubscrUserMapper subscrUserMapper;
+
+    protected final SubscrUserManageService subscrUserManageService;
+
+    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.portalUserIdsService = portalUserIdsService;
+        this.subscrUserMapper = subscrUserMapper;
+        this.subscrUserManageService = subscrUserManageService;
     }
 
     /**
@@ -59,8 +66,8 @@ public class SubscrUserController  {
      */
 	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**
@@ -73,18 +80,18 @@ public class SubscrUserController  {
 		checkNotNull(subscrUserId);
 
 		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
-		if (subscrUser == null || subscrUser.getSubscriberId() == null
-				|| !subscrUser.getSubscriberId().equals(subscrUserId)) {
+		if (subscrUser == null || subscrUser.getSubscriber().getId() == null
+				|| !subscrUser.getSubscriber().getId().equals(subscrUserId)) {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(subscrUsers));
+		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+		return ApiResponse.responseOK(subscrUsers);
 	}
 
 	/**
 	 *
-	 * @param subscrUser
+	 * @param subscrUserDTO
 	 * @param request
 	 * @return
 	 */
@@ -93,9 +100,11 @@ public class SubscrUserController  {
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
-			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
+			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-		return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), isAdmin, isReadonly, subscrUser, newPassword, request);
+        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
+	    return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), subscrUserDTO, newPassword, request);
 	}
 
 	/**
@@ -173,6 +182,18 @@ public class SubscrUserController  {
 //	}
 //
 
+
+    protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber,
+                                                           final SubscrUserDTO subscrUserDTO, String password, HttpServletRequest request) {
+        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(rmaSubscriber, subscrUserDTO, password);
+        //.map(subscrUserMapper::toDto)
+        // ResponseEntity.created(action.getLocation()).body(action.getResult())
+        return subscrUserOptional
+            .map(subscrUserMapper::toDto)
+                    .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
+            .orElse(ResponseEntity.badRequest().build());
+    }
+
     /**
      *
      * @param rmaSubscriber
@@ -183,7 +204,7 @@ public class SubscrUserController  {
      * @param request
      * @return
      */
-	protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
+	protected ResponseEntity<?> createSubscrUserInternal22(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
 			final SubscrUser subscrUser, String password, HttpServletRequest request) {
 		checkNotNull(rmaSubscriber);
 		checkNotNull(rmaSubscriber.getId());
@@ -204,7 +225,8 @@ public class SubscrUserController  {
 			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
 		}
 
-		subscrUser.setSubscriberId(rmaSubscriber.getId());
+        subscrUser.setSubscriber(new Subscriber().id(rmaSubscriber.getId()));
+//		subscrUser.setSubscriberId(rmaSubscriber.getId());
 		subscrUser.setIsAdmin(isAdmin);
 		subscrUser.setIsReadonly(isReadonly);
 		if (isReadonly) {
@@ -250,9 +272,9 @@ public class SubscrUserController  {
 		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUserId);
 		checkNotNull(subscrUser);
-		checkNotNull(subscrUser.getSubscriberId());
+		checkNotNull(subscrUser.getSubscriber());
 
-		if (!subscrUser.getSubscriberId().equals(rmaSubscriber.getId())) {
+		if (!subscrUser.getSubscriber().getId().equals(rmaSubscriber.getId())) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -318,8 +340,8 @@ public class SubscrUserController  {
 	 * @return
 	 */
 	private boolean checkSubscrUserOwnerFail(Long rSubscriberId, SubscrUser subscrUser) {
-		return subscrUser == null || subscrUser.getSubscriberId() == null
-				|| !subscrUser.getSubscriberId().equals(rSubscriberId);
+		return subscrUser == null || subscrUser.getSubscriber().getId() == null
+				|| !subscrUser.getSubscriber().getId().equals(rSubscriberId);
 	}
 
 }
