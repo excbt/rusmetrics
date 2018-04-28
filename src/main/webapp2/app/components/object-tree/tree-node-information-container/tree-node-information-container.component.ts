@@ -28,4 +28,8 @@ console.log('this.treeNodeId', this.treeNodeId);
         this.eventManager.subscribe('setTreeNode', (treeNodeId) => console.log('TreeNodeInformationContainerComponent: treeNodeId: ', treeNodeId));
     }
     
+    changeWidget(param) {
+        console.log(param);
+    }
+    
 }

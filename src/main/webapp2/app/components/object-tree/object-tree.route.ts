@@ -1,5 +1,8 @@
 import { Routes } from '@angular/router';
-import { PortalObjectTreeComponent, TreeNodeInformationContainerComponent } from './';
+import { PortalObjectTreeComponent, 
+        TreeNodeInformationContainerComponent, 
+        TreeNodeInformationComponent, 
+       } from './';
 import { UserRouteAccessService } from '../../shared';
 
 // const OBJECT_TREES_ROUTES: Routes = [
@@ -28,6 +31,14 @@ const TREE_NODE_INFORMATION_CONTAINER: Routes = [
     }
 ]
 
+const TREE_NODE_INFORMATION_CONTAINER_WIDGETS: Routes = [
+    {
+        path: 'tree-node-information',
+        component: TreeNodeInformationComponent       
+    }
+]
+
+
 export const objectTreeState: Routes = [{
     path: 'object-trees',
     component: PortalObjectTreeComponent,
@@ -36,5 +47,22 @@ export const objectTreeState: Routes = [{
         pageTitle: 'objectTree.title'
     },
     canActivate: [UserRouteAccessService],
-   /* children: [...TREE_NODE_INFORMATION_CONTAINER] */
+    children: [
+        {
+            path: '',
+            redirectTo: '/object-trees',
+            pathMatch: 'full'
+        }, 
+        {
+            path: 'tree-node-information',
+            component: TreeNodeInformationComponent,
+            children: [
+                {
+                    path: '',
+                    redirectTo: '/tree-node-information',
+                    pathMatch: 'full'
+                }
+            ]
+        } 
+    ]
 }];

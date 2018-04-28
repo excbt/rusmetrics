@@ -3,7 +3,7 @@ import { JhipsterSharedModule } from '../../shared';
 // import { PortalObjectTreeComponent } from './object-tree.component';
 import { PTreeNodeService } from './object-tree.service';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 // import { UserRouteAccessService } from '../../shared';
 
@@ -14,7 +14,8 @@ import { objectTreeState,
         SubscrTreeService,
         SubscrPrefService,
         PTreeNodeMonitorService,
-        TreeNodeInformationContainerComponent
+        TreeNodeInformationContainerComponent,
+        TreeNodeInformationComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -60,4 +61,9 @@ import { MatMenuModule } from '@angular/material/menu';
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class PortalObjectTreeModule {}
+export class PortalObjectTreeModule {
+    
+    constructor(router: Router) {
+        console.log('Router: ', router);    
+    }
+}

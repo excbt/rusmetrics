@@ -10,6 +10,7 @@ export * from './subscr-tree';
 export * from './subscr-pref';
 export * from './p-tree-node-monitor';
 
+export * from './tree-node-information';
 export * from './tree-node-information-container';
 
 export * from './object-tree.module';

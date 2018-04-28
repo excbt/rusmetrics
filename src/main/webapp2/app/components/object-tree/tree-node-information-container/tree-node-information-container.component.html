@@ -21,10 +21,13 @@
             </button>
             <mat-menu #menu="matMenu">
                 <button mat-menu-item *ngFor = "let widget of widgetList" 
-                   (click) = "changeWidget(widget)">
+                   (click) = "changeWidget(widget)"
+                   routerLink = "object-trees/tree-node-information"
+                   >
                     <span >{{widget.caption}}</span>
                 </button>                        
             </mat-menu>    
         </div>
     </mat-toolbar-row>
+    <router-outlet name = "treeNodeWidget"></router-outlet>
 </mat-toolbar>
