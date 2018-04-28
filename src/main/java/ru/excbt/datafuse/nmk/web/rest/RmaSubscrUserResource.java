@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.web.api;
+package ru.excbt.datafuse.nmk.web.rest;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -26,7 +26,6 @@ import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 /**
@@ -39,9 +38,9 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscrUserController extends SubscrUserResource {
+public class RmaSubscrUserResource extends SubscrUserResource {
 
-	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserResource.class);
 
 	private final SubscriberService subscriberService;
 
@@ -63,7 +62,7 @@ public class RmaSubscrUserController extends SubscrUserResource {
 		}
 	}
 
-    public RmaSubscrUserController(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscrUserMapper subscrUserMapper) {
+    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscrUserMapper subscrUserMapper) {
         super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper);
         this.subscriberService = subscriberService;
     }

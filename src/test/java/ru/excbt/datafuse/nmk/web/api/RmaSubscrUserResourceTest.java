@@ -23,11 +23,12 @@ import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.RmaSubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 @RunWith(SpringRunner.class)
-public class RmaSubscrUserControllerTest extends PortalApiTest {
+public class RmaSubscrUserResourceTest extends PortalApiTest {
 
 	public static final int TEST_RMA_ID = 64166467;
 
@@ -45,7 +46,7 @@ public class RmaSubscrUserControllerTest extends PortalApiTest {
 	@Mock
 	private PortalUserIdsService portalUserIdsService;
 
-	private RmaSubscrUserController rmaSubscrUserController;
+	private RmaSubscrUserResource rmaSubscrUserResource;
 
 	@Autowired
     private SubscrRoleService subscrRoleService;
@@ -63,9 +64,9 @@ public class RmaSubscrUserControllerTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        rmaSubscrUserController = new RmaSubscrUserController(subscrUserService, subscrRoleService, portalUserIdsService, subscriberService, subscrUserMapper);
+        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberService, subscrUserMapper);
 
-	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserController)
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserResource)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)
 	        .setMessageConverters(jacksonMessageConverter).build();
 
