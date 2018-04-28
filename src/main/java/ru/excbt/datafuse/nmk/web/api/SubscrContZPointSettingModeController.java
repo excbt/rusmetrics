@@ -34,17 +34,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContZPointSettingModeController extends AbstractSubscrApiResource {
+public class SubscrContZPointSettingModeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContZPointSettingModeController.class);
 
-	@Autowired
-	private ContZPointSettingModeService contZPointSettingModeService;
+	private final ContZPointSettingModeService contZPointSettingModeService;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
 
-	/**
+    public SubscrContZPointSettingModeController(ContZPointSettingModeService contZPointSettingModeService, ContZPointService contZPointService) {
+        this.contZPointSettingModeService = contZPointSettingModeService;
+        this.contZPointService = contZPointService;
+    }
+
+    /**
 	 *
 	 * @param contObjectId
 	 * @param contZPointId

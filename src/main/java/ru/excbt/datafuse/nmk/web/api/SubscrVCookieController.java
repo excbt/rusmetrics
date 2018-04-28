@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrVCookieService;
 import ru.excbt.datafuse.nmk.data.service.WidgetMetaService;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -27,15 +28,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/subscr/vcookie")
-public class SubscrVCookieController extends AbstractSubscrApiResource {
+public class SubscrVCookieController {
 
-	@Inject
-	private SubscrVCookieService subscrVCookieService;
+	private final SubscrVCookieService subscrVCookieService;
 
-	@Inject
-	private WidgetMetaService widgetMetaService;
+	private final WidgetMetaService widgetMetaService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrVCookieController(SubscrVCookieService subscrVCookieService, WidgetMetaService widgetMetaService, PortalUserIdsService portalUserIdsService) {
+        this.subscrVCookieService = subscrVCookieService;
+        this.widgetMetaService = widgetMetaService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -47,7 +54,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookie(getSubscriberParam());
+		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookie(portalUserIdsService.getCurrentIds());
 
 		List<SubscrVCookie> resultList = vCookieList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
@@ -79,7 +86,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
-			vc.setSubscriberId(getSubscriberId());
+			vc.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 			vc.setSubscrUserId(null);
 
 		}
@@ -156,7 +163,7 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookieByUser(getSubscriberParam());
+		List<SubscrVCookie> vCookieList = subscrVCookieService.selectSubscrVCookieByUser(portalUserIdsService.getCurrentIds());
 
 		List<SubscrVCookie> resultList = vCookieList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
 				.filter(i -> vcMode == null || vcMode.equals(i.getVcMode()))
@@ -188,10 +195,8 @@ public class SubscrVCookieController extends AbstractSubscrApiResource {
 				return ApiResponse.responseBadRequest(ApiResult.validationError("vcMode is null"));
 			}
 
-			SubscriberParam sParam = getSubscriberParam();
-
-			vc.setSubscriberId(sParam.getSubscriberId());
-			vc.setSubscrUserId(sParam.getSubscrUserId());
+			vc.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+			vc.setSubscrUserId(portalUserIdsService.getCurrentIds().getUserId());
 
 		}
 

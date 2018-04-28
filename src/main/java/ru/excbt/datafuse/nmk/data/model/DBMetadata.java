@@ -15,6 +15,7 @@ public class DBMetadata {
 	public static final String SCHEME_SLOG = "slog";
 	public static final String SCHEME_GATE = "gate";
 	public static final String SCHEME_CABINET2 = "cabinet2";
+    public static final String SCHEME_DATARAW = "dataraw";
 
 	private DBMetadata() {
 

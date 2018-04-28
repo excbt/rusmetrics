@@ -1,17 +1,15 @@
 package ru.excbt.datafuse.nmk.cli;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
+import ru.excbt.datafuse.nmk.config.DatabaseConfiguration;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 public abstract class AbstractDBToolCli {
 
@@ -34,8 +32,7 @@ public abstract class AbstractDBToolCli {
 
 	public AbstractDBToolCli() {
 		appContext = new AnnotationConfigApplicationContext(
-				JpaConfigLocal.class, LdapConfig.class,
-				JpaRawConfigLocal.class);
+				DatabaseConfiguration.class, LdapConfig.class);
 	}
 
 	public void showAppStatus() {

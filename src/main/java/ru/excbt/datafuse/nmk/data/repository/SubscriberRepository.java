@@ -1,16 +1,15 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
-import java.util.List;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
-
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+
+import java.util.List;
 
 /**
  * Repository для Subscriber
@@ -20,7 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.Subscriber;
  * @since 25.03.2015
  *
  */
-public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
+public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, QueryDslPredicateExecutor<Subscriber> {
 
 	/**
 	 *

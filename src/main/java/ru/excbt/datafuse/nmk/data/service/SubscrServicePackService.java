@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePackSpecial;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrServicePackSpecialRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -37,12 +38,12 @@ public class SubscrServicePackService {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrServicePack> selectServicePackList(SubscriberParam subscriberParam) {
+	public List<SubscrServicePack> selectServicePackList(PortalUserIds portalUserIds) {
 		Sort sort = new Sort(Sort.Direction.ASC, "packNr");
 		List<SubscrServicePack> result = subscrServicePackRepository.findAll(sort);
 
 		final List<SubscrServicePackSpecial> subscrServicePackSpecials = subscrServicePackSpecialRepository
-				.findBySubscriberId(subscriberParam.getSubscriberId());
+				.findBySubscriberId(portalUserIds.getSubscriberId());
 
 		List<Long> servicePackIds = subscrServicePackSpecials.stream().map(i -> i.getSubscrServicePackId())
 				.collect(Collectors.toList());

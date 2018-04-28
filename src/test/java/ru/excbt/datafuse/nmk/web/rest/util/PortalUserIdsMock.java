@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest.util;
 
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 
 import static org.mockito.Mockito.when;
@@ -28,6 +29,11 @@ public class PortalUserIdsMock {
             public Long getRmaId() {
                 return null;
             }
+
+            @Override
+            public SubscrTypeKey getSubscrTypeKey() {
+                return SubscrTypeKey.NORMAL;
+            }
         };
     }
 
@@ -51,6 +57,11 @@ public class PortalUserIdsMock {
             @Override
             public Long getRmaId() {
                 return null;
+            }
+
+            @Override
+            public SubscrTypeKey getSubscrTypeKey() {
+                return SubscrTypeKey.RMA;
             }
 
             @Override

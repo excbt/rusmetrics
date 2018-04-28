@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.joda.time.LocalDateTime;
@@ -17,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Класс для работы с текущим абонентом
@@ -135,6 +137,12 @@ public class CurrentSubscriberService {
 		Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
 		return pre == null ? null : new LocalDateTime(pre);
 	}
+
+    public LocalDate getSubscriberCurrentLocalDate() {
+        Date pre = subscriberService.getSubscriberCurrentTime(getSubscriberId());
+        return LocalDateUtils.asLocalDate(pre);
+    }
+
 
 	/**
 	 *

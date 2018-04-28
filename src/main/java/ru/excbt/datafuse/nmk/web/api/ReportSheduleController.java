@@ -3,21 +3,21 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
 import ru.excbt.datafuse.nmk.data.service.ReportSheduleService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -39,16 +39,19 @@ public class ReportSheduleController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSheduleController.class);
 
-	@Autowired
-	private ReportSheduleService reportSheduleService;
+	private final ReportSheduleService reportSheduleService;
 
-	@Autowired
-	private ReportParamsetService reportParamsetService;
+	private final ReportParamsetService reportParamsetService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+    private final PortalUserIdsService portalUserIdsService;
 
-	/**
+    public ReportSheduleController(ReportSheduleService reportSheduleService, ReportParamsetService reportParamsetService, PortalUserIdsService portalUserIdsService) {
+        this.reportSheduleService = reportSheduleService;
+        this.reportParamsetService = reportParamsetService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -58,7 +61,7 @@ public class ReportSheduleController {
 		ApiActionObjectProcess actionProcess = () -> {
 			LocalDateTime nowDate = LocalDateTime.now().withMillisOfDay(0);
 			List<ReportShedule> result = reportSheduleService
-					.selectReportShedule(currentSubscriberService.getSubscriberId(), nowDate);
+					.selectReportShedule(portalUserIdsService.getCurrentIds().getSubscriberId(), nowDate);
 			return result;
 		};
 
@@ -75,7 +78,7 @@ public class ReportSheduleController {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<ReportShedule> result = reportSheduleService
-					.selectReportShedule(currentSubscriberService.getSubscriberId());
+					.selectReportShedule(portalUserIdsService.getCurrentIds().getSubscriberId());
 			return result;
 		};
 		return ApiResponse.responseOK(actionProcess);
@@ -138,8 +141,8 @@ public class ReportSheduleController {
 		}
 
 		ApiActionProcess<ReportShedule> actionProcess = () -> {
-			reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
-			reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+			reportShedule.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
+			reportShedule.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 			reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 			reportShedule.setReportParamset(checkParamset);
@@ -202,8 +205,8 @@ public class ReportSheduleController {
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
-			reportShedule.setSubscriber(currentSubscriberService.getSubscriber());
-			reportShedule.setSubscriberId(currentSubscriberService.getSubscriberId());
+			reportShedule.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
+			reportShedule.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 			reportShedule.setReportTemplate(checkParamset.getReportTemplate());
 			reportShedule.setReportParamset(checkParamset);

@@ -1,10 +1,10 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.service.AppVersionService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
@@ -12,14 +12,14 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpSession;
 
-@Controller
+@RestController
 @RequestMapping("/api/appStatus")
+@AllArgsConstructor
 public class AppStatusController {
 
-	@Autowired
-	private AppVersionService appVersionService;
+	private final AppVersionService appVersionService;
 
-	/**
+    /**
 	 *
 	 * @return
 	 */

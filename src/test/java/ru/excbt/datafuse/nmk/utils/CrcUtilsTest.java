@@ -3,12 +3,14 @@ package ru.excbt.datafuse.nmk.utils;
 import java.util.Date;
 import java.util.UUID;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ibm.icu.math.BigDecimal;
 
+@Ignore
 public class CrcUtilsTest {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CrcUtilsTest.class);

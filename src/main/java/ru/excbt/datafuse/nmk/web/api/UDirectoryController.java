@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryNodeService;
 import ru.excbt.datafuse.nmk.data.service.UDirectoryService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -34,24 +35,30 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/u_directory")
-public class UDirectoryController extends AbstractSubscrApiResource {
+public class UDirectoryController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(UDirectoryController.class);
 
-	@Autowired
-	private UDirectoryService directoryService;
+	private final UDirectoryService directoryService;
 
-	@Autowired
-	private UDirectoryNodeService directoryNodeService;
+	private final UDirectoryNodeService directoryNodeService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public UDirectoryController(UDirectoryService directoryService, UDirectoryNodeService directoryNodeService, PortalUserIdsService portalUserIdsService) {
+        this.directoryService = directoryService;
+        this.directoryNodeService = directoryNodeService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param directoryId
 	 * @return
 	 */
 	@RequestMapping(value = "/{id}/nodes", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDirectoryNodes(@PathVariable("id") long directoryId) {
-		UDirectory dir = directoryService.findOne(getCurrentSubscriberId(), directoryId);
+		UDirectory dir = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 		checkNotNull(dir);
 
 		UDirectoryNode result = dir.getDirectoryNode();
@@ -66,9 +73,9 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getOne(@PathVariable("id") long directoryId) {
 
-		if (directoryService.checkAvailableDirectory(getCurrentSubscriberId(), directoryId)) {
+		if (directoryService.checkAvailableDirectory(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId)) {
 
-			UDirectory result = directoryService.findOne(getCurrentSubscriberId(), directoryId);
+			UDirectory result = directoryService.findOne(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 			checkNotNull(result);
 
 			return ResponseEntity.ok(result);
@@ -83,7 +90,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getAll() {
-		List<UDirectory> result = directoryService.findAll(getCurrentSubscriberId());
+		List<UDirectory> result = directoryService.findAll(portalUserIdsService.getCurrentIds().getSubscriberId());
 		checkNotNull(result);
 		return ResponseEntity.ok(result);
 	}
@@ -105,7 +112,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 
 			@Override
 			public void process() {
-				setResultEntity(directoryService.save(getCurrentSubscriberId(), entity));
+				setResultEntity(directoryService.save(portalUserIdsService.getCurrentIds().getSubscriberId(), entity));
 			}
 		};
 
@@ -134,7 +141,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 
 			@Override
 			public UDirectory processAndReturnResult() {
-				return directoryService.save(getCurrentSubscriberId(), entity);
+				return directoryService.save(portalUserIdsService.getCurrentIds().getSubscriberId(), entity);
 			}
 		};
 
@@ -150,14 +157,7 @@ public class UDirectoryController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/{directoryId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOne(@PathVariable("directoryId") final long directoryId) {
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				directoryService.delete(getCurrentSubscriberId(), directoryId);
-
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> directoryService.delete(portalUserIdsService.getCurrentIds().getSubscriberId(), directoryId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

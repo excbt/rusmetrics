@@ -1,7 +1,7 @@
 /**
  *
  */
-package ru.excbt.datafuse.nmk.app;
+package ru.excbt.datafuse.nmk.web.conf;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ import java.util.Collection;
  * @since 16.01.2017
  *
  */
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
+@EnableAutoConfiguration(exclude = {
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
 @ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"},
     excludeFilters = {
@@ -43,9 +43,9 @@ import java.util.Collection;
         })
 })
 @EnableConfigurationProperties({PortalProperties.class})
-public class PortalApplicationTest {
+public class PortalApiTestConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(PortalApplicationTest.class);
+	private static final Logger log = LoggerFactory.getLogger(PortalApiTestConfiguration.class);
 
 	@Inject
 	private Environment env;
@@ -86,7 +86,7 @@ public class PortalApplicationTest {
 	 */
 	public static void main(String[] args) throws UnknownHostException {
 
-		SpringApplication app = new SpringApplication(PortalApplicationTest.class);
+		SpringApplication app = new SpringApplication(PortalApiTestConfiguration.class);
 		DefaultProfileUtil.addDefaultProfile(app);
 		Environment env = app.run(args).getEnvironment();
 		log.info(

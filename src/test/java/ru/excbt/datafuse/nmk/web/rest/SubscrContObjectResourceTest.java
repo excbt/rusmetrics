@@ -38,6 +38,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -56,13 +57,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
-@WithMockUser(username = "admin", password = "admin",
-    roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
-        "RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
-        "CABINET_USER" })
-@Transactional
-public class SubscrContObjectResourceTest {
+public class SubscrContObjectResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContObjectResourceTest.class);
 
@@ -163,8 +158,8 @@ public class SubscrContObjectResourceTest {
         contObjectRepository.save(contObjects);
         contObjectRepository.flush();
 
-//        RequestExtraInitializer param = builder -> {
-//            builder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
+//        RequestExtraInitializer param = requestBuilder -> {
+//            requestBuilder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
 //        };
 //
 

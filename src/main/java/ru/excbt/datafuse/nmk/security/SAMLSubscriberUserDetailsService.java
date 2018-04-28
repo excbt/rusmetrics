@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.SystemUserService;
 
 /**
  * Сервис для работы по протоколу SAML
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 05.08.2015
@@ -80,7 +80,7 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @return
 	 */
@@ -90,14 +90,14 @@ public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService 
 		if (sUser == null) {
 			return null;
 		}
-		Collection<GrantedAuthority> gas = AdminUtils.makeAdminAuths();
+		Collection<GrantedAuthority> gas = AdminUtils.makeAuths(AuthoritiesConstants.adminAuthorities());
 
 		SubscriberUserDetails subscriberUserDetails = new SubscriberUserDetails(sUser, DUMMY_PASSWORD, gas);
 		return subscriberUserDetails;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param username
 	 * @return
 	 */

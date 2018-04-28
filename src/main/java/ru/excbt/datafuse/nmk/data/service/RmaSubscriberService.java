@@ -32,6 +32,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
  * Сервис для работы с Абонентами РМА
@@ -120,7 +121,7 @@ public class RmaSubscriberService extends SubscriberService {
 		}
 		// End of can Create Child LDAP action
 
-		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(getSubscriberCurrentTime(resultSubscriber.getId()));
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
 
 		// Make default Report Paramset
@@ -165,7 +166,7 @@ public class RmaSubscriberService extends SubscriberService {
 		}
 		// End of can Create Child LDAP action
 
-		LocalDate accessDate = getSubscriberCurrentDateJoda(resultSubscriber.getId());
+		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(getSubscriberCurrentTime(resultSubscriber.getId()));
 		subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
 
 		// Make default Report Paramset

@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.ReferencePeriodService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +35,7 @@ import static com.google.common.base.Preconditions.checkState;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class ReferencePeriodController extends AbstractSubscrApiResource {
+public class ReferencePeriodController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReferencePeriodController.class);
 
@@ -45,11 +46,14 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 
 	private final ObjectAccessService objectAccessService;
 
+	private final PortalUserIdsService portalUserIdsService;
+
     @Autowired
-    public ReferencePeriodController(ReferencePeriodService referencePeriodService, ContZPointService contZPointService, ObjectAccessService objectAccessService) {
+    public ReferencePeriodController(ReferencePeriodService referencePeriodService, ContZPointService contZPointService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.referencePeriodService = referencePeriodService;
         this.contZPointService = contZPointService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
 
@@ -65,7 +69,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 			@PathVariable("contZPointId") long contZPointId) {
 
 		ApiActionObjectProcess actionProcess = () -> referencePeriodService
-				.selectLastReferencePeriod(currentSubscriberService.getSubscriberId(), contZPointId);
+				.selectLastReferencePeriod(portalUserIdsService.getCurrentIds().getSubscriberId(), contZPointId);
 
 		return ApiResponse.responseOK(actionProcess);
 	}
@@ -104,7 +108,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 	 * @return
 	 */
 	private ResponseEntity<?> checkContObjectZPoint(long contObjectId, long contZPointId) {
-		List<Long> contObjectsIds = objectAccessService.findContObjectIds(getSubscriberId());
+		List<Long> contObjectsIds = objectAccessService.findContObjectIds(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		if (!contObjectsIds.contains(contObjectId)) {
 			return ResponseEntity.badRequest().body(ApiResult.validationError("Bad contObjectId"));
@@ -142,7 +146,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 		}
 
 		ApiActionProcess<ReferencePeriod> actionProcess = () -> {
-			referencePeriod.setSubscriber(currentSubscriberService.getSubscriber());
+			referencePeriod.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 			referencePeriod.setContZPointId(contZPointId);
 
 			return referencePeriodService.createOne(referencePeriod);
@@ -178,7 +182,7 @@ public class ReferencePeriodController extends AbstractSubscrApiResource {
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
-			referencePeriod.setSubscriber(currentSubscriberService.getSubscriber());
+			referencePeriod.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 			referencePeriod.setContZPointId(contZPointId);
 
 			return referencePeriodService.updateOne(referencePeriod);

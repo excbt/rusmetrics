@@ -17,16 +17,11 @@ import {
   // , delay
 } from 'rxjs/operators';
 
-// export interface ExcListFormEntityProvider<T> {
-//   load: (pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) => Observable<T>;
-// }
-
 export interface ExcListDatasourceProvider<T> {
   getDataSource: () => ExcAbstractDataSource<T>;
 }
 
 export interface ExcListFormParams {
-  baseUrl: string;
   modificationEventName?: string;
   onSaveUrl?: string;
   onDeleteUrl?: string;
@@ -125,12 +120,12 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     window.history.back();
   }
 
-  newNavigate() {
-    this.router.navigate([this.params.baseUrl + '/new/edit']);
+  navigateNew() {
+    this.router.navigate([this.router.url, 'new', 'edit']);
   }
 
-  editNavigate(entityId: any) {
-    this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
+  navigateEdit(entityId: any) {
+    this.router.navigate([this.router.url, entityId, 'edit']);
   }
 
 }

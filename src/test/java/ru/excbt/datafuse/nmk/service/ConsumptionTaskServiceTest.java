@@ -9,22 +9,19 @@ import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.converter.MessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.app.PortalApplicationTest;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTaskTemplate;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.jms.ConnectionFactory;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -32,8 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplicationTest.class)
-public class ConsumptionTaskServiceTest {
+public class ConsumptionTaskServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionTaskServiceTest.class);
 
@@ -133,7 +129,7 @@ public class ConsumptionTaskServiceTest {
     @Test
     @Transactional
     public void testSendDay() throws InterruptedException {
-        //DayConsumptionTask day = DayConsumptionTask.builder().
+        //DayConsumptionTask day = DayConsumptionTask.requestBuilder().
         //DayConsumptionTask.dayBuilder().
             ConsumptionTask ta = ConsumptionTask.builder().build();
             //ta.se

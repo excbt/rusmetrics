@@ -16,29 +16,29 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Базовый класс для хранимых сущностей
- * 
+ *
  * @version 1.0
  * @since 12.03.2015
- * 
+ *
  * @param <PK>
  */
 @MappedSuperclass
 public abstract class AbstractPersistableEntity<PK extends Serializable> implements Persistable<PK>, ModelIdable<PK> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6201049315760221599L;
 
 	@Id
-	@SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id", allocationSize = 1)
+	@SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "abstractEntity")
 	@Column
 	private PK id;
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Persistable#getId()
 	 */
 	@Override
@@ -48,7 +48,7 @@ public abstract class AbstractPersistableEntity<PK extends Serializable> impleme
 
 	/**
 	 * Sets the id of the entity.
-	 * 
+	 *
 	 * @param id
 	 *            the id to set
 	 */
@@ -58,7 +58,7 @@ public abstract class AbstractPersistableEntity<PK extends Serializable> impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.springframework.data.domain.Persistable#isNew()
 	 */
 	@Override
@@ -69,7 +69,7 @@ public abstract class AbstractPersistableEntity<PK extends Serializable> impleme
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

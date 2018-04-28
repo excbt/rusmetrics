@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.repository.SubscrRoleRepository;
 import ru.excbt.datafuse.nmk.security.AdminUtils;
+import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
@@ -59,7 +61,7 @@ public class SubscrRoleService {
 	public List<SubscrRole> subscrAdminRoles(boolean canCreateCabinet) {
 		List<SubscrRole> allRoles = findAllRoles();
 
-		List<String> adminRoles = AdminUtils.makeSubscrAdminAuthsNoChild().stream().map((i) -> i.getAuthority()).collect(Collectors.toList());
+		List<String> adminRoles = new ArrayList<>(AuthoritiesConstants.subscrAdminNoChild());
 
 		return allRoles.stream()
 				.filter(i -> adminRoles.contains(i.getRoleName())

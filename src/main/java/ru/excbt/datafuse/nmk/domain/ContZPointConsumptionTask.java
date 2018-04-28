@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.domain;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.Date;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class ContZPointConsumptionTask extends AbstractAuditableModel {
 
     @Id
     @Column(name = "id")
-    @SequenceGenerator(name = "contZPointConsumptionTaskSeq", sequenceName = "portal.cont_zpoint_consumption_task_id_seq", allocationSize = 50)
+    @SequenceGenerator(name = "contZPointConsumptionTaskSeq", sequenceName = "portal.cont_zpoint_consumption_task_id_seq")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "contZPointConsumptionTaskSeq")
     private Long id;
 
@@ -67,4 +68,18 @@ public class ContZPointConsumptionTask extends AbstractAuditableModel {
     @Column(name = "deleted")
     private int deleted;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        ContZPointConsumptionTask that = (ContZPointConsumptionTask) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), id);
+    }
 }

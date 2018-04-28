@@ -1,30 +1,45 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.types.DeviceModelType;
 import ru.excbt.datafuse.nmk.data.repository.HeatRadiatorTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectLoadingSettingsService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceLoadingSettingsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 
 
-@Transactional
-public class RmaDeviceObjectResourceTest extends RmaControllerTest {
+@RunWith(SpringRunner.class)
+public class RmaDeviceObjectResourceTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaDeviceObjectResourceTest.class);
 
@@ -46,6 +61,38 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
     @Autowired
 	private HeatRadiatorTypeRepository heatRadiatorTypeRepository;
 
+
+    @Autowired
+    private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+    private MockMvc restPortalContObjectMockMvc;
+
+    @Autowired
+    private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @MockBean
+    private PortalUserIdsService portalUserIdsService;
+
+    @Autowired
+    private RmaDeviceObjectResource rmaDeviceObjectResource;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+//        rmaDeviceObjectResource = new RmaDeviceObjectResource();
+
+        this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(rmaDeviceObjectResource)
+            .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalContObjectMockMvc);
+    }
+
     /*
 
      */
@@ -59,7 +106,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		String url = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
 
-		String deviceObjectContent = _testGetJson(url);
+
+		String deviceObjectContent = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//		String deviceObjectContent = _testGetJson(url);
 
 		DeviceObject deviceObject = TestUtils.fromJSON(new TypeReference<DeviceObject>() {
 		}, deviceObjectContent);
@@ -92,9 +141,22 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 			builder.param("dataSourceTable1h", "Table 1H:" + System.currentTimeMillis());
 			builder.param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis());
 		};
-		_testUpdateJson(url, deviceObject, paramInit);
 
-		_testGetJson(url);
+        mockMvcRestWrapper.restRequest(url)
+            .requestBuilder(b -> b
+                    .param("subscrDataSourceId", String.valueOf(65523603))
+                    .param("subscrDataSourceAddr","Addr:" + System.currentTimeMillis())
+                    .param("dataSourceTable", "Table:" + System.currentTimeMillis())
+                    .param("dataSourceTable1h", "Table 1H:" + System.currentTimeMillis())
+                    .param("dataSourceTable24h", "Table 24H:" + System.currentTimeMillis())
+            )
+            .testPut(deviceObject)
+            .testGet();
+
+//
+//		_testUpdateJson(url, deviceObject, paramInit);
+//
+//		_testGetJson(url);
 	}
 
     /*
@@ -107,7 +169,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		String url = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, DEV_RMA_DEVICE_OBJECT_ID));
 
-		String deviceObjectContent = _testGetJson(url);
+
+		String deviceObjectContent = mockMvcRestWrapper.restRequest(url).testGet().getStringContent();
+//		String deviceObjectContent = _testGetJson(url);
 
 		DeviceObject deviceObject = TestUtils.fromJSON(new TypeReference<DeviceObject>() {
 		}, deviceObjectContent);
@@ -121,7 +185,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 
 		deviceObject.getEditDataSourceInfo().setSubscrDataSourceId(65523603L);
 
-		_testUpdateJson(url, deviceObject);
+        mockMvcRestWrapper.restRequest(url).testPut(deviceObject);
+//		_testUpdateJson(url, deviceObject);
 	}
 
     /*
@@ -144,14 +209,20 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
 		};
-		Long deviceObjectId = _testCreateJson(url, deviceObject, paramInit);
+        Long deviceObjectId = mockMvcRestWrapper.restRequest(url)
+            .requestBuilder(b -> b
+                .param("subscrDataSourceId", String.valueOf(65523603))
+                .param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis())
+            ).testPost(deviceObject).getLastId();
+//		Long deviceObjectId = _testCreateJson(url, deviceObject, paramInit);
 
 		logger.info("TESTING GET");
 
 		String getUrl = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
 
-		_testGetJson(getUrl);
+        mockMvcRestWrapper.restRequest(getUrl).testGet();
+//		_testGetJson(getUrl);
 
 		logger.info("TESTING DELETE");
 
@@ -160,7 +231,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		RequestExtraInitializer paramDel = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
-		_testDeleteJson(deleteUrl, paramDel);
+        mockMvcRestWrapper.restRequest(deleteUrl).testDelete();
+//		_testDeleteJson(deleteUrl, paramDel);
 
 	}
 
@@ -182,14 +254,21 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 			builder.param("subscrDataSourceId", String.valueOf(65523603));
 			builder.param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis());
 		};
-		Long deviceObjectId = _testCreateJson(url, deviceObject, paramInit);
+		Long deviceObjectId = mockMvcRestWrapper.restRequest(url)
+            .requestBuilder(b -> b
+                .param("contObjectId", String.valueOf(DEV_RMA_CONT_OBJECT_ID))
+                .param("subscrDataSourceId", String.valueOf(65523603))
+                .param("subscrDataSourceAddr", "Addr:" + System.currentTimeMillis())
+            ).testPost(deviceObject).getLastId();
+//            _testCreateJson(url, deviceObject, paramInit);
 
 		String deleteUrl = UrlUtils.apiRmaUrl(
 				String.format("/contObjects/%d/deviceObjects/%d", DEV_RMA_CONT_OBJECT_ID, deviceObjectId));
 		RequestExtraInitializer paramDel = (builder) -> {
 			builder.param("isPermanent", "true");
 		};
-		_testDeleteJson(deleteUrl, paramDel);
+        mockMvcRestWrapper.restRequest(deleteUrl).requestBuilder(b -> b.param("isPermanent", "true")).testDelete();
+//		_testDeleteJson(deleteUrl, paramDel);
 
 	}
 
@@ -200,7 +279,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testAllDeviceObjectsGet() throws Exception {
-		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects"));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/deviceObjects").testGet();
+//		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/deviceObjects"));
 	}
 
     /*
@@ -209,7 +289,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testDeviceObjectsLoadingSettingsGet() throws Exception {
-		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/loadingSettings", 725, 3)
+            .testGet();
+//		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3));
 	}
 
     /*
@@ -218,7 +300,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testDeviceObjectsLoadingLogGet() throws Exception {
-		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingLog", 725, 3));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/loadingLog", 725, 3).testGet();
+//		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingLog", 725, 3));
 	}
 
     /*
@@ -233,7 +316,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		settings.setLoadingAttempts(10);
 		settings.setLoadingInterval("12:00");
 		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
-		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id2}/deviceObjects/{id2}/loadingSettings", 725, 3).testPut(settings);
+//		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/loadingSettings", 725, 3), settings);
 	}
 
     /*
@@ -241,6 +325,7 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
      */
 	@Test
     @Transactional
+    @Ignore
 	public void testDeviceObjectsSubscrDataSourceLoadingSettingsPut() throws Exception {
 		Long deviceObjectId = 65836845L;
 
@@ -255,9 +340,11 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		settings.setLoadingAttempts(10);
 		settings.setLoadingInterval("12:00");
 		settings.setIsLoadingAuto(!Boolean.TRUE.equals(settings.getIsLoadingAuto()));
-		_testUpdateJson(
-            UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource/loadingSettings", 725, deviceObjectId),
-				settings);
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/subscrDataSource/loadingSettings", 725, deviceObjectId)
+            .testPut(settings);
+//		_testUpdateJson(
+//            UrlUtils.apiRmaUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource/loadingSettings", 725, deviceObjectId),
+//				settings);
 	}
 
 	/*
@@ -267,7 +354,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
     @Transactional
 	public void testDeviceObjectDataSourceGet() throws Exception {
 		//65836845
-		_testGetJson(UrlUtils.apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id2}/subscrDataSource", 725, 65836845).testGet();
+//		_testGetJson(UrlUtils.apiSubscrUrl("/contObjects/%d/deviceObjects/%d/subscrDataSource", 725, 65836845));
 	}
 
 	/**
@@ -277,9 +365,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testDeviceObjectList() throws Exception {
-		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
-
-		_testGetJson(url);
+//		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/deviceObjects", DEV_RMA_CONT_OBJECT_ID));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects", DEV_RMA_CONT_OBJECT_ID).testGet();
+//		_testGetJson(url);
 
 	}
 
@@ -290,9 +378,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 	@Test
     @Transactional
 	public void testDeviceObjectLastInfo() throws Exception {
-		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/deviceObjects/%d", 512136083, 512136235));
-
-		String deviceObjectContent = _testGetJson(url);
+//		String url = UrlUtils.apiRmaUrl(String.format("/contObjects/%d/deviceObjects/%d", 512136083, 512136235));
+        mockMvcRestWrapper.restRequest("/api/rma/contObjects/{id1}/deviceObjects/{id1}", 512136083, 512136235).testGet();
+//		String deviceObjectContent = _testGetJson(url);
 
 	}
 
@@ -304,7 +392,9 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
     @Transactional
 	public void testDeviceModelUpdate() throws Exception {
 
-		String response = _testGetJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels"));
+
+		String response = mockMvcRestWrapper.restRequest("/api/rma/deviceObjects/deviceModels").testGet().getStringContent();
+//		String response = _testGetJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels"));
 
 		List<DeviceModel> deviceModels = TestUtils.fromJSON(new TypeReference<List<DeviceModel>>() {
 		}, response);
@@ -312,8 +402,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		if (!deviceModels.isEmpty()) {
 			DeviceModel deviceModel = deviceModels.get(0);
 			deviceModel.getDeviceDataTypes().add(DeviceModelType.WATER.name());
-
-			_testUpdateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels/" + deviceModel.getId()), deviceModel);
+            mockMvcRestWrapper.restRequest("/deviceObjects/deviceModels/{id1}", deviceModel.getId()).testPut(deviceModel);
+//			_testUpdateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels/" + deviceModel.getId()), deviceModel);
 
 		}
 
@@ -330,8 +420,8 @@ public class RmaDeviceObjectResourceTest extends RmaControllerTest {
 		DeviceModel deviceModel = new DeviceModel();
 		deviceModel.setModelName("TEST AK");
 		deviceModel.getDeviceDataTypes().add(DeviceModelType.WATER.name());
-
-		_testCreateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels"), deviceModel);
+        mockMvcRestWrapper.restRequest("api/rma/deviceObjects/deviceModels").testPost(deviceModel);
+//		_testCreateJson(UrlUtils.apiRmaUrl("/deviceObjects/deviceModels"), deviceModel);
 
 	}
 

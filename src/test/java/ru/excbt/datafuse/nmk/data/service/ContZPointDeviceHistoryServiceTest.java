@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.transaction.Transactional;
@@ -27,8 +28,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
-public class ContZPointDeviceHistoryServiceTest {
+public class ContZPointDeviceHistoryServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContZPointDeviceHistoryServiceTest.class);
 

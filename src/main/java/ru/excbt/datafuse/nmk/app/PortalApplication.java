@@ -32,8 +32,9 @@ import java.util.Collection;
  * @since 16.01.2017
  *
  */
-@EnableAutoConfiguration(exclude = {DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
+//@EnableAutoConfiguration(exclude = {
+//    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
+@EnableAutoConfiguration
 @ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"})
 @EnableConfigurationProperties({PortalProperties.class, SLogProperties.class})
 public class PortalApplication {
