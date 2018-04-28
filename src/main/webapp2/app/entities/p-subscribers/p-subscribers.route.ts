@@ -3,7 +3,7 @@ import { PSubscribersComponent } from './p-subscribers.component';
 import { UserRouteAccessService } from '../../shared';
 import { PSubscriberEditComponent } from './p-subscriber-edit.component';
 import { PSubscribersPartnerComponent } from './p-subscriber-partner.component';
-import { PSubscribersCustomerComponent } from './p-subscriber-cutomer.component';
+import { PSubscribersCustomerComponent } from './p-subscriber-customer.component';
 
 export const pSubscrPartnerRoute: Route = {
     path: 'partners',

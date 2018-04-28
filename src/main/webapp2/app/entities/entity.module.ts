@@ -43,6 +43,8 @@ import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widge
 import { PSubscriberEditComponent } from './p-subscribers/p-subscriber-edit.component';
 import { PSubscriberCustomerService } from './p-subscribers/p-subscriber.service';
 import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service';
+import { PSubscribersPartnerComponent } from './p-subscribers/p-subscriber-partner.component';
+import { PSubscribersCustomerComponent } from './p-subscribers/p-subscriber-customer.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -80,7 +82,9 @@ import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service'
         PSubscribersComponent,
         PSubscriberEditComponent,
         OrganizationsWidgetComponent,
-        PSubscribersWidgetComponent
+        PSubscribersWidgetComponent,
+        PSubscribersPartnerComponent,
+        PSubscribersCustomerComponent
     ],
     entryComponents: [
     ],
