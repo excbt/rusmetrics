@@ -105,6 +105,7 @@ public class SubscriberService implements SecuredRoles {
      * @param subscriberId
      * @return
      */
+    @Deprecated
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Subscriber selectSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
@@ -445,6 +446,36 @@ public class SubscriberService implements SecuredRoles {
             .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, portalUserIds.getSubscriberId()));
 	    return s.getIsRma() ? s.getId() : s.getRmaSubscriberId();
     }
+
+
+	@Transactional(readOnly = true)
+	public List<SubscriberDTO> findByRmaSubscriberId(Long rmaSubscriberId) {
+		return subscriberRepository.findByRmaSubscriberId(rmaSubscriberId).stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(s -> subscriberMapper.toDto(s)).collect(Collectors.toList());
+	}
+
+    @Transactional(readOnly = true)
+    public List<SubscriberDTO> findByRmaSubscriber(PortalUserIds portalUserIds) {
+	    if (!portalUserIds.isRma()) {
+	        return Collections.emptyList();
+        }
+        return subscriberRepository.findByRmaSubscriberId(portalUserIds.getSubscriberId()).stream()
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(s -> subscriberMapper.toDto(s)).collect(Collectors.toList());
+    }
+
+
+    /**
+     *
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public List<SubscriberDTO> findAllRma() {
+        return subscriberRepository.finaAllRma().stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(s -> subscriberMapper.toDto(s)).collect(Collectors.toList());
+    }
+
 
     //public void
 }

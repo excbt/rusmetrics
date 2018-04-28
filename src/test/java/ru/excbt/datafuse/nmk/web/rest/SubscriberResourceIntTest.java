@@ -75,14 +75,14 @@ public class SubscriberResourceIntTest extends PortalApiTest {
     @Test
     @Transactional
     public void getSubscribersRMAPage() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma")
             .testGet();
     }
 
     @Test
     @Transactional
     public void getSubscribersRMAPageSearch() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma")
             .requestBuilder(b -> b.param("searchString", "ижевск"))
             .testGet();
     }

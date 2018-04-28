@@ -19,10 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -42,7 +43,7 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrUserResource.class);
 
-	private final SubscriberService subscriberService;
+	private final SubscriberRepository subscriberRepository;
 
 	public class UsernameCheck {
 		private final boolean userValid;
@@ -62,9 +63,9 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		}
 	}
 
-    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscrUserMapper subscrUserMapper) {
-        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper);
-        this.subscriberService = subscriberService;
+    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
+        this.subscriberRepository = subscriberRepository;
     }
 
     /**
@@ -80,7 +81,7 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 			ApiResponse.responseForbidden();
 		}
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null || subscriber.getRmaSubscriberId() == null
 				|| !subscriber.getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 			return ApiResponse.responseBadRequest();
@@ -101,14 +102,16 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
 			@RequestParam(value = "newPassword", required = false) String newPassword,
-			@RequestBody SubscrUser subscrUser, HttpServletRequest request) {
+			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
+        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
 
-		return createSubscrUserInternal(subscriber, isAdmin, isReadonly, subscrUser, newPassword, request);
+		return createSubscrUserInternal(subscriber, subscrUserDTO, newPassword, request);
 	}
 
 	/**
@@ -130,10 +133,11 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		//				: null;
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		Subscriber subscriber = subscriberService.selectSubscriber(rSubscriberId);
+		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
 		if (subscriber == null) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
+
 
 		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}

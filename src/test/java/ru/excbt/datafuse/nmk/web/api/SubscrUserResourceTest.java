@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
@@ -54,6 +55,8 @@ public class SubscrUserResourceTest extends PortalApiTest {
     private MockMvcRestWrapper mockMvcRestWrapper;
     @Autowired
     private SubscrUserMapper subscrUserMapper;
+    @Autowired
+    private SubscrUserManageService subscrUserManageService;
 
     @Before
 	public void setUp() throws Exception {
@@ -61,7 +64,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscrUserController = new SubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper);
+        subscrUserController = new SubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrUserController)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)

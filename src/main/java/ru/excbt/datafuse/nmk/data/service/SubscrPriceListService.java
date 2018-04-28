@@ -11,8 +11,8 @@ import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPriceListRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
-import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
@@ -53,7 +53,7 @@ public class SubscrPriceListService  {
 
 	private final SubscrPriceListRepository subscrPriceListRepository;
 
-	private final RmaSubscriberService rmaSubscriberService;
+	private final SubscriberRepository subscriberRepository;
 
 	private final SubscrPriceItemService subscrPriceItemService;
 
@@ -61,9 +61,9 @@ public class SubscrPriceListService  {
 
 	private final SubscriberTimeService subscriberTimeService;
 
-    public SubscrPriceListService(SubscrPriceListRepository subscrPriceListRepository, RmaSubscriberService rmaSubscriberService, SubscrPriceItemService subscrPriceItemService, SubscriberService subscriberService, SubscriberTimeService subscriberTimeService) {
+    public SubscrPriceListService(SubscrPriceListRepository subscrPriceListRepository, SubscriberRepository subscriberRepository, SubscrPriceItemService subscrPriceItemService, SubscriberService subscriberService, SubscriberTimeService subscriberTimeService) {
         this.subscrPriceListRepository = subscrPriceListRepository;
-        this.rmaSubscriberService = rmaSubscriberService;
+        this.subscriberRepository = subscriberRepository;
         this.subscrPriceItemService = subscrPriceItemService;
         this.subscriberService = subscriberService;
         this.subscriberTimeService = subscriberTimeService;
@@ -424,8 +424,7 @@ public class SubscrPriceListService  {
 					.format("Archive SubscrPriceList (id=%d) is not allowed to assing to Subscribers", srcPriceListId));
 		}
 
-		List<Long> rmaSubscribersIdList = rmaSubscriberService
-				.selectRmaSubscriberIds(srcPriceList.getRmaSubscriberId());
+		List<Long> rmaSubscribersIdList = subscriberRepository.findIdsByRmaSubscriberId(srcPriceList.getRmaSubscriberId());
 		if (!rmaSubscribersIdList.contains(subscriber.getId())) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) is not set to rma (id=%d)",
 					subscriber.getId(), srcPriceList.getRmaSubscriberId()));
@@ -484,7 +483,7 @@ public class SubscrPriceListService  {
 	 * @return
 	 */
 	private Subscriber initSubscriber(Long id) {
-		return id == null ? null : rmaSubscriberService.selectSubscriber(id);
+		return id == null ? null : subscriberService.selectSubscriber(id);
 	}
 
 	/**

@@ -6,7 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.ReportParamsetService;
@@ -24,9 +26,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
-public class SubscriberCreatorService {
+public class SubscriberManageService {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscriberCreatorService.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscriberManageService.class);
 
     private final SubscriberRepository subscriberRepository;
     private final SubscriberTimeService subscriberTimeService;
@@ -34,14 +36,16 @@ public class SubscriberCreatorService {
     private final SystemParamService systemParamService;
     private final SubscriberLdapService subscriberLdapService;
     private final ReportParamsetService reportParamsetService;
+    private final SubscrUserManageService subscrUserManageService;
 
-    public SubscriberCreatorService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService) {
+    public SubscriberManageService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService, SubscrUserManageService subscrUserManageService) {
         this.subscriberRepository = subscriberRepository;
         this.subscriberTimeService = subscriberTimeService;
         this.subscrServiceAccessService = subscrServiceAccessService;
         this.systemParamService = systemParamService;
         this.subscriberLdapService = subscriberLdapService;
         this.reportParamsetService = reportParamsetService;
+        this.subscrUserManageService = subscrUserManageService;
     }
 
 
@@ -122,6 +126,74 @@ public class SubscriberCreatorService {
         subscriberRepository.delete(subscriber);
     }
 
+
+    /**
+     *
+     * @param subscriber
+     * @param rmaSubscriberId
+     * @return
+     */
+    @Transactional
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public Subscriber updateRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+        checkNotNull(subscriber);
+        checkNotNull(rmaSubscriberId);
+        checkArgument(!subscriber.isNew());
+        subscriber.setRmaSubscriberId(rmaSubscriberId);
+        checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
+
+        Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
+        if (checkSubscriber == null || checkSubscriber.getDeleted() == 1) {
+            throw new PersistenceException(
+                String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
+        }
+
+        // Can Create Child LDAP ou set
+        if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+            Subscriber s = subscriberRepository.findOne(subscriber.getId());
+            if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
+                subscriber.setChildLdapOu(subscriberLdapService.buildCabinetsOuName(subscriber.getId()));
+            } else {
+                subscriber.setChildLdapOu(s.getChildLdapOu());
+            }
+        }
+        // End of can Create Child LDAP
+
+        Subscriber resultSubscriber = subscriberRepository.save(subscriber);
+
+        // Can Create Child LDAP action
+        if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
+            String[] ldapOu = subscriberLdapService.buildSubscriberLdapOu(subscriber);
+            String childDescription = subscriberLdapService.buildChildDescription(subscriber);
+            subscriberLdapService.createOuIfNotExists(ldapOu, subscriber.getChildLdapOu(), childDescription);
+        }
+        // End of can Create Child LDAP action
+
+        // Make default Report Paramset
+        reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+        subscrUserManageService.setupSubscriberAdminUserRoles(resultSubscriber);
+
+        return resultSubscriber;
+    }
+
+
+    /**
+     * TODO Check arguments
+     * @param subscriberId
+     * @param rmaSubscriberId
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
+        checkNotNull(subscriberId);
+        checkNotNull(rmaSubscriberId);
+
+        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+        if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+            throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
+        }
+        subscriberRepository.save(EntityActions.softDelete(subscriber));
+    }
 
 
 

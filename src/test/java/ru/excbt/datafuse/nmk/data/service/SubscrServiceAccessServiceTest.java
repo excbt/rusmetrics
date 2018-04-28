@@ -13,11 +13,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
-import ru.excbt.datafuse.nmk.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -61,8 +60,6 @@ public class SubscrServiceAccessServiceTest extends PortalDataTest {
 	@Autowired
 	private SubscriberService subscriberService;
 
-	@Autowired
-	private RmaSubscriberService rmaSubscriberService;
 
 	@Test
 	public void testServiceItems() throws Exception {
@@ -159,7 +156,7 @@ public class SubscrServiceAccessServiceTest extends PortalDataTest {
 			logger.info("Service Pack {}: {}", i.getId(), i.getPackName());
 		});
 
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(rmaSubscriberId);
+		List<SubscriberDTO> subscribers = subscriberService.findByRmaSubscriberId(rmaSubscriberId);
 		subscribers.forEach(i -> {
 			logger.info("Processing {}", i.getSubscriberName());
 

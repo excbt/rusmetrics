@@ -5,12 +5,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
-import ru.excbt.datafuse.nmk.data.model.support.UsernameValidator;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.validators.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URI;
 import java.util.*;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -49,11 +50,14 @@ public class SubscrUserResource {
 
     protected final SubscrUserMapper subscrUserMapper;
 
-    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper) {
+    protected final SubscrUserManageService subscrUserManageService;
+
+    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.portalUserIdsService = portalUserIdsService;
         this.subscrUserMapper = subscrUserMapper;
+        this.subscrUserManageService = subscrUserManageService;
     }
 
     /**
@@ -98,9 +102,9 @@ public class SubscrUserResource {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-
-	    SubscrUser subscrUser = subscrUserMapper.toEntity(subscrUserDTO);
-	    return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), isAdmin, isReadonly, subscrUser, newPassword, request);
+        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
+	    return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), subscrUserDTO, newPassword, request);
 	}
 
 	/**
@@ -178,6 +182,18 @@ public class SubscrUserResource {
 //	}
 //
 
+
+    protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber,
+                                                           final SubscrUserDTO subscrUserDTO, String password, HttpServletRequest request) {
+        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(rmaSubscriber, subscrUserDTO, password);
+        //.map(subscrUserMapper::toDto)
+        // ResponseEntity.created(action.getLocation()).body(action.getResult())
+        return subscrUserOptional
+            .map(subscrUserMapper::toDto)
+                    .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
+            .orElse(ResponseEntity.badRequest().build());
+    }
+
     /**
      *
      * @param rmaSubscriber
@@ -188,7 +204,7 @@ public class SubscrUserResource {
      * @param request
      * @return
      */
-	protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
+	protected ResponseEntity<?> createSubscrUserInternal22(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
 			final SubscrUser subscrUser, String password, HttpServletRequest request) {
 		checkNotNull(rmaSubscriber);
 		checkNotNull(rmaSubscriber.getId());

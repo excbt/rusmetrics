@@ -45,20 +45,13 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, Q
 	@Query("SELECT r.organization FROM SubscrRso r WHERE r.subscriberId = :subscriberId")
 	public List<Organization> selectRsoOrganizations(@Param("subscriberId") Long subscriberId);
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
-	public List<Subscriber> findByRmaSubscriberId(Long rmaSubscriberId);
-
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     * 
+     * @param rmaSubscriberId
+     * @return
+     */
 	@Query("SELECT s.id FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId")
-	public List<Long> selectByRmaSubscriberIds(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	public List<Long> findIdsByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *
@@ -66,9 +59,10 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, Q
 	 * @return
 	 */
 	@Query("SELECT s FROM Subscriber s WHERE s.rmaSubscriberId = :rmaSubscriberId ORDER BY s.subscriberName")
-	public List<Subscriber> selectByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
+	public List<Subscriber> findByRmaSubscriberId(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
-	/**
+
+    /**
 	 *
 	 * @param subscriberId
 	 * @return
@@ -81,13 +75,13 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, Q
 	 * @return
 	 */
 	@Query("SELECT s FROM Subscriber s WHERE s.isRma = true")
-	public List<Subscriber> selectRmaList();
+	List<Subscriber> finaAllRma();
 
-	/**
-	 *
-	 * @param rmaSubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param parentSubscriberId
+     * @return
+     */
 	@Query("SELECT s FROM Subscriber s WHERE s.parentSubscriberId = :parentSubscriberId and s.isChild = true ORDER BY s.id ")
 	public List<Subscriber> selectChildSubscribers(@Param("parentSubscriberId") Long parentSubscriberId);
 

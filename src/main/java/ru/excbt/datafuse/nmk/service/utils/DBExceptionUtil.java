@@ -103,4 +103,9 @@ public class DBExceptionUtil {
     }
 
 
+    public static PersistenceException newUserArgeadyExistsException(String username) {
+        return new PersistenceException("User with name " + username + "already exists");
+    }
+
+
 }
