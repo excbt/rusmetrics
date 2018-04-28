@@ -3,7 +3,6 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -16,9 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
@@ -57,6 +58,10 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
     private MockMvcRestWrapper mockMvcRestWrapper;
     @Autowired
     private SubscrUserMapper subscrUserMapper;
+    @Autowired
+    private SubscriberRepository subscriberRepository;
+    @Autowired
+    private SubscrUserManageService subscrUserManageService;
 
     @Before
 	public void setUp() throws Exception {
@@ -64,7 +69,7 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberService, subscrUserMapper);
+        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberRepository, subscrUserMapper, subscrUserManageService);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserResource)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -84,7 +89,7 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
      * @throws Exception
      */
 	@Test
-    @Ignore
+//    @Ignore
 	public void testRSubscrUserCRUD() throws Exception {
 
 		SubscrUser subscrUser = new SubscrUser();

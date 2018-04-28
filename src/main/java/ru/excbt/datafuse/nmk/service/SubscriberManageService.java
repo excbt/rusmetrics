@@ -24,9 +24,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
-public class SubscriberCreatorService {
+public class SubscriberManageService {
 
-    private static final Logger log = LoggerFactory.getLogger(SubscriberCreatorService.class);
+    private static final Logger log = LoggerFactory.getLogger(SubscriberManageService.class);
 
     private final SubscriberRepository subscriberRepository;
     private final SubscriberTimeService subscriberTimeService;
@@ -35,7 +35,7 @@ public class SubscriberCreatorService {
     private final SubscriberLdapService subscriberLdapService;
     private final ReportParamsetService reportParamsetService;
 
-    public SubscriberCreatorService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService) {
+    public SubscriberManageService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService) {
         this.subscriberRepository = subscriberRepository;
         this.subscriberTimeService = subscriberTimeService;
         this.subscrServiceAccessService = subscrServiceAccessService;
