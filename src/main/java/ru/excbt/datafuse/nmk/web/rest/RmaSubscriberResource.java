@@ -120,7 +120,7 @@ public class RmaSubscriberResource {
 
 			@Override
 			public Subscriber processAndReturnResult() {
-				return subscriberManageService.createRmaSubscriber(entity, portalUserIdsService.getCurrentIds().getSubscriberId());
+				return subscriberManageService.createRmaSubscriberOld(entity, portalUserIdsService.getCurrentIds().getSubscriberId());
 			}
 		};
 

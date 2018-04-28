@@ -6,13 +6,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.service.SubscriberManageService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 
 @RestController
@@ -22,11 +25,13 @@ public class SubscriberResource {
     private final PortalUserIdsService portalUserIdsService;
     private final SubscriberService subscriberService;
     private final SubscriberMapper subscriberMapper;
+    private final SubscriberManageService subscriberManageService;
 
-    public SubscriberResource(PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscriberMapper subscriberMapper) {
+    public SubscriberResource(PortalUserIdsService portalUserIdsService, SubscriberService subscriberService, SubscriberMapper subscriberMapper, SubscriberManageService subscriberManageService) {
         this.portalUserIdsService = portalUserIdsService;
         this.subscriberService = subscriberService;
         this.subscriberMapper = subscriberMapper;
+        this.subscriberManageService = subscriberManageService;
     }
 
     @GetMapping(value = "/normal", produces = ApiConst.APPLICATION_JSON_UTF8)
@@ -80,14 +85,20 @@ public class SubscriberResource {
 
 
     @PutMapping("/normal")
-    public ResponseEntity<SubscriberVM> putSubscriberNormal() {
-        return new ResponseEntity<>(new SubscriberVM(), HttpStatus.OK);
+    public ResponseEntity<SubscriberVM> putSubscriberNormal(@RequestBody SubscriberVM subscriberVM) {
+        SubscriberVM resultVM = subscriberManageService.createNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+            .map(subscriberMapper::toVM)
+            .orElse(null);
+        return new ResponseEntity<>(resultVM, HttpStatus.OK);
     }
 
 
     @PutMapping("/rma")
-    public ResponseEntity<SubscriberVM> putSubscriberRma() {
-        return new ResponseEntity<>(new SubscriberVM(), HttpStatus.OK);
+    public ResponseEntity<SubscriberVM> putSubscriberRma(@RequestBody SubscriberVM subscriberVM) {
+        SubscriberVM resultVM = subscriberManageService.createRmaSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+            .map(subscriberMapper::toVM)
+            .orElse(null);
+        return new ResponseEntity<>(resultVM, HttpStatus.OK);
     }
 
 }

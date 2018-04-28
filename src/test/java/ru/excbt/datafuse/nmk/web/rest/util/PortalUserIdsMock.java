@@ -64,10 +64,10 @@ public class PortalUserIdsMock {
                 return SubscrTypeKey.RMA;
             }
 
-            @Override
-            public boolean isRma() {
-                return true;
-            }
+//            @Override
+//            public boolean isRma() {
+//                return true;
+//            }
 
         };
     }

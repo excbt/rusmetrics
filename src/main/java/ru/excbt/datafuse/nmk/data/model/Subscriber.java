@@ -59,14 +59,14 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	private String timezoneDefKeyname;
 
 	@JsonIgnore
-	@Column(name = "subscriber_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
+	@Column(name = "subscriber_uuid", updatable = false, columnDefinition = "uuid")
 	private UUID subscriberUUID;
 
 	@Version
 	private int version;
 
 	@Column(name = "is_rma", insertable = false, updatable = false)
-	private Boolean isRma;
+	private Boolean isRma = false;
 
 	@Column(name = "rma_subscriber_id", updatable = false)
 	private Long rmaSubscriberId;

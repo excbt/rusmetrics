@@ -33,6 +33,13 @@ public interface SubscriberMapper  {
     @Mapping(source = "comment", target = "subscriberComment")
     SubscriberVM toVM (Subscriber subscriber);
 
+    @Mapping(source = "subscriberInfo", target = "info")
+    @Mapping(source = "subscriberComment", target = "comment")
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "isRma", ignore = true)
+    Subscriber toEntity(SubscriberVM vm);
+
+
     default Subscriber subscriberFromId(Long id) {
         if (id == null) {
             return null;

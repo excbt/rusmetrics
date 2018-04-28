@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.fasterxml.uuid.EthernetAddress;
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
@@ -16,11 +20,15 @@ import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.data.service.SubscriberAccessService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBEntityUtil;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,6 +38,8 @@ public class SubscriberManageService {
 
     private static final Logger log = LoggerFactory.getLogger(SubscriberManageService.class);
 
+    private static final TimeBasedGenerator subscriberUUIDGen = Generators.timeBasedGenerator(EthernetAddress.fromInterface());
+
     private final SubscriberRepository subscriberRepository;
     private final SubscriberTimeService subscriberTimeService;
     private final SubscrServiceAccessService subscrServiceAccessService;
@@ -37,8 +47,9 @@ public class SubscriberManageService {
     private final SubscriberLdapService subscriberLdapService;
     private final ReportParamsetService reportParamsetService;
     private final SubscrUserManageService subscrUserManageService;
+    private final SubscriberMapper subscriberMapper;
 
-    public SubscriberManageService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService, SubscrUserManageService subscrUserManageService) {
+    public SubscriberManageService(SubscriberRepository subscriberRepository, SubscriberAccessService subscriberAccessService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, SystemParamService systemParamService, SubscriberLdapService subscriberLdapService, ReportParamsetService reportParamsetService, SubscrUserManageService subscrUserManageService, SubscriberMapper subscriberMapper) {
         this.subscriberRepository = subscriberRepository;
         this.subscriberTimeService = subscriberTimeService;
         this.subscrServiceAccessService = subscrServiceAccessService;
@@ -46,6 +57,7 @@ public class SubscriberManageService {
         this.subscriberLdapService = subscriberLdapService;
         this.reportParamsetService = reportParamsetService;
         this.subscrUserManageService = subscrUserManageService;
+        this.subscriberMapper = subscriberMapper;
     }
 
 
@@ -57,7 +69,7 @@ public class SubscriberManageService {
      */
     @Transactional
     @Secured({AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
-    public Subscriber createRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
+    public Subscriber createRmaSubscriberOld(Subscriber subscriber, Long rmaSubscriberId) {
         checkNotNull(subscriber);
         checkNotNull(rmaSubscriberId);
         checkArgument(subscriber.isNew());
@@ -98,6 +110,94 @@ public class SubscriberManageService {
         reportParamsetService.createDefaultReportParamsets(resultSubscriber);
 
         return resultSubscriber;
+    }
+
+    private String processLdapOus(Subscriber subscriber) {
+
+        String rmaOu = Optional.of(subscriber).map(Subscriber::getRmaLdapOu).orElse("");
+        subscriberLdapService.createOuIfNotExists(new String[0], rmaOu, "Subscriber");
+
+        String childLdapOu = null;
+        if (subscriber.getCanCreateChild()) {
+            childLdapOu = SubscriberLdapService.buildCabinetsOuName(subscriber);
+//            subscriber.setChildLdapOu(childLdapOu);
+
+            String[] ldapOuUnits = subscriberLdapService.buildLdapOu(subscriber);
+            String ldapDescription = subscriberLdapService.buildLdapDescription() + subscriber.getSubscriberName();
+            log.debug("Creating subscriber:\n id:{}\n subscriberName:{}\n ldapOuUnits:{}\n ldapDescription:{} \n",
+                subscriber.getId(), subscriber.getSubscriberName(), ldapOuUnits, ldapDescription);
+
+            boolean ldapResult = subscriberLdapService.createOuIfNotExists(ldapOuUnits, childLdapOu, ldapDescription);
+            if (!ldapResult) {
+                log.error("Ldap is not initialized");
+            }
+        }
+        return childLdapOu;
+    }
+
+    @Transactional
+    @Secured({AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public Optional<Subscriber> createNormalSubscriber(SubscriberVM subscriberVM, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(subscriberVM);
+        Objects.requireNonNull(portalUserIds);
+        if (subscriberVM.getId() != null || !portalUserIds.isRma()) {
+            return Optional.empty();
+        }
+
+        Subscriber resultSubscriber;
+        {
+            Subscriber newSubscr = subscriberMapper.toEntity(subscriberVM);
+            newSubscr.setRmaSubscriberId(portalUserIds.getSubscriberId());
+            newSubscr.setSubscriberUUID(subscriberUUIDGen.generate());
+            newSubscr.setIsRma(false);
+            newSubscr.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
+            resultSubscriber = subscriberRepository.saveAndFlush(newSubscr);
+        }
+
+        String childLdapOu = processLdapOus(resultSubscriber);
+        resultSubscriber.setChildLdapOu(childLdapOu);
+
+        log.debug("Processing accessDate");
+        java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(resultSubscriber.getId()));
+        subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+        // Make default Report Paramset
+        log.debug("Make Default Report Paramset");
+        reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+
+        return Optional.of(subscriberRepository.save(resultSubscriber));
+    }
+
+    @Transactional
+    @Secured({AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public Optional<Subscriber> createRmaSubscriber(SubscriberVM subscriberVM, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(subscriberVM);
+        Objects.requireNonNull(portalUserIds);
+        if (subscriberVM.getId() != null || !portalUserIds.isRma()) {
+            return Optional.empty();
+        }
+
+        Subscriber resultSubscriber;
+        {
+            Subscriber newSubscr = subscriberMapper.toEntity(subscriberVM);
+            newSubscr.setSubscriberUUID(subscriberUUIDGen.generate());
+            newSubscr.setIsRma(true);
+            newSubscr.setSubscrType(SubscrTypeKey.RMA.getKeyname());
+            resultSubscriber = subscriberRepository.saveAndFlush(newSubscr);
+        }
+
+        String childLdapOu = processLdapOus(resultSubscriber);
+        resultSubscriber.setChildLdapOu(childLdapOu);
+
+        log.debug("Processing accessDate");
+        java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(resultSubscriber.getId()));
+        subscrServiceAccessService.processAccessList(resultSubscriber.getId(), accessDate, new ArrayList<>());
+
+        // Make default Report Paramset
+        log.debug("Make Default Report Paramset");
+        reportParamsetService.createDefaultReportParamsets(resultSubscriber);
+
+        return Optional.of(subscriberRepository.save(resultSubscriber));
     }
 
 

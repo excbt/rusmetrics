@@ -109,7 +109,7 @@ public class RmaSubscriberResourceTest extends PortalApiTest {
         assertNotNull(org.getId());
 	    SubscriberDTO dto = SubscriberDTO.builder().subscriberName("Test Subscriber").organizationId(org.getId()).timezoneDefKeyname("MSK").build();
 
-	    Subscriber subscriber = subscriberManageService.createRmaSubscriber(subscriberMapper.toEntity(dto), portalUserIdsService.getCurrentIds().getSubscriberId());
+	    Subscriber subscriber = subscriberManageService.createRmaSubscriberOld(subscriberMapper.toEntity(dto), portalUserIdsService.getCurrentIds().getSubscriberId());
 
 	    assertNotNull(subscriber.getId());
         mockMvcRestWrapper.restRequest("/api/rma/subscribers/{id}", subscriber.getId()).testGet();
