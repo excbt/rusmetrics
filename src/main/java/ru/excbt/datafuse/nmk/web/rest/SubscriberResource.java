@@ -6,9 +6,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
-import ru.excbt.datafuse.nmk.domain.tools.KeyEnumTool;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -29,23 +29,65 @@ public class SubscriberResource {
         this.subscriberMapper = subscriberMapper;
     }
 
-
-    @GetMapping(value = "/{subscriberMode}/page", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/normal", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<Page<SubscriberVM>> partnersGetPage(@PathVariable(name="subscriberMode") String subscriberMode,
-                                                              @RequestParam(name = "searchString", required = false) Optional<String> searchString,
-                                                              Pageable pageable) {
+    public ResponseEntity<Page<SubscriberVM>> normalGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                            Pageable pageable) {
 
         Page<SubscriberVM> page = subscriberService
             .selectSubscribers2(
                 portalUserIdsService.getCurrentIds(),
-                KeyEnumTool.searchName(SubscriberService.SubscriberMode.class,
-                    subscriberMode.toUpperCase()
-                ).orElse(SubscriberService.SubscriberMode.NORMAL),
+                SubscriberService.SubscriberMode.NORMAL,
                 searchString,
                 subscriberMapper::toVM,
                 pageable);
-        return new ResponseEntity(page, HttpStatus.OK);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/rma", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity<Page<SubscriberVM>> rmaGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                         Pageable pageable) {
+        Page<SubscriberVM> page = subscriberService
+            .selectSubscribers2(
+                portalUserIdsService.getCurrentIds(),
+                SubscriberService.SubscriberMode.RMA,
+                searchString,
+                subscriberMapper::toVM,
+                pageable);
+        return new ResponseEntity<>(page, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/rma/{subscriberId}")
+    public ResponseEntity<SubscriberVM> getSubscriberSubscriber(@PathVariable("subscriberId") Long subscriberId) {
+        return new ResponseEntity<>(
+                        subscriberService.findOneSubscriber(subscriberId)
+                            .filter(s -> SubscrTypeKey.RMA.keyName().equals(s.getSubscrType()))
+                            .map(subscriberMapper::toVM)
+                            .orElse(null),
+            HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/normal/{subscriberId}")
+    public ResponseEntity<SubscriberVM> getSubscriberNormal(@PathVariable("subscriberId") Long subscriberId) {
+        return new ResponseEntity<>(
+                        subscriberService.findOneSubscriber(subscriberId)
+                            .filter(s -> SubscrTypeKey.NORMAL.keyName().equals(s.getSubscrType()))
+                            .map(subscriberMapper::toVM)
+                            .orElse(null),
+            HttpStatus.OK);
+    }
+
+
+    @PutMapping("/normal")
+    public ResponseEntity<SubscriberVM> putSubscriberNormal() {
+        return new ResponseEntity<>(new SubscriberVM(), HttpStatus.OK);
+    }
+
+
+    @PutMapping("/rma")
+    public ResponseEntity<SubscriberVM> putSubscriberRma() {
+        return new ResponseEntity<>(new SubscriberVM(), HttpStatus.OK);
     }
 
 }

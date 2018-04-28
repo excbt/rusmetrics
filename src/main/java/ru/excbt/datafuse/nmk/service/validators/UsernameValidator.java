@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.service.support;
+package ru.excbt.datafuse.nmk.service.validators;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,7 +15,7 @@ public class UsernameValidator {
 
 	/**
 	 * Validate username with regular expression
-	 * 
+	 *
 	 * @param username
 	 *            username for validation
 	 * @return true valid username, false invalid username

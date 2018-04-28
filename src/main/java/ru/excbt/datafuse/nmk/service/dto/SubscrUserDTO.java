@@ -27,4 +27,8 @@ public class SubscrUserDTO {
 
     private String userDescription;
 
+    private boolean isAdmin;
+
+    private boolean isReadonly;
+
 }
