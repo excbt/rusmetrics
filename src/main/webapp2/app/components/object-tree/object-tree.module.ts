@@ -44,7 +44,8 @@ import { MatMenuModule } from '@angular/material/menu';
     declarations: [
         PortalObjectTreeComponent,
         TreeNavigateComponent,
-        TreeNodeInformationContainerComponent
+        TreeNodeInformationContainerComponent,
+        TreeNodeInformationComponent
     ],
     entryComponents: [
     ],
@@ -62,8 +63,8 @@ import { MatMenuModule } from '@angular/material/menu';
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class PortalObjectTreeModule {
-    
+
     constructor(router: Router) {
-        console.log('Router: ', router);    
+        console.log('Router: ', router);
     }
 }

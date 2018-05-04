@@ -22,12 +22,15 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item *ngFor = "let widget of widgetList" 
                    (click) = "changeWidget(widget)"
-                   routerLink = "object-trees/tree-node-information"
+                   [routerLink] = "'tree-node-information'"
                    >
+<!--                   [routerLink] = "['/', { outlets: { treeNodeWidget: ['tree-node-information'] } }]"-->
+<!--                   [routerLink]="['/', { outlets: { popup: ['user-management-new'] } }]" -->
                     <span >{{widget.caption}}</span>
                 </button>                        
             </mat-menu>    
         </div>
-    </mat-toolbar-row>
-    <router-outlet name = "treeNodeWidget"></router-outlet>
+    </mat-toolbar-row>    
+<!--    <router-outlet name = "treeNodeWidget"></router-outlet>-->
 </mat-toolbar>
+<router-outlet></router-outlet>

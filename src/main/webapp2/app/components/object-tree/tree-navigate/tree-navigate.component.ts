@@ -19,14 +19,13 @@ import { SubscrContObjectTreeType1 } from '../subscr-tree';
 
 })
 export class TreeNavigateComponent implements OnInit {
-    
+
     @Output() onSetCurrentNodeId = new EventEmitter<number>();
-    
+
     tree: TreeNode[];
     treeNodeLoading: boolean;
     subscrObjectTreeList: SubscrContObjectTreeType1[];
 //    currentTree: subscrContObjectTreeType1;
-    
 
     constructor(private treeNavService: TreeNavigateService,
                  private eventManager: JhiEventManager
@@ -42,7 +41,7 @@ export class TreeNavigateComponent implements OnInit {
     successInit(res) {
         this.tree = this.treeNavService.getCurrentTree();
         this.treeNodeLoading = false;
-console.log('Tree', this.tree);        
+console.log('Tree', this.tree);
         this.eventManager.broadcast({name: 'setTreeNode', content: this.tree[0].data._id});
 //        this.onSetCurrentNodeId.emit(this.tree[0].data.getPTreeNodeId());
         this.subscrObjectTreeList = this.treeNavService.getSubscrObjectTreeList();
@@ -75,7 +74,7 @@ console.log('Tree', this.tree);
     loadNode(event) {
         this.treeNodeLoading = true;
 console.log(event);
-        if (event.node) {                        
+        if (event.node) {
             if (event.node.data.nodeType !== 'ELEMENT') {
                 this.treeNodeLoading = false;
                 return;
@@ -84,7 +83,7 @@ console.log(event);
             this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => this.successLoadNode(event, resp));
         }
     }
-    
+
     selectNode(event) {
         const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
         this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});

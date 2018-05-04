@@ -10,9 +10,9 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 })
 export class PortalObjectTreeComponent implements OnInit {
-    
+
     treeNodeId: number;
-    
+
     constructor() {
         this.treeNodeId = 777;
     }

@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { PortalObjectTreeComponent, 
-        TreeNodeInformationContainerComponent, 
-        TreeNodeInformationComponent, 
-       } from './';
+import { PortalObjectTreeComponent, TreeNodeInformationContainerComponent, TreeNodeInformationComponent } from './';
+// import { TreeNodeInformationContainerComponent } from './tree-node-information-container';
+// import { TreeNodeInformationComponent } from './tree-node-information';
+
 import { UserRouteAccessService } from '../../shared';
 
 // const OBJECT_TREES_ROUTES: Routes = [
@@ -23,46 +23,116 @@ import { UserRouteAccessService } from '../../shared';
 //    }
 // ];
 
-const TREE_NODE_INFORMATION_CONTAINER: Routes = [
-    {
-        path: 'tree-node-info',
-        component: TreeNodeInformationContainerComponent,
-        outlet: 'treeNodeView'
-    }
-]
+// const TREE_NODE_INFORMATION_CONTAINER: Routes = [
+//    {
+//        path: 'tree-node-info',
+//        component: TreeNodeInformationContainerComponent,
+//        outlet: 'treeNodeView'
+//    }
+// ];
+//
+// const TREE_NODE_INFORMATION_CONTAINER_WIDGETS: Routes = [
+//    {
+//        path: 'tree-node-information',
+//        component: TreeNodeInformationComponent
+//    }
+// ];
 
-const TREE_NODE_INFORMATION_CONTAINER_WIDGETS: Routes = [
+const OBJECT_TREE_ROUTES = [
+    {
+        path: 'object-trees',
+        component: PortalObjectTreeComponent,
+        children: [
+            {
+                path: 'tree-node-information',
+                component: TreeNodeInformationComponent
+            }
+        ]
+    },
     {
         path: 'tree-node-information',
-        component: TreeNodeInformationComponent       
-    }
-]
-
-
-export const objectTreeState: Routes = [{
-    path: 'object-trees',
-    component: PortalObjectTreeComponent,
-    data: {
-        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN'],
-        pageTitle: 'objectTree.title'
+        component: TreeNodeInformationComponent
     },
-    canActivate: [UserRouteAccessService],
-    children: [
-        {
-            path: '',
-            redirectTo: '/object-trees',
-            pathMatch: 'full'
-        }, 
-        {
-            path: 'tree-node-information',
-            component: TreeNodeInformationComponent,
-            children: [
-                {
-                    path: '',
-                    redirectTo: '/tree-node-information',
-                    pathMatch: 'full'
-                }
-            ]
-        } 
-    ]
-}];
+    {  /* for test */
+        path: 'tree-node-information-container',
+        component: TreeNodeInformationContainerComponent
+    },
+    {
+        path: '',
+        redirectTo: '/object-trees',
+        pathMatch: 'full'
+    },
+    {
+        path: '**',
+        redirectTo: '/object-trees'
+    }
+];
+
+export const objectTreeState: Routes = [
+    {
+        path: '',
+        data: {
+            authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN'],
+            pageTitle: 'objectTree.title'
+        },
+        canActivate: [UserRouteAccessService],
+        children: OBJECT_TREE_ROUTES
+    }
+];
+
+// export const objectTreeState: Routes = [{
+//    path: 'object-trees',
+//    component: PortalObjectTreeComponent,
+//    data: {
+//        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN'],
+//        pageTitle: 'objectTree.title'
+//    },
+//    canActivate: [UserRouteAccessService],
+//    children: [
+//        {
+//            path: 'tree-node-information',
+//            component: TreeNodeInformationComponent,
+//            children: [
+//                {
+//                    path: '',
+//                    redirectTo: 'tree-node-information',
+//                    pathMatch: 'full'
+//                }
+//            ]
+//        },
+//        {
+//            path: '',
+//            redirectTo: 'object-trees',
+//            pathMatch: 'full'
+//        }
+//    ]
+// }];
+
+//
+// export const objectTreeState: Routes = [{
+//    path: 'object-trees',
+//    component: PortalObjectTreeComponent,
+//    data: {
+//        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN'],
+//        pageTitle: 'objectTree.title'
+//    },
+//    canActivate: [UserRouteAccessService],
+//    children: [
+//        {
+//            path: '',
+//            redirectTo: '/object-trees',
+//            pathMatch: 'full'
+//        },
+//        {
+//            path: 'tree-node-information',
+//            component: TreeNodeInformationComponent,
+//            children: [
+//                {
+//                    path: '',
+//                    redirectTo: 'tree-node-information',
+//                    pathMatch: 'full'
+//                }
+//            ]
+//        }
+//    ]
+// }];
