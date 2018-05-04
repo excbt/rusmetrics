@@ -48,23 +48,6 @@ const OBJECT_TREE_ROUTES = [
                 component: TreeNodeInformationComponent
             }
         ]
-    },
-    {
-        path: 'tree-node-information',
-        component: TreeNodeInformationComponent
-    },
-    {  /* for test */
-        path: 'tree-node-information-container',
-        component: TreeNodeInformationContainerComponent
-    },
-    {
-        path: '',
-        redirectTo: '/object-trees',
-        pathMatch: 'full'
-    },
-    {
-        path: '**',
-        redirectTo: '/object-trees'
     }
 ];
 

@@ -2,7 +2,10 @@ import { Component, OnInit, Input } from '@angular/core';
 import { JhiEventManager } from 'ng-jhipster';
 @Component({
     selector: 'jhi-tree-node-information-container',
-    templateUrl: './tree-node-information-container.component.html'
+    templateUrl: './tree-node-information-container.component.html',
+    styleUrls: [
+        './tree-node-information-container.component.scss'
+    ]
 })
 export class TreeNodeInformationContainerComponent implements OnInit {
 
