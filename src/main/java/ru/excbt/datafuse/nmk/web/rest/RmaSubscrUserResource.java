@@ -138,7 +138,6 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
 
-
 		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}
 

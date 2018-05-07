@@ -78,6 +78,7 @@ public class SubscriberManageService {
         checkArgument(subscriber.getDeleted() == 0);
 
         subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
+        subscriber.setSubscriberUUID(subscriberUUIDGen.generate());
 
         Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 
