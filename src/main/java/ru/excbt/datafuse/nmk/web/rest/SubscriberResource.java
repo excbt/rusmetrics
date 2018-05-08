@@ -36,6 +36,14 @@ public class SubscriberResource {
 
     @GetMapping(value = "/normal", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
+    public ResponseEntity<Page<SubscriberVM>> normalGet(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                            Pageable pageable) {
+
+        return normalGetPage(searchString, pageable);
+    }
+
+    @GetMapping(value = "/normal/page", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
     public ResponseEntity<Page<SubscriberVM>> normalGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
                                                             Pageable pageable) {
 
@@ -50,6 +58,14 @@ public class SubscriberResource {
     }
 
     @GetMapping(value = "/rma", produces = ApiConst.APPLICATION_JSON_UTF8)
+    @Timed
+    public ResponseEntity<Page<SubscriberVM>> rmaGet(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                         Pageable pageable) {
+
+        return rmaGetPage(searchString, pageable);
+    }
+
+    @GetMapping(value = "/rma/page", produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<Page<SubscriberVM>> rmaGetPage(@RequestParam(name = "searchString", required = false) Optional<String> searchString,
                                                          Pageable pageable) {

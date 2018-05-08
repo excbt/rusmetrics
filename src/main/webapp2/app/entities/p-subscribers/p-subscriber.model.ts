@@ -8,6 +8,8 @@ export class PSubscriber {
     public timezoneDef: string,        // Часовой пояс абонента
     public subscrType: string,        // Тип абонента
     public contactEmail: string,        // Контактный email
+    public rmaLdapOu: string,        // Информация LDAP. Зарезервировано для внутреннего использования
+    public canCreateChild: boolean,        // Признак "Создание дочерних абонентов"
     public version: number
 ) { }
 }

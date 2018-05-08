@@ -40,8 +40,8 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
 
             this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
                 if (data && (data[0].path ===  'customers')) {
-                    this.subscriberMode = 'NORMAL';
-                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.subsriber.newTitle' : 'subscribers.subsriber.editTitle';
+                    this.subscriberMode = 'CUSTOMER';
+                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.customer.newTitle' : 'subscribers.customer.editTitle';
                 }
                 if (data && (data[0].path ===  'partners')) {
                     this.subscriberMode = 'RMA';
@@ -59,8 +59,8 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
             subscriberInfo: [data.subscriberInfo],
             subscriberComment: [data.subscriberComment],
             timezoneDef: [data.timezoneDef],
-            subscrType: [data.subscrType],
             contactEmail: [data.contactEmail],
+            rmaLdapOu: [data.rmaLdapOu]
         });
         return form;
     }
@@ -72,9 +72,10 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
             subscriberName: null,
             subscriberInfo: null,
             subscriberComment: null,
-            subscrType: null,
+            timezoneDef: null,
             canCreateChild: false,
             contactEmail: null,
+            rmaLdapOu: null,
         });
         return form;
     }
@@ -89,9 +90,11 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
             subscriberInfo: this.checkEmpty(formModel.subscriberInfo as string),
             subscriberComment: this.checkEmpty(formModel.subscriberComment as string),
             timezoneDef: this.checkEmpty(formModel.timezoneDef as string),
-            subscrType: this.checkEmpty(formModel.subscrType as string),
+            subscrType: null,
             contactEmail: this.checkEmpty(formModel.contactEmail as string),
-            version: this.entity.version
+            rmaLdapOu: this.subscriberMode === 'RMA' ? this.checkEmpty(formModel.rmaLdapOu as string) : null,
+            canCreateChild: formModel.canCreateChild,
+            version: (this.entity && this.entity.version) ? this.entity.version : 0
         };
         return savePSubscriber;
     }

@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PSubscriberPartnerService } from './p-subscriber.service';
+import { PSubscriberPartnerService, PSubscriberCustomerService } from './p-subscriber.service';
 import { PSubscriberDataSource } from './p-subscriber.datasource';
 
 @Component({
@@ -10,19 +10,18 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
     templateUrl: './p-subscribers.component.html',
     styleUrls: ['../blocks/list-form.scss']
 })
-export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
+export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
     displayedColumns = ['select', 'id', 'subscriberName'];
 
-    subscriberMode: string;
+    subscriberMode = 'NORMAL';
 
     constructor(
-        private service: PSubscriberPartnerService,
+        private service: PSubscriberCustomerService,
         router: Router,
         activatedRoute: ActivatedRoute,
     ) {
         super({modificationEventName: 'subscriberModification'}, router, activatedRoute);
-        this.subscriberMode = 'RMA';
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {

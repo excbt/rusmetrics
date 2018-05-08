@@ -37,12 +37,13 @@ import { MenubarModule } from 'primeng/menubar';
 
 // Etc
 import { entityState } from './';
-import { PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
 import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
 import { PSubscriberEditComponent } from './p-subscribers/p-subscriber-edit.component';
-import { PSubscriberCustomerService } from './p-subscribers/p-subscriber.service';
+import { PSubscriberCustomerService, PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service';
+import { PSubscribersPartnerComponent } from './p-subscribers/p-subscribers-partner.component';
+import { PSubscribersCustomerComponent } from './p-subscribers/p-subscribers-cutomer.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -78,6 +79,8 @@ import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service'
         OrganizationDetailComponent,
         OrganizationEditComponent,
         PSubscribersComponent,
+        PSubscribersPartnerComponent,
+        PSubscribersCustomerComponent,
         PSubscriberEditComponent,
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent

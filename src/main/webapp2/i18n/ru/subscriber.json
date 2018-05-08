@@ -8,7 +8,9 @@
         },
         "customer": {
             "title" : "Абоненты",
-            "listTitle" : "Список абонентов"
+            "listTitle" : "Список абонентов",
+            "editTitle" : "Редактирование абонента",
+            "newTitle" : "Добавление Абонента"
         }
     },
     "subscriber": {
@@ -31,7 +33,7 @@
         "mapZoom": "mapZoom",
         "mapZoomDetail": "mapZoomDetail",
         "subscrType": "subscrType",
-        "canCreateChild": "canCreateChild",
+        "canCreateChild": "Создание ЛК",
         "isChild": "isChild",
         "childLdapOu": "childLdapOu",
         "subscrCabinetNr": "subscrCabinetNr",
