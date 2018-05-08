@@ -27,8 +27,8 @@ public class SubscriberRepositoryTest extends PortalDataTest {
 		Subscriber sr = subscrOrgRepository.findOne(728L);
 		assertNotNull(sr);
 		logger.debug("subscrRole ID {}", sr.getId());
-		assertNotNull(sr.getOrganizationId());
-		logger.debug("subscrRole Organizatoin ID {}", sr.getOrganizationId());
+		assertNotNull(sr.getOrganization());
+		logger.debug("subscrRole Organizatoin ID {}", sr.getOrganization().getId());
 
 		List<Subscriber> soList = subscrOrgRepository.selectByOrganizationId(Long.valueOf(726));
 		checkArgument(soList.size() > 0);

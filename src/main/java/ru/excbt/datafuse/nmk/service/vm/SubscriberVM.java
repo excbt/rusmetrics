@@ -34,4 +34,8 @@ public class SubscriberVM {
 
     private int version;
 
+    private String organizationInn;
+
+    private String organizationName;
+
 }

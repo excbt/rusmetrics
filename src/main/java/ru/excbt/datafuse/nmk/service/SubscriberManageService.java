@@ -122,7 +122,6 @@ public class SubscriberManageService {
         String childLdapOu = null;
         if (Boolean.TRUE.equals(subscriber.getCanCreateChild())) {
             childLdapOu = SubscriberLdapService.buildCabinetsOuName(subscriber);
-//            subscriber.setChildLdapOu(childLdapOu);
 
             String[] ldapOuUnits = subscriberLdapService.buildLdapOu(subscriber);
             String ldapDescription = subscriberLdapService.buildLdapDescription() + subscriber.getSubscriberName();
