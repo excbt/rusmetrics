@@ -25,6 +25,7 @@ import {
   MatButtonModule,
   MatIconModule,
   MatCheckboxModule,
+  MatAutocompleteModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -34,6 +35,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 @NgModule({
   imports: [
@@ -50,12 +52,14 @@ import { CheckboxModule } from 'primeng/checkbox';
       MatButtonModule,
       MatIconModule,
       MatCheckboxModule,
+      MatAutocompleteModule,
       // PRIME NG
       CardModule,
       InputTextModule,
       MenubarModule,
       ButtonModule,
-      CheckboxModule
+      CheckboxModule,
+      AutoCompleteModule
   ],
   declarations: [
     ExcEditButtonsComponent,

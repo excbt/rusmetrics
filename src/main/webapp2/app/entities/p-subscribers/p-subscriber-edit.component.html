@@ -1,39 +1,43 @@
 <jhi-exc-form-template>
-        <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
-        <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-            (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="{{ menuHeaderKey }}">
-        </jhi-exc-edit-form-menu>
-        
-        <br>
-        <div>
-        <form [formGroup]="entityForm">
-            <div class="ui-g ui-g-nopad">
-                <div class="ui-g-6 ui-g-nopad">  
-                    <div class="flex-column">
-                            <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.organizationId' | translate}}" formControlName="organizationId">
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.subscriberName' | translate}}" formControlName="subscriberName">
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.subscriberInfo' | translate}}" formControlName="subscriberInfo">
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.subscriberComment' | translate}}" formControlName="subscriberComment">
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.timezoneDef' | translate}}" formControlName="timezoneDef">
-                                </mat-form-field>
-                                <mat-form-field>
-                                    <input matInput placeholder="{{'subscriber.canCreateChild' | translate}}" formControlName="canCreateChild">
-                                </mat-form-field>
-                    </div>          
+    <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
+    <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+    (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="{{ menuHeaderKey }}">
+</jhi-exc-edit-form-menu>
+
+<br>
+<div>
+    <form [formGroup]="entityForm">
+        <div class="ui-g ui-g-nopad">
+            <div class="ui-g-6 ui-g-nopad">  
+                <div class="flex-column">
+                    <jhi-organization-autocomplete>
+                    </jhi-organization-autocomplete>
+                
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.organizationId' | translate}}" formControlName="organizationId">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.subscriberName' | translate}}" formControlName="subscriberName">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.subscriberInfo' | translate}}" formControlName="subscriberInfo">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.subscriberComment' | translate}}" formControlName="subscriberComment">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.timezoneDef' | translate}}" formControlName="timezoneDef">
+                    </mat-form-field>
+                    <mat-form-field>
+                        <input matInput placeholder="{{'subscriber.canCreateChild' | translate}}" formControlName="canCreateChild">
+                    </mat-form-field>
+                    
+                </div>          
             </div>
-            </div>
+        </div>
         <!-- FORM BUTTONS -->
         <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
-            (backAction)="navigateBack()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
+        (backAction)="navigateBack()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
     </form>
-    </div>
+</div>
 </jhi-exc-form-template>        

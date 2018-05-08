@@ -24,7 +24,8 @@ import {
     MatIconModule,
     MatCheckboxModule,
     ErrorStateMatcher,
-    ShowOnDirtyErrorStateMatcher } from '@angular/material';
+    ShowOnDirtyErrorStateMatcher,
+    MatAutocompleteModule} from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';
@@ -45,6 +46,7 @@ import { PSubscribersPartnerComponent } from './p-subscribers/p-subscribers-part
 import { PSubscribersCustomerComponent } from './p-subscribers/p-subscribers-cutomer.component';
 import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-edit-customer.component';
 import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
+import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -68,6 +70,7 @@ import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-ed
         MatCheckboxModule,
         MatSelectModule,
         MatTooltipModule,
+        MatAutocompleteModule,
 
         // PRIME NG
         CardModule,
@@ -85,7 +88,8 @@ import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-ed
         PSubscriberEditCustomerComponent,
         PSubscriberEditPartnerComponent,
         OrganizationsWidgetComponent,
-        PSubscribersWidgetComponent
+        PSubscribersWidgetComponent,
+        OrganizationAutocompleteComponent
     ],
     entryComponents: [
     ],
