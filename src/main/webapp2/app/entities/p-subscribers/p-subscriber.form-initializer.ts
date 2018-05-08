@@ -56,7 +56,9 @@ export class PSubscriberFormInitializer extends ExcFormInitializer<PSubscriber> 
             contactEmail: ExcFormValue.clearEmptyString(formModel.contactEmail as string),
             rmaLdapOu: this.subscriberMode === 'RMA' ? ExcFormValue.clearEmptyString(formModel.rmaLdapOu as string) : null,
             canCreateChild: formModel.canCreateChild,
-            version: (currEntity && currEntity.version) ? currEntity.version : 0
+            version: (currEntity && currEntity.version) ? currEntity.version : 0,
+            organizationInn: null,
+            organizationName: null
         };
         return savePSubscriber;
     }

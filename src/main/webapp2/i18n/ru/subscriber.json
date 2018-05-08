@@ -38,6 +38,8 @@
         "childLdapOu": "childLdapOu",
         "subscrCabinetNr": "subscrCabinetNr",
         "contactEmail": "contactEmail",
-        "subscrCabinetSeq": "subscrCabinetSeq"
+        "subscrCabinetSeq": "subscrCabinetSeq",
+        "organizationName": "Кр. наименование организации",
+        "organizationInn": "Инн организации"
     }
 }

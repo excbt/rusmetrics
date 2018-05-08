@@ -24,7 +24,7 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 @Component({
   selector: 'jhi-organizations',
   templateUrl: './organizations.component.html',
-  styleUrls: ['./organizations.scss']
+  styleUrls: ['./organizations.scss', '../blocks/list-form.scss']
 })
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 

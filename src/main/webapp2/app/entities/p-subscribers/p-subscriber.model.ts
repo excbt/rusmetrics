@@ -10,6 +10,8 @@ export class PSubscriber {
     public contactEmail: string,        // Контактный email
     public rmaLdapOu: string,        // Информация LDAP. Зарезервировано для внутреннего использования
     public canCreateChild: boolean,        // Признак "Создание дочерних абонентов"
-    public version: number
+    public version: number,
+    public organizationInn: string,
+    public organizationName: string,
 ) { }
 }

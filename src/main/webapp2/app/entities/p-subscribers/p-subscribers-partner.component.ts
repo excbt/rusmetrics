@@ -12,7 +12,7 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
 })
 export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['select', 'id', 'subscriberName'];
+    displayedColumns = ['select', 'id',  'subscriberName', 'organizationInn', 'organizationName'];
 
     subscriberMode = 'RMA';
 
