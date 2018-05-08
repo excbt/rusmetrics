@@ -28,4 +28,10 @@ export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscri
         return {getDataSource: () => new PSubscriberDataSource(this.service)};
     }
 
+    navigateEdit() {
+        if (!this.selection.isEmpty()) {
+          this.router.navigate(['customers', this.selection.selected[0].id, 'edit']);
+        }
+    }
+
 }

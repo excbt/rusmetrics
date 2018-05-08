@@ -25,8 +25,10 @@ public interface SubscriberMapper  {
 
     List <SubscriberDTO> toDto(List<Subscriber> entityList);
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "info", source = "subscriberInfo")
     @Mapping(target = "comment", source = "subscriberComment")
+    @Mapping(target = "deleted", ignore = true)
     void updateSubscriber (SubscriberVM subscriberVM, @MappingTarget Subscriber subscriber);
 
     @Mapping(source = "info", target = "subscriberInfo")

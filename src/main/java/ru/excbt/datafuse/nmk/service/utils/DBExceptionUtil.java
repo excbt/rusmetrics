@@ -91,6 +91,10 @@ public class DBExceptionUtil {
         throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
     }
 
+    public static <T extends Persistable<?>> AccessDeniedException newAccessDeniedException(Class<T> clazz, Object id) {
+        return new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
+    }
+
 
     public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
         return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +

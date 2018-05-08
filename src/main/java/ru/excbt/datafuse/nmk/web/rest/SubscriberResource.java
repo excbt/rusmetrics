@@ -102,19 +102,32 @@ public class SubscriberResource {
 
     @PutMapping("/normal")
     public ResponseEntity<SubscriberVM> putSubscriberNormal(@RequestBody SubscriberVM subscriberVM) {
-        SubscriberVM resultVM = subscriberManageService.createNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
-            .map(subscriberMapper::toVM)
-            .orElse(null);
-        return new ResponseEntity<>(resultVM, HttpStatus.OK);
+        Optional<SubscriberVM> resultVM;
+        if (subscriberVM.getId() == null) {
+            resultVM = subscriberManageService.createNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                .map(subscriberMapper::toVM);
+        } else {
+            resultVM = subscriberManageService.updateNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                .map(subscriberMapper::toVM);
+        }
+        return resultVM.map(vm -> new ResponseEntity<>(vm, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST)) ;
     }
 
 
     @PutMapping("/rma")
     public ResponseEntity<SubscriberVM> putSubscriberRma(@RequestBody SubscriberVM subscriberVM) {
-        SubscriberVM resultVM = subscriberManageService.createRmaSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
-            .map(subscriberMapper::toVM)
-            .orElse(null);
-        return new ResponseEntity<>(resultVM, HttpStatus.OK);
+        Optional<SubscriberVM> resultVM;
+        if (subscriberVM.getId() == null) {
+            resultVM = subscriberManageService.createRmaSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                .map(subscriberMapper::toVM);
+        } else {
+            resultVM = subscriberManageService.updateRmaSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                .map(subscriberMapper::toVM);
+        }
+
+        return resultVM.map(vm -> new ResponseEntity<>(vm, HttpStatus.OK))
+            .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST)) ;
     }
 
 }

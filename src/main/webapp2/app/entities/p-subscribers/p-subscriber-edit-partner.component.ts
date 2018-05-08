@@ -4,16 +4,16 @@ import { PSubscriber } from './p-subscriber.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PSubscriberService } from './p-subscriber.service';
+import { PSubscriberService, PSubscriberPartnerService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
 
 @Component({
-    selector: 'jhi-p-subscriber-edit',
+    selector: 'jhi-p-subscriber-edit-partner',
     templateUrl: './p-subscriber-edit.component.html',
     styleUrls: ['../blocks/form-edit.scss']
   })
-export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> implements OnInit, OnDestroy {
+export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubscriber> implements OnInit, OnDestroy {
 
     private headerSubscription: Subscription;
 
@@ -28,12 +28,12 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        service: PSubscriberService) {
+        service: PSubscriberPartnerService) {
             super(
-                {   modificationEventName: 'pSubscriberModification',
-                    backUrl: '/organizations',
-                    onSaveUrl: '/organizations',
-                    onDeleteUrl: '/organizations'
+                {   modificationEventName: 'pSubscriberPartnerModification',
+                    backUrl: '/partners',
+                    onSaveUrl: '/partners',
+                    onDeleteUrl: '/partners'
                 },
                 service.entityProvider(),
                 eventManager,
@@ -43,17 +43,10 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
             this.formInitializer = new PSubscriberFormInitializer(this.fb);
 
             this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
-                if (data && (data[0].path ===  'customers')) {
-                    this.subscriberMode = 'CUSTOMER';
-                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.customer.newTitle' : 'subscribers.customer.editTitle';
-                }
-                if (data && (data[0].path ===  'partners')) {
-                    this.subscriberMode = 'RMA';
-                    this.menuHeaderKey = 'subscribers.partner.newTitle';
-                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.partner.newTitle' : 'subscribers.partner.editTitle';
-                }
+                this.subscriberMode = 'RMA';
+                this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.partner.newTitle' : 'subscribers.partner.editTitle';
             });
-        }
+    }
 
     createForm(data: PSubscriber): FormGroup {
         return this.formInitializer.createForm(data);
@@ -68,7 +61,7 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
     }
 
     navigateBack() {
-        this.router.navigate([this.subscriberMode === 'NORMAL' ? 'customers' : 'partners']);
+        this.router.navigate(['partners']);
     }
 
 }

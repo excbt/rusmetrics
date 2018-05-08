@@ -13,6 +13,7 @@ import {of} from 'rxjs/observable/of';
 import { JhiEventManager  } from 'ng-jhipster';
 
 import { ExcFormControlChecker } from '../../shared-blocks';
+import { ExcFormInitializer } from './exc-form.initializer';
 
 export interface ExcEditFormEntityProvider<T> {
     load: (id: any) => Observable<T>;
@@ -52,6 +53,8 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     private paramsSubscription:  Subscription;
 
     entity: T;
+
+    // formInitializer: ExcFormInitializer<T>;
 
     constructor(
         private params: ExcEditFormParams,
@@ -139,7 +142,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
         )
         .subscribe( (data: T) => {
                 this.loadingSubject.next(false);
-                if (data['id']) {
+                if (data && data['id']) {
                         if (this.newFlag && this.params.onSaveUrl) {
                             this.navigateOnSave();
                         } else {

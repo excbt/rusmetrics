@@ -321,7 +321,7 @@ public class SubscriberService implements SecuredRoles {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
         } else if (subscriberMode == SubscriberMode.NORMAL) {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
-            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+            where.and(qSubscriber.rmaSubscriberId.eq(userIds.getSubscriberId()));
         } else if (subscriberMode == SubscriberMode.CABINET) {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.CABINET.getKeyname()));
             where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
