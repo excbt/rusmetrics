@@ -10,9 +10,11 @@
         <div class="ui-g ui-g-nopad">
             <div class="ui-g-6 ui-g-nopad">  
                 <div class="flex-column">
-                    <jhi-organization-autocomplete>
+                    <!-- <jhi-organization-autocomplete>  -->
+                    <jhi-organization-autocomplete organizationId="{{ entityForm.controls['organizationId'].value }}" (onChange)="organizationSelect($event)"> 
+                        <!--  -->
                     </jhi-organization-autocomplete>
-                
+                    <p>organizationId: {{ entityForm.controls['organizationId'].value }}</p>
                     <mat-form-field>
                         <input matInput placeholder="{{'subscriber.organizationId' | translate}}" formControlName="organizationId">
                     </mat-form-field>

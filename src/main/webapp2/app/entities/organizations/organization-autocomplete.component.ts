@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { Organization } from './organization.model';
 import { OrganizationsService } from './organizations.service';
 import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
-import { FormControl } from '@angular/forms';
+import { FormControl, AbstractControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, flatMap, startWith, distinctUntilChanged, tap, debounceTime } from 'rxjs/operators';
 import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
+import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material';
 
 @Component({
     selector: 'jhi-organization-autocomplete',
@@ -14,52 +15,98 @@ import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-const
 })
 export class OrganizationAutocompleteComponent {
 
+    @Output() onChange = new EventEmitter<number>();
+
+    private _organizationId: number;
+
     private sorting = new ExcPageSorting('organizationName', 'asc');
     private pSize = new ExcPageSize(0, 30);
 
-    stateCtrl: FormControl;
+    organizationCtrl: FormControl;
 
     filteredOrganizations: Observable<Organization[]>;
-
-    // private filteredOrganizations = new BehaviorSubject<Organization[]>([]);
-
-    // public filteredOrganizations$ = this.filteredOrganizations.asObservable();
 
     private moreResults2 = new BehaviorSubject<boolean>(false);
 
     moreResults: boolean;
     moreResults2$ = this.moreResults2.asObservable();
 
-    constructor(private organizationService: OrganizationsService) {
-        this.stateCtrl = new FormControl();
-        // this.stateCtrl.valueChanges.pipe(
-        //     debounceTime(searchDebounceTimeValue),
-        //     startWith(''),
-        //     distinctUntilChanged(),
-        //     tap((arg) => this.findOrganizations(arg))
-        // );
+    // filteredOrganizations: Observable<Organization[]>;
 
-        this.filteredOrganizations = this.stateCtrl.valueChanges.pipe(
+    private selectedValue = new BehaviorSubject<number>(null);
+    private selectedValue$ = this.selectedValue.asObservable();
+    private selectedOrganization = new BehaviorSubject<Organization>(null);
+
+    private displayedValue: string;
+
+    constructor(private organizationService: OrganizationsService) {
+        this.organizationCtrl = new FormControl();
+        this.filteredOrganizations = this.stateCtrlChanges();
+    }
+
+    @Input()
+    get organizationId(): number {
+        return this._organizationId;
+    }
+
+    set organizationId(id: number) {
+        this._organizationId = id;
+        if (id) {
+            this.organizationCtrl.setValue(id);
+            this.selectedValue.next(id);
+            this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
+                debounceTime(searchDebounceTimeValue),
+                startWith(''),
+                distinctUntilChanged(),
+                flatMap((arg) => Observable.forkJoin(
+                    this.findFilteredOrganizations(arg),
+                    this.organizationService.findOne(id).map((data) => [data])
+                    ).map((results) => results[1].concat(results[0]))
+                ));
+            this.pushSelected(id);
+        }
+    }
+
+    stateCtrlChanges(): Observable<Organization[]> {
+        return this.organizationCtrl.valueChanges.pipe(
             debounceTime(searchDebounceTimeValue),
             startWith(''),
             distinctUntilChanged(),
-            flatMap((arg) => this.findFilteredOrganizations(arg))
-        );
+            flatMap((arg) => this.findFilteredOrganizations(arg)));
     }
-
-    // findOrganizations(search: string) {
-    //     this.organizationService.findPage({pageSize: this.pSize, pageSorting: this.sorting, searchString: search}).subscribe((data) => {
-    //         this.moreResults2.next(data.totalPages > 1);
-    //         this.filteredOrganizations.next(data.content);
-    //     });
-    // }
 
     findFilteredOrganizations(search: string): Observable<Organization[]> {
         return this.organizationService.findPage({pageSize: this.pSize, pageSorting: this.sorting, searchString: search})
-            .map((data) => {
-                this.moreResults = data.totalPages > 1;
-                return data.content;
-            });
+        .map((data) => {
+            this.moreResults = data.totalPages > 1;
+            this.moreResults2.next(data.totalPages > 1);
+            return data.content;
+        });
+    }
+
+    findOrganization(id: any): Observable<Organization> {
+        return this.organizationService.findOne(id);
+    }
+
+    itemSelected(evt: MatAutocompleteSelectedEvent) {
+        const id = evt.option.value;
+        console.log('evt: ' + id);
+        this.onChange.next(id);
+        this.pushSelected(id);
+    }
+
+    pushSelected(id) {
+        this.filteredOrganizations.flatMap((data) => data.filter((i) => i.id === id)).subscribe((data) => this.selectedOrganization.next(data));
+    }
+
+    getDisplayFn() {
+        return (val) => this.displayFn(val);
+    }
+
+    displayFn(id) {
+        console.log('org: ' + this.selectedOrganization.getValue());
+        const value = this.selectedOrganization.getValue();
+        return value ? value.organizationName : id;
     }
 
 }

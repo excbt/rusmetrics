@@ -1,7 +1,8 @@
 <div>
+    <p>Value: {{organizationId}}</p>
     <mat-form-field class="autocomplete-full-width">
-        <input matInput placeholder="{{ 'organization.detail.title' | translate }}" aria-label="organization" [matAutocomplete]="auto" [formControl]="stateCtrl">
-        <mat-autocomplete #auto="matAutocomplete">
+        <input matInput placeholder="{{ 'organization.detail.title' | translate }}" aria-label="organization" [matAutocomplete]="auto" [formControl]="organizationCtrl">
+        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="itemSelected($event)" [displayWith]="getDisplayFn()">
             <mat-option *ngFor="let organization of filteredOrganizations | async" [value]="organization.id">
                 <span>{{ organization.organizationName }}</span> |
                 <small>{{'organization.inn' | translate}}: {{organization.inn}}</small>

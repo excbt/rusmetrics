@@ -1,12 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ExcEditFormComponent } from '../../shared-blocks';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { map, flatMap, startWith, distinctUntilChanged, tap, debounceTime } from 'rxjs/operators';
+import { ExcEditFormComponent, ExcPageSorting, ExcPageSize } from '../../shared-blocks';
 import { PSubscriber } from './p-subscriber.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { PSubscriberService, PSubscriberCustomerService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
+import { OrganizationsService } from '../organizations/organizations.service';
+import { Organization } from '../organizations/organization.model';
+import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
     selector: 'jhi-p-subscriber-edit-customer',
@@ -28,7 +33,8 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        service: PSubscriberCustomerService) {
+        service: PSubscriberCustomerService,
+        private organizationService: OrganizationsService) {
             super(
                 {   modificationEventName: 'pSubscriberCustomerModification',
                     backUrl: '/customers',
@@ -62,6 +68,11 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
 
     navigateBack() {
         this.router.navigate(['customers']);
+    }
+
+    organizationSelect(id: number) {
+        this.entityForm.controls['organizationId'].setValue(id);
+        console.log(id);
     }
 
 }
