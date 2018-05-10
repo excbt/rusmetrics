@@ -33,10 +33,6 @@ export class OrganizationAutocompleteComponent {
 
     // filteredOrganizations: Observable<Organization[]>;
 
-    private selectedValue = new BehaviorSubject<number>(null);
-    private selectedValue$ = this.selectedValue.asObservable();
-    private selectedOrganization = new BehaviorSubject<Organization>(null);
-
     private displayedValue: string;
 
     constructor(private organizationService: OrganizationsService) {
@@ -52,18 +48,19 @@ export class OrganizationAutocompleteComponent {
     set organizationId(id: number) {
         this._organizationId = id;
         if (id) {
-            this.organizationCtrl.setValue(id);
-            this.selectedValue.next(id);
+            // this.organizationCtrl.setValue(id);
             this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
                 debounceTime(searchDebounceTimeValue),
                 startWith(''),
                 distinctUntilChanged(),
                 flatMap((arg) => Observable.forkJoin(
                     this.findFilteredOrganizations(arg),
-                    this.organizationService.findOne(id).map((data) => [data])
+                    this.organizationService.findOne(id).map((data) => {
+                        return [data];
+                    })
                     ).map((results) => results[1].concat(results[0]))
                 ));
-            this.pushSelected(id);
+            // this.pushSelected(id);
         }
     }
 
@@ -89,24 +86,23 @@ export class OrganizationAutocompleteComponent {
     }
 
     itemSelected(evt: MatAutocompleteSelectedEvent) {
-        const id = evt.option.value;
-        console.log('evt: ' + id);
-        this.onChange.next(id);
-        this.pushSelected(id);
+        const org = evt.option.value;
+        console.log('evt: ' + org);
+        this.onChange.next(org.id);
+        // this.pushSelected(id);
     }
 
-    pushSelected(id) {
-        this.filteredOrganizations.flatMap((data) => data.filter((i) => i.id === id)).subscribe((data) => this.selectedOrganization.next(data));
-    }
+    // pushSelected(id) {
+    //     this.filteredOrganizations.flatMap((data) => data.filter((i) => i.id === id)).subscribe((data) => this.selectedOrganization.next(data));
+    // }
 
     getDisplayFn() {
         return (val) => this.displayFn(val);
     }
 
     displayFn(id) {
-        console.log('org: ' + this.selectedOrganization.getValue());
-        const value = this.selectedOrganization.getValue();
-        return value ? value.organizationName : id;
+        // const value = this.selectedOrganization.getValue();
+        return id ? id.organizationName : 'N/A';
     }
 
 }
