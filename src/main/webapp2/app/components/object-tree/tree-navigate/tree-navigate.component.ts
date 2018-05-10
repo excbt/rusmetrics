@@ -75,19 +75,29 @@ console.log('Tree', this.tree);
         this.treeNodeLoading = true;
 console.log(event);
         if (event.node) {
+            const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
+            this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});
+
             if (event.node.data.nodeType !== 'ELEMENT') {
                 this.treeNodeLoading = false;
                 return;
             }
-            const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
+
             this.treeNavService.loadPTree(ptreeNodeId, 0).subscribe((resp) => this.successLoadNode(event, resp));
         }
     }
 
-    selectNode(event) {
-        const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
-        this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});
-    }
+//    selectNode(event) {
+// console.log('Select node: ', event);
+//        const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
+//        this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});
+//    }
+//
+//    clickNode(event) {
+// console.log('Click node: ', event);
+//        const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
+//        this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});
+//    }
 
     successLoadNode(event, resp) {
 console.log(resp);

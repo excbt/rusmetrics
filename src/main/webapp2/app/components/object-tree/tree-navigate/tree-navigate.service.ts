@@ -30,12 +30,21 @@ export class TreeNavigateService {
     private subscrObjectTreeList: SubscrContObjectTreeType1[];
     private defaultTreeSetting: SubscrPrefValue;
     private ptreeNodeMonitor: PTreeNodeMonitor[];
+//    private selectedPTreeNodeId: number;
 
     constructor(private http: HttpClient,
                  private subscrTreeService: SubscrTreeService,
                  private subscrPrefService: SubscrPrefService,
                  private pTreeNodeMonitorService: PTreeNodeMonitorService
                 ) {}
+
+//    getSelectedPTreeNodeId(): number {
+//        return this.selectedPTreeNodeId;
+//    }
+//
+//    setSelectedPTreeNodeId(nodeId: number) {
+//        this.selectedPTreeNodeId = nodeId;
+//    }
 
     getCurrentTree(): TreeNode[] {
         return this.currentTree;
@@ -72,6 +81,7 @@ export class TreeNavigateService {
     }
 
     loadPTree(treeId: number, childLvl = 0): Observable<TreeNode[]> {
+//        this.setSelectedPTreeNodeId(treeId);
         return this.http.get<PTreeNode>(this.P_TREE_NODE_URL + treeId, {params : new HttpParams()
             .set('childLevel', childLvl.toString()) })
             .map((ptree: PTreeNode) => this.convertPTreeToPrimeNGTreeNode(ptree));

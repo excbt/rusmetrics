@@ -23,8 +23,9 @@
             <mat-menu #menu="matMenu">
                 <button mat-menu-item *ngFor = "let widget of widgetList" 
                    (click) = "changeWidget(widget)"
-                   [routerLink] = "'tree-node-information'"
+                   
                    >
+<!--                   [routerLink] = "widget.url"-->
 <!--                   [routerLink] = "['/', { outlets: { treeNodeWidget: ['tree-node-information'] } }]"-->
 <!--                   [routerLink]="['/', { outlets: { popup: ['user-management-new'] } }]" -->
                     <span >{{widget.caption}}</span>

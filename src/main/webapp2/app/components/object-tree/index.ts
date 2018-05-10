@@ -7,6 +7,7 @@ export * from './tree-navigate/tree-navigate.service';
 
 export * from './subscr-tree';
 export * from './subscr-pref';
+export * from './tree-node-color-status';
 export * from './p-tree-node-monitor';
 
 export * from './tree-node-information';
