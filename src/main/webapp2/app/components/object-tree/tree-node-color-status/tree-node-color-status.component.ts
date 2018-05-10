@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
+// import { ChartModule } from 'primeng/chart';
+
 import {
     TreeNodeColorStatusService,
     TreeNodeColorStatus
@@ -15,10 +17,36 @@ import {
 })
 export class TreeNodeColorStatusComponent implements OnInit {
 
+    nodeData: any;
+
     constructor(
         private treeNodeColorStatusService: TreeNodeColorStatusService,
          private route: ActivatedRoute
-    ) {}
+    ) 
+    {
+//        this.nodeData = {
+//            datasets: [
+//                {
+//                    data: [
+//                        0,
+//                        0,
+//                        0
+//                    ],
+//                    backgroundColor: [
+//                        'red',
+//                        'yellow',
+//                        'green'
+//                    ],
+//                    label: 'Общая статистика по узлу.'
+//                }
+//            ],
+//            labels: [
+//                'Критически',
+//                'Некритические',
+//                'Штатные'
+//            ]
+//        };
+    }
 
     ngOnInit() {
 console.log(this.route);
@@ -30,7 +58,7 @@ console.log(this.route);
                      )
         );
 
-        tmp.subscribe((data) => console.log('Color data: ', data));
+        tmp.subscribe((data) => this.performTreeNodeColorStatus(data));
 
 //        this.treeNodeColorStatusService
 //            .loadCommonData()
@@ -38,7 +66,38 @@ console.log(this.route);
     }
 
     performTreeNodeColorStatus(data: TreeNodeColorStatus[]) {
+console.log('Color data: ', data);
+        const redElm = data.filter((elm) => elm.levelColor === 'RED')[0];
+        const yellowElm = data.filter((elm) => elm.levelColor === 'YELLOW')[0];
+        const greenElm = data.filter((elm) => elm.levelColor === 'GREEN')[0];
+        const red = redElm ? redElm.contObjectCount : 0;
+        const yellow = yellowElm ? yellowElm.contObjectCount : 0;
+        const green = greenElm ? greenElm.contObjectCount : 0;
+console.log(red, yellow, green);
+        this.nodeData = {
+            datasets: [
+                {
+                    data: [
+                        red,
+                        yellow,
+                        green
+                    ],
+                    backgroundColor: [
+                        'red',
+                        'yellow',
+                        'green'
+                    ],
+                    label: 'Общая статистика по узлу.'
+                }
+            ],
+            labels: [
+                'Критически',
+                'Некритические',
+                'Штатные'
+            ]
+        };
 
+console.log(this.nodeData);
     }
 
 }

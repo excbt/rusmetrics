@@ -1,9 +1,11 @@
+import 'chart.js/dist/Chart.js';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { JhipsterSharedModule } from '../../shared';
 // import { PortalObjectTreeComponent } from './object-tree.component';
 import { PTreeNodeService } from './object-tree.service';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
 import { RouterModule, Router } from '@angular/router';
+import { ChartModule } from 'primeng/chart';
 
 // import { UserRouteAccessService } from '../../shared';
 
@@ -41,7 +43,8 @@ import { MatMenuModule } from '@angular/material/menu';
         MatToolbarModule,
         MatButtonModule,
         MatIconModule,
-        MatMenuModule
+        MatMenuModule,
+        ChartModule
     ],
     declarations: [
         PortalObjectTreeComponent,
