@@ -7,6 +7,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map, flatMap, startWith, distinctUntilChanged, tap, debounceTime } from 'rxjs/operators';
 import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'jhi-organization-autocomplete',
@@ -28,16 +29,34 @@ export class OrganizationAutocompleteComponent {
 
     private moreResults2 = new BehaviorSubject<boolean>(false);
 
-    moreResults: boolean;
     moreResults2$ = this.moreResults2.asObservable();
 
-    // filteredOrganizations: Observable<Organization[]>;
+    private autoselectOrganizations = new BehaviorSubject<Organization[]>([]);
 
-    private displayedValue: string;
+    autoselectOrganizations$ = this.autoselectOrganizations.asObservable();
+    private innTranslation: string;
 
-    constructor(private organizationService: OrganizationsService) {
+    constructor(private organizationService: OrganizationsService,
+                private translate: TranslateService) {
+
+        // this.getAndInitTranslations();
+        this.innTranslation = 'ИНН';
         this.organizationCtrl = new FormControl();
-        this.filteredOrganizations = this.stateCtrlChanges();
+        this.stateCtrlChanges().subscribe((data) => this.autoselectOrganizations.next(data));
+
+        this.organizationCtrl.valueChanges.pipe(
+            debounceTime(searchDebounceTimeValue),
+            distinctUntilChanged()).subscribe((arg) => {
+                if (!arg) {
+                    this.onChange.next(null);
+                }
+            });
+    }
+
+    getAndInitTranslations() {
+        this.translate.get(['organization.inn']).subscribe( (translation) => {
+          this.innTranslation = translation['organization.inn'];
+        });
     }
 
     @Input()
@@ -48,18 +67,22 @@ export class OrganizationAutocompleteComponent {
     set organizationId(id: number) {
         this._organizationId = id;
         if (id) {
+            this.organizationService.findOne(id).subscribe((data) => {
+                this.autoselectOrganizations.next([data]);
+                this.organizationCtrl.setValue(data);
+            });
             // this.organizationCtrl.setValue(id);
-            this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
-                debounceTime(searchDebounceTimeValue),
-                startWith(''),
-                distinctUntilChanged(),
-                flatMap((arg) => Observable.forkJoin(
-                    this.findFilteredOrganizations(arg),
-                    this.organizationService.findOne(id).map((data) => {
-                        return [data];
-                    })
-                    ).map((results) => results[1].concat(results[0]))
-                ));
+            // this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
+            //     debounceTime(searchDebounceTimeValue),
+            //     startWith(''),
+            //     distinctUntilChanged(),
+            //     flatMap((arg) => Observable.forkJoin(
+            //         this.findFilteredOrganizations(arg),
+            //         this.organizationService.findOne(id).map((data) => {
+            //             return [data];
+            //         })
+            //         ).map((results) => results[1].concat(results[0]))
+            //     ));
             // this.pushSelected(id);
         }
     }
@@ -75,7 +98,6 @@ export class OrganizationAutocompleteComponent {
     findFilteredOrganizations(search: string): Observable<Organization[]> {
         return this.organizationService.findPage({pageSize: this.pSize, pageSorting: this.sorting, searchString: search})
         .map((data) => {
-            this.moreResults = data.totalPages > 1;
             this.moreResults2.next(data.totalPages > 1);
             return data.content;
         });
@@ -87,22 +109,20 @@ export class OrganizationAutocompleteComponent {
 
     itemSelected(evt: MatAutocompleteSelectedEvent) {
         const org = evt.option.value;
-        console.log('evt: ' + org);
         this.onChange.next(org.id);
-        // this.pushSelected(id);
     }
-
-    // pushSelected(id) {
-    //     this.filteredOrganizations.flatMap((data) => data.filter((i) => i.id === id)).subscribe((data) => this.selectedOrganization.next(data));
-    // }
 
     getDisplayFn() {
-        return (val) => this.displayFn(val);
+        return (val) => this.formatOrganization(val);
     }
 
-    displayFn(id) {
-        // const value = this.selectedOrganization.getValue();
-        return id ? id.organizationName : 'N/A';
+    formatOrganization(org: Organization): string {
+        const inn = this.formatOrganizationInn(org);
+        return org ? (org.organizationName + inn) : 'N/A';
+    }
+
+    formatOrganizationInn(org: Organization): string {
+        return (org && org.inn) ? (' | ' + this.innTranslation + ':' + org.inn) : '';
     }
 
 }
