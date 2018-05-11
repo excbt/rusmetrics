@@ -111,7 +111,7 @@ public class SubscrUserService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrUserDTO> findBySubscriberId(Long subscriberId) {
 		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
-		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(subscrUserMapper::toDto).collect(Collectors.toList());
+		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(SubscrUserDTO::new).collect(Collectors.toList());
 	}
 
 	/**

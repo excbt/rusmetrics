@@ -48,6 +48,7 @@ import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-e
 import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
 import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
 import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
+import { SubscrUserService } from './subscr-users/subscr-user.service';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -101,6 +102,7 @@ import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
         PSubscriberService,
         PSubscriberCustomerService,
         PSubscriberPartnerService,
+        SubscrUserService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],

@@ -156,7 +156,7 @@ public class SubscrUserResource {
                                                            final SubscrUserDTO subscrUserDTO, String password, HttpServletRequest request) {
         Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(rmaSubscriber, subscrUserDTO, password);
         return subscrUserOptional
-            .map(subscrUserMapper::toDto)
+            .map(SubscrUserDTO::new)
                     .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
             .orElse(ResponseEntity.badRequest().build());
     }
