@@ -8,6 +8,8 @@ import { PSubscriberService, PSubscriberPartnerService } from './p-subscriber.se
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
 import { MatSlideToggleChange } from '@angular/material';
+import { TimezoneDefService } from '../timezoneDef/timezoneDef.service';
+import { TimezoneDef } from '../timezoneDef/timezoneDef.model';
 
 @Component({
     selector: 'jhi-p-subscriber-edit-partner',
@@ -24,12 +26,15 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
     subscriberMode: string;
     menuHeaderKey: string;
 
+    timezoneDefOptions: TimezoneDef[] = [];
+
     constructor(
         eventManager: JhiEventManager,
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        service: PSubscriberPartnerService) {
+        private service: PSubscriberPartnerService,
+        private timezoneDefService: TimezoneDefService) {
             super(
                 {   modificationEventName: 'pSubscriberPartnerModification',
                     backUrl: '/partners',
@@ -47,6 +52,8 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
                 this.subscriberMode = 'RMA';
                 this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.partner.newTitle' : 'subscribers.partner.editTitle';
             });
+
+            this.timezoneDefService.findAll().subscribe((data) => this.timezoneDefOptions = data);
     }
 
     createForm(data: PSubscriber): FormGroup {

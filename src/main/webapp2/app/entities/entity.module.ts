@@ -47,6 +47,7 @@ import { PSubscribersCustomerComponent } from './p-subscribers/p-subscribers-cut
 import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-edit-customer.component';
 import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
 import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
+import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -94,6 +95,7 @@ import { OrganizationAutocompleteComponent } from './organizations/organization-
     entryComponents: [
     ],
     providers: [
+        TimezoneDefService,
         OrganizationsService,
         OrganizationTypeService,
         PSubscriberService,

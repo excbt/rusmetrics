@@ -5,7 +5,7 @@ export class PSubscriber {
     public subscriberName: string,        // Наименование абонента
     public subscriberInfo: string,        // Информация об абоненте
     public subscriberComment: string,        // Комментарий для пользователя
-    public timezoneDef: string,        // Часовой пояс абонента
+    public timezoneDefKeyname: string,        // Часовой пояс абонента
     public subscrType: string,        // Тип абонента
     public contactEmail: string,        // Контактный email
     public rmaLdapOu: string,        // Информация LDAP. Зарезервировано для внутреннего использования

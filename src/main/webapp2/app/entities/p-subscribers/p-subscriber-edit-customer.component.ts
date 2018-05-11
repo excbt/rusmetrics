@@ -13,6 +13,8 @@ import { OrganizationsService } from '../organizations/organizations.service';
 import { Organization } from '../organizations/organization.model';
 import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 import { MatSlideToggleChange } from '@angular/material';
+import { TimezoneDef } from '../timezoneDef/timezoneDef.model';
+import { TimezoneDefService } from '../timezoneDef/timezoneDef.service';
 
 @Component({
     selector: 'jhi-p-subscriber-edit-customer',
@@ -29,13 +31,16 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
     subscriberMode: string;
     menuHeaderKey: string;
 
+    timezoneDefOptions: TimezoneDef[] = [];
+
     constructor(
         eventManager: JhiEventManager,
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         service: PSubscriberCustomerService,
-        private organizationService: OrganizationsService) {
+        private organizationService: OrganizationsService,
+        private timezoneDefService: TimezoneDefService) {
             super(
                 {   modificationEventName: 'pSubscriberCustomerModification',
                     backUrl: '/customers',
@@ -53,6 +58,8 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
             this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
                 this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.customer.newTitle' : 'subscribers.customer.editTitle';
             });
+
+            this.timezoneDefService.findAll().subscribe((data) => this.timezoneDefOptions = data);
     }
 
     createForm(data: PSubscriber): FormGroup {

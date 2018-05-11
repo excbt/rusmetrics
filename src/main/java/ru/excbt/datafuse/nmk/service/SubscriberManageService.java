@@ -228,7 +228,7 @@ public class SubscriberManageService {
         String childLdapOu = processLdapOus(existingSubscriber);
         existingSubscriber.setChildLdapOu(childLdapOu);
 
-        subscriberMapper.updateSubscriber(subscriberVM, existingSubscriber);
+        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
         Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
 
         // Make default Report Paramset
@@ -265,7 +265,7 @@ public class SubscriberManageService {
         String childLdapOu = processLdapOus(existingSubscriber);
         existingSubscriber.setChildLdapOu(childLdapOu);
 
-        subscriberMapper.updateSubscriber(subscriberVM, existingSubscriber);
+        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
         Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
 
         // Make default Report Paramset

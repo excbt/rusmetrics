@@ -18,7 +18,7 @@ export class PSubscriberFormInitializer extends ExcFormInitializer<PSubscriber> 
             subscriberName: [data.subscriberName],
             subscriberInfo: [data.subscriberInfo],
             subscriberComment: [data.subscriberComment],
-            timezoneDef: [data.timezoneDef],
+            timezoneDefKeyname: [data.timezoneDefKeyname],
             canCreateChild: [data.canCreateChild],
             contactEmail: [data.contactEmail],
             rmaLdapOu: [data.rmaLdapOu]
@@ -33,7 +33,7 @@ export class PSubscriberFormInitializer extends ExcFormInitializer<PSubscriber> 
             subscriberName: null,
             subscriberInfo: null,
             subscriberComment: null,
-            timezoneDef: null,
+            timezoneDefKeyname: null,
             canCreateChild: false,
             contactEmail: null,
             rmaLdapOu: null,
@@ -46,13 +46,15 @@ export class PSubscriberFormInitializer extends ExcFormInitializer<PSubscriber> 
 
         console.log('prepare Entity');
 
+        const timeZoneKeyname = formModel.timezoneDefKeyname;
+
         const savePSubscriber: PSubscriber = {
             id: (currEntity && currEntity.id) ? currEntity.id : null,
             organizationId: ExcFormValue.clearEmptyString(formModel.organizationId as number),
             subscriberName: ExcFormValue.clearEmptyString(formModel.subscriberName as string),
             subscriberInfo: ExcFormValue.clearEmptyString(formModel.subscriberInfo as string),
             subscriberComment: ExcFormValue.clearEmptyString(formModel.subscriberComment as string),
-            timezoneDef: ExcFormValue.clearEmptyString(formModel.timezoneDef as string),
+            timezoneDefKeyname: ExcFormValue.clearEmptyString(timeZoneKeyname as string),
             subscrType: null,
             contactEmail: ExcFormValue.clearEmptyString(formModel.contactEmail as string),
             rmaLdapOu: this.subscriberMode === 'RMA' ? ExcFormValue.clearEmptyString(formModel.rmaLdapOu as string) : null,

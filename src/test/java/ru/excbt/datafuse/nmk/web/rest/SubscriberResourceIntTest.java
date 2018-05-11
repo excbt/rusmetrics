@@ -110,7 +110,7 @@ public class SubscriberResourceIntTest extends PortalApiTest {
             .subscriberName("Test Subscriber")
             .rmaLdapOu("Test_" + Generators.timeBasedGenerator().generate())
             .canCreateChild(true)
-            .timezoneDef(TimezoneDefKey.MSK.getKeyname())
+            .timezoneDefKeyname(TimezoneDefKey.MSK.getKeyname())
             .build();
         log.info("Is RMA: {}, Key: {}", portalUserIdsService.getCurrentIds().isRma(), portalUserIdsService.getCurrentIds().getSubscrTypeKey());
         mockMvcRestWrapper.restRequest("/api/subscribers/rma").testPut(vm);

@@ -22,7 +22,7 @@ public class SubscriberVM {
 
     private String subscriberComment;
 
-    private String timezoneDef;
+    private String timezoneDefKeyname;
 
     private String subscrType;
 

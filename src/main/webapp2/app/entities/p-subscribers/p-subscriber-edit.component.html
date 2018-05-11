@@ -21,11 +21,20 @@
                     <input matInput placeholder="{{'subscriber.subscriberInfo' | translate}}" formControlName="subscriberInfo">
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput placeholder="{{'subscriber.subscriberComment' | translate}}" formControlName="subscriberComment">
+                    <textarea matInput formControlName="subscriberComment" placeholder="{{'subscriber.subscriberComment' | translate}}">
+                    </textarea>
                 </mat-form-field>
                 <mat-form-field>
-                    <input matInput placeholder="{{'subscriber.timezoneDef' | translate}}" formControlName="timezoneDef">
+                    <mat-select placeholder="{{'subscriber.timezoneDef' | translate}}" formControlName="timezoneDefKeyname">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let timezoneDef of timezoneDefOptions" [value]="timezoneDef.keyname">
+                        {{timezoneDef.timezoneName}}
+                        <small>(GMT{{timezoneDef.timezoneSuffix}})</small>
+                      </mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error> -->
                 </mat-form-field>
+
                 <mat-slide-toggle
                     checked="{{ entityForm.controls['canCreateChild'] && entityForm.controls['canCreateChild'].value }}"
                     labelPosition="before"

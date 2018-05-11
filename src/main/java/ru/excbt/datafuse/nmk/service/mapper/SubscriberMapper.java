@@ -32,7 +32,7 @@ public interface SubscriberMapper  {
     @Mapping(target = "comment", source = "subscriberComment")
     @Mapping(target = "organization", source = "organizationId")
     @Mapping(target = "deleted", ignore = true)
-    void updateSubscriber (SubscriberVM subscriberVM, @MappingTarget Subscriber subscriber);
+    void updateSubscriber (@MappingTarget Subscriber subscriber, SubscriberVM subscriberVM);
 
     @Mapping(source = "info", target = "subscriberInfo")
     @Mapping(source = "comment", target = "subscriberComment")
