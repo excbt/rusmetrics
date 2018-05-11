@@ -11,6 +11,7 @@ import { OrganizationTypeService } from '../organization-types/organization-type
 import { ExcCustomValidators } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'jhi-organization-edit',
@@ -202,6 +203,21 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
 
     navigateBack() {
         this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
+    flagRsoToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagRso'].setValue(event.checked);
+        this.entityForm.controls['flagRso'].markAsDirty();
+    }
+
+    flagCmToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagCm'].setValue(event.checked);
+        this.entityForm.controls['flagCm'].markAsDirty();
+    }
+
+    flagRmaToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagRma'].setValue(event.checked);
+        this.entityForm.controls['flagRma'].markAsDirty();
     }
 
 }

@@ -4,5 +4,11 @@
     </mat-form-field>
 </div>
 <div *ngIf="isCheckboxField()">
-    <mat-checkbox  type="checkbox" checked="{{fieldValue}}" disabled >{{placeholder}}</mat-checkbox>
+    <!-- <mat-checkbox  type="checkbox" checked="{{fieldValue}}" disabled >{{placeholder}}</mat-checkbox> -->
+    <mat-slide-toggle
+        checked="{{ fieldValue }}"
+        disabled="true"
+        labelPosition="after">
+        {{placeholder}}
+    </mat-slide-toggle>  
 </div>
