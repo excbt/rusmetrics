@@ -9,7 +9,8 @@ const CLASSIFIERS_ROUTES = [
 export const classifiersState: Routes = [{
     path: '',
     data: {
-        authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN']
+        pageTitle: 'classifiers.title',
+        // authorities: ['ROLE_ADMIN', 'ROLE_SUBSCR_ADMIN']
     },
     canActivate: [UserRouteAccessService],
     children: CLASSIFIERS_ROUTES

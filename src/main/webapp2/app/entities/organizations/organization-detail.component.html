@@ -44,22 +44,20 @@
         </div>
         <div class="ui-lg-6 ui-g-nopad">
             <!-- BLOCK 3 left -->
-            <div class="ui-lg-6 ui-g-nopad">
-                <div class="ui-g-3 flex-column">
-                    <jhi-exc-form-detail-field 
-                        placeholder="{{'organization.flagRso' | translate}} ({{'organization.flagRso' | translate}})" 
-                        fieldType="check" fieldValue="{{organization?.flagRso}}">
-                    </jhi-exc-form-detail-field>
-                    <jhi-exc-form-detail-field 
-                        placeholder="{{'organization.flagCm' | translate}} ({{'organization.flagCmDesription' | translate}})" 
-                        fieldType="check" fieldValue="{{organization?.flagCm}}">
-                    </jhi-exc-form-detail-field>
-                    <jhi-exc-form-detail-field 
-                        placeholder="{{'organization.flagRma' | translate}} ({{'organization.flagRma' | translate}})" 
-                        fieldType="check" fieldValue="{{organization?.flagRma}}">
-                    </jhi-exc-form-detail-field>
-                </div>
-            </div>
+            <div class="flex-column-rpad">    
+                <jhi-exc-form-detail-field *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_SUBSCR_ADMIN']"
+                    placeholder="{{'organization.flagRso' | translate}} ({{'organization.flagRso' | translate}})" 
+                    fieldType="check" fieldValue="{{organization?.flagRso}}">
+                </jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_SUBSCR_ADMIN']"
+                    placeholder="{{'organization.flagCm' | translate}} ({{'organization.flagCmDesription' | translate}})" 
+                    fieldType="check" fieldValue="{{organization?.flagCm}}">
+                </jhi-exc-form-detail-field>
+                <jhi-exc-form-detail-field *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_SUBSCR_ADMIN']"
+                    placeholder="{{'organization.flagRma' | translate}} ({{'organization.flagRma' | translate}})" 
+                    fieldType="check" fieldValue="{{organization?.flagRma}}">
+                </jhi-exc-form-detail-field>
+            </div>    
             <!-- end of BLOCK 3 -->
         </div>
         <div class="ui-lg-6 ui-g-nopad">
