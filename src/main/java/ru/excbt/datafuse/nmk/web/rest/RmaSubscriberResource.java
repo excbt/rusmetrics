@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
@@ -14,6 +13,8 @@ import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.service.SubscriberManageService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
@@ -47,11 +48,14 @@ public class RmaSubscriberResource {
 
     private final PortalUserIdsService portalUserIdsService;
 
-    public RmaSubscriberResource(SubscriberService subscriberService, SubscriberManageService subscriberManageService, OrganizationService organizationService, PortalUserIdsService portalUserIdsService) {
+    private final SubscriberMapper subscriberMapper;
+
+    public RmaSubscriberResource(SubscriberService subscriberService, SubscriberManageService subscriberManageService, OrganizationService organizationService, PortalUserIdsService portalUserIdsService, SubscriberMapper subscriberMapper) {
         this.subscriberService = subscriberService;
         this.organizationService = organizationService;
         this.subscriberManageService = subscriberManageService;
         this.portalUserIdsService = portalUserIdsService;
+        this.subscriberMapper = subscriberMapper;
     }
 
     /**
@@ -88,8 +92,8 @@ public class RmaSubscriberResource {
 
 		Optional<SubscriberDTO> subscriberDTOOptional = subscriberService.findSubscriberDTO(rSubscriberId);
 		if (subscriberDTOOptional.isPresent()) {
-            if (subscriberDTOOptional.get().getRmaSubscriberId() == null
-                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
+            if (subscriberDTOOptional.get().getRmaSubscriberId() != null
+                && !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
                 return ApiResponse.responseForbidden();
             }
         }
@@ -100,18 +104,18 @@ public class RmaSubscriberResource {
 
 	/**
 	 *
-	 * @param rSubscriber
+	 * @param subscriberVM
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
+    public ResponseEntity<?> createSubscriber(@RequestBody SubscriberVM subscriberVM, HttpServletRequest request) {
 
-		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganizationId());
+		checkNotNull(subscriberVM);
+		checkNotNull(subscriberVM.getOrganizationId());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<Subscriber, Long>(rSubscriber, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscriberVM, Long>(subscriberVM, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -119,8 +123,9 @@ public class RmaSubscriberResource {
 			}
 
 			@Override
-			public Subscriber processAndReturnResult() {
-				return subscriberManageService.createRmaSubscriberOld(entity, portalUserIdsService.getCurrentIds().getSubscriberId());
+			public SubscriberVM processAndReturnResult() {
+				return subscriberManageService.createNormalSubscriber(entity, portalUserIdsService.getCurrentIds())
+                    .map(subscriberMapper::toVM).orElse(null);
 			}
 		};
 
@@ -130,24 +135,26 @@ public class RmaSubscriberResource {
     /**
      *
      * @param rSubscriberId
-     * @param rSubscriber
+     * @param subscriberVM
      * @return
      */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
-			@RequestBody Subscriber rSubscriber) {
+			@RequestBody SubscriberVM subscriberVM) {
 
 		checkNotNull(rSubscriberId);
-		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganizationId());
+		checkNotNull(subscriberVM);
+		checkNotNull(subscriberVM.getOrganizationId());
 
-		ApiAction action = new ApiActionEntityAdapter<Subscriber>(rSubscriber) {
+		ApiAction action = new ApiActionEntityAdapter<SubscriberVM>(subscriberVM) {
 
 			@Override
-			public Subscriber processAndReturnResult() {
-				return subscriberManageService.updateRmaSubscriber(rSubscriber, portalUserIdsService.getCurrentIds().getSubscriberId());
+			public SubscriberVM processAndReturnResult() {
+				return subscriberManageService.updateNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                    .map(subscriberMapper::toVM)
+                    .orElse(null);
 			}
 		};
 
@@ -168,11 +175,11 @@ public class RmaSubscriberResource {
 		checkNotNull(rSubscriberId);
 
 		ApiAction action = (ApiActionAdapter) () -> {
-            if (Boolean.TRUE.equals(isPermanent)) {
-                subscriberManageService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
-            } else {
-                subscriberManageService.deleteRmaSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
-            }
+//            if (Boolean.TRUE.equals(isPermanent)) {
+//                subscriberManageService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            } else {
+                subscriberManageService.deleteSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            }
         };
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

@@ -3,10 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicUpdate;
@@ -52,8 +50,10 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	@Column(name = "organization_id")
-	private Long organizationId;
+	@ManyToOne
+	@JoinColumn(name = "organization_id")
+    @BatchSize(size = 10)
+	private Organization organization;
 
 	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;

@@ -88,12 +88,12 @@ public class OrganizationService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Organization> selectRsoOrganizations(PortalUserIds portalUserIds) {
+	public List<OrganizationDTO> selectRsoOrganizations(PortalUserIds portalUserIds) {
 	    Long rmaSubscriberId = subscriberService.getRmaSubscriberId(portalUserIds);
 		List<Organization> organizations = organizationRepository
 				.selectRsoOrganizations(rmaSubscriberId);
-		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		List<OrganizationDTO> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).map(organizationMapper::toDTO).collect(Collectors.toList());
 		return result;
 	}
 
@@ -102,11 +102,13 @@ public class OrganizationService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Organization> selectCmOrganizations(PortalUserIds portalUserIds) {
+	public List<OrganizationDTO> selectCmOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
 				.selectCmOrganizations(portalUserIds.getRmaId());
-		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		List<OrganizationDTO> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
+            .map(organizationMapper::toDTO)
+            .collect(Collectors.toList());
 		return result;
 	}
 
@@ -115,11 +117,13 @@ public class OrganizationService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<Organization> selectOrganizations(PortalUserIds portalUserIds) {
+	public List<OrganizationDTO> selectOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
 				.findOrganizationsOfRma(portalUserIds.getRmaId());
-		List<Organization> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE).collect(Collectors.toList());
+		List<OrganizationDTO> result = organizations.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+				.filter(ObjectFilters.NO_DEV_MODE_OBJECT_PREDICATE)
+            .map(organizationMapper::toDTO)
+            .collect(Collectors.toList());
 		return result;
 	}
 
@@ -255,13 +259,13 @@ public class OrganizationService implements SecuredRoles {
 	 * @param checkOrganizationId
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public void checkAndEnhanceOrganizations(final List<Organization> organizations,
+	public void checkAndEnhanceOrganizations(final List<OrganizationDTO> organizations,
 			final Long checkOrganizationId) {
 
 		if (organizations != null && checkOrganizationId != null) {
 			boolean orgExists = organizations.stream().anyMatch(i -> checkOrganizationId.equals(i.getId()));
 			if (!orgExists) {
-                findOneOrganization(checkOrganizationId).ifPresent(o -> organizations.add(0, o));
+                findOneOrganization(checkOrganizationId).ifPresent(o -> organizations.add(0, organizationMapper.toDTO(o)));
 			}
 		}
 		//return organizations;

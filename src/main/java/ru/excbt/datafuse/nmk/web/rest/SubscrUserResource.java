@@ -272,9 +272,12 @@ public class SubscrUserResource {
 		checkNotNull(rmaSubscriber.getId());
 		checkNotNull(subscrUserId);
 		checkNotNull(subscrUser);
-		checkNotNull(subscrUser.getSubscriber());
+//		checkNotNull(subscrUser.getSubscriber());
 
-		if (!subscrUser.getSubscriber().getId().equals(rmaSubscriber.getId())) {
+        subscrUser.setSubscriber(rmaSubscriber);
+
+
+        if (!subscrUser.getSubscriber().getId().equals(rmaSubscriber.getId())) {
 			return ApiResponse.responseBadRequest();
 		}
 

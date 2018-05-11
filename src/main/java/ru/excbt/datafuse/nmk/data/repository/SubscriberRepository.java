@@ -26,7 +26,7 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long>, Q
 	 * @param id
 	 * @return
 	 */
-	@Query("SELECT s FROM Subscriber s WHERE s.organizationId = :organizationId")
+	@Query("SELECT s FROM Subscriber s WHERE s.organization.id = :organizationId")
 	public List<Subscriber> selectByOrganizationId(@Param("organizationId") Long organizationId);
 
 	/**

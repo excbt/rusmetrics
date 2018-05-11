@@ -321,7 +321,7 @@ public class SubscriberService implements SecuredRoles {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.RMA.getKeyname()));
         } else if (subscriberMode == SubscriberMode.NORMAL) {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.NORMAL.getKeyname()));
-            where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
+            where.and(qSubscriber.rmaSubscriberId.eq(userIds.getSubscriberId()));
         } else if (subscriberMode == SubscriberMode.CABINET) {
             where.and(qSubscriber.subscrType.eq(SubscrTypeKey.CABINET.getKeyname()));
             where.and(qSubscriber.parentSubscriberId.eq(userIds.getSubscriberId()));
@@ -411,8 +411,8 @@ public class SubscriberService implements SecuredRoles {
 			return new ArrayList<>();
 		}
 
-		long[] organizationIds = subscribers.stream().filter(i -> i.getOrganizationId() != null)
-				.mapToLong(i -> i.getOrganizationId()).toArray();
+		long[] organizationIds = subscribers.stream().filter(i -> i.getOrganization() != null)
+				.mapToLong(i -> i.getOrganization().getId()).toArray();
 
 		final List<Organization> organizations = organizationIds.length == 0 ? new ArrayList<>()
 				: organizationRepository.selectByIds(Arrays.asList(ArrayUtils.toObject(organizationIds)));
@@ -421,7 +421,8 @@ public class SubscriberService implements SecuredRoles {
 				.collect(Collectors.toMap(Organization::getId, Function.identity()));
 
 		return subscribers.stream()
-				.map(i -> new SubscriberOrganizationVO(i, organizationsMap.get(i.getOrganizationId())))
+				.filter(i -> i.getOrganization() != null)
+                .map(i -> new SubscriberOrganizationVO(i, organizationsMap.get(i.getOrganization().getId())))
 				.collect(Collectors.toList());
 	}
 

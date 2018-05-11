@@ -34,8 +34,8 @@
             </ng-container>
     
         <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'global.field.id' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let subscriber"> {{subscriber.id}} </mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber" class="id-column-width"> {{subscriber.id}} </mat-cell>
         </ng-container>
         
         <ng-container matColumnDef="organizationId">
@@ -44,8 +44,8 @@
         </ng-container>
         
         <ng-container matColumnDef="subscriberName">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberName}} </mat-cell>
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="name-column-width-2x" > {{'subscriber.subscriberName' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"  class="name-column-width-2x"> {{subscriber.subscriberName}} </mat-cell>
         </ng-container>
         
         <ng-container matColumnDef="subscriberInfo">
@@ -67,6 +67,16 @@
         <ng-container matColumnDef="contactEmail">
             <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.contactEmail' | translate}} </mat-header-cell>
             <mat-cell *matCellDef="let subscriber"> {{subscriber.contactEmail}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="organizationInn">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="inn-column-width"> {{'subscriber.organizationInn' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscriber" class="inn-column-width"> {{subscriber.organizationInn}} </mat-cell>
+        </ng-container>
+            
+        <ng-container matColumnDef="organizationName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="name-column-width"> {{'subscriber.organizationName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscriber" class="name-column-width-2x"> {{subscriber.organizationName}} </mat-cell>
         </ng-container>
         
 

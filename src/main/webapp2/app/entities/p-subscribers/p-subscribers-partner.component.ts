@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from '@angular/core';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PSubscriberPartnerService, PSubscriberCustomerService } from './p-subscriber.service';
+import { PSubscriberPartnerService } from './p-subscriber.service';
 import { PSubscriberDataSource } from './p-subscriber.datasource';
 
 @Component({
@@ -10,23 +10,28 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
     templateUrl: './p-subscribers.component.html',
     styleUrls: ['../blocks/list-form.scss']
 })
-export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
+export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['select', 'id', 'subscriberName'];
+    displayedColumns = ['select', 'id',  'subscriberName', 'organizationInn', 'organizationName'];
 
-    subscriberMode: string;
+    subscriberMode = 'RMA';
 
     constructor(
-        private service: PSubscriberCustomerService,
+        private service: PSubscriberPartnerService,
         router: Router,
         activatedRoute: ActivatedRoute,
     ) {
         super({modificationEventName: 'subscriberModification'}, router, activatedRoute);
-        this.subscriberMode = 'CUSTOMER';
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {
         return {getDataSource: () => new PSubscriberDataSource(this.service)};
+    }
+
+    navigateEdit() {
+        if (!this.selection.isEmpty()) {
+          this.router.navigate(['partners', this.selection.selected[0].id, 'edit']);
+        }
     }
 
 }

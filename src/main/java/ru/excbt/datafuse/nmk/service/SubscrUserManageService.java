@@ -47,17 +47,17 @@ public class SubscrUserManageService {
 
     /**
      *
-     * @param rmaSubscriber
+     * @param subscriber
      * @param subscrUserDTO
      * @param password
      * @return
      */
-    public Optional<SubscrUser> createSubscrUser(final Subscriber rmaSubscriber,
+    public Optional<SubscrUser> createSubscrUser(final Subscriber subscriber,
                                                  final SubscrUserDTO subscrUserDTO,
                                                  final String password) {
-        Objects.requireNonNull(rmaSubscriber);
-        Objects.requireNonNull(rmaSubscriber);
-        Objects.requireNonNull(rmaSubscriber.getId());
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscriber.getId());
         Objects.requireNonNull(subscrUserDTO);
 
         if (subscrUserDTO.getUserName() != null) {
@@ -76,11 +76,12 @@ public class SubscrUserManageService {
 
         SubscrUser subscrUser = subscrUserMapper.toEntity(subscrUserDTO);
 
-        List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(rmaSubscriber,
+        List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(subscriber,
             subscrUserDTO.isAdmin() && !subscrUserDTO.isReadonly(), subscrUserDTO.isReadonly());
 
         subscrUser.getSubscrRoles().clear();
         subscrUser.getSubscrRoles().addAll(subscrRoles);
+        subscrUser.setSubscriber(subscriber);
 
         SubscrUser result = subscrUserService.createSubscrUser(subscrUser, password);
 

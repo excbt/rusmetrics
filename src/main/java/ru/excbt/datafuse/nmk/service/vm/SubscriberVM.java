@@ -22,7 +22,7 @@ public class SubscriberVM {
 
     private String subscriberComment;
 
-    private String timezoneDef;
+    private String timezoneDefKeyname;
 
     private String subscrType;
 
@@ -33,5 +33,9 @@ public class SubscriberVM {
     private boolean canCreateChild;
 
     private int version;
+
+    private String organizationInn;
+
+    private String organizationName;
 
 }

@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBEntityUtil;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
@@ -31,7 +32,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+//import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class SubscriberManageService {
@@ -70,14 +71,15 @@ public class SubscriberManageService {
     @Transactional
     @Secured({AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
     public Subscriber createRmaSubscriberOld(Subscriber subscriber, Long rmaSubscriberId) {
-        checkNotNull(subscriber);
-        checkNotNull(rmaSubscriberId);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(rmaSubscriberId);
         checkArgument(subscriber.isNew());
         subscriber.setRmaSubscriberId(rmaSubscriberId);
         checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
         checkArgument(subscriber.getDeleted() == 0);
 
         subscriber.setSubscrType(SubscrTypeKey.NORMAL.getKeyname());
+        subscriber.setSubscriberUUID(subscriberUUIDGen.generate());
 
         Subscriber resultSubscriber = subscriberRepository.save(subscriber);
 
@@ -118,9 +120,8 @@ public class SubscriberManageService {
         subscriberLdapService.createOuIfNotExists(new String[0], rmaOu, "Subscriber");
 
         String childLdapOu = null;
-        if (subscriber.getCanCreateChild()) {
+        if (Boolean.TRUE.equals(subscriber.getCanCreateChild())) {
             childLdapOu = SubscriberLdapService.buildCabinetsOuName(subscriber);
-//            subscriber.setChildLdapOu(childLdapOu);
 
             String[] ldapOuUnits = subscriberLdapService.buildLdapOu(subscriber);
             String ldapDescription = subscriberLdapService.buildLdapDescription() + subscriber.getSubscriberName();
@@ -201,7 +202,78 @@ public class SubscriberManageService {
     }
 
 
+    /**
+     *
+     * @param subscriberVM
+     * @return
+     */
+    @Transactional
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public Optional<Subscriber> updateNormalSubscriber(SubscriberVM subscriberVM, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(subscriberVM);
 
+        checkArgument(subscriberVM.getId() != null);
+
+
+        Subscriber existingSubscriber = subscriberRepository.findOne(subscriberVM.getId());
+
+        if (existingSubscriber == null) {
+            return Optional.empty();
+        }
+
+        if (!portalUserIds.getSubscriberId().equals(existingSubscriber.getRmaSubscriberId())) {
+            throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriberVM.getId());
+        }
+
+        String childLdapOu = processLdapOus(existingSubscriber);
+        existingSubscriber.setChildLdapOu(childLdapOu);
+
+        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
+        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
+
+        // Make default Report Paramset
+        reportParamsetService.createDefaultReportParamsets(updatedSubscriber);
+        subscrUserManageService.setupSubscriberAdminUserRoles(updatedSubscriber);
+
+        return Optional.ofNullable(updatedSubscriber);
+    }
+
+
+    /**
+     *
+     * @param subscriberVM
+     * @return
+     */
+    @Transactional
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    public Optional<Subscriber> updateRmaSubscriber(SubscriberVM subscriberVM, PortalUserIds portalUserIds) {
+        Objects.requireNonNull(subscriberVM);
+
+        checkArgument(subscriberVM.getId() != null);
+
+
+        Subscriber existingSubscriber = subscriberRepository.findOne(subscriberVM.getId());
+
+        if (existingSubscriber == null) {
+            return Optional.empty();
+        }
+
+        if (!Boolean.TRUE.equals(existingSubscriber.getIsRma())) {
+            throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriberVM.getId());
+        }
+
+        String childLdapOu = processLdapOus(existingSubscriber);
+        existingSubscriber.setChildLdapOu(childLdapOu);
+
+        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
+        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
+
+        // Make default Report Paramset
+        reportParamsetService.createDefaultReportParamsets(updatedSubscriber);
+        subscrUserManageService.setupSubscriberAdminUserRoles(updatedSubscriber);
+
+        return Optional.ofNullable(updatedSubscriber);
+    }
 
 
     /**
@@ -212,8 +284,8 @@ public class SubscriberManageService {
     @Transactional
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
     public void deleteRmaSubscriberPermanent(Long subscriberId, Long rmaSubscriberId) {
-        checkNotNull(subscriberId);
-        checkNotNull(rmaSubscriberId);
+        Objects.requireNonNull(subscriberId);
+        Objects.requireNonNull(rmaSubscriberId);
 
 
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
@@ -236,8 +308,8 @@ public class SubscriberManageService {
     @Transactional
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
     public Subscriber updateRmaSubscriber(Subscriber subscriber, Long rmaSubscriberId) {
-        checkNotNull(subscriber);
-        checkNotNull(rmaSubscriberId);
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(rmaSubscriberId);
         checkArgument(!subscriber.isNew());
         subscriber.setRmaSubscriberId(rmaSubscriberId);
         checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
@@ -284,12 +356,12 @@ public class SubscriberManageService {
      */
     @Transactional(value = TxConst.TX_DEFAULT)
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
-    public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
-        checkNotNull(subscriberId);
-        checkNotNull(rmaSubscriberId);
+    public void deleteSubscriber(Long subscriberId, Long rmaSubscriberId) {
+        Objects.requireNonNull(subscriberId);
+        Objects.requireNonNull(rmaSubscriberId);
 
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+        if (subscriber.getRmaSubscriberId() != null && !rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
             throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
         }
         subscriberRepository.save(EntityActions.softDelete(subscriber));

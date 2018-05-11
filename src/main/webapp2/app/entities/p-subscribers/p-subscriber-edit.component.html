@@ -1,16 +1,56 @@
 <jhi-exc-form-template>
-        <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
-        <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-            (createAction)="navigateNew()" headerKey="{{ menuHeaderKey }}">
-        </jhi-exc-edit-form-menu>
-        
-        <br>
-        <div>
-        <form [formGroup]="entityForm">
+    <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
+    <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+    (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="{{ menuHeaderKey }}">
+</jhi-exc-edit-form-menu>
 
-        <!-- FORM BUTTONS -->
-        <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
-            (backAction)="navigateBack()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
-    </form>
+<br>
+<div>
+    <form [formGroup]="entityForm">
+        <div class="ui-g ui-g-nopad">
+            <div class="ui-g-6 ui-g-nopad">  
+                <div class="flex-column">
+                    <jhi-organization-autocomplete organizationId="{{ entityForm.controls['organizationId'].value }}" 
+                    (onChange)="organizationSelect($event)" readonly="false"> 
+                </jhi-organization-autocomplete>
+                <!-- <p>organizationId: {{ entityForm.controls['organizationId'].value }}</p> -->
+                <mat-form-field>
+                    <input matInput placeholder="{{'subscriber.subscriberName' | translate}}" formControlName="subscriberName">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="{{'subscriber.subscriberInfo' | translate}}" formControlName="subscriberInfo">
+                </mat-form-field>
+                <mat-form-field>
+                    <textarea matInput formControlName="subscriberComment" placeholder="{{'subscriber.subscriberComment' | translate}}">
+                    </textarea>
+                </mat-form-field>
+                <mat-form-field>
+                    <mat-select placeholder="{{'subscriber.timezoneDef' | translate}}" formControlName="timezoneDefKeyname">
+                      <mat-option>--</mat-option>
+                      <mat-option *ngFor="let timezoneDef of timezoneDefOptions" [value]="timezoneDef.keyname">
+                        {{timezoneDef.timezoneName}}
+                        <small>(GMT{{timezoneDef.timezoneSuffix}})</small>
+                      </mat-option>
+                    </mat-select>
+                    <!-- <mat-error *ngIf="animalControl.hasError('required')">Please choose an animal</mat-error> -->
+                </mat-form-field>
+
+                <mat-slide-toggle
+                    checked="{{ entityForm.controls['canCreateChild'] && entityForm.controls['canCreateChild'].value }}"
+                    labelPosition="before"
+                    [color]="Primary"
+                    (change) ="canCreateChildToggle($event)">
+                    {{'subscriber.canCreateChild' | translate}}
+                </mat-slide-toggle>                        
+                <br>
+            
+            
+        </div>          
     </div>
+</div>
+<!-- FORM BUTTONS -->
+<jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
+(backAction)="navigateBack()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
+</form>
+</div>
 </jhi-exc-form-template>        
