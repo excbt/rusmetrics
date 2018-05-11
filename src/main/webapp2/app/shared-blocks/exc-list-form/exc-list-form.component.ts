@@ -78,14 +78,16 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   ngAfterViewInit() {
     // server side search
-    this.formMenu.searchAction.pipe(
-          distinctUntilChanged(),
-          tap((arg) => {
-            this.searchString = arg;
-            this.paginator.pageIndex = 0;
-            this.loadList(arg);
-          })
-        ).subscribe();
+    if (this.formMenu && this.formMenu.searchAction) {
+      this.formMenu.searchAction.pipe(
+        distinctUntilChanged(),
+        tap((arg) => {
+          this.searchString = arg;
+          this.paginator.pageIndex = 0;
+          this.loadList(arg);
+        })
+      ).subscribe();
+    }
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);

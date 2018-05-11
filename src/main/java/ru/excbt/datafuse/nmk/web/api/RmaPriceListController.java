@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
@@ -47,13 +47,13 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 	private final SubscrPriceListService subscrPriceListService;
 
-	private final RmaSubscriberService rmaSubscriberService;
+	private final SubscriberService subscriberService;
 
 	private final PortalUserIdsService portalUserIdsService;
 
-    public RmaPriceListController(SubscrPriceListService subscrPriceListService, RmaSubscriberService rmaSubscriberService, PortalUserIdsService portalUserIdsService) {
+    public RmaPriceListController(SubscrPriceListService subscrPriceListService, SubscriberService subscriberService, PortalUserIdsService portalUserIdsService) {
         this.subscrPriceListService = subscrPriceListService;
-        this.rmaSubscriberService = rmaSubscriberService;
+        this.subscriberService = subscriberService;
         this.portalUserIdsService = portalUserIdsService;
     }
 
@@ -68,6 +68,12 @@ public class RmaPriceListController extends SubscrPriceListController {
 		private final boolean isRma;
 
 		private PriceListSubscriber(Subscriber subscriber) {
+			this.id = subscriber.getId();
+			this.subscriberName = subscriber.getSubscriberName();
+			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
+		}
+
+		private PriceListSubscriber(SubscriberDTO subscriber) {
 			this.id = subscriber.getId();
 			this.subscriberName = subscriber.getSubscriberName();
 			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
@@ -110,7 +116,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		if (isSystemUser()) {
 			resultList.add(new PriceListSubscriber(MASTER_PRICE_LIST_SUBSCRIBER_ID, "MASTER"));
 			resultList.add(new PriceListSubscriber());
-			List<Subscriber> rmaList = rmaSubscriberService.selectRmaList();
+			List<SubscriberDTO> rmaList = subscriberService.findAllRma();
 			rmaList.forEach(i -> {
 				resultList.add(new PriceListSubscriber(i));
 			});
@@ -119,8 +125,8 @@ public class RmaPriceListController extends SubscrPriceListController {
 			resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
 		}
 
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
-		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
+		List<SubscriberDTO> subscribers = subscriberService.findByRmaSubscriber(portalUserIdsService.getCurrentIds());
+		subscribers.stream().forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
 		return ApiResponse.responseOK(resultList);
@@ -139,10 +145,8 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return ApiResponse.responseForbidden();
 		}
 
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaList();
-		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
-			resultList.add(new PriceListSubscriber(i));
-		});
+		List<SubscriberDTO> subscribers = subscriberService.findAllRma();
+		subscribers.stream().forEach(i -> resultList.add(new PriceListSubscriber(i)));
 		return ApiResponse.responseOK(resultList);
 	}
 

@@ -24,7 +24,8 @@ import {
     MatIconModule,
     MatCheckboxModule,
     ErrorStateMatcher,
-    ShowOnDirtyErrorStateMatcher } from '@angular/material';
+    ShowOnDirtyErrorStateMatcher,
+    MatAutocompleteModule} from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';
@@ -37,14 +38,16 @@ import { MenubarModule } from 'primeng/menubar';
 
 // Etc
 import { entityState } from './';
-import { PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
 import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
-import { PSubscriberEditComponent } from './p-subscribers/p-subscriber-edit.component';
-import { PSubscriberCustomerService } from './p-subscribers/p-subscriber.service';
+import { PSubscriberCustomerService, PSubscriberService } from './p-subscribers/p-subscriber.service';
 import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service';
-import { PSubscribersPartnerComponent } from './p-subscribers/p-subscriber-partner.component';
-import { PSubscribersCustomerComponent } from './p-subscribers/p-subscriber-customer.component';
+import { PSubscribersPartnerComponent } from './p-subscribers/p-subscribers-partner.component';
+import { PSubscribersCustomerComponent } from './p-subscribers/p-subscribers-cutomer.component';
+import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-edit-customer.component';
+import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
+import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
+import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -68,6 +71,7 @@ import { PSubscribersCustomerComponent } from './p-subscribers/p-subscriber-cust
         MatCheckboxModule,
         MatSelectModule,
         MatTooltipModule,
+        MatAutocompleteModule,
 
         // PRIME NG
         CardModule,
@@ -80,15 +84,18 @@ import { PSubscribersCustomerComponent } from './p-subscribers/p-subscriber-cust
         OrganizationDetailComponent,
         OrganizationEditComponent,
         PSubscribersComponent,
-        PSubscriberEditComponent,
+        PSubscribersPartnerComponent,
+        PSubscribersCustomerComponent,
+        PSubscriberEditCustomerComponent,
+        PSubscriberEditPartnerComponent,
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
-        PSubscribersPartnerComponent,
-        PSubscribersCustomerComponent
+        OrganizationAutocompleteComponent
     ],
     entryComponents: [
     ],
     providers: [
+        TimezoneDefService,
         OrganizationsService,
         OrganizationTypeService,
         PSubscriberService,

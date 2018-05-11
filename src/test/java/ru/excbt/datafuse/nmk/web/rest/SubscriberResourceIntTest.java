@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.fasterxml.uuid.Generators;
+import com.fasterxml.uuid.UUIDGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,10 +16,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.model.types.TimezoneDefKey;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -48,6 +53,9 @@ public class SubscriberResourceIntTest extends PortalApiTest {
 
     private SubscriberResource subscriberResource;
 
+    @Autowired
+    private SubscriberManageService subscriberManageService;
+
     private MockMvcRestWrapper mockMvcRestWrapper;
 
     @Before
@@ -56,7 +64,7 @@ public class SubscriberResourceIntTest extends PortalApiTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscriberResource = new SubscriberResource(portalUserIdsService, subscriberService, subscriberMapper);
+        subscriberResource = new SubscriberResource(portalUserIdsService, subscriberService, subscriberMapper, subscriberManageService);
         this.restPortalContObjectMockMvc = MockMvcBuilders.standaloneSetup(subscriberResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -75,15 +83,36 @@ public class SubscriberResourceIntTest extends PortalApiTest {
     @Test
     @Transactional
     public void getSubscribersRMAPage() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma")
             .testGet();
     }
 
     @Test
     @Transactional
     public void getSubscribersRMAPageSearch() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscribers/rma/page")
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma")
             .requestBuilder(b -> b.param("searchString", "ижевск"))
             .testGet();
+    }
+
+    @Test
+    @Transactional
+    public void subscriberNormalCreate() throws Exception {
+        SubscriberVM vm = SubscriberVM.builder().subscriberName("Test Subscriber").canCreateChild(false).build();
+        log.info("Is RMA: {}, Key: {}", portalUserIdsService.getCurrentIds().isRma(), portalUserIdsService.getCurrentIds().getSubscrTypeKey());
+        mockMvcRestWrapper.restRequest("/api/subscribers/normal").testPut(vm);
+    }
+
+    @Test
+    @Transactional
+    public void subscriberRmaCreate() throws Exception {
+        SubscriberVM vm = SubscriberVM.builder()
+            .subscriberName("Test Subscriber")
+            .rmaLdapOu("Test_" + Generators.timeBasedGenerator().generate())
+            .canCreateChild(true)
+            .timezoneDefKeyname(TimezoneDefKey.MSK.getKeyname())
+            .build();
+        log.info("Is RMA: {}, Key: {}", portalUserIdsService.getCurrentIds().isRma(), portalUserIdsService.getCurrentIds().getSubscrTypeKey());
+        mockMvcRestWrapper.restRequest("/api/subscribers/rma").testPut(vm);
     }
 }

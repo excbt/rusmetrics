@@ -10,7 +10,7 @@ export const organizationsRoute: Route = {
     component: OrganizationsComponent,
     data: {
         pageTitle: 'organizations.title',
-        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
+        // authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
     },
     canActivate: [UserRouteAccessService]
 };
@@ -20,7 +20,7 @@ export const subscrOrganizationsRoute: Route = {
     component: OrganizationsComponent,
     data: {
         pageTitle: 'organizations.title',
-        authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
+        // authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
     },
     canActivate: [UserRouteAccessService]
 };

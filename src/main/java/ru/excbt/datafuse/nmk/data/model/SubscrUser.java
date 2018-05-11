@@ -4,15 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,6 +14,7 @@ import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
@@ -42,7 +35,7 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscriberUser;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
-public class SubscrUser extends JsonAbstractAuditableModel implements SubscriberUser, DeletableObject {
+public class SubscrUser extends JsonAbstractAuditableModel implements DeletableObject {
 
 	/**
 	 *
@@ -76,19 +69,20 @@ public class SubscrUser extends JsonAbstractAuditableModel implements Subscriber
 	private int version;
 
 	@JsonProperty(access = Access.READ_ONLY)
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany
 	@JoinTable(name = "subscr_user_role", joinColumns = @JoinColumn(name = "subscr_user_id"),
 			inverseJoinColumns = @JoinColumn(name = "subscr_role_id"))
+    @BatchSize(size = 10)
 	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
 	@JsonIgnore
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "subscriber_id", updatable = false)
+	@ManyToOne
+	@JoinColumn(name = "subscriber_id")
 	private Subscriber subscriber;
 
-	@Column(name = "subscriber_id", insertable = false, updatable = false)
-	private Long subscriberId;
-
+//	@Column(name = "subscriber_id", insertable = false, updatable = false)
+//	private Long subscriberId;
+//
 	@JsonIgnore
 	@Column(name = "user_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
 	private UUID userUUID;

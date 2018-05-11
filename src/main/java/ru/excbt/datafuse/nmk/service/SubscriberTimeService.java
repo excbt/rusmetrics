@@ -8,6 +8,8 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -37,5 +39,11 @@ public class SubscriberTimeService {
     public Date getSubscriberCurrentTime(PortalUserIds portalUserIds) {
         return getSubscriberCurrentTime(portalUserIds.getSubscriberId());
     }
+
+    public ZonedDateTime getSubscriberZonedDateTime(PortalUserIds portalUserIds) {
+        Date d = getSubscriberCurrentTime(portalUserIds.getSubscriberId());
+        return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
+    }
+
 
 }

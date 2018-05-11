@@ -56,6 +56,7 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "rma_subscriber_id")
+    @JsonIgnore
 	private Subscriber rmaSubscriber;
 
 	@Column(name = "subscriber_id", insertable = false, updatable = false)
@@ -63,6 +64,7 @@ public class SubscrPriceList extends AbstractAuditableModel implements DisabledO
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "subscriber_id")
+    @JsonIgnore
 	private Subscriber subscriber;
 
 	@Column(name = "price_list_level", updatable = false)

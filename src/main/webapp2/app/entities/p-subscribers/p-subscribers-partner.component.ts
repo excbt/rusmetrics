@@ -12,9 +12,9 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
 })
 export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['select', 'id', 'subscriberName'];
+    displayedColumns = ['select', 'id',  'subscriberName', 'organizationInn', 'organizationName'];
 
-    subscriberMode: string;
+    subscriberMode = 'RMA';
 
     constructor(
         private service: PSubscriberPartnerService,
@@ -22,11 +22,16 @@ export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscrib
         activatedRoute: ActivatedRoute,
     ) {
         super({modificationEventName: 'subscriberModification'}, router, activatedRoute);
-        this.subscriberMode = 'RMA';
     }
 
     getDataSourceProvider(): ExcListDatasourceProvider<PSubscriber> {
         return {getDataSource: () => new PSubscriberDataSource(this.service)};
+    }
+
+    navigateEdit() {
+        if (!this.selection.isEmpty()) {
+          this.router.navigate(['partners', this.selection.selected[0].id, 'edit']);
+        }
     }
 
 }

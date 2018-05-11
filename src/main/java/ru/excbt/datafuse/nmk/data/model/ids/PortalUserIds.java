@@ -11,7 +11,7 @@ public interface PortalUserIds {
     Long getParentSubscriberId();
 
     default boolean isRma() {
-        return false;
+        return SubscrTypeKey.RMA.equals(getSubscrTypeKey());
     }
 
     Long getRmaId();

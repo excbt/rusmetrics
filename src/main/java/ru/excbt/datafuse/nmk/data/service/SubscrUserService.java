@@ -23,6 +23,10 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -49,33 +53,37 @@ public class SubscrUserService implements SecuredRoles {
 		void doAction(LdapUserAccount user);
 	}
 
-	@Autowired
-	private SubscrUserRepository subscrUserRepository;
+	private final SubscrUserRepository subscrUserRepository;
 
-    @Autowired
-	private SystemUserRepository systemUserRepository;
+	private final SystemUserRepository systemUserRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberService subscriberService;
 
-	@Autowired
-	private LdapService ldapService;
+	private final LdapService ldapService;
 
-	@Autowired
-	private SubscrRoleService subscrRoleService;
+	private final SubscrRoleService subscrRoleService;
 
-    @Autowired
-    private UserPersistentTokenRepository persistentTokenRepository;
+    private final UserPersistentTokenRepository persistentTokenRepository;
 
     private final CacheManager cacheManager;
 
-    @Autowired
-    public SubscrUserService(CacheManager cacheManager) {
+    private final SubscriberLdapService subscriberLdapService;
+
+    private final SubscrUserMapper subscrUserMapper;
+
+    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper) {
+        this.subscrUserRepository = subscrUserRepository;
+        this.systemUserRepository = systemUserRepository;
+        this.subscriberService = subscriberService;
+        this.ldapService = ldapService;
+        this.subscrRoleService = subscrRoleService;
+        this.persistentTokenRepository = persistentTokenRepository;
         this.cacheManager = cacheManager;
+        this.subscriberLdapService = subscriberLdapService;
+        this.subscrUserMapper = subscrUserMapper;
     }
 
-
-	/**
+    /**
 	 *
 	 * @param subscrUserId
 	 * @return
@@ -98,6 +106,12 @@ public class SubscrUserService implements SecuredRoles {
 			i.getSubscriber().getId();
 		});
 		return resultList;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT)
+	public List<SubscrUserDTO> findBySubscriberId(Long subscriberId) {
+		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
+		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(subscrUserMapper::toDto).collect(Collectors.toList());
 	}
 
 	/**
@@ -147,12 +161,12 @@ public class SubscrUserService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
-		checkNotNull(subscrUser.getSubscriberId());
+		checkNotNull(subscrUser.getSubscriber());
 		checkNotNull(subscrUser.getSubscrRoles());
 		checkArgument(subscrUser.getDeleted() == 0);
 
-		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
-		subscrUser.setSubscriber(subscriber);
+//		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriber().getId());
+//		subscrUser.setSubscriber(subscriber);
 
 		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
 
@@ -183,7 +197,7 @@ public class SubscrUserService implements SecuredRoles {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
 		checkNotNull(subscrUser.getUserName());
-		checkNotNull(subscrUser.getSubscriberId());
+//		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
 
 		SubscrUser currentUser = subscrUserRepository.findOne(subscrUser.getId());
@@ -200,8 +214,8 @@ public class SubscrUserService implements SecuredRoles {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
 		}
 
-		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
-		subscrUser.setSubscriber(subscriber);
+//		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
+//		subscrUser.setSubscriber(subscriber);
 
 		String newPassword = null;
 
@@ -296,7 +310,7 @@ public class SubscrUserService implements SecuredRoles {
 
 		checkNotNull(subscrUser.getSubscriber());
 
-		String[] orgUnits = subscriberService.buildSubscriberLdapOu(subscrUser.getSubscriber());
+		String[] orgUnits = subscriberLdapService.buildSubscriberLdapOu(subscrUser.getSubscriber());
 
 		checkNotNull(orgUnits);
 
@@ -323,7 +337,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param action
 	 */
 	public void processLdapAction(SubscrUser subscrUser, LdapAction action) {
-		LdapUserAccount user = ldapAccountFactory(subscrUser, subscrUser.getSubscriberId());
+		LdapUserAccount user = ldapAccountFactory(subscrUser, subscrUser.getSubscriber().getId());
 		try {
 			action.doAction(user);
 		} catch (Exception e) {

@@ -6,6 +6,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { PSubscriberService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
+import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
 
 @Component({
     selector: 'jhi-p-subscriber-edit',
@@ -17,6 +18,7 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
     private headerSubscription: Subscription;
 
     private routeUrlSubscription: Subscription;
+    private formInitializer: PSubscriberFormInitializer;
 
     subscriberMode: string;
     menuHeaderKey: string;
@@ -38,10 +40,12 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
                 router,
                 activatedRoute);
 
+            this.formInitializer = new PSubscriberFormInitializer(this.fb);
+
             this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => {
                 if (data && (data[0].path ===  'customers')) {
-                    this.subscriberMode = 'NORMAL';
-                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.subsriber.newTitle' : 'subscribers.subsriber.editTitle';
+                    this.subscriberMode = 'CUSTOMER';
+                    this.menuHeaderKey = data[1].path === 'new' ? 'subscribers.customer.newTitle' : 'subscribers.customer.editTitle';
                 }
                 if (data && (data[0].path ===  'partners')) {
                     this.subscriberMode = 'RMA';
@@ -52,48 +56,15 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
         }
 
     createForm(data: PSubscriber): FormGroup {
-        const form = this.fb.group({
-            id: data.id,
-            organizationId: [data.organizationId],
-            subscriberName: [data.subscriberName],
-            subscriberInfo: [data.subscriberInfo],
-            subscriberComment: [data.subscriberComment],
-            timezoneDef: [data.timezoneDef],
-            subscrType: [data.subscrType],
-            contactEmail: [data.contactEmail],
-        });
-        return form;
+        return this.formInitializer.createForm(data);
     }
 
     initForm(): FormGroup {
-        const form = this.fb.group({
-            id: null,
-            organizationId: null,
-            subscriberName: null,
-            subscriberInfo: null,
-            subscriberComment: null,
-            subscrType: null,
-            canCreateChild: false,
-            contactEmail: null,
-        });
-        return form;
+        return this.formInitializer.initForm();
     }
 
     prepareEntity(form: FormGroup): PSubscriber {
-        const formModel = this.entityForm.value;
-
-        const savePSubscriber: PSubscriber = {
-            id: this.checkEmpty(formModel.id as number),
-            organizationId: this.checkEmpty(formModel.organizationId as number),
-            subscriberName: this.checkEmpty(formModel.subscriberName as string),
-            subscriberInfo: this.checkEmpty(formModel.subscriberInfo as string),
-            subscriberComment: this.checkEmpty(formModel.subscriberComment as string),
-            timezoneDef: this.checkEmpty(formModel.timezoneDef as string),
-            subscrType: this.checkEmpty(formModel.subscrType as string),
-            contactEmail: this.checkEmpty(formModel.contactEmail as string),
-            version: this.entity.version
-        };
-        return savePSubscriber;
+        return this.formInitializer.prepareEntity(this.entityForm, this.entity);
     }
 
     navigateBack() {

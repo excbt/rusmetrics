@@ -3,10 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import java.math.BigDecimal;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Version;
+import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -14,8 +11,10 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.DynamicUpdate;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
@@ -31,9 +30,10 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletableObject;
 @Entity
 @Table(name = "subscriber")
 @JsonInclude(Include.NON_NULL)
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Getter
 @Setter
+@DynamicUpdate
 public class Subscriber extends JsonAbstractAuditableModel implements DeletableObject, PersistableBuilder<Subscriber, Long> {
 
 	/**
@@ -50,21 +50,23 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	@Column(name = "organization_id")
-	private Long organizationId;
+	@ManyToOne
+	@JoinColumn(name = "organization_id")
+    @BatchSize(size = 10)
+	private Organization organization;
 
 	@Column(name = "timezone_def")
 	private String timezoneDefKeyname;
 
 	@JsonIgnore
-	@Column(name = "subscriber_uuid", insertable = false, updatable = false, columnDefinition = "uuid")
+	@Column(name = "subscriber_uuid", updatable = false, columnDefinition = "uuid")
 	private UUID subscriberUUID;
 
 	@Version
 	private int version;
 
 	@Column(name = "is_rma", insertable = false, updatable = false)
-	private Boolean isRma;
+	private Boolean isRma = false;
 
 	@Column(name = "rma_subscriber_id", updatable = false)
 	private Long rmaSubscriberId;

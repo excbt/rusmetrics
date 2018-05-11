@@ -1,12 +1,15 @@
 package ru.excbt.datafuse.nmk.service.vm;
 
-import lombok.Getter;
-import lombok.Setter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import java.util.UUID;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SubscriberVM {
 
     private Long id;
@@ -19,12 +22,20 @@ public class SubscriberVM {
 
     private String subscriberComment;
 
-    private String timezoneDef;
+    private String timezoneDefKeyname;
 
     private String subscrType;
 
     private String contactEmail;
 
+    private String rmaLdapOu;
+
+    private boolean canCreateChild;
+
     private int version;
+
+    private String organizationInn;
+
+    private String organizationName;
 
 }

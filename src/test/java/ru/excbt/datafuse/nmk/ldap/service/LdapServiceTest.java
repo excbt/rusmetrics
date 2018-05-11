@@ -10,7 +10,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
@@ -32,6 +33,9 @@ public class LdapServiceTest extends PortalDataTest {
 
 	@Autowired
 	private SubscriberService subscriberService;
+
+    @Autowired
+	private SubscriberLdapService subscriberLdapService;
 
     @Ignore
 	@Test
@@ -113,10 +117,10 @@ public class LdapServiceTest extends PortalDataTest {
 		SubscrUser subscrUser = subscrUserService.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
 
 		String subscriberName = subscrUser.getSubscriber().getSubscriberName();
-		Long subscriberId = subscrUser.getSubscriberId();
+		Long subscriberId = subscrUser.getSubscriber().getId();
 		String newOuName = subscriberService.buildCabinetsOuName(subscriberId);
 
-		String[] ou = subscriberService.buildSubscriberLdapOu(subscrUser.getSubscriber());
+		String[] ou = subscriberLdapService.buildSubscriberLdapOu(subscrUser.getSubscriber());
 
 		ldapService.createOuIfNotExists(ou, newOuName,
 				"Объектные пользователи (кабинеты) для " + subscriberName);

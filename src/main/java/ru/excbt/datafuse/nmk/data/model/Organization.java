@@ -172,6 +172,7 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
     @JoinColumn(name = "organization_type_id")
     private OrganizationType organizationType;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "subscriber_id")
     private Subscriber subscriber;

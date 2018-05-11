@@ -8,16 +8,18 @@
         },
         "customer": {
             "title" : "Абоненты",
-            "listTitle" : "Список абонентов"
+            "listTitle" : "Список абонентов",
+            "editTitle" : "Редактирование абонента",
+            "newTitle" : "Добавление Абонента"
         }
     },
     "subscriber": {
         "id": "id",
         "organizationId": "organizationId",
         "subscriberName": "Имя",
-        "subscriberInfo": "subscriberInfo",
-        "subscriberComment": "subscriberComment",
-        "timezoneDef": "timezoneDef",
+        "subscriberInfo": "Доп. информация",
+        "subscriberComment": "Комментарий",
+        "timezoneDef": "Часовой пояс",
         "subscriberUuid": "subscriberUuid",
         "parentSubscriberId": "parentSubscriberId",
         "isRma": "isRma",
@@ -31,11 +33,13 @@
         "mapZoom": "mapZoom",
         "mapZoomDetail": "mapZoomDetail",
         "subscrType": "subscrType",
-        "canCreateChild": "canCreateChild",
+        "canCreateChild": "Создание ЛК",
         "isChild": "isChild",
         "childLdapOu": "childLdapOu",
         "subscrCabinetNr": "subscrCabinetNr",
         "contactEmail": "contactEmail",
-        "subscrCabinetSeq": "subscrCabinetSeq"
+        "subscrCabinetSeq": "subscrCabinetSeq",
+        "organizationName": "Кр. наименование организации",
+        "organizationInn": "Инн организации"
     }
 }
