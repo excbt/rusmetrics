@@ -356,12 +356,12 @@ public class SubscriberManageService {
      */
     @Transactional(value = TxConst.TX_DEFAULT)
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
-    public void deleteRmaSubscriber(Long subscriberId, Long rmaSubscriberId) {
+    public void deleteSubscriber(Long subscriberId, Long rmaSubscriberId) {
         Objects.requireNonNull(subscriberId);
         Objects.requireNonNull(rmaSubscriberId);
 
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
+        if (subscriber.getRmaSubscriberId() != null && !rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
             throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
         }
         subscriberRepository.save(EntityActions.softDelete(subscriber));

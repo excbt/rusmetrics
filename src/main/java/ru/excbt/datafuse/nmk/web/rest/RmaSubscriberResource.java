@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
@@ -93,8 +92,8 @@ public class RmaSubscriberResource {
 
 		Optional<SubscriberDTO> subscriberDTOOptional = subscriberService.findSubscriberDTO(rSubscriberId);
 		if (subscriberDTOOptional.isPresent()) {
-            if (subscriberDTOOptional.get().getRmaSubscriberId() == null
-                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
+            if (subscriberDTOOptional.get().getRmaSubscriberId() != null
+                && !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
                 return ApiResponse.responseForbidden();
             }
         }
@@ -125,7 +124,7 @@ public class RmaSubscriberResource {
 
 			@Override
 			public SubscriberVM processAndReturnResult() {
-				return subscriberManageService.createRmaSubscriber(entity, portalUserIdsService.getCurrentIds())
+				return subscriberManageService.createNormalSubscriber(entity, portalUserIdsService.getCurrentIds())
                     .map(subscriberMapper::toVM).orElse(null);
 			}
 		};
@@ -153,7 +152,7 @@ public class RmaSubscriberResource {
 
 			@Override
 			public SubscriberVM processAndReturnResult() {
-				return subscriberManageService.updateRmaSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+				return subscriberManageService.updateNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
                     .map(subscriberMapper::toVM)
                     .orElse(null);
 			}
@@ -176,11 +175,11 @@ public class RmaSubscriberResource {
 		checkNotNull(rSubscriberId);
 
 		ApiAction action = (ApiActionAdapter) () -> {
-            if (Boolean.TRUE.equals(isPermanent)) {
-                subscriberManageService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
-            } else {
-                subscriberManageService.deleteRmaSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
-            }
+//            if (Boolean.TRUE.equals(isPermanent)) {
+//                subscriberManageService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            } else {
+                subscriberManageService.deleteSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            }
         };
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}

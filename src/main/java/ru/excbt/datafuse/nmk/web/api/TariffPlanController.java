@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -304,9 +305,9 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/rsoOrganizations", method = RequestMethod.GET)
 	public ResponseEntity<?> getRsoOrganizations() {
-		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
-		List<Organization> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
-				: ObjectFilters.devModeFilter(rsOrganizations);
+		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
+		List<OrganizationDTO> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
+				: rsOrganizations;
 		return ApiResponse.responseOK(resultList);
 	}
 
