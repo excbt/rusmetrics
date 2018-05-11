@@ -14,35 +14,38 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: './organization-autocomplete.component.html',
     styleUrls: ['./organization-autocomplete.component.scss']
 })
-export class OrganizationAutocompleteComponent {
+export class OrganizationAutocompleteComponent implements AfterViewInit {
 
     @Output() onChange = new EventEmitter<number>();
 
     private _organizationId: number;
+
+    private innTranslation: string;
+
+    private moreResults = new BehaviorSubject<boolean>(false);
+
+    private autoselectOrganizations = new BehaviorSubject<Organization[]>([]);
 
     private sorting = new ExcPageSorting('organizationName', 'asc');
     private pSize = new ExcPageSize(0, 30);
 
     organizationCtrl: FormControl;
 
-    filteredOrganizations: Observable<Organization[]>;
-
-    private moreResults2 = new BehaviorSubject<boolean>(false);
-
-    moreResults2$ = this.moreResults2.asObservable();
-
-    private autoselectOrganizations = new BehaviorSubject<Organization[]>([]);
+    moreResults$ = this.moreResults.asObservable();
 
     autoselectOrganizations$ = this.autoselectOrganizations.asObservable();
-    private innTranslation: string;
+
+    @Input()
+    readonly: boolean;
 
     constructor(private organizationService: OrganizationsService,
                 private translate: TranslateService) {
 
-        // this.getAndInitTranslations();
-        this.innTranslation = 'ИНН';
         this.organizationCtrl = new FormControl();
-        this.stateCtrlChanges().subscribe((data) => this.autoselectOrganizations.next(data));
+
+        this.readonly = false;
+
+        this.organizationCtrlChanges().subscribe((data) => this.autoselectOrganizations.next(data));
 
         this.organizationCtrl.valueChanges.pipe(
             debounceTime(searchDebounceTimeValue),
@@ -51,6 +54,10 @@ export class OrganizationAutocompleteComponent {
                     this.onChange.next(null);
                 }
             });
+    }
+
+    ngAfterViewInit() {
+        this.getAndInitTranslations();
     }
 
     getAndInitTranslations() {
@@ -71,23 +78,10 @@ export class OrganizationAutocompleteComponent {
                 this.autoselectOrganizations.next([data]);
                 this.organizationCtrl.setValue(data);
             });
-            // this.organizationCtrl.setValue(id);
-            // this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
-            //     debounceTime(searchDebounceTimeValue),
-            //     startWith(''),
-            //     distinctUntilChanged(),
-            //     flatMap((arg) => Observable.forkJoin(
-            //         this.findFilteredOrganizations(arg),
-            //         this.organizationService.findOne(id).map((data) => {
-            //             return [data];
-            //         })
-            //         ).map((results) => results[1].concat(results[0]))
-            //     ));
-            // this.pushSelected(id);
         }
     }
 
-    stateCtrlChanges(): Observable<Organization[]> {
+    organizationCtrlChanges(): Observable<Organization[]> {
         return this.organizationCtrl.valueChanges.pipe(
             debounceTime(searchDebounceTimeValue),
             startWith(''),
@@ -98,7 +92,7 @@ export class OrganizationAutocompleteComponent {
     findFilteredOrganizations(search: string): Observable<Organization[]> {
         return this.organizationService.findPage({pageSize: this.pSize, pageSorting: this.sorting, searchString: search})
         .map((data) => {
-            this.moreResults2.next(data.totalPages > 1);
+            this.moreResults.next(data.totalPages > 1);
             return data.content;
         });
     }
@@ -122,7 +116,21 @@ export class OrganizationAutocompleteComponent {
     }
 
     formatOrganizationInn(org: Organization): string {
-        return (org && org.inn) ? (' | ' + this.innTranslation + ':' + org.inn) : '';
+        return (org && org.inn) ? (' (' + this.innTranslation + ': ' + org.inn) + ')' : '';
     }
 
 }
+
+            // this.organizationCtrl.setValue(id);
+            // this.filteredOrganizations = this.organizationCtrl.valueChanges.pipe(
+            //     debounceTime(searchDebounceTimeValue),
+            //     startWith(''),
+            //     distinctUntilChanged(),
+            //     flatMap((arg) => Observable.forkJoin(
+            //         this.findFilteredOrganizations(arg),
+            //         this.organizationService.findOne(id).map((data) => {
+            //             return [data];
+            //         })
+            //         ).map((results) => results[1].concat(results[0]))
+            //     ));
+            // this.pushSelected(id);

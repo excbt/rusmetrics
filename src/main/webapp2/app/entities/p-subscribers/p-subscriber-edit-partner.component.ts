@@ -64,4 +64,9 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
         this.router.navigate(['partners']);
     }
 
+    organizationSelect(id: number) {
+        this.entityForm.controls['organizationId'].setValue(id);
+        this.entityForm.controls['organizationId'].markAsDirty();
+    }
+
 }

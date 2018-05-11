@@ -73,7 +73,6 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
     organizationSelect(id: number) {
         this.entityForm.controls['organizationId'].setValue(id);
         this.entityForm.controls['organizationId'].markAsDirty();
-        console.log(id);
     }
 
 }
