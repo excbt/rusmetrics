@@ -80,7 +80,6 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
     canCreateChildToggle(event: MatSlideToggleChange) {
         this.entityForm.controls['canCreateChild'].setValue(event.checked);
         this.entityForm.controls['canCreateChild'].markAsDirty();
-        console.log(event.checked);
     }
 
 }
