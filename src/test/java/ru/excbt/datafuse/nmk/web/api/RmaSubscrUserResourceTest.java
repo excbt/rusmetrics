@@ -69,7 +69,7 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberRepository, subscrUserMapper, subscrUserManageService);
+        rmaSubscrUserResource = new RmaSubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscriberRepository, subscrUserMapper, subscrUserManageService, subscriberService);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(rmaSubscrUserResource)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)

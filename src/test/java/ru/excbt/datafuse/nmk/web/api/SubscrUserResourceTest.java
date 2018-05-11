@@ -22,6 +22,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
@@ -31,7 +32,6 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 import java.util.function.Consumer;
 
 @RunWith(SpringRunner.class)
-@Ignore
 public class SubscrUserResourceTest extends PortalApiTest {
 
 	@Autowired
@@ -57,6 +57,8 @@ public class SubscrUserResourceTest extends PortalApiTest {
     private SubscrUserMapper subscrUserMapper;
     @Autowired
     private SubscrUserManageService subscrUserManageService;
+    @Autowired
+    private SubscriberService subscriberService;
 
     @Before
 	public void setUp() throws Exception {
@@ -64,7 +66,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
 
 	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscrUserController = new SubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
+        subscrUserController = new SubscrUserResource(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService, subscriberService);
 
 	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrUserController)
 	        .setCustomArgumentResolvers(pageableArgumentResolver)
@@ -125,4 +127,12 @@ public class SubscrUserResourceTest extends PortalApiTest {
             .testDelete();
 //		_testDeleteJson(UrlUtils.apiSubscrUrl("/subscrUsers", subscrUserId), param);
 	}
+
+
+    @Test
+    public void testGetSubscrUsersV2() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-users").testGet();
+//		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
+    }
+
 }

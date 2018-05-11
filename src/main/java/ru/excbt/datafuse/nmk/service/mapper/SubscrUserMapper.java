@@ -14,4 +14,5 @@ public interface SubscrUserMapper {
     @Mapping(source = "subscriber.id", target = "subscriberId")
     SubscrUserDTO toDto(SubscrUser entity);
 
+    //default S
 }

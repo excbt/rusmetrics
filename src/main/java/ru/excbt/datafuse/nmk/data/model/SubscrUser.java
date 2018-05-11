@@ -76,8 +76,9 @@ public class SubscrUser extends JsonAbstractAuditableModel implements DeletableO
 	private List<SubscrRole> subscrRoles = new ArrayList<>();
 
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "subscriber_id")
+    @BatchSize(size = 10)
 	private Subscriber subscriber;
 
 //	@Column(name = "subscriber_id", insertable = false, updatable = false)

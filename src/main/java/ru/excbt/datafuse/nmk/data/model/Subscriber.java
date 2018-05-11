@@ -50,7 +50,7 @@ public class Subscriber extends JsonAbstractAuditableModel implements DeletableO
 	@Column(name = "subscriber_comment")
 	private String comment;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "organization_id")
     @BatchSize(size = 10)
 	private Organization organization;

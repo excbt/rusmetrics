@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.validators.UsernameValidator;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
@@ -35,7 +39,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @Controller
-@RequestMapping("/api/subscr")
+@RequestMapping("/api")
 public class SubscrUserResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrUserResource.class);
@@ -52,19 +56,22 @@ public class SubscrUserResource {
 
     protected final SubscrUserManageService subscrUserManageService;
 
-    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
+    protected final SubscriberService subscriberService;
+
+    public SubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService, SubscriberService subscriberService) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.portalUserIdsService = portalUserIdsService;
         this.subscrUserMapper = subscrUserMapper;
         this.subscrUserManageService = subscrUserManageService;
+        this.subscriberService = subscriberService;
     }
 
     /**
      *
      * @return
      */
-	@RequestMapping(value = "/subscrUsers", method = RequestMethod.GET)
+	@RequestMapping(value = "/subscr/subscrUsers", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUsers() {
 		List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ApiResponse.responseOK(subscrUsers);
@@ -75,7 +82,7 @@ public class SubscrUserResource {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUsers/{subscrUserId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/subscr/subscrUsers/{subscrUserId}", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
@@ -95,7 +102,7 @@ public class SubscrUserResource {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUsers", method = RequestMethod.POST)
+	@RequestMapping(value = "/subscr/subscrUsers", method = RequestMethod.POST)
 	public ResponseEntity<?> createCurrentSubscrUsers(
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
@@ -113,7 +120,7 @@ public class SubscrUserResource {
 	 * @param subscrUser
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUsers/{subscrUserId}", method = RequestMethod.PUT)
+	@RequestMapping(value = "/subscr/subscrUsers/{subscrUserId}", method = RequestMethod.PUT)
 	public ResponseEntity<?> updateCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
 			@RequestParam(value = "isReadonly", required = false, defaultValue = "false") Boolean isReadonly,
@@ -136,7 +143,7 @@ public class SubscrUserResource {
 	 * @param isPermanent
 	 * @return
 	 */
-	@RequestMapping(value = "/subscrUsers/{subscrUserId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/subscr/subscrUsers/{subscrUserId}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteCurrentSubscrUsers(@PathVariable("subscrUserId") Long subscrUserId,
 			@RequestParam(value = "isPermanent", required = false, defaultValue = "false") Boolean isPermanent) {
 
@@ -144,116 +151,75 @@ public class SubscrUserResource {
 
 	}
 
-//	/**
-//	 * TODO Method has been moved to SubscrUserService
-//	 * Should be deleted
-//	 *
-//	 * @param rmaSubscriber
-//	 * @param subscrUser
-//	 * @param isAdmin
-//	 * @param isReadonly
-//	 * @return
-//	 */
-//	@Deprecated
-//	private List<SubscrRole> processSubscrRoles2(final Subscriber rmaSubscriber, final boolean isAdmin,
-//			final boolean isReadonly) {
-//		List<SubscrRole> subscrRoles = new ArrayList<>();
-//
-//		if (Boolean.TRUE.equals(isReadonly)) {
-//			subscrRoles.addAll(subscrRoleService.subscrReadonlyRoles());
-//		} else {
-//			if (Boolean.TRUE.equals(isAdmin)) {
-//				subscrRoles.addAll(
-//						subscrRoleService.subscrAdminRoles(Boolean.TRUE.equals(rmaSubscriber.getCanCreateChild())));
-//				if (Boolean.TRUE.equals(rmaSubscriber.getIsRma())) {
-//					subscrRoles.addAll(subscrRoleService.subscrRmaAdminRoles(rmaSubscriber.getCanCreateChild()));
-//				}
-//			} else {
-//				subscrRoles.addAll(subscrRoleService.subscrUserRoles());
-//			}
-//		}
-//
-//		Map<Long, SubscrRole> subscrRolesMap = new HashMap<>();
-//		for (SubscrRole r : subscrRoles) {
-//			subscrRolesMap.put(r.getId(), r);
-//		}
-//
-//		return new ArrayList<>(subscrRolesMap.values());
-//	}
-//
-
 
     protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber,
                                                            final SubscrUserDTO subscrUserDTO, String password, HttpServletRequest request) {
         Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(rmaSubscriber, subscrUserDTO, password);
-        //.map(subscrUserMapper::toDto)
-        // ResponseEntity.created(action.getLocation()).body(action.getResult())
         return subscrUserOptional
             .map(subscrUserMapper::toDto)
                     .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
             .orElse(ResponseEntity.badRequest().build());
     }
 
-    /**
-     *
-     * @param rmaSubscriber
-     * @param isAdmin
-     * @param isReadonly
-     * @param subscrUser
-     * @param password
-     * @param request
-     * @return
-     */
-	protected ResponseEntity<?> createSubscrUserInternal22(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
-			final SubscrUser subscrUser, String password, HttpServletRequest request) {
-		checkNotNull(rmaSubscriber);
-		checkNotNull(rmaSubscriber.getId());
-		checkNotNull(subscrUser);
-
-		if (subscrUser.getUserName() != null) {
-			subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
-		}
-
-		if (!usernameValidator.validate(subscrUser.getUserName())) {
-			return ApiResponse.responseBadRequest(ApiResult.validationError(
-					"Username %s is not valid. " + "Min length is 3, max length is 20. Allowed characters: {a-z0-9_-]}",
-					subscrUser.getUserName()));
-		}
-
-		Optional<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
-		if (checkUser.isPresent()) {
-			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
-		}
-
-        subscrUser.setSubscriber(new Subscriber().id(rmaSubscriber.getId()));
-//		subscrUser.setSubscriberId(rmaSubscriber.getId());
-		subscrUser.setIsAdmin(isAdmin);
-		subscrUser.setIsReadonly(isReadonly);
-		if (isReadonly) {
-			subscrUser.setIsAdmin(false);
-		}
-
-		List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
-
-		subscrUser.getSubscrRoles().clear();
-		subscrUser.getSubscrRoles().addAll(subscrRoles);
-
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrUserWrapper, Long>(request) {
-
-			@Override
-			protected Long getLocationId() {
-				return getResultEntity().getSubscrUser().getId();
-			}
-
-			@Override
-			public SubscrUserWrapper processAndReturnResult() {
-				SubscrUser result = subscrUserService.createSubscrUser(subscrUser, password);
-				return new SubscrUserWrapper(result, true);
-			}
-		};
-
-		return ApiActionTool.processResponceApiActionCreate(action);
-	}
+//    /**
+//     *
+//     * @param rmaSubscriber
+//     * @param isAdmin
+//     * @param isReadonly
+//     * @param subscrUser
+//     * @param password
+//     * @param request
+//     * @return
+//     */
+//	protected ResponseEntity<?> createSubscrUserInternal22(Subscriber rmaSubscriber, Boolean isAdmin, Boolean isReadonly,
+//			final SubscrUser subscrUser, String password, HttpServletRequest request) {
+//		checkNotNull(rmaSubscriber);
+//		checkNotNull(rmaSubscriber.getId());
+//		checkNotNull(subscrUser);
+//
+//		if (subscrUser.getUserName() != null) {
+//			subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
+//		}
+//
+//		if (!usernameValidator.validate(subscrUser.getUserName())) {
+//			return ApiResponse.responseBadRequest(ApiResult.validationError(
+//					"Username %s is not valid. " + "Min length is 3, max length is 20. Allowed characters: {a-z0-9_-]}",
+//					subscrUser.getUserName()));
+//		}
+//
+//		Optional<SubscrUser> checkUser = subscrUserService.findByUsername(subscrUser.getUserName());
+//		if (checkUser.isPresent()) {
+//			return ApiResponse.responseBadRequest(ApiResult.build(ApiResultCode.ERR_USER_ALREADY_EXISTS));
+//		}
+//
+//        subscrUser.setSubscriber(new Subscriber().id(rmaSubscriber.getId()));
+//		subscrUser.setIsAdmin(isAdmin);
+//		subscrUser.setIsReadonly(isReadonly);
+//		if (isReadonly) {
+//			subscrUser.setIsAdmin(false);
+//		}
+//
+//		List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(rmaSubscriber, isAdmin, isReadonly);
+//
+//		subscrUser.getSubscrRoles().clear();
+//		subscrUser.getSubscrRoles().addAll(subscrRoles);
+//
+//		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscrUserWrapper, Long>(request) {
+//
+//			@Override
+//			protected Long getLocationId() {
+//				return getResultEntity().getSubscrUser().getId();
+//			}
+//
+//			@Override
+//			public SubscrUserWrapper processAndReturnResult() {
+//				SubscrUser result = subscrUserService.createSubscrUser(subscrUser, password);
+//				return new SubscrUserWrapper(result, true);
+//			}
+//		};
+//
+//		return ApiActionTool.processResponceApiActionCreate(action);
+//	}
 
     /**
      *
@@ -346,5 +312,27 @@ public class SubscrUserResource {
 		return subscrUser == null || subscrUser.getSubscriber().getId() == null
 				|| !subscrUser.getSubscriber().getId().equals(rSubscriberId);
 	}
+
+
+    /**
+     *
+     * @param optSubscriberId
+     * @return
+     */
+    @Timed
+    @ApiOperation("Get all subscr users of subscriber")
+    @RequestMapping(value = "/subscr-users", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubscrUsers(@RequestParam(value = "subscriberId", required = false) Optional<Long> optSubscriberId) {
+
+        if (optSubscriberId.isPresent()) {
+            boolean check = subscriberService.checkParentSubscriber(optSubscriberId.get(),portalUserIdsService.getCurrentIds());
+            if (!check) {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+        }
+        Long selectSubscriberId = optSubscriberId.orElse(portalUserIdsService.getCurrentIds().getSubscriberId());
+        List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(selectSubscriberId);
+        return ResponseEntity.ok(subscrUsers);
+    }
 
 }

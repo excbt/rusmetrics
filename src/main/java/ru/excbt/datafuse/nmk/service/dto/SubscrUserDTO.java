@@ -3,6 +3,9 @@ package ru.excbt.datafuse.nmk.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
+import java.util.UUID;
+
 @Getter
 @Setter
 public class SubscrUserDTO {
@@ -17,6 +20,8 @@ public class SubscrUserDTO {
 
     private Long subscriberId;
 
+    private UUID userUuid;
+
     private String userComment;
 
     private String userEMail;
@@ -30,5 +35,7 @@ public class SubscrUserDTO {
     private boolean isAdmin;
 
     private boolean isReadonly;
+
+    private Set<String> authorities;
 
 }

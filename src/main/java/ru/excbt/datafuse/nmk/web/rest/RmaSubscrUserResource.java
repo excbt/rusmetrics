@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -63,8 +64,8 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		}
 	}
 
-    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
-        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
+    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService, SubscriberService subscriberService) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService, subscriberService);
         this.subscriberRepository = subscriberRepository;
     }
 
