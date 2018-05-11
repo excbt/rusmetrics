@@ -1,17 +1,53 @@
+<!--
 Tree Node Color Status:
 Tree node id: {{treeNodeId}}
-<div class = "ui-g">
-   <div class = "ui-g-12">
-       Graph: cont object monitor component
-       <div class = "ui-g-6">
-           <p-chart 
+-->
+<div class = "ui-g" style = "min-width: 1400px;">
+   <div class = "ui-g-12" >
+<!--       Graph: cont object monitor component-->
+      <div class = "ui-g-12">
+          <h3 style = "font-size: 24px; font-weight: 500;">Общая диаграмма монитора объектов и точек учета</h3>
+      </div>
+       <div class = "ui-g-6" style = "height: 367px; max-height: 367px;">
+           <p-chart
               type = "polarArea"
-              [data] = "nodeData">
+              [data] = "nodeGraphData"
+              [options] = "nodeGraphOptions"
+              height = "367px"
+              width = "676px"
+              >
            </p-chart>
        </div>
-       
+       <div class = "ui-g-6">          
+           <div class = "ui-g-12"
+             *ngFor = "let dougRow of dougRows"
+              >
+               <div [class] = "dougCol.class"
+                 *ngFor = "let dougCol of dougCols"
+                  >
+<!--
+                   <p-chart
+                     type = "doughnut"
+                     [data] = "doughnuts[dougCol.resource]"                     
+                      >
+                       
+                   </p-chart>
+-->
+<!--
+                   {{resources[dougRow.val + dougCol.val - 1]}}
+                   {{doughnuts[resources[dougRow.val + dougCol.val - 1]]}}
+-->
+               </div>   
+               
+           </div>
+<!--
+           <div class = "ui-g-12">
+               
+           </div>
+-->
+       </div>
    </div>
    <div class = "ui-g-12">
-       Cont object control component
+<!--       Cont object control component-->
    </div>
 </div>
