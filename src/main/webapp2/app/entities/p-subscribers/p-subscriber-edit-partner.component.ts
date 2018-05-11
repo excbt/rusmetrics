@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { PSubscriberService, PSubscriberPartnerService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
     selector: 'jhi-p-subscriber-edit-partner',
@@ -67,6 +68,12 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
     organizationSelect(id: number) {
         this.entityForm.controls['organizationId'].setValue(id);
         this.entityForm.controls['organizationId'].markAsDirty();
+    }
+
+    canCreateChildToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['canCreateChild'].setValue(event.checked);
+        this.entityForm.controls['canCreateChild'].markAsDirty();
+        console.log(event.checked);
     }
 
 }

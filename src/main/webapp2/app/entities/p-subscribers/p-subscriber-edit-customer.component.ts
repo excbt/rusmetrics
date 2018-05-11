@@ -12,6 +12,7 @@ import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
 import { OrganizationsService } from '../organizations/organizations.service';
 import { Organization } from '../organizations/organization.model';
 import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
     selector: 'jhi-p-subscriber-edit-customer',
@@ -73,6 +74,12 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
     organizationSelect(id: number) {
         this.entityForm.controls['organizationId'].setValue(id);
         this.entityForm.controls['organizationId'].markAsDirty();
+    }
+
+    canCreateChildToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['canCreateChild'].setValue(event.checked);
+        this.entityForm.controls['canCreateChild'].markAsDirty();
+        console.log(event.checked);
     }
 
 }

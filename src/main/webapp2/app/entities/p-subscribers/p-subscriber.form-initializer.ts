@@ -19,6 +19,7 @@ export class PSubscriberFormInitializer extends ExcFormInitializer<PSubscriber> 
             subscriberInfo: [data.subscriberInfo],
             subscriberComment: [data.subscriberComment],
             timezoneDef: [data.timezoneDef],
+            canCreateChild: [data.canCreateChild],
             contactEmail: [data.contactEmail],
             rmaLdapOu: [data.rmaLdapOu]
         });
