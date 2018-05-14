@@ -49,6 +49,8 @@ import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-ed
 import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
 import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
 import { SubscrUserService } from './subscr-users/subscr-user.service';
+import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
+import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -84,6 +86,7 @@ import { SubscrUserService } from './subscr-users/subscr-user.service';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
+        OrganizationAutocompleteComponent,
         PSubscribersComponent,
         PSubscribersPartnerComponent,
         PSubscribersCustomerComponent,
@@ -91,7 +94,8 @@ import { SubscrUserService } from './subscr-users/subscr-user.service';
         PSubscriberEditPartnerComponent,
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
-        OrganizationAutocompleteComponent
+        SubscrUsersComponent,
+        SubscrUsersWidgetComponent
     ],
     entryComponents: [
     ],
@@ -109,7 +113,8 @@ import { SubscrUserService } from './subscr-users/subscr-user.service';
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
         OrganizationsWidgetComponent,
-        PSubscribersWidgetComponent
+        PSubscribersWidgetComponent,
+        SubscrUsersWidgetComponent
     ]
 })
 export class PortalEntityModule {}

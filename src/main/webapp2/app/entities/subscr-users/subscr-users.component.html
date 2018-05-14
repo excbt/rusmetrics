@@ -1,0 +1,110 @@
+<jhi-exc-form-template>
+    
+    <jhi-exc-list-form-menu headerKey="subscrUsers.main.title" 
+    [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
+</jhi-exc-list-form-menu>
+
+<div class="spinner-container" *ngIf="dataSource.loading$ | async">
+    <mat-progress-bar  color="primary" mode="indeterminate">
+    </mat-progress-bar>
+</div>
+
+<mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+matSortDisableClear>
+
+<ng-container matColumnDef="select" >
+    <mat-header-cell *matHeaderCellDef class="select-column-width">
+        <mat-checkbox (change)="$event ? selection.clear() : null"
+        [checked]="!selection.isEmpty()"
+        [indeterminate]="!selection.isEmpty()"
+        >
+        </mat-checkbox>
+    </mat-header-cell>     
+    <mat-cell *matCellDef="let row" class="select-column-width">
+        <mat-checkbox 
+        (click)="$event.stopPropagation()"
+        (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)">
+        </mat-checkbox>
+    </mat-cell>               
+</ng-container>
+
+
+<ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser" class="id-column-width"> {{subscrUser.id}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userName">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userName' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userName}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userNickname">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userNickname' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userNickname}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="subscriberId">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.subscriberId' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.subscriberId}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userUuid">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userUuid' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userUuid}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userComment">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userComment' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userComment}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userEmail">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userEmail' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userEmail}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="isBlocked">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.isBlocked' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.isBlocked}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="contactEmail">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.contactEmail' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.contactEmail}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="userDescription">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userDescription' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userDescription}} </mat-cell>
+</ng-container>
+
+
+<ng-container matColumnDef="isAdmin">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.isAdmin' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.isAdmin}} </mat-cell>
+</ng-container>
+
+<ng-container matColumnDef="isReadonly">
+    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.isReadonly' | translate}} </mat-header-cell>
+    <mat-cell *matCellDef="let subscrUser"> {{subscrUser.isReadonly}} </mat-cell>
+</ng-container>
+
+<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+<mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+
+</mat-table>     
+
+<mat-paginator [length]="totalElements" [pageSize]="pageSize"
+[pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+
+<div>
+    
+    <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
+    icon="fa-arrow-left" routerLink="/classifiers"></button>
+    
+</div>
+
+
+</jhi-exc-form-template>

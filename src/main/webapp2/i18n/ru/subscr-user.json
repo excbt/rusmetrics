@@ -1,0 +1,29 @@
+{
+    "subscrUsers" : {
+        "main": {
+            "title" : "Пользователи",
+            "listTitle" : "Список пользователей",
+            "editTitle" : "Редактирование пользователя",
+            "newTitle" : "Добавление пользователя"
+        }
+    },    
+
+    "subscrUser": {
+        "id" : "id",
+        "userName" : "userName",
+        "firstName" : "firstName",
+        "lastName" : "lastName",
+        "password" : "password",
+        "userComment" : "userComment",
+        "subscriberId" : "subscriberId",
+        "userUuid" : "userUuid",
+        "userEmail" : "userEmail",
+        "isBlocked" : "isBlocked",
+        "isAdmin" : "isAdmin",
+        "isReadonly" : "isReadonly",
+        "contactEmail" : "contactEmail",
+        "userDescription" : "userDescription",
+        "userNickname" : "userNickname",
+        "devComment" : "devComment"        
+    }
+}

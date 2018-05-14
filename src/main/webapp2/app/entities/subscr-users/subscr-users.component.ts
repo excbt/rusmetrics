@@ -10,7 +10,9 @@ import { SubscrUserDataSource } from './subscr-user.datasource';
     templateUrl: './subscr-users.component.html',
     styleUrls: ['../blocks/list-form.scss']
 })
-export class SubscrUserComponent extends ExcListFormComponent<SubscrUser> implements OnDestroy {
+export class SubscrUsersComponent extends ExcListFormComponent<SubscrUser> implements OnDestroy {
+
+    displayedColumns = ['select', 'id', 'userName'];
 
     constructor(
         private subscrUserService: SubscrUserService,

@@ -1,19 +1,22 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
@@ -23,10 +26,13 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -113,6 +119,33 @@ public class SubscrUserService implements SecuredRoles {
 		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
 		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(SubscrUserDTO::new).collect(Collectors.toList());
 	}
+
+
+    @Transactional(readOnly = true)
+    public Page<SubscrUserDTO> findBySubscriberIdPaged(Long subscriberId, Optional<String> searchStringOptional,
+        Pageable pageable) {
+
+        QSubscrUser qSubscrUser = QSubscrUser.subscrUser;
+
+        QAbstractPersistableEntity qSubscriberPersistableEntity = new QAbstractPersistableEntity(qSubscrUser.subscriber());
+
+        BooleanExpression subscriberFilter = qSubscriberPersistableEntity.id.eq(subscriberId)
+            .and(qSubscrUser.deleted.eq(0));
+
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(subscriberFilter);
+
+        searchStringOptional.ifPresent(s -> where.and(
+            qSubscrUser.userName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
+            .or(qSubscrUser.userNickname.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
+
+        ));
+
+        Page<SubscrUserDTO> page = subscrUserRepository.findAll(where, pageable).map(SubscrUserDTO::new);
+
+        return page;
+    }
 
 	/**
 	 *

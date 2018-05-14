@@ -135,4 +135,10 @@ public class SubscrUserResourceTest extends PortalApiTest {
 //		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
     }
 
+    @Test
+    public void testGetSubscrUsersV2Page() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-users/page").testGet();
+//		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
+    }
+
 }

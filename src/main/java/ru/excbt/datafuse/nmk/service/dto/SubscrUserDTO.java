@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
@@ -36,9 +38,9 @@ public class SubscrUserDTO {
 
     private String userDescription;
 
-    private boolean isAdmin;
+    private Boolean isAdmin;
 
-    private boolean isReadonly;
+    private Boolean isReadonly;
 
     private Set<String> authorities;
 
@@ -60,6 +62,16 @@ public class SubscrUserDTO {
         if (Boolean.TRUE.equals(subscrUser.getIsAdmin())) {
             this.authorities.add(AuthoritiesConstants.ADMIN);
         }
+    }
+
+    @JsonIgnore
+    public boolean isAdmin() {
+        return Boolean.TRUE.equals(this.isAdmin);
+    }
+
+    @JsonIgnore
+    public boolean isReadonly() {
+        return Boolean.TRUE.equals(this.isReadonly);
     }
 
 

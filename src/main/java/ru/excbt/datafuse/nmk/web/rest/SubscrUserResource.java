@@ -4,6 +4,8 @@ import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -109,8 +111,8 @@ public class SubscrUserResource {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
-        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
+        subscrUserDTO.setIsAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setIsReadonly(Boolean.TRUE.equals(isReadonly));
 	    return createSubscrUserInternal(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()), subscrUserDTO, newPassword, request);
 	}
 
@@ -332,6 +334,24 @@ public class SubscrUserResource {
         }
         Long selectSubscriberId = optSubscriberId.orElse(portalUserIdsService.getCurrentIds().getSubscriberId());
         List<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberId(selectSubscriberId);
+        return ResponseEntity.ok(subscrUsers);
+    }
+
+    @Timed
+    @ApiOperation("Get all subscr users of subscriber")
+    @RequestMapping(value = "/subscr-users/page", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubscrUsersPage(@RequestParam(value = "subscriberId", required = false) Optional<Long> optSubscriberId,
+                                                @RequestParam(name = "searchString", required = false) Optional<String> searchString,
+                                                Pageable pageable) {
+
+        if (optSubscriberId.isPresent()) {
+            boolean check = subscriberService.checkParentSubscriber(optSubscriberId.get(),portalUserIdsService.getCurrentIds());
+            if (!check) {
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+        }
+        Long selectSubscriberId = optSubscriberId.orElse(portalUserIdsService.getCurrentIds().getSubscriberId());
+        Page<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberIdPaged(selectSubscriberId, searchString, pageable);
         return ResponseEntity.ok(subscrUsers);
     }
 
