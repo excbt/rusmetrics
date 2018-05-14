@@ -469,6 +469,7 @@ body{
 /*    height:61vh;*/
     min-height: 290px;
 }
+
 @media (max-height: 800px) {
     .nmc-cont-object-control-main-div {
         overflow: auto;
@@ -488,9 +489,39 @@ body{
 }
     /* Заголовок таблицы виджета "Контроль"*/
 tr.nmc-ctrl-cmp-table-header > th {
-    background-color: #646263; /*background color*/
-    color: #FFFFFF;
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
     font-weight: normal;
+}
+    /*Контроль: колонка Тип здания*/
+.nmc-ctrl-cmp-td-for-type {
+    min-width: 53px;
+    width: 2%;
+}
+    /*Контроль: подсветка выделенного эл-та таблицы данных*/
+.nmc-ctrl-cmp-bg-distinguish {
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td {
+    background-color: #D2D2D2 !important;
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td:before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 15px;
+/*
+    left: 10px;
+    margin-top: 14px;
+*/
+    border-top: 1px solid rgb(95, 95, 95);
+    border-right: 1px solid rgb(95, 95, 95);
+    transform: rotate(45deg);
+    width: 6px;
+    height: 6px;
 }
 
 .nmc-el-view-main-div-with-chart {
@@ -972,7 +1003,7 @@ tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
     min-width: 46px;
-    width: 3%;
+    width: 4%;
 }
 
 .nmc-td-for-buttons {
@@ -1739,11 +1770,17 @@ tr.nmc-inactive-price > td {
 /* Сохранить */
 .nmc-save-button {
     max-width: 112px;
+    min-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
-    max-width: 142px;
+    min-width: 112px;
+    max-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
 
 /* Закрыть окно - крестик в правом верхнем углу модального окна */
@@ -2184,7 +2221,8 @@ tr.nmc-inactive-price > td {
 /* Футер */
 .nmc-modal-footer {
     padding-top: 6px;
-    height: 35px;
+    padding-bottom: 6px;
+    height: 45px;
 }
  
 /* Рабочая панель */
@@ -3052,11 +3090,13 @@ a.user-menu:after {
 /*  Классы для настройки resizable компоненты*/
 /*******************************************************************/
 .ui-resizable-s {
+/*
     height: 14px;
     background-image: url(../images/resizable.png);
     background-repeat: no-repeat;
     background-position: center -26px;
     background-color: #DDD;
+*/
 /*
     border-radius: 4px;
     width: 10%;
@@ -3393,8 +3433,8 @@ div.nmc-energy-simple-line > div {
 
 /* Иконки для дерева объектов*/
 .nmc-p-tree-status-img {
-    max-width: 12px;
-    max-height: 12px;
+    max-width: 16px;
+    max-height: 16px;
 }
 
 /*Material: toolbar*/
@@ -3415,6 +3455,7 @@ div.nmc-energy-simple-line > div {
     max-height: 32px;
     border: 1px solid #41719c;
     border-left: none;
+    border-right: none;
 }
 
 .nmc-md-toolbar-n > .md-toolbar-tools {
@@ -3505,4 +3546,14 @@ div.nmc-energy-simple-line > div {
     min-height: 24px;
     height: 24px;
     line-height: inherit;
+}
+
+/*    Daterangepicker DateRangePicker drp*/
+.daterangepicker .calendar-time {
+    text-align: left !important;
+}
+
+.nmc-drp-ctrl-btns {
+    width: 49%;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
 }

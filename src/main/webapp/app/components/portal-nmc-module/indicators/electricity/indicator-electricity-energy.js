@@ -29,28 +29,28 @@ app.controller('ElectricityEnergyCtrl', ['$scope', '$http', 'indicatorSvc', 'mai
             type: "string"
         },
         {
-            header : "A+, кВт/ч",
+            header : "A+, кВт*ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
             fieldName: "p_Ap",
             graph: true
         },
         {
-            header : "A-, кВт/ч",
+            header : "A-, кВт*ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
             fieldName: "p_An",
             graph: true
         },
         {
-            header : "R+, кВАр/ч",
+            header : "R+, кВАр*ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
             fieldName: "q_Rp",
             graph: true
         },
         {
-            header : "R-, кВАр/ч",
+            header : "R-, кВАр*ч",
             headerClass : "col-xs-1 col-md-1 nmc-text-align-center",
             dataClass : "col-xs-1 col-md-1 nmc-text-align-right",
             fieldName: "q_Rn",

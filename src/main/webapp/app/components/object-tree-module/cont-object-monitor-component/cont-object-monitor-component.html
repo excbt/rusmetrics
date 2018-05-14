@@ -1,0 +1,131 @@
+<!--<div style = "min-width: 1400px;">-->
+    
+    <div layout = "column" class = "nmc-cont-object-monitor-div">
+<!--       style = "min-width: 1400px;">-->
+       <div layout = "row">
+           <h3 class = "nmc-cont-object-monitor-h3">Общая диаграмма монитора объектов и точек учета</h3>
+       </div>
+        <div layout = "row" class = "nmc-cont-object-monitor-data-row" layout-align = "center center">
+        <!--    style = "background-color: aqua">-->
+            <div flex = "40" style = "text-align: -webkit-right;">
+        <!--        style = "background-color: blueviolet">-->
+               <div class = "nmc-cont-object-monitor-polar-div">
+                <canvas id = "polar-area" 
+
+                        class = "chart chart-polar-area"
+                        chart-data = "$ctrl.data" chart-labels = "$ctrl.labels"
+                        chart-options = "$ctrl.options"
+                        chart-click = "$ctrl.doughnutClick"
+                        >
+                    <!--        chart-colors = "$ctrl.colours"-->
+                    </canvas>
+                </div>
+            </div>
+            
+            <div flex = "60">        
+                <div layout = "column">
+                   <div flex = "50">
+
+                        <div layout = "row">
+                           <div flex = "30">
+                               <canvas id="doughnut"
+style = "height: 130px;  width: 250px;"                                                                               
+                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
+                                        chart-data="$ctrl.doughnuts['heat'].data"
+                                        chart-labels="$ctrl.doughnuts['heat'].labels"                              
+                                        chart-options="$ctrl.doughnuts['heat'].options"
+                                        chart-click = "$ctrl.doughnutClick"
+                                        chart-colors = "$ctrl.doughnuts['heat'].colors"
+                                        >
+                                </canvas>
+                               <div class = "nmc-cont-object-monitor-doug-center">
+                                   <img id = "heatimg"
+                                      src = "components\object-tree-module\cont-object-monitor-component\heat.png"
+                                       
+                                   />
+                                   <p >{{$ctrl.doughnuts['heat'].allCount}}</p>
+                               </div>
+                           </div>
+                           <div flex = "30">
+                               <canvas id="doughnut"
+    style = "height: 130px;  width: 250px;"
+                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
+                                        chart-data="$ctrl.doughnuts['hw'].data"
+                                        chart-labels="$ctrl.doughnuts['hw'].labels"                              
+                                        chart-options="$ctrl.doughnuts['hw'].options"
+                                        chart-click = "$ctrl.doughnutClick"
+                                        chart-colors = "$ctrl.doughnuts['hw'].colors"
+                                        >
+                                </canvas>
+                               <div  class = "nmc-cont-object-monitor-doug-center">
+                                   <img src = "components\object-tree-module\cont-object-monitor-component\hw26.png"
+                                       
+                                   />
+                                   <p >{{$ctrl.doughnuts['hw'].allCount}}</p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                    <div flex = "50">
+                       <div layout = "row">
+                           <div flex = "30">
+                               <canvas id="doughnut"
+    style = "height: 130px;  width: 250px;"                                   
+                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
+                                        chart-data="$ctrl.doughnuts['cw'].data"
+                                        chart-labels="$ctrl.doughnuts['cw'].labels"                              
+                                        chart-options="$ctrl.doughnuts['cw'].options"
+                                        chart-click = "$ctrl.doughnutClick"
+                                        chart-colors = "$ctrl.doughnuts['cw'].colors"
+                                        >
+                                </canvas>
+                               <div  class = "nmc-cont-object-monitor-doug-center">
+                                   <img src = "components\object-tree-module\cont-object-monitor-component\cw26.png"
+                                       
+                                   />
+                                   <p >{{$ctrl.doughnuts['cw'].allCount}}</p>
+                               </div>
+                           </div>
+                           <div flex = "30">
+                               <canvas id="doughnut"
+     style = "height: 130px;  width: 250px;"                                      
+                                        class="chart chart-doughnut nmc-cont-object-monitor-doug" 
+                                        chart-data="$ctrl.doughnuts['el'].data"
+                                        chart-labels="$ctrl.doughnuts['el'].labels"                              
+                                        chart-options="$ctrl.doughnuts['el'].options"
+                                        chart-click = "$ctrl.doughnutClick"
+                                        chart-colors = "$ctrl.doughnuts['el'].colors"
+                                        >
+                                </canvas>
+                               <div  class = "nmc-cont-object-monitor-doug-center">
+                                   <img src = "components\object-tree-module\cont-object-monitor-component\el.png"
+                                       
+                                   />
+                                   <p >{{$ctrl.doughnuts['el'].allCount}}</p>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+        <div layout = "row" layout-align = "center center"  
+          class = "nmc-cont-object-monitor-legend"
+           style = "">
+            <div >
+                <p ng-style = "{'background-color': $ctrl.doughuntColors[0]}"></p>Критические
+                <p ng-style = "{'background-color': $ctrl.doughuntColors[1]}"></p>Некритические
+                <p ng-style = "{'background-color': $ctrl.doughuntColors[2]}"></p>Остальные
+<!--                <p style = "height: 16px; width: 32px; background-color: #803690; display: inline-block; margin: 5px 10px 0 5px;"></p>Фиолетовый-->
+            </div>
+        </div>
+        <div layout = "row" ng-if = "$ctrl.contObjectStateShowFlag">
+    <!--        style = "height: 400px; max-height: 400px;">-->
+            <div flex>
+    <!--            Cont object and zpoint montitor state.-->
+                <node-control-component node = "{id: $ctrl.nodeId}" filter-array = "$ctrl.contObjectFilterArray"></node-control-component>
+
+            </div>
+        </div>
+    </div>
+<!--</div>-->

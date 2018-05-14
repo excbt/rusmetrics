@@ -1,12 +1,30 @@
 
+//<<<<<<< HEAD
+//.nmc-card {
+//    padding: 1.5%;
+//    margin-top: 10px;
+    
+//    border: none;
+//    height: 91vh;
+    
+//    position: absolute;
+//    width: 100%;
+//    bottom: 0;
+//    top: 36px;
+//}
+//
+//.nmc-container {
+//    padding-left: 1px;
+//    padding-right: 1px;
+//=======
 .portal-card {
-    padding: 1%;
+//    padding: 1%;
     // padding-top: 0 !important;
     margin-top: 0% !important;
     margin-left: 0%;
     border: none;
     height: 92vh;
-    border-top: 1px solid black;
+//    border-top: 1px solid black;
     border-radius: 0 !important;    
     width: 100%;
     background-color: #fff;
@@ -32,4 +50,5 @@
     height: auto;
     margin-bottom: 0;
 
+//>>>>>>> angular-5/new-ui
 }

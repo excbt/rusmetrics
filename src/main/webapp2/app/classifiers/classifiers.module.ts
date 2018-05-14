@@ -6,7 +6,8 @@ import { JhipsterSharedModule } from '../shared';
 import { classifiersState} from './';
 import { ClassifiersDashboardComponent} from './';
 
-import { PortalEntityModule } from '.././entities/entity.module';
+import { PortalEntityModule } from '../entities/entity.module';
+import { PortalObjectTreeModule } from '../components/object-tree';
 import { CardModule } from 'primeng/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,7 +19,8 @@ import { MatIconModule } from '@angular/material/icon';
         CardModule,
         MatButtonModule,
         MatIconModule,
-        PortalEntityModule
+        PortalEntityModule,
+        PortalObjectTreeModule
         // RouterModule.forChild([ HOME_ROUTE ]) CLASSIFIERS_HOME_ROUTE
     ],
     declarations: [
