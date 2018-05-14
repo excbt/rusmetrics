@@ -1,31 +1,34 @@
 <p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hideMenu()" (onHide)="hideMenu()" >
     <mat-nav-list>
         <mat-list-item>
-            <a class="" routerLink="/" (click)="hideMenu()">
+            <a class="" (click)="hideMenu()">
                 <img src="../../../content/images/logo-main-menu-h.png"/> 
             </a> 
         </mat-list-item>
         <mat-divider></mat-divider>    
         <mat-list-item>
-            <a class="" routerLink="/object-trees" (click)="hideMenu()">
+            <a routerLink="/" (click)="hideMenu()">
                 <span>
-                    <i class="fa fa-list" aria-hidden="true"></i>                            
-                    <span>Мониторинг</span>
+                    <i class="fa fa-home" aria-hidden="true"></i>
+                    <span jhiTranslate="global.menu.home" class = "menu1-font-color">Home</span>
                 </span>
             </a>
         </mat-list-item>
         <mat-list-item>
-<!--            <button mat-button (click)="toggleMenu()">-->
-
-                <a class="" routerLink="/classifiers" (click)="hideMenu()">
-                    <span>
-                        <i class="fa fa-home" aria-hidden="true"></i>
-<!--                         <span jhiTranslate="global.menu.home">Home</span> -->
-                        <span>Справочники</span>
-                    </span>
-                </a>
-
-<!--            </button> -->
+            <a routerLink="/object-trees" (click)="hideMenu()">
+                <span>
+                    <i class="fa fa-list" aria-hidden="true"></i>                            
+                    <span jhiTranslate="global.menu.monitoring.title" class = "menu1-font-color">Monitoring</span>
+                </span>
+            </a>
+        </mat-list-item>
+        <mat-list-item>
+            <a routerLink="/classifiers" (click)="hideMenu()">
+                <span>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    <span jhiTranslate="global.menu.classifiers.title" class = "menu1-font-color">Classifiers</span>
+                </span>
+            </a>
         </mat-list-item>
     </mat-nav-list>
     

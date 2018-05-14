@@ -11,10 +11,12 @@ import { PortalObjectTreeModule } from '../components/object-tree';
 import { CardModule } from 'primeng/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { PortalSharedBlocksModule } from '../shared-blocks';
 
 @NgModule({
     imports: [
         JhipsterSharedModule,
+        PortalSharedBlocksModule,
         RouterModule.forChild(classifiersState),
         CardModule,
         MatButtonModule,
