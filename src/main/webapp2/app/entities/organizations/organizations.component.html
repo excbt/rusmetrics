@@ -34,14 +34,16 @@
 
         <ng-container matColumnDef="select" >
             <mat-header-cell *matHeaderCellDef class="select-column-width">
-                <mat-checkbox (change)="$event ? selection.clear() : null"
+                <!-- <mat-checkbox 
+                    (change)="$event ? selection.clear() : null"
                     [checked]="!selection.isEmpty()"
                     [indeterminate]="!selection.isEmpty()"
                     >
-                </mat-checkbox>
+                </mat-checkbox> -->
             </mat-header-cell>     
             <mat-cell *matCellDef="let row" class="select-column-width">
                 <mat-checkbox 
+                    color="primary"
                     (click)="$event.stopPropagation()"
                     (change)="$event ? selection.toggle(row) : null"
                     [checked]="selection.isSelected(row)">

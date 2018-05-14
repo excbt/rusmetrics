@@ -9,8 +9,8 @@
     },    
 
     "subscrUser": {
-        "id" : "id",
-        "userName" : "userName",
+        "id" : "ID",
+        "userName" : "Пользователь",
         "firstName" : "firstName",
         "lastName" : "lastName",
         "password" : "password",
