@@ -25,5 +25,11 @@ export class SubscrUsersComponent extends ExcListFormComponent<SubscrUser> imple
     getDataSourceProvider(): ExcListDatasourceProvider<SubscrUser> {
         return {getDataSource: () => new SubscrUserDataSource(this.subscrUserService)};
     }
+    navigateEdit() {
+        if (!this.selection.isEmpty()) {
+            // this.router.navigate([this.router.url, entityId, 'edit']);
+            super.navigateEdit(this.selection.selected[0].id);
+        }
+      }
 
 }

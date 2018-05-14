@@ -53,7 +53,7 @@ public class SubscrUserDTO {
         this.userUuid = subscrUser.getUserUUID();
         this.userComment = subscrUser.getUserComment();
         this.userEMail = subscrUser.getUserEMail();
-        this.isBlocked = subscrUser.getIsBlocked();
+        this.isBlocked = Boolean.TRUE.equals(subscrUser.getIsBlocked());
         this.contactEmail = subscrUser.getContactEmail();
         this.userDescription = subscrUser.getUserDescription();
         this.isAdmin = Boolean.TRUE.equals(subscrUser.getIsAdmin());

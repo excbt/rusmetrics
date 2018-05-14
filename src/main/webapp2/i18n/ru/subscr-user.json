@@ -5,6 +5,14 @@
             "listTitle" : "Список пользователей",
             "editTitle" : "Редактирование пользователя",
             "newTitle" : "Добавление пользователя"
+        },
+        "edit": {
+            "title": "Пользователь"
+        },
+        "form": {
+            "errors": {
+                "userNameRequired" : "Обязательное поле"
+            }
         }
     },    
 
@@ -14,16 +22,16 @@
         "firstName" : "firstName",
         "lastName" : "lastName",
         "password" : "password",
-        "userComment" : "userComment",
+        "userComment" : "Комментарий",
         "subscriberId" : "subscriberId",
         "userUuid" : "userUuid",
         "userEmail" : "userEmail",
-        "isBlocked" : "isBlocked",
-        "isAdmin" : "isAdmin",
-        "isReadonly" : "isReadonly",
-        "contactEmail" : "contactEmail",
-        "userDescription" : "userDescription",
-        "userNickname" : "userNickname",
-        "devComment" : "devComment"        
+        "isBlocked" : "Блокировка пользователя",
+        "isAdmin" : "Администратор",
+        "isReadonly" : "Только для чтения",
+        "contactEmail" : "e-mail",
+        "userDescription" : "Описание",
+        "userNickname" : "Имя",
+        "devComment" : "devComment"
     }
 }

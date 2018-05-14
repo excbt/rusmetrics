@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
@@ -25,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.RmaSubscrUserResource;
+import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -35,6 +37,9 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
+
+    @Autowired
+    private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
 	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -105,7 +110,7 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
             .testPost(subscrUser)
             .getLastId();
 
-		subscrUser = subscrUserService.findOne(subscrUserId);
+		subscrUser = subscrUserRepository.findOne(subscrUserId);
 		assertNotNull(subscrUser);
 
 		subscrUser.setUserComment("Modified By REST");

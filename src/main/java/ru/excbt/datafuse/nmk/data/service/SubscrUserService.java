@@ -165,9 +165,9 @@ public class SubscrUserService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser findOne(Long subscrUserId) {
+	public SubscrUserDTO findOne(Long subscrUserId) {
         SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-        return subscrUser;
+        return new SubscrUserDTO(subscrUser);
 	}
 
 	/**

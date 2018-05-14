@@ -184,6 +184,12 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
         this.deleteEntity(this.entityId);
     }
 
+    navigateBack() {
+        if (this.params.backUrl) {
+            this.router.navigate([this.params.backUrl]);
+        }
+    }
+
     navigateNew() {
         if (this.params.onSaveUrl) {
             this.router.navigate([this.params.onSaveUrl]);

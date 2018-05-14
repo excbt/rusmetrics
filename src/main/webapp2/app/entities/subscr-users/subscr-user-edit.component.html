@@ -1,0 +1,56 @@
+<jhi-exc-form-template>
+    <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+    (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="subscrUsers.edit.title">
+    </jhi-exc-edit-form-menu>
+
+    <br>
+    <form [formGroup]="entityForm">
+        <div class="flex-column">
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName">
+                <mat-error *ngIf="checkFormControl('userName', 'required')">
+                        {{'subscrUsers.form.errors.userNameRequired' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.userNickname' | translate}}" formControlName="userNickname">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.userComment' | translate}}" formControlName="userComment">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.contactEmail' | translate}}" formControlName="contactEmail">
+            </mat-form-field>
+            <mat-form-field>
+                    <textarea matInput formControlName="userDescription" placeholder="{{'subscrUser.userDescription' | translate}}">
+                    </textarea>
+            </mat-form-field>        
+
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isBlocked'] && entityForm.controls['isBlocked'].value }}"
+                labelPosition="after"
+                color="warn"
+                (change) ="isBlockedToggle($event)">
+                {{'subscrUser.isBlocked' | translate}}
+            </mat-slide-toggle>                        
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isAdmin'] && entityForm.controls['isAdmin'].value }}"
+                labelPosition="after"
+                color="primary"
+                (change) ="isAdminToggle($event)">
+                {{'subscrUser.isAdmin' | translate}}
+            </mat-slide-toggle>                        
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isReadonly'] && entityForm.controls['isReadonly'].value }}"
+                labelPosition="after"
+                color="primary"
+                (change) ="isReadonlyToggle($event)">
+                {{'subscrUser.isReadonly' | translate}}
+            </mat-slide-toggle>                        
+        </div>
+    </form>    
+    <br>
+    <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
+    (backAction)="navigateBack()" [deleteDisabled]="true"></jhi-exc-edit-buttons>            
+
+</jhi-exc-form-template>    

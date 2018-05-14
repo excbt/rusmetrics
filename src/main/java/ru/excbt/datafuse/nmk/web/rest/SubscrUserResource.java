@@ -88,9 +88,9 @@ public class SubscrUserResource {
 	public ResponseEntity<?> getCurrentSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
-		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
-		if (subscrUser == null || subscrUser.getSubscriber().getId() == null
-				|| !subscrUser.getSubscriber().getId().equals(subscrUserId)) {
+		SubscrUserDTO subscrUser = subscrUserService.findOne(subscrUserId);
+		if (subscrUser == null || subscrUser.getSubscriberId() == null
+				|| !subscrUser.getSubscriberId().equals(subscrUserId)) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -287,7 +287,7 @@ public class SubscrUserResource {
 		checkNotNull(rSubscriberId);
 		checkNotNull(subscrUserId);
 
-		SubscrUser subscrUser = subscrUserService.findOne(subscrUserId);
+		SubscrUserDTO subscrUser = subscrUserService.findOne(subscrUserId);
 		if (checkSubscrUserOwnerFail(rSubscriberId, subscrUser)) {
 			return ApiResponse.responseBadRequest();
 		}
@@ -313,6 +313,11 @@ public class SubscrUserResource {
 	private boolean checkSubscrUserOwnerFail(Long rSubscriberId, SubscrUser subscrUser) {
 		return subscrUser == null || subscrUser.getSubscriber().getId() == null
 				|| !subscrUser.getSubscriber().getId().equals(rSubscriberId);
+	}
+
+	private boolean checkSubscrUserOwnerFail(Long rSubscriberId, SubscrUserDTO subscrUser) {
+		return subscrUser == null || subscrUser.getSubscriberId() == null
+				|| !subscrUser.getSubscriberId().equals(rSubscriberId);
 	}
 
 
@@ -353,6 +358,17 @@ public class SubscrUserResource {
         Long selectSubscriberId = optSubscriberId.orElse(portalUserIdsService.getCurrentIds().getSubscriberId());
         Page<SubscrUserDTO> subscrUsers = subscrUserService.findBySubscriberIdPaged(selectSubscriberId, searchString, pageable);
         return ResponseEntity.ok(subscrUsers);
+    }
+
+    @RequestMapping(value = "/subscr-users/{subscrUserId}", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
+        checkNotNull(subscrUserId);
+
+        SubscrUserDTO subscrUserDTO = subscrUserService.findOne(subscrUserId);
+        if (checkSubscrUserOwnerFail(portalUserIdsService.getCurrentIds().getSubscriberId(), subscrUserDTO)) {
+            return ApiResponse.responseForbidden();
+        }
+        return ApiResponse.responseOK(subscrUserDTO);
     }
 
 }

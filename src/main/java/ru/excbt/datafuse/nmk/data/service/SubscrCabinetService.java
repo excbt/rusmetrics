@@ -497,8 +497,8 @@ public class SubscrCabinetService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {
-		SubscrUser fromSubscrUser = subscrUserService.findOne(fromSubscrUserId);
-		SubscrUser toSubscrUser = subscrUserService.findOne(toSubscrUserId);
+		SubscrUser fromSubscrUser = subscrUserRepository.findOne(fromSubscrUserId);
+		SubscrUser toSubscrUser = subscrUserRepository.findOne(toSubscrUserId);
 
 		if (fromSubscrUser == null || toSubscrUser == null) {
 			throw new PersistenceException(

@@ -51,6 +51,7 @@ import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
 import { SubscrUserService } from './subscr-users/subscr-user.service';
 import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
 import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
+import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -95,6 +96,7 @@ import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
         SubscrUsersComponent,
+        SubscrUserEditComponent,
         SubscrUsersWidgetComponent
     ],
     entryComponents: [

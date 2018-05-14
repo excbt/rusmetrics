@@ -1,6 +1,7 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
@@ -29,6 +31,7 @@ import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 @RunWith(SpringRunner.class)
@@ -36,6 +39,9 @@ public class SubscrUserResourceTest extends PortalApiTest {
 
 	@Autowired
 	private SubscrUserService subscrUserService;
+
+	@Autowired
+	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
 	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -99,7 +105,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
             .testPost().getLastId();
 
 //            _testCreateJson(UrlUtils.apiSubscrUrl("/subscrUsers"), subscrUser, params);
-		subscrUser = subscrUserService.findOne(subscrUserId);
+		subscrUser = subscrUserRepository.findOne(subscrUserId);
 		assertNotNull(subscrUser);
 
 		subscrUser.setUserComment("Modified By REST");
@@ -141,4 +147,11 @@ public class SubscrUserResourceTest extends PortalApiTest {
 //		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
     }
 
+    @Test
+    public void testGetSubscrUser() throws Exception {
+        List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+        assertTrue(subscrUsers.size() > 0);
+        mockMvcRestWrapper.restRequest("/api/subscr-users/{id}", subscrUsers.get(0).getId()).testGet();
+
+    }
 }
