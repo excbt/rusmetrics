@@ -7,11 +7,21 @@
     <form [formGroup]="entityForm">
         <div class="flex-column">
             <mat-form-field>
-                <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName">
+                <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName" required>
                 <mat-error *ngIf="checkFormControl('userName', 'required')">
                         {{'subscrUsers.form.errors.userNameRequired' | translate}}
                 </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'minlength', ['required', 'pattern'])">
+                        {{'subscrUsers.form.errors.userNameMinLenght' | translate}}
+                </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'pattern', ['required', 'minlenght'])">
+                        {{'subscrUsers.form.errors.userNamePattern' | translate}}
+                </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'usernameTaken', ['pattern', 'required', 'minlenght'])">
+                        {{'subscrUsers.form.errors.userNameTaken' | translate}}
+                </mat-error>
             </mat-form-field>
+            <span>{{entityForm.controls['userName'].errors | json}}</span>
             <mat-form-field>
                 <input matInput placeholder="{{'subscrUser.userNickname' | translate}}" formControlName="userNickname">
             </mat-form-field>

@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ExcEditFormComponent, ExcFormValue } from '../../shared-blocks';
 import { SubscrUser } from './subscr-user.model';
 import { SubscrUserService } from './subscr-user.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
@@ -33,7 +33,7 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     createForm(data: SubscrUser): FormGroup {
         const form = this.fb.group({
-            userName: [data.userName, [Validators.required]],
+            userName: [data.userName, [Validators.required, Validators.min(1)]],
             userNickname: [data.userNickname],
             userComment: [data.userComment],
             userEmail: [data.userEmail],
@@ -48,7 +48,7 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     initForm(): FormGroup {
         const form = this.fb.group({
-            userName: [null, [Validators.required]],
+            userName: [null, [Validators.required, Validators.pattern('[a-z]*[a-z0-9]*'), Validators.minLength(5)], this.validateUserNotTaken.bind(this)],
             userNickname: [null],
             userComment: [null],
             userEmail: [null],
@@ -104,5 +104,11 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     navigateNew() {
         this.router.navigate(['subscr-users', 'new', 'edit']);
+    }
+
+    validateUserNotTaken(control: AbstractControl) {
+        return this.subscrUserService.checkUserNotTaken(control.value).map((res) => {
+          return res ? null : { usernameTaken: true };
+        });
     }
 }

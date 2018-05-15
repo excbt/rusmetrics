@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
@@ -77,7 +78,10 @@ public class SubscrUserService implements SecuredRoles {
 
     private final SubscrUserMapper subscrUserMapper;
 
-    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper) {
+    private final QueryDSLService queryDSLService;
+
+
+    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper, QueryDSLService queryDSLService) {
         this.subscrUserRepository = subscrUserRepository;
         this.systemUserRepository = systemUserRepository;
         this.subscriberService = subscriberService;
@@ -87,6 +91,7 @@ public class SubscrUserService implements SecuredRoles {
         this.cacheManager = cacheManager;
         this.subscriberLdapService = subscriberLdapService;
         this.subscrUserMapper = subscrUserMapper;
+        this.queryDSLService = queryDSLService;
     }
 
     /**
@@ -145,6 +150,15 @@ public class SubscrUserService implements SecuredRoles {
         Page<SubscrUserDTO> page = subscrUserRepository.findAll(where, pageable).map(SubscrUserDTO::new);
 
         return page;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkUserNotExists(String username) {
+        QSubscrUser qSubscrUser = QSubscrUser.subscrUser;
+        BooleanExpression userNameFilter = qSubscrUser.userName.toUpperCase().eq(username.toUpperCase());
+        List<Long> count =queryDSLService.queryFactory().select(qSubscrUser.userName.count()).from(qSubscrUser).where(userNameFilter).fetch();
+        return count.isEmpty() || (count.get(0) == 0);
+
     }
 
 	/**

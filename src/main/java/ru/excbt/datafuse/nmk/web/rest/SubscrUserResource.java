@@ -371,4 +371,12 @@ public class SubscrUserResource {
         return ApiResponse.responseOK(subscrUserDTO);
     }
 
+    @RequestMapping(value = "/subscr-users/check", method = RequestMethod.GET)
+    public ResponseEntity<?> getSubscrUserCheck(@RequestParam("username") String username) {
+        boolean result = subscrUserService.checkUserNotExists(username);
+        Map<String, Boolean> resultJson = new HashMap<>();
+        resultJson.put("result", result);
+        return ResponseEntity.ok(resultJson);
+    }
+
 }

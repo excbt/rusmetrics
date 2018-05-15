@@ -154,4 +154,13 @@ public class SubscrUserResourceTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/subscr-users/{id}", subscrUsers.get(0).getId()).testGet();
 
     }
+
+    @Test
+    public void testGetCheckSubscrUserExists() throws Exception {
+        String username = "admin";
+        mockMvcRestWrapper.restRequest("/api/subscr-users/check").requestBuilder(b -> b.param("username", username))
+            .testGet();
+//		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
+    }
+
 }

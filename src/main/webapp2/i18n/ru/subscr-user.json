@@ -11,7 +11,10 @@
         },
         "form": {
             "errors": {
-                "userNameRequired" : "Обязательное поле"
+                "userNameRequired" : "Обязательное поле",
+                "userNamePattern" : "Допускаются только латинские буквы и цифры",
+                "userNameMinLenght" : "Минимальная длина 5 символов",
+                "userNameTaken" : "Имя пользователя занято"
             }
         }
     },    
