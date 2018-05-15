@@ -5,16 +5,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrRole;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.validators.UsernameValidator;
 
 import javax.persistence.PersistenceException;
@@ -39,40 +41,48 @@ public class SubscrUserManageService {
 
     private final SubscrUserService subscrUserService;
 
-    public SubscrUserManageService(SubscrUserRepository subscrUserRepository, SubscrUserMapper subscrUserMapper, SubscrUserService subscrUserService) {
+    private final SubscriberRepository subscriberRepository;
+
+    private final LdapService ldapService;
+
+    public SubscrUserManageService(SubscrUserRepository subscrUserRepository, SubscrUserMapper subscrUserMapper, SubscrUserService subscrUserService, SubscriberRepository subscriberRepository, LdapService ldapService) {
         this.subscrUserRepository = subscrUserRepository;
         this.subscrUserMapper = subscrUserMapper;
         this.subscrUserService = subscrUserService;
+        this.subscriberRepository = subscriberRepository;
+        this.ldapService = ldapService;
     }
 
     /**
      *
-     * @param subscriber
      * @param subscrUserDTO
      * @param password
      * @return
      */
-    public Optional<SubscrUser> createSubscrUser(final Subscriber subscriber,
-                                                 final SubscrUserDTO subscrUserDTO,
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    @Transactional
+    public Optional<SubscrUser> createSubscrUser(final SubscrUserDTO subscrUserDTO,
                                                  final String password) {
-        Objects.requireNonNull(subscriber);
-        Objects.requireNonNull(subscriber);
-        Objects.requireNonNull(subscriber.getId());
         Objects.requireNonNull(subscrUserDTO);
+
+        if (subscrUserDTO.getSubscriberId() == null) {
+            return Optional.empty();
+        }
 
         if (subscrUserDTO.getUserName() != null) {
             subscrUserDTO.setUserName(subscrUserDTO.getUserName().toLowerCase());
         }
 
         if (!usernameValidator.validate(subscrUserDTO.getUserName())) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         Optional<SubscrUser> checkUser = subscrUserRepository.findOneByUserNameIgnoreCase(subscrUserDTO.getUserName());
         if (checkUser.isPresent()) {
-            new PersistenceException("User with name " + subscrUserDTO.getUserName() + "already exists");
+            throw new PersistenceException("User with name " + subscrUserDTO.getUserName() + "already exists");
         }
 
+        Subscriber subscriber = subscriberRepository.findOne(subscrUserDTO.getSubscriberId());
 
         SubscrUser subscrUser = subscrUserMapper.toEntity(subscrUserDTO);
 
@@ -88,12 +98,85 @@ public class SubscrUserManageService {
         return Optional.of(result);
     }
 
+
+    /**
+     *
+     * @param subscrUserDTO
+     * @param passwords
+     * @return
+     */
+    @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
+    @Transactional
+    public Optional<SubscrUser> updateSubscrUser(final SubscrUserDTO subscrUserDTO,
+                                                 final String[] passwords) {
+
+        boolean isAdmin = Boolean.TRUE.equals(subscrUserDTO.getIsAdmin());
+        boolean isReadonly = Boolean.TRUE.equals(subscrUserDTO.getIsReadonly());
+
+        SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserDTO.getId());
+
+        if (subscrUser == null) {
+            throw DBExceptionUtil.newEntityNotFoundException(SubscrUser.class, subscrUserDTO.getId());
+        }
+        if (!subscrUser.getUserName().equals(subscrUserDTO.getUserName())) {
+            throw new PersistenceException(
+                String.format("Changing username is not allowed. SubscrUser (id=%d)", subscrUser.getId()));
+        }
+
+        if (subscrUser.getDeleted() == 1) {
+            throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
+        }
+
+        String newPassword = null;
+        if (passwords != null && passwords.length != 0) {
+            if (passwords.length != 2) {
+                throw new PersistenceException(
+                    String.format("Password for user(%s) is not set", subscrUser.getUserName()));
+            }
+            newPassword = passwords[1];
+            subscrUser.setPassword(null);
+        }
+
+
+        List<SubscrRole> subscrRoles = subscrUserService.processSubscrRoles(subscrUser.getSubscriber(), isAdmin, isReadonly);
+        subscrUser.getSubscrRoles().clear();
+        subscrUser.getSubscrRoles().addAll(subscrRoles);
+
+        subscrUserMapper.updateSubscrUser(subscrUser, subscrUserDTO);
+
+        SubscrUser savedSubscrUser = subscrUserRepository.save(subscrUser);
+
+        final String ldapPassword = newPassword;
+        if (ldapPassword != null) {
+
+            SubscrUserService.LdapAction action = (u) -> {
+                //ldapService.changePassword(u, passwords[0], passwords[1]);
+                ldapService.changePassword(u, ldapPassword);
+            };
+            subscrUserService.processLdapAction(savedSubscrUser, action);
+        }
+
+        if (Boolean.TRUE.equals(subscrUser.getIsBlocked())) {
+            SubscrUserService.LdapAction action = (u) -> {
+                ldapService.blockLdapUser(u);
+            };
+            subscrUserService.processLdapAction(savedSubscrUser, action);
+        }
+
+        if (Boolean.FALSE.equals(subscrUser.getIsBlocked())) {
+            SubscrUserService.LdapAction action = (u) -> {
+                ldapService.unblockLdapUser(u);
+            };
+            subscrUserService.processLdapAction(savedSubscrUser, action);
+        }
+        return Optional.of(savedSubscrUser);
+    }
     /**
      *
      * @param subscriber
      */
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public void setupSubscriberAdminUserRoles(Subscriber subscriber) {
 
         checkNotNull(subscriber);

@@ -374,7 +374,7 @@ public class SubscrUserService implements SecuredRoles {
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
 				subscrUser.getUserEMail(), subscrUser.getUserDescription(), gidNumber,
-				subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
+                (subscrTypeKey != null && subscrTypeKey.isChild()) ? subscrTypeKey.getKeyname() : null);
 		return user;
 
 	}

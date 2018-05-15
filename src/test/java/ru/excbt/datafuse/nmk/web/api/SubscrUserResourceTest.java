@@ -1,7 +1,10 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
@@ -25,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
@@ -32,6 +37,7 @@ import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @RunWith(SpringRunner.class)
@@ -102,7 +108,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
 
 		Long subscrUserId = mockMvcRestWrapper.restRequest("/api/subscr/subscrUsers")
             .requestBuilder(params)
-            .testPost().getLastId();
+            .testPost(subscrUser).getLastId();
 
 //            _testCreateJson(UrlUtils.apiSubscrUrl("/subscrUsers"), subscrUser, params);
 		subscrUser = subscrUserRepository.findOne(subscrUserId);
@@ -163,4 +169,37 @@ public class SubscrUserResourceTest extends PortalApiTest {
 //		_testGetJson(UrlUtils.apiSubscrUrl("/subscrUsers"));
     }
 
+    private SubscrUserDTO createTestUser() {
+        SubscrUserDTO subscrUserDTO = new SubscrUserDTO();
+        String username = "usr_" + System.currentTimeMillis();
+        subscrUserDTO.setUserName(username);
+        subscrUserDTO.setUserNickname("user_" + username + "_FN");
+        subscrUserDTO.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+        return subscrUserDTO;
+    }
+
+    @Test
+    public void testCreateUser() throws Exception {
+        SubscrUserDTO subscrUserDTO = createTestUser();
+
+        Long subscrUserId = mockMvcRestWrapper.restRequest("/api/subscr-users")
+            .requestBuilder(b -> b.param("newPassword", "my-pass12345"))
+            .testPost(subscrUserDTO).getLastId();
+
+        SubscrUser checkUser = subscrUserRepository.findOne(subscrUserId);
+        assertThat(checkUser.getUserName(), equalTo(subscrUserDTO.getUserName()));
+    }
+
+    @Test
+    public void testUpdateUser() throws Exception {
+        SubscrUserDTO subscrUserDTO = createTestUser();
+        Subscriber s = new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
+        String initPass = "pass12345";
+        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(subscrUserDTO, initPass);
+        assertThat(subscrUserOptional.isPresent(), is(true));
+        subscrUserOptional.ifPresent(d -> subscrUserDTO.setId(d.getId()));
+        mockMvcRestWrapper.restRequest("/api/subscr-users")
+            .requestBuilder(b -> b.param("newPassword", "my-pass12345").param("oldPassword", initPass))
+            .testPut(subscrUserDTO);
+    }
 }

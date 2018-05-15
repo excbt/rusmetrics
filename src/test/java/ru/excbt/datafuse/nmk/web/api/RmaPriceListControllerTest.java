@@ -135,7 +135,7 @@ public class RmaPriceListControllerTest extends PortalApiTest {
 		};
         mockMvcRestWrapper.restRequest("/api/rma/{id1}/priceList", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID)
             .requestBuilder(b -> b.param("srcPriceListId", priceList.get(0).getId().toString()))
-            .testPost();
+            .testPostEmpty();
 //		_testPostJson(String.format("/api/rma/%d/priceList", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID), param);
 	}
 
@@ -179,7 +179,7 @@ public class RmaPriceListControllerTest extends PortalApiTest {
 			// requestBuilder.param("activeIds", arrayToString(new long[] {}));
 		};
         mockMvcRestWrapper.restRequest("/api/rma/{id1}/priceList/{id2}/subscr", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceListId)
-            .requestBuilder(b -> b.param("subscriberIds", TestUtils.arrayToString(new long[] { TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID }))).testPost();
+            .requestBuilder(b -> b.param("subscriberIds", TestUtils.arrayToString(new long[] { TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID }))).testPostEmpty();
 //		_testPostJson(String.format("/api/rma/%d/priceList/%d/subscr", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
 	}
 
@@ -192,7 +192,7 @@ public class RmaPriceListControllerTest extends PortalApiTest {
 	public void testSetActiveSubscrPriceList() throws Exception {
 
 		//Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
-        mockMvcRestWrapper.restRequest("/api/rma/{id1}/priceList/{id2}/activate", 67628679L, 85609507L).testPut();
+        mockMvcRestWrapper.restRequest("/api/rma/{id1}/priceList/{id2}/activate", 67628679L, 85609507L).testPutEmpty();
 //		_testPutJson(String.format("/api/rma/%d/priceList/%d/activate", 67628679L, 85609507L));
 	}
 

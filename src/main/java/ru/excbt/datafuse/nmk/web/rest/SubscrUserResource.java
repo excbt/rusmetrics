@@ -156,7 +156,8 @@ public class SubscrUserResource {
 
     protected ResponseEntity<?> createSubscrUserInternal(Subscriber rmaSubscriber,
                                                            final SubscrUserDTO subscrUserDTO, String password, HttpServletRequest request) {
-        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(rmaSubscriber, subscrUserDTO, password);
+        subscrUserDTO.setSubscriberId(rmaSubscriber.getId());
+	    Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(subscrUserDTO, password);
         return subscrUserOptional
             .map(SubscrUserDTO::new)
                     .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
@@ -360,6 +361,8 @@ public class SubscrUserResource {
         return ResponseEntity.ok(subscrUsers);
     }
 
+    @Timed
+    @ApiOperation("Get all subscr users of subscriber")
     @RequestMapping(value = "/subscr-users/{subscrUserId}", method = RequestMethod.GET)
     public ResponseEntity<?> getSubscrUser(@PathVariable("subscrUserId") Long subscrUserId) {
         checkNotNull(subscrUserId);
@@ -371,12 +374,59 @@ public class SubscrUserResource {
         return ApiResponse.responseOK(subscrUserDTO);
     }
 
+    @Timed
+    @ApiOperation("Check if username is not taken")
     @RequestMapping(value = "/subscr-users/check", method = RequestMethod.GET)
     public ResponseEntity<?> getSubscrUserCheck(@RequestParam("username") String username) {
         boolean result = subscrUserService.checkUserNotExists(username);
         Map<String, Boolean> resultJson = new HashMap<>();
         resultJson.put("result", result);
         return ResponseEntity.ok(resultJson);
+    }
+
+    /**
+     *
+     * @param newPassword
+     * @param subscrUserDTO
+     * @param request
+     * @return
+     */
+    @Timed
+    @ApiOperation("SubscrUser Create")
+    @RequestMapping(value = "/subscr-users", method = RequestMethod.POST)
+    public ResponseEntity<?> createSubscrUser(
+        @RequestParam(value = "newPassword", required = false) String newPassword,
+        @RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
+
+        subscrUserDTO.setIsAdmin(Boolean.TRUE.equals(subscrUserDTO.getIsAdmin()));
+        subscrUserDTO.setIsReadonly(Boolean.TRUE.equals(subscrUserDTO.getIsReadonly()));
+        subscrUserDTO.setIsBlocked(Boolean.TRUE.equals(subscrUserDTO.getIsBlocked()));
+
+        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(subscrUserDTO, newPassword);
+        return subscrUserOptional
+            .map(SubscrUserDTO::new)
+            .map(r -> ResponseEntity.created(URI.create(request.getRequestURI() + '/' + r.getId())).body(r))
+            .orElse(ResponseEntity.badRequest().build());
+    }
+
+    @Timed
+    @ApiOperation("SubscrUser Update")
+    @RequestMapping(value = "/subscr-users", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateSubscrUser(@RequestParam(value = "oldPassword", required = false) String oldPassword,
+                                              @RequestParam(value = "newPassword", required = false) String newPassword,
+                                              @RequestBody SubscrUserDTO subscrUserDTO) {
+
+        if (subscrUserDTO.getId() == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
+
+        Optional<SubscrUser> subscrUserOptional = subscrUserManageService.updateSubscrUser(subscrUserDTO, passwords);
+        return subscrUserOptional
+            .map(SubscrUserDTO::new)
+            .map(r -> ResponseEntity.ok(r))
+            .orElse(ResponseEntity.badRequest().build());
     }
 
 }

@@ -210,11 +210,11 @@ public class SubscrContEventNotificationControllerTest extends PortalApiTest {
 
         mockMvcRestWrapper.restRequest("/api/subscr/contEvent/notifications/revision")
             .requestBuilder(params)
-            .testPut();
+            .testPutEmpty();
 
         mockMvcRestWrapper.restRequest("/api/subscr/contEvent/notifications/revision/isNew")
             .requestBuilder(params)
-            .testPut();
+            .testPutEmpty();
 
 //		_testUpdateJson("/api/subscr/contEvent/notifications/revision", null, params);
 

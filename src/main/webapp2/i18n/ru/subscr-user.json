@@ -7,7 +7,9 @@
             "newTitle" : "Добавление пользователя"
         },
         "edit": {
-            "title": "Пользователь"
+            "title": "Пользователь",
+            "oldPassword" : "Предыдущий пароль",
+            "passwordConfirmation" : "Подтверждение пароля"
         },
         "form": {
             "errors": {
@@ -24,7 +26,7 @@
         "userName" : "Пользователь",
         "firstName" : "firstName",
         "lastName" : "lastName",
-        "password" : "password",
+        "password" : "Пароль",
         "userComment" : "Комментарий",
         "subscriberId" : "subscriberId",
         "userUuid" : "userUuid",

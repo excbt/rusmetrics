@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -94,7 +95,7 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
      * @throws Exception
      */
 	@Test
-//    @Ignore
+    @Ignore
 	public void testRSubscrUserCRUD() throws Exception {
 
 		SubscrUser subscrUser = new SubscrUser();

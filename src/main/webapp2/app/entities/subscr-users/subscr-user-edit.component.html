@@ -21,10 +21,22 @@
                         {{'subscrUsers.form.errors.userNameTaken' | translate}}
                 </mat-error>
             </mat-form-field>
-            <span>{{entityForm.controls['userName'].errors | json}}</span>
+            <span>{{entityForm.controls['confPassword'].errors | json}}</span>
+            <span>{{entityForm.status | json}}</span>
             <mat-form-field>
                 <input matInput placeholder="{{'subscrUser.userNickname' | translate}}" formControlName="userNickname">
             </mat-form-field>
+            <div>
+                <mat-form-field>
+                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password">
+                </mat-form-field>
+                <mat-form-field *ngIf="entityForm.controls['newPassword'].value">
+                    <input matInput placeholder="{{'subscrUsers.edit.passwordConfirmation' | translate}}" formControlName="confPassword" type="password" required>
+                    <mat-error *ngIf="checkFormControl('confPassword', 'usernameTaken')">
+                            {{'subscrUsers.form.errors.userNameTaken' | translate}}
+                    </mat-error>
+                </mat-form-field>
+            </div>
             <mat-form-field>
                 <input matInput placeholder="{{'subscrUser.userComment' | translate}}" formControlName="userComment">
             </mat-form-field>
@@ -32,11 +44,12 @@
                 <input matInput placeholder="{{'subscrUser.contactEmail' | translate}}" formControlName="contactEmail">
             </mat-form-field>
             <mat-form-field>
-                    <textarea matInput formControlName="userDescription" placeholder="{{'subscrUser.userDescription' | translate}}">
-                    </textarea>
+                <textarea matInput formControlName="userDescription" placeholder="{{'subscrUser.userDescription' | translate}}">
+                </textarea>
             </mat-form-field>        
 
             <mat-slide-toggle
+                checked="{{ entityForm.controls['isBlocked'] && entityForm.controls['isBlocked'].value }}"
                 checked="{{ entityForm.controls['isBlocked'] && entityForm.controls['isBlocked'].value }}"
                 labelPosition="after"
                 color="warn"

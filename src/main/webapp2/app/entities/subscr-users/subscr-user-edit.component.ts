@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { ExcEditFormComponent, ExcFormValue } from '../../shared-blocks';
+import { ExcEditFormComponent, ExcFormValue, ExcCustomValidators } from '../../shared-blocks';
 import { SubscrUser } from './subscr-user.model';
 import { SubscrUserService } from './subscr-user.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material';
+import { debounceTime } from 'rxjs/operators';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
     selector: 'jhi-subscr-user-edit',
@@ -41,14 +44,17 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
             isBlocked: [data.isBlocked],
             isAdmin: [data.isAdmin],
             isReadonly: [data.isReadonly],
-            userDescription: [data.userDescription]
+            userDescription: [data.userDescription],
+            newPassword: [null],
+            confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
         });
+        this.initPasswordChanges(form);
         return form;
     }
 
     initForm(): FormGroup {
         const form = this.fb.group({
-            userName: [null, [Validators.required, Validators.pattern('[a-z]*[a-z0-9]*'), Validators.minLength(5)], this.validateUserNotTaken.bind(this)],
+            userName: [null, [Validators.required, Validators.pattern('[a-z]*[a-z0-9_]*'), Validators.minLength(5)], this.validateUserNotTaken.bind(this)],
             userNickname: [null],
             userComment: [null],
             userEmail: [null],
@@ -56,9 +62,21 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
             isBlocked: [false],
             isAdmin: [false],
             isReadonly: [false],
-            userDescription: ['']
+            userDescription: [''],
+            newPassword: [null],
+            confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
         });
+        this.initPasswordChanges(form);
         return form;
+    }
+
+    initPasswordChanges(form: FormGroup) {
+        const newPass = form.controls['newPassword'];
+        const confPass = form.controls['confPassword'];
+        newPass.valueChanges.subscribe((arg) => {
+                console.log('Dirty');
+                confPass.markAsTouched({ onlySelf: true });
+        });
     }
 
     prepareEntity(): SubscrUser {
@@ -73,7 +91,7 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
             userUuid: null,
             userComment: ExcFormValue.clearEmptyString(formModel.userComment as string),
             userEmail: ExcFormValue.clearEmptyString(formModel.userEmail as string),
-            isBlocked: null,
+            isBlocked: this.checkEmpty(formModel.isBlocked as boolean),
             contactEmail: this.checkEmpty(formModel.contactEmail as string),
             userDescription: this.checkEmpty(formModel.userDescription as string),
             isAdmin: this.checkEmpty(formModel.isAdmin as boolean),
@@ -108,7 +126,38 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     validateUserNotTaken(control: AbstractControl) {
         return this.subscrUserService.checkUserNotTaken(control.value).map((res) => {
-          return res ? null : { usernameTaken: true };
+            return res ? null : { usernameTaken: true };
         });
     }
+
+    passwordConfirmation(frm: FormGroup) {
+        const newPass = frm.controls['newPassword'];
+        const confPass = frm.controls['confPassword'];
+        console.log('Check Fire');
+        const isOk =  (newPass && confPass) ? (newPass.value === confPass.value) || (newPass.untouched && confPass.untouched) : false;
+        return {'passwordConfirmation': {value: isOk}};
+    }
+
+    passwordConfirmation1(controlName: string): ValidatorFn {
+        //   console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
+        //   ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
+        return (control: AbstractControl): {[key: string]: any} => {
+            const newPass = control.root.get(controlName);
+            console.log('Check Fire');
+            const isOk =  (newPass) ? (newPass.value === control.value)  : false;
+            return !isOk ? {'passwordConfirmation': false} : null;
+        };
+        // return !isOk ? {'passwordConfirmation': {value: isOk}} : null;
+    }
+
+    validateAllFormFields(formGroup: FormGroup) {         // {1}
+        Object.keys(formGroup.controls).forEach((field) => {  // {2}
+            const control = formGroup.get(field);             // {3}
+            if (control instanceof FormControl) {             // {4}
+            control.markAsTouched({ onlySelf: true });
+        } else if (control instanceof FormGroup) {        // {5}
+            this.validateAllFormFields(control);            // {6}
+        }
+    });
+}
 }

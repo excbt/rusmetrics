@@ -117,7 +117,11 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     abstract prepareEntity(form: FormGroup);
 
     revertForm() {
-        this.entityForm = this.createForm(this.entity);
+        if (this.newFlag) {
+            this.entityForm = this.initForm();
+        } else {
+            this.entityForm = this.createForm(this.entity);
+        }
     }
 
     saveForm() {
