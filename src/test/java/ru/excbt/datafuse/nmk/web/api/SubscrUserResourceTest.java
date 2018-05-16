@@ -122,7 +122,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
 //			builder.param("newPassword", "secret2");
 //		};
 
-        mockMvcRestWrapper.restRequest("/subscrUsers/{id}", subscrUserId)
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrUsers/{id}", subscrUserId)
             .requestBuilder(b -> b
                 .param("isAdmin", "false")
                 .param("oldPassword", "secret")
@@ -134,7 +134,7 @@ public class SubscrUserResourceTest extends PortalApiTest {
 //			builder.param("isPermanent", "true");
 //		};
 
-        mockMvcRestWrapper.restRequest("/subscrUsers")
+        mockMvcRestWrapper.restRequest("/api/subscr/subscrUsers/{id}", subscrUserId)
             .requestBuilder(b -> b.param("isPermanent", "true"))
             .testDelete();
 //		_testDeleteJson(UrlUtils.apiSubscrUrl("/subscrUsers", subscrUserId), param);

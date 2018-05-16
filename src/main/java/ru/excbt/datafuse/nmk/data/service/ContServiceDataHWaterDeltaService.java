@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 
 /**
@@ -56,10 +57,13 @@ public class ContServiceDataHWaterDeltaService {
 
     private final ObjectAccessService objectAccessService;
 
-    public ContServiceDataHWaterDeltaService(ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService) {
+    private final ContObjectMapper contObjectMapper;
+
+    public ContServiceDataHWaterDeltaService(ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService, ContObjectMapper contObjectMapper) {
         this.contObjectService = contObjectService;
         this.contObjectFiasService = contObjectFiasService;
         this.objectAccessService = objectAccessService;
+        this.contObjectMapper = contObjectMapper;
     }
 
     /**
@@ -350,7 +354,7 @@ public class ContServiceDataHWaterDeltaService {
 		Map<Long, ContObjectGeoPos> contObjectGeoPosMap = contObjectService.selectContObjectsGeoPosMap(contObjectIds);
 
 		contObjects.forEach((contObject) -> {
-			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObject,
+			ContObjectServiceTypeInfo item = new ContObjectServiceTypeInfo(contObjectMapper.toDto(contObject),
 					contObjectFiasMap.get(contObject.getId()), contObjectGeoPosMap.get(contObject.getId()));
 
 			ContServiceTypeInfoART hwART = hwContObjectARTs.get(contObject.getId());

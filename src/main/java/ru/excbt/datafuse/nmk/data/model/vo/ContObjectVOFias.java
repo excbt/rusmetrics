@@ -1,24 +1,25 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.model.vo;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.support.ModelWrapper;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.10.2016
- * 
+ *
  */
-public class ContObjectVOFias extends ModelWrapper<ContObject> {
+public class ContObjectVOFias extends ModelWrapper<ContObjectDTO> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6651921688983257995L;
 
@@ -29,26 +30,26 @@ public class ContObjectVOFias extends ModelWrapper<ContObject> {
 	/**
 	 * @param model
 	 */
-	public ContObjectVOFias(ContObject model, ContObjectFias contObjectFias) {
+	public ContObjectVOFias(ContObjectDTO model, ContObjectFias contObjectFias) {
 		super(model);
 		this.contObjectFias = contObjectFias;
 		this.contObjectGeo = null;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param model
 	 * @param contObjectFias
 	 * @param contObjectGeo
 	 */
-	public ContObjectVOFias(ContObject model, ContObjectFias contObjectFias, ContObjectGeoPos contObjectGeo) {
+	public ContObjectVOFias(ContObjectDTO model, ContObjectFias contObjectFias, ContObjectGeoPos contObjectGeo) {
 		super(model);
 		this.contObjectFias = contObjectFias;
 		this.contObjectGeo = contObjectGeo;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContObjectFias getContObjectFias() {
@@ -56,7 +57,7 @@ public class ContObjectVOFias extends ModelWrapper<ContObject> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContObjectGeoPos getContObjectGeo() {
