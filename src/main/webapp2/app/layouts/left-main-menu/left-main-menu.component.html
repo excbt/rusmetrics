@@ -30,6 +30,22 @@
                 </span>
             </a>
         </mat-list-item>
+        <mat-list-item *jhiHasAnyAuthority="'ROLE_RMA'">
+            <a routerLink="/partner-dashboard" (click)="hideMenu()">
+                <span>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    <span jhiTranslate="global.menu.partner.title" class = "menu1-font-color">Classifiers</span>
+                </span>
+            </a>
+        </mat-list-item>
+        <mat-list-item *jhiHasAnyAuthority="'ROLE_ADMIN'">
+            <a routerLink="/classifiers" (click)="hideMenu()">
+                <span>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
+                    <span jhiTranslate="global.menu.operator.title" class = "menu1-font-color">Classifiers</span>
+                </span>
+            </a>
+        </mat-list-item>
     </mat-nav-list>
     
 <!--

@@ -37,6 +37,12 @@
             },
             "monitoring" :{
                 "title": "Мониторинг"                
+            },
+            "partner": {
+                "title": "Партнер"
+            },
+            "operator": {
+                "title": "Оператор"
             }
         },
         "form": {
