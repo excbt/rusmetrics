@@ -39,7 +39,10 @@
                 "title": "Мониторинг"                
             },
             "partner": {
-                "title": "Партнер"
+                "title": "Партнер",
+                "dashboard": {
+                    "title": ""
+                }
             },
             "operator": {
                 "title": "Оператор"
