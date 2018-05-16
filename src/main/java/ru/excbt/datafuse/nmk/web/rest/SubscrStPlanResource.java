@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = "/api/subscr/st-plans")
+@RequestMapping(value = "/api/subscr-st-plans")
 public class SubscrStPlanResource {
 
     private final SubscrStPlanService subscrStPlanService;
