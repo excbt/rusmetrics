@@ -8,5 +8,6 @@ public class QueryDSLUtil {
     }
 
     public static final Function<String, String> upperCaseLikeStr = (s) -> '%' + s.toUpperCase() + '%';
+    public static final Function<String, String> lowerCaseLikeStr = (s) -> '%' + s.toLowerCase() + '%';
 
 }

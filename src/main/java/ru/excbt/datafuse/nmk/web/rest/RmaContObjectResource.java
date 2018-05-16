@@ -1,37 +1,33 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.google.common.base.Preconditions.*;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с объектами учета для РМА
@@ -49,14 +45,14 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 	private final SubscriberAccessService subscriberAccessService;
 	private final ObjectAccessService objectAccessService;
-    private final SubscriberService subscriberService;
+    private final SubscriberTimeService subscriberTimeService;
 
 	@Autowired
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService1, SubscriberService subscriberService) {
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, PortalUserIdsService portalUserIdsService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, SubscriberTimeService subscriberTimeService) {
         super(contObjectService, contGroupService, organizationService, contObjectFiasService, meterPeriodSettingService, objectAccessService, portalUserIdsService);
         this.subscriberAccessService = subscriberAccessService;
-        this.objectAccessService = objectAccessService1;
-        this.subscriberService = subscriberService;
+        this.objectAccessService = objectAccessService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**
@@ -76,7 +72,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			return ResponseEntity.badRequest().build();
 		}
 
-		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
+		LocalDate rmaBeginDate = LocalDateUtils.asLocalDate(
+		    subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectMonitorDTO, Long>(request) {
 
@@ -84,7 +81,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			public ContObjectMonitorDTO processAndReturnResult() {
 				ContObject result = contObjectService.automationCreate(contObjectDTO,
                         portalUserIdsService.getCurrentIds().getSubscriberId(),
-                        LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
+                        rmaBeginDate,
 						cmOrganizationId);
 
 				return contObjectService.wrapContObjectMonitorDTO(portalUserIdsService.getCurrentIds(),result,false);
@@ -116,10 +113,11 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
+		LocalDate subscrEndDate = LocalDateUtils.asLocalDate(
+		    subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 
-		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteContObject(contObjectId, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
+		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteContObject(contObjectId, subscrEndDate);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}
@@ -139,9 +137,10 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
+		LocalDate subscrEndDate = LocalDateUtils.asLocalDate(
+            subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
-		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteManyContObjects(contObjectIds, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
+		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteManyContObjects(contObjectIds, subscrEndDate);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}
@@ -229,7 +228,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 		checkNotNull(subscriberId);
 		checkNotNull(contObjectIds);
 
-		LocalDate subscrBeginDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
+		LocalDateTime subscrBeginDate = LocalDateUtils.asLocalDateTime(
+            subscriberTimeService.getSubscriberCurrentTime(subscriberId));
 
 		ApiAction action = new ContObjectDTOResponse() {
 
@@ -238,7 +238,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
                 subscriberAccessService.updateContObjectIdsAccess(
                     contObjectIds,
-                    LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()),
+                    subscrBeginDate,
                     new Subscriber().id(subscriberId));
                 List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
                 List<ContObjectDTO> result = contObjectService.mapToDTO(contObjects);

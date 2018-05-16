@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.Session;
 import org.hibernate.jdbc.Work;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDateTime;
+//import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKeynameConverter;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.nmk.reports.NmkReport;
 import ru.excbt.nmk.reports.NmkReport.FileType;
 import ru.excbt.nmk.reports.NmkReport.ReportType;
@@ -392,8 +394,9 @@ public class ReportService {
 								+ "ParamsetStartDate and ParamsetEndDate is not set correctly. " + "ReportPeriodKey=%s",
 						reportParamset.getId(), ReportPeriodKey.INTERVAL));
 			}
-			dtStart = JodaTimeUtils.startOfDay(new LocalDateTime(reportParamset.getParamsetStartDate()));
-			dtEnd = JodaTimeUtils.endOfDay(new LocalDateTime(reportParamset.getParamsetEndDate()));
+
+			dtStart = reportDate.toLocalDate().atStartOfDay();
+			dtEnd = reportDate.toLocalDate().plusDays(1).atStartOfDay().minusNanos(1);
 
 		}
 		//--------------------------------------------------------------------
@@ -408,7 +411,7 @@ public class ReportService {
 			LocalDateTime modReportDate = reportDate;
 			if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
 				if (reportParamset.getSettlementMonth() != null) {
-					modReportDate = modReportDate.withMonthOfYear(reportParamset.getSettlementMonth());
+					modReportDate = modReportDate.withMonth(reportParamset.getSettlementMonth());
 				}
 				if (reportParamset.getSettlementYear() != null) {
 					modReportDate = modReportDate.withYear(reportParamset.getSettlementYear());
@@ -417,27 +420,38 @@ public class ReportService {
 
 			// If Settlement day & LAST MONTH
 
-			final int lastDayOfCurrMonth = modReportDate.withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
-					.getDayOfMonth();
+			final int lastDayOfCurrMonth = modReportDate.toLocalDate().withDayOfMonth(1).plusMonths(1).minusDays(1).getMonthValue();
+//                withMillisOfDay(0).withDayOfMonth(1).plusMonths(1).minusDays(1)
+//					.getDayOfMonth();
 
 			int settlementDay = reportParamset.getSettlementDay() != null ? reportParamset.getSettlementDay()
 					: lastDayOfCurrMonth;
 
-			int currentDayOfMonth = modReportDate.withMillisOfDay(0).getDayOfMonth();
+			int currentDayOfMonth = modReportDate.getDayOfMonth(); // withMillisOfDay(0).getDayOfMonth();
 
 			if (currentDayOfMonth >= settlementDay && settlementDay <= lastDayOfCurrMonth) {
-				dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
-				dtStart = JodaTimeUtils.startOfDay(modReportDate.withDayOfMonth(settlementDay).minusMonths(1));
+				dtEnd = modReportDate.toLocalDate().withDayOfMonth(settlementDay).minusDays(1).atStartOfDay();
+//				dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
+				dtStart = modReportDate.toLocalDate().withDayOfMonth(settlementDay).minusMonths(1).atStartOfDay();
+//                    JodaTimeUtils.startOfDay(modReportDate.withDayOfMonth(settlementDay).minusMonths(1));
+//				dtStart = JodaTimeUtils.startOfDay(modReportDate.withDayOfMonth(settlementDay).minusMonths(1));
 			} else {
 
 				try {
-					final int lastDayOfPrev1Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
-							.getDayOfMonth();
-					final int lastDayOfPrev2Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
-							.minusDays(1).getDayOfMonth();
+					final int lastDayOfPrev1Month = modReportDate.toLocalDate().withDayOfMonth(1).minusDays(1)
+                        .getDayOfMonth();
+//					final int lastDayOfPrev1Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusDays(1)
+//							.getDayOfMonth();
+					final int lastDayOfPrev2Month = modReportDate.toLocalDate().withDayOfMonth(1).minusMonths(1)
+                        .minusDays(1).getDayOfMonth();
+//					final int lastDayOfPrev2Month = modReportDate.withMillisOfDay(0).withDayOfMonth(1).minusMonths(1)
+//							.minusDays(1).getDayOfMonth();
 					if (settlementDay <= lastDayOfPrev1Month && settlementDay <= lastDayOfPrev2Month) {
-						dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
-						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay));
+						dtEnd = modReportDate.withDayOfMonth(settlementDay).minusDays(1).toLocalDate()
+                            .plusDays(1).atStartOfDay().minusNanos(1);
+//						dtEnd = JodaTimeUtils.endOfDay(modReportDate.withDayOfMonth(settlementDay).minusDays(1));
+                        dtStart = modReportDate.minusMonths(1).withDayOfMonth(settlementDay).toLocalDate().atStartOfDay();
+//						dtStart = JodaTimeUtils.startOfDay(modReportDate.minusMonths(1).withDayOfMonth(settlementDay));
 					}
 
 				} catch (Exception e) {
@@ -462,7 +476,8 @@ public class ReportService {
 
 			if (reportParamset.getReportPeriodKey() == ReportPeriodKey.SETTLEMENT_MONTH) {
 				if (reportParamset.getSettlementMonth() != null) {
-					modReportDate = modReportDate.withMonthOfYear(reportParamset.getSettlementMonth());
+					modReportDate = modReportDate.withMonth(reportParamset.getSettlementMonth());
+//					modReportDate = modReportDate.withMonthOfYear(reportParamset.getSettlementMonth());
 				}
 				if (reportParamset.getSettlementYear() != null) {
 					modReportDate = modReportDate.withYear(reportParamset.getSettlementYear());

@@ -38,14 +38,4 @@ export class Organization {
     ) {}
 }
 
-export class OrganizationSort {
-    constructor(
-        public field: string,
-        public sortOrder: string
-    ) { }
-
-    sortString(): string {
-        return this.field.concat(',', this.sortOrder);
-    }
-
-}
+export const organizationModification = 'organizationModification';

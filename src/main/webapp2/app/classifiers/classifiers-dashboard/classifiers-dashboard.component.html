@@ -1,13 +1,24 @@
-<div>
-    <div class="row">
-        <div class="col-sm">
-            <jhi-organizations-widget></jhi-organizations-widget>
-        </div>
-        <div class="col-sm">
-            One of three columns
-        </div>
-        <div class="col-sm">
-            One of three columns
+<jhi-exc-form-template>
+    <div>
+        <div class="row">
+            <div class="col-sm">
+                <jhi-organizations-widget></jhi-organizations-widget>
+            </div>
+            <div class="col-sm">
+                <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                    <jhi-p-subscribers-widget subscrMode="partner"></jhi-p-subscribers-widget>
+                    <br>
+                    <br>
+                </div>
+                <div *jhiHasAnyAuthority="'ROLE_SUBSCR_ADMIN'">
+                    <jhi-p-subscribers-widget subscrMode="customer"></jhi-p-subscribers-widget>
+                </div>    
+            </div>
+            <div class="col-sm">
+                <jhi-subscr-users-widget>
+                    
+                </jhi-subscr-users-widget>
+            </div>
         </div>
     </div>
-</div>
+</jhi-exc-form-template>

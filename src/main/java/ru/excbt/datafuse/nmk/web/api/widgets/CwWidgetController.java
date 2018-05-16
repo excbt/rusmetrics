@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
-import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.widget.CwWidgetService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -46,8 +46,14 @@ public class CwWidgetController extends WidgetController {
 	private final ContObjectService contObjectService;
 
 	@Autowired
-    public CwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, CwWidgetService cwWidgetService, ContObjectService contObjectService) {
-        super(contEventMonitorV3Service, contZPointService);
+    public CwWidgetController(ContEventMonitorV3Service contEventMonitorV3Service,
+                              ContZPointService contZPointService,
+                              CwWidgetService cwWidgetService,
+                              ContObjectService contObjectService,
+                              ObjectAccessService objectAccessService,
+                              PortalUserIdsService portalUserIdsService,
+                              SubscriberTimeService subscriberTimeService) {
+        super(contEventMonitorV3Service, contZPointService, objectAccessService, portalUserIdsService, subscriberTimeService);
         this.cwWidgetService = cwWidgetService;
         this.contObjectService = contObjectService;
     }
@@ -61,7 +67,7 @@ public class CwWidgetController extends WidgetController {
 	@RequestMapping(value = "/chart/data/{mode}", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getChartData(@PathVariable(value = "contZpointId", required = true) Long contZpointId,
 			@PathVariable(value = "mode", required = true) String mode) {
-		if (!canAccessContZPoint(contZpointId)) {
+		if (!objectAccessService.checkContZPointId(contZpointId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 
@@ -69,7 +75,7 @@ public class CwWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime d = getSubscriberZonedDateTime();
+		ZonedDateTime d = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		ApiActionProcess<List<ContServiceDataHWater>> action = () -> cwWidgetService.selectChartData(contZpointId, d,
 				mode.toUpperCase());
@@ -85,7 +91,7 @@ public class CwWidgetController extends WidgetController {
 	@RequestMapping(value = "/status", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getStatus(@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
-		if (!canAccessContZPoint(contZpointId)) {
+        if (!objectAccessService.checkContZPointId(contZpointId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 
@@ -95,7 +101,7 @@ public class CwWidgetController extends WidgetController {
 			return ApiResponse.responseBadRequest();
 		}
 
-		ZonedDateTime subscriberDateTime = getSubscriberZonedDateTime();
+		ZonedDateTime subscriberDateTime = subscriberTimeService.getSubscriberZonedDateTime(portalUserIdsService.getCurrentIds());
 
 		WeatherForecast weatherForecast = contObjectService.selectWeatherForecast(contObjectId,
 				subscriberDateTime.toLocalDate());

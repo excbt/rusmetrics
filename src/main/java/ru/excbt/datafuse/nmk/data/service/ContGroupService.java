@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContGroupItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContGroupRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -252,10 +253,10 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectContGroupObjects(SubscriberParam subscriberParam, Long contGroupId) {
+	public List<ContObject> selectContGroupObjects(PortalUserIds portalUserIds, Long contGroupId) {
 		checkNotNull(contGroupId);
-		checkNotNull(subscriberParam);
-		return contGroupItemRepository.selectContGroupObjects(subscriberParam.getSubscriberId(), contGroupId);
+		checkNotNull(portalUserIds);
+		return contGroupItemRepository.selectContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
 	}
 
 	/**
@@ -265,11 +266,11 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ContObject> selectAvailableContGroupObjects(SubscriberParam subscriberParam, Long contGroupId) {
+	public List<ContObject> selectAvailableContGroupObjects(PortalUserIds portalUserIds, Long contGroupId) {
 		checkNotNull(contGroupId);
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 
-		return contGroupItemRepository.selectAvailableContGroupObjects(subscriberParam.getSubscriberId(), contGroupId);
+		return contGroupItemRepository.selectAvailableContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
 	}
 
 	/**
@@ -278,9 +279,9 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrContGroup> selectSubscriberGroups(SubscriberParam subscriberParam) {
-		checkNotNull(subscriberParam);
-		return contGroupRepository.findBySubscriberId(subscriberParam.getSubscriberId());
+	public List<SubscrContGroup> selectSubscriberGroups(PortalUserIds portalUserIds) {
+		checkNotNull(portalUserIds);
+		return contGroupRepository.findBySubscriberId(portalUserIds.getSubscriberId());
 	}
 
 }

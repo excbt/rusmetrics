@@ -1,0 +1,92 @@
+/* Компонент-виджет "Мониторинг точки учета"*/
+    /* Заголовок таблицы виджета "Контроль"*/
+/*
+tr.nmc-zp-monitor-table-header > th {
+    background-color:  #646263; 
+    color: #FFFFFF;
+    font-weight: normal;
+}
+*/
+
+.nmc-zp-monitor-table {
+/*    border: 1px solid red;*/
+/*    max-height: 250px;*/
+/*    max-height: 50vh;*/
+    position: absolute;
+    bottom: 9px;
+/*    bottom: 0;*/
+/*    top: 55px;*/
+    top: 42px;
+    overflow: auto;
+/*    margin-bottom: 0;*/
+}
+.nmc-zp-monitor-table-thead {
+    position: sticky;
+    top: 0;
+    height: 34px;
+    z-index: 1;
+/*    background: lightpink;*/
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
+    font-weight: normal;
+}
+
+.nmc-zp-monitor-table-row:nth-of-type(odd) {
+/*    background: grey;*/
+}
+
+.nmc-zp-monitor-settings-div {
+    transition: all linear 0.5s;
+    height: 82px;
+}
+
+.nmc-zp-monitor-settings-div.ng-hide {
+    height: 0;
+}
+.nmc-zp-monitor-settings-div.ng-show {
+/*    opacity: 1;*/
+}
+
+
+.nmc-zp-monitor-type-th {
+    width: 43px;
+    max-width: 50px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.nmc-zp-monitor-status-th {
+    width: 30px;
+    max-width: 50px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.nmc-zp-monitor-date-th {
+    width: 98px;
+    max-width: 100px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.nmc-zp-monitor-time-th {
+    width: 68px;
+    max-width: 70px;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.nmc-zp-monitor-event-th {
+    display: table-cell;
+    vertical-align: middle;
+/*    padding-left: 7px;*/
+/*    text-align: center;*/
+/*
+    position: absolute;
+    right: 0;
+*/
+}

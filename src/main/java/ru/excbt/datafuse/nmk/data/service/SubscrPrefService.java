@@ -21,7 +21,8 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
-import ru.excbt.datafuse.nmk.data.model.SubscrTypePref;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.domain.SubscrTypePref;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
@@ -29,8 +30,8 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrPrefObjectTreeTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrPrefValueRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrTypePrefRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SubscrPrefRepository;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 
 @Service
 public class SubscrPrefService implements SecuredRoles {
@@ -95,19 +96,19 @@ public class SubscrPrefService implements SecuredRoles {
 
 	/**
 	 *
-	 * @param subscriberId
+	 * @param portalUserIds
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<SubscrPrefValue> selectSubscrPrefValue(SubscriberParam subscriberParam) {
-		checkNotNull(subscriberParam);
+	public List<SubscrPrefValue> selectSubscrPrefValue(PortalUserIds portalUserIds) {
+		checkNotNull(portalUserIds);
 
-		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberParam.getSubscriberId());
+		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(portalUserIds.getSubscriberId());
 
 		List<SubscrPrefValue> prefValueList = subscrPrefValueRepository
-				.selectSubscrPrefValue(subscriberParam.getSubscriberId());
+				.selectSubscrPrefValue(portalUserIds.getSubscriberId());
 
-		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
+		List<SubscrPrefValue> result = filterSubscriberPrefValues(portalUserIds.getSubscriberId(),
 				subscrTypeKey.getKeyname(), prefValueList);
 
 		//Collections.sort(result, SUBSCR_PREF_COMPARATOR);
@@ -115,22 +116,22 @@ public class SubscrPrefService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param prefValueList
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @param prefValueList
+     * @return
+     */
 	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public List<SubscrPrefValue> saveSubscrPrefValues(SubscriberParam subscriberParam,
+	public List<SubscrPrefValue> saveSubscrPrefValues(PortalUserIds portalUserIds,
 			List<SubscrPrefValue> prefValueList) {
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 		checkNotNull(prefValueList);
 
-		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(subscriberParam.getSubscriberId());
+		SubscrTypeKey subscrTypeKey = getSubscrTypeKey(portalUserIds.getSubscriberId());
 
-		List<SubscrPrefValue> result = filterSubscriberPrefValues(subscriberParam.getSubscriberId(),
+		List<SubscrPrefValue> result = filterSubscriberPrefValues(portalUserIds.getSubscriberId(),
 				subscrTypeKey.getKeyname(), prefValueList);
 		return Lists.newArrayList(subscrPrefValueRepository.save(result));
 	}

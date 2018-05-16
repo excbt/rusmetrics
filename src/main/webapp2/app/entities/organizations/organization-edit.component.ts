@@ -4,14 +4,14 @@ import { Subscription } from 'rxjs/Rx';
 import { JhiEventManager } from 'ng-jhipster';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Validators} from '@angular/forms';
-import { Organization } from './organization.model';
+import { Organization, organizationModification } from './organization.model';
 import { OrganizationType } from '../organization-types/organization-type.model';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationTypeService } from '../organization-types/organization-type.service';
 import { ExcCustomValidators } from '../../shared-blocks';
 import { ExcEditFormComponent } from '../../shared-blocks/exc-edit-form/exc-edit-form.component';
-import { ExcEditFormMenuComponent } from '../../shared-blocks/exc-form-menu/exc-edit-form-menu.component';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'jhi-organization-edit',
@@ -20,14 +20,13 @@ import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
 })
 export class OrganizationEditComponent extends ExcEditFormComponent<Organization> implements OnInit, OnDestroy {
 
-    @ViewChild(ExcEditFormMenuComponent) editMenu: ExcEditFormMenuComponent;
-
     organizationTypes: OrganizationType[];
 
     private headerSubscription: Subscription;
 
     private routeUrlSubscription: Subscription;
     subscriberMode: boolean;
+    menuHeaderKey: string;
 
     constructor(
         eventManager: JhiEventManager,
@@ -37,7 +36,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         service: OrganizationsService,
         private organizationTypeService: OrganizationTypeService) {
             super(
-                {   modificationEventName: 'organizationModification',
+                {   modificationEventName: organizationModification,
                     backUrl: '/organizations',
                     onSaveUrl: '/organizations',
                     onDeleteUrl: '/organizations'
@@ -57,7 +56,7 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
     ngOnInit() {
         super.ngOnInit();
         this.headerSubscription = this.enitityId$.subscribe((id) => {
-            this.editMenu.headerKey = id ? 'organization.edit.title' : 'organization.new.title';
+            this.menuHeaderKey = id ? 'organization.edit.title' : 'organization.new.title';
         });
     }
 
@@ -198,8 +197,27 @@ export class OrganizationEditComponent extends ExcEditFormComponent<Organization
         this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
     }
 
+    navigateOnDelete() {
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
     navigateBack() {
-        this.router.navigate(['organizations']);
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations']);
+    }
+
+    flagRsoToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagRso'].setValue(event.checked);
+        this.entityForm.controls['flagRso'].markAsDirty();
+    }
+
+    flagCmToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagCm'].setValue(event.checked);
+        this.entityForm.controls['flagCm'].markAsDirty();
+    }
+
+    flagRmaToggle(event: MatSlideToggleChange) {
+        this.entityForm.controls['flagRma'].setValue(event.checked);
+        this.entityForm.controls['flagRma'].markAsDirty();
     }
 
 }

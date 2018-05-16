@@ -24,6 +24,21 @@ spring:
 #            enabled: false # we use gulp + BrowserSync for livereload
 #    jackson:
 #        serialization.indent_output: true
+
+    datasource:
+        type: com.zaxxer.hikari.HikariDataSource
+        driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        name: datasource
+#        jndi-name:
+        username: dbuser1
+        password: exbt_123456
+        hikari:
+            connection-test-query: SELECT 1
+            minimum-idle: 3
+            maximum-pool-size: 5
+            pool-name: master
+
 #    datasource:
 #        type: com.zaxxer.hikari.HikariDataSource
 #        #driver-class-name: org.postgresql.Driver
@@ -46,12 +61,13 @@ spring:
         database: POSTGRESQL
         properties:
             hibernate.hbm2ddl.auto: validate
-            hibernate.format_sql: false
-            hibernate.show_sql: false
+            hibernate.format_sql: true
+            hibernate.show_sql: true
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
-            hibernate.generate_statistics: false
-            hibernate.cache.use_query_cache: false
-            hibernate.cache.use_second_level_cache: false
+            hibernate.generate_statistics: true
+            hibernate.cache.use_query_cache: true
+            hibernate.cache.use_second_level_cache: true
+            hibernate.use_sql_comments: true
             #hibernate.cache.use_structured_entries: true
 
 #            naming:
@@ -69,10 +85,10 @@ spring:
 portal:
     datasource:
         databaseName: datafuse_2018_01
-        databasePort: 6432
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        driverClassName: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -80,12 +96,12 @@ portal:
         password: exbt_123456
         platform: POSTGRESQL
         connectionTestQuery: SELECT 1
-        minimumIdle: 3
+        minimumIdle: 1
         maximumPoolSize: 5
         poolName: MasterPool
         #---tomcat:
-        maxActive: 5
-        initialSize: 2
+        maxActive: 2
+        initialSize: 1
         minIdle: 2
         maxIdle: 3
 #        hikari:
@@ -118,8 +134,8 @@ raw:
         databaseName: test_dataraw
         databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        driverClassName: com.p6spy.engine.spy.P6SpyDriver
+        url: jdbc:p6spy:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         name:
         jndi-name:

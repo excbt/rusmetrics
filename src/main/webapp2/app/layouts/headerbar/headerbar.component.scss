@@ -1,21 +1,27 @@
 
-@mixin md-icon-size($size: 24px) {
+@mixin md-icon-size($size: 14px) {
     font-size: $size;
     height: $size;
     width: $size;
 }
   
 .headerbar-mat-menu-icon {
-    @include md-icon-size(40px);
+    @include md-icon-size(24px);
+    color: rgb(95, 95, 95);
 }
 
 
 .headerbar-profile-menu-icon {
-    @include md-icon-size(40px);
+////<<<<<<< HEAD:src/main/webapp2/app/layouts/headerbar/headerbar.scss
+    @include md-icon-size(24px);
+    color: rgb(95, 95, 95);
+//=======
+//    @include md-icon-size(40px);
+//>>>>>>> angular-5/new-ui:src/main/webapp2/app/layouts/headerbar/headerbar.component.scss
 }
 
 .headerbar-profile-font {
-    font-size: 15px;
+    font-size: 12px;
 }
 
 .headerbar-right {
@@ -61,6 +67,22 @@
     // padding: 0%,0%,0%,0%;
 }
 
+// <<<<<<< HEAD:src/main/webapp2/app/layouts/headerbar/headerbar.scss
+.nmc-toolbar {
+    min-height: 35px; 
+    background-color: rgb(240, 240, 240);
+}
+
+.nmc-toolbar mat-toolbar-row {
+    height: 35px;
+}
+
+.nmc-toolbar-btn {
+    height: 34px; 
+    width: 34px; 
+    line-height: 34px;
+}
+// =======
 .toolbar-row .ui-corner-all {
     height: 2.5em;
     border-radius: 0 !important;    
@@ -69,4 +91,5 @@
 .img-vertical-align {
     line-height: 20px !important;
     vertical-align: middle;
+// >>>>>>> angular-5/new-ui:src/main/webapp2/app/layouts/headerbar/headerbar.component.scss
 }

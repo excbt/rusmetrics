@@ -2,6 +2,18 @@
 headerbar works
 
 </p> -->
+<!--
+<<<<<<< HEAD
+<mat-toolbar class = "nmc-toolbar" style = "">  
+    <mat-toolbar-row 
+        style = "">
+        <div class="float-left">
+            <button mat-icon-button *ngIf="isAuthenticated()" (click)="toggleMainMenu()"
+             class ="nmc-toolbar-btn"
+              style = ""
+               >
+=======
+-->
 
 <div class="toolbar-container">
     <p-toolbar styleClass="toolbar-row">
@@ -39,12 +51,20 @@ headerbar works
     <mat-toolbar-row >
 <div class="float-left">
             <button mat-icon-button *ngIf="isAuthenticated()" (click)="toggleMainMenu()">
+>>>>>>> angular-5/new-ui
                 <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>
             </button>
         </div>    
 
+<<<<<<< HEAD
+        <div id="top-right">
+                <button mat-icon-button [matMenuTriggerFor]="menu" 
+                      class="nmc-toolbar-btn"
+                       style = "">
+=======
 <div id="top-right">
                 <button mat-icon-button [matMenuTriggerFor]="menu" class="">
+>>>>>>> angular-5/new-ui
                         <mat-icon class="headerbar-profile-menu-icon">more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">

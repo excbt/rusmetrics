@@ -1,38 +1,31 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
-
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataHWaterTotals;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class SubscrContServiceDataHWaterServiceTest extends JpaSupportTest {
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+@RunWith(SpringRunner.class)
+public class SubscrContServiceDataHWaterServiceTest extends PortalDataTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContServiceDataHWaterServiceTest.class);
 

@@ -13,7 +13,7 @@ import java.util.Collection;
 @WithMockUser(username = "rma-ex1", password = "12345",
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", })
-public class RmaControllerTest extends AnyControllerTest {
+public abstract class RmaControllerTest extends AnyControllerTest {
 
     private static final Logger log = LoggerFactory.getLogger(RmaControllerTest.class);
 

@@ -2,12 +2,12 @@ import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
-import { ExcPageSize, ExcPageSorting } from '../exc-tools/pagination-tools';
-import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/pagination-tools';
+import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
+import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
-import { AnyModelDataSource } from '../exc-tools/exc-datasource';
+import { ExcAbstractDataSource } from '../exc-tools/exc-abstract-datasource';
 import { ExcListFormMenuComponent } from '..';
 import {
   // debounceTime,
@@ -17,16 +17,11 @@ import {
   // , delay
 } from 'rxjs/operators';
 
-// export interface ExcListFormEntityProvider<T> {
-//   load: (pageSorting: ExcPageSorting, pageSize: ExcPageSize, searchString?: string) => Observable<T>;
-// }
-
 export interface ExcListDatasourceProvider<T> {
-  getDataSource: () => AnyModelDataSource<T>;
+  getDataSource: () => ExcAbstractDataSource<T>;
 }
 
 export interface ExcListFormParams {
-  baseUrl: string;
   modificationEventName?: string;
   onSaveUrl?: string;
   onDeleteUrl?: string;
@@ -44,7 +39,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   // private routeUrlSubscription: Subscription;
 
   // routeUrlSergments: UrlSegment[];
-  dataSource: AnyModelDataSource<T>;
+  dataSource: ExcAbstractDataSource<T>;
 
   public searchString: String;
 
@@ -69,10 +64,10 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
       // this.routeUrlSubscription = this.activatedRoute.url.subscribe((data) => this.routeUrlSergments = data);
   }
 
-  abstract getDatasourceProvider(): ExcListDatasourceProvider<T>;
+  abstract getDataSourceProvider(): ExcListDatasourceProvider<T>;
 
   ngOnInit() {
-    this.dataSource = this.getDatasourceProvider().getDataSource();
+    this.dataSource = this.getDataSourceProvider().getDataSource();
     this.initSearch();
     this.dataSource.totalElements$.subscribe(
       (count) => {
@@ -83,14 +78,16 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   ngAfterViewInit() {
     // server side search
-    this.formMenu.searchAction.pipe(
-          distinctUntilChanged(),
-          tap((arg) => {
-            this.searchString = arg;
-            this.paginator.pageIndex = 0;
-            this.loadList(arg);
-          })
-        ).subscribe();
+    if (this.formMenu && this.formMenu.searchAction) {
+      this.formMenu.searchAction.pipe(
+        distinctUntilChanged(),
+        tap((arg) => {
+          this.searchString = arg;
+          this.paginator.pageIndex = 0;
+          this.loadList(arg);
+        })
+      ).subscribe();
+    }
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -111,28 +108,26 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   initSearch() {
-    const sorting = new ExcPageSorting();
-    const pageSize: ExcPageSize = new ExcPageSize();
-    this.dataSource.findSearchPage (sorting, pageSize, '');
+    this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
   }
 
-  loadList(searchString?: string) {
+  loadList(search?: string) {
     console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
-    const pageSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
-    this.dataSource.findSearchPage (sorting, pageSize, searchString ? searchString : '');
+    const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+    this.dataSource.findPage ({pageSorting: sorting, pageSize: pSize, searchString: search});
   }
 
   previousState() {
     window.history.back();
   }
 
-  newNavigate() {
-    this.router.navigate([this.params.baseUrl + '/new/edit']);
+  navigateNew() {
+    this.router.navigate([this.router.url, 'new', 'edit']);
   }
 
-  editNavigate(entityId: any) {
-    this.router.navigate([this.params.baseUrl + '/' + entityId + '/edit']);
+  navigateEdit(entityId: any) {
+    this.router.navigate([this.router.url, entityId, 'edit']);
   }
 
 }

@@ -8,11 +8,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.HashMap;
@@ -25,17 +28,28 @@ import java.util.Map;
  * @since 27.12.2016
  *
  */
+@RestController
 @RequestMapping("/{contZpointId}")
-public class WidgetController extends AbstractSubscrApiResource {
+public class WidgetController  {
 
 	private final ContEventMonitorV3Service contEventMonitorV3Service;
 
 	protected final ContZPointService contZPointService;
 
+	protected final ObjectAccessService objectAccessService;
+
+    protected final PortalUserIdsService portalUserIdsService;
+
+
+    protected final SubscriberTimeService subscriberTimeService;
+
 	@Autowired
-    public WidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService) {
+    public WidgetController(ContEventMonitorV3Service contEventMonitorV3Service, ContZPointService contZPointService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberTimeService subscriberTimeService) {
         this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.contZPointService = contZPointService;
+        this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     /**
@@ -47,7 +61,7 @@ public class WidgetController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getContZpointMonitor(
 			@PathVariable(value = "contZpointId", required = true) Long contZpointId) {
 
-		if (!canAccessContZPoint(contZpointId)) {
+		if (!objectAccessService.checkContZPointId(contZpointId, portalUserIdsService.getCurrentIds())) {
 			ApiResponse.responseForbidden();
 		}
 

@@ -2,28 +2,22 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.joda.time.LocalDateTime;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class SubscrContEventNotificationStatusV2ServiceTest extends JpaSupportTest {
+@RunWith(SpringRunner.class)
+public class SubscrContEventNotificationStatusV2ServiceTest extends PortalDataTest {
 
 	@Autowired
 	private SubscrContEventNotificationStatusV2Service subscrContEventNotificationStatusV2Service;

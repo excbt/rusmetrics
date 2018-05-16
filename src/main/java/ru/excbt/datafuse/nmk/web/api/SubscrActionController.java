@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserGroupService;
 import ru.excbt.datafuse.nmk.data.service.SubscrActionUserService;
@@ -32,26 +34,35 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/subscr/subscrAction")
-public class SubscrActionController extends AbstractSubscrApiResource {
+public class SubscrActionController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrActionController.class);
 
-	@Autowired
-	private SubscrActionGroupService subscrActionGroupService;
+	private final SubscrActionGroupService subscrActionGroupService;
 
-	@Autowired
-	private SubscrActionUserService subscrActionUserService;
+	private final SubscrActionUserService subscrActionUserService;
 
-	@Autowired
-	private SubscrActionUserGroupService subscrActionUserGroupService;
+	private final SubscrActionUserGroupService subscrActionUserGroupService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrActionController(SubscrActionGroupService subscrActionGroupService,
+                                  SubscrActionUserService subscrActionUserService,
+                                  SubscrActionUserGroupService subscrActionUserGroupService,
+                                  PortalUserIdsService portalUserIdsService) {
+        this.subscrActionGroupService = subscrActionGroupService;
+        this.subscrActionUserService = subscrActionUserService;
+        this.subscrActionUserGroupService = subscrActionUserGroupService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/groups", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllGroups() {
-		List<SubscrActionGroup> resultList = subscrActionGroupService.findAll(getCurrentSubscriberId());
+		List<SubscrActionGroup> resultList = subscrActionGroupService.findAll(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -90,7 +101,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 		checkArgument(!entity.isNew());
 		checkArgument(entity.getId().longValue() == id);
 
-		entity.setSubscriber(currentSubscriberService.getSubscriber());
+		entity.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		final Long[] actionIds = subscrUserIds;
 
@@ -122,7 +133,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
 
-		entity.setSubscriber(currentSubscriberService.getSubscriber());
+		entity.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		final Long[] actionIds = subscrUserIds;
 
@@ -166,7 +177,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/users", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> findAllUsers() {
-		List<SubscrActionUser> resultList = subscrActionUserService.findAll(getCurrentSubscriberId());
+		List<SubscrActionUser> resultList = subscrActionUserService.findAll(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ResponseEntity.ok(resultList);
 	}
 
@@ -205,7 +216,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 		checkNotNull(entity.getId());
 		checkArgument(entity.getId().longValue() == id);
 
-		entity.setSubscriber(currentSubscriberService.getSubscriber());
+		entity.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		final Long[] actionGroupIds = subscrGroupIds;
 
@@ -236,7 +247,7 @@ public class SubscrActionController extends AbstractSubscrApiResource {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
 
-		entity.setSubscriber(currentSubscriberService.getSubscriber());
+		entity.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		final Long[] actionGroupIds = subscrGroupIds;
 

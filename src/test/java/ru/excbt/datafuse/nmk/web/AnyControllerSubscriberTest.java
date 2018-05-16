@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 
-public class AnyControllerSubscriberTest extends AnyControllerTest {
+public abstract class AnyControllerSubscriberTest extends AnyControllerTest {
 
 	@Autowired
 	private CurrentSubscriberService cs;

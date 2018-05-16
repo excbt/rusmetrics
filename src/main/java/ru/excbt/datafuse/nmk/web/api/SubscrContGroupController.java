@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
@@ -32,17 +34,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/contGroup")
-public class SubscrContGroupController extends AbstractSubscrApiResource {
+public class SubscrContGroupController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetController.class);
 
-	@Autowired
-	private ContGroupService contGroupService;
+	private final ContGroupService contGroupService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+    private final PortalUserIdsService portalUserIdsService;
 
-	/**
+    public SubscrContGroupController(ContGroupService contGroupService, PortalUserIdsService portalUserIdsService) {
+        this.contGroupService = contGroupService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -51,9 +56,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 
 		checkNotNull(contGroupId);
 
-		ApiActionObjectProcess action = () -> {
-			return contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
-		};
+		ApiActionObjectProcess action = () -> contGroupService.selectContGroupObjects(portalUserIdsService.getCurrentIds(), contGroupId);
 
 		//List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
 
@@ -71,7 +74,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 		checkNotNull(contGroupId);
 
 		ApiActionObjectProcess action = () -> {
-			return contGroupService.selectAvailableContGroupObjects(getSubscriberParam(), contGroupId);
+			return contGroupService.selectAvailableContGroupObjects(portalUserIdsService.getCurrentIds(), contGroupId);
 		};
 
 		return ApiResponse.responseOK(action);
@@ -85,7 +88,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getSubscriberGroups() {
 
 		ApiActionObjectProcess action = () -> {
-			return contGroupService.selectSubscriberGroups(getSubscriberParam());
+			return contGroupService.selectSubscriberGroups(portalUserIdsService.getCurrentIds());
 		};
 
 		return ApiResponse.responseOK(action);
@@ -107,7 +110,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 		checkArgument(contGroup.isNew());
 
 		ApiActionProcess<SubscrContGroup> process = () -> {
-			contGroup.setSubscriber(currentSubscriberService.getSubscriber());
+			contGroup.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 			return contGroupService.createOne(contGroup, contObjectIds);
 		};
 
@@ -146,7 +149,7 @@ public class SubscrContGroupController extends AbstractSubscrApiResource {
 		checkArgument(contGroup.getId().equals(contGroupId));
 
 		ApiActionObjectProcess action = () -> {
-			contGroup.setSubscriber(currentSubscriberService.getSubscriber());
+			contGroup.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
 			return contGroupService.updateOne(contGroup, contObjectIds);
 		};
 

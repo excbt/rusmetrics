@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorRankObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
@@ -15,7 +16,7 @@ public class MonitorContEventNotificationStatusV2
 		implements Serializable, StatusColorRankObject, ContObjectHolder, ContObjectFiasHolder, ContObjectGeoPosHolder {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5870004714222214147L;
 
@@ -30,21 +31,21 @@ public class MonitorContEventNotificationStatusV2
 	private long newEventsCount;
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 */
-	private MonitorContEventNotificationStatusV2(ContObject contObject, ContObjectFias contObjectFias,
-			ContObjectGeoPos contObjectGeoPos) {
-		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias,
+	private MonitorContEventNotificationStatusV2(ContObjectDTO contObject, ContObjectFias contObjectFias,
+                                                 ContObjectGeoPos contObjectGeoPos) {
+		this.contObjectVOFias = new ContObjectVOFias(contObject, contObjectFias,
 				contObjectGeoPos);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 * @return
 	 */
-	public static MonitorContEventNotificationStatusV2 newInstance(ContObject contObject, ContObjectFias contObjectFias,
+	public static MonitorContEventNotificationStatusV2 newInstance(ContObjectDTO contObject, ContObjectFias contObjectFias,
 			ContObjectGeoPos contObjectGeoPos) {
 		checkNotNull(contObject);
 		MonitorContEventNotificationStatusV2 result = new MonitorContEventNotificationStatusV2(contObject,
@@ -53,15 +54,15 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
-	public ContObject getContObject() {
+	public ContObjectDTO getContObject() {
 		return contObjectVOFias.getModel();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ContEventLevelColorKeyV2 getContEventLevelColorKey() {
@@ -69,7 +70,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contEventLevelColorKey
 	 */
 	public void setContEventLevelColorKey(ContEventLevelColorKeyV2 contEventLevelColorKey) {
@@ -77,7 +78,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public String getStatusColor() {
@@ -85,7 +86,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getEventsCount() {
@@ -93,7 +94,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @param eventsCount
 	 */
 	public void setEventsCount(long eventsCount) {
@@ -101,7 +102,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getEventsTypesCount() {
@@ -109,7 +110,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @param eventsTypesCount
 	 */
 	public void setEventsTypesCount(long eventsTypesCount) {
@@ -117,7 +118,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public long getNewEventsCount() {
@@ -125,7 +126,7 @@ public class MonitorContEventNotificationStatusV2
 	}
 
 	/**
-	 * 
+	 *
 	 * @param newEventsCount
 	 */
 	public void setNewEventsCount(long newEventsCount) {

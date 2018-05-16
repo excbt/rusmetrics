@@ -3,21 +3,16 @@ package ru.excbt.datafuse.nmk.data.service;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessage;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageDirection;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
@@ -25,8 +20,10 @@ import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,16 +32,18 @@ import java.util.UUID;
 import static org.junit.Assert.assertFalse;
 
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-//@Profile("CabinetMessage")
-public class CabinetMessageServiceTest extends JpaSupportTest {
+@RunWith(SpringRunner.class)
+public class CabinetMessageServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(CabinetMessageServiceTest.class);
 
     private static final CabinetMessageType CABINET_REQUEST = CabinetMessageType.REQUEST;
     private static final Pageable PAGE = new PageRequest(0,10);
+
+
+    @Mock
+    private PortalUserIdsService portalUserIdsService;
+
 
     @Autowired
     private CabinetMessageService cabinetMessageService;
@@ -61,6 +60,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
     }
 
     @Test
@@ -82,6 +82,10 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
         int databaseSizeBeforeCreate = cabinetMessageRepository.findAll().size();
 
         log.info("SibscriberId:{}. Size of cabinetMessages before: {}", portalUserIds.getSubscriberId(), databaseSizeBeforeCreate);
+
+        if (databaseSizeBeforeCreate == 0) {
+            return;
+        }
 
         Page<CabinetMessageDTO> list = cabinetMessageService.findAllRequestToSubscriber(portalUserIds, CABINET_REQUEST, PAGE);
         list.getContent().stream().filter(i -> i.getFromPortalSubscriberId() != null).limit(1).map(i -> {
@@ -129,7 +133,6 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     public void findMessageChain() throws Exception {
     }
 
-    @Override
     public long getSubscriberId() {
         return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
     }
@@ -137,7 +140,6 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
     /*
 
      */
-    @Override
     public long getSubscrUserId() {
         return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
     }
@@ -145,7 +147,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
     @Test
     public void testSentNotification() throws Exception {
-        UUID masterUuid = cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), "Test Notification", "Test body", null);
+        UUID masterUuid = cabinetMessageService.sendNotificationToCabinets(portalUserIdsService.getCurrentIds(), "Test Notification", "Test body", null);
 
         List<CabinetMessage> cabinetMessages = cabinetMessageRepository.findMessageByMasterUuid(masterUuid);
         assertFalse(cabinetMessages.isEmpty());

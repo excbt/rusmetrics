@@ -91,15 +91,24 @@ public class DBExceptionUtil {
         throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
     }
 
+    public static <T extends Persistable<?>> AccessDeniedException newAccessDeniedException(Class<T> clazz, Object id) {
+        return new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
+    }
 
-    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
+
+    public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
         return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
             (idKeyname ? "keyname" : "ID")
             + "=" + id + " is not found");
     }
 
-    public static <T extends Persistable<?>> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {
+    public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {
         return newEntityNotFoundException(clazz, id, false);
+    }
+
+
+    public static PersistenceException newUserArgeadyExistsException(String username) {
+        return new PersistenceException("User with name " + username + "already exists");
     }
 
 

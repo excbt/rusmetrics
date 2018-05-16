@@ -11,6 +11,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 @Deprecated
 public class LocalDatePeriod implements DateInterval {
@@ -37,6 +38,11 @@ public class LocalDatePeriod implements DateInterval {
 			return this;
 		}
 
+		public Builder dateFrom(java.time.LocalDateTime d) {
+			this.dateTimeFrom = new LocalDateTime(LocalDateUtils.asDate(d));
+			return this;
+		}
+
 		public Builder dateFrom(String s) {
 			this.dateTimeFrom = LocalDateTime.parse(s, DATE_FORMATTER);
 			return this;
@@ -44,6 +50,11 @@ public class LocalDatePeriod implements DateInterval {
 
 		public Builder dateTo(LocalDateTime d) {
 			this.dateTimeTo = d;
+			return this;
+		}
+
+		public Builder dateTo(java.time.LocalDateTime d) {
+			this.dateTimeTo = new LocalDateTime(LocalDateUtils.asDate(d));
 			return this;
 		}
 

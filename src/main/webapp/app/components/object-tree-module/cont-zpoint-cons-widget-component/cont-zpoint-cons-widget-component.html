@@ -1,0 +1,11 @@
+<div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+<!--  Cont zpoint cons widget component-->
+   <span ng-show='title' ng-bind='title'></span>
+   <div ng-show='isLoading'>Загрузка...</div>
+   <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+   <ng-widget ng-show = "!isLoading && !isError"
+       src = "$ctrl.zpoint.widgetOptions.type"
+       options = "$ctrl.zpoint.widgetOptions">
+
+    </ng-widget>
+</div>

@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadata;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContServiceType;
 import ru.excbt.datafuse.nmk.data.model.keyname.MeasureUnit;
-import ru.excbt.datafuse.nmk.data.service.ContServiceTypeService;
-import ru.excbt.datafuse.nmk.data.service.DeviceObjectMetadataService;
-import ru.excbt.datafuse.nmk.data.service.MeasureUnitService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -29,18 +27,27 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/rma")
-public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource {
+public class RmaDeviceObjectMetadataController  {
 
-	@Autowired
-	private MeasureUnitService measureUnitService;
+	private final MeasureUnitService measureUnitService;
 
-	@Autowired
-	private DeviceObjectMetadataService deviceObjectMetadataService;
+	private final DeviceObjectMetadataService deviceObjectMetadataService;
 
-	@Autowired
-	private ContServiceTypeService contServiceTypeService;
+	private final ContServiceTypeService contServiceTypeService;
 
-	/**
+	private final ObjectAccessService objectAccessService;
+
+    private final PortalUserIdsService portalUserIdsService;
+
+    public RmaDeviceObjectMetadataController(MeasureUnitService measureUnitService, DeviceObjectMetadataService deviceObjectMetadataService, ContServiceTypeService contServiceTypeService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+        this.measureUnitService = measureUnitService;
+        this.deviceObjectMetadataService = deviceObjectMetadataService;
+        this.contServiceTypeService = contServiceTypeService;
+        this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -83,7 +90,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	public ResponseEntity<?> getDeviceObjectMetadata(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("deviceObjectId") Long deviceObjectId) {
 
-		if (!canAccessContObject(contObjectId)) {
+		if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -126,7 +133,7 @@ public class RmaDeviceObjectMetadataController extends AbstractSubscrApiResource
 	public ResponseEntity<?> getDeviceObjectMetadataByContZPoint(@PathVariable("contObjectId") Long contObjectId,
 			@PathVariable("contZPointId") Long contZPointId) {
 
-		if (!canAccessContObject(contObjectId)) {
+        if (!objectAccessService.checkContObjectId(contObjectId, portalUserIdsService.getCurrentIds())) {
 			return ApiResponse.responseForbidden();
 		}
 

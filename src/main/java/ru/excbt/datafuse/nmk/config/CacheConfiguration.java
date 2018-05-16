@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigLocal;
-import ru.excbt.datafuse.nmk.config.jpa.JpaRawConfigLocal;
 import ru.excbt.datafuse.nmk.config.mvc.WebConfigurer;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 
@@ -25,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableCaching
 @AutoConfigureAfter(value = { MetricsConfiguration.class })
-@AutoConfigureBefore(value = { WebConfigurer.class, JpaConfigLocal.class, JpaRawConfigLocal.class})
+@AutoConfigureBefore(value = { WebConfigurer.class, DatabaseConfiguration.class})
 public class CacheConfiguration {
 
     private final javax.cache.configuration.Configuration<Object, Object> jcacheConfiguration;
@@ -59,7 +57,8 @@ public class CacheConfiguration {
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrPref.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrPrefCategory.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission.class.getName());
-            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SubscrType.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.domain.SubscrType.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.domain.SubscrTypeRole.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.SystemParam.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.TariffOption.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType.class.getName());
@@ -99,7 +98,7 @@ public class CacheConfiguration {
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrDataSource.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefValue.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType.class.getName());
-            //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName());
+            createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.Subscriber.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrUser.class.getName());
             //createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SystemUser.class.getName());
             createIfNotExists(cm, ru.excbt.datafuse.nmk.data.model.SubscrRole.class.getName());

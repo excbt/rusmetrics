@@ -39,7 +39,7 @@ public class PortalUserDetailService implements org.springframework.security.cor
 
             List<GrantedAuthority> grantedAuths = new ArrayList<>();
             if (user.is_system()) {
-                grantedAuths = AdminUtils.makeAdminAuths();
+                grantedAuths = AdminUtils.makeAuths(AuthoritiesConstants.adminAuthorities());
             } else {
                 List<SubscrRole> roles = subscrUserService.selectSubscrRoles(user.getId());
                 for (SubscrRole sr : roles) {

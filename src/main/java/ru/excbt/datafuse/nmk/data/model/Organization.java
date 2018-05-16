@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
@@ -168,12 +169,15 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
     @Column(name = "chief_accountant_fio")
     private String chiefAccountantFio;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_type_id")
+    @BatchSize(size = 10)
     private OrganizationType organizationType;
 
-    @ManyToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id")
+    @BatchSize(size = 10)
     private Subscriber subscriber;
 
     @Column(name = "subscriber_id", insertable = false, updatable = false)

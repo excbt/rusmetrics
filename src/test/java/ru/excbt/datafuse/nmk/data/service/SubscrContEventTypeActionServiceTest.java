@@ -1,30 +1,25 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaSupportTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class SubscrContEventTypeActionServiceTest extends JpaSupportTest {
+import java.util.Arrays;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
+
+@RunWith(SpringRunner.class)
+public class SubscrContEventTypeActionServiceTest extends PortalDataTest {
 
 	@Autowired
 	private SubscrContEventTypeActionService subscrContEventTypeActionService;
@@ -40,6 +35,7 @@ public class SubscrContEventTypeActionServiceTest extends JpaSupportTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testCreateAction() throws Exception {
 
 		Subscriber subscriber = subscriberService.selectSubscriber(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);

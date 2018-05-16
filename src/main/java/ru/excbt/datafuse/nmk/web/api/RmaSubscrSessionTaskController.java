@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointSessionDetailType;
 import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SessionDetailTypeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrSessionTaskService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -33,20 +34,26 @@ import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping(value = "/api/rma/subscrSessionTask")
-public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
+public class RmaSubscrSessionTaskController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscrSessionTaskController.class);
 
-	@Autowired
-	private SubscrSessionTaskService subscrSessionTaskService;
+	private final SubscrSessionTaskService subscrSessionTaskService;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
 
-	@Autowired
-	private SessionDetailTypeService sessionDetailTypeService;
+	private final SessionDetailTypeService sessionDetailTypeService;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+    public RmaSubscrSessionTaskController(SubscrSessionTaskService subscrSessionTaskService, ContZPointService contZPointService, SessionDetailTypeService sessionDetailTypeService, PortalUserIdsService portalUserIdsService) {
+        this.subscrSessionTaskService = subscrSessionTaskService;
+        this.contZPointService = contZPointService;
+        this.sessionDetailTypeService = sessionDetailTypeService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param id
 	 * @return
@@ -68,7 +75,7 @@ public class RmaSubscrSessionTaskController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> postSubscrSessionTask(
 			@RequestBody SubscrSessionTask requestEntity, HttpServletRequest request) {
 
-		subscrSessionTaskService.initTask(getSubscriberParam(), requestEntity);
+		subscrSessionTaskService.initTask(portalUserIdsService.getCurrentIds(), requestEntity);
 
 		if (!subscrSessionTaskService.checkTaskValid(requestEntity)) {
 			return ApiResponse.responseBadRequest(ApiResult.validationError("SubscrSessionTask enity is not valid"));

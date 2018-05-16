@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import lombok.Getter;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Immutable;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 
@@ -20,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DeletedMarker;
 @JsonInclude(Include.NON_NULL)
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Getter
+@Immutable
 public class TimezoneDef extends AbstractKeynameEntity implements DeletedMarker {
 
 	/**

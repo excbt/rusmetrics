@@ -18,9 +18,15 @@ public class SubscriberDTO {
 
     private String subscriberName;
 
+    @Deprecated // use subscriberInfo instead
     private String info;
 
+    private String subscriberInfo;
+
+    @Deprecated // use subscriberComment instead
     private String comment;
+
+    private String subscriberComment;
 
     private Long organizationId;
 
@@ -51,5 +57,9 @@ public class SubscriberDTO {
     private String subscrCabinetNr;
 
     private String contactEmail;
+
+    private String subscrType;
+
+    private Long parentSubscriberId;
 
 }

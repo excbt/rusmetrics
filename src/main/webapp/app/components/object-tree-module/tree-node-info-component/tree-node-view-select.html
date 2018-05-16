@@ -15,9 +15,11 @@
           <md-button class = "md-icon-button nmc-md-ltb-btn"
                ng-click = "$ctrl.openUserMenu($mdMenu, $event)"
                aria-label = "Выбор представления"
-               style = "">
-               <md-icon md-font-set = "fab fa-lg" style = "color: black !important; fill: black !important;">&#xf37f;</md-icon>
+               style = "padding-top: 0;">
+               <img src = "components\object-tree-module\tree-node-info-component\widget-switcher.png"/>
+<!--               <md-icon md-font-set = "fab fa-lg" style = "color: black !important; fill: black !important;">&#xf37f;</md-icon>-->
 <!--                <md-icon md-font-set = "fa fa-sm">&#xf0ca;</md-icon>-->
+         
           </md-button>
           <md-menu-content>                     
               <md-menu-item class = "nmc-md-menu-item" ng-repeat = "widget in $ctrl.nodeWidgets">

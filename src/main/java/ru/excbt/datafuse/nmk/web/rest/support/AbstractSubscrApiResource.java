@@ -1,16 +1,16 @@
 package ru.excbt.datafuse.nmk.web.rest.support;
 
-import org.joda.time.LocalDate;
+//import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import java.time.Duration;
@@ -43,6 +43,10 @@ public abstract class AbstractSubscrApiResource {
 
     @Autowired
 	private ObjectAccessService objectAccessService;
+
+    @Autowired
+    protected SubscriberTimeService subscriberTimeService;
+
 
 	/**
 	 *
@@ -151,26 +155,26 @@ public abstract class AbstractSubscrApiResource {
 		return subscriber.getRmaSubscriberId();
 	}
 
-	/**
-	 *
-	 * @return
-	 */
-	protected LocalDate getCurrentSubscriberLocalDate() {
-		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
-		return new LocalDate(d);
-	}
+//	/**
+//	 *
+//	 * @return
+//	 */
+//	protected LocalDate getCurrentSubscriberLocalDate() {
+//		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+//		return new LocalDate(d);
+//	}
 
 	/**
 	 *
 	 * @return
 	 */
 	protected ZonedDateTime getSubscriberZonedDateTime() {
-		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+		Date d = subscriberTimeService.getSubscriberCurrentTime(getCurrentSubscriberId());
 		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()) : ZonedDateTime.now();
 	}
 
 	protected ZonedDateTime getSubscriberZonedDateTime2() {
-		Date d = subscriberService.getSubscriberCurrentTime(getCurrentSubscriberId());
+		Date d = subscriberTimeService.getSubscriberCurrentTime(getCurrentSubscriberId());
         Long duration = 0L;
 		if (d != null) {
             LocalDateTime sd = LocalDateUtils.asLocalDateTime(d);
@@ -179,14 +183,24 @@ public abstract class AbstractSubscrApiResource {
 		return d != null ? ZonedDateTime.ofInstant(d.toInstant(), ZoneId.systemDefault()).plusNanos(duration) : ZonedDateTime.now();
 	}
 
+//	/**
+//	 *
+//	 * @param subscriberId
+//	 * @return
+//	 */
+//	protected LocalDate getSubscriberLocalDateOld(Long subscriberId) {
+//		Date d = subscriberService.getSubscriberCurrentTime(subscriberId);
+//		return new LocalDate(d);
+//	}
+
 	/**
 	 *
 	 * @param subscriberId
 	 * @return
 	 */
-	protected LocalDate getSubscriberLocalDate(Long subscriberId) {
-		Date d = subscriberService.getSubscriberCurrentTime(subscriberId);
-		return new LocalDate(d);
+	protected java.time.LocalDate getSubscriberLocalDate(Long subscriberId) {
+		Date d = subscriberTimeService.getSubscriberCurrentTime(subscriberId);
+		return LocalDateUtils.asLocalDate(d);
 	}
 
 	/**
@@ -208,15 +222,15 @@ public abstract class AbstractSubscrApiResource {
     /**
      *
      * @param objectList
-     * @param subscriberParam
+     * @param portalUserIds
      * @param <T>
      * @return
      */
-	protected <T> List<T> filterObjectAccess(List<T> objectList, SubscriberParam subscriberParam) {
+	protected <T> List<T> filterObjectAccess(List<T> objectList, PortalUserIds portalUserIds) {
         Objects.requireNonNull(objectList);
 
-		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, subscriberParam,
-				getSubscriberLocalDate(subscriberParam.getSubscriberId()));
+		List<T> resultObjects = subscrServiceAccessService.filterObjectAccess(objectList, portalUserIds,
+				getSubscriberLocalDate(portalUserIds.getSubscriberId()));
 
 		return resultObjects;
 	}

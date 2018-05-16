@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 
 import javax.persistence.PersistenceException;
@@ -185,7 +186,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
-		subscrUser.setSubscriberId(newSubscriber.getId());
+//		subscrUser.setSubscriberId(newSubscriber.getId());
 		subscrUser.setSubscrRoles(subscrRoleService.subscrCabinetRoles());
 		subscrUser.setUserName(subscrCabinetUsername);
 		subscrUser.setUserNickname("Не задано");
@@ -228,7 +229,7 @@ public class SubscrCabinetService implements SecuredRoles {
 					cabinetSubscriber.getId(), cabinetSubscriber.getSubscrType()));
 		}
 
-		List<SubscrUser> subscrUsers = subscrUserService.selectBySubscriberId(cabinetSubscriber.getId());
+		List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(cabinetSubscriber.getId());
 
 		List<Long> subscrUserIds = subscrUsers.stream().map(i -> i.getId()).collect(Collectors.toList());
 
@@ -308,7 +309,7 @@ public class SubscrCabinetService implements SecuredRoles {
 						.filter(i -> i.getId().equals(childSubscriberId)).findFirst();
 
 				if (optChildSubscriber.isPresent()) {
-					List<SubscrUser> childSubscrUsers = subscrUserService.selectBySubscriberId(childSubscriberId);
+					List<SubscrUser> childSubscrUsers = subscrUserRepository.selectBySubscriberId(childSubscriberId);
 					if (!childSubscrUsers.isEmpty()) {
 						subscrCabinetInfo = new SubscrCabinetInfo(optChildSubscriber.get(), childSubscrUsers.get(0),
 								childContObjectMap.get(optChildSubscriber.get().getId()));
@@ -496,8 +497,8 @@ public class SubscrCabinetService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {
-		SubscrUser fromSubscrUser = subscrUserService.findOne(fromSubscrUserId);
-		SubscrUser toSubscrUser = subscrUserService.findOne(toSubscrUserId);
+		SubscrUser fromSubscrUser = subscrUserRepository.findOne(fromSubscrUserId);
+		SubscrUser toSubscrUser = subscrUserRepository.findOne(toSubscrUserId);
 
 		if (fromSubscrUser == null || toSubscrUser == null) {
 			throw new PersistenceException(

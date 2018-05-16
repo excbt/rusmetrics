@@ -3,11 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -29,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
@@ -36,11 +33,11 @@ import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemReposit
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
@@ -54,7 +51,7 @@ import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 @Service
 public class ReportParamsetService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetService.class);
+	private static final Logger log = LoggerFactory.getLogger(ReportParamsetService.class);
 
 	private static final String REPORT_AUTO_SUFFIX = "REPORT_AUTO_SUFFIX";
 
@@ -135,11 +132,11 @@ public class ReportParamsetService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param reportTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamset
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	protected ReportParamset updateReportParamset(ReportParamset reportParamset) {
@@ -177,11 +174,12 @@ public class ReportParamsetService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param reportTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamset
+     * @param contObjectIds
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportParamset updateOne(ReportParamset reportParamset, Long[] contObjectIds) {
@@ -243,11 +241,11 @@ public class ReportParamsetService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public ReportParamset findReportParamset(long reportParamsetId) {
 
@@ -275,7 +273,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 	/**
 	 *
-	 * @param reportTemplateId
+	 * @param reportParamsetId
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
@@ -297,11 +295,14 @@ public class ReportParamsetService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param srcReportTemplateId
-	 * @return
-	 */
+    /**
+     *
+     * @param srcId
+     * @param reportParamset
+     * @param contObjectIds
+     * @param subscriber
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamset createByTemplate(long srcId, ReportParamset reportParamset, Long[] contObjectIds,
 			Subscriber subscriber) {
@@ -382,11 +383,12 @@ public class ReportParamsetService implements SecuredRoles {
 		return ObjectFilters.deletedFilter(preResult);
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamset
+     * @param objectId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamsetUnit addUnitToParamset(ReportParamset reportParamset, long objectId) {
 		checkNotNull(reportParamset);
@@ -423,11 +425,12 @@ public class ReportParamsetService implements SecuredRoles {
 		}
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param objectId
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public ReportParamsetUnit addUnitToParamset(long reportParamsetId, Long objectId) {
 		ReportParamset rp = findReportParamset(reportParamsetId);
@@ -435,24 +438,25 @@ public class ReportParamsetService implements SecuredRoles {
 		return addUnitToParamset(rp, objectId);
 	}
 
-	/**
-	 *
-	 * @param reportParamsetUnitId
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param contObjectId
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void deleteUnitFromParamset(final long reportParamsetId, final long contObjectId) {
 
 		List<Long> ids = reportParamsetUnitRepository.selectUnitIds(reportParamsetId, contObjectId);
 
 		if (ids.size() > 1) {
-			logger.trace("Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})",
+			log.trace("Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId={}, contObjectId={})",
 					reportParamsetId, contObjectId);
 			throw new PersistenceException(String.format(
 					"Can't delete ReportParamsetUnit. Too Many Rows. (reportParamsetId=%d, contObjectId=%d)",
 					reportParamsetId, contObjectId));
 		}
 		if (ids.size() == 0) {
-			logger.trace("Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})",
+			log.trace("Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId={}, contObjectId={})",
 					reportParamsetId, contObjectId);
 			throw new PersistenceException(String.format(
 					"Can't delete ReportParamsetUnit. No Rows Found. (reportParamsetId=%d, contObjectId=%d)",
@@ -558,22 +562,22 @@ public class ReportParamsetService implements SecuredRoles {
 		return reportParamsetRepository.selectReportParamset(reportTemplateId, activeDate.toDate());
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @param activeDate
-	 * @return
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     * @param isActive
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<ReportParamset> selectReportParamset(long reportTemplateId, boolean isActive) {
 		return reportParamsetRepository.selectReportParamset(reportTemplateId, isActive);
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param objectIds
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public void updateUnitToParamset(final long reportParamsetId, final Long[] objectIds) {
 
@@ -584,7 +588,7 @@ public class ReportParamsetService implements SecuredRoles {
 		List<Long> currentIds = reportParamsetUnitRepository.selectObjectIds(reportParamsetId);
 		for (Long currentId : currentIds) {
 			if (!newObjectIdList.contains(currentId)) {
-				logger.trace("removing objectId:{}", currentId);
+				log.trace("removing objectId:{}", currentId);
 				deleteUnitFromParamset(reportParamsetId, currentId);
 			}
 		}
@@ -618,7 +622,7 @@ public class ReportParamsetService implements SecuredRoles {
 		int totalCounter = 0;
 		int passedCounter = 0;
 
-		logger.info("Setting up allRequiredParamsPassed property");
+		log.info("Setting up allRequiredParamsPassed property");
 		for (ReportParamset rp : allParamsets) {
 
 			if (rp == null) {
@@ -631,7 +635,7 @@ public class ReportParamsetService implements SecuredRoles {
 
 			boolean specialPassed = reportMakerParam.isAllSpecialRequiredParamsExists();
 
-			logger.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
+			log.info("commonPassed:{}. specialPassed:{}.", commonPassed, specialPassed);
 
 			boolean requiredPassed = commonPassed && specialPassed;
 
@@ -639,7 +643,7 @@ public class ReportParamsetService implements SecuredRoles {
 				passedCounter++;
 			}
 
-			logger.info("ReportParamset id:{} reportType:{} ... requiredPass: {}", rp.getId(),
+			log.info("ReportParamset id:{} reportType:{} ... requiredPass: {}", rp.getId(),
 					rp.getReportTemplate().getReportTypeKeyname(), requiredPassed);
 
 			rp.setAllRequiredParamsPassed(requiredPassed);
@@ -648,24 +652,24 @@ public class ReportParamsetService implements SecuredRoles {
 			totalCounter++;
 		}
 
-		logger.info("Total Paramset processed {}. Passed {}", totalCounter, passedCounter);
+		log.info("Total Paramset processed {}. Passed {}", totalCounter, passedCounter);
 
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<ReportParamset> selectReportParamsetContextLaunch(final SubscriberParam subscriberParam) {
+	public List<ReportParamset> selectReportParamsetContextLaunch(final PortalUserIds portalUserIds) {
 
 		List<ReportParamset> result = null;
-		if (subscriberParam.getSubscrTypeKey().isChild() && subscriberParam.haveParentSubacriber()) {
+		if (portalUserIds.getSubscrTypeKey().isChild() && portalUserIds.haveParentSubacriber()) {
 			result = reportParamsetRepository
-					.selectRmaReportParamsetContextLaunchChild(subscriberParam.getParentSubscriberId());
+					.selectRmaReportParamsetContextLaunchChild(portalUserIds.getParentSubscriberId());
 		} else {
-			result = reportParamsetRepository.selectReportParamsetContextLaunch(subscriberParam.getSubscriberId());
+			result = reportParamsetRepository.selectReportParamsetContextLaunch(portalUserIds.getSubscriberId());
 		}
 
 		result.forEach((s) -> s.getParamSpecialList().size());
@@ -694,37 +698,42 @@ public class ReportParamsetService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriber
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<ReportParamset> createDefaultReportParamsets(Subscriber subscriber) {
 
-		checkNotNull(subscriber);
-		checkArgument(!subscriber.isNew());
+        Objects.requireNonNull(subscriber);
+        Objects.requireNonNull(subscriber.getId());
 
 		List<ReportParamset> resultList = new ArrayList<>();
 
 		List<ReportType> reportTypes = reportTypeService.findAllReportTypes();
 
 		for (ReportType rt : reportTypes) {
+            log.debug("ReportType: {} check", rt.getKeyname());
 			ReportTypeKey reportTypeKey = ReportTypeKey.valueOf(rt.getKeyname());
 			if (reportTypeKey == null) {
 				continue;
 			}
+            log.debug("ReportType: {} found. Looking for paramset", reportTypeKey);
 
 			List<ReportParamset> existingReportParamset = reportParamsetRepository
 					.selectSubscriberReportParamset(reportTypeKey.getKeyname(), true, subscriber.getId());
 
 			if (!existingReportParamset.isEmpty()) {
+                log.debug("ReportType: {} no Report Paramset", reportTypeKey);
 				continue;
 			}
 
+            log.debug("ReportType: {} Looking for common templates", reportTypeKey);
 			List<ReportTemplate> commonTemplates = reportTemplateService.selectCommonReportTemplates(reportTypeKey,
 					true);
 			if (commonTemplates.isEmpty()) {
+                log.debug("ReportType: {} Common templates not found", reportTypeKey);
 				continue;
 			}
 
@@ -734,11 +743,13 @@ public class ReportParamsetService implements SecuredRoles {
 					? commonTemplates.get(0).getReportParamsetDefaultName() : commonTemplates.get(0).getName();
 
 			String reportParamsetName = reportParamsetDefaultName + " " + suffix;
+            log.debug("ReportType: {} reportParamsetName: {}. Creating paramset", reportTypeKey, reportParamsetName);
 
 			ReportParamset reportParamset = createReportParamsetEx(commonTemplates.get(0), reportParamsetName,
 					ReportPeriodKey.CURRENT_MONTH, ReportOutputFileType.PDF, subscriber, true);
 
 			resultList.add(reportParamset);
+            log.debug("ReportType: {} Paramset init finished", reportTypeKey);
 
 		}
 

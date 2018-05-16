@@ -1,44 +1,33 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.apache.commons.lang3.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
+import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.web.ApiConst;
+import ru.excbt.datafuse.nmk.web.api.support.*;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.BooleanUtils;
-import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
-import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
-import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscrPriceListService;
-import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
-import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Контроллер для работы с прайс листами для РМА
@@ -56,13 +45,19 @@ public class RmaPriceListController extends SubscrPriceListController {
 
 	private final static Long MASTER_PRICE_LIST_SUBSCRIBER_ID = 0L;
 
-	@Autowired
-	private SubscrPriceListService subscrPriceListService;
+	private final SubscrPriceListService subscrPriceListService;
 
-	@Autowired
-	private RmaSubscriberService rmaSubscriberService;
+	private final SubscriberService subscriberService;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+    public RmaPriceListController(SubscrPriceListService subscrPriceListService, SubscriberService subscriberService, PortalUserIdsService portalUserIdsService) {
+        this.subscrPriceListService = subscrPriceListService;
+        this.subscriberService = subscriberService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @author kovtonyk
 	 *
@@ -73,6 +68,12 @@ public class RmaPriceListController extends SubscrPriceListController {
 		private final boolean isRma;
 
 		private PriceListSubscriber(Subscriber subscriber) {
+			this.id = subscriber.getId();
+			this.subscriberName = subscriber.getSubscriberName();
+			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
+		}
+
+		private PriceListSubscriber(SubscriberDTO subscriber) {
 			this.id = subscriber.getId();
 			this.subscriberName = subscriber.getSubscriberName();
 			this.isRma = Boolean.TRUE.equals(subscriber.getIsRma());
@@ -115,7 +116,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 		if (isSystemUser()) {
 			resultList.add(new PriceListSubscriber(MASTER_PRICE_LIST_SUBSCRIBER_ID, "MASTER"));
 			resultList.add(new PriceListSubscriber());
-			List<Subscriber> rmaList = rmaSubscriberService.selectRmaList();
+			List<SubscriberDTO> rmaList = subscriberService.findAllRma();
 			rmaList.forEach(i -> {
 				resultList.add(new PriceListSubscriber(i));
 			});
@@ -124,8 +125,8 @@ public class RmaPriceListController extends SubscrPriceListController {
 			resultList.add(new PriceListSubscriber(currentSubscriberService.getSubscriber()));
 		}
 
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(getCurrentSubscriberId());
-		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
+		List<SubscriberDTO> subscribers = subscriberService.findByRmaSubscriber(portalUserIdsService.getCurrentIds());
+		subscribers.stream().forEach(i -> {
 			resultList.add(new PriceListSubscriber(i));
 		});
 		return ApiResponse.responseOK(resultList);
@@ -144,10 +145,8 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return ApiResponse.responseForbidden();
 		}
 
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaList();
-		subscribers.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).forEach(i -> {
-			resultList.add(new PriceListSubscriber(i));
-		});
+		List<SubscriberDTO> subscribers = subscriberService.findAllRma();
+		subscribers.stream().forEach(i -> resultList.add(new PriceListSubscriber(i)));
 		return ApiResponse.responseOK(resultList);
 	}
 
@@ -379,7 +378,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 			return ApiResponse.responseBadRequest(ApiResult.validationError("SubscrPriceList is not found", priceListId));
 		}
 
-		LocalDate startDate = currentSubscriberService.getSubscriberCurrentTime_Joda().toLocalDate();
+		LocalDate startDate = currentSubscriberService.getSubscriberCurrentLocalDate();
 
 		ApiAction action = new ApiActionEntityAdapter<SubscrPriceList>() {
 
@@ -448,7 +447,7 @@ public class RmaPriceListController extends SubscrPriceListController {
 					ApiResult.validationError("SubscrPriceList (id=%d) is not found", subscrPriceListId));
 		}
 
-		LocalDate localDate = getCurrentSubscriberLocalDate();
+		LocalDate localDate = getSubscriberLocalDate(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		ApiAction action = new ApiActionEntityAdapter<List<SubscrPriceItemVO>>(subscrPriceItemVOs) {
 

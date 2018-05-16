@@ -1,7 +1,7 @@
 <jhi-exc-form-template>
     <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
     <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-        (createAction)="navigateNew()">
+        (createAction)="navigateNew()" headerKey="{{ menuHeaderKey }}">
     </jhi-exc-edit-form-menu>
     
     <br>
@@ -121,18 +121,23 @@
             </div>
             <div class="ui-lg-6 ui-g-nopad">
                 <!-- BLOCK 3 left -->
-                <div class="ui-lg-6 ui-g-nopad">
-                    <div class="ui-g-3 flex-column-rpad">
-                        <mat-checkbox  id="flagRso" type="checkbox" formControlName="flagRso">
-                            {{'organization.flagRso' | translate}}
-                            ( {{'organization.flagRsoDesription' | translate}} )
-                        </mat-checkbox>
-                        <mat-checkbox  id="flagCm" type="checkbox" formControlName="flagCm">
-                            {{'organization.flagCm' | translate}} ({{'organization.flagManagementDesription' | translate}})
-                        </mat-checkbox>
-                        <mat-checkbox  id="flagRma" type="checkbox" formControlName="flagRma">
+                <div class="ui-lg ui-g-nopad">
+                    <div class="flex-column-rpad">
+                        <mat-slide-toggle *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_SUBSCR_ADMIN']"
+                            checked="{{ entityForm.controls['flagRso'] && entityForm.controls['flagRso'].value }}"
+                            labelPosition="after" [color]="Primary" (change) ="flagRsoToggle($event)">
+                            {{'organization.flagRso' | translate}} ({{'organization.flagRsoDesription' | translate}})
+                        </mat-slide-toggle>                        
+                        <mat-slide-toggle *jhiHasAnyAuthority="['ROLE_ADMIN','ROLE_SUBSCR_ADMIN']"
+                            checked="{{ entityForm.controls['flagCm'] && entityForm.controls['flagCm'].value }}"
+                            labelPosition="after" [color]="Primary" (change) ="flagCmToggle($event)">
+                            {{'organization.flagCm' | translate}} ({{'organization.flagCmDesription' | translate}})
+                        </mat-slide-toggle>                        
+                        <mat-slide-toggle *jhiHasAnyAuthority="'ROLE_ADMIN'"
+                            checked="{{ entityForm.controls['flagRma'] && entityForm.controls['flagRma'].value }}"
+                            labelPosition="after" [color]="Primary" (change) ="flagRmaToggle($event)">
                             {{'organization.flagRma' | translate}} ({{'organization.flagRmaDesription' | translate}})
-                        </mat-checkbox>
+                        </mat-slide-toggle>       
                     </div>
                 </div>   
                 <!-- end of BLOCK 3 -->

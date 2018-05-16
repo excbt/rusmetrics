@@ -81,6 +81,7 @@
         }
         
         function successLoadContObjectsShortInfo(resp) {
+//console.log(resp);            
             contObjectsShortInfoLoading = false;
             if (resp === null || resp.data === null) {
                 setContObjectsShortInfoArray(null);

@@ -1,0 +1,50 @@
+<mat-toolbar class = "nmc-tree-nav-toolbar" style = "">  
+    <mat-toolbar-row 
+        style = "">
+<!--
+        <div class="float-left">
+            <button mat-icon-button (click)="toggleMainMenu()"
+             class ="nmc-toolbar-btn"
+              style = ""
+               >
+                <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>
+            </button>
+        </div>    
+-->
+
+        <div class="float-left">
+            <button mat-icon-button [matMenuTriggerFor]="menu" 
+                  class="nmc-tree-nav-toolbar-btn"
+                   style = "">
+<!--                        <mat-icon class="">more_vert</mat-icon>-->
+                <mat-icon fontSet = "fa" fontIcon = "fa-sitemap"></mat-icon>
+            </button>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item *ngFor = "let subscrObjectTree of subscrObjectTreeList" 
+                   (click) = "changeTree(subscrObjectTree)">
+                    <span >{{subscrObjectTree.objectName}}</span>
+                </button>                        
+            </mat-menu>    
+        </div>
+    </mat-toolbar-row>
+</mat-toolbar>
+<div>
+<!--    Tree navigate component-->
+<!--
+    <div>
+        <i class = "glyphicon glyphicon-folder"></i>
+        <i class="material-icons">&#xE87C;</i>
+    </div>
+-->
+    <p-tree [value] = "tree" 
+    (onNodeExpand) = "loadNode($event)" 
+    [style] = "{'width': '100%', 'height': '87.5vh'}"    
+    [loading] = "treeNodeLoading"
+    >
+<!--
+        <ng-template let-node pTemplate = "default">
+            <img [attrs.src] = "picture.path">
+        </ng-template>
+-->
+    </p-tree>
+</div>

@@ -2,13 +2,13 @@
     <!-- <jhi-form-search></jhi-form-search>     -->
 
     <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscrTitle" 
-        [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-        (createAction)="newNavigate()">
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false"
+        (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 
     <jhi-exc-list-form-menu *ngIf="!subscriberMode" headerKey="organizations.masterTitle" 
-        [createEnabled]="false" [viewEnabled]="true" [reportEnabled]="false"
-        (createAction)="newNavigate()">
+        [createEnabled]="false" [propertiesEnabled]="true" [reportEnabled]="false"
+        (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
@@ -17,7 +17,7 @@
     </div>
 
 
-    <mat-table class="organizations-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+    <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
         matSortDisableClear>
 
         <ng-container matColumnDef="edit">
@@ -32,6 +32,24 @@
             </mat-cell>
         </ng-container>
 
+        <ng-container matColumnDef="select" >
+            <mat-header-cell *matHeaderCellDef class="select-column-width">
+                <!-- <mat-checkbox 
+                    (change)="$event ? selection.clear() : null"
+                    [checked]="!selection.isEmpty()"
+                    [indeterminate]="!selection.isEmpty()"
+                    >
+                </mat-checkbox> -->
+            </mat-header-cell>     
+            <mat-cell *matCellDef="let row" class="select-column-width">
+                <mat-checkbox 
+                    color="primary"
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)">
+                </mat-checkbox>
+            </mat-cell>               
+        </ng-container>
 
         <ng-container matColumnDef="id">
             <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>

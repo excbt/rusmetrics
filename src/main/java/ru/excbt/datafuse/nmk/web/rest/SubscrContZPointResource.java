@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -292,10 +293,11 @@ public class SubscrContZPointResource {
     @Timed
     public ResponseEntity<?> getRsoOrganizations(
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
-		List<Organization> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
+		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
 
-		List<Organization> resultList = SecurityUtils.isSystemUser() ? rsOrganizations
-				: ObjectFilters.devModeFilter(rsOrganizations);
+		List<OrganizationDTO> resultList = SecurityUtils.isSystemUser() ? rsOrganizations
+				: rsOrganizations;
+            //ObjectFilters.devModeFilter(rsOrganizations);
 
 		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
 

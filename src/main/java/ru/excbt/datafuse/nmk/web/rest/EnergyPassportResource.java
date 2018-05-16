@@ -4,16 +4,19 @@ import com.codahale.metrics.annotation.Metric;
 import com.codahale.metrics.annotation.Timed;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportDataDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportSectionEntryDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.service.EnergyPassportService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -29,13 +32,26 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/api/subscr/energy-passports")
-public class EnergyPassportResource extends AbstractSubscrApiResource {
+public class EnergyPassportResource {
 
     private final EnergyPassportService energyPassportService;
 
-    public EnergyPassportResource(EnergyPassportService energyPassportService) {
+    private final PortalUserIdsService portalUserIdsService;
+
+    @Autowired
+    public EnergyPassportResource(EnergyPassportService energyPassportService, PortalUserIdsService portalUserIdsService) {
         this.energyPassportService = energyPassportService;
+        this.portalUserIdsService = portalUserIdsService;
     }
+
+    private Subscriber getCurrentSubscriber() {
+        return new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
+    }
+
+    private Long getSubscriberId() {
+        return portalUserIdsService.getCurrentIds().getSubscriberId();
+    }
+
 
     @PostMapping
     @ApiOperation(value = "Create Energy Passport")
@@ -48,7 +64,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
         if (templateKeyname == null) {
             templateKeyname = energyPassportVM.getTemplateKeyname();
         }
-        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014_Add.ENERGY_DECLARATION;
+        String keyname = templateKeyname != null ? templateKeyname : EnergyPassport401_2014_Add.ENERGY_DECLARATION_1;
         ApiActionProcess<EnergyPassportDTO> action = () -> energyPassportService.createPassport(keyname, energyPassportVM, getCurrentSubscriber());
         return ApiResponse.responseOK(action);
     }
@@ -98,6 +114,7 @@ public class EnergyPassportResource extends AbstractSubscrApiResource {
         List<EnergyPassportShortDTO> result = energyPassportService.findShortBySubscriberId(getSubscriberId());
         return ApiResponse.responseOK(result);
     }
+
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete Energy Passport")

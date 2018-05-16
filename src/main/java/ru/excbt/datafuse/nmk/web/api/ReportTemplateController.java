@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.ReportTemplateService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
@@ -33,17 +35,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/reportTemplate")
-public class ReportTemplateController extends AbstractSubscrApiResource {
+public class ReportTemplateController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateController.class);
 
-	@Autowired
-	private ReportTemplateService reportTemplateService;
+	private final ReportTemplateService reportTemplateService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	private final CurrentSubscriberService currentSubscriberService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public ReportTemplateController(ReportTemplateService reportTemplateService, CurrentSubscriberService currentSubscriberService, PortalUserIdsService portalUserIdsService) {
+        this.reportTemplateService = reportTemplateService;
+        this.currentSubscriberService = currentSubscriberService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param reportUrlName
 	 * @return
@@ -57,7 +65,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
-			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
+			return reportTemplateService.getAllReportTemplates(portalUserIdsService.getCurrentIds().getSubscriberId(), reportTypeKey,
 					ReportConstants.IS_ACTIVE);
 		};
 		return ApiResponse.responseOK(actionProcess);
@@ -77,7 +85,7 @@ public class ReportTemplateController extends AbstractSubscrApiResource {
 		}
 
 		ApiActionObjectProcess actionProcess = () -> {
-			return reportTemplateService.getAllReportTemplates(getCurrentSubscriberId(), reportTypeKey,
+			return reportTemplateService.getAllReportTemplates(portalUserIdsService.getCurrentIds().getSubscriberId(), reportTypeKey,
 					ReportConstants.IS_NOT_ACTIVE);
 		};
 		return ApiResponse.responseOK(actionProcess);

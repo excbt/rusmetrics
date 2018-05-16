@@ -11,15 +11,18 @@ import ru.excbt.datafuse.nmk.data.model.keyname.SystemParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SystemParamRepository;
 
+import java.util.Optional;
+
 /**
  * Сервис для работы с системными параметрами
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 19.03.2015
  *
  */
 @Service
+@Transactional(readOnly = true)
 public class SystemParamService {
 
 	private final static String PARAM_NOT_FOUND_MSG = "System Param with keyname(%s) not found";
@@ -28,11 +31,11 @@ public class SystemParamService {
 	private SystemParamRepository systemParamRepository;
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+
 	public String getParamValueAsString(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {
@@ -41,12 +44,15 @@ public class SystemParamService {
 		return sp.getParamValue();
 	}
 
+	public Optional<String> findOptParamValueAsString(final String keyname) {
+		return Optional.ofNullable(systemParamRepository.findOne(keyname)).map(SystemParam::getParamValue);
+	}
+
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public boolean getParamValueAsBoolean(final String keyname) {
 		SystemParam sp = systemParamRepository.findOne(keyname);
 		if (sp == null) {

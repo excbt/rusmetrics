@@ -1,0 +1,94 @@
+<jhi-exc-form-template>
+    <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
+    (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="subscrUsers.edit.title">
+    </jhi-exc-edit-form-menu>
+
+    <br>
+    <form [formGroup]="entityForm">
+        <div class="flex-column">
+            <mat-form-field *ngIf="newFlag">
+                <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName" required>
+                <mat-error *ngIf="checkFormControl('userName', 'required')">
+                        {{'subscrUsers.form.errors.userNameRequired' | translate}}
+                </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'minlength', ['required', 'pattern'])">
+                        {{'subscrUsers.form.errors.userNameMinLenght' | translate}}
+                </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'pattern', ['required', 'minlenght'])">
+                        {{'subscrUsers.form.errors.userNamePattern' | translate}}
+                </mat-error>
+                <mat-error *ngIf="checkFormControl('userName', 'usernameTaken', ['pattern', 'required', 'minlenght'])">
+                        {{'subscrUsers.form.errors.userNameTaken' | translate}}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field *ngIf="!newFlag">
+                    <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName" readonly>                
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.userNickname' | translate}}" formControlName="userNickname">
+            </mat-form-field>
+            <div>
+                <mat-form-field *ngIf="newFlag" class="password-len">
+                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password" required>
+                    <mat-error *ngIf="checkFormControl('newPassword', 'minlength')">
+                            {{'subscrUsers.form.errors.passwordLength' | translate}}
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="!newFlag" class="password-len">
+                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password">
+                    <mat-error *ngIf="checkFormControl('newPassword', 'minlength')">
+                            {{'subscrUsers.form.errors.passwordLength' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="entityForm.controls['confPassword']" class="password-len">
+                    <input matInput placeholder="{{'subscrUsers.edit.passwordConfirmation' | translate}}" formControlName="confPassword" type="password" required>
+                    <mat-error *ngIf="checkFormControl('confPassword', 'valuesEquals')">
+                            {{'subscrUsers.form.errors.passwordsNotEquals' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="!entityForm.controls['newPassword']?.pristine" class="password-len">
+                        <input matInput placeholder="{{'subscrUsers.edit.oldPassword' | translate}}" formControlName="oldPassword" type="password" required>
+                </mat-form-field>
+                    
+            </div>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.userComment' | translate}}" formControlName="userComment">
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="{{'subscrUser.contactEmail' | translate}}" formControlName="contactEmail">
+            </mat-form-field>
+            <mat-form-field>
+                <textarea matInput formControlName="userDescription" placeholder="{{'subscrUser.userDescription' | translate}}">
+                </textarea>
+            </mat-form-field>        
+
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isBlocked'] && entityForm.controls['isBlocked'].value }}"
+                checked="{{ entityForm.controls['isBlocked'] && entityForm.controls['isBlocked'].value }}"
+                labelPosition="after"
+                color="warn"
+                (change) ="isBlockedToggle($event)">
+                {{'subscrUser.isBlocked' | translate}}
+            </mat-slide-toggle>                        
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isAdmin'] && entityForm.controls['isAdmin'].value }}"
+                labelPosition="after"
+                color="primary"
+                (change) ="isAdminToggle($event)">
+                {{'subscrUser.isAdmin' | translate}}
+            </mat-slide-toggle>                        
+            <mat-slide-toggle
+                checked="{{ entityForm.controls['isReadonly'] && entityForm.controls['isReadonly'].value }}"
+                labelPosition="after"
+                color="primary"
+                (change) ="isReadonlyToggle($event)">
+                {{'subscrUser.isReadonly' | translate}}
+            </mat-slide-toggle>                        
+        </div>
+    </form>    
+    <br>
+    <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
+    (backAction)="navigateBack()" [deleteDisabled]="true"></jhi-exc-edit-buttons>            
+
+</jhi-exc-form-template>    

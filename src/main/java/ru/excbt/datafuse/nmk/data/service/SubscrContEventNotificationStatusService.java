@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.support.CounterInfo;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;
@@ -49,7 +50,9 @@ public class SubscrContEventNotificationStatusService {
 
 	private final ObjectAccessService objectAccessService;
 
-    public SubscrContEventNotificationStatusService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorService contEventMonitorService, ContEventTypeService contEventTypeService, SubscrContEventNotificationRepository subscrContEventNotificationRepository, ContEventLevelColorRepository contEventLevelColorRepository, ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService) {
+	private final ContObjectMapper contObjectMapper;
+
+    public SubscrContEventNotificationStatusService(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorService contEventMonitorService, ContEventTypeService contEventTypeService, SubscrContEventNotificationRepository subscrContEventNotificationRepository, ContEventLevelColorRepository contEventLevelColorRepository, ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ObjectAccessService objectAccessService, ContObjectMapper contObjectMapper) {
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.contEventMonitorService = contEventMonitorService;
         this.contEventTypeService = contEventTypeService;
@@ -58,6 +61,7 @@ public class SubscrContEventNotificationStatusService {
         this.contObjectService = contObjectService;
         this.contObjectFiasService = contObjectFiasService;
         this.objectAccessService = objectAccessService;
+        this.contObjectMapper = contObjectMapper;
     }
 
     /**
@@ -191,7 +195,7 @@ public class SubscrContEventNotificationStatusService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(contObjectMapper.toDto(co),
 					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
@@ -275,7 +279,7 @@ public class SubscrContEventNotificationStatusService {
 				resultColorKey = ContEventLevelColorKey.GREEN;
 			}
 
-			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(co,
+			MonitorContEventNotificationStatus item = MonitorContEventNotificationStatus.newInstance(contObjectMapper.toDto(co),
 					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);

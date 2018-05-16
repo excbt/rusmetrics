@@ -57,7 +57,7 @@
             {
                 name: 'objectsPTree.contObjectControl',
                 url: 'cont-object-control',
-                component: 'contObjectControlComponent',
+                component: 'nodeControlComponent',
                 params: {
                     node: null
                 }
@@ -75,7 +75,7 @@
             {
                 name: 'objectsPTree.treeNodeInfo.contObjectControl',
                 url: '/cont-object-control',
-                component: 'contObjectControlComponent',
+                component: 'nodeControlComponent',
                 params: {
                     node: null
                 }
@@ -105,7 +105,23 @@
                     node: null
                 }
             },
-            
+            {
+                name: 'objectsPTree.treeNodeInfo.contObjectMonitor',
+                url: '/cont-object-monitor',
+                component: 'contObjectMonitorComponent',
+                params: {
+                    node: null
+                }
+            },
+            {
+                name: 'objectsPTree.treeNodeInfo.contZpointConsWidget',
+                url: '/cont-zpoint-cons',
+                component: 'contZpointConsWidgetComponent',
+                params: {
+                    contObjectId: null,
+                    zpointId: null
+                }
+            },
 /*end 'component version'*/            
             {
                 name: 'demoMap',

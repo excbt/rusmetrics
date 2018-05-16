@@ -24,7 +24,8 @@ import {
     MatIconModule,
     MatCheckboxModule,
     ErrorStateMatcher,
-    ShowOnDirtyErrorStateMatcher } from '@angular/material';
+    ShowOnDirtyErrorStateMatcher,
+    MatAutocompleteModule} from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';
@@ -37,6 +38,20 @@ import { MenubarModule } from 'primeng/menubar';
 
 // Etc
 import { entityState } from './';
+import { PSubscribersComponent } from './p-subscribers/p-subscribers.component';
+import { PSubscribersWidgetComponent } from './p-subscribers/p-subscribers-widget.component';
+import { PSubscriberCustomerService, PSubscriberService } from './p-subscribers/p-subscriber.service';
+import { PSubscriberPartnerService } from './p-subscribers/p-subscriber.service';
+import { PSubscribersPartnerComponent } from './p-subscribers/p-subscribers-partner.component';
+import { PSubscribersCustomerComponent } from './p-subscribers/p-subscribers-cutomer.component';
+import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-edit-customer.component';
+import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
+import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
+import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
+import { SubscrUserService } from './subscr-users/subscr-user.service';
+import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
+import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
+import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -60,6 +75,7 @@ import { entityState } from './';
         MatCheckboxModule,
         MatSelectModule,
         MatTooltipModule,
+        MatAutocompleteModule,
 
         // PRIME NG
         CardModule,
@@ -71,19 +87,36 @@ import { entityState } from './';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
-        OrganizationsWidgetComponent
+        OrganizationAutocompleteComponent,
+        PSubscribersComponent,
+        PSubscribersPartnerComponent,
+        PSubscribersCustomerComponent,
+        PSubscriberEditCustomerComponent,
+        PSubscriberEditPartnerComponent,
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent,
+        SubscrUsersComponent,
+        SubscrUserEditComponent,
+        SubscrUsersWidgetComponent
     ],
     entryComponents: [
     ],
     providers: [
+        TimezoneDefService,
         OrganizationsService,
         OrganizationTypeService,
+        PSubscriberService,
+        PSubscriberCustomerService,
+        PSubscriberPartnerService,
+        SubscrUserService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
-        OrganizationsWidgetComponent
+        OrganizationsWidgetComponent,
+        PSubscribersWidgetComponent,
+        SubscrUsersWidgetComponent
     ]
 })
 export class PortalEntityModule {}

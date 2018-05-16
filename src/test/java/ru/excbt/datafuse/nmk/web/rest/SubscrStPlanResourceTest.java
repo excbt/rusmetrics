@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.service.StPlanTemplateService;
 import ru.excbt.datafuse.nmk.data.service.SubscrStPlanService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrStPlanMapper;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -36,8 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
-public class SubscrStPlanResourceTest {
+public class SubscrStPlanResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrStPlanResourceTest.class);
 

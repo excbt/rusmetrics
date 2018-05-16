@@ -18,7 +18,7 @@ import javax.persistence.*;
 public class HeatRadiatorType implements PersistableBuilder<HeatRadiatorType, Long> {
 
     @Id
-    @SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id", allocationSize = 1)
+    @SequenceGenerator(name = "abstractEntity", sequenceName = "seq_global_id")
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "abstractEntity")
     @Column(name = "id")
     private Long id;

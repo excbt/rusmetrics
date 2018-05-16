@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.joda.time.DateTime;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
 import ru.excbt.datafuse.nmk.data.model.Organization;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMeterPeriodSettingsDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.MeterPeriodSettingDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
@@ -36,8 +38,10 @@ import ru.excbt.datafuse.nmk.data.repository.OrganizationRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -56,13 +60,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
-@WithMockUser(username = "admin", password = "admin",
-    roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
-        "RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
-        "CABINET_USER" })
-@Transactional
-public class SubscrContObjectResourceTest {
+public class SubscrContObjectResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContObjectResourceTest.class);
 
@@ -94,6 +92,8 @@ public class SubscrContObjectResourceTest {
     private MeterPeriodSettingService meterPeriodSettingService;
     @Autowired
     private ObjectAccessService objectAccessService;
+    @Autowired
+    private ContObjectMapper contObjectMapper;
 
 
     @Autowired
@@ -163,8 +163,8 @@ public class SubscrContObjectResourceTest {
         contObjectRepository.save(contObjects);
         contObjectRepository.flush();
 
-//        RequestExtraInitializer param = builder -> {
-//            builder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
+//        RequestExtraInitializer param = requestBuilder -> {
+//            requestBuilder.param("meterPeriodSettingIds", TestUtils.listToString(Arrays.asList(meterPeriodSetting.getId())));
 //        };
 //
 
@@ -229,6 +229,7 @@ public class SubscrContObjectResourceTest {
     }
 
     /**
+     * TODO make ContObject serializer
      * @throws Exception
      */
     @Test
@@ -245,12 +246,13 @@ public class SubscrContObjectResourceTest {
 
         RequestExtraInitializer param = (builder) -> builder.param("cmOrganizationId", organization.getId().toString());
 
+        ContObjectDTO dto = contObjectMapper.toDto(testCO);
 
         ResultActions resultActions = restPortalContObjectMockMvc.perform(
             put(urlStr)
                 .param("cmOrganizationId", organization.getId().toString())
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(testCO)))
+                .content(TestUtil.convertObjectToJsonBytes(dto)))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
 

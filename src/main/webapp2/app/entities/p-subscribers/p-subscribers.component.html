@@ -1,0 +1,98 @@
+<jhi-exc-form-template>
+
+    <jhi-exc-list-form-menu *ngIf="subscriberMode==='NORMAL'" headerKey="subscribers.customer.title" 
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
+    </jhi-exc-list-form-menu>
+
+    <jhi-exc-list-form-menu *ngIf="subscriberMode==='RMA'" headerKey="subscribers.partner.title" 
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false" (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
+    </jhi-exc-list-form-menu>
+    
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-progress-bar  color="primary" mode="indeterminate">
+        </mat-progress-bar>
+    </div>
+
+    <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+        matSortDisableClear>
+
+        <ng-container matColumnDef="select" >
+                <mat-header-cell *matHeaderCellDef class="select-column-width">
+                    <!-- <mat-checkbox (change)="$event ? selection.clear() : null"
+                        [checked]="!selection.isEmpty()"
+                        [indeterminate]="!selection.isEmpty()"
+                        >
+                    </mat-checkbox> -->
+                </mat-header-cell>     
+                <mat-cell *matCellDef="let row" class="select-column-width">
+                    <mat-checkbox 
+                        color="primary"
+                        (click)="$event.stopPropagation()"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </mat-cell>               
+            </ng-container>
+    
+        <ng-container matColumnDef="id">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber" class="id-column-width"> {{subscriber.id}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="organizationId">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.organizationId' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.organizationId}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberName">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="name-column-width-2x" > {{'subscriber.subscriberName' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"  class="name-column-width-2x"> {{subscriber.subscriberName}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberInfo">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberInfo' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberInfo}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscriberComment">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscriberComment' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscriberComment}} </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="subscrType">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.subscrType' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.subscrType}} </mat-cell>
+        </ng-container>
+        
+        
+        <ng-container matColumnDef="contactEmail">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscriber.contactEmail' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let subscriber"> {{subscriber.contactEmail}} </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="organizationInn">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="inn-column-width"> {{'subscriber.organizationInn' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscriber" class="inn-column-width"> {{subscriber.organizationInn}} </mat-cell>
+        </ng-container>
+            
+        <ng-container matColumnDef="organizationName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="name-column-width"> {{'subscriber.organizationName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscriber" class="name-column-width-2x"> {{subscriber.organizationName}} </mat-cell>
+        </ng-container>
+        
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+
+    </mat-table>    
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+    
+    <!-- Navigation -->
+    <div>
+        <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
+            icon="fa-arrow-left" routerLink="/classifiers"></button>
+    </div>
+
+</jhi-exc-form-template>

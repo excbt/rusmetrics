@@ -3,22 +3,38 @@ package ru.excbt.datafuse.nmk.web.api;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.function.Consumer;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@Transactional
-public class SubscrContGroupControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class SubscrContGroupControllerTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContGroupControllerTest.class);
 
@@ -28,13 +44,45 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	@Autowired
 	private ContGroupService contGroupService;
 
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	private SubscrContGroupController subscrContGroupController;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+	@Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        subscrContGroupController = new SubscrContGroupController(contGroupService, portalUserIdsService);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrContGroupController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
+
 	/**
 	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testContGroupObjects() throws Exception {
-		_testGetJson("/api/subscr/contGroup/0/contObject/available");
+        mockMvcRestWrapper.restRequest("/api/subscr/contGroup/0/contObject/available").testGet();
+//		_testGetJson("/api/subscr/contGroup/0/contObject/available");
 	}
 
 	/**
@@ -43,7 +91,8 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testContGroup() throws Exception {
-		_testGetJson("/api/subscr/contGroup");
+        mockMvcRestWrapper.restRequest("/api/subscr/contGroup").testGet();
+//		_testGetJson("/api/subscr/contGroup");
 	}
 
 	/**
@@ -58,13 +107,18 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 
 		long[] objectIds = { 18811504L, 18811505L };
 
-		RequestExtraInitializer params = (builder) -> {
+		Consumer<MockHttpServletRequestBuilder> params = (builder) -> {
 			builder.param("contObjectIds", TestUtils.arrayToString(objectIds));
 		};
 
-		Long id = _testCreateJson("/api/subscr/contGroup", group, params);
+		Long id = mockMvcRestWrapper.restRequest("/api/subscr/contGroup")
+            .requestBuilder(params)
+            .testPost(group).getLastId();
+//            _testCreateJson("/api/subscr/contGroup", group, params);
 
-		testDeleteContGroup(id);
+        mockMvcRestWrapper.restRequest("/api/subscr/contGroup/{id}", id).testDelete();
+
+//		testDeleteContGroup(id);
 
 	}
 
@@ -78,33 +132,36 @@ public class SubscrContGroupControllerTest extends AnyControllerTest {
 				.selectSubscriberGroups(currentSubscriberService.getSubscriberParam());
 
 		assertTrue(contGroups.size() > 0);
-		SubscrContGroup cg;
+		SubscrContGroup contGroup;
 		if (contGroups.size() > 2) {
-			cg = contGroups.get(1);
+			contGroup = contGroups.get(1);
 		} else {
-			cg = contGroups.get(0);
+			contGroup = contGroups.get(0);
 		}
 
 		long[] objectIds = { 18811522L, 18811533L };
 
-		cg.setContGroupComment("TEST AutoUpdate " + System.currentTimeMillis());
-		String urlStr = "/api/subscr/contGroup/" + cg.getId();
+		contGroup.setContGroupComment("TEST AutoUpdate " + System.currentTimeMillis());
+		String urlStr = "/api/subscr/contGroup/" + contGroup.getId();
 
-		RequestExtraInitializer params = (builder) -> {
+		Consumer<MockHttpServletRequestBuilder> params = (builder) -> {
 			builder.param("contObjectIds", TestUtils.arrayToString(objectIds));
 		};
 
-		_testUpdateJson(urlStr, cg, params);
+        mockMvcRestWrapper.restRequest(urlStr)
+            .requestBuilder(params)
+            .testPut(contGroup);
+//		_testUpdateJson(urlStr, cg, params);
 	}
-
-	/**
-	 *
-	 * @param contGroupId
-	 * @throws Exception
-	 */
-
-	public void testDeleteContGroup(Long contGroupId) throws Exception {
-		_testDeleteJson("/api/subscr/contGroup/" + contGroupId);
-	}
-
+//
+//	/**
+//	 *
+//	 * @param contGroupId
+//	 * @throws Exception
+//	 */
+//
+//	public void testDeleteContGroup(Long contGroupId) throws Exception {
+//		_testDeleteJson("/api/subscr/contGroup/" + contGroupId);
+//	}
+//
 }

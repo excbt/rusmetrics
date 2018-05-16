@@ -9,6 +9,7 @@ import java.util.List;
 
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
@@ -17,7 +18,7 @@ public class ContObjectServiceTypeInfo
 		implements ContObjectHolder, ContObjectFiasHolder, ContObjectGeoPosHolder, Serializable {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5952850221897310120L;
 
@@ -26,28 +27,28 @@ public class ContObjectServiceTypeInfo
 	private final List<ContServiceTypeInfoART> serviceTypeARTs = new ArrayList<>();
 
 	/**
-	 * 
+	 *
 	 * @param contObject
 	 */
-	public ContObjectServiceTypeInfo(ContObject contObject, ContObjectFias contObjectFias) {
-		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias);
+	public ContObjectServiceTypeInfo(ContObjectDTO contObject, ContObjectFias contObjectFias) {
+		this.contObjectVOFias = new ContObjectVOFias(contObject, contObjectFias);
 	}
-	
-	public ContObjectServiceTypeInfo(ContObject contObject, ContObjectFias contObjectFias, ContObjectGeoPos contObjectGeoPos) {
-		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias, contObjectGeoPos);
+
+	public ContObjectServiceTypeInfo(ContObjectDTO contObject, ContObjectFias contObjectFias, ContObjectGeoPos contObjectGeoPos) {
+		this.contObjectVOFias = new ContObjectVOFias(contObject, contObjectFias, contObjectGeoPos);
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
-	public ContObject getContObject() {
+	public ContObjectDTO getContObject() {
 		return contObjectVOFias.getModel();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContServiceTypeInfoART> getServiceTypeARTs() {
@@ -55,7 +56,7 @@ public class ContObjectServiceTypeInfo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param serviceTypeKeyname
 	 * @return
 	 */
@@ -66,7 +67,7 @@ public class ContObjectServiceTypeInfo
 	}
 
 	/**
-	 * 
+	 *
 	 * @param item
 	 */
 	public void addServiceTypeART(ContServiceTypeInfoART item) {

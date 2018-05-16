@@ -1,10 +1,11 @@
-/*global Chart*/
+/*global Chart, Image, console, document*/
 (function () {
     'use strict';
     
     
     Chart.pluginService.register({
         beforeDraw: function (chart) {
+//console.log(chart);            
             if (chart.config.type != "doughnut") {
                 return;
             }
@@ -15,6 +16,9 @@
             
             ctx.restore();
             var fontSize = (height / 114).toFixed(2);
+//            if (height === 130) {
+//                fontSize = (height / 114 + 1).toFixed(2);
+//            }             
             ctx.font = fontSize + "em sans-serif";
             ctx.textBaseline = "middle";
             ctx.fillStyle = "#337ab7";
@@ -25,10 +29,31 @@
             var text = sumValues,
                 textX = Math.round((width - ctx.measureText(text).width) / 2),
                 textY = height / 2;
+//            if (height === 130) {
+                // labels at cont object monitor component
+//                textX = Math.round((height + 30 - ctx.measureText(text).width) / 2);
+//            }
+//            ctx.fillText(text, textX, textY);
+//            var img = new Image();
+//            
+//            img.src = "components\\object-tree-module\\cont-object-monitor-component\\heat.png";
+//            console.log("img", img);
+//            console.log(img);
+//            ctx.drawImage(img, textX, textY);
             
-            ctx.fillText(text, textX, textY);
+//            var img1 = document.getElementById('heatimg');
+//console.log(img1);            
+//            ctx.drawImage(img, 0, 0);
             ctx.save();
-            
+//console.log(ctx);            
         }
     });
+    
+//    Chart.types.Doughnut.extend({
+//        name: "Doughnut sl",
+//        draw: function () {
+//            Chart.types.Doughnut.prototype.draw.apply(this, arguments);
+//            ctx.drawImage()
+//        }
+//    });
 }());

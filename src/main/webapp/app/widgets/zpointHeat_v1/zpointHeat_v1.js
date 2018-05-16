@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true*/
-/*global angular, moment, $*/
+/*global angular, moment, $, document*/
 'use strict';
 
 angular.module('zpointHeat_v1Widget', ['angularWidget', 'chart.js'])

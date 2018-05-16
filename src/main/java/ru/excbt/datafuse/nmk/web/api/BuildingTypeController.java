@@ -3,6 +3,7 @@
  */
 package ru.excbt.datafuse.nmk.web.api;
 
+import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @RequestMapping(value = "/api/subscr/service/buildingType")
 public class BuildingTypeController {
 
-	@Autowired
-	private BuildingTypeService buildingTypeService;
+    private final BuildingTypeService buildingTypeService;
 
-    @Autowired
-    protected ModelMapper modelMapper;
+    protected final ModelMapper modelMapper;
+
+    public BuildingTypeController(BuildingTypeService buildingTypeService, ModelMapper modelMapper) {
+        this.buildingTypeService = buildingTypeService;
+        this.modelMapper = modelMapper;
+    }
 
     /**
      *

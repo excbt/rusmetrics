@@ -2,19 +2,19 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportTypeWithParamsVO;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
 import ru.excbt.datafuse.nmk.data.service.ReportTypeService;
+import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -28,25 +28,34 @@ import java.util.List;
  * @since 13.04.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/reportSettings")
-public class ReportSettingsController extends AbstractSubscrApiResource {
+public class ReportSettingsController {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportSettingsController.class);
 
-	@Autowired
-	private ReportTypeService reportTypeService;
+	private final ReportTypeService reportTypeService;
 
-	@Autowired
-	private ReportPeriodService reportPeriodService;
+	private final ReportPeriodService reportPeriodService;
 
-	@Autowired
-	private ReportSheduleTypeRepository reportSheduleTypeRepository;
+	private final ReportSheduleTypeRepository reportSheduleTypeRepository;
 
-	@Autowired
-	private ReportActionTypeRepository reportActionTypeRepository;
+	private final ReportActionTypeRepository reportActionTypeRepository;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+	private final SubscrServiceAccessService subscrServiceAccessService;
+
+    public ReportSettingsController(ReportTypeService reportTypeService, ReportPeriodService reportPeriodService, ReportSheduleTypeRepository reportSheduleTypeRepository, ReportActionTypeRepository reportActionTypeRepository, PortalUserIdsService portalUserIdsService, SubscrServiceAccessService subscrServiceAccessService) {
+        this.reportTypeService = reportTypeService;
+        this.reportPeriodService = reportPeriodService;
+        this.reportSheduleTypeRepository = reportSheduleTypeRepository;
+        this.reportActionTypeRepository = reportActionTypeRepository;
+        this.portalUserIdsService = portalUserIdsService;
+        this.subscrServiceAccessService = subscrServiceAccessService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -55,7 +64,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<ReportType> resultReports = reportTypeService
-					.findAllReportTypes(currentSubscriberService.isSystemUser());
+					.findAllReportTypes(portalUserIdsService.isSystemUser());
 			resultReports = filterObjectAccess(resultReports);
 			List<ReportTypeWithParamsVO> result = reportTypeService.makeReportTypeParams(resultReports);
 			return result;
@@ -73,7 +82,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 
 		ApiActionObjectProcess actionProcess = () -> {
 			List<ReportType> resultReports = reportTypeService
-					.findAllReportTypes(currentSubscriberService.isSystemUser());
+					.findAllReportTypes(portalUserIdsService.isSystemUser());
 			resultReports = filterObjectAccess(resultReports);
 			return resultReports;
 		};
@@ -86,9 +95,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/reportPeriod", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportPeriods() {
-		ApiActionObjectProcess actionProcess = () -> {
-			return reportPeriodService.selectReportPeriods();
-		};
+		ApiActionObjectProcess actionProcess = reportPeriodService::selectReportPeriods;
 		return ApiResponse.responseOK(actionProcess);
 	}
 
@@ -99,9 +106,7 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/reportSheduleType", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportSheduleTypeJson() {
 
-		ApiActionObjectProcess actionProcess = () -> {
-			return reportActionTypeRepository.findAll();
-		};
+		ApiActionObjectProcess actionProcess = reportActionTypeRepository::findAll;
 		return ApiResponse.responseOK(actionProcess);
 
 	}
@@ -112,10 +117,12 @@ public class ReportSettingsController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/reportActionType", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getReportActionTypeJson() {
-		ApiActionObjectProcess actionProcess = () -> {
-			return reportSheduleTypeRepository.findAll();
-		};
+		ApiActionObjectProcess actionProcess = () -> reportSheduleTypeRepository.findAll();
 		return ApiResponse.responseOK(actionProcess);
 	}
+
+    protected <T> List<T> filterObjectAccess(List<T> objectList) {
+        return subscrServiceAccessService.filterObjectAccess(objectList, portalUserIdsService.getCurrentIds());
+    }
 
 }

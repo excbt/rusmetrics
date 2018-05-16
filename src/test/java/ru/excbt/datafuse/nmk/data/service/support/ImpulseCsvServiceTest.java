@@ -1,21 +1,16 @@
 package ru.excbt.datafuse.nmk.data.service.support;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAutoConfiguration;
-import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.web.WebMvcAutoConfiguration;
-import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.JpaConfigTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataImpulse;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
+import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -24,10 +19,8 @@ import java.util.List;
 /**
  * Created by kovtonyk on 31.05.2017.
  */
-@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
-    SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class, WebMvcAutoConfiguration.class})
-@Transactional
-public class ImpulseCsvServiceTest extends JpaConfigTest {
+@RunWith(SpringRunner.class)
+public class ImpulseCsvServiceTest extends PortalDataTest {
 
     private static final Logger log = LoggerFactory.getLogger(ImpulseCsvServiceTest.class);
 

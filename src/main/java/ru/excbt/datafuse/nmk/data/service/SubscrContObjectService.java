@@ -1,23 +1,24 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
-import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
+import java.time.LocalDate;
 import java.util.*;
 
 
@@ -49,14 +50,17 @@ public class SubscrContObjectService implements SecuredRoles {
 
     private final ObjectAccessService objectAccessService;
 
+    private final SubscriberTimeService subscriberTimeService;
+
 	@Autowired
-    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService) {
+    public SubscrContObjectService(SubscrContObjectRepository subscrContObjectRepository, SubscriberService subscriberService, ContGroupService contGroupService, ContObjectMapper contObjectMapper, ContObjectAccessRepository contObjectAccessRepository, ObjectAccessService objectAccessService, SubscriberTimeService subscriberTimeService) {
         this.subscrContObjectRepository = subscrContObjectRepository;
         this.subscriberService = subscriberService;
         this.contGroupService = contGroupService;
         this.contObjectMapper = contObjectMapper;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.objectAccessService = objectAccessService;
+        this.subscriberTimeService = subscriberTimeService;
     }
 
     private final Access access = new Access();
@@ -150,7 +154,7 @@ public class SubscrContObjectService implements SecuredRoles {
         SubscrContObject subscrContObject = new SubscrContObject();
         subscrContObject.setContObject(new ContObject().id(contObjectId));
         subscrContObject.setSubscriber(subscriber);
-        subscrContObject.setSubscrBeginDate(subscrBeginDate.toDate());
+        subscrContObject.setSubscrBeginDate(LocalDateUtils.asDate(subscrBeginDate));
         return subscrContObjectRepository.save(subscrContObject);
     }
 
@@ -164,10 +168,10 @@ public class SubscrContObjectService implements SecuredRoles {
     private void updateSubscrContObjectsInternal(Long subscriberId, List<Long> contObjectIds,
                                                     LocalDate subscrBeginDate) {
 
-        LocalDate subscrCurrentDate = subscriberService.getSubscriberCurrentDateJoda(subscriberId);
+        Date subscrCurrentDate = subscriberTimeService.getSubscriberCurrentTime(subscriberId);
         Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 
-        if (subscrCurrentDate.isBefore(subscrBeginDate)) {
+        if (subscrCurrentDate.before(LocalDateUtils.asDate(subscrBeginDate))) {
             throw new PersistenceException(
                 String.format("Subscriber (id=%d) Subscr Current Date is before subscrBeginDate ", subscriberId));
         }
@@ -198,7 +202,7 @@ public class SubscrContObjectService implements SecuredRoles {
             }
         });
 
-        deleteSubscrContObject(delSubscrContObjects, LocalDateUtils.asLocalDate(subscrCurrentDate.toDate()));
+        deleteSubscrContObject(delSubscrContObjects, LocalDateUtils.asLocalDate(subscrCurrentDate));
 
         addContObjectIds.forEach(i -> {
             createSubscrContObjectLink(i, subscriber, subscrBeginDate);

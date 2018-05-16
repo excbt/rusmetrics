@@ -5,13 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -29,26 +27,32 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrPrefController extends AbstractSubscrApiResource {
+public class SubscrPrefController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrPrefController.class);
 
-	@Autowired
-	private SubscrPrefService subscrPrefService;
+	private final SubscrPrefService subscrPrefService;
 
-	@Autowired
-	private SubscrObjectTreeService subscrObjectTreeService;
+	private final SubscrObjectTreeService subscrObjectTreeService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrPrefController(SubscrPrefService subscrPrefService, SubscrObjectTreeService subscrObjectTreeService, PortalUserIdsService portalUserIdsService) {
+        this.subscrPrefService = subscrPrefService;
+        this.subscrObjectTreeService = subscrObjectTreeService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/subscrPrefValues", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefValues() {
 
-		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
+		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(portalUserIdsService.getCurrentIds());
 
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
@@ -61,7 +65,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/subscrPrefValue", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrPrefValue(@RequestParam("subscrPrefKeyname") String subscrPrefKeyname) {
 
-		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(getSubscriberParam());
+		List<SubscrPrefValue> resultList = subscrPrefService.selectSubscrPrefValue(portalUserIdsService.getCurrentIds());
 
 		Optional<SubscrPrefValue> result = resultList.stream()
 				.filter(i -> i.getSubscrPrefKeyname().equals(subscrPrefKeyname)).findFirst();
@@ -87,7 +91,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 			return ApiResponse.responseOK();
 		}
 
-		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
+		List<SubscrObjectTree> treeList = subscrObjectTreeService.selectSubscrObjectTreeShort(portalUserIdsService.getCurrentIds());
 
 		List<SubscrObjectTree> resultList = treeList.stream().filter(i -> treeTypes.contains(i.getObjectTreeType()))
 				.collect(Collectors.toList());
@@ -105,10 +109,9 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 
 		checkNotNull(requestEntityList);
 
-		final SubscriberParam subscriberParam = getSubscriberParam();
 
 		for (SubscrPrefValue v : requestEntityList) {
-			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(subscriberParam.getSubscriberId())) {
+			if (v.getSubscriberId() == null || !v.getSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid subscriberId in request"));
 			}
 		}
@@ -118,7 +121,7 @@ public class SubscrPrefController extends AbstractSubscrApiResource {
 			@Override
 			public List<SubscrPrefValue> processAndReturnResult() {
 
-				return subscrPrefService.saveSubscrPrefValues(subscriberParam, requestEntityList);
+				return subscrPrefService.saveSubscrPrefValues(portalUserIdsService.getCurrentIds(), requestEntityList);
 			}
 		};
 

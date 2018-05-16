@@ -1,0 +1,13 @@
+<p-card *ngIf="subscrMode === partnerMode" title="{{'subscribers.partner.title' | translate}}">
+    <button mat-button routerLink="/partners">
+        <mat-icon class="headerbar-mat-menu-icon">list</mat-icon>
+        <span jhiTranslate="subscribers.partner.listTitle">Partners</span>
+    </button>
+</p-card>
+
+<p-card *ngIf="subscrMode === customerMode" title="{{'subscribers.customer.title' | translate}}">
+    <button mat-button routerLink="/customers">
+        <mat-icon class="headerbar-mat-menu-icon">list</mat-icon>
+        <span jhiTranslate="subscribers.customer.listTitle">Customers</span>
+    </button>
+</p-card>

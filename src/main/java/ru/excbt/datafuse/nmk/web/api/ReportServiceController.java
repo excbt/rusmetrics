@@ -1,10 +1,8 @@
 package ru.excbt.datafuse.nmk.web.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,18 +10,16 @@ import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
-import ru.excbt.datafuse.nmk.data.service.ReportMakerParamService;
-import ru.excbt.datafuse.nmk.data.service.ReportPeriodService;
-import ru.excbt.datafuse.nmk.data.service.ReportService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
+import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.*;
+import java.time.LocalDateTime;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -37,25 +33,35 @@ import static com.google.common.base.Preconditions.*;
  */
 @Controller
 @RequestMapping(value = "/api/reportService")
-public class ReportServiceController extends AbstractSubscrApiResource {
+public class ReportServiceController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportServiceController.class);
 
 	public final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	@Autowired
-	private ReportService reportService;
+	private final ReportService reportService;
 
-	@Autowired
-	private ReportMakerParamService reportMakerParamService;
+	private final ReportMakerParamService reportMakerParamService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+	private final ReportPeriodService reportPeriodService;
 
-	@Autowired
-	private ReportPeriodService reportPeriodService;
+	private final PortalUserIdsService portalUserIdsService;
 
-	/**
+	private final SubscriberTimeService subscriberTimeService;
+
+    public ReportServiceController(ReportService reportService,
+                                   ReportMakerParamService reportMakerParamService,
+                                   ReportPeriodService reportPeriodService,
+                                   PortalUserIdsService portalUserIdsService,
+                                   SubscriberTimeService subscriberTimeService) {
+        this.reportService = reportService;
+        this.reportMakerParamService = reportMakerParamService;
+        this.reportPeriodService = reportPeriodService;
+        this.portalUserIdsService = portalUserIdsService;
+        this.subscriberTimeService = subscriberTimeService;
+    }
+
+    /**
 	 *
 	 * @author kovtonyk
 	 *
@@ -114,14 +120,13 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportUrlName
-	 * @param reportParamsetId
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
+    /**
+     *
+     * @param reportUrlName
+     * @param reportParamsetId
+     * @return
+     * @throws IOException
+     */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/preview", method = RequestMethod.GET)
 	public ResponseEntity<?> downloadAnyReportPreview(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable("reportParamsetId") long reportParamsetId) throws IOException {
@@ -138,16 +143,16 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 		return processDowndloadAnyReport(reportMakerParam, reportMaker);
 	}
 
-	/**
-	 *
-	 * @param reportUrlName
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
+    /**
+     *
+     * @param reportUrlName
+     * @param reportParamsetId
+     * @param contObjectIds
+     * @param clearContObjectIds
+     * @param reportParamset
+     * @return
+     * @throws IOException
+     */
 	@RequestMapping(value = "/{reportUrlName}/{reportParamsetId}/download", method = RequestMethod.PUT)
 	public ResponseEntity<?> downloadAnyReportCustom(@PathVariable("reportUrlName") String reportUrlName,
 			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
@@ -183,128 +188,13 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 
 	}
 
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	//	@RequestMapping(value = "/{reportParamsetId}/download/zip", method = RequestMethod.PUT,
-	//			produces = "application/zip")
-	protected ResponseEntity<?> doDowndloadReportPutZip(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
-			@RequestBody ReportParamset reportParamset) throws IOException {
-
-		checkNotNull(reportParamsetId);
-		checkNotNull(reportParamset);
-
-		reportParamset.setOutputFileZipped(true);
-
-		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
-				? new Long[] {} : contObjectIds;
-
-		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
-
-	}
-
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	//@RequestMapping(value = "/{reportParamsetId}/download/pdf", method = RequestMethod.PUT, produces = MIME_PDF)
-	protected ResponseEntity<?> doDowndloadReportPutPdf(@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
-			@RequestBody ReportParamset reportParamset) throws IOException {
-
-		checkNotNull(reportParamsetId);
-		checkNotNull(reportParamset);
-
-		reportParamset.setOutputFileZipped(false);
-		reportParamset.setOutputFileType(ReportOutputFileType.PDF);
-
-		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
-				? new Long[] {} : contObjectIds;
-
-		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
-
-	}
-
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	//@RequestMapping(value = "/{reportParamsetId}/download/xlsx", method = RequestMethod.PUT, produces = MIME_XLSX)
-	protected ResponseEntity<?> doDowndloadReportPutXlsx(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
-			@RequestBody ReportParamset reportParamset) throws IOException {
-
-		checkNotNull(reportParamsetId);
-		checkNotNull(reportParamset);
-
-		reportParamset.setOutputFileZipped(false);
-		reportParamset.setOutputFileType(ReportOutputFileType.XLSX);
-
-		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
-				? new Long[] {} : contObjectIds;
-
-		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
-
-	}
-
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @param response
-	 * @throws IOException
-	 */
-	//@RequestMapping(value = "/{reportParamsetId}/download/html", method = RequestMethod.PUT, produces = MIME_TEXT)
-	protected ResponseEntity<?> doDowndloadReportPutHtml(
-			@PathVariable(value = "reportParamsetId") Long reportParamsetId,
-			@RequestParam(value = "contObjectIds", required = false) Long[] contObjectIds,
-			@RequestParam(value = "clearContObjectIds", required = false) Boolean clearContObjectIds,
-			@RequestBody ReportParamset reportParamset) throws IOException {
-
-		checkNotNull(reportParamsetId);
-		checkNotNull(reportParamset);
-
-		reportParamset.setOutputFileZipped(false);
-		reportParamset.setOutputFileType(ReportOutputFileType.HTML);
-
-		final Long[] fixContObjectIds = (contObjectIds == null && Boolean.TRUE.equals(clearContObjectIds))
-				? new Long[] {} : contObjectIds;
-
-		return initDownloadProcessAllReports(reportParamsetId, reportParamset, fixContObjectIds);
-
-	}
-
-	/**
-	 *
-	 * @param reportMakerParam
-	 * @param reportMaker
-	 * @param request
-	 * @return
-	 * @throws IOException
-	 */
+    /**
+     *
+     * @param reportMakerParam
+     * @param reportMaker
+     * @return
+     * @throws IOException
+     */
 	private ResponseEntity<?> processDowndloadAnyReport(ReportMakerParam reportMakerParam, ReportMaker reportMaker)
 			throws IOException {
 
@@ -334,8 +224,9 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 		byte[] byteArray = null;
 		// XXX Time Zone Service
 		try (ByteArrayOutputStream memoryOutputStream = new ByteArrayOutputStream()) {
-			reportMaker.makeReport(reportMakerParam, currentSubscriberService.getSubscriberCurrentTime_Joda(),
-					memoryOutputStream);
+
+            java.time.LocalDateTime sDateTime = LocalDateUtils.asLocalDateTime(subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds()));
+			reportMaker.makeReport(reportMakerParam, sDateTime, memoryOutputStream);
 			byteArray = memoryOutputStream.toByteArray();
 		}
 
@@ -391,9 +282,7 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 	private void setupReportParamset(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 
-		Subscriber subscriber = currentSubscriberService.getSubscriber();
-		checkNotNull(subscriber);
-		checkNotNull(subscriber.getId());
+		Subscriber subscriber = new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		reportParamset.setSubscriberId(subscriber.getId());
 		reportParamset.setSubscriber(subscriber);
@@ -401,16 +290,14 @@ public class ReportServiceController extends AbstractSubscrApiResource {
 		reportParamset.setReportPeriod(reportPeriodService.findByKeyname(reportParamset.getReportPeriodKey()));
 	}
 
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param contObjectIds
-	 * @param reportParamset
-	 * @param request
-	 * @param response
-	 * @return
-	 * @throws IOException
-	 */
+    /**
+     *
+     * @param reportParamsetId
+     * @param reportParamset
+     * @param contObjectIds
+     * @return
+     * @throws IOException
+     */
 	private ResponseEntity<?> initDownloadProcessAllReports(Long reportParamsetId, ReportParamset reportParamset,
 			Long[] contObjectIds) throws IOException {
 

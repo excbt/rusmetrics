@@ -6,15 +6,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
-import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
-import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.service.SubscriberManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.SubscriberController;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
@@ -35,18 +36,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping("/api/rma")
-public class RmaSubscriberResource extends SubscriberController {
+public class RmaSubscriberResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(RmaSubscriberResource.class);
 
+	private final SubscriberService subscriberService;
+
 	private final OrganizationService organizationService;
 
-	private final RmaSubscriberService rmaSubscriberService;
+	private final SubscriberManageService subscriberManageService;
 
-    public RmaSubscriberResource(ObjectAccessService objectAccessService, OrganizationService organizationService, RmaSubscriberService rmaSubscriberService) {
-        super(objectAccessService);
+    private final PortalUserIdsService portalUserIdsService;
+
+    private final SubscriberMapper subscriberMapper;
+
+    public RmaSubscriberResource(SubscriberService subscriberService, SubscriberManageService subscriberManageService, OrganizationService organizationService, PortalUserIdsService portalUserIdsService, SubscriberMapper subscriberMapper) {
+        this.subscriberService = subscriberService;
         this.organizationService = organizationService;
-        this.rmaSubscriberService = rmaSubscriberService;
+        this.subscriberManageService = subscriberManageService;
+        this.portalUserIdsService = portalUserIdsService;
+        this.subscriberMapper = subscriberMapper;
     }
 
     /**
@@ -56,11 +65,10 @@ public class RmaSubscriberResource extends SubscriberController {
 	@RequestMapping(value = "/subscribers", method = RequestMethod.GET)
     @Timed
     public ResponseEntity<?> getRmaSubscribers() {
-		if (!currentSubscriberService.isRma()) {
+		if (!portalUserIdsService.getCurrentIds().isRma()) {
 			return ApiResponse.responseForbidden();
 		}
-
-		return ApiResponse.responseOK(() -> rmaSubscriberService.selectRmaSubscribersDTO(getCurrentSubscriberId()));
+		return ResponseEntity.ok(subscriberService.findByRmaSubscriber(portalUserIdsService.getCurrentIds()));
 	}
 
 	/**
@@ -73,7 +81,7 @@ public class RmaSubscriberResource extends SubscriberController {
     public ResponseEntity<?> getRmaSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId) {
 
 
-        PortalUserIds portalUserIds = getSubscriberParam().asPortalUserIds();
+        PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
 
         //SubscrUserInfo userInfo = getSubscriberParam();
 
@@ -84,8 +92,8 @@ public class RmaSubscriberResource extends SubscriberController {
 
 		Optional<SubscriberDTO> subscriberDTOOptional = subscriberService.findSubscriberDTO(rSubscriberId);
 		if (subscriberDTOOptional.isPresent()) {
-            if (subscriberDTOOptional.get().getRmaSubscriberId() == null
-                || !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
+            if (subscriberDTOOptional.get().getRmaSubscriberId() != null
+                && !subscriberDTOOptional.get().getRmaSubscriberId().equals(portalUserIds.getSubscriberId())) {
                 return ApiResponse.responseForbidden();
             }
         }
@@ -96,18 +104,18 @@ public class RmaSubscriberResource extends SubscriberController {
 
 	/**
 	 *
-	 * @param rSubscriber
+	 * @param subscriberVM
 	 * @param request
 	 * @return
 	 */
 	@RequestMapping(value = "/subscribers", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
-    public ResponseEntity<?> createSubscriber(@RequestBody Subscriber rSubscriber, HttpServletRequest request) {
+    public ResponseEntity<?> createSubscriber(@RequestBody SubscriberVM subscriberVM, HttpServletRequest request) {
 
-		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganizationId());
+		checkNotNull(subscriberVM);
+		checkNotNull(subscriberVM.getOrganizationId());
 
-		ApiActionLocation action = new ApiActionEntityLocationAdapter<Subscriber, Long>(rSubscriber, request) {
+		ApiActionLocation action = new ApiActionEntityLocationAdapter<SubscriberVM, Long>(subscriberVM, request) {
 
 			@Override
 			protected Long getLocationId() {
@@ -115,8 +123,9 @@ public class RmaSubscriberResource extends SubscriberController {
 			}
 
 			@Override
-			public Subscriber processAndReturnResult() {
-				return rmaSubscriberService.createRmaSubscriber(entity, getCurrentSubscriberId());
+			public SubscriberVM processAndReturnResult() {
+				return subscriberManageService.createNormalSubscriber(entity, portalUserIdsService.getCurrentIds())
+                    .map(subscriberMapper::toVM).orElse(null);
 			}
 		};
 
@@ -126,24 +135,26 @@ public class RmaSubscriberResource extends SubscriberController {
     /**
      *
      * @param rSubscriberId
-     * @param rSubscriber
+     * @param subscriberVM
      * @return
      */
 	@RequestMapping(value = "/subscribers/{rSubscriberId}", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<?> updateSubscriber(@PathVariable("rSubscriberId") Long rSubscriberId,
-			@RequestBody Subscriber rSubscriber) {
+			@RequestBody SubscriberVM subscriberVM) {
 
 		checkNotNull(rSubscriberId);
-		checkNotNull(rSubscriber);
-		checkNotNull(rSubscriber.getOrganizationId());
+		checkNotNull(subscriberVM);
+		checkNotNull(subscriberVM.getOrganizationId());
 
-		ApiAction action = new ApiActionEntityAdapter<Subscriber>(rSubscriber) {
+		ApiAction action = new ApiActionEntityAdapter<SubscriberVM>(subscriberVM) {
 
 			@Override
-			public Subscriber processAndReturnResult() {
-				return rmaSubscriberService.updateRmaSubscriber(rSubscriber, getCurrentSubscriberId());
+			public SubscriberVM processAndReturnResult() {
+				return subscriberManageService.updateNormalSubscriber(subscriberVM, portalUserIdsService.getCurrentIds())
+                    .map(subscriberMapper::toVM)
+                    .orElse(null);
 			}
 		};
 
@@ -164,11 +175,11 @@ public class RmaSubscriberResource extends SubscriberController {
 		checkNotNull(rSubscriberId);
 
 		ApiAction action = (ApiActionAdapter) () -> {
-            if (Boolean.TRUE.equals(isPermanent)) {
-                rmaSubscriberService.deleteRmaSubscriberPermanent(rSubscriberId, getCurrentSubscriberId());
-            } else {
-                rmaSubscriberService.deleteRmaSubscriber(rSubscriberId, getCurrentSubscriberId());
-            }
+//            if (Boolean.TRUE.equals(isPermanent)) {
+//                subscriberManageService.deleteRmaSubscriberPermanent(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            } else {
+                subscriberManageService.deleteSubscriber(rSubscriberId, portalUserIdsService.getCurrentIds().getSubscriberId());
+//            }
         };
 		return ApiActionTool.processResponceApiActionDelete(action);
 	}
@@ -180,7 +191,7 @@ public class RmaSubscriberResource extends SubscriberController {
 	@RequestMapping(value = "/subscribers/organizations", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
     @Timed
     public ResponseEntity<?> getOrganizations() {
-		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(getSubscriberParam().asPortalUserIds());
+		List<OrganizationDTO> organizations = organizationService.findOrganizationsOfRma(portalUserIdsService.getCurrentIds());
 		return ApiResponse.responseOK(organizations);
 	}
 

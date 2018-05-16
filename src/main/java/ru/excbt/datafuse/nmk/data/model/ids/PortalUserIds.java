@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.model.ids;
 
+import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
+
 public interface PortalUserIds {
 
     Long getSubscriberId();
@@ -9,7 +11,7 @@ public interface PortalUserIds {
     Long getParentSubscriberId();
 
     default boolean isRma() {
-        return false;
+        return SubscrTypeKey.RMA.equals(getSubscrTypeKey());
     }
 
     Long getRmaId();
@@ -18,4 +20,9 @@ public interface PortalUserIds {
         return getSubscriberId() != null && getUserId() != null;
     }
 
+    default boolean haveParentSubacriber() {
+        return getParentSubscriberId() != null;
+    }
+
+    SubscrTypeKey getSubscrTypeKey();
 }

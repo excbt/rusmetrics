@@ -13,10 +13,14 @@ Main page styles
 
 .home-logo {
     display: inline-block;
-    width: 347px;
-    height: 497px;
-    background: url("../../content/images/title_bg.jpg") no-repeat center top;
-    background-size: contain;
+    width: 100%;
+    height: 91vh;
+//    width: 347px;
+//    height: 497px;
+//    background: url("../../content/images/title_bg.jpg") no-repeat center top;
+    background: url("../../content/images/title_bg.jpg") no-repeat;
+//    background-size: contain;
+    background-size: 100%;
 }
 
 

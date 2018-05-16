@@ -1,0 +1,45 @@
+{
+    "subscribers" : {
+        "partner": {
+            "title" : "Партнеры",
+            "listTitle" : "Список партнеров",
+            "editTitle" : "Редактирование партнера",
+            "newTitle" : "Добавление партнера"
+        },
+        "customer": {
+            "title" : "Абоненты",
+            "listTitle" : "Список абонентов",
+            "editTitle" : "Редактирование абонента",
+            "newTitle" : "Добавление Абонента"
+        }
+    },
+    "subscriber": {
+        "id": "id",
+        "organizationId": "organizationId",
+        "subscriberName": "Имя",
+        "subscriberInfo": "Доп. информация",
+        "subscriberComment": "Комментарий",
+        "timezoneDef": "Часовой пояс",
+        "subscriberUuid": "subscriberUuid",
+        "parentSubscriberId": "parentSubscriberId",
+        "isRma": "isRma",
+        "rmaSubscriberId": "rmaSubscriberId",
+        "ghostSubscriberId": "ghostSubscriberId",
+        "isGhostMode": "isGhostMode",
+        "skipServiceFilter": "skipServiceFilter",
+        "rmaLdapOu": "rmaLdapOu",
+        "mapCenterLat": "mapCenterLat",
+        "mapCenterLng": "mapCenterLng",
+        "mapZoom": "mapZoom",
+        "mapZoomDetail": "mapZoomDetail",
+        "subscrType": "subscrType",
+        "canCreateChild": "Создание ЛК",
+        "isChild": "isChild",
+        "childLdapOu": "childLdapOu",
+        "subscrCabinetNr": "subscrCabinetNr",
+        "contactEmail": "contactEmail",
+        "subscrCabinetSeq": "subscrCabinetSeq",
+        "organizationName": "Кр. наименование организации",
+        "organizationInn": "Инн организации"
+    }
+}
