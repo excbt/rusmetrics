@@ -53,6 +53,7 @@ import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.c
 import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
 import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
 import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-chart-widget.component';
+import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-dashboard.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -99,7 +100,8 @@ import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-cha
         SubscrUsersComponent,
         SubscrUserEditComponent,
         SubscrUsersWidgetComponent,
-        StTemperatureChartWidgetComponent
+        StTemperatureChartWidgetComponent,
+        SubscrAccessDashboardComponent
     ],
     entryComponents: [
     ],
