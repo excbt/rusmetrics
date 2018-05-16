@@ -13,7 +13,7 @@
         </mat-progress-bar>
     </div>
 
-    <mat-table class="organizations-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
+    <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
         matSortDisableClear>
 
         <ng-container matColumnDef="select" >
@@ -26,6 +26,7 @@
                 </mat-header-cell>     
                 <mat-cell *matCellDef="let row" class="select-column-width">
                     <mat-checkbox 
+                        color="primary"
                         (click)="$event.stopPropagation()"
                         (change)="$event ? selection.toggle(row) : null"
                         [checked]="selection.isSelected(row)">
@@ -88,5 +89,10 @@
     <mat-paginator [length]="totalElements" [pageSize]="pageSize"
                    [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
     
+    <!-- Navigation -->
+    <div>
+        <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
+            icon="fa-arrow-left" routerLink="/classifiers"></button>
+    </div>
 
 </jhi-exc-form-template>

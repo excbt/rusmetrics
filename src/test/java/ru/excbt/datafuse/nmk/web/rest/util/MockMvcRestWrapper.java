@@ -162,7 +162,7 @@ public class MockMvcRestWrapper {
             return this;
         }
 
-        public RestRequest testPut() throws Exception {
+        public RestRequest testPutEmpty() throws Exception {
             testPutAndReturn(null);
             return this;
         }
@@ -193,7 +193,7 @@ public class MockMvcRestWrapper {
             return this;
         }
 
-        public RestRequest testPost() throws Exception {
+        public RestRequest testPostEmpty() throws Exception {
             testPostAndReturn(null, Optional.of(status().is2xxSuccessful()));
             return this;
         }

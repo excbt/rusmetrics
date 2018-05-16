@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -19,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
  * @since 26.02.2015
  *
  */
-public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
+public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long>, QueryDslPredicateExecutor<SubscrUser> {
 
     String USERS_BY_LOGIN_CACHE = "usersByLogin";
 
@@ -36,6 +37,6 @@ public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long> {
 	@Query("SELECT u FROM SubscrUser u WHERE u.subscriber.id = :subscriberId ORDER BY u.id ")
 	List<SubscrUser> selectBySubscriberId(@Param("subscriberId") Long subscriberId);
 
-	@Query("SELECT u.id FROM SubscrUser u INNER JOIN u.subscriber s WHERE u.subscriber.id = :subscriberId OR (s.rmaSubscriberId = :subscriberId)")
+    @Query("SELECT u.id FROM SubscrUser u INNER JOIN u.subscriber s WHERE u.subscriber.id = :subscriberId OR (s.rmaSubscriberId = :subscriberId)")
 	List<Long> findUserIdsBySubscriberOrRmaId(@Param("subscriberId") Long subscriberId);
 }

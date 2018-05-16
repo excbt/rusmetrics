@@ -48,6 +48,10 @@ import { PSubscriberEditCustomerComponent } from './p-subscribers/p-subscriber-e
 import { PSubscriberEditPartnerComponent } from './p-subscribers/p-subscriber-edit-partner.component';
 import { OrganizationAutocompleteComponent } from './organizations/organization-autocomplete.component';
 import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
+import { SubscrUserService } from './subscr-users/subscr-user.service';
+import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
+import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
+import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -83,6 +87,7 @@ import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
         OrganizationsComponent,
         OrganizationDetailComponent,
         OrganizationEditComponent,
+        OrganizationAutocompleteComponent,
         PSubscribersComponent,
         PSubscribersPartnerComponent,
         PSubscribersCustomerComponent,
@@ -90,7 +95,9 @@ import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
         PSubscriberEditPartnerComponent,
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
-        OrganizationAutocompleteComponent
+        SubscrUsersComponent,
+        SubscrUserEditComponent,
+        SubscrUsersWidgetComponent
     ],
     entryComponents: [
     ],
@@ -101,13 +108,15 @@ import { TimezoneDefService } from './timezoneDef/timezoneDef.service';
         PSubscriberService,
         PSubscriberCustomerService,
         PSubscriberPartnerService,
+        SubscrUserService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA],
     exports: [
         OrganizationsWidgetComponent,
-        PSubscribersWidgetComponent
+        PSubscribersWidgetComponent,
+        SubscrUsersWidgetComponent
     ]
 })
 export class PortalEntityModule {}

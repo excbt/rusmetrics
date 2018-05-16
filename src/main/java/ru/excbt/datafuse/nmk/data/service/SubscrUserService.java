@@ -1,19 +1,22 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.SubscrRole;
-import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
@@ -23,10 +26,14 @@ import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapUserAccount;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
+import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -71,7 +78,10 @@ public class SubscrUserService implements SecuredRoles {
 
     private final SubscrUserMapper subscrUserMapper;
 
-    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper) {
+    private final QueryDSLService queryDSLService;
+
+
+    public SubscrUserService(SubscrUserRepository subscrUserRepository, SystemUserRepository systemUserRepository, SubscriberService subscriberService, LdapService ldapService, SubscrRoleService subscrRoleService, UserPersistentTokenRepository persistentTokenRepository, CacheManager cacheManager, SubscriberLdapService subscriberLdapService, SubscrUserMapper subscrUserMapper, QueryDSLService queryDSLService) {
         this.subscrUserRepository = subscrUserRepository;
         this.systemUserRepository = systemUserRepository;
         this.subscriberService = subscriberService;
@@ -81,6 +91,7 @@ public class SubscrUserService implements SecuredRoles {
         this.cacheManager = cacheManager;
         this.subscriberLdapService = subscriberLdapService;
         this.subscrUserMapper = subscrUserMapper;
+        this.queryDSLService = queryDSLService;
     }
 
     /**
@@ -111,8 +122,44 @@ public class SubscrUserService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public List<SubscrUserDTO> findBySubscriberId(Long subscriberId) {
 		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
-		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(subscrUserMapper::toDto).collect(Collectors.toList());
+		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(SubscrUserDTO::new).collect(Collectors.toList());
 	}
+
+
+    @Transactional(readOnly = true)
+    public Page<SubscrUserDTO> findBySubscriberIdPaged(Long subscriberId, Optional<String> searchStringOptional,
+        Pageable pageable) {
+
+        QSubscrUser qSubscrUser = QSubscrUser.subscrUser;
+
+        QAbstractPersistableEntity qSubscriberPersistableEntity = new QAbstractPersistableEntity(qSubscrUser.subscriber());
+
+        BooleanExpression subscriberFilter = qSubscriberPersistableEntity.id.eq(subscriberId)
+            .and(qSubscrUser.deleted.eq(0));
+
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(subscriberFilter);
+
+        searchStringOptional.ifPresent(s -> where.and(
+            qSubscrUser.userName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
+            .or(qSubscrUser.userNickname.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
+
+        ));
+
+        Page<SubscrUserDTO> page = subscrUserRepository.findAll(where, pageable).map(SubscrUserDTO::new);
+
+        return page;
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkUserNotExists(String username) {
+        QSubscrUser qSubscrUser = QSubscrUser.subscrUser;
+        BooleanExpression userNameFilter = qSubscrUser.userName.toUpperCase().eq(username.toUpperCase());
+        List<Long> count =queryDSLService.queryFactory().select(qSubscrUser.userName.count()).from(qSubscrUser).where(userNameFilter).fetch();
+        return count.isEmpty() || (count.get(0) == 0);
+
+    }
 
 	/**
 	 *
@@ -132,9 +179,9 @@ public class SubscrUserService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
-	public SubscrUser findOne(Long subscrUserId) {
+	public SubscrUserDTO findOne(Long subscrUserId) {
         SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-        return subscrUser;
+        return new SubscrUserDTO(subscrUser);
 	}
 
 	/**
@@ -327,7 +374,7 @@ public class SubscrUserService implements SecuredRoles {
 
 		LdapUserAccount user = new LdapUserAccount(subscrUser.getId(), subscrUser.getUserName(), stringNames, orgUnits,
 				subscrUser.getUserEMail(), subscrUser.getUserDescription(), gidNumber,
-				subscrTypeKey.isChild() ? subscrTypeKey.getKeyname() : null);
+                (subscrTypeKey != null && subscrTypeKey.isChild()) ? subscrTypeKey.getKeyname() : null);
 		return user;
 
 	}

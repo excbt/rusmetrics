@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrRoleService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.service.SubscrUserManageService;
+import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
@@ -63,8 +64,8 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		}
 	}
 
-    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService) {
-        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService);
+    public RmaSubscrUserResource(SubscrUserService subscrUserService, SubscrRoleService subscrRoleService, PortalUserIdsService portalUserIdsService, SubscriberRepository subscriberRepository, SubscrUserMapper subscrUserMapper, SubscrUserManageService subscrUserManageService, SubscriberService subscriberService) {
+        super(subscrUserService, subscrRoleService, portalUserIdsService, subscrUserMapper, subscrUserManageService, subscriberService);
         this.subscriberRepository = subscriberRepository;
     }
 
@@ -91,12 +92,16 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		return ApiResponse.responseOK(subscrUsers);
 	}
 
-	/**
-	 *
-	 * @param subscrUser
-	 * @param request
-	 * @return
-	 */
+    /**
+     *
+     * @param rSubscriberId
+     * @param isAdmin
+     * @param isReadonly
+     * @param newPassword
+     * @param subscrUserDTO
+     * @param request
+     * @return
+     */
 	@RequestMapping(value = "/{rSubscriberId}/subscrUsers", method = RequestMethod.POST)
 	public ResponseEntity<?> createSubscrUser(@PathVariable("rSubscriberId") Long rSubscriberId,
 			@RequestParam(value = "isAdmin", required = false, defaultValue = "false") Boolean isAdmin,
@@ -108,8 +113,8 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		if (subscriber == null) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
-        subscrUserDTO.setAdmin(Boolean.TRUE.equals(isAdmin));
-        subscrUserDTO.setReadonly(Boolean.TRUE.equals(isReadonly));
+        subscrUserDTO.setIsAdmin(Boolean.TRUE.equals(isAdmin));
+        subscrUserDTO.setIsReadonly(Boolean.TRUE.equals(isReadonly));
 
 		return createSubscrUserInternal(subscriber, subscrUserDTO, newPassword, request);
 	}

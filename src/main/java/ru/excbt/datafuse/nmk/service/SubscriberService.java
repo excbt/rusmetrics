@@ -477,6 +477,13 @@ public class SubscriberService implements SecuredRoles {
             .map(s -> subscriberMapper.toDto(s)).collect(Collectors.toList());
     }
 
-
+    @Transactional(readOnly = true)
+    public boolean checkParentSubscriber(Long subcriberId, PortalUserIds portalUserIds) {
+        Subscriber subscriber = subscriberRepository.findOne(subcriberId);
+        if (subscriber == null) {
+            return false;
+        }
+        return portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId());
+    }
     //public void
 }

@@ -1,0 +1,44 @@
+{
+    "subscrUsers" : {
+        "main": {
+            "title" : "Пользователи",
+            "listTitle" : "Список пользователей",
+            "editTitle" : "Редактирование пользователя",
+            "newTitle" : "Добавление пользователя"
+        },
+        "edit": {
+            "title": "Пользователь",
+            "oldPassword" : "Предыдущий пароль",
+            "passwordConfirmation" : "Подтверждение пароля"
+        },
+        "form": {
+            "errors": {
+                "userNameRequired": "Обязательное поле",
+                "userNamePattern": "Допускаются только латинские буквы и цифры",
+                "userNameMinLenght": "Минимальная длина 5 символов",
+                "userNameTaken": "Имя пользователя занято",
+                "passwordLength": "Минимальная длина пароля 5 символов",
+                "passwordsNotEquals": "Пароли не совпадают"
+            }
+        }
+    },    
+
+    "subscrUser": {
+        "id" : "ID",
+        "userName" : "Пользователь",
+        "firstName" : "firstName",
+        "lastName" : "lastName",
+        "password" : "Пароль",
+        "userComment" : "Комментарий",
+        "subscriberId" : "subscriberId",
+        "userUuid" : "userUuid",
+        "userEmail" : "userEmail",
+        "isBlocked" : "Блокировка пользователя",
+        "isAdmin" : "Администратор",
+        "isReadonly" : "Только для чтения",
+        "contactEmail" : "e-mail",
+        "userDescription" : "Описание",
+        "userNickname" : "Имя",
+        "devComment" : "devComment"
+    }
+}

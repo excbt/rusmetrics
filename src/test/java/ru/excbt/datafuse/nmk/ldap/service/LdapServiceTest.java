@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.config.ldap.LdapConfig;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
+import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
-import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
 import static org.junit.Assert.*;
@@ -29,7 +29,7 @@ public class LdapServiceTest extends PortalDataTest {
 	private LdapConfig ldapConfig;
 
 	@Autowired
-	private SubscrUserService subscrUserService;
+	private SubscrUserRepository subscrUserRepository;
 
 	@Autowired
 	private SubscriberService subscriberService;
@@ -114,7 +114,7 @@ public class LdapServiceTest extends PortalDataTest {
     @Ignore
 	@Test
 	public void testCreateCabinetsOU() throws Exception {
-		SubscrUser subscrUser = subscrUserService.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
+		SubscrUser subscrUser = subscrUserRepository.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
 
 		String subscriberName = subscrUser.getSubscriber().getSubscriberName();
 		Long subscriberId = subscrUser.getSubscriber().getId();

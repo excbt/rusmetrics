@@ -25,7 +25,7 @@ import { Principal } from '../../shared';
 @Component({
   selector: 'jhi-organizations',
   templateUrl: './organizations.component.html',
-  styleUrls: ['./organizations.scss', '../blocks/list-form.scss']
+  styleUrls: ['./organizations.component.scss', '../blocks/list-form.scss']
 })
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
 

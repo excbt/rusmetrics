@@ -1,7 +1,8 @@
 import {
     Validators,
     AbstractControl,
-    ValidatorFn
+    ValidatorFn,
+    FormGroup
 } from '@angular/forms';
 
 // ****************************************************************
@@ -37,6 +38,22 @@ export class ExcCustomValidators {
         return Validators.pattern('[0-9 ]*');
     }
 
+    static valuesEquals(controlName: string): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} => {
+            const otherControl = control.root.get(controlName);
+            const isOk =  (otherControl) ? (otherControl.value === control.value)  : false;
+            return !isOk ? {'valuesEquals': {value: control.value}} : null;
+        };
+    }
+
+    static valuesEqualsUntouched(controlName: string): ValidatorFn {
+        return (control: AbstractControl): {[key: string]: any} => {
+            const otherControl = control.root.get(controlName);
+            const isOk =  (otherControl) ? (otherControl.value === control.value)  : false;
+            return !isOk ? {'valuesEquals': {value: control.value}} : null;
+        };
+    }
+
 }
 
 export class ExcFormControlChecker {
@@ -55,6 +72,10 @@ export class ExcFormControlChecker {
 
 export class ExcFormValue {
     static clearEmptyString(val: any): any {
+        return (val === '') ? null : val;
+    }
+
+    static checkEmpty(val: any) {
         return (val === '') ? null : val;
     }
 }

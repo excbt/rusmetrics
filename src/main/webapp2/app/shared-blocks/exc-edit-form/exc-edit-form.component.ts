@@ -41,7 +41,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
 
     entityForm: FormGroup;
     private eventSubscriber: Subscription;
-    private newFlag: boolean;
+    newFlag: boolean;
     private entityId: number;
     private entityIdSubject = new BehaviorSubject<any>(null);
     private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -117,7 +117,11 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
     abstract prepareEntity(form: FormGroup);
 
     revertForm() {
-        this.entityForm = this.createForm(this.entity);
+        if (this.newFlag) {
+            this.entityForm = this.initForm();
+        } else {
+            this.entityForm = this.createForm(this.entity);
+        }
     }
 
     saveForm() {
@@ -182,6 +186,12 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
 
     deleteAction() {
         this.deleteEntity(this.entityId);
+    }
+
+    navigateBack() {
+        if (this.params.backUrl) {
+            this.router.navigate([this.params.backUrl]);
+        }
     }
 
     navigateNew() {
