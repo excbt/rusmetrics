@@ -4,21 +4,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.io.Serializable;
 
+import org.mapstruct.factory.Mappers;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.vo.ContObjectVOFias;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 
 @Deprecated
 public class MonitorContEventNotificationStatus
 		implements Serializable, StatusColorObject, ContObjectHolder, ContObjectFiasHolder, ContObjectGeoPosHolder {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5870004714222214147L;
+
+//	private static ContObjectMapper contObjectMapper = Mappers.getMapper(ContObjectMapper.class);
 
 	private final ContObjectVOFias contObjectVOFias;
 
@@ -30,18 +35,18 @@ public class MonitorContEventNotificationStatus
 
 	private long newEventsCount;
 
-	public MonitorContEventNotificationStatus(ContObject contObject, ContObjectFias contObjectFias,
+	public MonitorContEventNotificationStatus(ContObjectDTO contObject, ContObjectFias contObjectFias,
 			ContObjectGeoPos contObjectGeoPos) {
-		this.contObjectVOFias = new ContObjectVOFias(ContObjectShort.newInstance(contObject), contObjectFias,
+		this.contObjectVOFias = new ContObjectVOFias(contObject, contObjectFias,
 				contObjectGeoPos);
 	}
 
 	@Override
-	public ContObject getContObject() {
+	public ContObjectDTO getContObject() {
 		return contObjectVOFias.getModel();
 	}
 
-	public static MonitorContEventNotificationStatus newInstance(ContObject contObject, ContObjectFias contObjectFias,
+	public static MonitorContEventNotificationStatus newInstance(ContObjectDTO contObject, ContObjectFias contObjectFias,
 			ContObjectGeoPos contObjectGeoPos) {
 		checkNotNull(contObject);
 		MonitorContEventNotificationStatus result = new MonitorContEventNotificationStatus(contObject, contObjectFias,

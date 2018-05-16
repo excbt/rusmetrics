@@ -1,7 +1,21 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.support.*;
+import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
+import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,25 +23,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
-import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
-import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
-import ru.excbt.datafuse.nmk.data.model.support.MonitorContEventNotificationStatusV2;
-import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
-import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
-import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
-import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
-import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 @Service
 public class SubscrContEventNotificationStatusV2Service {
@@ -42,12 +39,15 @@ public class SubscrContEventNotificationStatusV2Service {
 
 	private final ContObjectFiasService contObjectFiasService;
 
+	private final ContObjectMapper contObjectMapper;
+
 	@Autowired
-    public SubscrContEventNotificationStatusV2Service(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV3Service contEventMonitorV3Service, ContObjectService contObjectService, ContObjectFiasService contObjectFiasService) {
+    public SubscrContEventNotificationStatusV2Service(SubscrContEventNotificationService subscrContEventNotificationService, ContEventMonitorV3Service contEventMonitorV3Service, ContObjectService contObjectService, ContObjectFiasService contObjectFiasService, ContObjectMapper contObjectMapper) {
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.contEventMonitorV3Service = contEventMonitorV3Service;
         this.contObjectService = contObjectService;
         this.contObjectFiasService = contObjectFiasService;
+        this.contObjectMapper = contObjectMapper;
     }
 
     /**
@@ -148,7 +148,7 @@ public class SubscrContEventNotificationStatusV2Service {
 			final ContEventLevelColorKeyV2 resultColorKey = worseMonitorColorKey != null ? worseMonitorColorKey
 					: ContEventLevelColorKeyV2.GREEN;
 
-			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(co,
+			MonitorContEventNotificationStatusV2 item = MonitorContEventNotificationStatusV2.newInstance(contObjectMapper.toDto(co),
 					contObjectFiasMap.get(co.getId()), contObjectGeoPosMap.get(co.getId()));
 
 			item.setEventsCount(allCnt);
