@@ -16,27 +16,26 @@ import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-const
     styleUrls: ['../blocks/form-edit.scss']
 })
 export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> implements OnInit, OnDestroy {
-    constructor(
-        eventManager: JhiEventManager,
-        router: Router,
-        activatedRoute: ActivatedRoute,
-        private fb: FormBuilder,
-        private subscrUserService: SubscrUserService) {
-            super(
-                {   modificationEventName: 'subscrUserModification',
-                backUrl: '/subscr-users',
-                onSaveUrl: '/subscr-users',
-                onDeleteUrl: '/subscr-users'
-            },
-            subscrUserService.entityProvider(),
-            eventManager,
-            router,
-            activatedRoute);
-        }
+    constructor(eventManager: JhiEventManager,
+                router: Router,
+                activatedRoute: ActivatedRoute,
+                private fb: FormBuilder,
+                private subscrUserService: SubscrUserService) {
+        super(
+            {modificationEventName: 'subscrUserModification',
+            backUrl: '/subscr-users',
+            onSaveUrl: '/subscr-users',
+            onDeleteUrl: '/subscr-users'
+        },
+        subscrUserService.userEntityProvider(),
+        eventManager,
+        router,
+        activatedRoute);
+    }
 
     createForm(data: SubscrUser): FormGroup {
         const form = this.fb.group({
-            userName: [data.userName, [Validators.required, Validators.min(1)]],
+            userName: [data.userName, [Validators.required]],
             userNickname: [data.userNickname],
             userComment: [data.userComment],
             userEmail: [data.userEmail],
@@ -45,8 +44,8 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
             isAdmin: [data.isAdmin],
             isReadonly: [data.isReadonly],
             userDescription: [data.userDescription],
-            newPassword: [null],
-            confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
+            newPassword: [null]
+            // confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
         });
         this.initPasswordChanges(form);
         return form;
@@ -54,17 +53,17 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     initForm(): FormGroup {
         const form = this.fb.group({
-            userName: [null, [Validators.required, Validators.pattern('[a-z]*[a-z0-9_]*'), Validators.minLength(5)], this.validateUserNotTaken.bind(this)],
-            userNickname: [null],
-            userComment: [null],
-            userEmail: [null],
-            contactEmail: [null],
+            userName: ['', [Validators.required, Validators.pattern('[a-z]*[a-z0-9_]*'), Validators.minLength(5)], this.validateUserNotTaken.bind(this)],
+            userNickname: [''],
+            userComment: [''],
+            userEmail: [''],
+            contactEmail: [''],
+            userDescription: [''],
             isBlocked: [false],
             isAdmin: [false],
             isReadonly: [false],
-            userDescription: [''],
-            newPassword: [null],
-            confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
+            newPassword: [null, [Validators.required, Validators.minLength(5)]]
+            // confPassword: [null, [ExcCustomValidators.valuesEquals('newPassword')]]
         });
         this.initPasswordChanges(form);
         return form;
@@ -72,11 +71,22 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
 
     initPasswordChanges(form: FormGroup) {
         const newPass = form.controls['newPassword'];
-        const confPass = form.controls['confPassword'];
-        newPass.valueChanges.subscribe((arg) => {
-                console.log('Dirty');
-                confPass.markAsTouched({ onlySelf: true });
-        });
+        if (newPass) {
+            newPass.valueChanges.subscribe((arg) => {
+                if (!form.controls['confPassword']) {
+                    const contControl = new FormControl('', [Validators.required, ExcCustomValidators.valuesEquals('newPassword')]);
+                    form.addControl('confPassword', contControl);
+                } else {
+                    form.controls['confPassword'].reset();
+                }
+                if (!this.newFlag) {
+                    if (!form.controls['oldPassword']) {
+                        const contControl = new FormControl('', [Validators.required]);
+                        form.addControl('oldPassword', contControl);
+                    }
+                }
+            });
+        }
     }
 
     prepareEntity(): SubscrUser {
@@ -91,11 +101,13 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
             userUuid: null,
             userComment: ExcFormValue.clearEmptyString(formModel.userComment as string),
             userEmail: ExcFormValue.clearEmptyString(formModel.userEmail as string),
-            isBlocked: this.checkEmpty(formModel.isBlocked as boolean),
-            contactEmail: this.checkEmpty(formModel.contactEmail as string),
-            userDescription: this.checkEmpty(formModel.userDescription as string),
-            isAdmin: this.checkEmpty(formModel.isAdmin as boolean),
-            isReadonly: this.checkEmpty(formModel.isReadonly as boolean),
+            isBlocked: ExcFormValue.checkEmpty(formModel.isBlocked as boolean),
+            contactEmail: ExcFormValue.checkEmpty(formModel.contactEmail as string),
+            userDescription: ExcFormValue.checkEmpty(formModel.userDescription as string),
+            isAdmin: ExcFormValue.checkEmpty(formModel.isAdmin as boolean),
+            isReadonly: ExcFormValue.checkEmpty(formModel.isReadonly as boolean),
+            newPassword: ExcFormValue.clearEmptyString(formModel.newPassword as string),
+            oldPassword: this.entityForm.controls['oldPassword'] ? ExcFormValue.clearEmptyString(formModel.oldPassword as string) : null,
             authorities: []
         };
         return subscrUser;
@@ -130,34 +142,4 @@ export class SubscrUserEditComponent extends ExcEditFormComponent<SubscrUser> im
         });
     }
 
-    passwordConfirmation(frm: FormGroup) {
-        const newPass = frm.controls['newPassword'];
-        const confPass = frm.controls['confPassword'];
-        console.log('Check Fire');
-        const isOk =  (newPass && confPass) ? (newPass.value === confPass.value) || (newPass.untouched && confPass.untouched) : false;
-        return {'passwordConfirmation': {value: isOk}};
-    }
-
-    passwordConfirmation1(controlName: string): ValidatorFn {
-        //   console.log('invalidLength:' + JSON.stringify(control.value) + ' len:' + String(control.value).length +
-        //   ' cond: ' + goodInnLen + 'trim <' + String(control.value).trim() + '>');
-        return (control: AbstractControl): {[key: string]: any} => {
-            const newPass = control.root.get(controlName);
-            console.log('Check Fire');
-            const isOk =  (newPass) ? (newPass.value === control.value)  : false;
-            return !isOk ? {'passwordConfirmation': false} : null;
-        };
-        // return !isOk ? {'passwordConfirmation': {value: isOk}} : null;
-    }
-
-    validateAllFormFields(formGroup: FormGroup) {         // {1}
-        Object.keys(formGroup.controls).forEach((field) => {  // {2}
-            const control = formGroup.get(field);             // {3}
-            if (control instanceof FormControl) {             // {4}
-            control.markAsTouched({ onlySelf: true });
-        } else if (control instanceof FormGroup) {        // {5}
-            this.validateAllFormFields(control);            // {6}
-        }
-    });
-}
 }

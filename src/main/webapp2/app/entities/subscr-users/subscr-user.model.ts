@@ -13,6 +13,8 @@ export class SubscrUser {
         public userDescription: string,        // Описание пользователя
         public isAdmin: boolean,        // Признак "администратор"
         public isReadonly: boolean,        // Признак "только чтение"
-        public authorities: string[]
+        public authorities: string[],
+        public newPassword?: string,
+        public oldPassword?: string
         ) { }
 }

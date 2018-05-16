@@ -41,7 +41,7 @@ export abstract class ExcEditFormComponent<T> implements OnInit, OnDestroy {
 
     entityForm: FormGroup;
     private eventSubscriber: Subscription;
-    private newFlag: boolean;
+    newFlag: boolean;
     private entityId: number;
     private entityIdSubject = new BehaviorSubject<any>(null);
     private loadingSubject = new BehaviorSubject<boolean>(false);

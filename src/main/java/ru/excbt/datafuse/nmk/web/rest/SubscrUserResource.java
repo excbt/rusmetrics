@@ -402,6 +402,7 @@ public class SubscrUserResource {
         subscrUserDTO.setIsReadonly(Boolean.TRUE.equals(subscrUserDTO.getIsReadonly()));
         subscrUserDTO.setIsBlocked(Boolean.TRUE.equals(subscrUserDTO.getIsBlocked()));
 
+        subscrUserDTO.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
         Optional<SubscrUser> subscrUserOptional = subscrUserManageService.createSubscrUser(subscrUserDTO, newPassword);
         return subscrUserOptional
             .map(SubscrUserDTO::new)
@@ -420,7 +421,7 @@ public class SubscrUserResource {
             return ResponseEntity.badRequest().build();
         }
 
-        String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
+        String[] passwords = (newPassword != null && newPassword.length() > 0) ? new String[] { oldPassword, newPassword } : null;
 
         Optional<SubscrUser> subscrUserOptional = subscrUserManageService.updateSubscrUser(subscrUserDTO, passwords);
         return subscrUserOptional

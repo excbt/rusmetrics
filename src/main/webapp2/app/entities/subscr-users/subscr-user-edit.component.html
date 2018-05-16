@@ -6,7 +6,7 @@
     <br>
     <form [formGroup]="entityForm">
         <div class="flex-column">
-            <mat-form-field>
+            <mat-form-field *ngIf="newFlag">
                 <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName" required>
                 <mat-error *ngIf="checkFormControl('userName', 'required')">
                         {{'subscrUsers.form.errors.userNameRequired' | translate}}
@@ -21,21 +21,36 @@
                         {{'subscrUsers.form.errors.userNameTaken' | translate}}
                 </mat-error>
             </mat-form-field>
-            <span>{{entityForm.controls['confPassword'].errors | json}}</span>
-            <span>{{entityForm.status | json}}</span>
+            <mat-form-field *ngIf="!newFlag">
+                    <input matInput placeholder="{{'subscrUser.userName' | translate}}" formControlName="userName" readonly>                
+            </mat-form-field>
             <mat-form-field>
                 <input matInput placeholder="{{'subscrUser.userNickname' | translate}}" formControlName="userNickname">
             </mat-form-field>
             <div>
-                <mat-form-field>
-                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password">
-                </mat-form-field>
-                <mat-form-field *ngIf="entityForm.controls['newPassword'].value">
-                    <input matInput placeholder="{{'subscrUsers.edit.passwordConfirmation' | translate}}" formControlName="confPassword" type="password" required>
-                    <mat-error *ngIf="checkFormControl('confPassword', 'usernameTaken')">
-                            {{'subscrUsers.form.errors.userNameTaken' | translate}}
+                <mat-form-field *ngIf="newFlag" class="password-len">
+                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password" required>
+                    <mat-error *ngIf="checkFormControl('newPassword', 'minlength')">
+                            {{'subscrUsers.form.errors.passwordLength' | translate}}
                     </mat-error>
                 </mat-form-field>
+
+                <mat-form-field *ngIf="!newFlag" class="password-len">
+                    <input matInput placeholder="{{'subscrUser.password' | translate}}" formControlName="newPassword" type="password">
+                    <mat-error *ngIf="checkFormControl('newPassword', 'minlength')">
+                            {{'subscrUsers.form.errors.passwordLength' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="entityForm.controls['confPassword']" class="password-len">
+                    <input matInput placeholder="{{'subscrUsers.edit.passwordConfirmation' | translate}}" formControlName="confPassword" type="password" required>
+                    <mat-error *ngIf="checkFormControl('confPassword', 'valuesEquals')">
+                            {{'subscrUsers.form.errors.passwordsNotEquals' | translate}}
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field *ngIf="!entityForm.controls['newPassword']?.pristine" class="password-len">
+                        <input matInput placeholder="{{'subscrUsers.edit.oldPassword' | translate}}" formControlName="oldPassword" type="password" required>
+                </mat-form-field>
+                    
             </div>
             <mat-form-field>
                 <input matInput placeholder="{{'subscrUser.userComment' | translate}}" formControlName="userComment">

@@ -13,10 +13,12 @@
         },
         "form": {
             "errors": {
-                "userNameRequired" : "Обязательное поле",
-                "userNamePattern" : "Допускаются только латинские буквы и цифры",
-                "userNameMinLenght" : "Минимальная длина 5 символов",
-                "userNameTaken" : "Имя пользователя занято"
+                "userNameRequired": "Обязательное поле",
+                "userNamePattern": "Допускаются только латинские буквы и цифры",
+                "userNameMinLenght": "Минимальная длина 5 символов",
+                "userNameTaken": "Имя пользователя занято",
+                "passwordLength": "Минимальная длина пароля 5 символов",
+                "passwordsNotEquals": "Пароли не совпадают"
             }
         }
     },    
