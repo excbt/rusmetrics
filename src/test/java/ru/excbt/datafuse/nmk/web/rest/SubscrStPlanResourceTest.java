@@ -91,7 +91,7 @@ public class SubscrStPlanResourceTest extends PortalApiTest {
         SubscrStPlanDTO resultPlan = subscrStPlanService.saveStPlanDTO(subscrStPlanMapper.toDto(stPlan), portalUserIdsService.getCurrentIds());
         log.info("Created stPlan:{}",  resultPlan.toString());
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/st-plans"))
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr-st-plans"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.[*].id").value(hasItem(resultPlan.getId().intValue())))
@@ -105,7 +105,7 @@ public class SubscrStPlanResourceTest extends PortalApiTest {
     @Test
     @Transactional
     public void createStPlanAndSave() throws Exception {
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(post("/api/subscr/st-plans/new"))
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(post("/api/subscr-st-plans/new"))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isCreated())
             .andDo(objectBeatifyResultHandler)
@@ -119,7 +119,7 @@ public class SubscrStPlanResourceTest extends PortalApiTest {
     @Test
     @Transactional
     public void getBlankStPlan() throws Exception {
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr/st-plans/new"))
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(get("/api/subscr-st-plans/new"))
             .andDo(MockMvcResultHandlers.print())
             .andDo((i) -> log.info("Result Json:\n {}", JsonResultViewer.objectBeatifyResult(i)))
             .andExpect(status().isOk())
@@ -138,7 +138,7 @@ public class SubscrStPlanResourceTest extends PortalApiTest {
         SubscrStPlanDTO subscrStPlanDTO = subscrStPlanMapper.toDto(subscrStPlan);
         log.info("DTO: {}", subscrStPlanDTO.toString());
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/subscr/st-plans")
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(put("/api/subscr-st-plans")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(subscrStPlanDTO)))
             .andDo(MockMvcResultHandlers.print())
@@ -158,7 +158,7 @@ public class SubscrStPlanResourceTest extends PortalApiTest {
         subscrStPlan.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
         SubscrStPlan savedStPlan = subscrStPlanRepository.saveAndFlush(subscrStPlan);
 
-        ResultActions resultActions = restPortalContObjectMockMvc.perform(delete("/api/subscr/st-plans/{id}", savedStPlan.getId()))
+        ResultActions resultActions = restPortalContObjectMockMvc.perform(delete("/api/subscr-st-plans/{id}", savedStPlan.getId()))
             .andDo(MockMvcResultHandlers.print())
             .andExpect(status().isOk());
 

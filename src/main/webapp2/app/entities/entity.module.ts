@@ -52,6 +52,7 @@ import { SubscrUserService } from './subscr-users/subscr-user.service';
 import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
 import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
 import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
+import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-chart-widget.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -97,7 +98,8 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
         PSubscribersWidgetComponent,
         SubscrUsersComponent,
         SubscrUserEditComponent,
-        SubscrUsersWidgetComponent
+        SubscrUsersWidgetComponent,
+        StTemperatureChartWidgetComponent
     ],
     entryComponents: [
     ],
@@ -116,7 +118,8 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
     exports: [
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
-        SubscrUsersWidgetComponent
+        SubscrUsersWidgetComponent,
+        StTemperatureChartWidgetComponent
     ]
 })
 export class PortalEntityModule {}

@@ -46,6 +46,8 @@ import {
     ErrorComponent,
     HeaderbarComponent
 } from './layouts';
+import { PartnerModule } from './partner/partner.module';
+import { OperatorModule } from './operator/operator.module';
 // import { ClassifiersHomeComponent } from './classifiers/classifiers-home.component';
 // import { LeftMainMenuComponent } from './layouts/left-main-menu/left-main-menu.component';
 
@@ -73,7 +75,9 @@ import {
         PortalClassifiersModule,
         PortalEntityModule,
         PortalObjectTreeModule,
-        PortalSharedBlocksModule
+        PortalSharedBlocksModule,
+        PartnerModule,
+        OperatorModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
