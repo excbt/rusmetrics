@@ -11,15 +11,24 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -27,16 +36,61 @@ import ru.excbt.datafuse.nmk.data.model.TariffPlan;
 import ru.excbt.datafuse.nmk.data.model.TariffType;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
+import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
-@Transactional
-public class TariffPlanControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class TariffPlanControllerTest extends PortalApiTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(TariffPlanControllerTest.class);
+
+	@Autowired
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
+
+	@Autowired
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
+
+	private TariffPlanController tariffPlanController;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Autowired
+    private TariffOptionRepository tariffOptionRepository;
+    @Autowired
+    private ContObjectService contObjectService;
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        tariffPlanController = new TariffPlanController(tariffPlanService,tariffOptionRepository, tariffTypeRepository, contObjectService, organizationService, portalUserIdsService);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(tariffPlanController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
 
 	@Autowired
 	private TariffPlanService tariffPlanService;
@@ -52,22 +106,22 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testOption() throws Exception {
-		_testGetJson("/api/subscr/tariff/option");
+        mockMvcRestWrapper.restRequest("/api/subscr/tariff/option").testGet();
 	}
 
 	@Test
 	public void testType() throws Exception {
-		_testGetJson("/api/subscr/tariff/type");
+        mockMvcRestWrapper.restRequest("/api/subscr/tariff/type").testGet();
 	}
 
 	@Test
 	public void testRso() throws Exception {
-		_testGetJson("/api/subscr/tariff/rso");
+        mockMvcRestWrapper.restRequest("/api/subscr/tariff/rso").testGet();
 	}
 
 	@Test
 	public void testDefault() throws Exception {
-		_testGetJson("/api/subscr/tariff/default");
+        mockMvcRestWrapper.restRequest("/api/subscr/tariff/default").testGet();
 	}
 
 	@Test
@@ -106,7 +160,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 		ResultActions resultActionsAll;
 		try {
-			resultActionsAll = mockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
+			resultActionsAll = restPortalMockMvc.perform(put(urlStr).contentType(MediaType.APPLICATION_JSON)
 					.param("rsoOrganizationId", testRec.getRso().getId().toString())
 					.param("tariffTypeId", testRec.getTariffType().getId().toString())
 					.param("contObjectIds", TestUtils.arrayToString(contObjects)).content(jsonBody).with(testSecurityContext())
@@ -151,7 +205,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 		long[] contObjectIds = new long[1];
 		contObjectIds[0] = tariffContObjects.get(0).getId();
 
-		ResultActions resultAction = mockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
+		ResultActions resultAction = restPortalMockMvc.perform(post(urlStr).contentType(MediaType.APPLICATION_JSON)
 				.param("rsoOrganizationId", org.getId().toString()).param("tariffTypeId", tt.getId().toString())
 				.param("contObjectIds", TestUtils.arrayToString(contObjectIds)).content(jsonBody).with(testSecurityContext())
 				.accept(MediaType.APPLICATION_JSON));
@@ -164,21 +218,7 @@ public class TariffPlanControllerTest extends AnyControllerTest {
 
 	@Test
 	public void testAvailableContObjects() throws Exception {
-		_testGetJson("/api/subscr/tariff/1/contObject/available");
-	}
-
-	@Override
-	public long getSubscriberId() {
-		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
-	}
-
-	/**
-	 *
-	 * @return
-	 */
-	@Override
-	public long getSubscrUserId() {
-		return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
+        mockMvcRestWrapper.restRequest("/api/subscr/tariff/1/contObject/available").testGet();
 	}
 
 }

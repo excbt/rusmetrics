@@ -2,10 +2,8 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.TariffPlan;
@@ -13,14 +11,14 @@ import ru.excbt.datafuse.nmk.data.model.TariffType;
 import ru.excbt.datafuse.nmk.data.repository.TariffTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
-import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.TariffPlanService;
+import ru.excbt.datafuse.nmk.service.OrganizationService;
 import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -39,26 +37,32 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @RestController
 @RequestMapping(value = "/api/subscr/tariff")
-public class TariffPlanController extends AbstractSubscrApiResource {
+public class TariffPlanController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(TariffPlanController.class);
 
-	@Autowired
-	private TariffPlanService tariffPlanService;
+	private final TariffPlanService tariffPlanService;
 
-	@Autowired
-	private TariffOptionRepository tariffOptionRepository;
+	private final TariffOptionRepository tariffOptionRepository;
 
-	@Autowired
-	private TariffTypeRepository tariffTypeRepository;
+	private final TariffTypeRepository tariffTypeRepository;
 
-	@Autowired
-	private ContObjectService contObjectService;
+	private final ContObjectService contObjectService;
 
-	@Autowired
-	private OrganizationService organizationService;
+	private final OrganizationService organizationService;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+    public TariffPlanController(TariffPlanService tariffPlanService, TariffOptionRepository tariffOptionRepository, TariffTypeRepository tariffTypeRepository, ContObjectService contObjectService, OrganizationService organizationService, PortalUserIdsService portalUserIdsService) {
+        this.tariffPlanService = tariffPlanService;
+        this.tariffOptionRepository = tariffOptionRepository;
+        this.tariffTypeRepository = tariffTypeRepository;
+        this.contObjectService = contObjectService;
+        this.organizationService = organizationService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -83,7 +87,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/rso", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> rsoGet() {
 		// subscriberService.selectRsoOrganizations(currentSubscriberService.getSubscriberId())
-		return ResponseEntity.ok(organizationService.selectRsoOrganizations(getSubscriberParam()));
+		return ResponseEntity.ok(organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds()));
 	}
 
 	/**
@@ -92,7 +96,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/default", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listDefaultAll() {
-		List<?> resultList = tariffPlanService.selectTariffPlanList(getCurrentSubscriberId());
+		List<?> resultList = tariffPlanService.selectTariffPlanList(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ApiResponse.responseOK(resultList);
 	}
 
@@ -167,7 +171,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			@Override
 			public void process() {
 				//entity.setIsDefault(entity.is_default());
-				setResultEntity(tariffPlanService.updateOne(getSubscriberParam(), entity));
+				setResultEntity(tariffPlanService.updateOne(portalUserIdsService.getCurrentIds(), entity));
 
 			}
 		};
@@ -226,7 +230,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 			}
 		}
 
-		tariffPlan.setSubscriberId(getSubscriberId());
+		tariffPlan.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<TariffPlan, Long>(tariffPlan, request) {
 
@@ -240,7 +244,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 
 				//entity.setIsDefault(entity.is_default());
 
-				return tariffPlanService.createOne(getSubscriberParam(), entity);
+				return tariffPlanService.createOne(portalUserIdsService.getCurrentIds(), entity);
 			}
 
 		};
@@ -279,7 +283,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getTariffPlanContObjects(@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService.selectTariffPlanContObjects(tariffPlanId,
-				currentSubscriberService.getSubscriberId());
+			portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
 	}
@@ -294,7 +298,7 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	public ResponseEntity<?> getTariffPlanAvailableContObjects(@PathVariable("tariffPlanId") long tariffPlanId) {
 
 		List<ContObject> contObjectList = tariffPlanService.selectTariffPlanAvailableContObjects(tariffPlanId,
-				currentSubscriberService.getSubscriberId());
+				portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		return ResponseEntity.ok(contObjectList);
 	}
@@ -305,8 +309,8 @@ public class TariffPlanController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/rsoOrganizations", method = RequestMethod.GET)
 	public ResponseEntity<?> getRsoOrganizations() {
-		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(getSubscriberParam());
-		List<OrganizationDTO> resultList = currentSubscriberService.isSystemUser() ? rsOrganizations
+		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
+		List<OrganizationDTO> resultList = portalUserIdsService.isSystemUser() ? rsOrganizations
 				: rsOrganizations;
 		return ApiResponse.responseOK(resultList);
 	}

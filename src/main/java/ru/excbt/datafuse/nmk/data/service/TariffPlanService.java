@@ -167,15 +167,15 @@ public class TariffPlanService implements SecuredRoles {
 		return tariffPlanRepository.save(tariffPlan);
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @param tariffPlan
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @param tariffPlan
+     * @return
+     */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
-	public TariffPlan createOne(SubscriberParam subscriberParam, TariffPlan tariffPlan) {
+	public TariffPlan createOne(PortalUserIds portalUserIds, TariffPlan tariffPlan) {
 
 		checkNotNull(tariffPlan);
 		checkArgument(tariffPlan.isNew());
@@ -185,7 +185,7 @@ public class TariffPlanService implements SecuredRoles {
 		checkNotNull(tariffPlan.getRso(), "rso is NULL");
 
 		if (Boolean.TRUE.equals(tariffPlan.getIsDefault())) {
-			setOtherInactive(subscriberParam, null, tariffPlan.getRso().getId(), tariffPlan.getTariffType().getId());
+			setOtherInactive(portalUserIds, null, tariffPlan.getRso().getId(), tariffPlan.getTariffType().getId());
 		}
 
 		return tariffPlanRepository.save(tariffPlan);
