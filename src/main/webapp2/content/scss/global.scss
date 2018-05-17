@@ -254,3 +254,7 @@ $alt-theme: mat-light-theme($alt-primary, $alt-accent);
     min-height: 360px;
     margin-top: 10px;
 }
+
+md-icon{
+    font-family: 'Material Icons' !important;
+}
