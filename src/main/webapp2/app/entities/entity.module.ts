@@ -54,6 +54,8 @@ import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
 import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
 import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-chart-widget.component';
 import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-dashboard.component';
+import { ContObjectAccessService } from './cont-object-access/cont-object-access.service';
+import { ContObjectAccessManageComponent } from './cont-object-access/cont-object-access-manage.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -101,7 +103,8 @@ import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-da
         SubscrUserEditComponent,
         SubscrUsersWidgetComponent,
         StTemperatureChartWidgetComponent,
-        SubscrAccessDashboardComponent
+        SubscrAccessDashboardComponent,
+        ContObjectAccessManageComponent
     ],
     entryComponents: [
     ],
@@ -113,6 +116,7 @@ import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-da
         PSubscriberCustomerService,
         PSubscriberPartnerService,
         SubscrUserService,
+        ContObjectAccessService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
