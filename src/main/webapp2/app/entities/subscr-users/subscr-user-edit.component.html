@@ -47,7 +47,7 @@
                             {{'subscrUsers.form.errors.passwordsNotEquals' | translate}}
                     </mat-error>
                 </mat-form-field>
-                <mat-form-field *ngIf="!entityForm.controls['newPassword']?.pristine" class="password-len">
+                <mat-form-field *ngIf="!newFlag && (!entityForm.controls['newPassword']?.pristine)" class="password-len">
                         <input matInput placeholder="{{'subscrUsers.edit.oldPassword' | translate}}" formControlName="oldPassword" type="password" required>
                 </mat-form-field>
                     
