@@ -1,8 +1,6 @@
 import {Organization} from './organization.model';
 import {OrganizationsService} from './organizations.service';
-import {catchError, finalize} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
+import { ExcPageParams } from '../../shared-blocks';
 import {ExcAbstractDataSource} from '../../shared-blocks';
 
 // ***************************************************************************

@@ -1,14 +1,11 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ExcEditFormComponent, ExcFormValue, ExcCustomValidators } from '../../shared-blocks';
 import { SubscrUser } from './subscr-user.model';
 import { SubscrUserService } from './subscr-user.service';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormControl, AbstractControl } from '@angular/forms';
 import { MatSlideToggleChange } from '@angular/material';
-import { debounceTime } from 'rxjs/operators';
-import { distinctUntilChanged } from 'rxjs/operators';
-import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 
 @Component({
     selector: 'jhi-subscr-user-edit',

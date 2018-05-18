@@ -1,7 +1,7 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
+import { ExcPage, ExcPageParams } from '../../shared-blocks';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 

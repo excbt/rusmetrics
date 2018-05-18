@@ -15,8 +15,6 @@ import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
   })
 export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> implements OnInit, OnDestroy {
 
-    private headerSubscription: Subscription;
-
     private routeUrlSubscription: Subscription;
     private formInitializer: PSubscriberFormInitializer;
 
@@ -54,6 +52,13 @@ export class PSubscriberEditComponent extends ExcEditFormComponent<PSubscriber> 
                 }
             });
         }
+
+    ngOnDestroy() {
+        if (this.routeUrlSubscription) {
+            this.routeUrlSubscription.unsubscribe();
+        }
+        super.ngOnDestroy();
+    }
 
     createForm(data: PSubscriber): FormGroup {
         return this.formInitializer.createForm(data);

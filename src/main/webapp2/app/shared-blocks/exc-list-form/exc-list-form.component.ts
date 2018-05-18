@@ -48,7 +48,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   pageSizeOptions = defaultPageSizeOptions;
 
   constructor(
-    private params: ExcListFormParams,
+    readonly params: ExcListFormParams,
     readonly router: Router,
     readonly activatedRoute: ActivatedRoute,
   ) {

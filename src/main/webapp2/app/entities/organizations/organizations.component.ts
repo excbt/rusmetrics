@@ -1,21 +1,7 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-// import { MatSort } from '@angular/material';
-// import { MatPaginator } from '@angular/material/paginator';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization, organizationModification } from './organization.model';
-// import { merge } from 'rxjs/observable/merge';
-// import { ExcPageSize, ExcPageSorting } from '../../shared-blocks';
-// import { defaultPageSize, defaultPageSizeOptions } from '../../shared-blocks';
-// import {
-//     // debounceTime,
-//     distinctUntilChanged,
-//     // startWith,
-//     tap
-//     // , delay
-// } from 'rxjs/operators';
-// import { SelectionModel } from '@angular/cdk/collections';
-// import { ExcListFormMenuComponent } from '../../shared-blocks';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { Subscription } from 'rxjs';
@@ -27,12 +13,10 @@ import { Principal } from '../../shared';
   templateUrl: './organizations.component.html',
   styleUrls: ['./organizations.component.scss', '../blocks/list-form.scss']
 })
-export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnInit, OnDestroy, AfterViewInit {
+export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnDestroy, AfterViewInit {
 
   private masterColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
   private subscrColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
-
-  private account: Account;
 
   displayedColumns = this.subscrColumns;
 
@@ -54,10 +38,6 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
 
   getDataSourceProvider(): ExcListDatasourceProvider<Organization>  {
     return {getDataSource: () => new OrganizationsDataSource(this.organizationService, this.subscriberMode)};
-  }
-
-  ngOnInit() {
-    super.ngOnInit();
   }
 
   ngOnDestroy() {

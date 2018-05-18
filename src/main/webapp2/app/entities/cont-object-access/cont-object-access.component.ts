@@ -1,10 +1,9 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ContObjectAccessService } from './cont-object-access.service';
-import { Principal } from '../../shared';
+// import { Principal } from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
-import { DataSource } from '@angular/cdk/table';
 import { ContObjectAccess } from './cont-object-access.model';
-import { ExcAbstractDataSource, ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent } from '../../shared-blocks';
+import { ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent } from '../../shared-blocks';
 import { ContObjectAccessDataSource } from './cont-object-access.datasource';
 import { TreeNode } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
@@ -31,10 +30,10 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
     private searchString: string;
-    private devMode = true;
+    public devMode = true;
 
     constructor(private contObjectAccessService: ContObjectAccessService,
-        private principal: Principal,
+        // private principal: Principal,
         router: Router,
         activatedRoute: ActivatedRoute) { }
 

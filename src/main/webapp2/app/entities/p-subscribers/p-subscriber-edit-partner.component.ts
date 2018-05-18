@@ -4,7 +4,7 @@ import { PSubscriber } from './p-subscriber.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { PSubscriberService, PSubscriberPartnerService } from './p-subscriber.service';
+import { PSubscriberPartnerService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
 import { MatSlideToggleChange } from '@angular/material';
@@ -17,8 +17,6 @@ import { TimezoneDef } from '../timezoneDef/timezoneDef.model';
     styleUrls: ['../blocks/form-edit.scss']
   })
 export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubscriber> implements OnInit, OnDestroy {
-
-    private headerSubscription: Subscription;
 
     private routeUrlSubscription: Subscription;
     private formInitializer: PSubscriberFormInitializer;
@@ -33,7 +31,7 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
         router: Router,
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
-        private service: PSubscriberPartnerService,
+        service: PSubscriberPartnerService,
         private timezoneDefService: TimezoneDefService) {
             super(
                 {   modificationEventName: 'pSubscriberPartnerModification',
@@ -54,6 +52,13 @@ export class PSubscriberEditPartnerComponent extends ExcEditFormComponent<PSubsc
             });
 
             this.timezoneDefService.findAll().subscribe((data) => this.timezoneDefOptions = data);
+    }
+
+    ngOnDestroy() {
+        if (this.routeUrlSubscription) {
+            this.routeUrlSubscription.unsubscribe();
+        }
+        super.ngOnDestroy();
     }
 
     createForm(data: PSubscriber): FormGroup {

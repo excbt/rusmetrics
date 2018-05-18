@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, AfterViewInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { Organization } from './organization.model';
 import { OrganizationsService } from './organizations.service';
-import { ExcPageSize, ExcPageSorting, ExcPage } from '../../shared-blocks';
-import { FormControl, AbstractControl } from '@angular/forms';
+import { ExcPageSize, ExcPageSorting } from '../../shared-blocks';
+import { FormControl } from '@angular/forms';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { map, flatMap, startWith, distinctUntilChanged, tap, debounceTime } from 'rxjs/operators';
+import { flatMap, startWith, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
-import { MatAutocompleteSelectedEvent, MatAutocompleteTrigger } from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

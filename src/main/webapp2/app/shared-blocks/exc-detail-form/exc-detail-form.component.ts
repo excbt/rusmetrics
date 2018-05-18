@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy} from '@angular/core';
+import { OnInit, OnDestroy} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Subscription, BehaviorSubject } from 'rxjs/Rx';
@@ -62,7 +62,9 @@ export abstract class ExcDetailFormComponent implements OnInit, OnDestroy {
     }
 
     navigateBack() {
-        this.router.navigate(['organizations']);
+        if (this.params && this.params.backUrl) {
+            this.router.navigate([this.params.backUrl]);
+        }
     }
 
 }
