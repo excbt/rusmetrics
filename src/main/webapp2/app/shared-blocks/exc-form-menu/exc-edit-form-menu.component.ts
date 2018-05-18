@@ -10,6 +10,7 @@ import { ExcAbstractMenuComponent } from './exc-abstract-menu.component';
 })
 export class ExcEditFormMenuComponent extends ExcAbstractMenuComponent implements OnInit {
   @Input() headerKey: string;
+  @Input() reportEnabled: boolean;
   @Input() createEnabled: boolean;
   @Output() saveAction: EventEmitter<any> = new EventEmitter();
   @Output() createAction: EventEmitter<any> = new EventEmitter();

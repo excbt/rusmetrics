@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -19,6 +20,11 @@ import java.time.ZonedDateTime;
 @Setter
 @IdClass(ContObjectAccess.PK.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@NamedEntityGraphs({
+    @NamedEntityGraph(name="ContObjectAccess.contObjectJoins", attributeNodes = {
+        @NamedAttributeNode("contObject")
+    })
+})
 public class ContObjectAccess {
 
     @Getter
@@ -92,10 +98,12 @@ public class ContObjectAccess {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "subscriber_id", insertable = false, updatable = false)
+    @BatchSize(size = 10)
     private Subscriber subscriber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cont_object_id", insertable = false, updatable = false)
+    @BatchSize(size = 10)
     private ContObject contObject;
 
     public ContObjectAccess subscriberId(Long subscriberId) {

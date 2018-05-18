@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.service.util.FlexDataFactory;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.OrganizationService;
+import ru.excbt.datafuse.nmk.service.SubscriberAccessService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;

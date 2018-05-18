@@ -46,6 +46,12 @@
             },
             "operator": {
                 "title": "Оператор"
+            },
+            "subscrAccess": {
+                "title": "Управление доступом"
+            },
+            "settings": {
+                "title": "Настройки"
             }
         },
         "form": {

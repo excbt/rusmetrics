@@ -1,8 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
-import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams, ExcApiParams } from './';
+import { ExcPage, ExcPageParams, ExcApiParams } from './';
 import { ExcEditFormEntityProvider } from '..';
 
 export interface ServiceParams {
@@ -21,6 +20,12 @@ export class ExcAbstractService<T> {
 
     findPage(pageParams: ExcPageParams, pageSuffix: string = defaultPageSuffix): Observable<ExcPage<T>> {
         return this.http.get<ExcPage<T>>(this.resourceUrl + pageSuffix, {
+            params : this.defaultPageParams(pageParams)
+        } );
+    }
+
+    findPageUrl(subUrl: string, pageParams: ExcPageParams, pageSuffix: string = defaultPageSuffix): Observable<ExcPage<T>> {
+        return this.http.get<ExcPage<T>>(this.resourceUrl + subUrl + pageSuffix, {
             params : this.defaultPageParams(pageParams)
         } );
     }

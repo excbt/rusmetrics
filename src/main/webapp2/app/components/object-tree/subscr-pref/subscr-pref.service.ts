@@ -5,7 +5,8 @@ import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from '../../../app.constants';
 
-import { SubscrPref, SubscrPrefValue } from './';
+import { // SubscrPref,
+    SubscrPrefValue } from './';
 
 @Injectable()
 export class SubscrPrefService {

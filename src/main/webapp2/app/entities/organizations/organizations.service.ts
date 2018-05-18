@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
-import { SERVER_API_URL } from '../../app.constants';
 import { Organization } from './organization.model';
-import { ExcPageSize, ExcPageSorting, ExcPage, ExcPageParams } from '../../shared-blocks';
-import { ExcEditFormEntityProvider } from '../../shared-blocks';
-import { ExcDetailFormEntityProvider } from '../../shared-blocks/exc-detail-form/exc-detail-form.component';
+import { ExcPage, ExcPageParams } from '../../shared-blocks';
 import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
 @Injectable()

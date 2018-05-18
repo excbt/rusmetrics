@@ -55,7 +55,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "cont_object_id", insertable = false, updatable = false)
 	private Long contObjectId;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "cont_service_type")
 	private ContServiceType contServiceType;
 
@@ -77,6 +77,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinTable(name = "cont_zpoint_device", joinColumns = @JoinColumn(name = "cont_zpoint_id"),
 			inverseJoinColumns = @JoinColumn(name = "device_object_id"))
+    @BatchSize(size = 10)
 	private DeviceObject deviceObject;
 
 	@Version
@@ -123,7 +124,7 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Column(name = "is_drools_disable")
 	private Boolean isDroolsDisable;
 
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "temperature_chart_id")
 	private TemperatureChart temperatureChart;
 

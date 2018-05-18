@@ -1,7 +1,7 @@
 export class TimezoneDef {
     constructor(
-        private keyname: string,
-        private timezoneName: string,
-        private timezoneSuffix: string
+        public keyname: string,
+        public timezoneName: string,
+        public timezoneSuffix: string
     ) {}
 }

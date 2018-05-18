@@ -1,11 +1,18 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import com.querydsl.core.types.Predicate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.support.ObjectAccessRI;
 
 import java.time.LocalDateTime;
@@ -17,7 +24,9 @@ import java.util.Optional;
 /**
  * Created by kovtonyk on 28.06.2017.
  */
-public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK>, ObjectAccessRI<ContObjectAccess> {
+@Repository
+public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK>, ObjectAccessRI<ContObjectAccess>,
+    QueryDslPredicateExecutor<ContObjectAccess> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a " +
         " WHERE a.accessTtl IS NULL")
@@ -38,6 +47,7 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         " AND a.accessTtl IS NULL")
     Optional<Long> findByPK(@Param("subscriberId") Long subscriberId, @Param("contObjectId") Long contObjectId);
 
+    @EntityGraph(value = "ContObjectAccess.contObjectJoins", type = EntityGraph.EntityGraphType.LOAD)
     List<ContObjectAccess> findBySubscriberId (Long subscriberId);
 
     /// Queries for ContObject
