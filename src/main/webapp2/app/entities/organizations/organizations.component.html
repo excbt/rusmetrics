@@ -2,12 +2,12 @@
     <!-- <jhi-form-search></jhi-form-search>     -->
 
     <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscrTitle" 
-        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="false"
+        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="true"
         (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 
     <jhi-exc-list-form-menu *ngIf="!subscriberMode" headerKey="organizations.masterTitle" 
-        [createEnabled]="false" [propertiesEnabled]="true" [reportEnabled]="false"
+        [createEnabled]="false" [propertiesEnabled]="true" [reportEnabled]="true"
         (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 

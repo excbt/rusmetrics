@@ -26,7 +26,9 @@ import {
   MatIconModule,
   MatCheckboxModule,
   MatAutocompleteModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatToolbarModule,
+  MatListModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -56,6 +58,8 @@ import { TreeTableModule } from 'primeng/treetable';
       MatCheckboxModule,
       MatAutocompleteModule,
       MatSlideToggleModule,
+      MatToolbarModule,
+      MatListModule,
       // PRIME NG
       CardModule,
       InputTextModule,

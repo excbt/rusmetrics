@@ -25,7 +25,8 @@ import {
     MatCheckboxModule,
     ErrorStateMatcher,
     ShowOnDirtyErrorStateMatcher,
-    MatAutocompleteModule} from '@angular/material';
+    MatAutocompleteModule,
+    MatToolbarModule} from '@angular/material';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatPaginatorIntl } from '@angular/material';

@@ -1,5 +1,11 @@
-<p-menubar styleClass="menu1" [model]="menuItems" [autoDisplay]="true">
-    <div class="menu1-header" >
-            <span>{{headerKey | translate}}</span>
-    </div>
-</p-menubar>
+<mat-toolbar class="menu1-toolbar">
+        <button *ngIf="reportEnabled" mat-icon-button (click)="reportAction.next()">
+            <mat-icon mat-list-icon>save_alt</mat-icon>
+        </button>
+        <button *ngIf="createEnabled" mat-icon-button (click)="createAction.next()">
+            <mat-icon mat-list-icon>add</mat-icon>
+        </button>
+        &nbsp;
+        <span class="menu1-header-toolbar">{{headerKey | translate}}</span>
+        <span class="spacer"></span>
+</mat-toolbar>
