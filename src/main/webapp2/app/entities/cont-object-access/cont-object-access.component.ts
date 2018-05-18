@@ -3,7 +3,7 @@ import { ContObjectAccessService } from './cont-object-access.service';
 // import { Principal } from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ContObjectAccess } from './cont-object-access.model';
-import { ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent } from '../../shared-blocks';
+import { ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent, defaultPageSizeOptions } from '../../shared-blocks';
 import { ContObjectAccessDataSource } from './cont-object-access.datasource';
 import { TreeNode } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
@@ -27,6 +27,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     displayedColumns = ['contObjectId', 'contObjectName', 'contObjectFullAddress', 'contObjectManage'];
     totalElements: number;
     pageSize = defaultPageSize;
+
+    pageSizeOptions = defaultPageSizeOptions;
 
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
     private searchString: string;

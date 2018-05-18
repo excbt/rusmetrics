@@ -1,7 +1,7 @@
 <jhi-exc-form-template>
     <!-- <jhi-exc-top-header headerString="{{ 'organization.edit.title' | translate }}" headerId="{{entityId?.id}}"></jhi-exc-top-header> -->
     <jhi-exc-edit-form-menu [createEnabled]="true" [viewEnabled]="true" [reportEnabled]="false"
-    (createAction)="navigateNew()" (propertiesAction)="navigateEdit()" headerKey="{{ menuHeaderKey }}">
+    (createAction)="navigateNew()" headerKey="{{ menuHeaderKey }}">
 </jhi-exc-edit-form-menu>
 
 <br>
@@ -38,7 +38,6 @@
                 <mat-slide-toggle
                     checked="{{ entityForm.controls['canCreateChild'] && entityForm.controls['canCreateChild'].value }}"
                     labelPosition="before"
-                    [color]="Primary"
                     (change) ="canCreateChildToggle($event)">
                     {{'subscriber.canCreateChild' | translate}}
                 </mat-slide-toggle>                        
@@ -50,7 +49,7 @@
 </div>
 <!-- FORM BUTTONS -->
 <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
-(backAction)="navigateBack()" [deleteDisabled]="entity?.isCommon || !entity?.id"></jhi-exc-edit-buttons>            
+(backAction)="navigateBack()" [deleteDisabled]="!entity?.id"></jhi-exc-edit-buttons>            
 </form>
 </div>
 </jhi-exc-form-template>        
