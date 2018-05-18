@@ -1,0 +1,12 @@
+{
+    "subscrAccess": {
+        "contObject": {
+            "title": "Объект учета"
+        },
+        "contZPoint": {
+            "title": "Точка учета",
+            "contServiceType": "Тип ресурса"
+
+        }
+    }
+}

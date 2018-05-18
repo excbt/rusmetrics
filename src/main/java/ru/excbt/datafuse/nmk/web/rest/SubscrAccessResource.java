@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.ContObjectAccessService;
 import ru.excbt.datafuse.nmk.service.dto.ContObjectAccessDTO;
+import ru.excbt.datafuse.nmk.service.dto.ContZPointAccessDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 
@@ -56,8 +57,18 @@ public class SubscrAccessResource {
     public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Optional<Long> subscriberId,
                                                  @RequestParam(name = "searchString", required = false) Optional<String> searchString,
                                                  Pageable pageable) {
-        Page<ContObjectAccessDTO> contObjectAccessDTOS = contObjectAccessService.getContObjectAccess(portalUserIdsService.getCurrentIds(), searchString, pageable);
+        Page<ContObjectAccessDTO> contObjectAccessDTOS = contObjectAccessService.getContObjectAccessPage(portalUserIdsService.getCurrentIds(), searchString, pageable);
         return ResponseEntity.ok(contObjectAccessDTOS);
     }
+
+    @GetMapping("/cont-zpoints")
+    @Timed
+    @ApiOperation("")
+    public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Optional<Long> subscriberId,
+                                            @RequestParam(name = "contObjectId") Long contObjectId) {
+        List<ContZPointAccessDTO> contZPointAccessDTOS = contObjectAccessService.getContZPointAccess(portalUserIdsService.getCurrentIds(),contObjectId);
+        return ResponseEntity.ok(contZPointAccessDTOS);
+    }
+
 
 }

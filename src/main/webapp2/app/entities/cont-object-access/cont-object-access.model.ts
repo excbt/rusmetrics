@@ -12,4 +12,5 @@ export class ContObjectAccess {
 //          public accessTtl: null,        // Время, до которого будет предоставлен доступ
 //          public accessTtlTz: null,        // Время, до которого будет предоставлен доступ
     ) { }
+
 }

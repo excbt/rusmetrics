@@ -1,3 +1,56 @@
 <div>
     <h1>Access</h1>
+
+    <!-- <mat-table class="list-form-table" #table [dataSource]="dataSource" >
+        <ng-container matColumnDef="contObjectId">
+            <mat-header-cell *matHeaderCellDef class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" class="id-column-width"> {{contObjectAccess.contObjectId}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectName">
+                <mat-header-cell *matHeaderCellDef > contObjectName </mat-header-cell>
+                <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectName}} </mat-cell>
+            </ng-container>        
+    
+        <ng-container matColumnDef="contObjectFullName">
+            <mat-header-cell *matHeaderCellDef > contObjectFullName </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullName}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectFullAddress">
+            <mat-header-cell *matHeaderCellDef > contObjectFullAddress </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullAddress}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectManage">
+                <mat-header-cell *matHeaderCellDef > contObjectManage </mat-header-cell>
+                <mat-cell *matCellDef="let contObjectAccess" > 
+                        <mat-list>
+                        <mat-list-item> Pepper </mat-list-item>
+                        <mat-list-item> Salt </mat-list-item>
+                        <mat-list-item> Paprika </mat-list-item>
+                        </mat-list>
+                </mat-cell>
+        </ng-container>        
+    
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+        
+    </mat-table> -->
+
+    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
+            <p-column header="{{'subscrAccess.contObject.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contObjectFullName">{{node.data.contObjectFullName}}</span>
+                </ng-template>
+            </p-column>               
+            <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
+                </ng-template>
+             </p-column>               
+    </p-treeTable>
+
+
 </div>

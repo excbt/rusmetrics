@@ -25,6 +25,12 @@ export class ExcAbstractService<T> {
         } );
     }
 
+    findPageUrl(subUrl: string, pageParams: ExcPageParams, pageSuffix: string = defaultPageSuffix): Observable<ExcPage<T>> {
+        return this.http.get<ExcPage<T>>(this.resourceUrl + subUrl + pageSuffix, {
+            params : this.defaultPageParams(pageParams)
+        } );
+    }
+
     findAll(): Observable<T[]> {
         return this.http.get<T[]>(this.resourceUrl);
     }

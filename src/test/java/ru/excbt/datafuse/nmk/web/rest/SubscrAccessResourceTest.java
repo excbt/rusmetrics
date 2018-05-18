@@ -75,4 +75,11 @@ public class SubscrAccessResourceTest extends PortalApiTest {
     public void testGetContObjectsPage() throws Exception {
         mockMvcRestWrapper.restRequest("/api/subscr-access/cont-objects/page").testGet();
     }
+
+    @Test
+    public void testGetZPointAccess() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-access/cont-zpoints")
+            .requestBuilder(b -> b.param("contObjectId", "18811505")).testGet();
+    }
+
 }
