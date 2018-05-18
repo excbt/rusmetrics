@@ -1,6 +1,6 @@
 import { CollectionViewer, DataSource, } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
-import { PTreeNode } from './p-tree-node.model';
+// import { PTreeNode } from './p-tree-node.model';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
 import { PTreeNodeLinkedObject } from './p-tree-node.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';

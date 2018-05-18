@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { switchMap } from 'rxjs/operators';
+// import { switchMap } from 'rxjs/operators';
 import { JhiEventManager } from 'ng-jhipster';
 
 @Component({

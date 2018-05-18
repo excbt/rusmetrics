@@ -38,9 +38,9 @@ export class TreeNodeColorStatusComponent implements OnInit {
     private chartBgColors: string[];
     private chartLabels: string[];
     public resources: string[];
-    private statusKeynames: string[];
+    public statusKeynames: string[];
 
-    private doughuntOpts: any = {
+    public doughuntOpts: any = {
         responsive: false,
         cutoutPercentage: 80,
         legend: {

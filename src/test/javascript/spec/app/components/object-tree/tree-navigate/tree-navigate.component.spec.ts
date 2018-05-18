@@ -1,6 +1,6 @@
-import { TestBed, async, tick, fakeAsync, inject } from '@angular/core/testing';
+import { TestBed, async} from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 
 import { JhipsterTestModule } from '../../../../test.module';
 import { MockActivatedRoute } from '../../../../helpers/mock-route.service';
@@ -11,7 +11,7 @@ describe('Component Tests', () => {
 
     describe('TreeNavigateComponent', () => {
 
-        let comp: TreeNavigateComponent;
+        // let comp: TreeNavigateComponent;
 
         beforeEach(async(() => {
             TestBed.configureTestingModule({
@@ -30,8 +30,8 @@ describe('Component Tests', () => {
         }));
 
         beforeEach(() => {
-            const fixture = TestBed.createComponent(TreeNavigateComponent);
-            comp = fixture.componentInstance;
+            // const fixture = TestBed.createComponent(TreeNavigateComponent);
+            // comp = fixture.componentInstance;
         });
 
         // it('calls activate.get with the key from params',
