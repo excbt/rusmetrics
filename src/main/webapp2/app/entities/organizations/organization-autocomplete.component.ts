@@ -112,7 +112,7 @@ export class OrganizationAutocompleteComponent implements AfterViewInit {
 
     formatOrganization(org: Organization): string {
         const inn = this.formatOrganizationInn(org);
-        return org ? (org.organizationName + inn) : 'N/A';
+        return org ? (org.organizationName + inn) : '';
     }
 
     formatOrganizationInn(org: Organization): string {
