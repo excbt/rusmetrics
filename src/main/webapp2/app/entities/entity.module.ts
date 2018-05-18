@@ -55,7 +55,7 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
 import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-chart-widget.component';
 import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-dashboard.component';
 import { ContObjectAccessService } from './cont-object-access/cont-object-access.service';
-import { ContObjectAccessManageComponent } from './cont-object-access/cont-object-access-manage.component';
+import { ContObjectAccessComponent } from './cont-object-access/cont-object-access.component';
 import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manage.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
@@ -106,7 +106,7 @@ import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manag
         StTemperatureChartWidgetComponent,
         SubscrAccessDashboardComponent,
         SubscrAccessManageComponent,
-        ContObjectAccessManageComponent
+        ContObjectAccessComponent
     ],
     entryComponents: [
     ],

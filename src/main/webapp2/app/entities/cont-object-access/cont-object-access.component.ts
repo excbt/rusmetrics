@@ -4,21 +4,22 @@ import { Principal } from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DataSource } from '@angular/cdk/table';
 import { ContObjectAccess } from './cont-object-access.model';
-import { ExcAbstractDataSource, ExcPageSorting, ExcPageSize, defaultPageSize } from '../../shared-blocks';
+import { ExcAbstractDataSource, ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent } from '../../shared-blocks';
 import { ContObjectAccessDataSource } from './cont-object-access.datasource';
 import { TreeNode } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
 import { merge } from 'rxjs/observable/merge';
-import { tap } from 'rxjs/operators';
+import { tap, distinctUntilChanged } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material';
 
 @Component({
-    selector: 'jhi-cont-object-acceess-manage',
-    templateUrl: './cont-object-access-manage.component.html',
+    selector: 'jhi-cont-object-access',
+    templateUrl: './cont-object-access.component.html',
     styles: ['../blocks/list-form.scss']
 })
-export class ContObjectAccessManageComponent implements OnInit, AfterViewInit {
+export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
     objectAccess: TreeNode[];
 
@@ -29,6 +30,8 @@ export class ContObjectAccessManageComponent implements OnInit, AfterViewInit {
     pageSize = defaultPageSize;
 
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
+    private searchString: string;
+    private devMode = true;
 
     constructor(private contObjectAccessService: ContObjectAccessService,
         private principal: Principal,
@@ -47,12 +50,22 @@ export class ContObjectAccessManageComponent implements OnInit, AfterViewInit {
     // Add 'implements AfterViewInit' to the class.
     // on sort or paginate events, load a new page
 
-    merge(this.paginator.page).pipe(
-        tap(() => {
-          this.loadList();
-          console.log('from change');
-        })
-    ).subscribe();
+        if (this.formMenu && this.formMenu.searchAction) {
+            this.formMenu.searchAction.pipe(
+            distinctUntilChanged(),
+            tap((arg) => {
+                this.paginator.pageIndex = 0;
+                this.loadList(arg);
+                this.searchString = arg;
+            })
+            ).subscribe();
+        }
+
+        merge(this.paginator.page).pipe(
+            tap(() => {
+                this.loadList(this.searchString);
+            })
+        ).subscribe();
 
     }
 

@@ -3,7 +3,9 @@
         "title": "Управление доступом к объектам учета",
         "listTitle": "Список объектов учета",
         "contObject": {
-            "title": "Объект учета"
+            "title": "Объект учета",
+            "contObjectName": "Имя",
+            "contObjectFullAddress": "Адрес"
         },
         "contZPoint": {
             "title": "Точка учета",

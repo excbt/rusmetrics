@@ -1,24 +1,35 @@
 
 <div>
-    
-    <h1>{{'subscrAccess.listTitle' | translate}}</h1>
-    <div>
-        <span>Поиск</span>
-        <input class="search1" type="text" pInputText #input>
-    </div>
-    
+    <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
+    </jhi-exc-list-form-menu>
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
 
     <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
             <!-- ContObjectAccess -->
             <p-column header="{{'subscrAccess.contObject.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contObjectFullName">{{node.data.contObjectFullName}}</span>
+                    <span *ngIf="node.data.contObjectId">{{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}</span>
+                    <div>
+                        <small *ngIf="node.data.contObjectId && devMode"><i>{{'global.field.id' | translate}}:</i>
+                            {{node.data.contObjectId}} &nbsp;</small>
+                        
+                        <small *ngIf="node.data.contObjectFullAddress"><i>{{'subscrAccess.contObject.contObjectFullAddress' | translate}}:</i>
+                            {{node.data.contObjectFullAddress}}</small>
+    
+                    </div>
                 </ng-template>
             </p-column>               
             <!-- ContZPointAccess -->
             <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
+                    <small *ngIf="node.data.contZPointId && devMode"><i>{{'global.field.id' | translate}}:</i>
+                        {{node.data.contZPointId}}</small>
                     <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
+                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>(
+                        {{node.data.contServiceTypeKeyname}})</i></small>
+                    
                 </ng-template>
             </p-column>               
             <p-column header="{{'subscrAccess.contZPoint.contZPointTsNumber' | translate}}">
@@ -33,8 +44,6 @@
                 </ng-template>
             </p-column>               
     </p-treeTable>
-    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
 
 
 </div>
