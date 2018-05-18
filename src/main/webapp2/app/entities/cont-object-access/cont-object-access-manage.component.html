@@ -1,5 +1,43 @@
+
 <div>
-    <h1>Access</h1>
+    
+    <h1>{{'subscrAccess.listTitle' | translate}}</h1>
+    <div>
+        <span>Поиск</span>
+        <input class="search1" type="text" pInputText #input>
+    </div>
+    
+
+    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
+            <!-- ContObjectAccess -->
+            <p-column header="{{'subscrAccess.contObject.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contObjectFullName">{{node.data.contObjectFullName}}</span>
+                </ng-template>
+            </p-column>               
+            <!-- ContZPointAccess -->
+            <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
+                </ng-template>
+            </p-column>               
+            <p-column header="{{'subscrAccess.contZPoint.contZPointTsNumber' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span>
+                </ng-template>
+            </p-column>               
+            <!-- Access -->
+            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
+                </ng-template>
+            </p-column>               
+    </p-treeTable>
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+
+
+</div>
 
     <!-- <mat-table class="list-form-table" #table [dataSource]="dataSource" >
         <ng-container matColumnDef="contObjectId">
@@ -38,19 +76,3 @@
         <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
         
     </mat-table> -->
-
-    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
-            <p-column header="{{'subscrAccess.contObject.title' | translate}}">
-                <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contObjectFullName">{{node.data.contObjectFullName}}</span>
-                </ng-template>
-            </p-column>               
-            <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
-                <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
-                </ng-template>
-             </p-column>               
-    </p-treeTable>
-
-
-</div>

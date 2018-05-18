@@ -9,7 +9,7 @@ import {
  } from './organizations/organizations.route';
 import { pSubscrPartnerRoute, pSubscrCustomerRoute, pSubscrPartnerEditRoute, pSubscrCustomerEditRoute } from './p-subscribers/p-subscribers.route';
 import { subscrUsersRoute, subscrUserEditRoute } from './subscr-users/subscr-users.route';
-import { subscrAccessDashboardRoute } from './subscr-access/subscr-access.route';
+import { subscrAccessDashboardRoute, subscrAccessManageRoute } from './subscr-access/subscr-access.route';
 
 const ENTITY_ROUTES = [
     organizationsRoute,
@@ -24,7 +24,8 @@ const ENTITY_ROUTES = [
     pSubscrCustomerEditRoute,
     subscrUsersRoute,
     subscrUserEditRoute,
-    subscrAccessDashboardRoute
+    subscrAccessDashboardRoute,
+    subscrAccessManageRoute
 ];
 
 export const entityState: Routes = [{

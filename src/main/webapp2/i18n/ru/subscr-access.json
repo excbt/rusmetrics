@@ -1,12 +1,17 @@
 {
     "subscrAccess": {
+        "title": "Управление доступом к объектам учета",
+        "listTitle": "Список объектов учета",
         "contObject": {
             "title": "Объект учета"
         },
         "contZPoint": {
             "title": "Точка учета",
-            "contServiceType": "Тип ресурса"
+            "contServiceType": "Тип ресурса",
+            "contZPointTsNumber": "Номер теплосистемы"
 
-        }
+        },
+        "accessColumn": "Доступ"
     }
+    
 }

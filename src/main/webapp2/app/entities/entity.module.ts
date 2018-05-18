@@ -56,6 +56,7 @@ import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-cha
 import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-dashboard.component';
 import { ContObjectAccessService } from './cont-object-access/cont-object-access.service';
 import { ContObjectAccessManageComponent } from './cont-object-access/cont-object-access-manage.component';
+import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manage.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -104,6 +105,7 @@ import { ContObjectAccessManageComponent } from './cont-object-access/cont-objec
         SubscrUsersWidgetComponent,
         StTemperatureChartWidgetComponent,
         SubscrAccessDashboardComponent,
+        SubscrAccessManageComponent,
         ContObjectAccessManageComponent
     ],
     entryComponents: [
