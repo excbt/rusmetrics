@@ -18,9 +18,15 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
         );
     }
 
-    findContObjectsPage(pageParams: ExcPageParams): Observable<ExcPage<ContObjectAccess>> {
+    findContObjectsPage(subscriberId: number, pageParams: ExcPageParams): Observable<ExcPage<ContObjectAccess>> {
+
+        let myParams: HttpParams = this.defaultPageParams(pageParams);
+        if (subscriberId) {
+            myParams = myParams.set('subscriberId', subscriberId.toString());
+        }
+
         return this.http.get<ExcPage<ContObjectAccess>>(this.resourceUrl + 'cont-objects/page', {
-            params : this.defaultPageParams(pageParams)
+            params : myParams
         } );
     }
 

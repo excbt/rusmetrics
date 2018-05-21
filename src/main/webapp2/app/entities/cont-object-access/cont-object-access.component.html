@@ -3,8 +3,28 @@
     <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
     </jhi-exc-list-form-menu>
 
-    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+    <div [formGroup]="subscriberGroup" class="column-div">
+        <div class="column-div">
+            <mat-slide-toggle formControlName="subscriberSelectEnable">
+                {{'subscrAccess.subscriberSelectSlider' | translate}}
+            </mat-slide-toggle>
+            <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+            [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+        
+        </div>
+        <div class="column-div">
+            <mat-form-field *ngIf="subscriberSelectEnable.value" class="subscriber-search">
+                <mat-select placeholder="{{'subscrAccess.subscriberSelect' | translate}}" formControlName="subscriberSelect" >
+                    <mat-option>--</mat-option>
+                    <mat-option *ngFor="let subscriber of subscriberList" [value]="subscriber.id">
+                    {{subscriber.subscriberName}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+
+
 
     <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
             <!-- ContObjectAccess -->
@@ -68,8 +88,6 @@
                 </ng-template>
             </p-column>               
     </p-treeTable>
-
-    <p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>    
 
 </div>
 

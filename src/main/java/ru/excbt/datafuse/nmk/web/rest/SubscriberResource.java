@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -128,6 +129,14 @@ public class SubscriberResource {
 
         return resultVM.map(vm -> new ResponseEntity<>(vm, HttpStatus.OK))
             .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST)) ;
+    }
+
+    @GetMapping(value = "/manage-list")
+    public ResponseEntity<?> getSubscriberManageList() {
+
+        List<SubscriberVM> resultList = subscriberService.findSubscribersManageList(portalUserIdsService.getCurrentIds());
+
+        return ResponseEntity.ok(resultList);
     }
 
 }

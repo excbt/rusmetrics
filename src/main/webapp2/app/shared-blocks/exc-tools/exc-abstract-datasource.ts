@@ -55,4 +55,8 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
                 this.nextPage(page);
             });
     }
+
+    makeEmpty() {
+        this.nextPage(new ExcPage([], 0, 0, 0));
+    }
 }

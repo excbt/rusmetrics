@@ -9,7 +9,6 @@ import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
-import ru.excbt.datafuse.nmk.service.dto.ContObjectAccessDTO;
 import ru.excbt.datafuse.nmk.service.dto.ContZPointAccessDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointAccessMapper;
@@ -53,11 +52,11 @@ public class ContObjectAccessService {
             .or(qContObjectAccess.contObject().fullAddress.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)));
     }
 
-    private Page<ContObjectAccess> searchContObjectAccess(PortalUserIds portalUserIds,
+    private Page<ContObjectAccess> searchContObjectAccess(Long subscriberId,
                                                           Optional<String> searchStringOptional,
                                                           Pageable pageable) {
 
-        BooleanExpression subscriberFilter = qContObjectAccess.subscriberId.eq(portalUserIds.getSubscriberId());
+        BooleanExpression subscriberFilter = qContObjectAccess.subscriberId.eq(subscriberId);
 
 
         WhereClauseBuilder where = new WhereClauseBuilder()
@@ -71,20 +70,14 @@ public class ContObjectAccessService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ContObjectAccessDTO> getContObjectAccessPage(PortalUserIds portalUserIds,
-                                                         Optional<String> searchStringOptional,
-                                                         Pageable pageable) {
-
-        Page<ContObjectAccess> resultPage = searchContObjectAccess(portalUserIds, searchStringOptional, pageable);
-
-        return resultPage.map(contObjectAccessMapper::toDto);
-    }
-
-    @Transactional(readOnly = true)
     public Page<ContObjectAccessVM> getContObjectAccessVMPage(PortalUserIds portalUserIds,
+                                                              Optional<Long> optSubscriberId,
                                                               Optional<String> searchStringOptional,
                                                               Pageable pageable) {
-        Page<ContObjectAccess> accessPage = searchContObjectAccess(portalUserIds, searchStringOptional, pageable);
+
+        Long id = optSubscriberId.orElse(portalUserIds.getSubscriberId());
+
+        Page<ContObjectAccess> accessPage = searchContObjectAccess(id, searchStringOptional, pageable);
 
         Page<ContObjectAccessVM> accessVMPage = accessPage.map(contObjectAccessMapper::toVM);
 
@@ -171,9 +164,12 @@ public class ContObjectAccessService {
 
     @Transactional(readOnly = true)
     public List<ContZPointAccessVM> getContZPointAccessVM(PortalUserIds portalUserIds,
+                                                          Optional<Long> optSubscriberId,
                                                           Long contObjectId) {
 
-        List<ContZPointAccess> accesList = findContZPointAccess(portalUserIds.getSubscriberId(), contObjectId);
+        Long subscriberId = optSubscriberId.orElse(portalUserIds.getSubscriberId());
+
+        List<ContZPointAccess> accesList = findContZPointAccess(subscriberId, contObjectId);
         List<ContZPoint> zPointList = findAllContZPoints(contObjectId);
         List<Long> accessIds = accesList.stream().map(ContZPointAccess::getContZPointId).collect(Collectors.toList());
         List<ContZPointAccessVM> resultVMList = accesList.stream().map(contZPointAccessMapper::toVM).collect(Collectors.toList());;
@@ -182,7 +178,7 @@ public class ContObjectAccessService {
         zPointList.forEach(i -> {
             if (!accessIds.contains(i.getId())) {
                 ContZPointAccessVM availableAccess = new ContZPointAccessVM();
-                availableAccess.setSubscriberId(portalUserIds.getSubscriberId());
+                availableAccess.setSubscriberId(subscriberId);
                 availableAccess.setContZPointId(i.getId());
                 availableAccess.setContServiceTypeKeyname(i.getContServiceTypeKeyname());
                 availableAccess.setContZPointCustomServiceName(i.getCustomServiceName());

@@ -10,12 +10,10 @@ export class PSubscriberService extends ExcAbstractService<PSubscriber> {
 
     constructor(http: HttpClient) {
         super({apiUrl: 'api/subscribers/'}, http);
-     }
+    }
 
-     findPageMode(pageParams: ExcPageParams, subscriberMode: string): Observable<ExcPage<PSubscriber>> {
-        return this.http.get<ExcPage<PSubscriber>>(this.resourceUrl +  defaultPageSuffix, {
-            params : this.defaultPageParams(pageParams).set('subscriberMode', subscriberMode)
-        } );
+     findManageList(): Observable<PSubscriber[]> {
+        return this.http.get<PSubscriber[]>(this.resourceUrl +  'manage-list');
     }
 }
 

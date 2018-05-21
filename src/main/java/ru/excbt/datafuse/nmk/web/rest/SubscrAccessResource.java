@@ -56,19 +56,20 @@ public class SubscrAccessResource {
     @GetMapping("/cont-objects/page")
     @Timed
     @ApiOperation("")
-    public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Optional<Long> subscriberId,
+    public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Optional<Long> optSubscriberId,
                                                  @RequestParam(name = "searchString", required = false) Optional<String> searchString,
                                                  Pageable pageable) {
-        Page<ContObjectAccessVM> contObjectAccessDTOS = contObjectAccessService.getContObjectAccessVMPage(portalUserIdsService.getCurrentIds(), searchString, pageable);
+
+        Page<ContObjectAccessVM> contObjectAccessDTOS = contObjectAccessService.getContObjectAccessVMPage(portalUserIdsService.getCurrentIds(), optSubscriberId, searchString, pageable);
         return ResponseEntity.ok(contObjectAccessDTOS);
     }
 
     @GetMapping("/cont-zpoints")
     @Timed
     @ApiOperation("")
-    public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Optional<Long> subscriberId,
+    public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Optional<Long> optSubscriberId,
                                             @RequestParam(name = "contObjectId") Long contObjectId) {
-        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(),contObjectId);
+        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), optSubscriberId, contObjectId);
         return ResponseEntity.ok(contZPointAccessDTOS);
     }
 
