@@ -52,6 +52,12 @@ import { SubscrUserService } from './subscr-users/subscr-user.service';
 import { SubscrUsersWidgetComponent } from './subscr-users/subscr-users-widget.component';
 import { SubscrUsersComponent } from './subscr-users/subscr-users.component';
 import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.component';
+import { StTemperatureChartWidgetComponent } from './st-plans/st-temperature-chart-widget.component';
+import { SubscrAccessDashboardComponent } from './subscr-access/subscr-access-dashboard.component';
+import { ContObjectAccessService } from './cont-object-access/cont-object-access.service';
+import { ContObjectAccessComponent } from './cont-object-access/cont-object-access.component';
+import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manage.component';
+import { StTemperatureChartComponent } from './st-plans/st-temperature-chart.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -97,7 +103,12 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
         PSubscribersWidgetComponent,
         SubscrUsersComponent,
         SubscrUserEditComponent,
-        SubscrUsersWidgetComponent
+        SubscrUsersWidgetComponent,
+        StTemperatureChartWidgetComponent,
+        SubscrAccessDashboardComponent,
+        SubscrAccessManageComponent,
+        ContObjectAccessComponent,
+        StTemperatureChartComponent
     ],
     entryComponents: [
     ],
@@ -109,6 +120,7 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
         PSubscriberCustomerService,
         PSubscriberPartnerService,
         SubscrUserService,
+        ContObjectAccessService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
@@ -116,7 +128,8 @@ import { SubscrUserEditComponent } from './subscr-users/subscr-user-edit.compone
     exports: [
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
-        SubscrUsersWidgetComponent
+        SubscrUsersWidgetComponent,
+        StTemperatureChartWidgetComponent
     ]
 })
 export class PortalEntityModule {}

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PSubscriber } from './p-subscriber.model';
 import { ExcAbstractService, defaultPageSuffix } from '../../shared-blocks/exc-tools/exc-abstract-service';
-import { ExcPageParams, ExcPage, ExcEditFormEntityProvider } from '../../shared-blocks';
+import { ExcPageParams, ExcPage } from '../../shared-blocks';
 import { Observable } from 'rxjs/Observable';
 
 @Injectable()

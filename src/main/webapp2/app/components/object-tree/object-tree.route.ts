@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { PortalObjectTreeComponent,
-        TreeNodeInformationContainerComponent,
+//        TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
         TreeNodeColorStatusComponent
        } from './';

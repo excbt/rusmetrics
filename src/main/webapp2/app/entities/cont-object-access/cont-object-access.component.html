@@ -1,0 +1,87 @@
+
+<div>
+    <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
+    </jhi-exc-list-form-menu>
+
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+
+    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
+            <!-- ContObjectAccess -->
+            <p-column header="{{'subscrAccess.contObject.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contObjectId">{{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}</span>
+                    <div>
+                        <small *ngIf="node.data.contObjectId && devMode"><i>{{'global.field.id' | translate}}:</i>
+                            {{node.data.contObjectId}} &nbsp;</small>
+                        
+                        <small *ngIf="node.data.contObjectFullAddress"><i>{{'subscrAccess.contObject.contObjectFullAddress' | translate}}:</i>
+                            {{node.data.contObjectFullAddress}}</small>
+    
+                    </div>
+                </ng-template>
+            </p-column>               
+            <!-- ContZPointAccess -->
+            <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <small *ngIf="node.data.contZPointId && devMode"><i>{{'global.field.id' | translate}}:</i>
+                        {{node.data.contZPointId}}</small>
+                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
+                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>(
+                        {{node.data.contServiceTypeKeyname}})</i></small>
+                    
+                </ng-template>
+            </p-column>               
+            <p-column header="{{'subscrAccess.contZPoint.contZPointTsNumber' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span>
+                </ng-template>
+            </p-column>               
+            <!-- Access -->
+            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
+                </ng-template>
+            </p-column>               
+    </p-treeTable>
+
+
+</div>
+
+    <!-- <mat-table class="list-form-table" #table [dataSource]="dataSource" >
+        <ng-container matColumnDef="contObjectId">
+            <mat-header-cell *matHeaderCellDef class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" class="id-column-width"> {{contObjectAccess.contObjectId}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectName">
+                <mat-header-cell *matHeaderCellDef > contObjectName </mat-header-cell>
+                <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectName}} </mat-cell>
+            </ng-container>        
+    
+        <ng-container matColumnDef="contObjectFullName">
+            <mat-header-cell *matHeaderCellDef > contObjectFullName </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullName}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectFullAddress">
+            <mat-header-cell *matHeaderCellDef > contObjectFullAddress </mat-header-cell>
+            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullAddress}} </mat-cell>
+        </ng-container>        
+
+        <ng-container matColumnDef="contObjectManage">
+                <mat-header-cell *matHeaderCellDef > contObjectManage </mat-header-cell>
+                <mat-cell *matCellDef="let contObjectAccess" > 
+                        <mat-list>
+                        <mat-list-item> Pepper </mat-list-item>
+                        <mat-list-item> Salt </mat-list-item>
+                        <mat-list-item> Paprika </mat-list-item>
+                        </mat-list>
+                </mat-cell>
+        </ng-container>        
+    
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+        
+    </mat-table> -->

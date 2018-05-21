@@ -13,7 +13,6 @@ import {of} from 'rxjs/observable/of';
 import { JhiEventManager  } from 'ng-jhipster';
 
 import { ExcFormControlChecker } from '../../shared-blocks';
-import { ExcFormInitializer } from './exc-form.initializer';
 
 export interface ExcEditFormEntityProvider<T> {
     load: (id: any) => Observable<T>;

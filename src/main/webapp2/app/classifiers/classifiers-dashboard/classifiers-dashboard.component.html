@@ -1,23 +1,30 @@
 <jhi-exc-form-template>
+    <h1>
+        {{'global.menu.classifiers.title' | translate}}
+    </h1>
+    <br>
     <div>
         <div class="row">
             <div class="col-sm">
                 <jhi-organizations-widget></jhi-organizations-widget>
             </div>
             <div class="col-sm">
-                <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
-                    <jhi-p-subscribers-widget subscrMode="partner"></jhi-p-subscribers-widget>
-                    <br>
-                    <br>
-                </div>
-                <div *jhiHasAnyAuthority="'ROLE_SUBSCR_ADMIN'">
-                    <jhi-p-subscribers-widget subscrMode="customer"></jhi-p-subscribers-widget>
-                </div>    
+                <jhi-subscr-users-widget>
+                </jhi-subscr-users-widget>
             </div>
             <div class="col-sm">
-                <jhi-subscr-users-widget>
-                    
-                </jhi-subscr-users-widget>
+            </div>
+        </div>
+        <div class="row">
+            <br>
+        </div>        
+        <div class="row">
+            <div class="col-sm">
+                <jhi-st-temperature-chart-widget></jhi-st-temperature-chart-widget>
+            </div>
+            <div class="col-sm">
+            </div>
+            <div class="col-sm">
             </div>
         </div>
     </div>

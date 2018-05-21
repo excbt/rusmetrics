@@ -115,8 +115,8 @@ public class ContObject extends AbstractAuditableModel
 	private int version;
 
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "contObject")
-	@Fetch(value = FetchMode.SUBSELECT)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contObject")
+    @BatchSize(size = 10)
 	private List<ContManagement> contManagements = new ArrayList<>();
 
 	@Column(name = "timezone_def")

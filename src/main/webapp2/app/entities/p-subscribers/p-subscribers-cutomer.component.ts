@@ -1,8 +1,8 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { PSubscriberPartnerService, PSubscriberCustomerService } from './p-subscriber.service';
+import { PSubscriberCustomerService } from './p-subscriber.service';
 import { PSubscriberDataSource } from './p-subscriber.datasource';
 
 @Component({

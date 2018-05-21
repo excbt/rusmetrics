@@ -1,34 +1,36 @@
 <p-sidebar [(visible)]="display" [baseZIndex]="10000" (click)="hideMenu()" (onHide)="hideMenu()" >
     <mat-nav-list>
-        <mat-list-item>
-            <a class="" (click)="hideMenu()">
-                <img src="../../../content/images/logo-main-menu-h.png"/> 
-            </a> 
-        </mat-list-item>
+        <a mat-list-item class="" (click)="hideMenu()">
+            <img src="../../../content/images/logo-main-menu-h.png"/> 
+        </a> 
         <mat-divider></mat-divider>    
-        <mat-list-item>
-            <a routerLink="/" (click)="hideMenu()">
-                <span>
-                    <i class="fa fa-home" aria-hidden="true"></i>
-                    <span jhiTranslate="global.menu.home" class = "menu1-font-color">Home</span>
-                </span>
-            </a>
+        <mat-list-item routerLink="/" (click)="hideMenu()">
+            <mat-icon mat-list-icon>home</mat-icon>
+            <h4 mat-line>{{'global.menu.home' | translate}}</h4>
         </mat-list-item>
-        <mat-list-item>
-            <a routerLink="/object-trees" (click)="hideMenu()">
-                <span>
-                    <i class="fa fa-list" aria-hidden="true"></i>                            
-                    <span jhiTranslate="global.menu.monitoring.title" class = "menu1-font-color">Monitoring</span>
-                </span>
-            </a>
+        <mat-list-item routerLink="/object-trees" (click)="hideMenu()">
+            <mat-icon mat-list-icon>timeline</mat-icon>
+            <h4 mat-line>{{'global.menu.monitoring.title' | translate}}</h4>
         </mat-list-item>
-        <mat-list-item>
-            <a routerLink="/classifiers" (click)="hideMenu()">
-                <span>
-                    <i class="fa fa-folder" aria-hidden="true"></i>
-                    <span jhiTranslate="global.menu.classifiers.title" class = "menu1-font-color">Classifiers</span>
-                </span>
-            </a>
+        <mat-list-item routerLink="/classifiers" (click)="hideMenu()">
+            <mat-icon mat-list-icon>view_headline</mat-icon>
+            <h4 mat-line>{{'global.menu.classifiers.title' | translate}}</h4>
+        </mat-list-item>
+        <mat-list-item *jhiHasAnyAuthority="'ROLE_RMA'" routerLink="/partner-dashboard" (click)="hideMenu()">
+            <mat-icon mat-list-icon>recent_actors</mat-icon>
+            <h4 mat-line>{{'global.menu.partner.title' | translate}}</h4>
+        </mat-list-item>
+        <mat-list-item *jhiHasAnyAuthority="'ROLE_ADMIN'" routerLink="/operator-dashboard" (click)="hideMenu()">
+            <mat-icon mat-list-icon>person_pin</mat-icon>
+            <h4 mat-line>{{'global.menu.operator.title' | translate}}</h4>
+        </mat-list-item>
+        <mat-list-item (click)="hideMenu()">
+            <mat-icon mat-list-icon>settings</mat-icon>
+            <h4 mat-line>{{'global.menu.settings.title' | translate}}</h4>
+        </mat-list-item>
+        <mat-list-item *jhiHasAnyAuthority="'ROLE_SUBSCR_ADMIN'" routerLink="/subscr-access-dashboard" (click)="hideMenu()">
+            <mat-icon mat-list-icon>group_ss</mat-icon>
+            <h4 mat-line>{{'global.menu.subscrAccess.title' | translate}}</h4>
         </mat-list-item>
     </mat-nav-list>
     

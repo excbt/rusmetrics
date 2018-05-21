@@ -1,17 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map, flatMap, startWith, distinctUntilChanged, tap, debounceTime } from 'rxjs/operators';
-import { ExcEditFormComponent, ExcPageSorting, ExcPageSize } from '../../shared-blocks';
+import { ExcEditFormComponent } from '../../shared-blocks';
 import { PSubscriber } from './p-subscriber.model';
 import { JhiEventManager } from 'ng-jhipster';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
-import { PSubscriberService, PSubscriberCustomerService } from './p-subscriber.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { PSubscriberCustomerService } from './p-subscriber.service';
 import { Subscription } from 'rxjs';
 import { PSubscriberFormInitializer } from './p-subscriber.form-initializer';
-import { OrganizationsService } from '../organizations/organizations.service';
-import { Organization } from '../organizations/organization.model';
-import { searchDebounceTimeValue } from '../../shared-blocks/exc-tools/exc-constants';
 import { MatSlideToggleChange } from '@angular/material';
 import { TimezoneDef } from '../timezoneDef/timezoneDef.model';
 import { TimezoneDefService } from '../timezoneDef/timezoneDef.service';
@@ -22,8 +17,6 @@ import { TimezoneDefService } from '../timezoneDef/timezoneDef.service';
     styleUrls: ['../blocks/form-edit.scss']
   })
 export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubscriber> implements OnInit, OnDestroy {
-
-    private headerSubscription: Subscription;
 
     private routeUrlSubscription: Subscription;
     private formInitializer: PSubscriberFormInitializer;
@@ -39,7 +32,6 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
         activatedRoute: ActivatedRoute,
         private fb: FormBuilder,
         service: PSubscriberCustomerService,
-        private organizationService: OrganizationsService,
         private timezoneDefService: TimezoneDefService) {
             super(
                 {   modificationEventName: 'pSubscriberCustomerModification',
@@ -60,6 +52,13 @@ export class PSubscriberEditCustomerComponent extends ExcEditFormComponent<PSubs
             });
 
             this.timezoneDefService.findAll().subscribe((data) => this.timezoneDefOptions = data);
+    }
+
+    ngOnDestroy() {
+        if (this.routeUrlSubscription) {
+            this.routeUrlSubscription.unsubscribe();
+        }
+        super.ngOnDestroy();
     }
 
     createForm(data: PSubscriber): FormGroup {

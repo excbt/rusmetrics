@@ -26,7 +26,9 @@ import {
   MatIconModule,
   MatCheckboxModule,
   MatAutocompleteModule,
-  MatSlideToggleModule
+  MatSlideToggleModule,
+  MatToolbarModule,
+  MatListModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -37,6 +39,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
+import { TreeTableModule } from 'primeng/treetable';
 
 @NgModule({
   imports: [
@@ -55,13 +58,16 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
       MatCheckboxModule,
       MatAutocompleteModule,
       MatSlideToggleModule,
+      MatToolbarModule,
+      MatListModule,
       // PRIME NG
       CardModule,
       InputTextModule,
       MenubarModule,
       ButtonModule,
       CheckboxModule,
-      AutoCompleteModule
+      AutoCompleteModule,
+      TreeTableModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -89,7 +95,8 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
     ButtonModule,
     CheckboxModule,
     MatAutocompleteModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    TreeTableModule
   ]
 })
 export class PortalSharedBlocksModule {}

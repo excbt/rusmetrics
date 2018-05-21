@@ -1,7 +1,5 @@
 import { Route } from '@angular/router';
-import { PSubscribersComponent } from './p-subscribers.component';
 import { UserRouteAccessService } from '../../shared';
-import { PSubscriberEditComponent } from './p-subscriber-edit.component';
 import { PSubscribersPartnerComponent } from './p-subscribers-partner.component';
 import { PSubscribersCustomerComponent } from './p-subscribers-cutomer.component';
 import { PSubscriberEditCustomerComponent } from './p-subscriber-edit-customer.component';

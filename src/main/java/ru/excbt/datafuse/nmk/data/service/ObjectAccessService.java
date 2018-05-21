@@ -90,6 +90,15 @@ public class ObjectAccessService {
         return ObjectFilters.deletedFilter(result);
     }
 
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
+    public List<ContObject> findContObjects(PortalUserIds portalUserIds) {
+        return findContObjects(portalUserIds.getSubscriberId());
+    }
+
     public List<ContObject> findContObjectsNoTtl(Long subscriberId) {
         List<ContObject> result;
         if (NEW_ACCESS) {
