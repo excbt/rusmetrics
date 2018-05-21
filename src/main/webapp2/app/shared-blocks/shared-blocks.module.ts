@@ -40,6 +40,7 @@ import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TreeTableModule } from 'primeng/treetable';
+import { ContextMenuModule } from 'primeng/contextmenu';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import { TreeTableModule } from 'primeng/treetable';
       ButtonModule,
       CheckboxModule,
       AutoCompleteModule,
-      TreeTableModule
+      TreeTableModule,
+      ContextMenuModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -96,7 +98,8 @@ import { TreeTableModule } from 'primeng/treetable';
     CheckboxModule,
     MatAutocompleteModule,
     MatSlideToggleModule,
-    TreeTableModule
+    TreeTableModule,
+    ContextMenuModule
   ]
 })
 export class PortalSharedBlocksModule {}

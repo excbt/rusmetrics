@@ -88,6 +88,7 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
     List<DeviceObject> findAllDeviceObjects(@Param("subscriberId") Long subscriberId);
 
 
+    // TODO check query. Issue with LAST Spring boot 1.5.13
     @Query(value = "SELECT DISTINCT a.subscriberId as subscriberId, zp.contObject.id as contObjectId, zp.id as contZPointId, zp.tsNumber as tsNumber, " +
         " zp.isManualLoading as isManualLoading, d.id as deviceObjectId, d.number as deviceObjectNumber, ds.subscrDataSource.id as subscrDataSourceId" +
         " FROM ContZPointAccess a, ContZPoint zp INNER JOIN zp.deviceObject d LEFT JOIN d.deviceObjectDataSource ds" +

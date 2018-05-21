@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ContObjectAccess } from './cont-object-access.model';
 import { ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent, defaultPageSizeOptions } from '../../shared-blocks';
 import { ContObjectAccessDataSource } from './cont-object-access.datasource';
-import { TreeNode } from 'primeng/api';
+import { TreeNode, MenuItem } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
 import { merge } from 'rxjs/observable/merge';
 import { tap, distinctUntilChanged } from 'rxjs/operators';
@@ -22,6 +22,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
     objectAccess: TreeNode[];
 
+    selectedNode: TreeNode;
+
     dataSource: ContObjectAccessDataSource;
 
     displayedColumns = ['contObjectId', 'contObjectName', 'contObjectFullAddress', 'contObjectManage'];
@@ -29,6 +31,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     pageSize = defaultPageSize;
 
     pageSizeOptions = defaultPageSizeOptions;
+
+    contextMenuItems: MenuItem[];
 
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
     private searchString: string;
@@ -44,6 +48,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.dataSource.modelSubject.subscribe((data) => this.objectAccess = this.contObjectAccessToNode(data));
         this.dataSource.totalElements$.subscribe((count) => this.totalElements = count);
         this.initSearch();
+
+        this.contextMenuItems = [
+            {label: 'View', icon: 'fa-add', command: (event) => console.log('Hi')},
+            {label: 'Delete', icon: 'fa-close', command: (event) => console.log('Hi2')}
+        ];
     }
 
     ngAfterViewInit() {
@@ -111,6 +120,12 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.contObjectAccessService.findContZPointAccess(event.node.data.contObjectId)
             .subscribe((data) => event.node.children = this.contZPointAccessToNode(data));
     }
-}
+    }
+
+    accessOnChange(node) {
+        if (node.data.contZPointId) {
+            console.log('Change' + node.data.contZPointId);
+        }
+    }
 
 }

@@ -5,7 +5,8 @@
         "contObject": {
             "title": "Объект учета",
             "contObjectName": "Имя",
-            "contObjectFullAddress": "Адрес"
+            "contObjectFullAddress": "Адрес",
+            "accessTemplate": "точек учета"
         },
         "contZPoint": {
             "title": "Точка учета",
@@ -13,7 +14,8 @@
             "contZPointTsNumber": "Номер теплосистемы"
 
         },
-        "accessColumn": "Доступ"
+        "accessColumn": "Доступ",
+        "grantTZ": "Дата предоставления доступа"        
     }
     
 }

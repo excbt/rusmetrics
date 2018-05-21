@@ -32,19 +32,44 @@
                     
                 </ng-template>
             </p-column>               
-            <p-column header="{{'subscrAccess.contZPoint.contZPointTsNumber' | translate}}">
+            <!-- grantTZ -->
+            <p-column header="{{'subscrAccess.grantTZ' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span>
+                    <span *ngIf="node.data.grantTZ">
+                        <small>{{node.data.grantTZ | date:'dd/MM/yyyy HH:mm' }}</small>
+                    </span>
+                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
                 </ng-template>
             </p-column>               
             <!-- Access -->
             <p-column header="{{'subscrAccess.accessColumn' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
+                    <span *ngIf="node.data.contObjectId">
+                        <b>{{node.data.accessContZPointCnt}}</b>/<small>{{node.data.allContZPointCnt}} {{'subscrAccess.contObject.accessTemplate' | translate}}</small>
+                    </span>
+                </ng-template>
+            </p-column>               
+            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <button *ngIf="node.data.contObjectId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)">
+                    <mat-icon mat-list-icon>add_circle</mat-icon>
+                    </button>
+                    <button *ngIf="node.data.contObjectId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)">
+                            <mat-icon mat-list-icon>remove_circle</mat-icon>
+                    </button>
+
+                    <button *ngIf="node.data.contZPointId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)">
+                        <mat-icon mat-list-icon>add_circle</mat-icon>
+                    </button>
+
+                    <button *ngIf="node.data.contZPointId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)">
+                        <mat-icon mat-list-icon>remove_circle</mat-icon>
+                    </button>
                 </ng-template>
             </p-column>               
     </p-treeTable>
 
+    <p-contextMenu #cm [model]="contextMenuItems"></p-contextMenu>    
 
 </div>
 

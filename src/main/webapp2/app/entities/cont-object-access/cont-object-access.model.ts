@@ -11,6 +11,10 @@ export class ContObjectAccess {
         public accessType: string,        // Тип доступа
 //          public accessTtl: null,        // Время, до которого будет предоставлен доступ
 //          public accessTtlTz: null,        // Время, до которого будет предоставлен доступ
+        public grantTZ: Date,
+        public accessEnabled?: boolean,
+        public accessContZPointCnt?: number,
+        public allContZPointCnt?: number,
     ) { }
 
 }

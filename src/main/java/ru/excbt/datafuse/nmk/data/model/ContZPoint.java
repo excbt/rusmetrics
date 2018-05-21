@@ -83,8 +83,9 @@ public class ContZPoint extends AbstractAuditableModel implements ExSystemObject
 	@Version
 	private int version;
 
-	@ManyToOne()
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "rso_organization_id")
+    @BatchSize(size = 10)
 	private Organization rso;
 
 	@Column(name = "rso_organization_id", updatable = false, insertable = false)
