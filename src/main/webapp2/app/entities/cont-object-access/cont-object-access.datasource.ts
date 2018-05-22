@@ -8,11 +8,11 @@ export class ContObjectAccessDataSource extends ExcAbstractPageDataSource<ContOb
     }
 
     findPage(pageParams: ExcPageParams) {
-        this.wrapPageService(this.contObjectAccessService.findContObjectsPage(null, pageParams));
+        this.wrapPageService(this.contObjectAccessService.findContObjectsPage(null, false, pageParams));
     }
 
-    findSubscriberPage(subscriberId: number, pageParams: ExcPageParams) {
-        this.wrapPageService(this.contObjectAccessService.findContObjectsPage(subscriberId, pageParams));
+    findPageBySubscriber(subscriberId: number, addMode: boolean, pageParams: ExcPageParams) {
+        this.wrapPageService(this.contObjectAccessService.findContObjectsPage(subscriberId, addMode, pageParams));
     }
 
 }

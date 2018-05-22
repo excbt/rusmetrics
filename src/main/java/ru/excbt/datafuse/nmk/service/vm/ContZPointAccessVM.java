@@ -9,7 +9,6 @@ import java.time.ZonedDateTime;
 
 @Getter
 @Setter
-
 public class ContZPointAccessVM {
 
     private Long contZPointId;
@@ -28,7 +27,10 @@ public class ContZPointAccessVM {
     private LocalDateTime accessTtl;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private ZonedDateTime grantTZ;
+    private ZonedDateTime grantTz;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private ZonedDateTime revokeTz;
 
     private boolean accessEnabled;
 }

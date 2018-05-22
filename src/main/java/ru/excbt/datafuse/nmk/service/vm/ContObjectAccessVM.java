@@ -35,6 +35,9 @@ public class ContObjectAccessVM {
     private int accessContZPointCnt;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private ZonedDateTime grantTZ;
+    private ZonedDateTime grantTz;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private ZonedDateTime revokeTz;
 
 }

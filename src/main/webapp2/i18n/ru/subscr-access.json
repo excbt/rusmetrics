@@ -16,8 +16,9 @@
         },
         "subscriberSelect": "Абонент",
         "subscriberSelectSlider": "Управление абонентами",
+        "addModeEnable": "Добавление объектов",
         "accessColumn": "Доступ",
-        "grantTZ": "Дата предоставления доступа"        
+        "grantTz": "Дата предоставления доступа"        
     }
     
 }

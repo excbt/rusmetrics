@@ -18,6 +18,8 @@ public interface ContZPointAccessMapper {
     @Mapping(source = "contZPoint.tsNumber", target = "contZPointTsNumber")
     @Mapping(source = "contZPoint.customServiceName", target = "contZPointCustomServiceName")
     @Mapping(target = "accessEnabled", ignore = true)
+    @Mapping(source = "grantTz", target = "grantTz")
+    @Mapping(source = "revokeTz", target = "revokeTz")
     ContZPointAccessVM toVM(ContZPointAccess contZPointAccess);
 
 }

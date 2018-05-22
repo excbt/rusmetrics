@@ -7,7 +7,8 @@ export class ContZPointAccess {
         public contZPointCustomServiceName: string,
         public accessType: string,
         public accessTtl: Date,
-        public grantTZ: Date,
+        public grantTz: Date,
+        public revokeTz: Date,        // Время отзыва доступа
         public accessEnabled?: boolean
     ) { }
 }

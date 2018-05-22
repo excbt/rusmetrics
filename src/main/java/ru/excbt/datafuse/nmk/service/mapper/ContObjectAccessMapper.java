@@ -22,6 +22,8 @@ public interface ContObjectAccessMapper {
     @Mapping(target = "allContZPointCnt", ignore = true)
     @Mapping(target = "accessContZPointCnt", ignore = true)
     @Mapping(target = "accessEnabled", ignore = true)
+    @Mapping(source = "grantTz", target = "grantTz")
+    @Mapping(source = "revokeTz", target = "revokeTz")
     ContObjectAccessVM toVM(ContObjectAccess contObjectAccess);
 
 }

@@ -7,8 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
@@ -57,29 +59,87 @@ public class SubscrAccessResource {
     @GetMapping("/cont-objects/page")
     @Timed
     @ApiOperation("")
-    public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Optional<Long> optSubscriberId,
-                                                 @RequestParam(name = "searchString", required = false) Optional<String> searchString,
+    public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Long subscriberId,
+                                                 @RequestParam(name = "searchString", required = false) String searchString,
+                                                 @RequestParam(name = "addMode", required = false) Boolean addMode,
                                                  Pageable pageable) {
 
-        Page<ContObjectAccessVM> contObjectAccessDTOS = contObjectAccessService.getContObjectAccessVMPage(portalUserIdsService.getCurrentIds(), optSubscriberId, searchString, pageable);
-        return ResponseEntity.ok(contObjectAccessDTOS);
+        Page<ContObjectAccessVM> contObjectAccessVMPage;
+        if (Boolean.TRUE.equals(addMode) && subscriberId != null) {
+            contObjectAccessVMPage = contObjectAccessService
+                .findAvailableContObjectAccess(portalUserIdsService.getCurrentIds(),subscriberId, searchString, pageable);
+        } else {
+            contObjectAccessVMPage = contObjectAccessService.getContObjectAccessVMPage(portalUserIdsService.getCurrentIds(), subscriberId, searchString, pageable);
+        }
+        return ResponseEntity.ok(contObjectAccessVMPage);
     }
 
     @GetMapping("/cont-zpoints")
     @Timed
     @ApiOperation("")
-    public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Optional<Long> optSubscriberId,
+    public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Long subscriberId,
                                             @RequestParam(name = "contObjectId") Long contObjectId) {
-        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), optSubscriberId, contObjectId);
+        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), subscriberId, contObjectId);
         return ResponseEntity.ok(contZPointAccessDTOS);
     }
 
     @GetMapping(value = "/subscriber-manage-list")
+    @Timed
+    @ApiOperation("")
     public ResponseEntity<?> getSubscriberManageList() {
 
         List<SubscriberVM> resultList = contObjectAccessService.findSubscribersManageList(portalUserIdsService.getCurrentIds());
 
         return ResponseEntity.ok(resultList);
+    }
+
+    @GetMapping(value = "/available-cont-objects/page")
+    @Timed
+    @ApiOperation("")
+    public ResponseEntity<?> getAvailableContObjects(@RequestParam(value = "subscriberId") Long subscriberId,
+                                                     @RequestParam(name = "searchString", required = false) String searchString,
+                                                     Pageable pageable) {
+
+        Page<ContObjectAccessVM> resultList = contObjectAccessService
+            .findAvailableContObjectAccess(portalUserIdsService.getCurrentIds(),subscriberId, searchString, pageable);
+
+        return ResponseEntity.ok(resultList);
+    }
+
+
+    @PutMapping("/cont-objects")
+    @Timed
+    @ApiOperation("")
+    public ResponseEntity<?> grantRevokeContObject(@RequestParam(value = "subscriberId") Long subscriberId,
+                                                   @RequestParam(value = "contObjectId") Long contObjectId,
+                                                   @RequestParam(value = "action", required = false, defaultValue = "grant") String action,
+                                                   @RequestParam(value = "onlyContObject", defaultValue = "false", required = false) Boolean onlyContObject) {
+
+        if (action == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String actionLower = action.toLowerCase();
+
+        if (!"grant".equals(actionLower) && !"revoke".equals(actionLower)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if ("grant".equals(actionLower)) {
+            boolean grantResult = contObjectAccessService.grantContObjectAccess(portalUserIdsService.getCurrentIds(), subscriberId, contObjectId);
+            if (!grantResult) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        if ("revoke".equals(actionLower)) {
+            boolean revokeResult = contObjectAccessService.revokeContObjectAccess(portalUserIdsService.getCurrentIds(), subscriberId, contObjectId);
+            if (!revokeResult) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        return  ResponseEntity.ok().build();
     }
 
 

@@ -11,8 +11,12 @@ import { merge } from 'rxjs/observable/merge';
 import { tap, distinctUntilChanged } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { PSubscriber } from '../p-subscribers/p-subscriber.model';
 import { FormControl, FormGroup } from '@angular/forms';
+import { ExcAbstractDataSource } from '../../shared-blocks/exc-tools/exc-abstract-datasource';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
 
 @Component({
     selector: 'jhi-cont-object-access',
@@ -39,10 +43,17 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     subscriberGroup: FormGroup;
     subscriberSelect: FormControl;
     subscriberSelectEnable: FormControl;
+    addModelEnable: FormControl;
 
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
     private searchString: string;
     public devMode = true;
+
+    avalialableAccess: ContObjectAccess[];
+
+    private currentSubscriberIdSubject = new BehaviorSubject<number>(null);
+    currentSubscriberId$ = this.currentSubscriberIdSubject.asObservable();
+    currentSubscriberId: number;
 
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,
@@ -57,14 +68,16 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         });
         this.subscriberSelect = new FormControl();
         this.subscriberSelectEnable = new FormControl(false);
+        this.addModelEnable = new FormControl(false);
         this.subscriberGroup.addControl('subscriberSelect', this.subscriberSelect);
         this.subscriberGroup.addControl('subscriberSelectEnable', this.subscriberSelectEnable);
+        this.subscriberGroup.addControl('addModelEnable', this.addModelEnable);
 
         this.dataSource = new ContObjectAccessDataSource(this.contObjectAccessService);
         this.dataSource.modelSubject.subscribe((data) => this.objectAccess = this.contObjectAccessToNode(data));
         this.dataSource.totalElements$.subscribe((count) => this.totalElements = count);
 
-        this.loadList();
+        this.loadAccessData();
 
     }
 
@@ -78,7 +91,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             distinctUntilChanged(),
             tap((arg) => {
                 this.paginator.pageIndex = 0;
-                this.loadList(arg);
+                this.loadAccessData(arg);
                 this.searchString = arg;
             })
             ).subscribe();
@@ -87,7 +100,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.subscriberSelect.valueChanges.subscribe((arg) => {
             this.paginator.pageIndex = 0;
             // if (arg) {
-                this.loadList(this.searchString);
+                this.loadAccessData(this.searchString);
+                this.currentSubscriberId = +arg;
             // } else {
             //     this.dataSource.makeEmpty();
             // }
@@ -102,23 +116,23 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             }
         });
 
+        this.addModelEnable.valueChanges.subscribe((arg) => {
+            this.loadAccessData(this.searchString);
+        });
+
         merge(this.paginator.page).pipe(
             tap(() => {
-                this.loadList(this.searchString);
+                this.loadAccessData(this.searchString);
             })
         ).subscribe();
 
     }
 
-    initSearch(id?: number) {
-        this.dataSource.findSubscriberPage (id, { pageSorting: this.defaultPageSorting, pageSize: new ExcPageSize() });
-    }
-
-    loadList(search?: string) {
+    loadAccessData(search?: string) {
         const subscriberId = +this.subscriberSelect.value;
         const sorting = this.defaultPageSorting;
         const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
-        this.dataSource.findSubscriberPage (subscriberId, {pageSorting: sorting, pageSize: pSize, searchString: search});
+        this.dataSource.findPageBySubscriber (subscriberId, (this.addModelEnable.value === true), {pageSorting: sorting, pageSize: pSize, searchString: search});
     }
 
    contObjectAccessToNode(inData: ContObjectAccess[]): TreeNode[] {
@@ -147,15 +161,31 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     if (event.node) {
         // in a real application, make a call to a remote url to load children of the current node and add the new nodes as children
         // this.nodeService.getLazyFilesystem().then(nodes => event.node.children = nodes);
-        this.contObjectAccessService.findContZPointAccess(event.node.data.contObjectId)
+        this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, event.node.data.contObjectId)
             .subscribe((data) => event.node.children = this.contZPointAccessToNode(data));
     }
     }
 
     accessOnChange(node) {
         if (node.data.contZPointId) {
-            console.log('Change' + node.data.contZPointId);
+            console.log('Change contZPointId' + node.data.contZPointId);
         }
+
+        let action: Observable<any>;
+
+        if (node.data.contObjectId) {
+            console.log('Change contObjectId' + node.data.contObjectId);
+            if (node.data.accessEnabled === false) {
+                action = this.contObjectAccessService.grantContObjectAccess(this.currentSubscriberId, node.data.contObjectId);
+            } else {
+                action = this.contObjectAccessService.revokeContObjectAccess(this.currentSubscriberId, node.data.contObjectId);
+            }
+        }
+        action.pipe(
+            catchError(() => of([])),
+            finalize(() => this.loadAccessData(this.searchString))
+        ).subscribe();
+
     }
 
 }
