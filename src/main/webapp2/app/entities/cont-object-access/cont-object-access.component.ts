@@ -10,7 +10,6 @@ import { ContZPointAccess } from './cont-zpoint-access.model';
 import { merge } from 'rxjs/observable/merge';
 import { tap, distinctUntilChanged } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material';
-import { PSubscriberService } from '../p-subscribers/p-subscriber.service';
 import { BehaviorSubject } from 'rxjs';
 import { PSubscriber } from '../p-subscribers/p-subscriber.model';
 import { FormControl, FormGroup } from '@angular/forms';
@@ -41,9 +40,6 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     subscriberSelect: FormControl;
     subscriberSelectEnable: FormControl;
 
-    private currentSubscriber: BehaviorSubject<number> = new BehaviorSubject(null);
-    private currentSubscriber$ = this.currentSubscriber.asObservable();
-
     private defaultPageSorting = new ExcPageSorting('contObject.id', 'asc');
     private searchString: string;
     public devMode = true;
@@ -51,9 +47,9 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,
         router: Router,
-        activatedRoute: ActivatedRoute,
-        private subscriberService: PSubscriberService) {
-            this.subscriberService.findManageList().subscribe((data) => this.subscriberList = data);
+        activatedRoute: ActivatedRoute) {
+            //  this.subscriberService.findManageList().subscribe((data) => this.subscriberList = data);
+            this.contObjectAccessService.findSubscriberManageList().subscribe((data) => this.subscriberList = data);
          }
 
     ngOnInit() {
@@ -63,13 +59,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.subscriberSelectEnable = new FormControl(false);
         this.subscriberGroup.addControl('subscriberSelect', this.subscriberSelect);
         this.subscriberGroup.addControl('subscriberSelectEnable', this.subscriberSelectEnable);
-        // this.subscriberSelect.valueChanges.subscribe((arg) => this.currentSubscriber.next(+arg));
 
         this.dataSource = new ContObjectAccessDataSource(this.contObjectAccessService);
         this.dataSource.modelSubject.subscribe((data) => this.objectAccess = this.contObjectAccessToNode(data));
         this.dataSource.totalElements$.subscribe((count) => this.totalElements = count);
 
-        // this.currentSubscriber$.subscribe((id) => this.initSearch(id));
         this.loadList();
 
     }

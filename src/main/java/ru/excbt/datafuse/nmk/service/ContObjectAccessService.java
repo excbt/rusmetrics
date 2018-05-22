@@ -1,20 +1,29 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import org.opensaml.xml.signature.Q;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
+import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.service.dto.ContZPointAccessDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointAccessMapper;
+import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 import ru.excbt.datafuse.nmk.service.vm.ContObjectAccessVM;
 import ru.excbt.datafuse.nmk.service.vm.ContZPointAccessVM;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,13 +43,17 @@ public class ContObjectAccessService {
     private final ContZPointAccessMapper contZPointAccessMapper;
 
     private final QueryDSLService queryDSLService;
+    private final SubscriberRepository subscriberRepository;
+    private final SubscriberMapper subscriberMapper;
 
-    public ContObjectAccessService(ContObjectAccessRepository contObjectAccessRepository, ContObjectAccessMapper contObjectAccessMapper, ContZPointAccessRepository contZPointAccessRepository, ContZPointAccessMapper contZPointAccessMapper, QueryDSLService queryDSLService) {
+    public ContObjectAccessService(ContObjectAccessRepository contObjectAccessRepository, ContObjectAccessMapper contObjectAccessMapper, ContZPointAccessRepository contZPointAccessRepository, ContZPointAccessMapper contZPointAccessMapper, QueryDSLService queryDSLService, SubscriberRepository subscriberRepository, SubscriberMapper subscriberMapper) {
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.contObjectAccessMapper = contObjectAccessMapper;
         this.contZPointAccessRepository = contZPointAccessRepository;
         this.contZPointAccessMapper = contZPointAccessMapper;
         this.queryDSLService = queryDSLService;
+        this.subscriberRepository = subscriberRepository;
+        this.subscriberMapper = subscriberMapper;
     }
 
     private static BooleanExpression searchCondition(String s) {
@@ -188,6 +201,26 @@ public class ContObjectAccessService {
         });
 
         return resultVMList;
-    };
+    }
 
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public List<SubscriberVM> findSubscribersManageList(PortalUserIds userIds) {
+
+        QSubscriber qSubscriber = QSubscriber.subscriber;
+        QAbstractPersistableEntity qPersistableEntity = new QAbstractPersistableEntity(qSubscriber);
+
+        BooleanExpression subscriberFilter = qSubscriber.rmaSubscriberId.eq(userIds.getSubscriberId());
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(qSubscriber.deleted.eq(0))
+            .and(qPersistableEntity.id.ne(userIds.getSubscriberId()))
+            .and(subscriberFilter);
+
+        Sort sorting = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
+        List<SubscriberVM> resultList = new ArrayList<>();
+        subscriberRepository.findAll(where,sorting).forEach(i -> resultList.add(subscriberMapper.toVM(i)));
+
+        return resultList;
+    }
 }

@@ -336,58 +336,6 @@ public class SubscriberService implements SecuredRoles {
         return result.map(mapper::apply);
 	}
 
-
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-    public List<SubscriberVM> findSubscribersManageList(PortalUserIds userIds) {
-
-        QAbstractPersistableEntity qPersistableEntity = new QAbstractPersistableEntity(qSubscriber);
-
-        BooleanExpression subscriberFilter = qSubscriber.rmaSubscriberId.eq(userIds.getSubscriberId());
-
-
-        WhereClauseBuilder where = new WhereClauseBuilder()
-            .and(qSubscriber.deleted.eq(0))
-            .and(qPersistableEntity.id.ne(userIds.getSubscriberId()))
-            .and(subscriberFilter);
-
-        Sort sorting = new Sort(new Sort.Order(Sort.Direction.ASC, "id"));
-        List<SubscriberVM> resultList = new ArrayList<>();
-        subscriberRepository.findAll(where,sorting).forEach(i -> resultList.add(subscriberMapper.toVM(i)));
-
-        return resultList;
-    }
-
-//	/**
-//	 *
-//	 * @param subscriber
-//	 * @return
-//	 */
-//	public String[] buildSubscriberLdapOu(Subscriber subscriber) {
-//		checkNotNull(subscriber);
-//
-//		String rmaOu = null;
-//		String childLdapOu = null;
-//		String[] orgUnits = null;
-//
-//		if (Boolean.TRUE.equals(subscriber.getIsChild())) {
-//			rmaOu = getRmaLdapOu(subscriber.getParentSubscriberId());
-//			Subscriber parentSubscriber = selectSubscriber(subscriber.getParentSubscriberId());
-//			checkNotNull(parentSubscriber);
-//
-//			childLdapOu = parentSubscriber.getChildLdapOu();
-//
-//			orgUnits = new String[] { rmaOu, childLdapOu };
-//
-//		} else {
-//			rmaOu = getRmaLdapOu(subscriber.getId());
-//			orgUnits = new String[] { rmaOu };
-//		}
-//
-//		checkNotNull(orgUnits);
-//
-//		return orgUnits;
-//	}
-
 	/**
 	 *
 	 * @param subscriberId

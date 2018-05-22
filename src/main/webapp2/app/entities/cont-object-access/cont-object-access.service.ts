@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { ExcPageParams, ExcPage } from '../../shared-blocks';
 import { ContZPointAccess } from './cont-zpoint-access.model';
+import { PSubscriber } from '../p-subscribers/p-subscriber.model';
 
 @Injectable()
 export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess> {
@@ -28,6 +29,10 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
         return this.http.get<ExcPage<ContObjectAccess>>(this.resourceUrl + 'cont-objects/page', {
             params : myParams
         } );
+    }
+
+    findSubscriberManageList(): Observable<PSubscriber[]> {
+        return this.http.get<PSubscriber[]>(this.resourceUrl + 'subscriber-manage-list');
     }
 
 }

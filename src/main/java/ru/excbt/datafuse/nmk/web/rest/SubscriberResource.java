@@ -131,12 +131,4 @@ public class SubscriberResource {
             .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST)) ;
     }
 
-    @GetMapping(value = "/manage-list")
-    public ResponseEntity<?> getSubscriberManageList() {
-
-        List<SubscriberVM> resultList = subscriberService.findSubscribersManageList(portalUserIdsService.getCurrentIds());
-
-        return ResponseEntity.ok(resultList);
-    }
-
 }

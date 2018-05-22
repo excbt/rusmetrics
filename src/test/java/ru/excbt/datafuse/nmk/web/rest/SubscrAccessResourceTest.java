@@ -82,4 +82,9 @@ public class SubscrAccessResourceTest extends PortalApiTest {
             .requestBuilder(b -> b.param("contObjectId", "18811505")).testGet();
     }
 
+    @Test
+    public void testSubscriberManageList() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-access/subscriber-manage-list").testGet();
+    }
+
 }

@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.vm.ContObjectAccessVM;
 import ru.excbt.datafuse.nmk.service.vm.ContZPointAccessVM;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,6 +72,14 @@ public class SubscrAccessResource {
                                             @RequestParam(name = "contObjectId") Long contObjectId) {
         List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), optSubscriberId, contObjectId);
         return ResponseEntity.ok(contZPointAccessDTOS);
+    }
+
+    @GetMapping(value = "/subscriber-manage-list")
+    public ResponseEntity<?> getSubscriberManageList() {
+
+        List<SubscriberVM> resultList = contObjectAccessService.findSubscribersManageList(portalUserIdsService.getCurrentIds());
+
+        return ResponseEntity.ok(resultList);
     }
 
 
