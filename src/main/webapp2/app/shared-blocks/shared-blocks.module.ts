@@ -41,6 +41,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TreeTableModule } from 'primeng/treetable';
 import { ContextMenuModule } from 'primeng/contextmenu';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
   imports: [
@@ -99,7 +100,8 @@ import { ContextMenuModule } from 'primeng/contextmenu';
     MatAutocompleteModule,
     MatSlideToggleModule,
     TreeTableModule,
-    ContextMenuModule
+    ContextMenuModule,
+    OverlayPanelModule
   ]
 })
 export class PortalSharedBlocksModule {}

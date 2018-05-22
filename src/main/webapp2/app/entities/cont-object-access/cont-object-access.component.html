@@ -8,6 +8,7 @@
             <mat-slide-toggle formControlName="subscriberSelectEnable">
                 {{'subscrAccess.subscriberSelectSlider' | translate}}
             </mat-slide-toggle>
+
             <mat-paginator [length]="totalElements" [pageSize]="pageSize"
             [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
         
@@ -21,6 +22,9 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+            <button mat-icon-button (click)="op.toggle($event)">
+                <mat-icon mat-list-icon>add_circle</mat-icon>
+            </button>            
         </div>
     </div>
 
@@ -91,6 +95,10 @@
 
 </div>
 
+
+<p-overlayPanel #op>
+        Content
+</p-overlayPanel>
     <!-- <mat-table class="list-form-table" #table [dataSource]="dataSource" >
         <ng-container matColumnDef="contObjectId">
             <mat-header-cell *matHeaderCellDef class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>

@@ -1,8 +1,8 @@
-import { ExcAbstractDataSource, ExcPageParams } from '../../shared-blocks';
+import {ExcPageParams, ExcAbstractPageDataSource } from '../../shared-blocks';
 import { ContObjectAccess } from './cont-object-access.model';
 import { ContObjectAccessService } from './cont-object-access.service';
 
-export class ContObjectAccessDataSource extends ExcAbstractDataSource<ContObjectAccess> {
+export class ContObjectAccessDataSource extends ExcAbstractPageDataSource<ContObjectAccess> {
     constructor( private contObjectAccessService: ContObjectAccessService) {
         super();
     }

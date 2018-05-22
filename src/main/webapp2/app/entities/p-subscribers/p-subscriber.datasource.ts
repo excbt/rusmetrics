@@ -1,8 +1,8 @@
 import { PSubscriber } from './p-subscriber.model';
-import { ExcAbstractDataSource, ExcPageParams } from '../../shared-blocks';
+import { ExcAbstractPageDataSource, ExcPageParams } from '../../shared-blocks';
 import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
-export class PSubscriberDataSource extends ExcAbstractDataSource<PSubscriber> {
+export class PSubscriberDataSource extends ExcAbstractPageDataSource<PSubscriber> {
 
     constructor( private pSubscriberService: ExcAbstractService<PSubscriber>) {
         super();

@@ -7,7 +7,7 @@ import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagina
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
-import { ExcAbstractDataSource } from '../exc-tools/exc-abstract-datasource';
+import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
 import { ExcListFormMenuComponent } from '..';
 import {
   // debounceTime,
@@ -18,7 +18,7 @@ import {
 } from 'rxjs/operators';
 
 export interface ExcListDatasourceProvider<T> {
-  getDataSource: () => ExcAbstractDataSource<T>;
+  getDataSource: () => ExcAbstractPageDataSource<T>;
 }
 
 export interface ExcListFormParams {
@@ -39,7 +39,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   // private routeUrlSubscription: Subscription;
 
   // routeUrlSergments: UrlSegment[];
-  dataSource: ExcAbstractDataSource<T>;
+  dataSource: ExcAbstractPageDataSource<T>;
 
   public searchString: String;
 

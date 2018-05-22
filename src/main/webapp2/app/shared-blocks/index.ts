@@ -8,4 +8,4 @@ export * from './exc-search-field/exc-search-field.component';
 export * from './exc-validators/exc.validators';
 export * from './shared-blocks.module';
 export * from './exc-tools/exc-pagination';
-export * from './exc-tools/exc-abstract-datasource';
+export * from './exc-tools/exc-abstract-page-datasource';

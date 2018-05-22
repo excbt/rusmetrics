@@ -1,8 +1,8 @@
-import { ExcAbstractDataSource, ExcPageParams } from '../../shared-blocks';
+import { ExcAbstractPageDataSource, ExcPageParams } from '../../shared-blocks';
 import { SubscrUser } from './subscr-user.model';
 import { ExcAbstractService } from '../../shared-blocks/exc-tools/exc-abstract-service';
 
-export class SubscrUserDataSource extends ExcAbstractDataSource<SubscrUser> {
+export class SubscrUserDataSource extends ExcAbstractPageDataSource<SubscrUser> {
 
     constructor( private subscrUserService: ExcAbstractService<SubscrUser>) {
         super();
