@@ -59,7 +59,7 @@ public class SubscrAccessResource {
     @GetMapping("/cont-objects/page")
     @Timed
     @ApiOperation("")
-    public ResponseEntity<?> getContObjectsPaged(@RequestParam(name = "subscriberId", required = false) Long subscriberId,
+    public ResponseEntity<?> getContObjectsPage(@RequestParam(name = "subscriberId", required = false) Long subscriberId,
                                                  @RequestParam(name = "searchString", required = false) String searchString,
                                                  @RequestParam(name = "addMode", required = false) Boolean addMode,
                                                  Pageable pageable) {
@@ -112,8 +112,7 @@ public class SubscrAccessResource {
     @ApiOperation("")
     public ResponseEntity<?> grantRevokeContObject(@RequestParam(value = "subscriberId") Long subscriberId,
                                                    @RequestParam(value = "contObjectId") Long contObjectId,
-                                                   @RequestParam(value = "action", required = false, defaultValue = "grant") String action,
-                                                   @RequestParam(value = "onlyContObject", defaultValue = "false", required = false) Boolean onlyContObject) {
+                                                   @RequestParam(value = "action", required = false, defaultValue = "grant") String action) {
 
         if (action == null) {
             return ResponseEntity.badRequest().build();
@@ -142,5 +141,38 @@ public class SubscrAccessResource {
         return  ResponseEntity.ok().build();
     }
 
+    @PutMapping("/cont-zpoints")
+    @Timed
+    @ApiOperation("")
+    public ResponseEntity<?> grantRevokeContZPoint(@RequestParam(value = "subscriberId") Long subscriberId,
+                                                   @RequestParam(value = "contZPointId") Long contZPointId,
+                                                   @RequestParam(value = "action", required = false, defaultValue = "grant") String action) {
+
+        if (action == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        String actionLower = action.toLowerCase();
+
+        if (!"grant".equals(actionLower) && !"revoke".equals(actionLower)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        if ("grant".equals(actionLower)) {
+            boolean grantResult = contObjectAccessService.grantContZPointAccess(portalUserIdsService.getCurrentIds(), subscriberId, contZPointId);
+            if (!grantResult) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        if ("revoke".equals(actionLower)) {
+            boolean revokeResult = contObjectAccessService.revokeContZPointAccess(portalUserIdsService.getCurrentIds(), subscriberId, contZPointId);
+            if (!revokeResult) {
+                return ResponseEntity.badRequest().build();
+            }
+        }
+
+        return ResponseEntity.ok().build();
+    }
 
 }

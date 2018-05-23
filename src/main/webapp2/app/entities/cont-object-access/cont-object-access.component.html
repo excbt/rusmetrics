@@ -26,15 +26,12 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-icon-button (click)="op.toggle($event)">
-                <mat-icon mat-list-icon>add_circle</mat-icon>
-            </button>            
         </div>
     </div>
 
 
 
-    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
+    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNodeEvent($event)">
             <!-- ContObjectAccess -->
             <p-column header="{{'subscrAccess.contObject.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
@@ -79,18 +76,17 @@
             </p-column>               
             <p-column header="{{'subscrAccess.accessColumn' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <button *ngIf="node.data.contObjectId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
-                    <mat-icon mat-list-icon>add_circle</mat-icon>
+                    <button *ngIf="node.data.contObjectId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
+                        <mat-icon mat-list-icon>add_circle</mat-icon>
                     </button>
-                    <button *ngIf="node.data.contObjectId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
+                    <button *ngIf="node.data.contObjectId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
                             <mat-icon mat-list-icon>remove_circle</mat-icon>
                     </button>
-
-                    <button *ngIf="node.data.contZPointId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
+                    <button *ngIf="node.data.contZPointId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
                         <mat-icon mat-list-icon>add_circle</mat-icon>
                     </button>
 
-                    <button *ngIf="node.data.contZPointId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
+                    <button *ngIf="node.data.contZPointId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
                         <mat-icon mat-list-icon>remove_circle</mat-icon>
                     </button>
                 </ng-template>

@@ -14,9 +14,11 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
      }
 
      findContZPointAccess(subscriberId: number, contObjectId: number): Observable<ContZPointAccess[]> {
-        return this.http.get<ContZPointAccess[]>(this.resourceUrl + 'cont-zpoints/',
-        {params: new HttpParams().set('contObjectId', contObjectId.toString()).set('subscriberId', subscriberId.toPrecision())}
-        );
+        let myParams = new HttpParams().set('contObjectId', contObjectId.toString());
+        if (subscriberId) {
+            myParams = myParams.set('subscriberId', subscriberId.toString());
+        }
+        return this.http.get<ContZPointAccess[]>(this.resourceUrl + 'cont-zpoints/', {params: myParams});
     }
 
     findContObjectsPage(subscriberId: number, addMode: boolean, pageParams: ExcPageParams): Observable<ExcPage<ContObjectAccess>> {
@@ -53,6 +55,22 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
         return this.http.put(this.resourceUrl + 'cont-objects', null, {
             params: new HttpParams().set('subscriberId', subscriberId.toString())
                     .set('contObjectId', contObjectId.toString())
+                    .set('action', 'revoke')
+        });
+    }
+
+    grantContZPointAccess(subscriberId: number, contZPointId: number): Observable<any> {
+        return this.http.put(this.resourceUrl + 'cont-zpoints', null, {
+            params: new HttpParams().set('subscriberId', subscriberId.toString())
+                    .set('contZPointId', contZPointId.toString())
+                    .set('action', 'grant')
+        });
+    }
+
+    revokeContZPointAccess(subscriberId: number, contZPointId: number): Observable<any> {
+        return this.http.put(this.resourceUrl + 'cont-zpoints', null, {
+            params: new HttpParams().set('subscriberId', subscriberId.toString())
+                    .set('contZPointId', contZPointId.toString())
                     .set('action', 'revoke')
         });
     }

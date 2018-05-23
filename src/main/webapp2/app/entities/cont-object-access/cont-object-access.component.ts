@@ -55,6 +55,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     currentSubscriberId$ = this.currentSubscriberIdSubject.asObservable();
     currentSubscriberId: number;
 
+    private expandedContObjectIds: number[] = [];
+
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,
         router: Router,
@@ -74,7 +76,10 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.subscriberGroup.addControl('addModelEnable', this.addModelEnable);
 
         this.dataSource = new ContObjectAccessDataSource(this.contObjectAccessService);
-        this.dataSource.modelSubject.subscribe((data) => this.objectAccess = this.contObjectAccessToNode(data));
+        this.dataSource.modelSubject
+            .map((data) => this.contObjectAccessToNode(data))
+            .flatMap((data) => this.loadExpanedNodes(data))
+            .subscribe((nodes) => this.objectAccess = nodes);
         this.dataSource.totalElements$.subscribe((count) => this.totalElements = count);
 
         this.loadAccessData();
@@ -91,6 +96,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             distinctUntilChanged(),
             tap((arg) => {
                 this.paginator.pageIndex = 0;
+                this.expandedContObjectIds = [];
                 this.loadAccessData(arg);
                 this.searchString = arg;
             })
@@ -100,6 +106,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         this.subscriberSelect.valueChanges.subscribe((arg) => {
             this.paginator.pageIndex = 0;
             // if (arg) {
+                this.expandedContObjectIds = [];
                 this.loadAccessData(this.searchString);
                 this.currentSubscriberId = +arg;
             // } else {
@@ -117,7 +124,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
         });
 
         this.addModelEnable.valueChanges.subscribe((arg) => {
-            this.loadAccessData(this.searchString);
+            if (this.currentSubscriberId) {
+                this.loadAccessData(this.searchString);
+            } else if (this.subscriberSelectEnable.value === true) {
+                this.dataSource.makeEmpty();
+            }
         });
 
         merge(this.paginator.page).pipe(
@@ -136,10 +147,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     }
 
    contObjectAccessToNode(inData: ContObjectAccess[]): TreeNode[] {
-       return inData.map((i) => {
+       return inData.map((d) => {
+        const isExpanded = this.expandedContObjectIds.filter((i) => i === d.contObjectId).length > 0;
             const node: TreeNode = {
-                label: i.contObjectName ? i.contObjectName : i.contObjectFullAddress,
-                data: i,
+                label: d.contObjectName ? d.contObjectName : d.contObjectFullAddress,
+                data: d,
                 leaf: false
             };
             return node;
@@ -157,34 +169,89 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     });
    }
 
-   loadNode(event) {
-    if (event.node) {
-        // in a real application, make a call to a remote url to load children of the current node and add the new nodes as children
-        // this.nodeService.getLazyFilesystem().then(nodes => event.node.children = nodes);
-        this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, event.node.data.contObjectId)
-            .subscribe((data) => event.node.children = this.contZPointAccessToNode(data));
-    }
+    loadNodeEvent(event) {
+        if (event.node) { this.loadChildNode(event.node)
+            .subscribe((data) => event.node.children = data);
+        }
     }
 
-    accessOnChange(node) {
+    loadChildNode(node: TreeNode): Observable<TreeNode[]> {
+        if (node && node.data.contObjectId) {
+            const contObjectId = node.data.contObjectId;
+            return this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, contObjectId)
+                .map((data) => {
+                    this.expandedContObjectIds.push(contObjectId);
+                    return this.contZPointAccessToNode(data);
+                });
+        } else {
+            return Observable.of([]);
+        }
+    }
+
+    loadExpanedNodes(nodes: TreeNode[]): Observable<TreeNode[]> {
+        const childNodesLoading: Observable<TreeNode[]>[] = [];
+        const resultNodes = nodes.map((n) => {
+            const isExpanded = n.data.contObjectId && this.expandedContObjectIds.filter((i) => i === n.data.contObjectId).length > 0;
+            let resultNode: TreeNode;
+            if (isExpanded) {
+                resultNode = {
+                    label: n.label,
+                    data: n.data,
+                    leaf: n.leaf,
+                    expanded: true
+                };
+                childNodesLoading.push(this.loadChildNode(n).pipe(
+                    tap((child) => resultNode.children = child)
+                ));
+            } else {
+                resultNode = n;
+            }
+            return resultNode;
+        });
+
+        if (childNodesLoading.length === 0) {
+            return Observable.of(resultNodes);
+        } else {
+            return merge(... childNodesLoading).map(() => resultNodes);
+        }
+    }
+
+    accessOnChange(node: TreeNode) {
         if (node.data.contZPointId) {
             console.log('Change contZPointId' + node.data.contZPointId);
+            const parentNode = node.parent;
+            let action: Observable<any>;
+
+            if (node.data.accessEnabled === false) {
+                action = this.contObjectAccessService.grantContZPointAccess(this.currentSubscriberId, node.data.contZPointId);
+            } else {
+                action = this.contObjectAccessService.revokeContZPointAccess(this.currentSubscriberId, node.data.contZPointId);
+            }
+            action.pipe(
+                catchError(() => of([])),
+                // finalize(() => {
+                //     this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, node.data.contObjectId)
+                //         .subscribe((data) => parentNode.children = this.contZPointAccessToNode(data));
+                // }
+                finalize(() => {
+                    this.loadAccessData(this.searchString);
+                })
+            ).subscribe();
         }
 
-        let action: Observable<any>;
-
         if (node.data.contObjectId) {
+            let action: Observable<any>;
             console.log('Change contObjectId' + node.data.contObjectId);
             if (node.data.accessEnabled === false) {
                 action = this.contObjectAccessService.grantContObjectAccess(this.currentSubscriberId, node.data.contObjectId);
             } else {
                 action = this.contObjectAccessService.revokeContObjectAccess(this.currentSubscriberId, node.data.contObjectId);
             }
+            action.pipe(
+                catchError(() => of([])),
+                finalize(() => this.loadAccessData(this.searchString))
+            ).subscribe();
         }
-        action.pipe(
-            catchError(() => of([])),
-            finalize(() => this.loadAccessData(this.searchString))
-        ).subscribe();
 
     }
 

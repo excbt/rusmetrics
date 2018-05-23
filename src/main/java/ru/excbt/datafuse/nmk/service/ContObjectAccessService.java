@@ -29,7 +29,6 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -165,24 +164,23 @@ public class ContObjectAccessService {
             .and(subscriberFilter)
             .and(contObjectFilter);
 
-        //Collections.
         List<ContZPointAccess> resultList = new ArrayList<>();
         contZPointAccessRepository.findAll(where).forEach(resultList::add);
         return resultList;
     }
 
-    /**
-     *
-     * @param portalUserIds
-     * @param contObjectId
-     * @return
-     */
-    @Transactional(readOnly = true)
-    public List<ContZPointAccessDTO> getContZPointAccess(PortalUserIds portalUserIds,
-                                                         Long contObjectId) {
-        List<ContZPointAccess> resultList = findContZPointAccess(portalUserIds.getSubscriberId(), contObjectId);
-        return resultList.stream().map(contZPointAccessMapper::toDto).collect(Collectors.toList());
-    }
+//    /**
+//     *
+//     * @param portalUserIds
+//     * @param contObjectId
+//     * @return
+//     */
+//    @Transactional(readOnly = true)
+//    public List<ContZPointAccessDTO> getContZPointAccess(PortalUserIds portalUserIds,
+//                                                         Long contObjectId) {
+//        List<ContZPointAccess> resultList = findContZPointAccess(portalUserIds.getSubscriberId(), contObjectId);
+//        return resultList.stream().map(contZPointAccessMapper::toDto).collect(Collectors.toList());
+//    }
 
     @Transactional(readOnly = true)
     public List<ContZPointAccessVM> getContZPointAccessVM(PortalUserIds portalUserIds,
@@ -214,10 +212,17 @@ public class ContObjectAccessService {
                 resultVMList.add(availableAccess);
             }
         });
-
+        Comparator<ContZPointAccessVM> c = Comparator.comparing(ContZPointAccessVM::getContServiceTypeKeyname,
+            Comparator.nullsLast(Comparator.naturalOrder()));
+        resultVMList.sort(c);
         return resultVMList;
     }
 
+    /**
+     *
+     * @param portalUserIds
+     * @param subscriberConsumer
+     */
     private void subscriberAccessLoader(PortalUserIds portalUserIds, Consumer<Subscriber> subscriberConsumer) {
         QSubscriber qSubscriber = QSubscriber.subscriber;
         QAbstractPersistableEntity qPersistableEntity = new QAbstractPersistableEntity(qSubscriber);
@@ -232,7 +237,11 @@ public class ContObjectAccessService {
     }
 
 
-
+    /**
+     *
+     * @param userIds
+     * @return
+     */
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<SubscriberVM> findSubscribersManageList(PortalUserIds userIds) {
         List<SubscriberVM> resultList = new ArrayList<>();
@@ -240,6 +249,11 @@ public class ContObjectAccessService {
         return resultList;
     }
 
+    /**
+     *
+     * @param userIds
+     * @return
+     */
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
     public List<SubscriberAccessStatsVM> findSubscriberAccessManageList(PortalUserIds userIds) {
         List<SubscriberAccessStatsVM> subscriberList = new ArrayList<>();
@@ -260,6 +274,12 @@ public class ContObjectAccessService {
         return subscriberList;
     }
 
+    /**
+     *
+     * @param subscriberId
+     * @param searchString
+     * @return
+     */
     private List<ContObjectAccess> findContObjectAccessList(Long subscriberId, String searchString) {
         BooleanExpression subscriberFilterForRma = qContObjectAccess.subscriberId.eq(subscriberId);
         WhereClauseBuilder where = new WhereClauseBuilder()
@@ -285,12 +305,12 @@ public class ContObjectAccessService {
             ContObjectAccess sAccess = susbcrAccessMap.get(i.getContObjectId());
             boolean accessFound = sAccess != null;
             if (accessFound) {
+                i.setSubscriberId(sAccess.getSubscriberId());
                 i.setAccessContZPointCnt(findContZPointAccessCnt(i.getSubscriberId(), i.getContObjectId()));
                 i.setGrantTz(sAccess.getGrantTz());
                 i.setAccessTtl(sAccess.getAccessTtl());
                 i.setAccessType(sAccess.getAccessType());
                 i.setAccessEnabled(sAccess.getRevokeTz() == null);
-                i.setSubscriberId(sAccess.getSubscriberId());
             } else {
                 i.setAccessContZPointCnt(0);
                 i.setGrantTz(null);
@@ -320,7 +340,13 @@ public class ContObjectAccessService {
         return accessVMPage;
     }
 
-
+    /**
+     *
+     * @param portalUserIds
+     * @param subscriberId
+     * @param contObjectId
+     * @return
+     */
     @Transactional
     public boolean grantContObjectAccess(PortalUserIds portalUserIds, Long subscriberId, Long contObjectId) {
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
@@ -337,7 +363,6 @@ public class ContObjectAccessService {
                 .and(qContObjectAccess.subscriberId.eq(portalUserIds.getSubscriberId()))
                 .and(qContObjectAccess.contObjectId.eq(contObjectId));
 
-
             List<ContObjectAccess> checkRmaAccess = new ArrayList<>();
             contObjectAccessRepository.findAll(rmaWhereBuilder).forEach(checkRmaAccess::add);
             if (checkRmaAccess.size() <= 0) {
@@ -350,19 +375,6 @@ public class ContObjectAccessService {
             }
 
         }
-//        {
-//            WhereClauseBuilder subscriberWhereBuilder = new WhereClauseBuilder()
-//                .and(qContObjectAccess.subscriberId.eq(subscriberId))
-//                .and(qContObjectAccess.contObjectId.eq(contObjectId));
-//
-//
-//            List<ContObjectAccess> checkSubscriberAccess = new ArrayList<>();
-//            contObjectAccessRepository.findAll(subscriberWhereBuilder).forEach(checkSubscriberAccess::add);
-//            if (checkSubscriberAccess.size() != 0) {
-//                return false;
-//            }
-//
-//        }
         subscriberAccessService.grantContObjectAccess(new ContObject().id(contObjectId), new Subscriber().id(subscriberId));
         return true;
     }
@@ -386,20 +398,63 @@ public class ContObjectAccessService {
             return false;
         }
 
-//        {
-//            WhereClauseBuilder subscriberWhereBuilder = new WhereClauseBuilder()
-//                .and(qContObjectAccess.subscriberId.eq(subscriberId))
-//                .and(qContObjectAccess.contObjectId.eq(contObjectId));
-//
-//            List<ContObjectAccess> checkSubscriberAccess = new ArrayList<>();
-//            contObjectAccessRepository.findAll(subscriberWhereBuilder).forEach(checkSubscriberAccess::add);
-//            if (checkSubscriberAccess.size() == 0) {
-//                return false;
-//            }
-//
-//        }
         subscriberAccessService.revokeContObjectAccess(new ContObject().id(contObjectId), new Subscriber().id(subscriberId));
         return true;
     }
 
+
+    @Transactional
+    public boolean grantContZPointAccess(PortalUserIds portalUserIds, Long subscriberId, Long contZPointId) {
+        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+        if (subscriber == null) {
+            return false;
+        }
+
+        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+            return false;
+        }
+
+        {
+            WhereClauseBuilder rmaWhereBuilder = new WhereClauseBuilder()
+                .and(qContZPointAccess.subscriberId.eq(portalUserIds.getSubscriberId()))
+                .and(qContZPointAccess.contZPointId.eq(contZPointId));
+
+            List<ContZPointAccess> checkRmaAccess = new ArrayList<>();
+            contZPointAccessRepository.findAll(rmaWhereBuilder).forEach(checkRmaAccess::add);
+            if (checkRmaAccess.size() <= 0) {
+                return false;
+            }
+
+            if (SubscriberAccessService.TRIAL_ACCESS.equals(checkRmaAccess.get(0).getAccessType())) {
+                return false;
+            }
+
+        }
+        subscriberAccessService.grantContZPointAccess(new ContZPoint().id(contZPointId), new Subscriber().id(subscriberId));
+
+        return true;
+    }
+
+
+    /**
+     *
+     * @param portalUserIds
+     * @param subscriberId
+     * @param contZPointId
+     * @return
+     */
+    @Transactional
+    public boolean revokeContZPointAccess(PortalUserIds portalUserIds, Long subscriberId, Long contZPointId) {
+        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+        if (subscriber == null) {
+            return false;
+        }
+
+        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+            return false;
+        }
+
+        subscriberAccessService.revokeContZPointAccess(new ContZPoint().id(contZPointId), new Subscriber().id(subscriberId));
+        return true;
+    }
 }
