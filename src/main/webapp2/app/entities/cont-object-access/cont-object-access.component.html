@@ -18,9 +18,9 @@
                     </mat-slide-toggle>
                 </div>
             </div>
-            <div class="col-lg row-height" *ngIf="subscriberSelectEnable.value">
+            <div class="col-lg row-height" >
                 <br>
-                <div style="display: inline">
+                <div style="display: inline" *ngIf="subscriberSelectEnable.value">
                     <mat-form-field class="subscriber-search">
                         <mat-select placeholder="{{'subscrAccess.subscriberSelect' | translate}}" formControlName="subscriberSelect" >
                             <mat-option>--</mat-option>
