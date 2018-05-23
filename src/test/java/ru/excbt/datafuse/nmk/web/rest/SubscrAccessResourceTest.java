@@ -92,7 +92,12 @@ public class SubscrAccessResourceTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/subscr-access/subscriber-manage-list").testGet();
     }
 
-//    @Test
+    @Test
+    public void testSubscriberAccessStats() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-access/subscriber-access-stats").testGet();
+    }
+
+    //    @Test
 //    public void testGetAvailableContObjects() throws Exception {
 //
 //        List<SubscriberAccessStatsVM> subscriberVMList = contObjectAccessService.findSubscriberAccessManageList(portalUserIdsService.getCurrentIds());

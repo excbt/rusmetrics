@@ -18,7 +18,10 @@
         "subscriberSelectSlider": "Управление абонентами",
         "addModeEnable": "Добавление объектов",
         "accessColumn": "Доступ",
-        "grantTz": "Дата предоставления доступа"        
+        "accessStatsColumn": "Статус",
+        "grantTz": "Дата предоставления доступа",
+        "contObjectsTotal": "Всего объектов учета",
+        "contZPointsTotal": "Всего точек учета"
     }
     
 }

@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.vm.ContObjectAccessVM;
 import ru.excbt.datafuse.nmk.service.vm.ContZPointAccessVM;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberAccessStatsVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 
 import java.util.List;
@@ -174,5 +175,14 @@ public class SubscrAccessResource {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping(value = "/subscriber-access-stats")
+    @Timed
+    @ApiOperation("")
+    public ResponseEntity<?> getSubscriberAccessStats(@RequestParam(value = "subscriberId", required = false) Long subscriberId) {
+        SubscriberAccessStatsVM result = contObjectAccessService.findSubscriberAccessStats(portalUserIdsService.getCurrentIds(), subscriberId);
+        return ResponseEntity.ok(result);
+    }
+
 
 }

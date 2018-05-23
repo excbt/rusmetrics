@@ -33,5 +33,7 @@ public class SubscriberAccessStatsVM {
 
     private String organizationName;
 
-    private int totalObjects = 0;
+    private int totalContObjects = 0;
+
+    private int totalContZPoints = 0;
 }

@@ -17,11 +17,12 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { ExcAbstractDataSource } from '../../shared-blocks/exc-tools/exc-abstract-datasource';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { SubscriberAccessStats } from './subcriber-access-stats.model';
 
 @Component({
     selector: 'jhi-cont-object-access',
     templateUrl: './cont-object-access.component.html',
-    styles: ['../blocks/list-form.scss', './cont-object-access.component.scss']
+    styleUrls: ['../../shared-blocks/shared-blocks.scss', '../blocks/list-form.scss', './cont-object-access.component.scss']
 })
 export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -51,9 +52,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
     avalialableAccess: ContObjectAccess[];
 
-    private currentSubscriberIdSubject = new BehaviorSubject<number>(null);
-    currentSubscriberId$ = this.currentSubscriberIdSubject.asObservable();
+    private currentSubscriberStatsSubject = new BehaviorSubject<number>(null);
+    private currentSubscriberStatsLoader$ = this.currentSubscriberStatsSubject.asObservable();
+
     currentSubscriberId: number;
+    currentSubscriberAccessStats: SubscriberAccessStats;
 
     private expandedContObjectIds: number[] = [];
 
@@ -82,6 +85,9 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             .subscribe((nodes) => this.objectAccess = nodes);
         this.dataSource.totalElements$.subscribe((count) => this.totalElements = count);
 
+        this.currentSubscriberStatsLoader$.flatMap((id) => this.contObjectAccessService.getSubscriberAccessStats(id))
+            .subscribe((stats) => this.currentSubscriberAccessStats = stats);
+
         this.loadAccessData();
 
     }
@@ -105,18 +111,26 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
         this.subscriberSelect.valueChanges.subscribe((arg) => {
             this.paginator.pageIndex = 0;
-            // if (arg) {
+            if (arg) {
                 this.expandedContObjectIds = [];
-                this.loadAccessData(this.searchString);
                 this.currentSubscriberId = +arg;
-            // } else {
-            //     this.dataSource.makeEmpty();
-            // }
+                this.currentSubscriberStatsSubject.next(+arg);
+                this.loadAccessData(this.searchString);
+            } else {
+                this.currentSubscriberId = null;
+                this.currentSubscriberStatsSubject.next(null);
+                if (this.subscriberSelectEnable.value === true) {
+                    this.dataSource.makeEmpty();
+                }
+            }
         });
 
         this.subscriberSelectEnable.valueChanges.subscribe((arg) => {
             if (arg === false) {
                 this.subscriberSelect.setValue(null);
+                this.currentSubscriberId = null;
+                this.loadAccessData(this.searchString);
+                this.currentSubscriberStatsSubject.next(null);
             }
             if (arg === true) {
                 this.dataSource.makeEmpty();
@@ -198,7 +212,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
                     label: n.label,
                     data: n.data,
                     leaf: n.leaf,
-                    expanded: true
+                    expanded: true,
                 };
                 childNodesLoading.push(this.loadChildNode(n).pipe(
                     tap((child) => resultNode.children = child)
@@ -236,7 +250,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
                 finalize(() => {
                     this.loadAccessData(this.searchString);
                 })
-            ).subscribe();
+            ).subscribe((d) => this.currentSubscriberStatsSubject.next(this.currentSubscriberId));
         }
 
         if (node.data.contObjectId) {
@@ -249,10 +263,11 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             }
             action.pipe(
                 catchError(() => of([])),
-                finalize(() => this.loadAccessData(this.searchString))
-            ).subscribe();
+                finalize(() => {
+                    this.loadAccessData(this.searchString);
+                })
+            ).subscribe((d) => this.currentSubscriberStatsSubject.next(this.currentSubscriberId));
         }
-
     }
 
 }

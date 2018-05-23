@@ -3,29 +3,48 @@
     <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
     </jhi-exc-list-form-menu>
 
-    <div [formGroup]="subscriberGroup" class="column-div">
-        <div class="column-div">
-            <mat-slide-toggle formControlName="subscriberSelectEnable">
-                {{'subscrAccess.subscriberSelectSlider' | translate}}
-            </mat-slide-toggle>
+    <div [formGroup]="subscriberGroup">
 
-            <mat-slide-toggle formControlName="addModelEnable">
-                    {{'subscrAccess.addModeEnable' | translate}}
-            </mat-slide-toggle>
-                
-            <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-            [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
-        
-        </div>
-        <div class="column-div">
-            <mat-form-field *ngIf="subscriberSelectEnable.value" class="subscriber-search">
-                <mat-select placeholder="{{'subscrAccess.subscriberSelect' | translate}}" formControlName="subscriberSelect" >
-                    <mat-option>--</mat-option>
-                    <mat-option *ngFor="let subscriber of subscriberList" [value]="subscriber.id">
-                    {{subscriber.subscriberName}}
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
+        <div class="row">
+            <div class="col-sm row-height">
+                <br>
+                <mat-slide-toggle formControlName="subscriberSelectEnable">
+                        {{'subscrAccess.subscriberSelectSlider' | translate}}
+                </mat-slide-toggle>
+                <br>
+                <div *ngIf="subscriberSelectEnable.value">
+                    <mat-slide-toggle formControlName="addModelEnable">
+                            {{'subscrAccess.addModeEnable' | translate}}
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <div class="col-lg row-height" *ngIf="subscriberSelectEnable.value">
+                <br>
+                <div style="display: inline">
+                    <mat-form-field class="subscriber-search">
+                        <mat-select placeholder="{{'subscrAccess.subscriberSelect' | translate}}" formControlName="subscriberSelect" >
+                            <mat-option>--</mat-option>
+                            <mat-option *ngFor="let subscriber of subscriberList" [value]="subscriber.id">
+                            {{subscriber.subscriberName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+            
+                </div>
+                <div style="display: inline-block; margin-left: 2rem;">
+                    <div *ngIf="currentSubscriberAccessStats" style="display: inline; ">
+                        <small>{{'subscrAccess.contObjectsTotal' | translate}}:</small>
+                        <b>{{currentSubscriberAccessStats?.totalContObjects}}</b>
+                        <br>
+                        <small>{{'subscrAccess.contZPointsTotal' | translate}}:</small>
+                        <b>{{currentSubscriberAccessStats?.totalContZPoints}}</b>
+                    </div>
+                </div>
+            
+            </div>           
+            <div class="col-sm row-height">
+                <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+            </div>    
         </div>
     </div>
 
@@ -33,10 +52,14 @@
 
     <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNodeEvent($event)">
             <!-- ContObjectAccess -->
+            <!--  -->
             <p-column header="{{'subscrAccess.contObject.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contObjectId">{{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}</span>
-                    <div>
+                    <span *ngIf="node.data.contObjectId" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        {{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}
+                    </span>
+                    <div [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        <!--  -->
                         <small *ngIf="node.data.contObjectId && devMode"><i>{{'global.field.id' | translate}}:</i>
                             {{node.data.contObjectId}} &nbsp;</small>
                         
@@ -49,11 +72,14 @@
             <!-- ContZPointAccess -->
             <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <small *ngIf="node.data.contZPointId && devMode"><i>{{'global.field.id' | translate}}:</i>
-                        {{node.data.contZPointId}}</small>
-                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
-                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>(
-                        {{node.data.contServiceTypeKeyname}})</i></small>
+                    <small *ngIf="node.data.contZPointId && devMode">
+                        <i>{{'global.field.id' | translate}}:</i> {{node.data.contZPointId}}
+                    </small>
+                    <span *ngIf="node.data.contZPointCustomServiceName" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        {{node.data.contZPointCustomServiceName}}
+                    </span>
+                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>
+                        ({{node.data.contServiceTypeKeyname}})</i></small>
                     
                 </ng-template>
             </p-column>               
@@ -67,9 +93,9 @@
                 </ng-template>
             </p-column>               
             <!-- Access -->
-            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+            <p-column header="{{'subscrAccess.accessStatsColumn' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contObjectId">
+                    <span *ngIf="node.data.contObjectId" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
                         <b>{{node.data.accessContZPointCnt}}</b>/<small>{{node.data.allContZPointCnt}} {{'subscrAccess.contObject.accessTemplate' | translate}}</small>
                     </span>
                 </ng-template>

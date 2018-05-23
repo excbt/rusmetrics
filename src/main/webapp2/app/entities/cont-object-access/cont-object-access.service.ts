@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import { ExcPageParams, ExcPage } from '../../shared-blocks';
 import { ContZPointAccess } from './cont-zpoint-access.model';
 import { PSubscriber } from '../p-subscribers/p-subscriber.model';
+import { SubscriberAccessStats } from './subcriber-access-stats.model';
 
 @Injectable()
 export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess> {
@@ -75,4 +76,11 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
         });
     }
 
+    getSubscriberAccessStats(subscriberId: number): Observable<SubscriberAccessStats> {
+        let myParams = new HttpParams();
+        if (subscriberId) {
+            myParams = myParams.set('subscriberId', subscriberId.toString());
+        }
+        return this.http.get<SubscriberAccessStats>(this.resourceUrl + 'subscriber-access-stats', {params: myParams});
+    }
 }
