@@ -127,6 +127,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
         this.subscriberSelectEnable.valueChanges.subscribe((arg) => {
             if (arg === false) {
+                this.expandedContObjectIds = [];
                 this.subscriberSelect.setValue(null);
                 this.currentSubscriberId = null;
                 this.loadAccessData(this.searchString);
