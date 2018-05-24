@@ -79,8 +79,10 @@ public class SubscrAccessResource {
     @Timed
     @ApiOperation("")
     public ResponseEntity<?> getContZPoints(@RequestParam(name = "subscriberId", required = false) Long subscriberId,
-                                            @RequestParam(name = "contObjectId") Long contObjectId) {
-        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), subscriberId, contObjectId);
+                                            @RequestParam(name = "contObjectId") Long contObjectId,
+                                            @RequestParam(name = "addUnused", required = false, defaultValue = "false") Boolean addUnused) {
+        boolean pAddUnused = Boolean.TRUE.equals(addUnused);
+        List<ContZPointAccessVM> contZPointAccessDTOS = contObjectAccessService.getContZPointAccessVM(portalUserIdsService.getCurrentIds(), subscriberId, contObjectId, pAddUnused);
         return ResponseEntity.ok(contZPointAccessDTOS);
     }
 

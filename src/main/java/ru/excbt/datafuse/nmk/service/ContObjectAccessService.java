@@ -187,12 +187,13 @@ public class ContObjectAccessService {
     @Transactional(readOnly = true)
     public List<ContZPointAccessVM> getContZPointAccessVM(PortalUserIds portalUserIds,
                                                           Long subscriberId,
-                                                          Long contObjectId) {
+                                                          Long contObjectId,
+                                                          boolean addUnused) {
 
         Long qrySubscriberId = Optional.ofNullable(subscriberId).orElse(portalUserIds.getSubscriberId());
 
         List<ContZPointAccess> accessList = subscriberAccessService.findContZPointAccess(new Subscriber().id(qrySubscriberId), new ContObject().id(contObjectId));
-        List<ContZPoint> zPointList = findAllContZPoints(contObjectId);
+        List<ContZPoint> zPointList = addUnused ? findAllContZPoints(contObjectId) : Collections.emptyList();
         List<Long> accessIds = accessList.stream().map(ContZPointAccess::getContZPointId).collect(Collectors.toList());
         List<ContZPointAccessVM> resultVMList = accessList.stream().map(contZPointAccessMapper::toVM).collect(Collectors.toList());;
 
@@ -203,17 +204,19 @@ public class ContObjectAccessService {
                 i.setGrantTz(null);
             }
         });
-        zPointList.forEach(i -> {
-            if (!accessIds.contains(i.getId())) {
-                ContZPointAccessVM availableAccess = new ContZPointAccessVM();
-                availableAccess.setSubscriberId(null);
-                availableAccess.setContZPointId(i.getId());
-                availableAccess.setContServiceTypeKeyname(i.getContServiceTypeKeyname());
-                availableAccess.setContZPointCustomServiceName(i.getCustomServiceName());
-                availableAccess.setAccessEnabled(false);
-                resultVMList.add(availableAccess);
-            }
-        });
+        if (addUnused) {
+            zPointList.forEach(i -> {
+                if (!accessIds.contains(i.getId())) {
+                    ContZPointAccessVM availableAccess = new ContZPointAccessVM();
+                    availableAccess.setSubscriberId(null);
+                    availableAccess.setContZPointId(i.getId());
+                    availableAccess.setContServiceTypeKeyname(i.getContServiceTypeKeyname());
+                    availableAccess.setContZPointCustomServiceName(i.getCustomServiceName());
+                    availableAccess.setAccessEnabled(false);
+                    resultVMList.add(availableAccess);
+                }
+            });
+        }
         Comparator<ContZPointAccessVM> c = Comparator.comparing(ContZPointAccessVM::getContServiceTypeKeyname,
             Comparator.nullsLast(Comparator.naturalOrder()));
         resultVMList.sort(c);

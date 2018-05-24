@@ -14,10 +14,13 @@ export class ContObjectAccessService extends ExcAbstractService<ContObjectAccess
         super({apiUrl: 'api/subscr-access/'}, http);
      }
 
-     findContZPointAccess(subscriberId: number, contObjectId: number): Observable<ContZPointAccess[]> {
+     findContZPointAccess(subscriberId: number, contObjectId: number, addUnused?: boolean): Observable<ContZPointAccess[]> {
         let myParams = new HttpParams().set('contObjectId', contObjectId.toString());
         if (subscriberId) {
             myParams = myParams.set('subscriberId', subscriberId.toString());
+        }
+        if (addUnused) {
+            myParams = myParams.set('addUnused', 'true');
         }
         return this.http.get<ContZPointAccess[]>(this.resourceUrl + 'cont-zpoints/', {params: myParams});
     }

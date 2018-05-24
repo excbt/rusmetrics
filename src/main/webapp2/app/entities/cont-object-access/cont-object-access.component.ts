@@ -197,7 +197,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     loadChildNode(node: TreeNode): Observable<TreeNode[]> {
         if (node && node.data.contObjectId) {
             const contObjectId = node.data.contObjectId;
-            return this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, contObjectId)
+            const addUnused = (this.operationMode === this.OPERATOR_MODE) || (this.operationMode === this.PARTNER_MODE);
+            return this.contObjectAccessService.findContZPointAccess(this.currentSubscriberId, contObjectId, addUnused)
                 .map((data) => {
                     this.expandedContObjectIds.push(contObjectId);
                     return this.contZPointAccessToNode(data);
