@@ -12,29 +12,29 @@ import { OrganizationTypeService } from './organization-types/organization-type.
 
 import { PortalSharedBlocksModule } from '../shared-blocks/shared-blocks.module';
 
-import {
-    MatGridListModule,
-    MatInputModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatProgressBarModule,
-    MatSortModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatCheckboxModule,
-    ErrorStateMatcher,
-    ShowOnDirtyErrorStateMatcher,
-    MatAutocompleteModule} from '@angular/material';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatPaginatorIntl } from '@angular/material';
+// import {
+//     MatGridListModule,
+//     MatInputModule,
+//     MatPaginatorModule,
+//     MatProgressSpinnerModule,
+//     MatProgressBarModule,
+//     MatSortModule,
+//     MatTableModule,
+//     MatButtonModule,
+//     MatIconModule,
+//     MatCheckboxModule,
+//     ErrorStateMatcher,
+//     ShowOnDirtyErrorStateMatcher,
+//     MatAutocompleteModule} from '@angular/material';
+// import { MatSelectModule } from '@angular/material/select';
+// import { MatTooltipModule } from '@angular/material/tooltip';
+// import { MatPaginatorIntl } from '@angular/material';
 import { CustomMatPaginatorIntl } from './shared/custom-mat-paginator-int';
 
 // PRIME NG
-import { CardModule } from 'primeng/card';
-import { InputTextModule } from 'primeng/inputtext';
-import { MenubarModule } from 'primeng/menubar';
+// import { CardModule } from 'primeng/card';
+// import { InputTextModule } from 'primeng/inputtext';
+// import { MenubarModule } from 'primeng/menubar';
 
 // Etc
 import { entityState } from './';
@@ -58,6 +58,7 @@ import { ContObjectAccessService } from './cont-object-access/cont-object-access
 import { ContObjectAccessComponent } from './cont-object-access/cont-object-access.component';
 import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manage.component';
 import { StTemperatureChartComponent } from './st-plans/st-temperature-chart.component';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } from '@angular/material';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -69,24 +70,24 @@ import { StTemperatureChartComponent } from './st-plans/st-temperature-chart.com
         FormsModule,
         ReactiveFormsModule,
         // Angular Material
-        MatGridListModule,
-        MatInputModule,
-        MatPaginatorModule,
-        MatProgressSpinnerModule,
-        MatProgressBarModule,
-        MatSortModule,
-        MatTableModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCheckboxModule,
-        MatSelectModule,
-        MatTooltipModule,
-        MatAutocompleteModule,
+        // MatGridListModule,
+        // MatInputModule,
+        // MatPaginatorModule,
+        // MatProgressSpinnerModule,
+        // MatProgressBarModule,
+        // MatSortModule,
+        // MatTableModule,
+        // MatButtonModule,
+        // MatIconModule,
+        // MatCheckboxModule,
+        // MatSelectModule,
+        // MatTooltipModule,
+        // MatAutocompleteModule,
 
         // PRIME NG
-        CardModule,
-        InputTextModule,
-        MenubarModule,
+        // CardModule,
+        // InputTextModule,
+        // MenubarModule,
         /* jhipster-needle-add-entity-module - JHipster will add entity modules here */
     ],
     declarations: [
@@ -129,7 +130,8 @@ import { StTemperatureChartComponent } from './st-plans/st-temperature-chart.com
         OrganizationsWidgetComponent,
         PSubscribersWidgetComponent,
         SubscrUsersWidgetComponent,
-        StTemperatureChartWidgetComponent
+        StTemperatureChartWidgetComponent,
+        ContObjectAccessComponent
     ]
 })
 export class PortalEntityModule {}

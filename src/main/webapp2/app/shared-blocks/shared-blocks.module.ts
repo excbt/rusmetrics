@@ -95,13 +95,28 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     // NG module
-    ButtonModule,
-    CheckboxModule,
     MatAutocompleteModule,
     MatSlideToggleModule,
+    MatGridListModule,
+    MatInputModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
+    MatProgressBarModule,
+    MatSortModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    MatCheckboxModule,
+    MatAutocompleteModule,
+    // Prime NG mudule
     TreeTableModule,
     ContextMenuModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    ButtonModule,
+    CheckboxModule,
+    CardModule,
+    InputTextModule,
+    MenubarModule
   ]
 })
 export class PortalSharedBlocksModule {}

@@ -1,9 +1,11 @@
 import { Routes } from '@angular/router';
 import { operatorDashboardRoute } from './operator-dashboard/operator-dashboard.route';
 import { UserRouteAccessService } from '../shared';
+import { operatorAccessManagementRoute } from './access-management/access-management.route';
 
 const OPERATOR_ROUTES = [
-    operatorDashboardRoute
+    operatorDashboardRoute,
+    operatorAccessManagementRoute
 ];
 
 export const operatorState: Routes = [{
