@@ -11,7 +11,6 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
     private totalElements = new BehaviorSubject<number>(0);
-    private totalPages = new BehaviorSubject<number>(0);
 
     public loading$ = this.loadingSubject.asObservable();
     public totalElements$ = this.totalElements.asObservable();

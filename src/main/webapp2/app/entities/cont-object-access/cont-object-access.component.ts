@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ContObjectAccess } from './cont-object-access.model';
 import { ExcPageSorting, ExcPageSize, defaultPageSize, ExcListFormMenuComponent, defaultPageSizeOptions } from '../../shared-blocks';
 import { ContObjectAccessDataSource } from './cont-object-access.datasource';
-import { TreeNode, MenuItem } from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
 import { merge } from 'rxjs/observable/merge';
 import { tap, distinctUntilChanged } from 'rxjs/operators';
@@ -14,7 +14,6 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { PSubscriber } from '../p-subscribers/p-subscriber.model';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ExcAbstractDataSource } from '../../shared-blocks/exc-tools/exc-abstract-datasource';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { SubscriberAccessStats } from './subcriber-access-stats.model';
@@ -61,8 +60,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
 
     private expandedContObjectIds: number[] = [];
 
-    private OPERATOR_MODE = 'OPERATOR';
-    private PARTNER_MODE = 'PARTNER';
+    readonly OPERATOR_MODE = 'OPERATOR';
+    readonly PARTNER_MODE = 'PARTNER';
 
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,
@@ -166,8 +165,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     }
 
    contObjectAccessToNode(inData: ContObjectAccess[]): TreeNode[] {
-       return inData.map((d) => {
-        const isExpanded = this.expandedContObjectIds.filter((i) => i === d.contObjectId).length > 0;
+        return inData.map((d) => {
             const node: TreeNode = {
                 label: d.contObjectName ? d.contObjectName : d.contObjectFullAddress,
                 data: d,
@@ -239,7 +237,6 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     accessOnChange(node: TreeNode) {
         if (node.data.contZPointId) {
             console.log('Change contZPointId' + node.data.contZPointId);
-            const parentNode = node.parent;
             let action: Observable<any>;
 
             if (node.data.accessEnabled === false) {
