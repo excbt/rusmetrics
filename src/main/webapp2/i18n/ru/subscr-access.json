@@ -19,7 +19,7 @@
         "addModeEnable": "Добавление объектов",
         "accessColumn": "Доступ",
         "accessStatsColumn": "Статус",
-        "grantTz": "Дата предоставления доступа",
+        "grantTz": "Дата",
         "contObjectsTotal": "Всего объектов учета",
         "contZPointsTotal": "Всего точек учета"
     }

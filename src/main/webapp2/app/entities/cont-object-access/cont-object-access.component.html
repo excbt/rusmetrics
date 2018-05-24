@@ -7,15 +7,18 @@
 
         <div class="row">
             <div class="col-sm row-height">
-                <br>
-                <mat-slide-toggle formControlName="subscriberSelectEnable">
-                        {{'subscrAccess.subscriberSelectSlider' | translate}}
-                </mat-slide-toggle>
-                <br>
-                <div *ngIf="subscriberSelectEnable.value">
-                    <mat-slide-toggle formControlName="addModelEnable">
-                            {{'subscrAccess.addModeEnable' | translate}}
+                <div *ngIf="(operationMode === OPERATOR_MODE) || (operationMode === PARTNER_MODE)">
+                    <br>
+                    <mat-slide-toggle formControlName="subscriberSelectEnable">
+                            {{'subscrAccess.subscriberSelectSlider' | translate}}
                     </mat-slide-toggle>
+                    <br>
+                    <div *ngIf="subscriberSelectEnable.value">
+                        <mat-slide-toggle formControlName="addModelEnable">
+                                {{'subscrAccess.addModeEnable' | translate}}
+                        </mat-slide-toggle>
+                    </div>
+        
                 </div>
             </div>
             <div class="col-lg row-height" >
@@ -84,7 +87,7 @@
                 </ng-template>
             </p-column>               
             <!-- grantTZ -->
-            <p-column header="{{'subscrAccess.grantTz' | translate}}">
+            <p-column header="{{'subscrAccess.grantTz' | translate}}" [style]="{'width': '15rem', 'text-align': 'center'}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
                     <span *ngIf="node.data.grantTz && (node.data?.accessEnabled === true)">
                         <small>{{node.data.grantTz | date:'dd/MM/yyyy HH:mm' }}</small>
@@ -93,14 +96,15 @@
                 </ng-template>
             </p-column>               
             <!-- Access -->
-            <p-column header="{{'subscrAccess.accessStatsColumn' | translate}}">
+            <p-column header="{{'subscrAccess.accessStatsColumn' | translate}}" [style]="{'width': '10rem', 'text-align': 'center'}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
                     <span *ngIf="node.data.contObjectId" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
                         <b>{{node.data.accessContZPointCnt}}</b>/<small>{{node.data.allContZPointCnt}} {{'subscrAccess.contObject.accessTemplate' | translate}}</small>
                     </span>
                 </ng-template>
             </p-column>               
-            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+            <p-column *ngIf="(operationMode === OPERATOR_MODE) || (operationMode === PARTNER_MODE)"
+                                header="{{'subscrAccess.accessColumn' | translate}}" [style]="{'width': '10rem', 'text-align': 'center'}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
                     <button *ngIf="node.data.contObjectId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
                         <mat-icon mat-list-icon>add_circle</mat-icon>

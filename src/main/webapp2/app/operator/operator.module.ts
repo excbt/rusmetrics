@@ -5,7 +5,7 @@ import { PortalEntityModule } from '../entities/entity.module';
 import { RouterModule } from '@angular/router';
 import { OperatorDashboardComponent } from './operator-dashboard/operator-dashboard.component';
 import { operatorState } from './operator.route';
-import { OperatorAccessManagementComponent } from './access-management/access-management.component';
+import { OperatorAccessManagementObjectsComponent } from './access-management/access-management-objects.component';
 import { OperatorAccessManagementWidgetComponent } from './access-management/access-management-widget.component';
 
 @NgModule({
@@ -17,7 +17,7 @@ import { OperatorAccessManagementWidgetComponent } from './access-management/acc
     ],
     declarations: [
         OperatorDashboardComponent,
-        OperatorAccessManagementComponent,
+        OperatorAccessManagementObjectsComponent,
         OperatorAccessManagementWidgetComponent
     ],
     entryComponents: [

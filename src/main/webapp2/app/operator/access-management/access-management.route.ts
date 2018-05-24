@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
-import { OperatorAccessManagementComponent } from './access-management.component';
+import { OperatorAccessManagementObjectsComponent } from './access-management-objects.component';
 
 export const operatorAccessManagementRoute: Route = {
-    path: 'operator-access-management',
-    component: OperatorAccessManagementComponent,
+    path: 'operator-access-management-objects',
+    component: OperatorAccessManagementObjectsComponent,
     data: {
         pageTitle: 'classifiers.title'
     }

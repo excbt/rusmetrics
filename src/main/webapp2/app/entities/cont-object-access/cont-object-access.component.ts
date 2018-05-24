@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Input } from '@angular/core';
 import { ContObjectAccessService } from './cont-object-access.service';
 // import { Principal } from '../../shared';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -22,12 +22,13 @@ import { SubscriberAccessStats } from './subcriber-access-stats.model';
 @Component({
     selector: 'jhi-cont-object-access',
     templateUrl: './cont-object-access.component.html',
-    styleUrls: ['../../shared-blocks/shared-blocks.scss', '../blocks/list-form.scss', './cont-object-access.component.scss']
+    styleUrls: ['./cont-object-access.component.scss']
 })
 export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
+    @Input('operationMode') operationMode: string;
     objectAccess: TreeNode[];
 
     selectedNode: TreeNode;
@@ -59,6 +60,9 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     currentSubscriberAccessStats: SubscriberAccessStats;
 
     private expandedContObjectIds: number[] = [];
+
+    private OPERATOR_MODE = 'OPERATOR';
+    private PARTNER_MODE = 'PARTNER';
 
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,

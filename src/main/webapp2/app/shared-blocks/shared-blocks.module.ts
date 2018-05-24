@@ -28,7 +28,9 @@ import {
   MatAutocompleteModule,
   MatSlideToggleModule,
   MatToolbarModule,
-  MatListModule
+  MatListModule,
+  MatSelectModule,
+  MatTooltipModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -94,9 +96,7 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
-    // NG module
-    MatAutocompleteModule,
-    MatSlideToggleModule,
+    // NG Material module
     MatGridListModule,
     MatInputModule,
     MatPaginatorModule,
@@ -107,7 +107,10 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     MatButtonModule,
     MatIconModule,
     MatCheckboxModule,
+    MatSelectModule,
+    MatTooltipModule,
     MatAutocompleteModule,
+    MatSlideToggleModule,
     // Prime NG mudule
     TreeTableModule,
     ContextMenuModule,
