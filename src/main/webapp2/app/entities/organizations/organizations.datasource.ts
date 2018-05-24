@@ -1,12 +1,12 @@
 import {Organization} from './organization.model';
 import {OrganizationsService} from './organizations.service';
 import { ExcPageParams } from '../../shared-blocks';
-import {ExcAbstractDataSource} from '../../shared-blocks';
+import {ExcAbstractPageDataSource} from '../../shared-blocks';
 
 // ***************************************************************************
 //
 // ***************************************************************************
-export class OrganizationsDataSource extends ExcAbstractDataSource<Organization> {
+export class OrganizationsDataSource extends ExcAbstractPageDataSource<Organization> {
 
     private subscriberMode: boolean;
 

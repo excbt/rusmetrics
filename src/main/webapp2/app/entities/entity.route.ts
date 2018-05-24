@@ -10,6 +10,7 @@ import {
 import { pSubscrPartnerRoute, pSubscrCustomerRoute, pSubscrPartnerEditRoute, pSubscrCustomerEditRoute } from './p-subscribers/p-subscribers.route';
 import { subscrUsersRoute, subscrUserEditRoute } from './subscr-users/subscr-users.route';
 import { subscrAccessDashboardRoute, subscrAccessManageRoute } from './subscr-access/subscr-access.route';
+import { UserRouteAccessService } from '../shared';
 
 const ENTITY_ROUTES = [
     organizationsRoute,
@@ -33,6 +34,6 @@ export const entityState: Routes = [{
     data: {
         authorities: []
     },
-    canActivate: [],
+    canActivate: [UserRouteAccessService],
     children: ENTITY_ROUTES
 }];

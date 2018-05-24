@@ -10,12 +10,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 
 /**
  * Сервис для работы с абонентами
@@ -332,37 +335,6 @@ public class SubscriberService implements SecuredRoles {
         Page<Subscriber> result = subscriberRepository.findAll(where, pageable);
         return result.map(mapper::apply);
 	}
-
-//	/**
-//	 *
-//	 * @param subscriber
-//	 * @return
-//	 */
-//	public String[] buildSubscriberLdapOu(Subscriber subscriber) {
-//		checkNotNull(subscriber);
-//
-//		String rmaOu = null;
-//		String childLdapOu = null;
-//		String[] orgUnits = null;
-//
-//		if (Boolean.TRUE.equals(subscriber.getIsChild())) {
-//			rmaOu = getRmaLdapOu(subscriber.getParentSubscriberId());
-//			Subscriber parentSubscriber = selectSubscriber(subscriber.getParentSubscriberId());
-//			checkNotNull(parentSubscriber);
-//
-//			childLdapOu = parentSubscriber.getChildLdapOu();
-//
-//			orgUnits = new String[] { rmaOu, childLdapOu };
-//
-//		} else {
-//			rmaOu = getRmaLdapOu(subscriber.getId());
-//			orgUnits = new String[] { rmaOu };
-//		}
-//
-//		checkNotNull(orgUnits);
-//
-//		return orgUnits;
-//	}
 
 	/**
 	 *

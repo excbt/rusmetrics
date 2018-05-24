@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +19,13 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.ContObjectAccessService;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectAccessMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.vm.SubscriberAccessStatsVM;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
+
+import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 public class SubscrAccessResourceTest extends PortalApiTest {
@@ -82,4 +87,40 @@ public class SubscrAccessResourceTest extends PortalApiTest {
             .requestBuilder(b -> b.param("contObjectId", "18811505")).testGet();
     }
 
+    @Test
+    public void testGetSubscriberManageList() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-access/subscriber-manage-list").testGet();
+    }
+
+    @Test
+    public void testSubscriberAccessStats() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-access/subscriber-access-stats").testGet();
+    }
+
+    //    @Test
+//    public void testGetAvailableContObjects() throws Exception {
+//
+//        List<SubscriberAccessStatsVM> subscriberVMList = contObjectAccessService.findSubscriberAccessManageList(portalUserIdsService.getCurrentIds());
+//
+//        Optional<SubscriberAccessStatsVM> testSubscriber = subscriberVMList.stream().filter(i -> i.getTotalObjects() == 0).findFirst();
+//
+//        Assert.assertTrue(testSubscriber.isPresent());
+//
+//        mockMvcRestWrapper.restRequest("/api/subscr-access/available-cont-objects")
+//            .requestBuilder(b -> b.param("subscriberId", testSubscriber.get().getId().toString())).testGet();
+//    }
+
+
+//    @Test
+//    public void testGrant() throws Exception {
+//        // cont-objects?subscriberId=222403982&contObjectId=18811505&action=grant
+//        mockMvcRestWrapper.restRequest("/api/subscr-access/cont-objects")
+//            .requestBuilder(b -> b.param("subscriberId","222403982")
+//                .param("contObjectId","18811505").param("action","revoke")).testPutEmpty();
+//
+//        mockMvcRestWrapper.restRequest("/api/subscr-access/cont-objects")
+//            .requestBuilder(b -> b.param("subscriberId","222403982")
+//                .param("contObjectId","18811505").param("action","revoke")).testPutEmpty();
+//
+//    }
 }

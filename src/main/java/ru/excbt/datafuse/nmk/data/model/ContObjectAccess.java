@@ -77,8 +77,8 @@ public class ContObjectAccess {
     private Long contObjectId;
 
     @NotNull
-    @Column(name = "grant_tz", updatable = false)
-    private ZonedDateTime grantTZ = ZonedDateTime.now();
+    @Column(name = "grant_tz")
+    private ZonedDateTime grantTz = ZonedDateTime.now();
 
     @Column(name = "revoke_tz")
     private ZonedDateTime revokeTz;
@@ -120,7 +120,7 @@ public class ContObjectAccess {
         this.clearRevokeTZ();
         this.clearAccessTTL();
         this.accessType = null;
-        this.grantTZ = ZonedDateTime.now();
+        this.grantTz = ZonedDateTime.now();
     }
 
     public void clearAccessTTL(){

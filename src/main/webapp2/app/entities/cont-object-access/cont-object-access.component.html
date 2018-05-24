@@ -3,15 +3,66 @@
     <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
     </jhi-exc-list-form-menu>
 
-    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+    <div [formGroup]="subscriberGroup">
 
-    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNode($event)">
+        <div class="row">
+            <div class="col-sm row-height">
+                <div *ngIf="(operationMode === OPERATOR_MODE) || (operationMode === PARTNER_MODE)">
+                    <br>
+                    <mat-slide-toggle formControlName="subscriberSelectEnable">
+                            {{'subscrAccess.subscriberSelectSlider' | translate}}
+                    </mat-slide-toggle>
+                    <br>
+                    <div *ngIf="subscriberSelectEnable.value">
+                        <mat-slide-toggle formControlName="addModelEnable">
+                                {{'subscrAccess.addModeEnable' | translate}}
+                        </mat-slide-toggle>
+                    </div>
+        
+                </div>
+            </div>
+            <div class="col-lg row-height" >
+                <br>
+                <div style="display: inline" *ngIf="subscriberSelectEnable.value">
+                    <mat-form-field class="subscriber-search">
+                        <mat-select placeholder="{{'subscrAccess.subscriberSelect' | translate}}" formControlName="subscriberSelect" >
+                            <mat-option>--</mat-option>
+                            <mat-option *ngFor="let subscriber of subscriberList" [value]="subscriber.id">
+                            {{subscriber.subscriberName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+            
+                </div>
+                <div style="display: inline-block; margin-left: 2rem;">
+                    <div *ngIf="currentSubscriberAccessStats" style="display: inline; ">
+                        <small>{{'subscrAccess.contObjectsTotal' | translate}}:</small>
+                        <b>{{currentSubscriberAccessStats?.totalContObjects}}</b>
+                        <br>
+                        <small>{{'subscrAccess.contZPointsTotal' | translate}}:</small>
+                        <b>{{currentSubscriberAccessStats?.totalContZPoints}}</b>
+                    </div>
+                </div>
+            
+            </div>           
+            <div class="col-sm row-height">
+                <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+            </div>    
+        </div>
+    </div>
+
+
+
+    <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNodeEvent($event)">
             <!-- ContObjectAccess -->
+            <!--  -->
             <p-column header="{{'subscrAccess.contObject.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contObjectId">{{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}</span>
-                    <div>
+                    <span *ngIf="node.data.contObjectId" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        {{'subscrAccess.contObject.contObjectName' | translate}}: {{node.data.contObjectName}}
+                    </span>
+                    <div [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        <!--  -->
                         <small *ngIf="node.data.contObjectId && devMode"><i>{{'global.field.id' | translate}}:</i>
                             {{node.data.contObjectId}} &nbsp;</small>
                         
@@ -24,64 +75,52 @@
             <!-- ContZPointAccess -->
             <p-column header="{{'subscrAccess.contZPoint.title' | translate}}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <small *ngIf="node.data.contZPointId && devMode"><i>{{'global.field.id' | translate}}:</i>
-                        {{node.data.contZPointId}}</small>
-                    <span *ngIf="node.data.contZPointCustomServiceName">{{node.data.contZPointCustomServiceName}}</span>
-                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>(
-                        {{node.data.contServiceTypeKeyname}})</i></small>
+                    <small *ngIf="node.data.contZPointId && devMode">
+                        <i>{{'global.field.id' | translate}}:</i> {{node.data.contZPointId}}
+                    </small>
+                    <span *ngIf="node.data.contZPointCustomServiceName" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        {{node.data.contZPointCustomServiceName}}
+                    </span>
+                    <small *ngIf="node.data.contServiceTypeKeyname && devMode"><i>
+                        ({{node.data.contServiceTypeKeyname}})</i></small>
                     
                 </ng-template>
             </p-column>               
-            <p-column header="{{'subscrAccess.contZPoint.contZPointTsNumber' | translate}}">
+            <!-- grantTZ -->
+            <p-column header="{{'subscrAccess.grantTz' | translate}}" [style]="{'width': '15rem', 'text-align': 'center'}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span>
+                    <span *ngIf="node.data.grantTz && (node.data?.accessEnabled === true)">
+                        <small>{{node.data.grantTz | date:'dd/MM/yyyy HH:mm' }}</small>
+                    </span>
+                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
                 </ng-template>
             </p-column>               
             <!-- Access -->
-            <p-column header="{{'subscrAccess.accessColumn' | translate}}">
+            <p-column header="{{'subscrAccess.accessStatsColumn' | translate}}" [style]="{'width': '10rem', 'text-align': 'center'}">
                 <ng-template let-col let-node="rowData" pTemplate="body">
-                    <!-- <span *ngIf="node.data.contZPointTsNumber">{{node.data.contZPointTsNumber}}</span> -->
+                    <span *ngIf="node.data.contObjectId" [ngClass]="{'no-access-color': (node.data?.accessEnabled === false)}">
+                        <b>{{node.data.accessContZPointCnt}}</b>/<small>{{node.data.allContZPointCnt}} {{'subscrAccess.contObject.accessTemplate' | translate}}</small>
+                    </span>
+                </ng-template>
+            </p-column>               
+            <p-column *ngIf="(operationMode === OPERATOR_MODE) || (operationMode === PARTNER_MODE)"
+                                header="{{'subscrAccess.accessColumn' | translate}}" [style]="{'width': '10rem', 'text-align': 'center'}">
+                <ng-template let-col let-node="rowData" pTemplate="body">
+                    <button *ngIf="node.data.contObjectId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
+                        <mat-icon mat-list-icon>add_circle</mat-icon>
+                    </button>
+                    <button *ngIf="node.data.contObjectId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
+                            <mat-icon mat-list-icon>remove_circle</mat-icon>
+                    </button>
+                    <button *ngIf="node.data.contZPointId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === true)" (click)="accessOnChange(node)">
+                        <mat-icon mat-list-icon>add_circle</mat-icon>
+                    </button>
+
+                    <button *ngIf="node.data.contZPointId && currentSubscriberId" mat-icon-button [disabled]="(node.data?.accessEnabled === false)" (click)="accessOnChange(node)">
+                        <mat-icon mat-list-icon>remove_circle</mat-icon>
+                    </button>
                 </ng-template>
             </p-column>               
     </p-treeTable>
 
-
 </div>
-
-    <!-- <mat-table class="list-form-table" #table [dataSource]="dataSource" >
-        <ng-container matColumnDef="contObjectId">
-            <mat-header-cell *matHeaderCellDef class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let contObjectAccess" class="id-column-width"> {{contObjectAccess.contObjectId}} </mat-cell>
-        </ng-container>        
-
-        <ng-container matColumnDef="contObjectName">
-                <mat-header-cell *matHeaderCellDef > contObjectName </mat-header-cell>
-                <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectName}} </mat-cell>
-            </ng-container>        
-    
-        <ng-container matColumnDef="contObjectFullName">
-            <mat-header-cell *matHeaderCellDef > contObjectFullName </mat-header-cell>
-            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullName}} </mat-cell>
-        </ng-container>        
-
-        <ng-container matColumnDef="contObjectFullAddress">
-            <mat-header-cell *matHeaderCellDef > contObjectFullAddress </mat-header-cell>
-            <mat-cell *matCellDef="let contObjectAccess" > {{contObjectAccess.contObjectFullAddress}} </mat-cell>
-        </ng-container>        
-
-        <ng-container matColumnDef="contObjectManage">
-                <mat-header-cell *matHeaderCellDef > contObjectManage </mat-header-cell>
-                <mat-cell *matCellDef="let contObjectAccess" > 
-                        <mat-list>
-                        <mat-list-item> Pepper </mat-list-item>
-                        <mat-list-item> Salt </mat-list-item>
-                        <mat-list-item> Paprika </mat-list-item>
-                        </mat-list>
-                </mat-cell>
-        </ng-container>        
-    
-
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
-        
-    </mat-table> -->

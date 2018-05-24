@@ -5,6 +5,8 @@ import { PortalEntityModule } from '../entities/entity.module';
 import { RouterModule } from '@angular/router';
 import { OperatorDashboardComponent } from './operator-dashboard/operator-dashboard.component';
 import { operatorState } from './operator.route';
+import { OperatorAccessManagementObjectsComponent } from './access-management/access-management-objects.component';
+import { OperatorAccessManagementWidgetComponent } from './access-management/access-management-widget.component';
 
 @NgModule({
     imports: [
@@ -14,15 +16,15 @@ import { operatorState } from './operator.route';
         RouterModule.forChild(operatorState)
     ],
     declarations: [
-        OperatorDashboardComponent
+        OperatorDashboardComponent,
+        OperatorAccessManagementObjectsComponent,
+        OperatorAccessManagementWidgetComponent
     ],
     entryComponents: [
     ],
     providers: [
     ],
-    exports: [
-        OperatorDashboardComponent
-    ],
+    exports: [],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class OperatorModule {}

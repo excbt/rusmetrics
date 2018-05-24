@@ -1,19 +1,22 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { ExcPage, ExcPageParams } from '../../shared-blocks';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
+export abstract class ExcAbstractPageDataSource<T> implements DataSource<T> {
 
     modelSubject = new BehaviorSubject<T[]>([]);
 
     private loadingSubject = new BehaviorSubject<boolean>(false);
 
     private totalElements = new BehaviorSubject<number>(0);
+    private totalPages = new BehaviorSubject<number>(0);
 
     public loading$ = this.loadingSubject.asObservable();
     public totalElements$ = this.totalElements.asObservable();
+    public totalPages$ = this.totalPages.asObservable();
 
     connect(collectionViewer: CollectionViewer): Observable<T[]> {
         return this.modelSubject.asObservable();
@@ -24,6 +27,12 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
         this.loadingSubject.complete();
     }
 
+    nextPage(page: ExcPage<T>) {
+      this.modelSubject.next(page.content);
+      this.totalElements.next(page.totalElements);
+      this.totalPages.next(page.totalPages);
+    }
+
     startLoading() {
       this.loadingSubject.next(true);
     }
@@ -32,28 +41,22 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
       this.loadingSubject.next(false);
     }
 
-    abstract findData();
+    abstract findPage(params: ExcPageParams);
 
-    wrapPageService(anyService: Observable<T[]>) {
+    wrapPageService(anyService: Observable<ExcPage<T>>) {
         this.startLoading();
         anyService
             .pipe(
                 catchError(() => of([])),
                 finalize(() => this.finishLoading())
             )
-            .subscribe( (data) => {
+            .subscribe( (page: ExcPage<T>) => {
                 this.finishLoading();
-                this.nextData(data);
+                this.nextPage(page);
             });
     }
 
     makeEmpty() {
-        this.nextData([]);
+        this.nextPage(new ExcPage([], 0, 0, 0));
     }
-
-    nextData(data: T[]) {
-        this.modelSubject.next(data);
-        this.totalElements.next(data.length);
-    }
-
 }

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.service.SubscrContObjectService;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -262,9 +265,12 @@ public class SubscriberAccessService {
         subscrContObjectService.access().linkSubscrContObject(subscriber, contObject,
             subscriberDateTime != null ? subscriberDateTime.toLocalDate() : LocalDate.now());
 
+        List<Long> contZPointAccessCheck = findContZPointAccess(subscriber, contObject).stream().map(ContZPointAccess::getContZPointId).collect(Collectors.toList());
 
-        contZPointRepository.findContZPointIds(contObject.getId()).forEach(i -> startContZPointAccess(new ContZPoint().id(i), subscriberDateTime, subscriber));
-
+        if (contZPointAccessCheck.size() == 0) {
+            contZPointRepository.findContZPointIds(contObject.getId())
+                .forEach(i -> startContZPointAccess(new ContZPoint().id(i), subscriberDateTime, subscriber));
+        }
 
     }
 
@@ -506,6 +512,22 @@ public class SubscriberAccessService {
         );
     }
 
+    @Transactional(readOnly = true)
+    public List<ContZPointAccess> findContZPointAccess(Subscriber subscriber, ContObject contObject) {
+        QContZPointAccess qContZPointAccess = QContZPointAccess.contZPointAccess;
+        BooleanExpression subscriberFilter = qContZPointAccess.subscriberId.eq(subscriber.getId());
+        BooleanExpression contObjectFilter = qContZPointAccess.contZPoint().contObjectId.eq(contObject.getId())
+            .and(qContZPointAccess.contZPoint().deleted.eq(0))
+            .and(qContZPointAccess.revokeTz.isNull());
+
+        WhereClauseBuilder where = new WhereClauseBuilder()
+            .and(subscriberFilter)
+            .and(contObjectFilter);
+
+        List<ContZPointAccess> resultList = new ArrayList<>();
+        contZPointAccessRepository.findAll(where).forEach(resultList::add);
+        return resultList;
+    }
 
 
 }
