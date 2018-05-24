@@ -3,7 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { EventEmitter } from '@angular/core';
 
-const searchDebounceTimeValue = 500;
+const searchDebounceTimeValue = 150;
 
 export class ExcSearchToolService {
   private inputSearchString = new BehaviorSubject<string>(null);
@@ -20,9 +20,8 @@ export class ExcSearchToolService {
 
   }
 
-  filterInput(s: string): Observable<string> {
+  filterInput(s: string) {
     this.inputSearchString.next(s);
-    return this.searchString$;
   }
 
 }

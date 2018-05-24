@@ -105,20 +105,15 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     // on sort or paginate events, load a new page
 
         if (this.formMenu && this.formMenu.searchAction) {
-            this.formMenu.searchAction.flatMap((data) => this.searchToolService.filterInput(data)).subscribe((arg) => {
-                this.paginator.pageIndex = 0;
-                this.expandedContObjectIds = [];
-                this.loadAccessData(arg);
-                this.searchString = arg;
-            });
+            this.formMenu.searchAction.subscribe((data) => this.searchToolService.filterInput(data));
         }
 
-        // this.searchToolService.searchString$.subscribe((arg) => {
-        //     this.paginator.pageIndex = 0;
-        //     this.expandedContObjectIds = [];
-        //     this.loadAccessData(arg);
-        //     this.searchString = arg;
-        // });
+        this.searchToolService.searchString$.subscribe((arg) => {
+            this.paginator.pageIndex = 0;
+            this.expandedContObjectIds = [];
+            this.loadAccessData(arg);
+            this.searchString = arg;
+        });
 
         this.subscriberSelect.valueChanges.subscribe((arg) => {
             this.paginator.pageIndex = 0;

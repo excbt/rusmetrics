@@ -79,7 +79,7 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
 
  ngAfterViewInit() {
     Observable.fromEvent(this.input.nativeElement, 'keyup')
-      .flatMap((data) => this.searchToolService.filterInput(this.input.nativeElement.value)).subscribe((data) => this.searchAction.emit(data));
+      .subscribe((data) => this.searchToolService.filterInput(this.input.nativeElement.value));
     // .pipe(
     //     debounceTime(searchDebounceTimeValue),
     //     distinctUntilChanged(),
@@ -89,9 +89,9 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
     //     })
     // ).subscribe();
 
-    // this.searchToolService.searchString$.subscribe((data) => {
-    //   this.searchAction.emit(data);
-    // });
+    this.searchToolService.searchString$.subscribe((data) => {
+      this.searchAction.emit(data);
+    });
   }
 
   registerAuthenticationSuccess() {

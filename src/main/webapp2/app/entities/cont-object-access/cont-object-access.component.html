@@ -3,6 +3,12 @@
     <jhi-exc-list-form-menu  headerKey="subscrAccess.listTitle">
     </jhi-exc-list-form-menu>
 
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-progress-bar  color="primary" mode="indeterminate">
+        </mat-progress-bar>
+    </div>
+
+        
     <div [formGroup]="subscriberGroup">
 
         <div class="row">
@@ -50,8 +56,6 @@
             </div>    
         </div>
     </div>
-
-
 
     <p-treeTable [value]="objectAccess" (onNodeExpand)="loadNodeEvent($event)">
             <!-- ContObjectAccess -->
