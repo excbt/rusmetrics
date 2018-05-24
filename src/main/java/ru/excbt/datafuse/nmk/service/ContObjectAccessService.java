@@ -62,9 +62,22 @@ public class ContObjectAccessService {
         if (s.isEmpty()) {
             return null;
         }
-        return qContObjectAccess.contObject().name.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s))
-            .or(qContObjectAccess.contObject().fullName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)))
-            .or(qContObjectAccess.contObject().fullAddress.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(s)));
+
+        List<String> searchArray = new ArrayList<>();
+        searchArray.addAll(Arrays.asList(s.split("\\s+")));
+
+        Function<String, BooleanExpression> exprBuilder = builderString -> qContObjectAccess.contObject().name.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(builderString))
+            .or(qContObjectAccess.contObject().fullName.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(builderString)))
+            .or(qContObjectAccess.contObject().fullAddress.toUpperCase().like(QueryDSLUtil.upperCaseLikeStr.apply(builderString)));
+
+        BooleanExpression result = null;
+
+        for (String splitString: searchArray) {
+            BooleanExpression sExpr = exprBuilder.apply(splitString);
+            result = result != null ? result.and(sExpr) : sExpr;
+        }
+
+        return result == null ? exprBuilder.apply(s) : result;
     }
 
     private Page<ContObjectAccess> searchContObjectAccess(Long subscriberId,
