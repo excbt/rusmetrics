@@ -1,6 +1,6 @@
 {
     "operator" : {
         "accessManagement": "Управление доступом",
-        "contObjectAccess": "Доступ к объектам учета"
+        "contObjectAccess": "Подписка на объекты учета"
     }
 }

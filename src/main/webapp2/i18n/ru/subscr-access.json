@@ -1,6 +1,6 @@
 {
     "subscrAccess": {
-        "title": "Управление доступом к объектам учета",
+        "title": "Управление подпиской к объектам учета",
         "listTitle": "Список объектов учета",
         "contObject": {
             "title": "Объект учета",
@@ -17,7 +17,7 @@
         "subscriberSelect": "Абонент",
         "subscriberSelectSlider": "Управление абонентами",
         "addModeEnable": "Добавление объектов",
-        "accessColumn": "Доступ",
+        "accessColumn": "Подписка",
         "accessStatsColumn": "Статус",
         "grantTz": "Дата",
         "contObjectsTotal": "Всего объектов учета",
