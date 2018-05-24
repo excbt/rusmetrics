@@ -15,6 +15,8 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
     public loading$ = this.loadingSubject.asObservable();
     public totalElements$ = this.totalElements.asObservable();
 
+    readonly startLoadingDelay = 160;
+
     connect(collectionViewer: CollectionViewer): Observable<T[]> {
         return this.modelSubject.asObservable();
     }
@@ -25,7 +27,7 @@ export abstract class ExcAbstractDataSource<T> implements DataSource<T> {
     }
 
     startLoading() {
-      this.loadingSubject.next(true);
+        Observable.timer(this.startLoadingDelay).takeUntil(this.modelSubject).subscribe(() => this.loadingSubject.next(true));
     }
 
     finishLoading() {

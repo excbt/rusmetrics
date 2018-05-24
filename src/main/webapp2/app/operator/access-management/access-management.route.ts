@@ -5,6 +5,6 @@ export const operatorAccessManagementRoute: Route = {
     path: 'operator-access-management-objects',
     component: OperatorAccessManagementObjectsComponent,
     data: {
-        pageTitle: 'classifiers.title'
+        pageTitle: 'operator.contObjectAccess'
     }
 };

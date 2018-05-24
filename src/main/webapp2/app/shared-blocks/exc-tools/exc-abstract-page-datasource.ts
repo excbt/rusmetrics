@@ -2,7 +2,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ExcPage, ExcPageParams } from '../../shared-blocks';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, finalize, takeUntil } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 export abstract class ExcAbstractPageDataSource<T> implements DataSource<T> {
@@ -17,6 +17,8 @@ export abstract class ExcAbstractPageDataSource<T> implements DataSource<T> {
     public loading$ = this.loadingSubject.asObservable();
     public totalElements$ = this.totalElements.asObservable();
     public totalPages$ = this.totalPages.asObservable();
+
+    readonly startLoadingDelay = 160;
 
     connect(collectionViewer: CollectionViewer): Observable<T[]> {
         return this.modelSubject.asObservable();
@@ -34,7 +36,7 @@ export abstract class ExcAbstractPageDataSource<T> implements DataSource<T> {
     }
 
     startLoading() {
-      this.loadingSubject.next(true);
+      Observable.timer(this.startLoadingDelay).takeUntil(this.modelSubject).subscribe(() => this.loadingSubject.next(true));
     }
 
     finishLoading() {
