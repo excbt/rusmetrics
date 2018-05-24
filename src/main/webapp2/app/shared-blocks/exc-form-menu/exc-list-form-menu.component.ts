@@ -5,6 +5,7 @@ import { MenuItem } from 'primeng/api';
 import { Account,  Principal } from '../../shared';
 import { JhiEventManager } from 'ng-jhipster';
 import {searchDebounceTimeValue} from '../exc-tools/exc-constants';
+import { ExcSearchToolService } from '../exc-tools/exc-search-tool-service';
 
 @Component({
   selector: 'jhi-exc-list-form-menu',
@@ -25,7 +26,9 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   @Input() createEnabled: boolean;
 
   account: Account;
-  items: MenuItem[];
+  // items: MenuItem[];
+
+  private searchToolService = new ExcSearchToolService();
 
   constructor(
     private principal: Principal,
@@ -41,49 +44,54 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
 
     this.registerAuthenticationSuccess();
 
-    this.items = [
-      {
-        icon: 'fa-caret-down',
-        styleClass: 'menu-bars-size',
-        items: [{
-            icon: 'far fa-download',
-            label: 'Отчет',
-            id: 'report',
-            command: (event) => {
-              this.reportAction.next();
-            }
-          },
-          {
-            icon: 'fa-eye',
-            label: 'Свойства',
-            id: 'properties',
-            command: (event) => {
-              this.propertiesAction.next();
-            }
-          },
-          {
-            icon: 'fa-plus',
-            label: 'Создать',
-            id: 'create',
-            command: (event) => {
-              this.createAction.next();
-            }
-          }
-        ]
-      }
-    ];
+    // this.items = [
+    //   {
+    //     icon: 'fa-caret-down',
+    //     styleClass: 'menu-bars-size',
+    //     items: [{
+    //         icon: 'far fa-download',
+    //         label: 'Отчет',
+    //         id: 'report',
+    //         command: (event) => {
+    //           this.reportAction.next();
+    //         }
+    //       },
+    //       {
+    //         icon: 'fa-eye',
+    //         label: 'Свойства',
+    //         id: 'properties',
+    //         command: (event) => {
+    //           this.propertiesAction.next();
+    //         }
+    //       },
+    //       {
+    //         icon: 'fa-plus',
+    //         label: 'Создать',
+    //         id: 'create',
+    //         command: (event) => {
+    //           this.createAction.next();
+    //         }
+    //       }
+    //     ]
+    //   }
+    // ];
   }
 
  ngAfterViewInit() {
     Observable.fromEvent(this.input.nativeElement, 'keyup')
-    .pipe(
-        debounceTime(searchDebounceTimeValue),
-        distinctUntilChanged(),
-        tap(() => {
-                const val = this.input.nativeElement.value;
-                this.searchAction.emit(val);
-        })
-    ).subscribe();
+      .flatMap((data) => this.searchToolService.filterInput(this.input.nativeElement.value)).subscribe((data) => this.searchAction.emit(data));
+    // .pipe(
+    //     debounceTime(searchDebounceTimeValue),
+    //     distinctUntilChanged(),
+    //     tap(() => {
+    //             const val = this.input.nativeElement.value;
+    //             this.searchAction.emit(val);
+    //     })
+    // ).subscribe();
+
+    // this.searchToolService.searchString$.subscribe((data) => {
+    //   this.searchAction.emit(data);
+    // });
   }
 
   registerAuthenticationSuccess() {
@@ -102,15 +110,15 @@ export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   }
 
   updateMenuItemAvailability(menuId: string,  menuEnabled: boolean, roleName?: string) {
-    const menuLevel1: MenuItem = this.items[0];
-    const menuLevel2: MenuItem[] = <MenuItem[]> menuLevel1.items;
-    const menuItem = menuLevel2.find((x) => x.id === menuId);
-    if (menuItem) {
-      if (roleName) {
-        menuItem.visible = (this.account.authorities.filter((x) => x === roleName).length > 0) && menuEnabled;
-      } else {
-        menuItem.visible = menuEnabled;
-      }
-    }
+    // const menuLevel1: MenuItem = this.items[0];
+    // const menuLevel2: MenuItem[] = <MenuItem[]> menuLevel1.items;
+    // const menuItem = menuLevel2.find((x) => x.id === menuId);
+    // if (menuItem) {
+    //   if (roleName) {
+    //     menuItem.visible = (this.account.authorities.filter((x) => x === roleName).length > 0) && menuEnabled;
+    //   } else {
+    //     menuItem.visible = menuEnabled;
+    //   }
+    // }
   }
 }

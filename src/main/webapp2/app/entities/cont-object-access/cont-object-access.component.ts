@@ -17,6 +17,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { SubscriberAccessStats } from './subcriber-access-stats.model';
+import { ExcSearchToolService } from '../../shared-blocks/exc-tools/exc-search-tool-service';
 
 @Component({
     selector: 'jhi-cont-object-access',
@@ -63,6 +64,8 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     readonly OPERATOR_MODE = 'OPERATOR';
     readonly PARTNER_MODE = 'PARTNER';
 
+    private searchToolService = new ExcSearchToolService();
+
     constructor(private contObjectAccessService: ContObjectAccessService,
         // private principal: Principal,
         router: Router,
@@ -92,6 +95,7 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
             .subscribe((stats) => this.currentSubscriberAccessStats = stats);
 
         this.loadAccessData();
+        this.searchToolService.searchString$.subscribe((data) => console.log('input:' + data));
 
     }
 
@@ -101,16 +105,20 @@ export class ContObjectAccessComponent implements OnInit, AfterViewInit {
     // on sort or paginate events, load a new page
 
         if (this.formMenu && this.formMenu.searchAction) {
-            this.formMenu.searchAction.pipe(
-            distinctUntilChanged(),
-            tap((arg) => {
+            this.formMenu.searchAction.flatMap((data) => this.searchToolService.filterInput(data)).subscribe((arg) => {
                 this.paginator.pageIndex = 0;
                 this.expandedContObjectIds = [];
                 this.loadAccessData(arg);
                 this.searchString = arg;
-            })
-            ).subscribe();
+            });
         }
+
+        // this.searchToolService.searchString$.subscribe((arg) => {
+        //     this.paginator.pageIndex = 0;
+        //     this.expandedContObjectIds = [];
+        //     this.loadAccessData(arg);
+        //     this.searchString = arg;
+        // });
 
         this.subscriberSelect.valueChanges.subscribe((arg) => {
             this.paginator.pageIndex = 0;
