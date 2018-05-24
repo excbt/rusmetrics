@@ -277,6 +277,8 @@ public class SubscrUserService implements SecuredRoles {
 
 		SubscrUser result = subscrUserRepository.save(subscrUser);
 
+        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(result.getUserName());
+
 		final String ldapPassword = newPassword;
 		if (ldapPassword != null) {
 

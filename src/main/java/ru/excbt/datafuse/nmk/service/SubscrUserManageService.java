@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.CacheManager;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,12 +46,15 @@ public class SubscrUserManageService {
 
     private final LdapService ldapService;
 
-    public SubscrUserManageService(SubscrUserRepository subscrUserRepository, SubscrUserMapper subscrUserMapper, SubscrUserService subscrUserService, SubscriberRepository subscriberRepository, LdapService ldapService) {
+    private final CacheManager cacheManager;
+
+    public SubscrUserManageService(SubscrUserRepository subscrUserRepository, SubscrUserMapper subscrUserMapper, SubscrUserService subscrUserService, SubscriberRepository subscriberRepository, LdapService ldapService, CacheManager cacheManager) {
         this.subscrUserRepository = subscrUserRepository;
         this.subscrUserMapper = subscrUserMapper;
         this.subscrUserService = subscrUserService;
         this.subscriberRepository = subscriberRepository;
         this.ldapService = ldapService;
+        this.cacheManager = cacheManager;
     }
 
     /**
@@ -145,6 +149,7 @@ public class SubscrUserManageService {
         subscrUserMapper.updateSubscrUser(subscrUser, subscrUserDTO);
 
         SubscrUser savedSubscrUser = subscrUserRepository.save(subscrUser);
+        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(savedSubscrUser.getUserName());
 
         final String ldapPassword = newPassword;
         if (ldapPassword != null) {
