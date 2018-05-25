@@ -3,7 +3,7 @@
  */
 package ru.excbt.datafuse.nmk.data.service;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.MeterPeriodSetting;
@@ -59,7 +59,7 @@ public class MeterPeriodSettingService {
      * @param portalUserIds
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<MeterPeriodSettingDTO> findBySubscriberId(PortalUserIds portalUserIds) {
 		List<Long> ids = Lists.newArrayList(portalUserIds.getSubscriberId(), portalUserIds.getRmaId()).stream()
             .filter(Objects::nonNull).collect(Collectors.toList());
@@ -74,7 +74,7 @@ public class MeterPeriodSettingService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public MeterPeriodSettingDTO findOne(Long id) {
 		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
 		return setting != null && setting.getDeleted() == 0 ? modelMapper.map(setting, MeterPeriodSettingDTO.class) : null;
@@ -85,7 +85,7 @@ public class MeterPeriodSettingService {
 	 * @param meterPeriodSettingDTO
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({SUBSCR_ADMIN, ADMIN })
 	public MeterPeriodSettingDTO save(MeterPeriodSettingDTO meterPeriodSettingDTO) {
 
@@ -108,7 +108,7 @@ public class MeterPeriodSettingService {
 	 *
 	 * @param id
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ SUBSCR_ADMIN, ADMIN })
 	public void delete(Long id) {
 		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);

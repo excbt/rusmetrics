@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
 
@@ -45,7 +45,7 @@ public class FiasService {
 	 * @param fiasUUID
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public UUID getCityUUID(UUID fiasUUID) {
 		String qString = "SELECT fias.get_city_uuid(:p_uuid);";
 
@@ -66,7 +66,7 @@ public class FiasService {
 	 * @param fiasUUID
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public String getCityName(UUID fiasUUID) {
 		String qString = "SELECT fias.get_city_name(:p_uuid);";
 
@@ -87,7 +87,7 @@ public class FiasService {
 	 * @param fiasUUID
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public String getShortAddr(UUID fiasUUID) {
 		String qString = "SELECT fias.get_short_addr(:p_uuid);";
 

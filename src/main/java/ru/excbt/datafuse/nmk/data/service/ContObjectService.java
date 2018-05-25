@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
@@ -127,7 +127,7 @@ public class ContObjectService implements SecuredRoles {
       * @param contObjectId
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public ContObject findContObjectChecked(Long contObjectId) {
 		ContObject result = contObjectRepository.findOne(contObjectId);
 		if (result == null) {
@@ -136,7 +136,7 @@ public class ContObjectService implements SecuredRoles {
 		return result;
 	}
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public Optional<ContObject> findContObjectOptional(Long contObjectId) {
         ContObject result = contObjectRepository.findOne(contObjectId);
 
@@ -149,13 +149,13 @@ public class ContObjectService implements SecuredRoles {
      * @param contObjectId
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public ContObjectDTO findContObjectDTO(Long contObjectId) {
 		return contObjectMapper.toDto(findContObjectChecked(contObjectId));
 	}
 
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public ContObjectMonitorDTO findContObjectMonitorDTO(PortalUserIds portalUserIds,  Long contObjectId) {
 		ContObject contObject = findContObjectChecked(contObjectId);
         contObjectDaDataService.findOneByContObjectId(contObjectId).ifPresent((i) -> contObject.set_daDataSraw(i.getSraw()));
@@ -169,7 +169,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param str
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObject> findContObjectsByFullName(String str) {
 		return contObjectRepository.findByFullNameLikeIgnoreCase(str);
 	}
@@ -179,7 +179,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
     @Deprecated
 	private ContObject updateContObject(ContObject contObject, Long cmOrganizationId) {
@@ -287,7 +287,7 @@ public class ContObjectService implements SecuredRoles {
 	}
 
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     @Secured({ ROLE_CONT_OBJECT_ADMIN })
     public ContObject automationUpdate(ContObject contObject, Long cmOrganizationId) {
         Objects.requireNonNull(contObject);
@@ -373,7 +373,7 @@ public class ContObjectService implements SecuredRoles {
         return resultContObject;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     @Secured({ ROLE_CONT_OBJECT_ADMIN })
     public ContObject automationUpdate(ContObjectDTO contObjectDTO, Long cmOrganizationId) {
 	    Objects.requireNonNull(contObjectDTO);
@@ -466,7 +466,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObject
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
     @Deprecated
 	private ContObject createContObject(ContObject contObject, Long subscriberId, org.joda.time.LocalDate subscrBeginDate,
@@ -552,7 +552,7 @@ public class ContObjectService implements SecuredRoles {
 		return resultContObject;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public ContObject automationCreate(ContObject contObject, Long subscriberId, java.time.LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
@@ -630,7 +630,7 @@ public class ContObjectService implements SecuredRoles {
      * @param cmOrganizationId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public ContObject automationCreate(ContObjectDTO contObjectDTO, Long subscriberId, java.time.LocalDate subscrBeginDate,
 			Long cmOrganizationId) {
@@ -710,7 +710,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteContObject(Long contObjectId, LocalDate subscrEndDate) {
         Objects.requireNonNull(contObjectId);
@@ -737,7 +737,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjects
 	 * @param subscrEndDate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deleteManyContObjects(Long[] contObjects, java.time.LocalDate subscrEndDate) {
         Objects.requireNonNull(contObjects);
@@ -750,7 +750,7 @@ public class ContObjectService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObjectSettingModeType> selectContObjectSettingModeType() {
 		List<ContObjectSettingModeType> resultList = contObjectSettingModeTypeRepository.findAll();
 		return resultList;
@@ -760,7 +760,7 @@ public class ContObjectService implements SecuredRoles {
 	 *
 	 * @param contObjectIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_CONT_OBJECT_ADMIN })
 	public List<Long> updateContObjectCurrentSettingModeType(Long[] contObjectIds, String currentSettingMode,
 			Long subscriberId) {
@@ -798,7 +798,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public ContObjectFias findContObjectFias(Long contObjectId) {
 //		checkNotNull(contObjectId);
 //		List<ContObjectFias> vList = contObjectFiasRepository.findByContObjectId(contObjectId);
@@ -825,7 +825,7 @@ public class ContObjectService implements SecuredRoles {
      * @param contObjects
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObjectMonitorDTO> wrapContObjectsMonitorDTO(PortalUserIds portalUserIds, List<ContObject> contObjects) {
 	    List<ContObjectMonitorDTO> monitorDTOS = wrapContObjectsMonitorDTO (portalUserIds, contObjects, true);
         objectAccessService.readContObjectAccess(portalUserIds.getSubscriberId(), monitorDTOS);
@@ -939,7 +939,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObjectGeoPos> selectContObjectsGeoPos(List<Long> contObjectIds) {
 		return contObjectIds == null || contObjectIds.isEmpty() ? new ArrayList<>()
 				: contObjectGeoPosRepository.selectByContObjectIds(contObjectIds);
@@ -962,7 +962,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param currentDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public WeatherForecast selectWeatherForecast(Long contObjectId, java.time.LocalDate currentDate) {
 
 		List<ContObjectFias> co = contObjectFiasRepository.findByContObjectId(contObjectId);
@@ -982,7 +982,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectMeterPeriodSettingsDTO
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void updateMeterPeriodSettings(ContObjectMeterPeriodSettingsDTO contObjectMeterPeriodSettingsDTO) {
 
 		List<ContObject> contObjectList = new ArrayList<>();
@@ -1016,7 +1016,7 @@ public class ContObjectService implements SecuredRoles {
      * @param contObjectIds
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObjectMeterPeriodSettingsDTO> findMeterPeriodSettings(List<Long> contObjectIds) {
 
 		List<Tuple> values = contObjectRepository.findMeterPeriodSettings(contObjectIds);
@@ -1045,7 +1045,7 @@ public class ContObjectService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContObjectMeterPeriodSettingsDTO getContObjectMeterPeriodSettings(Long contObjectId) {
 		ContObject result = findContObjectChecked(contObjectId);
 
@@ -1059,12 +1059,12 @@ public class ContObjectService implements SecuredRoles {
 		return settings;
 	}
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public List<ContObjectDTO> mapToDTO(List<ContObject> contObjects) {
         return contObjects.stream().map((i) -> contObjectMapper.toDto(i)).collect(Collectors.toList());
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public ContObjectDTO mapToDTO(ContObject contObjects) {
         return contObjectMapper.toDto(contObjects);
     }

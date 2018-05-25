@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.energypassport.EPConstants.DocumentModes;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil;
 import ru.excbt.datafuse.nmk.data.energypassport.EPSectionValueUtil.JsonVars;
@@ -82,12 +82,12 @@ public class EnergyPassportService {
         this.sectionEntryRepository = energyPassportSectionEntryRepository;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public EnergyPassportDTO createPassport(String templateKeyname, Subscriber subscriber) {
         return createPassport(templateKeyname, null, subscriber);
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public EnergyPassportDTO createPassport(String templateKeyname, EnergyPassportVM energyPassportVM, Subscriber subscriber) {
         Optional<EnergyPassportTemplate> energyPassportTemplate = passportTemplateRepository.findByKeyname(templateKeyname);
         if (!energyPassportTemplate.isPresent()) {
@@ -125,7 +125,7 @@ public class EnergyPassportService {
      * @param subscriber
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public EnergyPassportDTO updatePassport(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
         EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
         if (energyPassport == null) {
@@ -148,7 +148,7 @@ public class EnergyPassportService {
      * @param subscriber
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public EnergyPassportShortDTO updatePassportShort(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
         EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
         if (energyPassport == null) {
@@ -165,7 +165,7 @@ public class EnergyPassportService {
         return energyPassportDTO;
     }
 
-        @Transactional(value = TxConst.TX_DEFAULT)
+        @Transactional
     public EnergyPassportDTO find(Long id) {
         EnergyPassport energyPassport = passportRepository.findOne(id);
 
@@ -176,7 +176,7 @@ public class EnergyPassportService {
         return setupPassportVars(result);
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional(readOnly = true)
     public List<EnergyPassportDTO> findBySubscriberId(Long subscriberId) {
         List<EnergyPassportDTO> resultList = passportRepository.findBySubscriberId(subscriberId, DocumentModes.DEFAULT).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
@@ -187,14 +187,14 @@ public class EnergyPassportService {
         return resultList;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional(readOnly = true)
     public List<EnergyPassportShortDTO> findShortBySubscriberId(Long subscriberId) {
         List<EnergyPassportShortDTO> resultList = passportRepository.findBySubscriberId(subscriberId, DocumentModes.DEFAULT).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO_Short()).collect(Collectors.toList());
         return resultList;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public void delete(Long id, Subscriber subscriber) {
         EnergyPassport energyPassport = passportRepository.findOne(id);
         if (energyPassport == null) {
@@ -501,7 +501,7 @@ public class EnergyPassportService {
     }
 
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public void deleteSectionEntry(Long energyPassportId, Long sectionId, Long entryId, Subscriber subscriber) {
         EnergyPassport energyPassport = passportRepository.findOne(energyPassportId);
         if (energyPassport == null) {
@@ -586,7 +586,7 @@ public class EnergyPassportService {
         return passportRepository.findEnergyPassportContObjectIds(energyPassportId).stream().sorted().collect(Collectors.toList());
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional(readOnly = true)
     public List<EnergyPassportDTO> findContObjectEnergyPassport(Long contObjectId) {
         List<EnergyPassportDTO> resultList = passportRepository.findContObjectEnergyPassports(contObjectId,DocumentModes.CONT_OBJECT)
             .stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> i.getDTO()).collect(Collectors.toList());
@@ -597,7 +597,7 @@ public class EnergyPassportService {
         return resultList;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public EnergyPassportDTO createContObjectPassport(EnergyPassportVM energyPassportVM, List<Long> contObjectIds,
                                                       Subscriber subscriber) {
         EnergyPassportDTO result = createPassport(EnergyPassport_X.ENERGY_PASSPORT_X, energyPassportVM, subscriber);

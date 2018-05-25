@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
@@ -42,7 +42,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
  *
  */
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional( readOnly = true)
 public class ContServiceDataHWaterDeltaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterDeltaService.class);

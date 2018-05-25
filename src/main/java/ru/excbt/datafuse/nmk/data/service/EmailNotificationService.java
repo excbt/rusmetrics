@@ -9,7 +9,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.EmailNotification;
 import ru.excbt.datafuse.nmk.data.repository.EmailNotificationRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
@@ -25,7 +25,7 @@ public class EmailNotificationService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public EmailNotification saveEmailNotification(EmailNotification entity) {
 		return emailNotificationRepository.save(entity);
 	}
@@ -35,7 +35,7 @@ public class EmailNotificationService implements SecuredRoles {
 	 * @param fromSubscrUserId
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteEmailNotifications(Long subscrUserId) {
 		List<EmailNotification> emailNotifications = emailNotificationRepository.findByFromSubscrUserId(subscrUserId);
 
@@ -51,7 +51,7 @@ public class EmailNotificationService implements SecuredRoles {
 	 * @param fromSubscrUserIds
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteEmailNotifications(List<Long> fromSubscrUserIds) {
 		checkNotNull(fromSubscrUserIds);
 		for (Long i : fromSubscrUserIds) {

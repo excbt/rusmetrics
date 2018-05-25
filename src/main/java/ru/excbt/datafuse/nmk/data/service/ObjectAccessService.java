@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
@@ -284,7 +284,7 @@ public class ObjectAccessService {
         return result;
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public void readContObjectAccess(Long subscriberId, List<? extends ObjectAccessInitializer> contObjectDTOS) {
         Objects.requireNonNull(contObjectDTOS);
         List<ContObjectAccess> accesses = contObjectAccessRepository.findBySubscriberId(subscriberId);
@@ -298,7 +298,7 @@ public class ObjectAccessService {
         });
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public void setupRmaHaveSubscr(final PortalUserIds subscriberParam, final List<ContObject> contObjects) {
         Objects.requireNonNull(subscriberParam);
         Objects.requireNonNull(contObjects);
@@ -317,7 +317,7 @@ public class ObjectAccessService {
         });
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public void setupRmaHaveSubscrDTO(final PortalUserIds portalUserIds, final List<ContObjectDTO> contObjects) {
         Objects.requireNonNull(portalUserIds);
         Objects.requireNonNull(contObjects);

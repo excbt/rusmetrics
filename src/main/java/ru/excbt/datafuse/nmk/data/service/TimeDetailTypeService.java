@@ -9,14 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.keyname.TimeDetailType;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimeDetailTypeRepository;
 
 /**
  * Сервис для работы с типами детализации
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 28.01.2015
@@ -47,19 +47,19 @@ public class TimeDetailTypeService {
 	public TimeDetailTypeRepository timeDetailTypeRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimeDetailType> findAll() {
 		return timeDetailTypeRepository.findAll();
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimeDetailType> select24h24hAbs() {
 		List<TimeDetailType> resultList = timeDetailTypeRepository.findAll();
 		return resultList.stream().filter(i -> TIME_DETAIL_24H_24HAbs.contains(i.getKeyname()))
@@ -67,10 +67,10 @@ public class TimeDetailTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimeDetailType> select1h24h() {
 		List<TimeDetailType> resultList = timeDetailTypeRepository.findAll();
 		return resultList.stream().filter(i -> TIME_DETAIL_1H_24h.contains(i.getKeyname()))

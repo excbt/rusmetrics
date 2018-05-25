@@ -16,7 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -83,7 +83,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param subscrDataSource
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public SubscrDataSource createOne(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
@@ -101,7 +101,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param subscrDataSource
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public SubscrDataSource updateOne(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
@@ -118,7 +118,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 *
 	 * @param dataSourceId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOne(Long dataSourceId) {
 		SubscrDataSource dataSource = subscrDataSourceRepository.findOne(dataSourceId);
@@ -133,13 +133,13 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public List<SubscrDataSource> selectDataSourceBySubscriber(Long subscriberId) {
 //		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 //		return ObjectFilters.deletedFilter(list);
 //	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrDataSourceDTO> selectDataSourceDTOBySubscriber(Long subscriberId) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 		return list.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(i -> subscrDataSourceMapper.toDto(i)).collect(Collectors.toList());
@@ -150,7 +150,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param ids
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrDataSource> selectDataSourceByIds(Collection<Long> ids) {
 		if (ids == null || ids.isEmpty()) {
 			return new ArrayList<>();
@@ -164,7 +164,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<Long> selectDataSourceIdsBySubscriber(Long subscriberId) {
 		List<Long> list = subscrDataSourceRepository.selectIdsBySubscriberId(subscriberId);
 		return list;
@@ -176,7 +176,7 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrDataSource selectDataSourceByKeyname(Long subscriberId, String keyname) {
 		List<SubscrDataSource> list = subscrDataSourceRepository.findBySubscriberId(subscriberId);
 
@@ -191,14 +191,14 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 * @param dataSourceId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrDataSourceDTO findOne(Long dataSourceId) {
         return Stream.of(subscrDataSourceRepository.findOne(dataSourceId))
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).findFirst().map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
 	}
 
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public Long csvFileId() {
 	    return subscrDataSourceRepository.findByKeyname("CSV_FILE").map(SubscrDataSource::getId).orElse(0L);
     }

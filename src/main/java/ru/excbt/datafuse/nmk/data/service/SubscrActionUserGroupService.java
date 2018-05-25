@@ -14,7 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUserGroup;
@@ -23,7 +23,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с пользователями для заданий абонентов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.mm.2015
@@ -38,10 +38,10 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	private SubscrActionUserGroupRepository subscrActionUserGroupRepository;
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetUnitId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteUserGroup(final long subscrActionUserId, final long subscrActionGroupId) {
 
@@ -63,11 +63,11 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrActionUserId
 	 * @param subscrActionGroupId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void addUserGroup(final long subscrActionUserId, final long subscrActionGroupId) {
 		SubscrActionUserGroup item = new SubscrActionUserGroup();
@@ -77,12 +77,12 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param userId
 	 * @param groupIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateUserToGroups(long userId, Long[] groupIds) {
 
@@ -109,12 +109,12 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param userId
 	 * @param groupIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateGroupToUsers(long groupId, Long[] userIds) {
 
@@ -141,10 +141,10 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrActionUserId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByUser(long subscrActionUserId) {
 		List<Long> toDelGroupIdList = subscrActionUserGroupRepository.selectGroupIdsByUser(subscrActionUserId);
@@ -154,10 +154,10 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrActionGroupId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByGroup(long subscrActionGroupId) {
 		List<Long> toDelUserIdList = subscrActionUserGroupRepository.selectUserIdsByGroup(subscrActionGroupId);
@@ -167,23 +167,23 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrActionGroupId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrActionUser> selectUsersByGroup(long subscrActionGroupId) {
 		return subscrActionUserGroupRepository.selectUsersByGroup(subscrActionGroupId);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param subscrActionUserId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrActionGroup> selectGroupsByUser(long subscrActionUserId) {
 		return subscrActionUserGroupRepository.selectGroupsByUser(subscrActionUserId);
 	}

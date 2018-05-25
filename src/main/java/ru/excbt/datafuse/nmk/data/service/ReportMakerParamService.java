@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
@@ -66,7 +66,7 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId) {
 		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 
@@ -79,7 +79,7 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId) {
 		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 
@@ -92,7 +92,7 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds) {
 		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
@@ -103,7 +103,7 @@ public class ReportMakerParamService {
 	 * @param reportParamsetId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId, Long[] contObjectIds) {
 		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_ON);
@@ -115,7 +115,7 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds) {
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
 	}
@@ -125,7 +125,7 @@ public class ReportMakerParamService {
      * @param reportParamset
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset) {
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_OFF);
 	}
@@ -136,7 +136,7 @@ public class ReportMakerParamService {
 	 * @param contObjectIds
 	 * @return
 	 */
-	//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//	@Transactional( readOnly = true)
 	//	public ReportMakerParam newReportMakerParam(ReportParamset reportParamset, Long[] contObjectIds,
 	//			boolean previewMode) {
 	//
@@ -196,7 +196,7 @@ public class ReportMakerParamService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Map<String, Object> getParamSpecialValues(ReportMakerParam reportMakerParam) {
 
 		checkNotNull(reportMakerParam);

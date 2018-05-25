@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc;
@@ -46,7 +46,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param localPlaceId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<LocalPlaceTemperatureSst> selectSstByLocalPlace(Long localPlaceId, LocalDate sstDate) {
 		checkNotNull(localPlaceId);
 		checkNotNull(sstDate);
@@ -65,7 +65,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public LocalPlaceTemperatureSst saveSst(LocalPlaceTemperatureSst entity) {
 		checkNotNull(entity);
 		checkNotNull(entity.getLocalPlaceId());
@@ -98,7 +98,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<LocalPlaceTemperatureSst> saveSstList(List<LocalPlaceTemperatureSst> entityList) {
 		checkNotNull(entityList);
 
@@ -126,7 +126,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteLocalPlaceTemperatureSst(Long id) {
 		LocalPlaceTemperatureSst entity = localPlaceTemperatureSstRepository.findOne(id);
 		if (entity == null) {
@@ -141,7 +141,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteLocalPlaceTemperatureSst(Long localPlaceId, Long id) {
 		checkNotNull(localPlaceId);
 		checkNotNull(id);
@@ -163,7 +163,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void initMonth(Long localPlaceId, LocalDate sstDate) {
 		List<LocalPlaceTemperatureSst> check = selectSstByLocalPlace(localPlaceId, sstDate);
 
@@ -177,7 +177,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void initMonthNoCheck(Long localPlaceId, LocalDate sstDate) {
 		LocalPlace localPlace = localPlaceService.findLocalPlace(localPlaceId);
 
@@ -209,7 +209,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 * @param localPlaceId
 	 * @param sstDate
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void initSstCalc(Long localPlaceId, LocalDate sstDate) {
 
 		List<LocalPlaceTemperatureSst> monthSstList = selectSstByLocalPlace(localPlaceId, sstDate);
@@ -222,7 +222,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 *
 	 * @param monthSstList
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<LocalPlaceTemperatureSst> initSstCalc(List<LocalPlaceTemperatureSst> monthSstList) {
 
 		checkNotNull(monthSstList);

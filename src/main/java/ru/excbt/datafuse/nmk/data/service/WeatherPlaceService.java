@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 import ru.excbt.datafuse.nmk.data.repository.WeatherPlaceRepository;
 
@@ -30,7 +30,7 @@ public class WeatherPlaceService {
 	 * @param fiasUuid
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<WeatherPlace> selectWeatherPlaceByFias(UUID fiasUuid) {
 		return weatherPlaceRepository.selectWeatherPlacesByFias(fiasUuid);
 	}

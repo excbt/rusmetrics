@@ -16,7 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
@@ -58,7 +58,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<TemperatureChart> selectTemperatureCharts() {
 		return temperatureChartRepository.selectTemperatureCharts();
 	}
@@ -67,7 +67,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<TemperatureChart> selectTemperatureChartsInfo() {
 		List<TemperatureChart> result = temperatureChartRepository.selectTemperatureCharts();
 		result.forEach(i -> {
@@ -82,7 +82,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<TemperatureChart> selectTemperatureChartsByContZPointId(Long contZPointId) {
 
 	    ContZPoint contZPoint = contZPointRepository.findOne(contZPointId);
@@ -100,7 +100,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<TemperatureChart> selectTemperatureChartsByContObjectId(Long contObjectId) {
 
 		checkNotNull(contObjectId);
@@ -133,7 +133,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public TemperatureChart selectTemperatureChart(Long id) {
 		return temperatureChartRepository.findOne(id);
 	}
@@ -144,7 +144,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public TemperatureChart saveTemperatureChart(TemperatureChart entity) {
 		checkNotNull(entity);
 
@@ -177,7 +177,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteTemperatureChart(Long id) {
 		TemperatureChart entity = temperatureChartRepository.findOne(id);
 		if (entity == null) {
@@ -191,7 +191,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param temperatureChartId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TemperatureChartItem> selectTemperatureChartItems(Long temperatureChartId) {
 		return ObjectFilters
 				.deletedFilter(temperatureChartItemRepository.selectTemperatureChartItems(temperatureChartId));
@@ -202,7 +202,7 @@ public class TemperatureChartService implements SecuredRoles {
      * @param temperatureChartItemId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public TemperatureChartItem selectTemperatureChartItem(Long temperatureChartItemId) {
 		return temperatureChartItemRepository.findOne(temperatureChartItemId);
 	}
@@ -212,7 +212,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public TemperatureChartItem saveTemperatureChartItem(TemperatureChartItem entity) {
 		checkNotNull(entity);
 		checkNotNull(entity.getTemperatureChartId());
@@ -240,7 +240,7 @@ public class TemperatureChartService implements SecuredRoles {
 	 * @param id
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteTemperatureChartItem(Long id) {
 		TemperatureChartItem entity = temperatureChartItemRepository.findOne(id);
 		if (entity == null) {

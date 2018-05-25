@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
@@ -47,7 +47,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 * @param subscrPriceListId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceItem> findPriceItems(Long subscrPriceListId) {
 		return servicePriceItemRepository.findBySubscrPriceListId(subscrPriceListId);
 	}
@@ -57,7 +57,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 * @param subscrPriceListId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceItemVO> findPriceItemVOs(Long subscrPriceListId) {
 		List<SubscrPriceItem> subscrPriceItems = findPriceItems(subscrPriceListId);
 		List<SubscrPriceItemVO> resultList = subscrPriceItems.stream().map(i -> new SubscrPriceItemVO(i))
@@ -69,7 +69,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 *
 	 * @param subscrPriceListId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteSubscrPriceItems(Long subscrPriceListId) {
 		List<SubscrPriceItem> items = servicePriceItemRepository.findBySubscrPriceListId(subscrPriceListId);
@@ -82,7 +82,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 * @param dstSubscrPriceList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public List<SubscrPriceItem> copySubscrPriceItems(Long srcSubscrPriceListId, SubscrPriceList dstSubscrPriceList) {
 		List<SubscrPriceItem> resultList = new ArrayList<>();
@@ -130,7 +130,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrPriceItem> updateSubscrPriceItemValues(SubscrPriceList subscrPriceList,
 			List<SubscrPriceItemVO> subscrPriceItemVOs, LocalDate localDate) {
 		checkNotNull(subscrPriceList);
@@ -180,7 +180,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrPriceItem> updateRmaPriceItemValues(SubscrPriceList subscrPriceList,
 			List<SubscrPriceItemVO> subscrPriceItemVOs, LocalDate localDate) {
 		checkNotNull(subscrPriceList);

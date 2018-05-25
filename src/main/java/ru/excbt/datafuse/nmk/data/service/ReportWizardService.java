@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import net.sf.jasperreports.engine.JRException;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -99,7 +99,7 @@ public class ReportWizardService implements SecuredRoles {
 	 * @return
 	 */
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ColumnElement[] makeColumnElement(ReportColumnSettings reportColumnSettings) {
 		checkNotNull(reportColumnSettings);
 		checkNotNull(reportColumnSettings.getAllTsList());
@@ -129,7 +129,7 @@ public class ReportWizardService implements SecuredRoles {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportTemplate createCommerceWizard(ReportTemplate reportTemplate, ReportColumnSettings reportColumnSettings,
 			Subscriber subscriber) {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service.widget;
 
@@ -17,18 +17,18 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 09.01.2017
- * 
+ *
  */
 @Service
 public class ElWidgetService extends WidgetService {
@@ -45,7 +45,7 @@ public class ElWidgetService extends WidgetService {
 	private ContServiceDataElService contServiceDataElService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -54,13 +54,13 @@ public class ElWidgetService extends WidgetService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param dateTime
 	 * @param mode
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataElCons> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
 

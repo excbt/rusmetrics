@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamCommon;
 import ru.excbt.datafuse.nmk.data.model.ReportMetaParamSpecial;
@@ -26,14 +26,14 @@ import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 
 /**
  * Сервис для работы с типами отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 14.04.2015
  *
  */
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional( readOnly = true)
 public class ReportTypeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTypeService.class);
@@ -58,7 +58,7 @@ public class ReportTypeService {
 	private ReportTypeContServiceTypeRepository reportTypeContServiceTypeRepository;
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -68,7 +68,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -77,7 +77,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
@@ -87,7 +87,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypeKey
 	 * @return
 	 */
@@ -98,7 +98,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ReportType> findAllReportTypes() {
@@ -106,7 +106,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ReportType> findAllReportTypes(boolean devMode) {
@@ -121,7 +121,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportTypes
 	 * @return
 	 */
@@ -137,7 +137,7 @@ public class ReportTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportType
 	 * @return
 	 */

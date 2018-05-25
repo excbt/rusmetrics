@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefObjectTreeType;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
@@ -79,7 +79,7 @@ public class SubscrPrefService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPref> selectSubscrPrefsBySubscrType(String subscrTypeKeyname) {
 		List<SubscrTypePref> typePrefList = subscrTypePrefRepository.findBySubscrType(subscrTypeKeyname);
 
@@ -99,7 +99,7 @@ public class SubscrPrefService implements SecuredRoles {
 	 * @param portalUserIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPrefValue> selectSubscrPrefValue(PortalUserIds portalUserIds) {
 		checkNotNull(portalUserIds);
 
@@ -123,7 +123,7 @@ public class SubscrPrefService implements SecuredRoles {
      * @return
      */
 	@Secured({ ROLE_SUBSCR_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrPrefValue> saveSubscrPrefValues(PortalUserIds portalUserIds,
 			List<SubscrPrefValue> prefValueList) {
 		checkNotNull(portalUserIds);
@@ -229,7 +229,7 @@ public class SubscrPrefService implements SecuredRoles {
 	 * @param subscrPrefKeyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<String> selectSubscrPrefTreeTypes(String subscrPrefKeyname) {
 		SubscrPref subscrPref = subscrPrefRepository.findOne(subscrPrefKeyname);
 

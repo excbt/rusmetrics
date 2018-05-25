@@ -10,7 +10,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.QSubscrContEventNotification;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventNotification;
@@ -184,7 +184,7 @@ public class SubscrContEventNotificationService {
 	 * @param pageable
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectAll(final long subscriberId, final Boolean isNew,
 			final Pageable pageable) {
 
@@ -212,7 +212,7 @@ public class SubscrContEventNotificationService {
      * @param pageable
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public Page<SubscrContEventNotification> selectNotificationByConditionsDSL(SearchConditions searchConditions,
 			final Pageable pageable) {
 
@@ -272,7 +272,7 @@ public class SubscrContEventNotificationService {
      * @param revisionIsNew
      * @param revisionSubscrUserId
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void updateRevisionByConditions(final PortalUserIds portalUserIds, final DateInterval dateInterval,
 			final List<Long> contObjectList, final List<Long> contEventTypeList, final Boolean isNew,
 			final Boolean revisionIsNew, Long revisionSubscrUserId) {
@@ -304,7 +304,7 @@ public class SubscrContEventNotificationService {
      * @param contEventTypeIds
      * @param revisionIsNew
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void updateRevisionByConditionsFast(PortalUserIds portalUserIds, final DateInterval datePeriod,
 			final List<Long> contObjectIds, final List<Long> contEventTypeIds, final Boolean revisionIsNew) {
 
@@ -405,7 +405,7 @@ public class SubscrContEventNotificationService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public SubscrContEventNotification findNotification(Long id) {
 		SubscrContEventNotification result = subscrContEventNotificationRepository.findOne(id);
 		initContEvent(result);
@@ -418,7 +418,7 @@ public class SubscrContEventNotificationService {
 	 * @return
 	 */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrContEventNotification updateNotificationRevision(final PortalUserIds portalUserIds,
 			final Boolean isNew, final Long subscrContEventNotificationId) {
 
@@ -443,7 +443,7 @@ public class SubscrContEventNotificationService {
      * @return
      */
 	@Deprecated
-	//@Transactional(value = TxConst.TX_DEFAULT)
+	//@Transactional
 	private SubscrContEventNotification updateNotificationRevision(PortalUserIds portalUserIds,
 			SubscrContEventNotification subscrContEventNotification, Boolean isNew) {
 
@@ -468,7 +468,7 @@ public class SubscrContEventNotificationService {
      * @param isNew
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<Long> updateNotificationsRevisions(PortalUserIds portalUserIds, List<Long> notificationIds,
                                                    Boolean isNew) {
 
@@ -486,7 +486,7 @@ public class SubscrContEventNotificationService {
 	 * @param notificationIds
 	 */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void updateNotificationRevision(PortalUserIds portalUserIds, Boolean isNew, List<Long> notificationIds) {
 		checkNotNull(isNew);
 		checkNotNull(notificationIds);
@@ -503,7 +503,7 @@ public class SubscrContEventNotificationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
 			final DateInterval datePeriod) {
 		checkNotNull(contObjectId);
@@ -524,7 +524,7 @@ public class SubscrContEventNotificationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public long selectNotificationsCount(final Long subscriberId, final Long contObjectId,
 			final DateInterval datePeriod, Boolean isNew) {
 		checkNotNull(contObjectId);
@@ -546,7 +546,7 @@ public class SubscrContEventNotificationService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public long selectContEventTypeCountGroup(final Long subscriberId, final Long contObjectId,
 			final DateInterval datePeriod) {
 
@@ -568,7 +568,7 @@ public class SubscrContEventNotificationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		return selectContEventNotificationCounterInfo(subscriberId, contObjectIds, datePeriod, null);
@@ -587,7 +587,7 @@ public class SubscrContEventNotificationService {
 	 * @param isNew
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<CounterInfo> selectContEventNotificationCounterInfo(final Long subscriberId,
                                                                     final List<Long> contObjectIds, final DateInterval datePeriod, Boolean isNew) {
 		checkNotNull(subscriberId);
@@ -628,7 +628,7 @@ public class SubscrContEventNotificationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<CounterInfo> selectContObjectEventTypeGroupCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		checkNotNull(subscriberId);
@@ -651,7 +651,7 @@ public class SubscrContEventNotificationService {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<CounterInfo> selectContObjectEventTypeGroupCollapseCounterInfo(final Long subscriberId,
 			final List<Long> contObjectIds, final DateInterval datePeriod) {
 		checkNotNull(subscriberId);

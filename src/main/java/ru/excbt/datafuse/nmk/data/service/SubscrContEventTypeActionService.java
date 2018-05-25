@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeAction;
@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeActionRepository
 
 /**
  * Сервис для работы с действиями для типа уведомлений
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.12.2015
@@ -37,20 +37,20 @@ public class SubscrContEventTypeActionService {
 	private SubscrContEventTypeActionRepository subscrContEventTypeActionRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContEventType> selectAvailableContEventTypes() {
 		return contEventTypeRepository.selectBySmsNotification();
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrContEventTypeAction> selectSubscrContEventTypeActions(Long subscriberId, Long contEventTypeId) {
 		List<SubscrContEventTypeAction> preResult = subscrContEventTypeActionRepository
 				.selectSubscrContEventActions(subscriberId, contEventTypeId);
@@ -58,13 +58,13 @@ public class SubscrContEventTypeActionService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscriber
 	 * @param contEventType
 	 * @param smsAddrList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrContEventTypeAction> updateSubscrContEventTypeActions(Subscriber subscriber,
 			ContEventType contEventType, List<SubscrContEventTypeAction> subscrContEventTypeActions) {
 

@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventCategory;
@@ -41,7 +41,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventDeviationRepositor
  */
 
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional(readOnly = true)
 public class ContEventService {
 
 	private final static int DEFAULT_MAX_EVENTS = 1000;
@@ -211,7 +211,7 @@ public class ContEventService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<ContEventCategory> selectContEventCategoryList() {
 		return contEventCategoryRepository.selectCategoryList();
 	}
@@ -220,7 +220,7 @@ public class ContEventService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<ContEventDeviation> findContEventDeviation() {
 		return Lists.newArrayList(contEventDeviationRepository.selectContEventDeviation());
 	}
@@ -243,7 +243,7 @@ public class ContEventService {
 	 * @param contEvents
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public <T extends ContEventTypeModel> List<T> loadContEventTypeModel(List<T> contEvents) {
 
 		List<Long> contEventTypeIds = contEvents.stream().map(i -> i.getContEventTypeId()).distinct()
@@ -268,7 +268,7 @@ public class ContEventService {
 	 * @param contEventsPage
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public <T extends ContEventTypeModel> Page<T> loadContEventTypeModel(Page<T> contEventsPage) {
 
 		loadContEventTypeModel(contEventsPage.getContent());

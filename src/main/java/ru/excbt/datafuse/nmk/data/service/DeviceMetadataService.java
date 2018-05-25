@@ -12,14 +12,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.repository.DeviceMetadataRepository;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 
 /**
  * Сервис для работ с метаданными прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 28.05.2015
@@ -38,17 +38,17 @@ public class DeviceMetadataService {
 	private DeviceMetadataRepository deviceMetadataRepository;
 
 	/**
-	 * 
+	 *
 	 * @param deviceModelId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceMetadata> selectDeviceMetadata(Long deviceModelId, String deviceMetadataType) {
 		return deviceMetadataRepository.selectDeviceMetadata(deviceModelId, deviceMetadataType);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceMetadataList
 	 * @return
 	 */
@@ -98,7 +98,7 @@ public class DeviceMetadataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */
@@ -128,7 +128,7 @@ public class DeviceMetadataService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param src
 	 * @return
 	 */

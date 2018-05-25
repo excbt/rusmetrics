@@ -11,7 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContManagement;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -52,7 +52,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param beginDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContManagement createManagement(Long contObjectId, Long organizationId, LocalDate beginDate) {
 
@@ -88,7 +88,7 @@ public class ContManagementService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ContManagement createManagement(ContObject contObject, Long organizationId, LocalDate beginDate) {
 
@@ -124,7 +124,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContManagement> selectActiveManagement(long contObjectId) {
 		return contManagementRepository.selectActiveManagement(contObjectId);
 	}
@@ -135,7 +135,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContManagement> selectActiveManagement(final ContObject contObject) {
 		checkNotNull(contObject);
 		checkNotNull(contObject.getId());
@@ -147,7 +147,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContManagement> selectByOgranization(long organizationId) {
 		checkArgument(organizationId > 0);
 		;
@@ -159,7 +159,7 @@ public class ContManagementService implements SecuredRoles {
 	 * @param organizationId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContManagement> selectContManagement(long contObjectId, long organizationId) {
 		checkArgument(contObjectId > 0);
 		checkArgument(organizationId > 0);
@@ -170,7 +170,7 @@ public class ContManagementService implements SecuredRoles {
 	 *
 	 * @param contManagements
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deletePermanent(List<ContManagement> contManagements) {
 		checkNotNull(contManagements);

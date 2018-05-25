@@ -36,7 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.JasperDatabaseConnectionSettings;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -61,7 +61,7 @@ import ru.excbt.nmk.reports.NmkReport.ReportType;
  *
  */
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional( readOnly = true)
 public class ReportService {
 
 	public final static String DATE_TEMPLATE = "yyyy-MM-dd";

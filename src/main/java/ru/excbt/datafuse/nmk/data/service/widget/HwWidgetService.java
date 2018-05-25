@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package ru.excbt.datafuse.nmk.data.service.widget;
 
@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
@@ -25,11 +25,11 @@ import ru.excbt.datafuse.nmk.data.service.ContServiceDataHWaterService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
 
 /**
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since dd.12.2016
- * 
+ *
  */
 @Service
 public class HwWidgetService extends WidgetService {
@@ -45,7 +45,7 @@ public class HwWidgetService extends WidgetService {
 	private ContServiceDataHWaterService contServiceDataHWaterService;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -54,13 +54,13 @@ public class HwWidgetService extends WidgetService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contZpointId
 	 * @param dateTime
 	 * @param mode
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
 

@@ -9,7 +9,7 @@ import org.springframework.data.domain.PageRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectPkeWarn;
 import ru.excbt.datafuse.nmk.data.model.QDeviceObjectPkeWarn;
 import ru.excbt.datafuse.nmk.data.model.keyname.DeviceObjectPkeType;
@@ -82,7 +82,7 @@ public class DeviceObjectPkeService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectPkeType> selectDeviceObjectPkeType() {
 		return Lists.newArrayList(deviceObjectPkeTypeRepository.findAll());
 	}
@@ -93,7 +93,7 @@ public class DeviceObjectPkeService {
 	 * @param period
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectPkeWarn> selectDeviceObjectPkeWarn(long deviceObjectId, LocalDatePeriod period) {
 		checkNotNull(period);
 		checkArgument(period.isValidEq());
@@ -107,7 +107,7 @@ public class DeviceObjectPkeService {
 	 * @param searchConditions
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectPkeWarn> selectDeviceObjectPkeWarn(PkeWarnSearchConditions searchConditions) {
 
 

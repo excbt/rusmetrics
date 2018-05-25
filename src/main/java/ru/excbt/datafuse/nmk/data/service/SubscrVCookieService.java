@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrVCookie;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrVCookieRepository;
@@ -33,7 +33,7 @@ public class SubscrVCookieService {
 	 * @param portalUserIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<SubscrVCookie> selectSubscrVCookie(PortalUserIds portalUserIds) {
 		List<SubscrVCookie> result = subscrVCookieRepository
 				.selectSubscrVCookie(portalUserIds.getSubscriberId());
@@ -45,7 +45,7 @@ public class SubscrVCookieService {
 	 * @param portalUserIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<SubscrVCookie> selectSubscrVCookieByUser(PortalUserIds portalUserIds) {
 		List<SubscrVCookie> result = subscrVCookieRepository
 				.selectSubscrVCookie(portalUserIds.getSubscriberId(), portalUserIds.getUserId());
@@ -57,7 +57,7 @@ public class SubscrVCookieService {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrVCookie saveSubscrVCookie(SubscrVCookie entity) {
 		checkNotNull(entity.getSubscriberId());
 		checkNotNull(entity.getVcMode());
@@ -75,7 +75,7 @@ public class SubscrVCookieService {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrVCookie saveSubscrVCookieUser(SubscrVCookie entity) {
 		checkNotNull(entity.getSubscriberId());
 		checkNotNull(entity.getSubscrUserId());
@@ -124,7 +124,7 @@ public class SubscrVCookieService {
 	 * @param entities
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrVCookie> saveSubscrVCookie(List<SubscrVCookie> entities) {
 
 		Long subscriberId = entities.isEmpty() ? null : entities.get(0).getSubscriberId();
@@ -145,7 +145,7 @@ public class SubscrVCookieService {
 	 * @param entities
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrVCookie> saveSubscrVCookieUser(List<SubscrVCookie> entities) {
 
 		Long subscriberId = entities.isEmpty() ? null : entities.get(0).getSubscriberId();

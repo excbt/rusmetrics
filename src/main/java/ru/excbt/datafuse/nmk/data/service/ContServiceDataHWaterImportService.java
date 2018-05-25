@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWaterImport;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
@@ -78,7 +78,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 	 *
 	 * @param serviceDataImportInfos
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
 	public void importData(final Long subscriberId, final List<ServiceDataImportInfo> serviceDataImportInfos) {
 

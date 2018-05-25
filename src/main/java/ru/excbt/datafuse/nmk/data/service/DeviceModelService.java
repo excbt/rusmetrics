@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceModelHeatRadiator;
@@ -83,7 +83,7 @@ public class DeviceModelService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public DeviceModel save(DeviceModel entity) {
 		return deviceModelRepository.save(entity);
 	}
@@ -93,7 +93,7 @@ public class DeviceModelService implements SecuredRoles {
 	 * @param entity
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void delete(DeviceModel entity) {
 		deviceModelRepository.delete(entity);
 	}
@@ -103,7 +103,7 @@ public class DeviceModelService implements SecuredRoles {
 	 * @param id
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void delete(Long id) {
 		deviceModelRepository.delete(id);
 	}
@@ -113,7 +113,7 @@ public class DeviceModelService implements SecuredRoles {
 	 * @param exSystem
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<DeviceModel> findDeviceModelsByExSystem(String exSystem) {
 
 		List<DeviceModel> result = deviceModelRepository.findByExSystem(exSystem);
@@ -125,7 +125,7 @@ public class DeviceModelService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public DeviceModel findPortalDeviceModel() {
 
 		List<DeviceModel> pre = findDeviceModelsByExSystem(ExSystemKey.PORTAL.getKeyname());
@@ -141,12 +141,12 @@ public class DeviceModelService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public DeviceModel findDeviceModel(Long id) {
 		return deviceModelRepository.findOne(id);
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public DeviceModelDTO findDeviceModelDTO(Long id) {
 
 	    DeviceModelDTO deviceModelDTO = deviceModelMapper.toDto(deviceModelRepository.findOne(id));
@@ -163,13 +163,13 @@ public class DeviceModelService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<DeviceModel> findDeviceModelAll() {
 		List<DeviceModel> preResult = Lists.newArrayList(deviceModelRepository.findAll());
 		return ObjectFilters.deletedFilter(preResult);
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<DeviceModelDTO> findDeviceModels() {
 		List<DeviceModel> deviceModels = Lists.newArrayList(deviceModelRepository.findAll());
 
@@ -236,7 +236,7 @@ public class DeviceModelService implements SecuredRoles {
 //	 *
 //	 * @return
 //	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public List<DeviceModelDataType> findDeviceModelTypes() {
 //		return deviceModelDataTypeRepository.selectAll();
 //	}
@@ -245,7 +245,7 @@ public class DeviceModelService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<ImpulseCounterType> findImpulseCounterTypes() {
 		return impulseCounterTypeRepository.selectAllOrdered();
 	}

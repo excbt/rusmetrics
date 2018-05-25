@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SessionDetailTypeContServiceType;
 import ru.excbt.datafuse.nmk.data.model.support.SessionDetailTypeInfo;
 import ru.excbt.datafuse.nmk.data.repository.SessionDetailTypeContServiceTypeRepository;
@@ -19,11 +19,11 @@ public class SessionDetailTypeService {
 	private SessionDetailTypeContServiceTypeRepository sessionDetailTypeContServiceTypeRepository;
 
 	/**
-	 * 
+	 *
 	 * @param contServiceType
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SessionDetailTypeInfo> selectByContServiceType(String contServiceType) {
 		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
 				.selectSessionDetailTypeContServiceType(contServiceType);
@@ -34,11 +34,11 @@ public class SessionDetailTypeService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param contServiceTypes
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SessionDetailTypeInfo> selectByContServiceType(List<String> contServiceTypes) {
 		List<SessionDetailTypeContServiceType> preResult = sessionDetailTypeContServiceTypeRepository
 				.selectSessionDetailTypeContServiceType(contServiceTypes);

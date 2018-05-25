@@ -15,7 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.QOrganization;
@@ -63,12 +63,12 @@ public class OrganizationService implements SecuredRoles {
 //	 * @param id
 //	 * @return
 //	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public Organization selectOrganization(final long id) {
 //		return organizationRepository.findOne(id);
 //	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Optional<Organization> findOneOrganization(final long id) {
 		return Optional.ofNullable(organizationRepository.findOne(id));
 	}
@@ -78,7 +78,7 @@ public class OrganizationService implements SecuredRoles {
 //	 * @param id
 //	 * @return
 //	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public Organization findOrganization(final long id) {
 //		return organizationRepository.findOne(id);
 //	}
@@ -87,7 +87,7 @@ public class OrganizationService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<OrganizationDTO> selectRsoOrganizations(PortalUserIds portalUserIds) {
 	    Long rmaSubscriberId = subscriberService.getRmaSubscriberId(portalUserIds);
 		List<Organization> organizations = organizationRepository
@@ -101,7 +101,7 @@ public class OrganizationService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<OrganizationDTO> selectCmOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
 				.selectCmOrganizations(portalUserIds.getRmaId());
@@ -116,7 +116,7 @@ public class OrganizationService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<OrganizationDTO> selectOrganizations(PortalUserIds portalUserIds) {
 		List<Organization> organizations = organizationRepository
 				.findOrganizationsOfRma(portalUserIds.getRmaId());
@@ -127,7 +127,7 @@ public class OrganizationService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids) {
 	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
 		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(searchSubscriberId)
@@ -138,7 +138,7 @@ public class OrganizationService implements SecuredRoles {
 		return organizations;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<OrganizationDTO> findOrganizationsOfRma(PortalUserIds userids, Sort sort) {
 	    Long searchSubscriberId = userids.isRma() ? userids.getSubscriberId() : userids.getRmaId();
 		List<OrganizationDTO> organizations = organizationRepository.findOrganizationsOfRma(searchSubscriberId, sort)
@@ -157,7 +157,7 @@ public class OrganizationService implements SecuredRoles {
      * @param pageable
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public Page<OrganizationDTO> findOrganizationsOfRmaPaged(
                                                             PortalUserIds userids,
                                                             Optional<String> searchStringOptional,
@@ -211,7 +211,7 @@ public class OrganizationService implements SecuredRoles {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public Organization selectByKeyname(SubscriberParam subscriberParam, String keyname) {
 		List<Organization> organizations = organizationRepository.selectByKeyname(subscriberParam.getRmaSubscriberId(),
 				keyname);
@@ -223,14 +223,14 @@ public class OrganizationService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization saveOrganization(Organization entity) {
 		return organizationRepository.saveAndFlush(entity);
 	}
 
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public OrganizationDTO saveOrganization(OrganizationDTO dto, PortalUserIds currentIds) {
 	    Organization organization = organizationMapper.toEntity(dto);
@@ -247,7 +247,7 @@ public class OrganizationService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public Organization deleteOrganization(Organization entity) {
 		return organizationRepository.save(EntityActions.softDelete(entity));
@@ -258,7 +258,7 @@ public class OrganizationService implements SecuredRoles {
 	 * @param organizations
 	 * @param checkOrganizationId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public void checkAndEnhanceOrganizations(final List<OrganizationDTO> organizations,
 			final Long checkOrganizationId) {
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrSmsLog;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSmsLogRepository;
@@ -18,12 +18,12 @@ public class SubscrSmsLogService {
 	private SubscrSmsLogRepository subscrSmsLogRepository;
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrSmsLog> selectSmsLog(Long subscriberId, LocalDatePeriod localDatePeriod) {
 		return subscrSmsLogRepository.selectBySubscriber(subscriberId, localDatePeriod.getDateFrom(),
 				localDatePeriod.getDateTo());
