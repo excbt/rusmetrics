@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.CacheService;
 import ru.excbt.datafuse.nmk.service.SubscriberAccessService;
 import ru.excbt.datafuse.nmk.service.widget.ContEventMonitorWidgetService;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -46,13 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = PortalApplication.class)
-@WithMockUser(username = "admin", password = "admin",
-    roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
-        "RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
-        "CABINET_USER" })
-@Transactional
-public class ContEventMonitorWidgetResourceTest {
+public class ContEventMonitorWidgetResourceTest extends PortalApiTest {
 
     private static final Logger log = LoggerFactory.getLogger(ContEventMonitorWidgetResourceTest.class);
 

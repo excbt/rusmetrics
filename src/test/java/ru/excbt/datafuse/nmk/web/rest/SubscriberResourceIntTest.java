@@ -116,11 +116,5 @@ public class SubscriberResourceIntTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/subscribers/rma").testPut(vm);
     }
 
-    @Test
-    @Transactional
-    public void getSubscribersManageList() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscribers/manage-list")
-            .testGet();
-    }
 
 }
