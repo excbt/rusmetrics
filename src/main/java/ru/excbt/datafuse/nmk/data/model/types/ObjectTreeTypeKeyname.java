@@ -7,7 +7,8 @@ import ru.excbt.datafuse.nmk.data.model.markers.KeynameObject;
 
 public enum ObjectTreeTypeKeyname implements KeynameObject {
 
-	CONT_OBJECT_TREE_TYPE_1("contObjectTreeType1");
+	CONT_OBJECT_TREE_TYPE_1("contObjectTreeType1"),
+    OBJECT_TREE_TYPE_TEMPLATE("objectTreeTypeTemplate");
 
 	private final String urlName;
 
@@ -22,7 +23,7 @@ public enum ObjectTreeTypeKeyname implements KeynameObject {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param urlName
 	 * @return
 	 */

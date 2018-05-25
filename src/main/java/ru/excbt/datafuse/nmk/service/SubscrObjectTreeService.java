@@ -1,4 +1,4 @@
-package ru.excbt.datafuse.nmk.data.service;
+package ru.excbt.datafuse.nmk.service;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
@@ -25,25 +26,36 @@ import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeRepository;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeContObjectService;
+import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
+import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrObjectTreeMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 @Service
-public class SubscrObjectTreeService implements SecuredRoles {
+public class SubscrObjectTreeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
 
-	@Autowired
-	private SubscrObjectTreeRepository subscrObjectTreeRepository;
+	private final SubscrObjectTreeRepository subscrObjectTreeRepository;
 
-	@Autowired
-	private SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
+	private final SubscrObjectTreeTemplateService subscrObjectTreeTemplateService;
 
-	@Autowired
-	private SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
+	private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
-	/**
+	private final SubscrObjectTreeMapper subscrObjectTreeMapper;
+
+    public SubscrObjectTreeService(SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeTemplateService subscrObjectTreeTemplateService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeMapper subscrObjectTreeMapper) {
+        this.subscrObjectTreeRepository = subscrObjectTreeRepository;
+        this.subscrObjectTreeTemplateService = subscrObjectTreeTemplateService;
+        this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
+        this.subscrObjectTreeMapper = subscrObjectTreeMapper;
+    }
+
+    /**
 	 *
 	 *
 	 * @author A.Kovtonyuk
@@ -80,6 +92,17 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	@Transactional( readOnly = true)
 	public SubscrObjectTree selectSubscrObjectTree(Long id) {
 		return subscrObjectTreeRepository.findOne(id);
+	}
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+	@Transactional( readOnly = true)
+	public SubscrObjectTreeDTO findSubscrObjectTreeDTO(Long id) {
+	    SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
+		return subscrObjectTreeMapper.toDto(ObjectFilters.deletedFilter(subscrObjectTree));
 	}
 
 	/**
@@ -386,7 +409,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
 
@@ -400,7 +423,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 *
 	 * @param subscrObjectTreeId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
 	public void deleteRootSubscrObjectTree(final SubscriberParam subscriberParam, Long subscrObjectTreeId) {
 
@@ -432,7 +455,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 *
 	 * @param subscrObjectTreeId
 	 */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
 	public void deleteChildSubscrObjectTreeNode(final SubscriberParam subscriberParam, Long subscrObjectTreeId,
 			Long childSubscrObjectTreeId) {

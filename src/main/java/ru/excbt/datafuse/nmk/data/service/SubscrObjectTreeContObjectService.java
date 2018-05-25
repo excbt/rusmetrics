@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 

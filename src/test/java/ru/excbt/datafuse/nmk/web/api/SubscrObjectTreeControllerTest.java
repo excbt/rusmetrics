@@ -11,10 +11,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
+import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameVM;
 
 @WithMockUser(username = "ex1-cab-admin", password = "exbt_123456", roles = { "CONT_OBJECT_ADMIN", "SUBSCR_ADMIN",
 		"SUBSCR_CREATE_CABINET", "SUBSCR_CREATE_CHILD", "SUBSCR_USER", "ZPOINT_ADMIN", })
@@ -41,7 +41,7 @@ public class SubscrObjectTreeControllerTest extends AnyControllerTest {
     @Ignore
 	public void testSubscrObjectTreeCRUD() throws Exception {
 
-		ObjectNameHolder tree = new ObjectNameHolder();
+		ObjectNameVM tree = new ObjectNameVM();
 		tree.setObjectName("Object 1");
 
 		Long id = _testCreateJson("/api/subscr/subscrObjectTree/contObjectTreeType1", tree);
