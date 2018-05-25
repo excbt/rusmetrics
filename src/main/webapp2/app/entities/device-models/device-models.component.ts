@@ -12,7 +12,7 @@ import { DeviceModelDataSource } from './device-model.datasource';
 })
 export class DeviceModelsComponent extends ExcListFormComponent<DeviceModel> {
 
-    displayedColumns = ['id', 'deviceModelName', 'caption', 'modelDriverType'];
+    displayedColumns = ['id', 'modelName', 'caption'];
 
     constructor(
         private deviceModelService: DeviceModelService,

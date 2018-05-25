@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
+import ru.excbt.datafuse.nmk.service.dto.DeviceModelDTO;
 
 import java.util.Date;
 

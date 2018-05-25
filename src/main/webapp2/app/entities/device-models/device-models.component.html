@@ -1,5 +1,5 @@
 <jhi-exc-form-template>
-    <jhi-exc-list-form-menu headerKey="device-model.listTitle">
+    <jhi-exc-list-form-menu headerKey="deviceModel.listTitle">
     </jhi-exc-list-form-menu>
         
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
@@ -12,12 +12,12 @@
     matSortDisableClear>
 
     <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'global.field.id' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.id}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+        <mat-cell *matCellDef="let deviceModel" class="id-column-width"> {{deviceModel.id}} </mat-cell>
     </ng-container>
     
-    <ng-container matColumnDef="deviceModelName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.deviceModelName' | translate}} </mat-header-cell>
+    <ng-container matColumnDef="modelName">
+        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelName' | translate}} </mat-header-cell>
         <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelName}} </mat-cell>
     </ng-container>
     
@@ -39,11 +39,6 @@
     <ng-container matColumnDef="modelDescription">
         <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelDescription' | translate}} </mat-header-cell>
         <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelDescription}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="exLabel">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.exLabel' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.exLabel}} </mat-cell>
     </ng-container>
     
     <ng-container matColumnDef="modelDriverType">
@@ -86,7 +81,7 @@
 
 <div>
     <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
-    icon="fa-arrow-left" routerLink="/subscr-access"></button>
+    icon="fa-arrow-left" routerLink="/classifiers"></button>
 </div>
 
 </jhi-exc-form-template>        

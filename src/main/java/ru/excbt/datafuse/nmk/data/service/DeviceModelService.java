@@ -1,9 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.Lists;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,16 +8,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.google.common.collect.Lists;
-
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceModelHeatRadiator;
 import ru.excbt.datafuse.nmk.data.model.QDeviceModel;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
-import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ImpulseCounterType;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelHeatRadiatorRepository;
@@ -28,8 +20,15 @@ import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ImpulseCounterTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
+import ru.excbt.datafuse.nmk.service.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Сервис для работы с моделями прибора
@@ -196,6 +195,9 @@ public class DeviceModelService implements SecuredRoles {
 
 
     private static BooleanExpression searchCondition(String s) {
+        if (s == null || s.isEmpty()) {
+            return null;
+        }
         QDeviceModel qDeviceModel = QDeviceModel.deviceModel;
         Function<String, BooleanExpression> exprBuilder =
             builderString -> qDeviceModel.modelName.toLowerCase().like(QueryDSLUtil.lowerCaseLikeStr.apply(builderString));
@@ -212,13 +214,14 @@ public class DeviceModelService implements SecuredRoles {
         WhereClauseBuilder whereBuilder = new WhereClauseBuilder()
             .and(qDeviceModel.deleted.eq(0));
 
-        Optional.ofNullable(searchString).ifPresent(s -> whereBuilder.and(searchCondition(s)));
+        Optional.ofNullable(searchString).filter(i -> !i.isEmpty())
+            .ifPresent(s -> whereBuilder.and(searchCondition(s)));
 
         Page<DeviceModel> rawData = deviceModelRepository.findAll(whereBuilder, pageable);
 
         List<DeviceModelHeatRadiator> heatRadiatorsAll = deviceModelHeatRadiatorRepository.findAll();
 
-        Page<DeviceModelDTO> dtoData = rawData.map(deviceModelMapper::deviceModelToDto);
+        Page<DeviceModelDTO> dtoData = rawData.map(deviceModelMapper::toDto);
         dtoData.getContent().forEach((i) -> heatRadiatorsAll.stream()
             .filter((r) -> r.getDeviceModelHeatRadiatorPK().getDeviceModel().getId().equals(i.getId()))
             .forEach((r) ->

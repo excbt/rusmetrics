@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.service.dto.DeviceModelDTO;
 
 import java.util.List;
 

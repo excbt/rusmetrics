@@ -6,7 +6,7 @@ export const deviceModelsRoute: Route = {
     path: 'device-models',
     component: DeviceModelsComponent,
     data: {
-        pageTitle: 'device-model.listTitle'
+        pageTitle: 'deviceModel.listTitle'
     },
     canActivate: [UserRouteAccessService]
 };

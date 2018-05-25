@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.repository.VzletSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
+import ru.excbt.datafuse.nmk.service.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;

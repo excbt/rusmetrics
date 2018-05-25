@@ -63,7 +63,8 @@ public class DeviceModelResourceTest extends PortalApiTest {
 
     @Test
     public void testGetDeviceModelsPage() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/device-models/page").testGet();
+        mockMvcRestWrapper.restRequest("/api/device-models/page")
+            .requestBuilder(b -> b.param("searchString", "")).testGet();
     }
 
 }
