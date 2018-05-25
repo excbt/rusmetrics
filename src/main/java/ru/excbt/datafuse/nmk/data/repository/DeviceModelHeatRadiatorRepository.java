@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface DeviceModelHeatRadiatorRepository extends JpaRepository<DeviceModelHeatRadiator, DeviceModelHeatRadiatorId> {
 
-    @Query ("SELECT d FROM DeviceModelHeatRadiator d WHERE d.deviceModelHeatRadiatorId.deviceModel.id = :deviceModelId")
+    @Query ("SELECT d FROM DeviceModelHeatRadiator d WHERE d.deviceModelHeatRadiatorPK.deviceModel.id = :deviceModelId")
     List<DeviceModelHeatRadiator> findByDeviceModel (@Param("deviceModelId") Long deviceModelId);
 
 }

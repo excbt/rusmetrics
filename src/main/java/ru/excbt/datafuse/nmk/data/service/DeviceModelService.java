@@ -1,11 +1,13 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,14 +18,18 @@ import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
 import ru.excbt.datafuse.nmk.data.model.DeviceModelHeatRadiator;
+import ru.excbt.datafuse.nmk.data.model.QDeviceModel;
 import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ImpulseCounterType;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelHeatRadiatorRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceModelRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ImpulseCounterTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 
 /**
  * Сервис для работы с моделями прибора
@@ -148,7 +154,7 @@ public class DeviceModelService implements SecuredRoles {
 
 	    if (deviceModelDTO != null) {
 	        deviceModelHeatRadiatorRepository.findByDeviceModel(deviceModelDTO.getId())
-                .forEach((i) -> deviceModelDTO.getHeatRadiatorKcs().put(i.getDeviceModelHeatRadiatorId().getHeatRadiatorType().getId(), i.getKc()));
+                .forEach((i) -> deviceModelDTO.getHeatRadiatorKcs().put(i.getDeviceModelHeatRadiatorPK().getHeatRadiatorType().getId(), i.getKc()));
         }
 
 		return deviceModelDTO;
@@ -179,14 +185,49 @@ public class DeviceModelService implements SecuredRoles {
         resultList.forEach((i) -> {
 
             heatRadiatorsAll.stream()
-                .filter((r) -> r.getDeviceModelHeatRadiatorId().getDeviceModel().getId().equals(i.getId()))
+                .filter((r) -> r.getDeviceModelHeatRadiatorPK().getDeviceModel().getId().equals(i.getId()))
                 .forEach((r) ->
-                    i.getHeatRadiatorKcs().put(r.getDeviceModelHeatRadiatorId().getHeatRadiatorType().getId(), r.getKc())
+                    i.getHeatRadiatorKcs().put(r.getDeviceModelHeatRadiatorPK().getHeatRadiatorType().getId(), r.getKc())
                 );
         });
 
         return resultList;
 	}
+
+
+    private static BooleanExpression searchCondition(String s) {
+        QDeviceModel qDeviceModel = QDeviceModel.deviceModel;
+        Function<String, BooleanExpression> exprBuilder =
+            builderString -> qDeviceModel.modelName.toLowerCase().like(QueryDSLUtil.lowerCaseLikeStr.apply(builderString));
+
+        return QueryDSLUtil.buildSearchCondition(s, exprBuilder);
+    }
+
+
+    @Transactional(readOnly = true)
+    public Page<DeviceModelDTO> findDeviceModels(String searchString, Pageable pageable) {
+
+        QDeviceModel qDeviceModel = QDeviceModel.deviceModel;
+
+        WhereClauseBuilder whereBuilder = new WhereClauseBuilder()
+            .and(qDeviceModel.deleted.eq(0));
+
+        Optional.ofNullable(searchString).ifPresent(s -> whereBuilder.and(searchCondition(s)));
+
+        Page<DeviceModel> rawData = deviceModelRepository.findAll(whereBuilder, pageable);
+
+        List<DeviceModelHeatRadiator> heatRadiatorsAll = deviceModelHeatRadiatorRepository.findAll();
+
+        Page<DeviceModelDTO> dtoData = rawData.map(deviceModelMapper::deviceModelToDto);
+        dtoData.getContent().forEach((i) -> heatRadiatorsAll.stream()
+            .filter((r) -> r.getDeviceModelHeatRadiatorPK().getDeviceModel().getId().equals(i.getId()))
+            .forEach((r) ->
+                i.getHeatRadiatorKcs().put(r.getDeviceModelHeatRadiatorPK().getHeatRadiatorType().getId(), r.getKc())
+            ));
+
+
+	    return dtoData;
+    }
 
 //	/**
 //	 *

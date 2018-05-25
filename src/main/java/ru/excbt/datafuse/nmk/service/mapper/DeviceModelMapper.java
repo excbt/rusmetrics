@@ -16,6 +16,8 @@ public interface DeviceModelMapper {
 
     DeviceModelDTO deviceModelToDto (DeviceModel deviceModel);
 
+//    DeviceModelDTO toDto (DeviceModel deviceModel);
+
 
     default DeviceModel deviceModelFromId(Long id) {
         return id == null ? null : new DeviceModel().id(id);

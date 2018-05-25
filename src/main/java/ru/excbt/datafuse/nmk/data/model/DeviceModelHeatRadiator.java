@@ -19,7 +19,7 @@ import java.io.Serializable;
 public class DeviceModelHeatRadiator implements Serializable {
 
     @EmbeddedId
-    private DeviceModelHeatRadiatorId deviceModelHeatRadiatorId;
+    private DeviceModelHeatRadiatorId deviceModelHeatRadiatorPK;
 
     @Column(name = "kc", columnDefinition = "numeric(12,4)", precision = 12, scale = 4 )
     private Double kc;
@@ -31,11 +31,11 @@ public class DeviceModelHeatRadiator implements Serializable {
 
         DeviceModelHeatRadiator that = (DeviceModelHeatRadiator) o;
 
-        return deviceModelHeatRadiatorId != null ? deviceModelHeatRadiatorId.equals(that.deviceModelHeatRadiatorId) : that.deviceModelHeatRadiatorId == null;
+        return deviceModelHeatRadiatorPK!= null ? deviceModelHeatRadiatorPK.equals(that.deviceModelHeatRadiatorPK) : that.deviceModelHeatRadiatorPK == null;
     }
 
     @Override
     public int hashCode() {
-        return deviceModelHeatRadiatorId != null ? deviceModelHeatRadiatorId.hashCode() : 0;
+        return deviceModelHeatRadiatorPK != null ? deviceModelHeatRadiatorPK.hashCode() : 0;
     }
 }
