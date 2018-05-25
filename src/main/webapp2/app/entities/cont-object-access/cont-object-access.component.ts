@@ -8,7 +8,7 @@ import { ContObjectAccessDataSource } from './cont-object-access.datasource';
 import { TreeNode } from 'primeng/api';
 import { ContZPointAccess } from './cont-zpoint-access.model';
 import { merge } from 'rxjs/observable/merge';
-import { tap, distinctUntilChanged } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';

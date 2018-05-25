@@ -2,7 +2,7 @@ import { CollectionViewer, DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ExcPage, ExcPageParams } from '../../shared-blocks';
-import { catchError, finalize, takeUntil } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
 export abstract class ExcAbstractPageDataSource<T> implements DataSource<T> {
