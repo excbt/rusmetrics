@@ -14,6 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 import ru.excbt.datafuse.nmk.config.AsyncConfiguration;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
@@ -43,6 +44,7 @@ import java.util.Collection;
         })
 })
 @EnableConfigurationProperties({PortalProperties.class})
+@ActiveProfiles("dev")
 public class PortalApiTestConfiguration {
 
 	private static final Logger log = LoggerFactory.getLogger(PortalApiTestConfiguration.class);

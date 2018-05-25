@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.support.SubscriberUserInfo;
@@ -16,6 +17,7 @@ import ru.excbt.datafuse.nmk.web.conf.PortalApiTestConfiguration;
 		roles = { "ADMIN", "SUBSCR_ADMIN", "SUBSCR_USER", "CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "DEVICE_OBJECT_ADMIN",
 				"RMA_CONT_OBJECT_ADMIN", "RMA_ZPOINT_ADMIN", "RMA_DEVICE_OBJECT_ADMIN", "SUBSCR_CREATE_CABINET",
 				"CABINET_USER" })
+@ActiveProfiles("dev")
 public abstract class AnyControllerTest extends AbstractControllerTest implements SubscriberUserInfo {
 
 	private final static long TEST_AUDIT_USER = 1;
