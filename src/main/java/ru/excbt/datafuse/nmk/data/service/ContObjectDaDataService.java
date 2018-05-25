@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.jayway.jsonpath.JsonPath;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectDaData;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectDaDataRepository;
@@ -41,7 +41,7 @@ public class ContObjectDaDataService {
 	 * @param contObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Optional<ContObjectDaData> findOneByContObjectId(Long contObjectId) {
 //        Optional<ContObjectDaData> contObjectDaDataOptional = contObjectDaDataRepository.findOneByContObjectId(contObjectId);
 		return contObjectDaDataRepository.findOneByContObjectId(contObjectId);
@@ -52,7 +52,7 @@ public class ContObjectDaDataService {
 	 * @param contObject
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public ContObjectDaData getOrInitDaData(ContObject contObject) {
 		ContObjectDaData result;
 		if (contObject.isNew()) {
@@ -87,7 +87,7 @@ public class ContObjectDaDataService {
 	 * @param contObjectDaData
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public ContObjectDaData saveContObjectDaData(ContObjectDaData contObjectDaData) {
 		return contObjectDaDataRepository.save(contObjectDaData);
 	}

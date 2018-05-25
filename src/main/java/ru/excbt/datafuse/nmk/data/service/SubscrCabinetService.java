@@ -7,7 +7,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
@@ -122,7 +122,7 @@ public class SubscrCabinetService implements SecuredRoles {
      * @param contObjectIds
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public SubscrCabinetInfo createSubscrUserCabinet(Subscriber parentSubscriber, Long[] contObjectIds) {
 		checkNotNull(parentSubscriber);
@@ -219,7 +219,7 @@ public class SubscrCabinetService implements SecuredRoles {
 	 *
 	 * @param cabinetSubscriber
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public void deleteSubscrUserCabinet(Subscriber cabinetSubscriber) {
 		checkNotNull(cabinetSubscriber);
@@ -248,7 +248,7 @@ public class SubscrCabinetService implements SecuredRoles {
 	 *
 	 * @param cabinetSubscriberId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	public void deleteSubscrUserCabinet(Long cabinetSubscriberId) {
 		Subscriber subscriber = subscriberService.findOneSubscriber(cabinetSubscriberId)
@@ -332,7 +332,7 @@ public class SubscrCabinetService implements SecuredRoles {
 	 * @param parentSubscriberId
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional( readOnly = true)
 	private List<SubscCabinetContObjectStats> selectChildSubscrCabinetContObjectsStats(Long parentSubscriberId) {
 		List<Object[]> qryResult = objectAccessService.findChildSubscrCabinetContObjectsStats(parentSubscriberId);
 		List<SubscCabinetContObjectStats> result = new ArrayList<>();
@@ -396,7 +396,7 @@ public class SubscrCabinetService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUserWrapper saveCabinelSubscrUser(Long parentSubscriberId, SubscrUserWrapper entity) {
 		checkNotNull(entity);
 		checkNotNull(entity.getSubscrUser());
@@ -440,7 +440,7 @@ public class SubscrCabinetService implements SecuredRoles {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrUser selectCabinelSubscrUser(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
@@ -464,7 +464,7 @@ public class SubscrCabinetService implements SecuredRoles {
      * @return
      */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUserWrapper saveCabinelSubscrUserPassword(Long parentSubscriberId, Long subscrUserId,
 			String password) {
 		checkNotNull(subscrUserId);
@@ -496,7 +496,7 @@ public class SubscrCabinetService implements SecuredRoles {
      * @return
      */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {
 		SubscrUser fromSubscrUser = subscrUserRepository.findOne(fromSubscrUserId);
 		SubscrUser toSubscrUser = subscrUserRepository.findOne(toSubscrUserId);

@@ -11,7 +11,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.repository.ReportSheduleRepository;
 import ru.excbt.datafuse.nmk.report.ReportActionKey;
@@ -19,7 +19,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с расписаниями отчетов
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 16.04.2015
@@ -32,11 +32,11 @@ public class ReportSheduleService implements SecuredRoles {
 	private ReportSheduleRepository reportSheduleRepository;
 
 	/**
-	 * 
+	 *
 	 * @param dateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId, LocalDateTime dateTime) {
 
 		List<ReportShedule> result = reportSheduleRepository.selectReportShedule(subscriberId, dateTime.toDate());
@@ -47,11 +47,11 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId) {
 		List<ReportShedule> result = reportSheduleRepository.findBySubscriberId(subscriberId);
 
@@ -61,7 +61,7 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param action
 	 * @param param
 	 * @return
@@ -74,11 +74,11 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportShedule
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportShedule createOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
@@ -113,11 +113,11 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportShedule
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public ReportShedule updateOne(ReportShedule reportShedule) {
 		checkNotNull(reportShedule, "argument reportShedule is NULL");
@@ -154,11 +154,11 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ReportShedule findOne(long reportSheduleId) {
 		ReportShedule result = reportSheduleRepository.findOne(reportSheduleId);
 		result.getReportParamset().getParamSpecialList().size();
@@ -166,20 +166,20 @@ public class ReportSheduleService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportSheduleId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long reportSheduleId) {
 		reportSheduleRepository.delete(reportSheduleId);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param reportParamsetId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteByReportParamset(long reportParamsetId) {
 		reportSheduleRepository.softDeleteByReportParamset(reportParamsetId);

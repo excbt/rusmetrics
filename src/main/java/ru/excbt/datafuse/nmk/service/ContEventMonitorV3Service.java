@@ -5,7 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorV3;
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
 import ru.excbt.datafuse.nmk.data.model.dto.ContEventMonitorXDTO;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional( readOnly = true)
 public class ContEventMonitorV3Service {
     private static final Logger log = LoggerFactory.getLogger(ContEventMonitorV3Service.class);
 

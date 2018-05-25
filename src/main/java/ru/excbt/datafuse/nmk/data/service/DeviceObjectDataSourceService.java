@@ -14,7 +14,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource2;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSource2Repository;
@@ -48,7 +48,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectDataSource> selectActiveDeviceObjectDataSource(Long deviceObjectId) {
 		List<DeviceObjectDataSource> resultList = deviceObjectDataSourceRepository
 				.selectActiveDataSource(deviceObjectId);
@@ -60,7 +60,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @param deviceObjectDataSource
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public DeviceObjectDataSource saveDeviceDataSource(DeviceObjectDataSource deviceObjectDataSource) {
 		// Check parameters
@@ -110,7 +110,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void makeDeviceDataSourceInactive(Long deviceObjectId) {
 		List<DeviceObjectDataSource> deviceObjectDataSources = selectActiveDeviceObjectDataSource(deviceObjectId);
@@ -119,7 +119,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	}
 
 
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
     public DeviceObjectDataSource2 saveDeviceDataSource2(DeviceObjectDataSource2 deviceObjectDataSource2) {
         Objects.requireNonNull(deviceObjectDataSource2);

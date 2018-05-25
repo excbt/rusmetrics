@@ -3,7 +3,7 @@ package ru.excbt.datafuse.nmk.data.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
@@ -30,7 +30,7 @@ public class SubscrSessionTaskService {
 	 * @param task
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrSessionTask saveSubscrSessionTask(SubscrSessionTask task) {
 		SubscrSessionTask result = subscrSessionTaskRepository.save(task);
 		return result;
@@ -41,7 +41,7 @@ public class SubscrSessionTaskService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrSessionTask findSubscrSessionTask(Long id) {
 		return subscrSessionTaskRepository.findOne(id);
 	}
@@ -51,7 +51,7 @@ public class SubscrSessionTaskService {
 	 * @param subscrSessionTaskId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public boolean getIsProgress(Long subscrSessionTaskId) {
 		SubscrSessionTask task = subscrSessionTaskRepository.findOne(subscrSessionTaskId);
 		return Boolean.TRUE.equals(task.getTaskIsComplete());
@@ -62,7 +62,7 @@ public class SubscrSessionTaskService {
 	 * @param task
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrSessionTask createSubscrSessionTask(SubscrSessionTask task) {
 
 		checkArgument(checkTaskValid(task));
@@ -100,7 +100,7 @@ public class SubscrSessionTaskService {
 	 * @param subscrSessionTaskId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<LogSession> selectTaskLogSessions(Long subscrSessionTaskId) {
 		return subscrSessionTaskLogRepository
 				.selectTaskLogSessions(subscrSessionTaskId != null ? subscrSessionTaskId : 0);

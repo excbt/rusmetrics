@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.widget.HeatWidgetTemperatureDto;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
@@ -100,7 +100,7 @@ public class HeatWidgetService extends WidgetService {
 	 * @param mode
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<HeatWidgetTemperatureDto> selectChartData2(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
 
@@ -131,7 +131,7 @@ public class HeatWidgetService extends WidgetService {
 	 * @param mode
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<HeatWidgetTemperatureDto> selectChartData(Long contZpointId, java.time.ZonedDateTime dateTime,
 			String mode) {
 

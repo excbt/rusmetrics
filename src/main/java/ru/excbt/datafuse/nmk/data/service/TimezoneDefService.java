@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimezoneDefRepository;
@@ -42,7 +42,7 @@ public class TimezoneDefService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public TimezoneDef getDefaultTimezoneDef() {
 
 		TimezoneDef result = defaultTimezoneDef;
@@ -72,13 +72,13 @@ public class TimezoneDefService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimezoneDef> selectTimeZoneDefs() {
 		List<TimezoneDef> result = timezoneDefRepository.selectAll();
 		return ObjectFilters.deletedFilter(result);
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimezoneDefDTO> findTimeZoneDefs() {
 		List<TimezoneDef> result = timezoneDefRepository.selectAll();
 		return result.stream().filter(i -> i.getTimezoneName() != null && i.getDeleted() == 0)
@@ -90,7 +90,7 @@ public class TimezoneDefService {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public TimezoneDef findTimeZoneDef(String keyname) {
 		if (keyname == null) {
 			return null;

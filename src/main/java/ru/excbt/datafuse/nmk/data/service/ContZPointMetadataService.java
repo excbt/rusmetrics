@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
@@ -86,7 +86,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<ContZPointMetadata> selectNewMetadata(Long contZPointId, boolean isTsFilter) {
 
 		List<ContZPointMetadata> result = new ArrayList<>();
@@ -210,7 +210,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 * @param metadataList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<DeviceMetadataInfo> buildSrcPropsDeviceMapping(List<ContZPointMetadata> metadataList) {
 
 		final Map<String, List<String>> deviceMappings = getSrcPropsDeviceMapping(metadataList);
@@ -258,7 +258,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public List<ContZPointMetadata> selectContZPointMetadata(Long contZPointId) {
 		ContZPointMetadataKey key = findContZPointMetadataKey(contZPointId);
 		if (key == null) {
@@ -328,7 +328,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public int deleteOtherContZPointMetadata(Long contZPointId, Long deviceObjectId) {
 		return contZPointMetadataRepository.deleteOtherContZPointMetadata(contZPointId, deviceObjectId);
 	}
@@ -340,7 +340,7 @@ public class ContZPointMetadataService implements SecuredRoles {
      * @return
      */
 	@Secured({ ROLE_ZPOINT_ADMIN, ROLE_RMA_ZPOINT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<ContZPointMetadata> saveContZPointMetadata(List<ContZPointMetadata> entityList, Long contZPointId) {
 		ContZPoint contZPoint = contZPointService.findOne(contZPointId);
 		if (contZPoint == null) {
@@ -365,7 +365,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public Map<String, List<String>> getSrcPropsDeviceMapping(List<ContZPointMetadata> metadataList) {
 
 		Map<String, List<String>> result = null;

@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 
 //@Service
-//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//@Transactional( readOnly = true)
 public class ContEventMonitorV2Service {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContEventMonitorV2Service.class);

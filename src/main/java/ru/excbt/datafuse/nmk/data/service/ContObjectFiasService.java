@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectFiasRepository;
@@ -62,7 +62,7 @@ public class ContObjectFiasService {
      * @param contObjectId
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public ContObjectFias findContObjectFias(Long contObjectId) {
         Preconditions.checkNotNull(contObjectId);
         List<ContObjectFias> vList = contObjectFiasRepository.findByContObjectId(contObjectId);
@@ -127,7 +127,7 @@ public class ContObjectFiasService {
      * @param contObjectIds
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public List<ContObjectFias> selectContObjectsFias(List<Long> contObjectIds) {
         return contObjectIds == null || contObjectIds.isEmpty() ? new ArrayList<>()
             : contObjectFiasRepository.findByContObjectIds(contObjectIds);

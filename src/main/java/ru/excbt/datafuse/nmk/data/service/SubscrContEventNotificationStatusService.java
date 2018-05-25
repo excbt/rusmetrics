@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitor;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -69,7 +69,7 @@ public class SubscrContEventNotificationStatusService {
 	 * @return
 	 */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus_old(
 			final SubscriberParam subscriberParam, final Long contGroupId, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
@@ -101,7 +101,7 @@ public class SubscrContEventNotificationStatusService {
 	 * @param noGreenColor
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<CityMonitorContEventsStatus> selectCityMonitoryContEventsStatus(final PortalUserIds portalUserIds,
 			final List<ContObject> contObjects, final LocalDatePeriod datePeriod, Boolean noGreenColor) {
 
@@ -127,7 +127,7 @@ public class SubscrContEventNotificationStatusService {
 	 * @return
 	 */
 	@Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatus(final Long subscriberId,
 			final LocalDatePeriod datePeriod) {
 		checkNotNull(subscriberId);
@@ -213,7 +213,7 @@ public class SubscrContEventNotificationStatusService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<MonitorContEventNotificationStatus> selectMonitorContEventNotificationStatusCollapse(
         final PortalUserIds portalUserIds, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
         Boolean noGreenColor) {
@@ -310,7 +310,7 @@ public class SubscrContEventNotificationStatusService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	private List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod) {
 
@@ -355,7 +355,7 @@ public class SubscrContEventNotificationStatusService {
      * @param datePeriod
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatusCollapse(
 			final PortalUserIds portalUserIds, final Long contObjectId, final LocalDatePeriod datePeriod) {
 

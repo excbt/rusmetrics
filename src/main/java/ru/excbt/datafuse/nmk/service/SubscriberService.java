@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -109,7 +109,7 @@ public class SubscriberService implements SecuredRoles {
      * @return
      */
     @Deprecated
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Subscriber selectSubscriber(Long subscriberId) {
 		Subscriber result = subscriberRepository.findOne(subscriberId);
 		if (result == null) {
@@ -119,7 +119,7 @@ public class SubscriberService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
 		return Optional.ofNullable(subscriberMapper.toDto(subscriberRepository.findOne(subscriberId)));
 	}
@@ -130,7 +130,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public Subscriber saveSubscriber(Subscriber entity) {
 		return subscriberRepository.saveAndFlush(entity);
 	}
@@ -141,7 +141,7 @@ public class SubscriberService implements SecuredRoles {
      * @return
      */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public Subscriber saveSubscriberDTO(SubscriberDTO subscriberDTO) {
 		return subscriberRepository.saveAndFlush(subscriberMapper.toEntity(subscriberDTO));
 	}
@@ -151,7 +151,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param entity
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteSubscriber(Subscriber entity) {
 		checkNotNull(entity);
 		subscriberRepository.save(EntityActions.softDelete(entity));
@@ -162,7 +162,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Optional<Subscriber> findOneSubscriber(Long subscriberId) {
 		return Optional.ofNullable(subscriberRepository.findOne(subscriberId));
 	}
@@ -172,7 +172,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<Organization> selectRsoOrganizations2(Long subscriberId) {
 		return subscriberRepository.selectRsoOrganizations(subscriberId);
 	}
@@ -182,7 +182,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public boolean checkSubscriberId(Long subscriberId) {
 		List<Long> ids = subscriberRepository.checkSubscriberId(subscriberId);
 		return ids.size() == 1;
@@ -193,7 +193,7 @@ public class SubscriberService implements SecuredRoles {
 //	 * @param subscriberId
 //	 * @return
 //	 */
-//	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+//	@Transactional( readOnly = true)
 //	public String getRmaLdapOu(Long subscriberId) {
 //		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
 //		if (subscriber == null) {
@@ -245,7 +245,7 @@ public class SubscriberService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<Subscriber> findAllSubscribers() {
 		return Lists.newArrayList(subscriberRepository.findAll());
 	}
@@ -255,13 +255,13 @@ public class SubscriberService implements SecuredRoles {
 	 * @param parentSubscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<Subscriber> selectChildSubscribers(Long parentSubscriberId) {
 		List<Subscriber> result = subscriberRepository.selectChildSubscribers(parentSubscriberId);
 		return ObjectFilters.deletedFilter(result);
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscriberDTO> selectSubscribers(PortalUserIds userIds) {
 
 
@@ -279,7 +279,7 @@ public class SubscriberService implements SecuredRoles {
     }
 
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public Page<SubscriberDTO> selectSubscribers(PortalUserIds userIds,
                                                  SubscriberMode subscriberMode,
                                                  Optional<String> searchStringOptional,
@@ -307,7 +307,7 @@ public class SubscriberService implements SecuredRoles {
         return result.map(subscriberMapper::toDto);
 	}
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
 	public <T> Page<T> selectSubscribers2(PortalUserIds userIds,
                                                  SubscriberMode subscriberMode,
                                                  Optional<String> searchStringOptional,
@@ -375,7 +375,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscribers
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscriberOrganizationVO> enhanceSubscriber(final List<Subscriber> subscribers) {
 		checkNotNull(subscribers);
 
@@ -403,7 +403,7 @@ public class SubscriberService implements SecuredRoles {
 	 * @param subscriber
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscriberOrganizationVO enhanceSubscriber(Subscriber subscriber) {
 		return checkNotNull(enhanceSubscriber(Arrays.asList(subscriber))).get(0);
 	}

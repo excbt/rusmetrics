@@ -10,7 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.repository.RawModemModelRepository;
@@ -23,41 +23,41 @@ public class RawModemService implements SecuredRoles {
 	private RawModemModelRepository rawModemModelRepository;
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<RawModemModel> selectRawModels() {
 		return ObjectFilters.deletedFilter(rawModemModelRepository.selectRawModels());
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rawModemModelId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public RawModemModel selectRawModel(Long rawModemModelId) {
 		return rawModemModelRepository.findOne(rawModemModelId);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public RawModemModel saveRawModemModel(RawModemModel entity) {
 		return rawModemModelRepository.save(entity);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param rawModemModelId
 	 */
 	@Secured({ ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public void deleteRawModemModel(Long rawModemModelId) {
 		RawModemModel deleteCadidate = rawModemModelRepository.findOne(rawModemModelId);
 		checkNotNull(rawModemModelId);

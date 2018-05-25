@@ -10,7 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
 import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
@@ -40,7 +40,7 @@ public class LocalPlaceService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<LocalPlace> selectLocalPlaces() {
 		return localPlaceRepository.selectLocalPlaces();
 	}
@@ -50,7 +50,7 @@ public class LocalPlaceService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public LocalPlace findLocalPlace(Long id) {
 		return localPlaceRepository.findOne(id);
 	}
@@ -60,7 +60,7 @@ public class LocalPlaceService implements SecuredRoles {
 	 * @param fiasUUID
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public LocalPlace selectLocalPlaceByFias(UUID fiasUUID) {
 		if (fiasUUID == null) {
 			return null;
@@ -75,7 +75,7 @@ public class LocalPlaceService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public LocalPlace saveLocalPlace(LocalPlace entity) {
 		return localPlaceRepository.save(entity);
 	}
@@ -86,7 +86,7 @@ public class LocalPlaceService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public LocalPlace saveCityToLocalPlace(UUID fiasUuid) {
 	    if (fiasUuid == null) {
 	        return null;
@@ -110,7 +110,7 @@ public class LocalPlaceService implements SecuredRoles {
 	}
 
     @Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public LocalPlace saveCityToLocalPlace(ContObjectFias contObjectFias) {
         return contObjectFias != null ? saveCityToLocalPlace(contObjectFias.getCityFiasUUID()) : null;
     }

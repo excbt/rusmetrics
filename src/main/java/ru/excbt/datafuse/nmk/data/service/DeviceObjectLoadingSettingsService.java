@@ -10,7 +10,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingSettingsRepository;
@@ -18,7 +18,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с настройками загрузки с прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.01.2016
@@ -31,22 +31,22 @@ public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 	private DeviceObjectLoadingSettingsRepository deviceObjectLoadingSettingsRepository;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public DeviceObjectLoadingSettings findOne(Long id) {
 		return deviceObjectLoadingSettingsRepository.findOne(id);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public DeviceObjectLoadingSettings saveOne(DeviceObjectLoadingSettings entity) {
 		checkNotNull(entity.getDeviceObject());
 		checkArgument(!entity.getDeviceObject().isNew());
@@ -58,11 +58,11 @@ public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public DeviceObjectLoadingSettings getDeviceObjectLoadingSettings(DeviceObject entity) {
 		if (entity.isNew()) {
 			DeviceObjectLoadingSettings result = new DeviceObjectLoadingSettings();
@@ -83,7 +83,7 @@ public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public DeviceObjectLoadingSettings newDefaultDeviceObjectLoadingSettings(DeviceObject deviceObject) {

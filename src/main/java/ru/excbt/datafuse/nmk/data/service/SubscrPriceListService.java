@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceList;
@@ -73,7 +73,7 @@ public class SubscrPriceListService  {
      *
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectRootPriceLists() {
 		List<SubscrPriceList> preResult = subscrPriceListRepository.selectByLevel(0);
 
@@ -88,7 +88,7 @@ public class SubscrPriceListService  {
      * @param priceListKeyname
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrPriceList selectRootPriceLists(String priceListKeyname) {
 		List<SubscrPriceList> list = subscrPriceListRepository.selectByLevel(0);
 
@@ -126,7 +126,7 @@ public class SubscrPriceListService  {
 	 *
 	 * @param subscrPriceList
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({AuthoritiesConstants.ADMIN})
 	public void deleteSubscrPriceList(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -141,7 +141,7 @@ public class SubscrPriceListService  {
 	 *
 	 * @param subscrPriceList
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public void softDeleteSubscrPriceList(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -166,7 +166,7 @@ public class SubscrPriceListService  {
 	 *
 	 * @param subscrPriceList
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public void softDeleteRmaPriceList(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -193,7 +193,7 @@ public class SubscrPriceListService  {
 	 *
 	 * @param subscrPriceList
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public void softDeleteRootPriceList(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -220,7 +220,7 @@ public class SubscrPriceListService  {
      * @param subscriberId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectActiveRmaPriceList(Long rmaSubscriberId, Long subscriberId) {
 
 		List<SubscrPriceList> activePriceLists = selectRmaPriceLists(rmaSubscriberId, subscriberId).stream()
@@ -235,7 +235,7 @@ public class SubscrPriceListService  {
      * @param subscriberId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectDraftRmaPriceLists(Long rmaSubscriberId, Long subscriberId) {
 
 		List<SubscrPriceList> rmaPriceLists = selectRmaPriceLists(rmaSubscriberId, subscriberId);
@@ -251,7 +251,7 @@ public class SubscrPriceListService  {
      * @param subscriberId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectRmaPriceLists(Long rmaSubscriberId, Long subscriberId) {
 
 		List<SubscrPriceList> rmaPriceLists = subscrPriceListRepository.selectByRma(rmaSubscriberId);
@@ -274,7 +274,7 @@ public class SubscrPriceListService  {
 	 * @param rmaSubscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectRmaPriceLists(Long rmaSubscriberId) {
 		return selectRmaPriceLists(rmaSubscriberId, null);
 	}
@@ -285,7 +285,7 @@ public class SubscrPriceListService  {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrPriceList> selectSubscriberPriceLists(Long rmaSubscriberId, Long subscriberId) {
 		checkNotNull(rmaSubscriberId);
 		checkNotNull(subscriberId);
@@ -306,7 +306,7 @@ public class SubscrPriceListService  {
 	 * @param srcPriceListId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList createAnyDraftPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
@@ -344,7 +344,7 @@ public class SubscrPriceListService  {
      * @param rmaSubscriber
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN })
 	public SubscrPriceList createRmaPriceList(Long srcPriceListId, Subscriber rmaSubscriber) {
 		checkNotNull(srcPriceListId);
@@ -386,7 +386,7 @@ public class SubscrPriceListService  {
      * @param rmaSubscriberIds
      * @param activeIds
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN })
 	public void createRmaPriceLists(Long srcPriceListId, List<Long> rmaSubscriberIds, List<Long> activeIds) {
 		checkNotNull(srcPriceListId);
@@ -409,7 +409,7 @@ public class SubscrPriceListService  {
      * @param subscriber
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList createSubscrPriceList(Long srcPriceListId, Subscriber subscriber) {
 		checkNotNull(srcPriceListId);
@@ -460,7 +460,7 @@ public class SubscrPriceListService  {
 	 * @param subscriberIds
 	 * @param activeIds
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public void createSubscrPriceLists(Long srcPriceListId, List<Long> subscriberIds, List<Long> activeIds) {
 		checkNotNull(srcPriceListId);
@@ -491,7 +491,7 @@ public class SubscrPriceListService  {
 	 * @param subscrPriceList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList updateOne(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -520,7 +520,7 @@ public class SubscrPriceListService  {
      * @param subscrPriceList
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public int deactiveOtherSubscrPriceLists(SubscrPriceList subscrPriceList) {
 		checkNotNull(subscrPriceList);
@@ -536,7 +536,7 @@ public class SubscrPriceListService  {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public int deactiveOtherSubscrPriceLists(Long rmaSubscriberId, Long subscriberId) {
 		checkNotNull(rmaSubscriberId);
@@ -567,7 +567,7 @@ public class SubscrPriceListService  {
 	 * @param subscrPriceList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public int deactiveOtherRmaPriceLists(SubscrPriceList subscrPriceList) {
 		Long rmaSubscriberId = subscrPriceList.getRmaSubscriber().getId();
@@ -582,7 +582,7 @@ public class SubscrPriceListService  {
      * @param subscriberId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public int deactiveOtherRmaPriceLists(Long rmaSubscriberId, Long subscriberId) {
 		checkNotNull(rmaSubscriberId);
@@ -609,7 +609,7 @@ public class SubscrPriceListService  {
      * @param startDate
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList activateSubscrPriceList(Long subscrPriceListId, LocalDate startDate) {
 		checkNotNull(subscrPriceListId);
@@ -651,7 +651,7 @@ public class SubscrPriceListService  {
      * @param startDate
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ AuthoritiesConstants.ADMIN })
 	public SubscrPriceList activateRmaPriceList(Long subscrPriceListId, LocalDate startDate) {
 		checkNotNull(startDate);
@@ -683,7 +683,7 @@ public class SubscrPriceListService  {
 	 * @param subscrPriceListId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrPriceList findOne(Long subscrPriceListId) {
 		return subscrPriceListRepository.findOne(subscrPriceListId);
 	}
@@ -715,7 +715,7 @@ public class SubscrPriceListService  {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public int selectSubscrActiveCount(Long subscriberId) {
 		Long result = subscrPriceListRepository.selectActiveCountBySubscriber(subscriberId);
 		return result != null ? result.intValue() : 0;
@@ -726,7 +726,7 @@ public class SubscrPriceListService  {
 	 * @param subscriber
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public int selectSubscrActiveCount(Subscriber subscriber) {
 		checkNotNull(subscriber);
 		Long result = subscrPriceListRepository.selectActiveCountBySubscriber(subscriber.getId());
@@ -738,7 +738,7 @@ public class SubscrPriceListService  {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrPriceItemVO> selectActiveSubscrPriceListItemVOs(Long subscriberId) {
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListRepository.selectActiveBySubscriber(subscriberId);
 		if (subscrPriceLists.size() == 0) {
@@ -759,7 +759,7 @@ public class SubscrPriceListService  {
 	 * @param rmaSubscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrPriceItemVO> selectActiveRmaPriceListItemVOs(Long rmaSubscriberId) {
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListRepository.selectActiveByRmaSubscriber(rmaSubscriberId);
 		if (subscrPriceLists.size() == 0) {

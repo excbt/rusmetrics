@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateItemRepository;
@@ -29,7 +29,7 @@ public class SubscrObjectTreeTemplateService {
 	 * @param rmaSubscriberTemplate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrObjectTreeTemplate> selectRmaSubscriberTemplates(SubscriberParam subscriberParam) {
 		checkNotNull(subscriberParam);
 		if (subscriberParam.isRma()) {
@@ -44,7 +44,7 @@ public class SubscrObjectTreeTemplateService {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrObjectTreeTemplate findSubscrObjectTreeTemplate(Long id) {
 		return subscrObjectTreeTemplateRepository.findOne(id);
 	}
@@ -54,7 +54,7 @@ public class SubscrObjectTreeTemplateService {
 	 * @param templateId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrObjectTreeTemplateItem> selectSubscrObjectTreeTemplateItems(Long templateId) {
 		return subscrObjectTreeTemplateItemRepository.selectTemplateItems(templateId);
 	}

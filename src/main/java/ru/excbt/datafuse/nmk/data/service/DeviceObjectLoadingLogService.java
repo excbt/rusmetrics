@@ -7,7 +7,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingLogRepository;
@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с протоколированием загрузки с прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 27.01.2016
@@ -28,32 +28,32 @@ public class DeviceObjectLoadingLogService implements SecuredRoles {
 	private DeviceObjectLoadingLogRepository deviceObjectLoadingLogRepository;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public DeviceObjectLoadingLog findOne(Long id) {
 		return deviceObjectLoadingLogRepository.findOne(id);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public DeviceObjectLoadingLog saveOne(DeviceObjectLoadingLog entity) {
 		return deviceObjectLoadingLogRepository.save(entity);
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public DeviceObjectLoadingLog getDeviceObjectLoadingLog(DeviceObject entity) {
 		if (entity.isNew()) {
 			DeviceObjectLoadingLog result = new DeviceObjectLoadingLog();

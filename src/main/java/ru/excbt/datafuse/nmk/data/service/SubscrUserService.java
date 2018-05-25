@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
@@ -99,7 +99,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrRole> selectSubscrRoles(long subscrUserId) {
 		List<SubscrRole> result = subscrUserRepository.selectSubscrRoles(subscrUserId);
 		return ObjectFilters.disabledFilter(result);
@@ -110,7 +110,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrUser> selectBySubscriberId(Long subscriberId) {
 		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
 		resultList.forEach(i -> {
@@ -119,7 +119,7 @@ public class SubscrUserService implements SecuredRoles {
 		return resultList;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrUserDTO> findBySubscriberId(Long subscriberId) {
 		List<SubscrUser> resultList = subscrUserRepository.selectBySubscriberId(subscriberId);
 		return resultList.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(SubscrUserDTO::new).collect(Collectors.toList());
@@ -166,7 +166,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<Long> findUserIdsBySubscriberOrRmaId(Long subscriberId) {
         List<Long> result = subscrUserRepository.findUserIdsBySubscriberOrRmaId(subscriberId);
         result.addAll(systemUserRepository.findUserIdsBySubscriberOrRmaId(subscriberId));
@@ -178,7 +178,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscrUserId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUserDTO findOne(Long subscrUserId) {
         SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
         return new SubscrUserDTO(subscrUser);
@@ -190,7 +190,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUser createSubscrUser(SubscrUser subscrUser, String password) {
 		return createSubscrUser(subscrUser, password, false);
 	}
@@ -203,7 +203,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUser createSubscrUser(SubscrUser subscrUser, String password, boolean skipLdapAction) {
 		checkNotNull(subscrUser);
 		checkArgument(subscrUser.isNew());
@@ -239,7 +239,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrUser updateSubscrUser(SubscrUser subscrUser, String[] passwords) {
 		checkNotNull(subscrUser);
 		checkArgument(!subscrUser.isNew());
@@ -311,7 +311,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteSubscrUser(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
@@ -339,7 +339,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteSubscrUserPermanent(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
@@ -410,7 +410,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param userName
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Optional<SubscrUser> findByUsername(String userName) {
 		return subscrUserRepository.findOneByUserNameIgnoreCase(userName);
 	}
@@ -420,7 +420,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscriberId
 	 */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<Long> deleteSubscrUsers(Long subscriberId) {
 
 		List<SubscrUser> subscrUsers = subscrUserRepository.selectBySubscriberId(subscriberId);
@@ -453,7 +453,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param subscrUserId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_USER, ROLE_CABINET_USER })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void clearSubscrUserPassword(Long subscrUserId) {
 		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
 		if (subscrUser == null) {
@@ -471,7 +471,7 @@ public class SubscrUserService implements SecuredRoles {
 	 * @param isReadonly
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrRole> processSubscrRoles(final Subscriber subscriber, final boolean isAdmin,
 			final boolean isReadonly) {
 		List<SubscrRole> subscrRoles = new ArrayList<>();
@@ -500,7 +500,7 @@ public class SubscrUserService implements SecuredRoles {
 	}
 
     @Scheduled(cron = "0 0 0 * * ?")
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     public void removeOldPersistentTokens() {
         LocalDate now = LocalDate.now();
         persistentTokenRepository.findByTokenDateBefore(now.minusMonths(1)).forEach(token -> {

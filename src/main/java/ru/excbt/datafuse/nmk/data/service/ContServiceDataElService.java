@@ -12,7 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -138,7 +138,7 @@ public class ContServiceDataElService {
 	 * @param pageRequest
 	 * @return
 	 */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public Page<ContServiceDataElCons> selectConsByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
                                                               LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 
@@ -159,7 +159,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataElCons> selectConsByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			DateInterval localDatePeriod) {
 		checkArgument(contZPointId > 0);
@@ -178,7 +178,7 @@ public class ContServiceDataElService {
 	 * @param timeDetail
 	 * @param localDatePeriod
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataSummary<ContServiceDataElCons> selectConsSummary(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -347,7 +347,7 @@ public class ContServiceDataElService {
      * @param localDatePeriod
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElCons selectCons_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -362,7 +362,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElCons selectCons_Min(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -376,7 +376,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElCons selectCons_Max(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -391,7 +391,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElCons selectCons_Sum(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -407,7 +407,7 @@ public class ContServiceDataElService {
 	 * @param pageRequest
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Page<ContServiceDataElTech> selectTechByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 		checkArgument(contZPointId > 0);
@@ -427,7 +427,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataElTech> selectTechByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 		checkArgument(contZPointId > 0);
@@ -447,7 +447,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataSummary<ContServiceDataElTech> selectTechSummary(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -482,7 +482,7 @@ public class ContServiceDataElService {
 
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElTech selectTech_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -525,7 +525,7 @@ public class ContServiceDataElService {
      * @param pageRequest
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Page<ContServiceDataElProfile> selectProfileByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod, PageRequest pageRequest) {
 		checkArgument(contZPointId > 0);
@@ -545,7 +545,7 @@ public class ContServiceDataElService {
 	 * @param localDatePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataElProfile> selectProfileByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 		checkArgument(contZPointId > 0);
@@ -564,7 +564,7 @@ public class ContServiceDataElService {
 	 * @param timeDetail
 	 * @param localDatePeriod
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataSummary<ContServiceDataElProfile> selectProfileSummary(Long contZPointId,
 			TimeDetailKey timeDetail, LocalDatePeriod localDatePeriod) {
 
@@ -606,7 +606,7 @@ public class ContServiceDataElService {
      * @param localDatePeriod
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataElProfile selectProfile_Avg(Long contZPointId, TimeDetailKey timeDetail,
 			LocalDatePeriod localDatePeriod) {
 
@@ -637,7 +637,7 @@ public class ContServiceDataElService {
 	 * @param contZPointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Boolean selectExistsAnyConsData(long contZPointId) {
 		checkArgument(contZPointId > 0);
 		List<Long> resultList = contServiceDataElConsRepository.selectExistsAnyDataByZPoint(contZPointId,
@@ -651,7 +651,7 @@ public class ContServiceDataElService {
 	 * @param fromDateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public LocalDateTime selectLastConsDataDate(long contZPointId, LocalDateTime fromDateTime) {
 		checkArgument(contZPointId > 0);
 
@@ -678,7 +678,7 @@ public class ContServiceDataElService {
 	 * @param idServiceTypePairs
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMapByPair(
 			List<Pair<String, Long>> idServiceTypePairs) {
 		checkArgument(idServiceTypePairs != null);

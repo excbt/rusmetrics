@@ -142,7 +142,7 @@ public class SubscrContObjectService implements SecuredRoles {
      * @param subscrBeginDate
      * @return
      */
-    //@Transactional(value = TxConst.TX_DEFAULT)
+    //@Transactional
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
     private SubscrContObject createSubscrContObjectLink(Long contObjectId, Subscriber subscriber,
                                                         LocalDate subscrBeginDate) {

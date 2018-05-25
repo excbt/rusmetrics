@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
@@ -353,7 +353,7 @@ public class SubscriberManageService {
      * @param subscriberId
      * @param rmaSubscriberId
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     @Secured({ AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN, AuthoritiesConstants.ADMIN })
     public void deleteSubscriber(Long subscriberId, Long rmaSubscriberId) {
         Objects.requireNonNull(subscriberId);

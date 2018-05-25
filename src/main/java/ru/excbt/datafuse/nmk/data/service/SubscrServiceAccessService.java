@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -69,7 +69,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param accessDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServiceAccess> selectSubscriberServiceAccessFull(long subscriberId, LocalDate accessDate) {
 		checkNotNull(accessDate);
 		return subscrServiceAccessRepository.selectBySubscriberId(subscriberId, LocalDateUtils.asDate(accessDate));
@@ -81,7 +81,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param accessDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServiceAccess> selectSubscriberServiceAccess(long subscriberId, LocalDate accessDate) {
 		checkNotNull(accessDate);
 
@@ -100,7 +100,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param entity
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_ADMIN })
 	public boolean processAccess(Long subscriberId, LocalDate accessDate, SubscrServiceAccess entity) {
 		checkNotNull(entity);
@@ -130,7 +130,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param accessList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_ADMIN })
 	public List<SubscrServiceAccess> processAccessList(Long subscriberId, LocalDate accessDate,
 			final List<SubscrServiceAccess> accessList) {
@@ -235,7 +235,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 *
 	 * @param entityId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteOne(long entityId) {
 		subscrServiceAccessRepository.delete(entityId);
 	}
@@ -244,7 +244,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 *
 	 * @param subscriberId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteSubscriberAccess(Long subscriberId) {
 		List<SubscrServiceAccess> accessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId);
@@ -256,13 +256,13 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, LocalDate accessDate) {
 		return selectSubscriberPermissions(subscriberId, LocalDateUtils.asDate(accessDate));
 	}
 
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServicePermission> selectSubscriberPermissions(Long subscriberId, Date accessDate) {
 		checkNotNull(accessDate);
 		List<SubscrServicePermission> result = subscrServicePermissionRepository.selectCommonPermissions();
@@ -280,7 +280,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
      * @param <T>
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public <T> List<T> filterObjectAccess(List<T> objectList, PortalUserIds portalUserIds, LocalDate accessDate) {
 		List<SubscrServicePermission> permissions = selectSubscriberPermissions(portalUserIds.getSubscriberId(),
 				accessDate);
@@ -321,7 +321,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 * @param packId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<SubscrServiceAccess> getPackSubscrServiceAccess(Long packId) {
 		SubscrServicePack subscrServicePack = subscrServicePackRepository.findOne(packId);
 		if (subscrServicePack == null) {

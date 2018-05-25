@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
@@ -50,7 +50,7 @@ public class SubscrContEventTypeSmsService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContEventType> selectAvailableContEventTypes() {
 		return contEventTypeRepository.selectBySmsNotification();
 	}
@@ -60,7 +60,7 @@ public class SubscrContEventTypeSmsService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrContEventTypeSms> selectSubscrContEventTypeSms(Long subscriberId) {
 		logger.trace("selectSubscrContEventTypeSms. subscriberId={}", subscriberId);
 		List<SubscrContEventTypeSms> preResult = subscrContEventTypeSmsRepository.findBySubscriberId(subscriberId);
@@ -72,7 +72,7 @@ public class SubscrContEventTypeSmsService {
 	 * @param subscrContEventTypeSmsId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrContEventTypeSmsAddr> selectSubscrContEventTypeSmsAddr(Long subscrContEventTypeSmsId) {
 		List<SubscrContEventTypeSmsAddr> preResult = subscrContEventTypeSmsAddrRepository
 				.findBySubscrContEventTypeSmsId(subscrContEventTypeSmsId);
@@ -86,7 +86,7 @@ public class SubscrContEventTypeSmsService {
 	 * @param smsAddrList
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrContEventTypeSms createSubscrContEventTypeSms(Subscriber subscriber, ContEventType contEventType,
 			List<SubscrContEventTypeSmsAddr> smsAddrList) {
 
@@ -115,7 +115,7 @@ public class SubscrContEventTypeSmsService {
 	 *
 	 * @param subscrContEventTypeSmsId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteSubscrContEventTypeSms(Long subscrContEventTypeSmsId) {
 		SubscrContEventTypeSms sms = subscrContEventTypeSmsRepository.findOne(subscrContEventTypeSmsId);
 		if (sms == null) {

@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
@@ -94,7 +94,7 @@ public class SubscriberLdapService {
      * @param subscriberId
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public String getRmaLdapOu(Long subscriberId) {
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
         if (subscriber == null) {
@@ -116,7 +116,7 @@ public class SubscriberLdapService {
         return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
     }
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public Optional<String> findRmaLdapOu(Long subscriberId) {
         Optional<Subscriber> subscriber =  Optional.ofNullable(subscriberId).map(subscriberRepository::findOne);
 

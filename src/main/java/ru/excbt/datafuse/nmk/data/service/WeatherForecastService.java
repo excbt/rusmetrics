@@ -14,7 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.WeatherForecast;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc;
 import ru.excbt.datafuse.nmk.data.repository.WeatherForecastCalcRepository;
@@ -37,12 +37,12 @@ public class WeatherForecastService {
 	private WeatherForecastCalcRepository weatherForecastCalcRepository;
 
 	/**
-	 * 
+	 *
 	 * @param weatherPlaceId
 	 * @param forecastDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<WeatherForecastCalc> selectWeatherForecastCalc(Long weatherPlaceId, LocalDate forecastDate) {
 		checkNotNull(weatherPlaceId);
 		checkNotNull(forecastDate);
@@ -51,12 +51,12 @@ public class WeatherForecastService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param weatherPlaceId
 	 * @param forecastDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<WeatherForecastCalc> selectWeatherForecastCalc(Long weatherPlaceId, Date forecastDate) {
 		checkNotNull(weatherPlaceId);
 		checkNotNull(forecastDate);
@@ -64,11 +64,11 @@ public class WeatherForecastService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public WeatherForecast selectLastWeatherForecast(Long weatherPlaceId, java.time.LocalDate currentDate) {
 
 		Date d = Date.from(currentDate.atTime(23, 59, 59, 0).atZone(ZoneId.systemDefault()).toInstant());

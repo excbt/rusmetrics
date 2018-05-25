@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -81,7 +81,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectMetadata> selectDeviceObjectMetadata(Long deviceObjectId) {
 		List<DeviceObjectMetadata> result = deviceObjectMetadataRepository.selectDeviceObjectMetadata(deviceObjectId,
 				DEVICE_METADATA_TYPE);
@@ -94,7 +94,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceObjectMetadataId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public DeviceObjectMetadata findOne(Long deviceObjectMetadataId) {
 		return deviceObjectMetadataRepository.findOne(deviceObjectMetadataId);
 	}
@@ -105,7 +105,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<DeviceObjectMetadata> updateDeviceObjectMetadata(Long deviceObjectId,
 			List<DeviceObjectMetadata> deviceObjectMetadataList) {
 		checkNotNull(deviceObjectMetadataList);
@@ -135,7 +135,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<DeviceObjectMetadata> copyDeviceObjectMetadata(Long srcDeviceObjectId, Long destDeviceObjectId) {
 		List<DeviceObjectMetadata> srcMetadata = selectDeviceObjectMetadata(srcDeviceObjectId);
 		List<DeviceObjectMetadata> newMetadata = new ArrayList<>();
@@ -170,7 +170,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteDeviceObjectMetadata(Long deviceObjectId) {
 		List<DeviceObjectMetadata> metadata = selectDeviceObjectMetadata(deviceObjectId);
 		deviceObjectMetadataRepository.delete(metadata);
@@ -183,7 +183,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public List<DeviceObjectMetadata> copyDeviceMetadata(Long deviceModelId, Long destDeviceObjectId) {
 
 		checkNotNull(deviceModelId, "deviceModelId is null");
@@ -242,7 +242,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceMetadataType
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
 		List<DeviceObject> deviceObjects =  contZPointRepository.selectDeviceObjects(contZPointId);
@@ -277,7 +277,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceMetadataType
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId, String deviceMetadataType) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
 		List<DeviceObject> deviceObjects = contZPointRepository.selectDeviceObjects(contZPointId);
@@ -297,7 +297,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceObjectMetadataList
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public boolean deviceObjectMetadataTransform(List<DeviceObjectMetadata> deviceObjectMetadataList) {
 		checkNotNull(deviceObjectMetadataList);
 
@@ -374,7 +374,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 * @param deviceObjectId
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deviceObjectMetadataTransform(Long deviceObjectId) {
 		List<DeviceObjectMetadata> deviceObjectMetadataList = selectDeviceObjectMetadata(deviceObjectId);
 		deviceObjectMetadataTransform(deviceObjectMetadataList);

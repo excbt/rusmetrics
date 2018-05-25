@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
@@ -21,7 +21,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с узлами универсального справочника
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 13.03.2015
@@ -46,7 +46,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 	// return result;
 	// }
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectoryNode save(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
@@ -56,12 +56,12 @@ public class UDirectoryNodeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nodeDir
 	 * @param directoryId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public UDirectoryNode saveWithDictionary(long subscriberId, final UDirectoryNode nodeDir, final long directoryId) {
 		checkNotNull(nodeDir);
@@ -82,7 +82,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, propagation = Propagation.REQUIRED)
+	@Transactional( propagation = Propagation.REQUIRED)
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void saveWithChildren(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
@@ -98,11 +98,11 @@ public class UDirectoryNodeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nodeId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public UDirectoryNode getRootNode(long nodeId) {
 		UDirectoryNode result = directoryNodeRepository.findOne(nodeId);
 
@@ -118,11 +118,11 @@ public class UDirectoryNodeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public UDirectoryNode findOne(long id) {
 		UDirectoryNode result = directoryNodeRepository.findOne(id);
 		loadLazyChildNodes(result);
@@ -130,10 +130,10 @@ public class UDirectoryNodeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nodeDirectory
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
@@ -142,10 +142,10 @@ public class UDirectoryNodeService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param nodeDir
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void loadLazyChildNodes(final UDirectoryNode nodeDir) {
 		checkNotNull(nodeDir);
 

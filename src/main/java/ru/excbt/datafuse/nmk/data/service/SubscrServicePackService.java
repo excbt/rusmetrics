@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePackSpecial;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
@@ -37,7 +37,7 @@ public class SubscrServicePackService {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServicePack> selectServicePackList(PortalUserIds portalUserIds) {
 		Sort sort = new Sort(Sort.Direction.ASC, "packNr");
 		List<SubscrServicePack> result = subscrServicePackRepository.findAll(sort);
@@ -57,7 +57,7 @@ public class SubscrServicePackService {
 	 * @param keyname
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrServicePack> findByKeyname(String keyname) {
 		return subscrServicePackRepository.findByKeyname(keyname);
 	}

@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContEventMonitorX;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.ContObjectFias;
@@ -58,7 +58,7 @@ public class SubscrContEventNotificationStatusV2Service {
 	 * @param noGreenColor
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
         final PortalUserIds portalUserIds, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
         Boolean noGreenColor) {
@@ -93,7 +93,7 @@ public class SubscrContEventNotificationStatusV2Service {
 	 * @param noGreenColor
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional( readOnly = true)
 	private List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
 			final PortalUserIds portalUserIds, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {

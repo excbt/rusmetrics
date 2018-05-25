@@ -13,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
@@ -105,7 +105,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
      * @param pageRequest
      * @return
      */
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public Page<ContServiceDataImpulse> selectImpulseByContZPoint(Long contZPointId, TimeDetailKey timeDetail,
                                                                   DateInterval dateInterval, PageRequest pageRequest) {
         checkArgument(contZPointId > 0);
@@ -124,7 +124,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
      * @param subscrUserId aka authorId
      * @param fileImportInfos
      */
-    @Transactional(value = TxConst.TX_DEFAULT)
+    @Transactional
     @Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
     public void importData(final long subscrUserId, final List<FileImportInfo> fileImportInfos) {
 

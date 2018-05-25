@@ -16,7 +16,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
@@ -77,7 +77,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrObjectTree selectSubscrObjectTree(Long id) {
 		return subscrObjectTreeRepository.findOne(id);
 	}
@@ -387,7 +387,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @return
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrObjectTree saveRootSubscrObjectTree(SubscrObjectTree entity) {
 
 		checkArgument(entity.getParent() == null);
@@ -401,7 +401,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteRootSubscrObjectTree(final SubscriberParam subscriberParam, Long subscrObjectTreeId) {
 
 		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
@@ -433,7 +433,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 */
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public void deleteChildSubscrObjectTreeNode(final SubscriberParam subscriberParam, Long subscrObjectTreeId,
 			Long childSubscrObjectTreeId) {
 
@@ -496,7 +496,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
      * @param portalUserIds
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<SubscrObjectTree> selectSubscrObjectTreeShort(final PortalUserIds portalUserIds) {
 		List<Object[]> results = portalUserIds.isRma()
 				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(portalUserIds.getSubscriberId())
@@ -524,7 +524,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Long selectRmaSubscriberId(final Long subscrObjectTreeId) {
 		List<Long> ids = subscrObjectTreeRepository.selectRmaSubscriberIds(subscrObjectTreeId);
 		return ids.isEmpty() ? null : ids.get(0);
@@ -535,7 +535,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Long selectSubscriberId(final Long subscrObjectTreeId) {
 		List<Long> ids = subscrObjectTreeRepository.selectSubscriberIds(subscrObjectTreeId);
 		return ids.isEmpty() ? null : ids.get(0);
@@ -546,7 +546,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public boolean selectIsLinkDeny(final Long subscrObjectTreeId) {
 		List<Boolean> ids = subscrObjectTreeRepository.selectIsLinkDeny(subscrObjectTreeId);
 		return ids.isEmpty() ? false : Boolean.TRUE.equals(ids.get(0));
@@ -557,7 +557,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
      * @param subscriberParam
      * @param subscrObjectTreeId
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
 
 		if (!checkValidSubscriberOk(subscriberParam, subscrObjectTreeId)) {
@@ -567,7 +567,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
 
 	}
 
-    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    @Transactional( readOnly = true)
     public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
 
         if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
@@ -583,7 +583,7 @@ public class SubscrObjectTreeService implements SecuredRoles {
      * @param subscrObjectTreeId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public boolean checkValidSubscriberOk(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
 		checkNotNull(portalUserIds);
 		checkNotNull(subscrObjectTreeId);

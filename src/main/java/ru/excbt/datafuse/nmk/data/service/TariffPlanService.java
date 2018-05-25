@@ -15,7 +15,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.constant.TariffPlanConstant;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Organization;
@@ -63,7 +63,7 @@ public class TariffPlanService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TariffPlan> selectTariffPlanList(long subscriberId) {
 		return tariffPlanRepository.selectTariffPlanList(subscriberId);
 	}
@@ -72,7 +72,7 @@ public class TariffPlanService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TariffPlan> selectTariffPlanList(long subscriberId, long rsoOrganizationId) {
 		return tariffPlanRepository.selectTariffPlanList(subscriberId, rsoOrganizationId);
 	}
@@ -81,7 +81,7 @@ public class TariffPlanService implements SecuredRoles {
 	 *
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TariffPlan> getContObjectTariffPlanList(long subscriberId, long rsoOrganizationId, long contObjectId) {
 		return tariffPlanRepository.selectTariffPlanList(subscriberId, contObjectId);
 	}
@@ -90,7 +90,7 @@ public class TariffPlanService implements SecuredRoles {
 	 *
 	 * @param rsoOrganizationId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void initDefaultTariffPlan(long subscriberId, long rsoOrganizationId) {
 		List<TariffPlan> currentTariffPlan = tariffPlanRepository.selectTariffPlanList(rsoOrganizationId);
@@ -123,7 +123,7 @@ public class TariffPlanService implements SecuredRoles {
 	 *
 	 * @param rsoOrganizationId
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteDefaultTariffPlan(long subscriberId, long rsoOrganizationId) {
 		tariffPlanRepository.deleteTariffPlan(subscriberId, rsoOrganizationId);
@@ -135,7 +135,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan updateOne(PortalUserIds portalUserIds, TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
@@ -173,7 +173,7 @@ public class TariffPlanService implements SecuredRoles {
      * @param tariffPlan
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan createOne(PortalUserIds portalUserIds, TariffPlan tariffPlan) {
 
@@ -197,7 +197,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(TariffPlan tariffPlan) {
 		checkNotNull(tariffPlan);
@@ -217,7 +217,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlan
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long tariffPlanId) {
 		TariffPlan tariffPlan = tariffPlanRepository.findOne(tariffPlanId);
@@ -231,7 +231,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlanId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public boolean canModifyTariffPlanId(long subscriberId, long tariffPlanId) {
 		List<Long> ids = tariffPlanRepository.selectTariffPlanId(subscriberId, tariffPlanId);
 		return ids.size() == 1;
@@ -243,7 +243,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObject> selectTariffPlanContObjects(long tariffPlanId, long subscriberId) {
 		return tariffPlanRepository.selectTariffPlanContObjects(subscriberId, tariffPlanId);
 	}
@@ -254,7 +254,7 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContObject> selectTariffPlanAvailableContObjects(long tariffPlanId, long subscriberId) {
 		return tariffPlanRepository.selectAvailableContObjects(subscriberId, tariffPlanId);
 	}
@@ -264,12 +264,12 @@ public class TariffPlanService implements SecuredRoles {
 	 * @param tariffPlanId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public TariffPlan findOne(long tariffPlanId) {
 		return tariffPlanRepository.findOne(tariffPlanId);
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	private void setOtherInactive(PortalUserIds portalUserIds, Long tariffPlanId, Long rsoOrganizationId,
 			Long tariffTypeId) {
 		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(portalUserIds.getSubscriberId());

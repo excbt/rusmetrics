@@ -18,7 +18,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
 import ru.excbt.datafuse.nmk.data.repository.ReportMasterTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.report.ReportConstants;
@@ -46,7 +46,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	 * @param reportTypeKey
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional(readOnly = true)
 	public ReportMasterTemplateBody selectReportMasterTemplate(ReportTypeKey reportTypeKey) {
 		List<ReportMasterTemplateBody> resultList = reportMasterTemplateBodyRepository
 				.findByReportTypeKeyname(reportTypeKey.getKeyname());
@@ -71,7 +71,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	 * @return
 	 * @throws IOException
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN })
 	public boolean saveJasperReportMasterTemplateBody(long reportMasterTemplateBodyId, String fileResource,
 			boolean isCompiled) throws IOException {
@@ -224,7 +224,7 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 	 * @param reportTypeKey
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ ROLE_ADMIN })
 	public ReportMasterTemplateBody createOne(ReportTypeKey reportTypeKey) {
 		ReportMasterTemplateBody entity = new ReportMasterTemplateBody();

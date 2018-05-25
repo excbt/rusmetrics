@@ -13,20 +13,20 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.keyname.KeyStore;
 import ru.excbt.datafuse.nmk.data.repository.keyname.KeyStoreRepository;
 
 /**
  * Сервис для работы с параметрами системы
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 02.07.2015
  *
  */
 @Service
-@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+@Transactional( readOnly = true)
 public class KeyStoreService {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -35,7 +35,7 @@ public class KeyStoreService {
 	private KeyStoreRepository keyStoreRepository;
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */
@@ -46,7 +46,7 @@ public class KeyStoreService {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param keyname
 	 * @return
 	 */

@@ -15,7 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataHWater;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
@@ -103,7 +103,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			PageRequest pageRequest) {
 		checkArgument(contZpointId > 0);
@@ -122,7 +122,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional( readOnly = true)
 	private List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
 		checkArgument(contZpointId > 0);
@@ -143,7 +143,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail, Date beginDate,
 			Date endDate) {
 		checkArgument(contZpointId > 0);
@@ -163,7 +163,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
                                                           org.joda.time.LocalDateTime beginDate,
                                                           org.joda.time.LocalDateTime endDate) {
@@ -184,7 +184,7 @@ public class ContServiceDataHWaterService  {
 	 * @param datePeriod
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWaterDTO> selectDTOByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod) {
 		List<ContServiceDataHWater> dataHWaterList = selectByContZPoint(contZpointId, timeDetail, datePeriod);
@@ -198,7 +198,7 @@ public class ContServiceDataHWaterService  {
      * @param datePeriod
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod datePeriod) {
 		checkArgument(contZpointId > 0);
@@ -219,7 +219,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Page<ContServiceDataHWater> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate, PageRequest pageRequest) {
 		checkArgument(contZpointId > 0);
@@ -241,7 +241,7 @@ public class ContServiceDataHWaterService  {
      * @param pageRequest
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Page<ContServiceDataHWaterDTO> selectByContZPoint(long contZpointId, TimeDetailKey timeDetail,
                                                              LocalDatePeriod datePeriod, PageRequest pageRequest) {
 		checkArgument(contZpointId > 0);
@@ -259,7 +259,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataHWater selectLastData(long contZpointId) {
 		checkArgument(contZpointId > 0);
 		List<ContServiceDataHWater> resultList = contServiceDataHWaterRepository.selectLastDataByZPoint(contZpointId,
@@ -272,7 +272,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public LocalDateTime selectLastDataDate(long contZpointId, LocalDateTime fromDateTime) {
 		checkArgument(contZpointId > 0);
 
@@ -301,7 +301,7 @@ public class ContServiceDataHWaterService  {
 	 * @param fromDateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWater> selectLastDataFromDate(Long contZpointId, String timeDetailType,
 			java.time.LocalDate fromDateTime) {
 
@@ -320,7 +320,7 @@ public class ContServiceDataHWaterService  {
      * @param contZpointId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public LocalDateTime selectLastDataDate(long contZpointId) {
 		return selectLastDataDate(contZpointId, null);
 	}
@@ -330,7 +330,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Date selectAnyDataDate(long contZpointId) {
 		checkArgument(contZpointId > 0);
 		Page<ContServiceDataHWater> resultPage = contServiceDataHWaterRepository.selectAnyDataByZPoint(contZpointId,
@@ -344,7 +344,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public Boolean selectExistsAnyData(long contZpointId) {
 		checkArgument(contZpointId > 0);
 		List<Long> resultList = contServiceDataHWaterRepository.selectExistsAnyDataByZPoint(contZpointId,
@@ -360,7 +360,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataHWaterTotals selectContZPoint_Totals(long contZpointId, TimeDetailKey timeDetail,
                                                                org.joda.time.LocalDateTime beginDate, org.joda.time.LocalDateTime endDate) {
 
@@ -422,7 +422,7 @@ public class ContServiceDataHWaterService  {
 		return result;
 	}
 
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataHWater selectContZPoint_Avgs(long contZpointId, TimeDetailKey timeDetail,
 			LocalDatePeriod period) {
 
@@ -499,7 +499,7 @@ public class ContServiceDataHWaterService  {
 	 * @param localDateTime
 	 * @return
 	 */
-	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional( readOnly = true)
 	private ContServiceDataHWater selectLastAbsData(long contZpointId, org.joda.time.LocalDateTime localDateTime) {
 
 		checkNotNull(localDateTime);
@@ -519,7 +519,7 @@ public class ContServiceDataHWaterService  {
 	 * @param localDateTime
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public ContServiceDataHWater selectLastAbsData(long contZpointId, TimeDetailKey timeDetail,
                                                    org.joda.time.LocalDateTime localDateTime, boolean isEndDate) {
 
@@ -568,7 +568,7 @@ public class ContServiceDataHWaterService  {
 	 * @param endDate
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<ContServiceDataHWaterAbs_Csv> selectDataAbs_Csv(long contZpointId, TimeDetailKey timeDetail,
 			DateTime beginDate, DateTime endDate) {
 
@@ -599,7 +599,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointId
 	 * @param inData
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ SecuredRoles.ROLE_ADMIN, SecuredRoles.ROLE_SUBSCR_ADMIN })
 	public void insertManualLoadDataHWater(Long contZpointId, List<ContServiceDataHWater> inData, File outFile) {
 
@@ -657,7 +657,7 @@ public class ContServiceDataHWaterService  {
 	 * @param outFile
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	@Secured({ SecuredRoles.ROLE_ADMIN, SecuredRoles.ROLE_SUBSCR_ADMIN })
 	public List<ContServiceDataHWater> deleteManualDataHWater(Long contZpointId, LocalDatePeriod localDatePeriod,
 			TimeDetailKey timeDetailKey, File outFile) {
@@ -698,7 +698,7 @@ public class ContServiceDataHWaterService  {
      * @param contZpointId
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public List<TimeDetailLastDate> selectTimeDetailLastDate(long contZpointId) {
 		checkArgument(contZpointId > 0);
 
@@ -729,7 +729,7 @@ public class ContServiceDataHWaterService  {
 	 * @param contZpointIds
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMap(List<Long> contZpointIds) {
 		checkArgument(contZpointIds != null);
 
@@ -747,7 +747,7 @@ public class ContServiceDataHWaterService  {
 	 * @param idServiceTypePairs
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public HashMap<Long, List<TimeDetailLastDate>> selectTimeDetailLastDateMapByPair(
 			List<Pair<String, Long>> idServiceTypePairs) {
 		checkArgument(idServiceTypePairs != null);

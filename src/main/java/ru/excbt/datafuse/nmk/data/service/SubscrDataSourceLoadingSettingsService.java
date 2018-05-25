@@ -12,7 +12,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import ru.excbt.datafuse.nmk.config.jpa.TxConst;
+
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceLoadingSettingsRepository;
@@ -27,11 +27,11 @@ public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
 	private SubscrDataSourceLoadingSettingsRepository subscrDataSourceLoadingSettingsRepository;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrDataSourceLoadingSettings findSubscrDataSourceLoadingSettings(Long subscrDataSourceId) {
 		SubscrDataSourceLoadingSettings result = subscrDataSourceLoadingSettingsRepository.findOne(subscrDataSourceId);
 		if (result.getSubscrDataSource() != null) {
@@ -41,12 +41,12 @@ public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param entity
 	 * @return
 	 */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	@Transactional(value = TxConst.TX_DEFAULT)
+	@Transactional
 	public SubscrDataSourceLoadingSettings saveSubscrDataSourceLoadingSettings(SubscrDataSourceLoadingSettings entity) {
 		checkNotNull(entity.getSubscrDataSource());
 		checkArgument(!entity.getSubscrDataSource().isNew());
@@ -58,11 +58,11 @@ public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional( readOnly = true)
 	public SubscrDataSourceLoadingSettings getSubscrDataSourceLoadingSettings(SubscrDataSource subscrDataSource) {
 		SubscrDataSourceLoadingSettings result = null;
 		if (subscrDataSource.isNew()) {
@@ -91,7 +91,7 @@ public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param subscrDataSource
 	 * @return
 	 */
