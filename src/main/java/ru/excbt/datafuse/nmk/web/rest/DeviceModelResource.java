@@ -12,6 +12,8 @@ import ru.excbt.datafuse.nmk.data.model.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.data.service.DeviceModelService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 
+import java.util.List;
+
 @RestController()
 @RequestMapping("/api")
 public class DeviceModelResource {
@@ -25,9 +27,16 @@ public class DeviceModelResource {
         this.portalUserIdsService = portalUserIdsService;
     }
 
-    @GetMapping("/device-object-models")
+    @GetMapping("/device-models")
     @Timed
-    public ResponseEntity<?> getDeviceModels(@RequestParam(name = "searchString", required = false) String searchString,
+    public ResponseEntity<?> getDeviceModels() {
+        List<DeviceModelDTO> resultPage = deviceModelService.findDeviceModels();
+        return ResponseEntity.ok(resultPage);
+    }
+
+    @GetMapping("/device-models/page")
+    @Timed
+    public ResponseEntity<?> getDeviceModelsPage(@RequestParam(name = "searchString", required = false) String searchString,
                                              Pageable pageable) {
         Page<DeviceModelDTO> resultPage = deviceModelService.findDeviceModels(searchString, pageable);
         return ResponseEntity.ok(resultPage);

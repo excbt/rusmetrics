@@ -1,0 +1,21 @@
+{
+    "deviceModel": {
+        "widgetTitle": "Модели приборов",
+        "title": "Модель прибора",
+        "listTitle": "Модели приборов учета",
+
+        "id": "id",
+        "deviceModelName": "deviceModelName",
+        "keyname": "keyname",
+        "caption": "Описание",
+        "modelComment": "modelComment",
+        "modelDescription": "modelDescription",
+        "exLabel": "exLabel",
+        "modelDriverType": "modelDriverType",
+        "metaVersion": "metaVersion",
+        "isImpulse": "isImpulse",
+        "defaultImpulseK": "defaultImpulseK",
+        "defaultImpulseMu": "defaultImpulseMu",
+        "deviceType": "deviceType"
+    }
+}

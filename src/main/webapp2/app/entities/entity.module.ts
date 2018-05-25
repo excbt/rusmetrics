@@ -59,6 +59,9 @@ import { ContObjectAccessComponent } from './cont-object-access/cont-object-acce
 import { SubscrAccessManageComponent } from './subscr-access/subscr-access-manage.component';
 import { StTemperatureChartComponent } from './st-plans/st-temperature-chart.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } from '@angular/material';
+import { DeviceModelService } from './device-models/device-model.service';
+import { DeviceModelsComponent } from './device-models/device-models.component';
+import { DeviceModelsWidgetComponent } from './device-models/device-models-widget.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -109,7 +112,9 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } fro
         SubscrAccessDashboardComponent,
         SubscrAccessManageComponent,
         ContObjectAccessComponent,
-        StTemperatureChartComponent
+        StTemperatureChartComponent,
+        DeviceModelsComponent,
+        DeviceModelsWidgetComponent
     ],
     entryComponents: [
     ],
@@ -122,6 +127,7 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } fro
         PSubscriberPartnerService,
         SubscrUserService,
         ContObjectAccessService,
+        DeviceModelService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
@@ -131,7 +137,9 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } fro
         PSubscribersWidgetComponent,
         SubscrUsersWidgetComponent,
         StTemperatureChartWidgetComponent,
-        ContObjectAccessComponent
+        ContObjectAccessComponent,
+        DeviceModelsComponent,
+        DeviceModelsWidgetComponent
     ]
 })
 export class PortalEntityModule {}

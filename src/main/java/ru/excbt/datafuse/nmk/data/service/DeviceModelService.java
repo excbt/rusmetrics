@@ -171,7 +171,7 @@ public class DeviceModelService implements SecuredRoles {
 	}
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
-	public List<DeviceModelDTO> findDeviceModelDTOs() {
+	public List<DeviceModelDTO> findDeviceModels() {
 		List<DeviceModel> deviceModels = Lists.newArrayList(deviceModelRepository.findAll());
 
         deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);

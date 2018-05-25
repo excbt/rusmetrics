@@ -358,7 +358,7 @@ public class SubscrDeviceObjectResource //extends AbstractSubscrApiResource
     @Timed
 	public ResponseEntity<?> getDeviceModels() {
 		ApiActionObjectProcess actionProcess = () -> {
-			List<DeviceModelDTO> deviceModels = deviceModelService.findDeviceModelDTOs();
+			List<DeviceModelDTO> deviceModels = deviceModelService.findDeviceModels();
 			if (!portalUserIdsService.isSystemUser()) {
 				deviceModels = ObjectFilters.devModeFilter(deviceModels);
 			}
