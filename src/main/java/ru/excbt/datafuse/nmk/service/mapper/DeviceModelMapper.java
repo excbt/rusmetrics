@@ -14,7 +14,7 @@ import java.util.Map;
 public interface DeviceModelMapper {
 
 
-    DeviceModelDTO deviceModelToDto (DeviceModel deviceModel);
+//    DeviceModelDTO deviceModelToDto (DeviceModel deviceModel);
 
     DeviceModelDTO toDto (DeviceModel deviceModel);
 

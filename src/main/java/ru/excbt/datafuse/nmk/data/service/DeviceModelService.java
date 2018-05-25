@@ -149,7 +149,7 @@ public class DeviceModelService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceModelDTO findDeviceModelDTO(Long id) {
 
-	    DeviceModelDTO deviceModelDTO = deviceModelMapper.deviceModelToDto(deviceModelRepository.findOne(id));
+	    DeviceModelDTO deviceModelDTO = deviceModelMapper.toDto(deviceModelRepository.findOne(id));
 
 	    if (deviceModelDTO != null) {
 	        deviceModelHeatRadiatorRepository.findByDeviceModel(deviceModelDTO.getId())
@@ -176,7 +176,7 @@ public class DeviceModelService implements SecuredRoles {
         deviceModels.sort(DeviceModelService.COMPARE_BY_NAME);
 
         List<DeviceModelDTO> resultList = deviceModels.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-            .map((i) -> deviceModelMapper.deviceModelToDto(i)).collect(Collectors.toList());
+            .map((i) -> deviceModelMapper.toDto(i)).collect(Collectors.toList());
 
 
         List<DeviceModelHeatRadiator> heatRadiatorsAll = deviceModelHeatRadiatorRepository.findAll();
