@@ -44,6 +44,7 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { TreeTableModule } from 'primeng/treetable';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ScrollPanelModule } from 'primeng/scrollpanel';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
       CheckboxModule,
       AutoCompleteModule,
       TreeTableModule,
-      ContextMenuModule
+      ContextMenuModule,
+      ScrollPanelModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -119,7 +121,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     CheckboxModule,
     CardModule,
     InputTextModule,
-    MenubarModule
+    MenubarModule,
+    ScrollPanelModule
   ]
 })
 export class PortalSharedBlocksModule {}
