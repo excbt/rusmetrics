@@ -45,6 +45,7 @@ import { TreeTableModule } from 'primeng/treetable';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TableModule } from 'primeng/table';
 
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
@@ -78,6 +79,7 @@ import { AngularSplitModule } from 'angular-split';
       TreeTableModule,
       ContextMenuModule,
       ScrollPanelModule,
+      TableModule,
       // 3rd party modules
       AngularSplitModule
   ],
@@ -129,6 +131,7 @@ import { AngularSplitModule } from 'angular-split';
     InputTextModule,
     MenubarModule,
     ScrollPanelModule,
+    TableModule,
     // 3rd party modules
     AngularSplitModule
   ]

@@ -16,6 +16,10 @@ export class SubscrObjectTreesComponent implements OnInit {
 
     displayedColumns = [];
 
+    subscrObjectTreeData: SubscrObjectTree[];
+
+    selectedRow: SubscrObjectTree;
+
     dataSource: SubscrObjectTreeDataSource;
 
     totalElements: number;
@@ -23,13 +27,18 @@ export class SubscrObjectTreesComponent implements OnInit {
     pageSizeOptions = defaultPageSizeOptions;
 
     constructor(
-        private deviceModelService: SubscrObjectTreeService,
+        private subscrObjectTreeService: SubscrObjectTreeService,
         router: Router,
         activatedRoute: ActivatedRoute,
-    ) {}
+    ) {
+        this.dataSource = new SubscrObjectTreeDataSource(this.subscrObjectTreeService);
+        this.dataSource.modelSubject.asObservable().subscribe((data) => {
+            this.subscrObjectTreeData = data;
+            console.log('DataLoaded');
+        });
+    }
 
     ngOnInit() {
-        this.dataSource = new SubscrObjectTreeDataSource(this.deviceModelService);
         this.dataSource.totalElements$.subscribe(
             (count) => {
               this.totalElements = count;
@@ -40,7 +49,11 @@ export class SubscrObjectTreesComponent implements OnInit {
     }
 
     initSearch() {
+        console.log('Init Search');
         this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
     }
 
+    selectRow(data) {
+        console.log('Row select ID:' + JSON.stringify(data));
+    }
 }
