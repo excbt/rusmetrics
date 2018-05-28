@@ -1,6 +1,7 @@
 import 'chart.js/dist/Chart.js';
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { JhipsterSharedModule } from '../../shared';
+import { PortalSharedBlocksModule } from '../../shared-blocks';
 // import { PortalObjectTreeComponent } from './object-tree.component';
 import { PTreeNodeService } from './object-tree.service';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
@@ -36,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
 @NgModule({
     imports: [
         JhipsterSharedModule,
+        PortalSharedBlocksModule,
         RouterModule.forChild(objectTreeState),
         ResizableModule,
         AngularSplitModule,
