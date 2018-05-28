@@ -542,6 +542,34 @@ public class SubscrObjectTreeService {
 		return resultList;
 	}
 
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
+	@Transactional( readOnly = true)
+	public List<SubscrObjectTreeDTO> selectSubscrObjectTreeShortDTO(final PortalUserIds portalUserIds) {
+		List<Object[]> results = portalUserIds.isRma()
+				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(portalUserIds.getSubscriberId())
+				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(portalUserIds.getSubscriberId());
+
+		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName");
+
+		List<SubscrObjectTreeDTO> resultList = new ArrayList<>();
+
+		for (Object[] row : results) {
+            SubscrObjectTreeDTO t = new SubscrObjectTreeDTO();
+			t.setId(helper.getResultAsClass(row, "id", Long.class));
+			t.setSubscriberId(helper.getResultAsClass(row, "subscriberId", Long.class));
+			t.setRmaSubscriberId(helper.getResultAsClass(row, "rmaSubscriberId", Long.class));
+			t.setObjectTreeType(helper.getResultAsClass(row, "objectTreeType", String.class));
+			t.setObjectName(helper.getResultAsClass(row, "objectName", String.class));
+			resultList.add(t);
+		}
+
+		return resultList;
+	}
+
 	/**
 	 *
 	 * @param subscrObjectTreeId

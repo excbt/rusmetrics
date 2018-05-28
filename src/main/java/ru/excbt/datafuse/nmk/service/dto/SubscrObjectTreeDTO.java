@@ -10,6 +10,8 @@ import java.util.List;
 @Setter
 public class SubscrObjectTreeDTO {
 
+    private Long id;
+
     private Long parentId;
 
     private List<SubscrObjectTreeDTO> childObjectList = new ArrayList<>();

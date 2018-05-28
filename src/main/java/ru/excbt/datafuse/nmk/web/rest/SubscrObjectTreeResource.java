@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/subscr-object-tree")
@@ -46,4 +50,26 @@ public class SubscrObjectTreeResource {
         SubscrObjectTreeDTO result = subscrObjectTreeService.findSubscrObjectTreeDTO(rootSubscrObjectTreeId);
         return ApiResponse.responseOK(result);
     }
+
+    /**
+     * Same as RmaSubscrObjectTreeController
+     *
+     *
+     * @param objectTreeType
+     * @return
+     */
+    @RequestMapping(value = "/{objectTreeType}", method = RequestMethod.GET,
+        produces = ApiConst.APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType) {
+
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+        if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        List<SubscrObjectTreeDTO> result = subscrObjectTreeService.selectSubscrObjectTreeShortDTO(portalUserIdsService.getCurrentIds());
+        return ApiResponse.responseOK(result);
+    }
+
 }

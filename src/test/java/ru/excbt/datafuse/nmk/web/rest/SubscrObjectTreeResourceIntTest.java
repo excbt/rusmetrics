@@ -61,4 +61,10 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
     public void getSubscrObjectTree() throws Exception {
         mockMvcRestWrapper.restRequest("/api/subscr-object-tree/contObjectTreeType1/{1}", 173486396).testGet();
     }
+
+    @Test
+    public void getSubscrObjectTreeList() throws Exception {
+        mockMvcRestWrapper.restRequest("/api/subscr-object-tree/contObjectTreeType1").testGet();
+    }
+
 }
