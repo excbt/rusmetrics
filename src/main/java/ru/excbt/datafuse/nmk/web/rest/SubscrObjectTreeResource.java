@@ -1,23 +1,24 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/subscr-object-tree")
+@RequestMapping("/api/subscr-object-trees")
 public class SubscrObjectTreeResource {
 
     private final SubscrObjectTreeService subscrObjectTreeService;
@@ -47,7 +48,7 @@ public class SubscrObjectTreeResource {
             return ApiResponse.responseBadRequest();
         }
 
-        SubscrObjectTreeDTO result = subscrObjectTreeService.findSubscrObjectTreeDTO(rootSubscrObjectTreeId);
+        SubscrObjectTreeVM result = subscrObjectTreeService.findSubscrObjectTreeVM(rootSubscrObjectTreeId);
         return ApiResponse.responseOK(result);
     }
 
@@ -68,8 +69,27 @@ public class SubscrObjectTreeResource {
             return ApiResponse.responseBadRequest();
         }
 
-        List<SubscrObjectTreeDTO> result = subscrObjectTreeService.selectSubscrObjectTreeShortDTO(portalUserIdsService.getCurrentIds());
+        List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(result);
     }
+
+    @RequestMapping(value = "/{objectTreeType}/page", method = RequestMethod.GET,
+        produces = ApiConst.APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> getSubscrObjectTreePage(@PathVariable("objectTreeType") String objectTreeType,
+                                                     @RequestParam(name = "searchString", required = false) String searchString,
+                                                     Pageable pageable) {
+
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+        if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
+
+        Page<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVMPage(portalUserIdsService.getCurrentIds(), subscriberId, pageable);
+        return ApiResponse.responseOK(result);
+    }
+
 
 }

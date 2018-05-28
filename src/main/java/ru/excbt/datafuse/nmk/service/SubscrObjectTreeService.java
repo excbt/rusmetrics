@@ -9,15 +9,19 @@ import java.util.Optional;
 
 import javax.persistence.PersistenceException;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.QSubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
@@ -34,11 +38,15 @@ import ru.excbt.datafuse.nmk.service.mapper.SubscrObjectTreeMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 
 @Service
 public class SubscrObjectTreeService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeService.class);
+
+	public static final String VM_MODE_NORMAL = "NORMAL";
 
 	private final SubscrObjectTreeRepository subscrObjectTreeRepository;
 
@@ -104,6 +112,13 @@ public class SubscrObjectTreeService {
 	    SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
 		return subscrObjectTreeMapper.toDto(ObjectFilters.deletedFilter(subscrObjectTree));
 	}
+
+    @Transactional( readOnly = true)
+    public SubscrObjectTreeVM findSubscrObjectTreeVM(Long id) {
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
+        SubscrObjectTreeVM result = subscrObjectTreeMapper.toVMShort(ObjectFilters.deletedFilter(subscrObjectTree));
+        return result;
+    }
 
 	/**
 	 *
@@ -548,17 +563,19 @@ public class SubscrObjectTreeService {
      * @return
      */
 	@Transactional( readOnly = true)
-	public List<SubscrObjectTreeDTO> selectSubscrObjectTreeShortDTO(final PortalUserIds portalUserIds) {
+	public List<SubscrObjectTreeVM> selectSubscrObjectTreeShortVM(final PortalUserIds portalUserIds) {
+
+
 		List<Object[]> results = portalUserIds.isRma()
 				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort(portalUserIds.getSubscriberId())
 				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(portalUserIds.getSubscriberId());
 
 		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName");
 
-		List<SubscrObjectTreeDTO> resultList = new ArrayList<>();
+		List<SubscrObjectTreeVM> resultList = new ArrayList<>();
 
 		for (Object[] row : results) {
-            SubscrObjectTreeDTO t = new SubscrObjectTreeDTO();
+            SubscrObjectTreeVM t = new SubscrObjectTreeVM();
 			t.setId(helper.getResultAsClass(row, "id", Long.class));
 			t.setSubscriberId(helper.getResultAsClass(row, "subscriberId", Long.class));
 			t.setRmaSubscriberId(helper.getResultAsClass(row, "rmaSubscriberId", Long.class));
@@ -568,6 +585,28 @@ public class SubscrObjectTreeService {
 		}
 
 		return resultList;
+	}
+
+	@Transactional( readOnly = true)
+	public Page<SubscrObjectTreeVM> selectSubscrObjectTreeShortVMPage(final PortalUserIds portalUserIds,
+                                                                      Long subscriberId,
+                                                                      Pageable pageable) {
+
+
+	    QSubscrObjectTree qSubscrObjectTree = QSubscrObjectTree.subscrObjectTree;
+
+        BooleanExpression subscriberExpr = qSubscrObjectTree.deleted.eq(0)
+            .and(qSubscrObjectTree.parentId.isNull())
+            .and(portalUserIds.isRma() ? qSubscrObjectTree.rmaSubscriberId.eq(subscriberId) : qSubscrObjectTree.subscriberId.eq(subscriberId));
+
+        WhereClauseBuilder whereClauseBuilder = new WhereClauseBuilder().and(subscriberExpr);
+
+
+        Page<SubscrObjectTree> subscrObjectTreePage = subscrObjectTreeRepository.findAll(whereClauseBuilder, pageable);
+
+        Page<SubscrObjectTreeVM> subscrObjectTreeVMPage = subscrObjectTreePage.map(subscrObjectTreeMapper::toVMShort);
+
+		return subscrObjectTreeVMPage;
 	}
 
 	/**

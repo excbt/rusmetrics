@@ -1,0 +1,42 @@
+<div class="toolbal-row">
+    <p-toolbar>
+        <div class="ui-toolbar-group-left">
+            <button mat-icon-button >
+                <mat-icon mat-list-icon>save_alt</mat-icon>
+            </button>
+            <button mat-icon-button >
+                <mat-icon mat-list-icon>add</mat-icon>
+            </button>
+        </div>
+        <div class="ui-toolbar-group-right">
+            <input class="search-input" type="text" pInputText #input>      
+            <!-- <mat-form-field>
+                <input matInput placeholder="{{'subscrObjectTree.search' | translate}}" class="search-input"  #input>
+            </mat-form-field>             -->
+        </div>
+    </p-toolbar>
+</div>
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-progress-bar  color="primary" mode="indeterminate">
+        </mat-progress-bar>
+    </div>
+    <br>
+        <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header > {{'global.field.id' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscrObjectTree" > {{subscrObjectTree.id}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="objectName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrObjectTree.objectName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscrObjectTree"> {{subscrObjectTree.objectName}} </mat-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+            
+        </mat-table>
+    
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+    

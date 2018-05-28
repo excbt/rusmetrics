@@ -3,15 +3,16 @@ package ru.excbt.datafuse.nmk.data.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 
-public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectTree, Long> {
+public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectTree, Long>, QueryDslPredicateExecutor<SubscrObjectTree> {
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -20,7 +21,7 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	List<SubscrObjectTree> selectRmaSubscrObjectTree(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param rmaSubscriberId
 	 * @return
 	 */
@@ -30,7 +31,7 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	List<Object[]> selectRmaSubscrObjectTreeShort(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscriberId
 	 * @return
 	 */
@@ -40,7 +41,7 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	List<Object[]> selectSubscrObjectTreeShort(@Param("subscriberId") Long subscriberId);
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -48,7 +49,7 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	public List<Long> selectRmaSubscriberIds(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */
@@ -56,7 +57,7 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 	public List<Long> selectSubscriberIds(@Param("subscrObjectTreeId") Long subscrObjectTreeId);
 
 	/**
-	 * 
+	 *
 	 * @param subscrObjectTreeId
 	 * @return
 	 */

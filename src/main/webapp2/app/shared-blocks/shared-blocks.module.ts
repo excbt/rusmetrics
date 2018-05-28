@@ -46,6 +46,9 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 
+// 3rd Party Modules
+import { AngularSplitModule } from 'angular-split';
+
 @NgModule({
   imports: [
       BrowserAnimationsModule,
@@ -74,7 +77,9 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
       AutoCompleteModule,
       TreeTableModule,
       ContextMenuModule,
-      ScrollPanelModule
+      ScrollPanelModule,
+      // 3rd party modules
+      AngularSplitModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -99,6 +104,7 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     // NG Material module
+    MatToolbarModule,
     MatGridListModule,
     MatInputModule,
     MatPaginatorModule,
@@ -122,7 +128,9 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     CardModule,
     InputTextModule,
     MenubarModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    // 3rd party modules
+    AngularSplitModule
   ]
 })
 export class PortalSharedBlocksModule {}

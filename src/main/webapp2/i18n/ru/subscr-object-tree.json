@@ -1,0 +1,20 @@
+{
+    "subscrObjectTree": {
+        "search": "Поиск",
+        "id": "id",
+        "parentId": "parentId",
+        "rmaSubscriberId": "rmaSubscriberId",
+        "subscriberId": "subscriberId",
+        "isRma": "isRma",
+        "objectTreeType": "objectTreeType",
+        "objectName": "Имя иерархии",
+        "objectDescription": "objectDescription",
+        "objectComemnt": "objectComemnt",
+        "devComment": "devComment",
+        "templateId": "templateId",
+        "templateItemId": "templateItemId",
+        "isLinkDeny": "isLinkDeny",
+        "isSingleObject": "isSingleObject",
+        "treeMode": "treeMode"        
+    }
+}
