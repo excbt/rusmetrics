@@ -3,39 +3,51 @@ Tree Node Color Status:
 Tree node id: {{treeNodeId}}
 -->
 <div class = "ui-g" style = "min-width: 1400px;">
-   <div class = "ui-g-12" >
+   <div class = "ui-g-12">
 <!--       Graph: cont object monitor component-->
       <div class = "ui-g-12">
-          <h3 style = "font-size: 24px; font-weight: 500;">Общая диаграмма монитора объектов и точек учета</h3>
+          <h3 style = "font-size: 24px; font-weight: 500; color: rgb(95, 95, 95)">Общая диаграмма монитора объектов и точек учета</h3>
       </div>
-       <div class = "ui-g-6" style = "height: 367px; max-height: 367px;">
+       <div class = "ui-g-4">
            <p-chart
               type = "polarArea"
               [data] = "nodeGraphData"
               [options] = "nodeGraphOptions"
-              height = "367px"
-              width = "676px"
+              height = "380px"
+              width = "370px"
+              style = "float: right;"
               >
            </p-chart>
        </div>
-       <div class = "ui-g-6">          
+       <div class = "ui-g-8">          
            <div class = "ui-g-12"
              *ngFor = "let dougRow of dougRows"
               >
                <div [class] = "dougCol.class"
                  *ngFor = "let dougCol of dougCols"
                   >
-<!--
-                   <p-chart
+                   <p-chart 
+                    *ngIf = "doughnuts[resources[dougRow.val + dougCol.val - 1]] && doughnuts[resources[dougRow.val + dougCol.val - 1]].data"
                      type = "doughnut"
-                     [data] = "doughnuts[dougCol.resource]"                     
+                     [data] = "doughnuts[resources[dougRow.val + dougCol.val - 1]].data"                     
+                     [options] = "doughnuts[resources[dougRow.val + dougCol.val - 1]].options"
                       >
                        
                    </p-chart>
--->
+                   
+                   <div  class = "nmc-cont-object-monitor-doug-center">
+                      
+                      <div [class] = "'nmc-' + resources[dougRow.val + dougCol.val - 1] + '-icon'">
+                          
+                      </div>                       
+                       <p>{{doughnuts[resources[dougRow.val + dougCol.val - 1]].allCount}}</p>
+                   </div>
+                   
 <!--
                    {{resources[dougRow.val + dougCol.val - 1]}}
-                   {{doughnuts[resources[dougRow.val + dougCol.val - 1]]}}
+                   <pre>
+                       {{doughnuts[resources[dougRow.val + dougCol.val - 1]] | json}}
+                   </pre>
 -->
                </div>   
                
@@ -47,7 +59,14 @@ Tree node id: {{treeNodeId}}
 -->
        </div>
    </div>
-   <div class = "ui-g-12">
+   <div class = "ui-g-12" style = "padding: 0">
+    <div class = "nmc-cont-object-monitor-legend">
+        <div *ngFor = "let chartLabel of chartLabels; index as labelIndex">
+            <p [style.backgroundColor] = "chartBgColors[labelIndex]"></p>{{chartLabel}}
+        </div>
+    </div>
+   </div>
+   <div class = "ui-g-12" style = "height: 42.7vh;">
 <!--       Cont object control component-->
    </div>
 </div>

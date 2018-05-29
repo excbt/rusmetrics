@@ -26,7 +26,7 @@ export class Doughnut {
     selector: 'jhi-tree-node-color-status',
     templateUrl: './tree-node-color-status.component.html',
     styleUrls: [
-
+        './tree-node-color-status.component.scss'
     ]
 })
 export class TreeNodeColorStatusComponent implements OnInit {
@@ -62,14 +62,14 @@ export class TreeNodeColorStatusComponent implements OnInit {
     };
 
     // settings for resource doughnut grid
-    dougRows = [{val: 1}, {val: 2}];
+    dougRows = [{val: 1}, {val: 3}];
     dougCols = [
         {
-            class: 'ui-g-6',
+            class: 'ui-g-6 nmc-resource-doughnut',
             val: 0
         },
         {
-            class: 'ui-g-6',
+            class: 'ui-g-6 nmc-resource-doughnut',
             val: 1
         }
     ];
@@ -93,7 +93,27 @@ export class TreeNodeColorStatusComponent implements OnInit {
         this.chartLabels = this.treeNodeColorStatusService.getChartLabels();
         this.resources = this.treeNodeColorStatusService.getResources();
         this.statusKeynames = this.treeNodeColorStatusService.getStatusKeynames();
+        
+        this.doughnutTemplate = {};
+        this.doughnutTemplate.data = {
+            labels: this.chartLabels,
+            datasets: [
+                {
+                    data: [0, 0, 0],
+                    backgroundColor: this.chartBgColors
+                }
+            ]
+        };
+        
+        this.doughnutTemplate.labels = this.chartLabels;
+        this.doughnutTemplate.colors = this.chartBgColors;
+        this.doughnutTemplate.options = this.doughuntOpts;
+console.log(this.doughnutTemplate);        
+        
+        this.doughnuts = {};
 //        for (let res in this.resources) {
+//console.log(this.resources[res]);
+//console.log(typeof this.resources[res]);
 //            this.doughnuts[this.resources[res]] = new Doughnut();
 //        }
 
@@ -101,9 +121,9 @@ console.log(this.route);
 //        this.route.data.subscribe((data) => console.log('Route data: ', data));
         const tmp = this.route.paramMap.pipe(
             switchMap((params: ParamMap) => {
-//                for (let res in this.resources) {
-//                    this.initResourceChart(params.get('treeNodeId'), this.resources[res]);
-//                }
+                for (let res in this.resources) {
+                    this.initResourceChart(params.get('treeNodeId'), this.resources[res]);
+                }
                 return this.treeNodeColorStatusService.loadCommonData(params.get('treeNodeId'));
             })
         );
@@ -153,6 +173,7 @@ console.log(red, yellow, green);
         };
 
         this.nodeGraphOptions = {
+            maintainAspectRatio: false,
             responsive: true,
             scale: {
                 gridLines: {
@@ -204,16 +225,37 @@ console.log(this.nodeGraphOptions);
     initResourceChart(nodeId, resource) {
         this.treeNodeColorStatusService.loadResourceData(nodeId, resource)
             .subscribe((resp) => {
-// console.log(resp);
+ console.log(resp);
             if (!resp || resp === null) {
                 console.warn('Resource data: ' + resource + ' is empty', resp);
                 return false;
             }
-            this.doughnuts[resource] = Object.assign({}, this.doughnutTemplate); // angular.copy(this.doughnutTemplate);
+console.log(resource);
+//            this.doughnuts[resource] = Object.assign({}, this.doughnutTemplate); // angular.copy(this.doughnutTemplate);
+//            this.doughnuts[resource].options = Object.assign({}, this.doughnutTemplate.options);
+//            this.doughnuts[resource].options.name = resource;
+//            this.doughnuts[resource].data.datasets[0].data = [0, 0, 0];
+//            this.doughnuts[resource].allCount = 0;
+            
+            this.doughnuts[resource] = {};
+console.log(this.doughnuts[resource]);
+            this.doughnuts[resource].data = {
+                labels: this.chartLabels,
+                datasets: [
+                    {
+                        data: [0, 0, 0],
+                        backgroundColor: this.chartBgColors
+                    }
+                ]
+            };
+
+            this.doughnuts[resource].labels = this.chartLabels;
+            this.doughnuts[resource].colors = this.chartBgColors;
+            
             this.doughnuts[resource].options = Object.assign({}, this.doughnutTemplate.options);
-            this.doughnuts[resource].options.name = resource;
-            this.doughnuts[resource].data = [0, 0, 0];
+            this.doughnuts[resource].options.name = resource;            
             this.doughnuts[resource].allCount = 0;
+            
             resp.forEach( (colorObj) => this.performResourceColorData(colorObj, resource));
         });
     }
@@ -222,13 +264,13 @@ console.log(this.nodeGraphOptions);
         this.doughnuts[resource].allCount += colorObj.contObjectCount;
         switch (colorObj.levelColor) {
             case 'RED': case 'red':
-                this.doughnuts[resource].data[0] = colorObj.contObjectCount;
+                this.doughnuts[resource].data.datasets[0].data[0] = colorObj.contObjectCount;
                 break;
             case 'YELLOW': case 'yellow':
-                this.doughnuts[resource].data[1] = colorObj.contObjectCount;
+                this.doughnuts[resource].data.datasets[0].data[1] = colorObj.contObjectCount;
                 break;
             case 'GREEN': case 'green':
-                this.doughnuts[resource].data[2] = colorObj.contObjectCount;
+                this.doughnuts[resource].data.datasets[0].data[2] = colorObj.contObjectCount;
                 break;
         }
     }
