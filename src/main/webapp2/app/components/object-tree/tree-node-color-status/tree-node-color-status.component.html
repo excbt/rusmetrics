@@ -40,7 +40,7 @@ Tree node id: {{treeNodeId}}
                       <div [class] = "'nmc-' + resources[dougRow.val + dougCol.val - 1] + '-icon'">
                           
                       </div>                       
-                       <p>{{doughnuts[resources[dougRow.val + dougCol.val - 1]].allCount}}</p>
+                       <p *ngIf = "doughnuts[resources[dougRow.val + dougCol.val - 1]]">{{doughnuts[resources[dougRow.val + dougCol.val - 1]].allCount}}</p>
                    </div>
                    
 <!--

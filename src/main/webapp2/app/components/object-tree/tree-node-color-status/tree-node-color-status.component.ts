@@ -93,7 +93,7 @@ export class TreeNodeColorStatusComponent implements OnInit {
         this.chartLabels = this.treeNodeColorStatusService.getChartLabels();
         this.resources = this.treeNodeColorStatusService.getResources();
         this.statusKeynames = this.treeNodeColorStatusService.getStatusKeynames();
-        
+
         this.doughnutTemplate = {};
         this.doughnutTemplate.data = {
             labels: this.chartLabels,
@@ -104,25 +104,27 @@ export class TreeNodeColorStatusComponent implements OnInit {
                 }
             ]
         };
-        
+
         this.doughnutTemplate.labels = this.chartLabels;
         this.doughnutTemplate.colors = this.chartBgColors;
         this.doughnutTemplate.options = this.doughuntOpts;
-console.log(this.doughnutTemplate);        
-        
+// console.log(this.doughnutTemplate);
+
         this.doughnuts = {};
 //        for (let res in this.resources) {
-//console.log(this.resources[res]);
-//console.log(typeof this.resources[res]);
+// console.log(this.resources[res]);
+// console.log(typeof this.resources[res]);
 //            this.doughnuts[this.resources[res]] = new Doughnut();
 //        }
 
-console.log(this.route);
+// console.log(this.route);
 //        this.route.data.subscribe((data) => console.log('Route data: ', data));
         const tmp = this.route.paramMap.pipe(
             switchMap((params: ParamMap) => {
-                for (let res in this.resources) {
-                    this.initResourceChart(params.get('treeNodeId'), this.resources[res]);
+                for (const res in this.resources) {
+                    if (this.resources.hasOwnProperty(res)) {
+                        this.initResourceChart(params.get('treeNodeId'), this.resources[res]);
+                    }
                 }
                 return this.treeNodeColorStatusService.loadCommonData(params.get('treeNodeId'));
             })
@@ -153,14 +155,14 @@ console.log(this.route);
     }
 
     performTreeNodeColorStatus(data: TreeNodeColorStatus[]) {
-console.log('Color data: ', data);
+// console.log('Color data: ', data);
         const redElm = data.filter((elm) => elm.levelColor === 'RED')[0];
         const yellowElm = data.filter((elm) => elm.levelColor === 'YELLOW')[0];
         const greenElm = data.filter((elm) => elm.levelColor === 'GREEN')[0];
         const red = redElm ? redElm.contObjectCount : 0;
         const yellow = yellowElm ? yellowElm.contObjectCount : 0;
         const green = greenElm ? greenElm.contObjectCount : 0;
-console.log(red, yellow, green);
+// console.log(red, yellow, green);
         this.nodeGraphData = {
             datasets: [
                 {
@@ -185,8 +187,8 @@ console.log(red, yellow, green);
             }
         };
 
-console.log(this.nodeGraphData);
-console.log(this.nodeGraphOptions);
+// console.log(this.nodeGraphData);
+// console.log(this.nodeGraphOptions);
     }
 
     generateLabels(chart) {
@@ -225,20 +227,20 @@ console.log(this.nodeGraphOptions);
     initResourceChart(nodeId, resource) {
         this.treeNodeColorStatusService.loadResourceData(nodeId, resource)
             .subscribe((resp) => {
- console.log(resp);
+// console.log(resp);
             if (!resp || resp === null) {
                 console.warn('Resource data: ' + resource + ' is empty', resp);
                 return false;
             }
-console.log(resource);
-//            this.doughnuts[resource] = Object.assign({}, this.doughnutTemplate); // angular.copy(this.doughnutTemplate);
-//            this.doughnuts[resource].options = Object.assign({}, this.doughnutTemplate.options);
-//            this.doughnuts[resource].options.name = resource;
-//            this.doughnuts[resource].data.datasets[0].data = [0, 0, 0];
-//            this.doughnuts[resource].allCount = 0;
-            
+// console.log(resource);
+// this.doughnuts[resource] = Object.assign({}, this.doughnutTemplate); // angular.copy(this.doughnutTemplate);
+// this.doughnuts[resource].options = Object.assign({}, this.doughnutTemplate.options);
+// this.doughnuts[resource].options.name = resource;
+// this.doughnuts[resource].data.datasets[0].data = [0, 0, 0];
+// this.doughnuts[resource].allCount = 0;
+
             this.doughnuts[resource] = {};
-console.log(this.doughnuts[resource]);
+// console.log(this.doughnuts[resource]);
             this.doughnuts[resource].data = {
                 labels: this.chartLabels,
                 datasets: [
@@ -251,11 +253,11 @@ console.log(this.doughnuts[resource]);
 
             this.doughnuts[resource].labels = this.chartLabels;
             this.doughnuts[resource].colors = this.chartBgColors;
-            
+
             this.doughnuts[resource].options = Object.assign({}, this.doughnutTemplate.options);
-            this.doughnuts[resource].options.name = resource;            
+            this.doughnuts[resource].options.name = resource;
             this.doughnuts[resource].allCount = 0;
-            
+
             resp.forEach( (colorObj) => this.performResourceColorData(colorObj, resource));
         });
     }
