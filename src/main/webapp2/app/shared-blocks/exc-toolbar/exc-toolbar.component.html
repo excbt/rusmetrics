@@ -1,0 +1,9 @@
+<mat-toolbar class="exc-toolbar">
+    <mat-toolbar-row>
+        <div class="float-left">
+            <ng-content select="[toolbar-left]"></ng-content>            
+        </div>
+        <span class="toolbar-spacer"></span>
+        <ng-content select="[toolbar-right]"></ng-content>
+    </mat-toolbar-row>
+</mat-toolbar>

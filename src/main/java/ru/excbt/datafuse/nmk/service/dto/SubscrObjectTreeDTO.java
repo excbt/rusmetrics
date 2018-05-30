@@ -38,4 +38,6 @@ public class SubscrObjectTreeDTO {
 
     private int version;
 
+    private String treeMode;
+
 }

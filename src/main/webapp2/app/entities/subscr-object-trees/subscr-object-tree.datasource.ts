@@ -9,7 +9,7 @@ export class SubscrObjectTreeDataSource extends ExcAbstractPageDataSource<Subscr
     }
 
     findPage(pageParams: ExcPageParams) {
-        this.wrapPageService(this.deviceModelService.findContObjectType1(pageParams));
+        this.wrapPageService(this.deviceModelService.findContObjectType1Page(pageParams));
     }
 
 }

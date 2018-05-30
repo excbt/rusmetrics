@@ -1,6 +1,15 @@
 {
     "subscrObjectTree": {
         "search": "Поиск",
+        "newObject": "Новый элемент",
+        "actionTitle": "Действия",
+        "siblingsActionTitle": "Добавить узел",
+        "addActionTitle": "Добавить дочерний узел",
+        "childActionTitle": "Добавить дочерний узел",
+        "editActionTitle": "Редактирование узла",
+        "renameTitle": "Переименовать",
+        "addSibling": "Добавить",
+        "addChild": "Добавить",
         "id": "id",
         "parentId": "parentId",
         "rmaSubscriberId": "rmaSubscriberId",
@@ -8,13 +17,14 @@
         "isRma": "isRma",
         "objectTreeType": "objectTreeType",
         "objectName": "Имя иерархии",
+        "nodeName": "Имя узла",
         "objectDescription": "objectDescription",
         "objectComemnt": "objectComemnt",
         "devComment": "devComment",
         "templateId": "templateId",
         "templateItemId": "templateItemId",
-        "isLinkDeny": "isLinkDeny",
-        "isSingleObject": "isSingleObject",
+        "isLinkDeny": "Запретить привязку объектов",
+        "isSingleObject": "Только один объект",
         "treeMode": "treeMode"        
     }
 }

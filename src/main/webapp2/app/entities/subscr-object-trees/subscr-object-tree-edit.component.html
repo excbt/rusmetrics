@@ -1,0 +1,53 @@
+<jhi-exc-toolbar>
+</jhi-exc-toolbar>
+<div>
+    <h3>{{nameOfTree}}</h4>
+</div>
+<p-treeTable [value]="objectTree">
+    <!-- ContObjectAccess -->
+    <!--  -->
+    <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
+        <ng-template let-node="rowData" pTemplate="body">
+            {{node.data.objectName}}
+        </ng-template>
+    </p-column>
+
+    <p-column header="{{'subscrObjectTree.actionTitle' | translate}}" [style]="{'width': '20rem', 'text-align': 'left'}">
+        <ng-template let-col let-node="rowData" pTemplate="body">
+
+            <button *ngIf="node.data.parentId" mat-icon-button (click)="editNodeDialog($event, opEditNodeDialog, node.data)">
+                <mat-icon>edit</mat-icon>
+            </button>
+
+            <button *ngIf="node.data.parentId" mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, node.data, 'sibling')">
+                <mat-icon>add</mat-icon>
+            </button>
+
+            <button mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, node.data, 'child')">
+                <mat-icon>library_add</mat-icon>
+            </button>
+
+        </ng-template>
+    </p-column>
+</p-treeTable>
+
+<p-overlayPanel #opAddNodeDialog [appendTo]="'body'">
+    <!-- <span>{{'subscrObjectTree.newObject' | translate}}</span> -->
+    <div *ngIf="newEditVM">
+        <h5>{{ dialogHeaderKey | translate }}</h5>
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeAdd($event, opAddNodeDialog)" 
+            (keyup.esc)="cancelDialog($event, opAddNodeDialog)" [(ngModel)]="newEditVM.objectName">
+        <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeAdd($event, opAddNodeDialog)"></button>
+        <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opAddNodeDialog)"></button>
+    </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opEditNodeDialog [appendTo]="'body'">
+    <div *ngIf="currentObjectTreeNode">
+        <h5>{{ dialogHeaderKey | translate }}</h5>
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeEdit($event, opEditNodeDialog)" 
+            (keyup.esc)="cancelDialog($event, opEditNodeDialog)" [(ngModel)]="currentObjectTreeNode.objectName">
+        <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeEdit($event, opEditNodeDialog)"></button>
+        <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opEditNodeDialog)"></button>
+    </div>
+</p-overlayPanel>

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -42,7 +43,7 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
     @BatchSize(size = 10)
-	private List<SubscrObjectTree> childObjectList = new ArrayList<SubscrObjectTree>();
+	private List<SubscrObjectTree> childObjectList = new ArrayList<>();
 
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
@@ -84,6 +85,7 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 	@Column(name = "deleted")
 	private int deleted;
 
+	@NotNull
     @Column(name = "tree_mode", updatable = false)
     private String treeMode;
 

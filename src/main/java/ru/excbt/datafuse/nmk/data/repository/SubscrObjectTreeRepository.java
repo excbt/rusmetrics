@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
@@ -9,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 
-public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectTree, Long>, QueryDslPredicateExecutor<SubscrObjectTree> {
+public interface SubscrObjectTreeRepository extends JpaRepository<SubscrObjectTree, Long>, QueryDslPredicateExecutor<SubscrObjectTree> {
 
 	/**
 	 *
@@ -29,6 +30,11 @@ public interface SubscrObjectTreeRepository extends CrudRepository<SubscrObjectT
 			+ " WHERE t.rmaSubscriberId = :rmaSubscriberId AND t.parentId IS NULL AND t.deleted = 0 "
 			+ " ORDER BY t.objectTreeType, t.objectName ")
 	List<Object[]> selectRmaSubscrObjectTreeShort(@Param("rmaSubscriberId") Long rmaSubscriberId);
+
+	@Query("SELECT t.id, t.subscriberId, t.rmaSubscriberId, t.objectTreeType, t.objectName FROM SubscrObjectTree t "
+			+ " WHERE (t.rmaSubscriberId = :rmaSubscriberId or t.subscriberId = :rmaSubscriberId )AND t.parentId IS NULL AND t.deleted = 0 "
+			+ " ORDER BY t.objectTreeType, t.objectName ")
+	List<Object[]> selectRmaSubscrObjectTreeShort2(@Param("rmaSubscriberId") Long rmaSubscriberId);
 
 	/**
 	 *

@@ -49,6 +49,7 @@ import { TableModule } from 'primeng/table';
 
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
+import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
 
 @NgModule({
   imports: [
@@ -90,7 +91,8 @@ import { AngularSplitModule } from 'angular-split';
     ExcTopHeaderComponent,
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
-    ExcSearchFieldComponent
+    ExcSearchFieldComponent,
+    ExcToolbarComponent
   ],
   entryComponents: [
   ],
@@ -105,6 +107,7 @@ import { AngularSplitModule } from 'angular-split';
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
+    ExcToolbarComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,

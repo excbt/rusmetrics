@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.web.rest;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
@@ -48,7 +49,7 @@ public class SubscrObjectTreeResource {
             return ApiResponse.responseBadRequest();
         }
 
-        SubscrObjectTreeVM result = subscrObjectTreeService.findSubscrObjectTreeVM(rootSubscrObjectTreeId);
+        SubscrObjectTreeDTO result = subscrObjectTreeService.findSubscrObjectTreeDTO(rootSubscrObjectTreeId);
         return ApiResponse.responseOK(result);
     }
 
@@ -89,6 +90,58 @@ public class SubscrObjectTreeResource {
 
         Page<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVMPage(portalUserIdsService.getCurrentIds(), subscriberId, pageable);
         return ApiResponse.responseOK(result);
+    }
+
+
+    /**
+     * Same as RmaSubscrObjectTreeController
+     *
+     *
+     * @param objectTreeType
+     * @return
+     */
+    @RequestMapping(value = "/{objectTreeType}/new", method = RequestMethod.PUT,
+        produces = ApiConst.APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> putSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType,
+                                                     @RequestParam("newTreeName") String newTreeName) {
+
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+        if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1 || newTreeName == null || newTreeName.trim().isEmpty()) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
+
+        Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService.addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), subscriberId);
+
+        return resultTree.map(ApiResponse::responseOK).orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)) ;
+    }
+
+
+    @RequestMapping(value = "/{objectTreeType}", method = RequestMethod.PUT,
+        produces = ApiConst.APPLICATION_JSON_UTF8)
+    public ResponseEntity<?> putSubscrObjectTreeNode(@PathVariable("objectTreeType") String objectTreeType,
+                                                     @RequestParam(value = "addMode", required = false) String addMode,
+                                                     @RequestBody SubscrObjectTreeVM subscrObjectTreeVM) {
+
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+        if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1 ) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        if (addMode == null) {
+            addMode = SubscrObjectTreeService.ADD_MODE_CHILD;
+        }
+
+        Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
+
+        Optional<SubscrObjectTreeVM> resultTree = subscrObjectTreeVM.getId() == null
+            ? subscrObjectTreeService.addSubscrObjectTreeNode(subscrObjectTreeVM, treeType, portalUserIdsService.getCurrentIds(), subscriberId, addMode)
+            : subscrObjectTreeService.updateSubscrObjectTreeNode(subscrObjectTreeVM, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+
+        return resultTree.map(ApiResponse::responseOK).orElse(ResponseEntity.badRequest().build()) ;
     }
 
 

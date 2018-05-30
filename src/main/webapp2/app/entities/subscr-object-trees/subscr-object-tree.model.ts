@@ -18,3 +18,11 @@ export class SubscrObjectTree {
         public treeMode: string
     ) { }
 }
+
+export interface SubscrObjectTreeVM {
+    id?: number;
+    parentId?: number;
+    objectName: string;
+    isLinkDeny?: boolean;
+    isSingleObject?: boolean;
+}

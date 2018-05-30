@@ -1,11 +1,8 @@
 package ru.excbt.datafuse.nmk.service.vm;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
-import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -14,8 +11,6 @@ public class SubscrObjectTreeVM {
     private Long id;
 
     private Long parentId;
-
-    private List<SubscrObjectTreeVM> childObjectList = new ArrayList<>();
 
     private Long rmaSubscriberId;
 
