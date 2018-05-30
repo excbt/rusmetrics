@@ -3,6 +3,7 @@
         "search": "Поиск",
         "newObject": "Новый элемент",
         "actionTitle": "Действия",
+        "nodeProperties": "Свойства узла",
         "siblingsActionTitle": "Добавить узел",
         "addActionTitle": "Добавить дочерний узел",
         "childActionTitle": "Добавить дочерний узел",

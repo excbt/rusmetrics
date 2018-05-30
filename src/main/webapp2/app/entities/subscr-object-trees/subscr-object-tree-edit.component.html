@@ -12,6 +12,19 @@
         </ng-template>
     </p-column>
 
+    <p-column header="{{'subscrObjectTree.nodeProperties' | translate}}" [style]="{'width': '20rem', 'text-align': 'left'}">
+        <ng-template let-col let-node="rowData" pTemplate="body">
+            <!-- isLinkDeny -->
+            <button *ngIf="node.data.parentId && !node.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(node.data)">
+                <mat-icon [ngClass]="{'propertyDisabled': node.data?.isLinkDeny}">filter_9_plus</mat-icon>
+            </button>
+            <button *ngIf="node.data.parentId && node.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(node.data)">
+                <mat-icon [ngClass]="{'propertyDisabled': node.data?.isLinkDeny}">close</mat-icon>
+            </button>
+        </ng-template>
+    </p-column>
+
+
     <p-column header="{{'subscrObjectTree.actionTitle' | translate}}" [style]="{'width': '20rem', 'text-align': 'left'}">
         <ng-template let-col let-node="rowData" pTemplate="body">
 
@@ -27,6 +40,10 @@
                 <mat-icon>library_add</mat-icon>
             </button>
 
+            <button mat-icon-button (click)="deleteNode(node.data)">
+                    <mat-icon>delete</mat-icon>
+            </button>
+                
         </ng-template>
     </p-column>
 </p-treeTable>
@@ -35,8 +52,8 @@
     <!-- <span>{{'subscrObjectTree.newObject' | translate}}</span> -->
     <div *ngIf="newEditVM">
         <h5>{{ dialogHeaderKey | translate }}</h5>
-        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeAdd($event, opAddNodeDialog)" 
-            (keyup.esc)="cancelDialog($event, opAddNodeDialog)" [(ngModel)]="newEditVM.objectName">
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeAdd($event, opAddNodeDialog)" (keyup.esc)="cancelDialog($event, opAddNodeDialog)"
+            [(ngModel)]="newEditVM.objectName">
         <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeAdd($event, opAddNodeDialog)"></button>
         <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opAddNodeDialog)"></button>
     </div>
@@ -45,8 +62,8 @@
 <p-overlayPanel #opEditNodeDialog [appendTo]="'body'">
     <div *ngIf="currentObjectTreeNode">
         <h5>{{ dialogHeaderKey | translate }}</h5>
-        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeEdit($event, opEditNodeDialog)" 
-            (keyup.esc)="cancelDialog($event, opEditNodeDialog)" [(ngModel)]="currentObjectTreeNode.objectName">
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeEdit($event, opEditNodeDialog)" (keyup.esc)="cancelDialog($event, opEditNodeDialog)"
+            [(ngModel)]="currentObjectTreeNode.objectName">
         <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeEdit($event, opEditNodeDialog)"></button>
         <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opEditNodeDialog)"></button>
     </div>

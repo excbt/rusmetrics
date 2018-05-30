@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,8 +120,24 @@ public class SubscrObjectTreeService {
 	@Transactional( readOnly = true)
 	public SubscrObjectTreeDTO findSubscrObjectTreeDTO(Long id) {
 	    SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
-		return subscrObjectTreeMapper.toDto(ObjectFilters.deletedFilter(subscrObjectTree));
+        SubscrObjectTreeDTO dto = subscrObjectTreeMapper.toDto(ObjectFilters.deletedFilter(subscrObjectTree));
+        sortChildObjects(dto);
+		return dto;
 	}
+
+	private void sortChildObjects(SubscrObjectTreeDTO dto) {
+	    if (dto == null || dto.getChildObjectList() == null) {
+	        return;
+        }
+
+        if (!dto.getChildObjectList().isEmpty()) {
+            dto.getChildObjectList().removeIf(i -> i.getDeleted() == 1);
+            dto.getChildObjectList().sort(Comparator.comparing(SubscrObjectTreeDTO::getObjectName));
+        }
+        for (SubscrObjectTreeDTO child : dto.getChildObjectList()) {
+	        sortChildObjects(child);
+        }
+    }
 
     @Transactional( readOnly = true)
     public SubscrObjectTreeVM findSubscrObjectTreeVM(Long id) {
@@ -803,6 +820,24 @@ public class SubscrObjectTreeService {
         SubscrObjectTree result = subscrObjectTreeRepository.saveAndFlush(preSave);
 
         return Optional.ofNullable(subscrObjectTreeMapper.toDto(result));
+    }
+
+    public boolean deleteSubscrObjectTreeNode(Long treeNodeId,
+                                              PortalUserIds portalUserIds,
+                                              Long subscriberId) {
+        SubscrObjectTree deleteCanidate = subscrObjectTreeRepository.findOne(treeNodeId);
+
+        if (deleteCanidate == null) {
+            return false;
+        }
+
+        if (!deleteCanidate.getSubscriberId().equals(subscriberId) || !portalUserIds.isRma()) {
+            return false;
+        }
+
+        deleteCanidate.setDeleted(1);
+        subscrObjectTreeRepository.saveAndFlush(deleteCanidate);
+        return true;
     }
 
     @Transactional

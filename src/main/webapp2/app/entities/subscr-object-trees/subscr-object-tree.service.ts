@@ -49,4 +49,8 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
         return this.http.put<SubscrObjectTreeVM>(this.resourceUrl + this.treeTypeSuffix1, treeVM);
     }
 
+    deleteTreeNodeNode(treeVM: SubscrObjectTreeVM): Observable<any> {
+        return this.http.delete<SubscrObjectTreeVM>(this.resourceUrl + this.treeTypeSuffix1 + treeVM.id);
+    }
+
 }

@@ -60,8 +60,7 @@ public class SubscrObjectTreeResource {
      * @param objectTreeType
      * @return
      */
-    @RequestMapping(value = "/{objectTreeType}", method = RequestMethod.GET,
-        produces = ApiConst.APPLICATION_JSON_UTF8)
+    @GetMapping(value = "/{objectTreeType}")
     public ResponseEntity<?> getSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType) {
 
         ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
@@ -72,6 +71,20 @@ public class SubscrObjectTreeResource {
 
         List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(portalUserIdsService.getCurrentIds());
         return ApiResponse.responseOK(result);
+    }
+
+    @DeleteMapping(value = "/{objectTreeType}/{nodeId}")
+    public ResponseEntity<?> deleteSubscrObjectTreeNode(@PathVariable("objectTreeType") String objectTreeType,
+                                                        @PathVariable("nodeId") Long nodeId) {
+
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
+
+        if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
+            return ApiResponse.responseBadRequest();
+        }
+
+        boolean result = subscrObjectTreeService.deleteSubscrObjectTreeNode(nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+        return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
     @RequestMapping(value = "/{objectTreeType}/page", method = RequestMethod.GET,

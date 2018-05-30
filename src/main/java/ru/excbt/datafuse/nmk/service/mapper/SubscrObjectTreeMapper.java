@@ -24,6 +24,7 @@ public interface SubscrObjectTreeMapper {
     @Mapping(target = "isRma", ignore = true)
     @Mapping(target = "templateId", ignore = true)
     @Mapping(target = "templateItemId", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
     void updateTreeFromVM (@MappingTarget SubscrObjectTree subscrObjectTree, SubscrObjectTreeVM vm);
 
 

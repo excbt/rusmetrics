@@ -42,6 +42,9 @@ export class SubscrObjectTreeEditComponent {
                 this.nameOfTree = res.objectName;
                 this.objectTree = [this.convertDataToObjectTree(res)];
             });
+        } else {
+            this.data = null;
+            this.objectTree = [];
         }
     }
 
@@ -101,6 +104,22 @@ export class SubscrObjectTreeEditComponent {
     cancelDialog(event, panel: OverlayPanel) {
             panel.hide();
             this.currentObjectTreeNode = null;
+    }
+
+    switchIsLinkDeny(node: SubscrObjectTree) {
+        this.currentObjectTreeNode = Object.assign({}, node);
+        this.currentObjectTreeNode.isLinkDeny = this.currentObjectTreeNode.isLinkDeny ? !this.currentObjectTreeNode.isLinkDeny : true;
+        this.subscrObjectTreeService.updateTreeNodeNode(this.currentObjectTreeNode).subscribe((data) => {
+            this.currentObjectTreeNode = null;
+            this.loadData(this.rootNodeId);
+        });
+    }
+
+    deleteNode(node: SubscrObjectTree) {
+        this.currentObjectTreeNode = null;
+        if (node && node.id) {
+            this.subscrObjectTreeService.deleteTreeNodeNode({id: node.id}).subscribe((data) => this.loadData(this.rootNodeId));
+        }
     }
 
 }

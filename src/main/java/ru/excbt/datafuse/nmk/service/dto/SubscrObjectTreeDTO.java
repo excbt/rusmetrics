@@ -40,4 +40,6 @@ public class SubscrObjectTreeDTO {
 
     private String treeMode;
 
+    private int deleted;
+
 }
