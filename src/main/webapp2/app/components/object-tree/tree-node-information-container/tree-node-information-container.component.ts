@@ -39,7 +39,7 @@ console.log('this.treeNodeId', this.treeNodeId);
                 url: 'tree-node-control'
             }
         ];
-        this.currentWidget = this.widgetList[1];
+        this.currentWidget = this.widgetList[2];
 
         this.eventManager.subscribe('setTreeNode', (eventData) => this.changeNode(eventData));
     }

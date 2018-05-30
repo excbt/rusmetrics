@@ -3,7 +3,7 @@ import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { JhipsterSharedModule } from '../../shared';
 import { PortalSharedBlocksModule } from '../../shared-blocks';
 // import { PortalObjectTreeComponent } from './object-tree.component';
-import { PTreeNodeService } from './object-tree.service';
+// import { PTreeNodeService } from './object-tree.service';
 import { PTreeNodeLinkedObjectService } from './object-tree.service';
 import { RouterModule, Router } from '@angular/router';
 import { ChartModule } from 'primeng/chart';
@@ -20,7 +20,11 @@ import { objectTreeState,
         TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
         TreeNodeColorStatusService,
-        TreeNodeColorStatusComponent
+        TreeNodeColorStatusComponent,
+        TreeNodeControlService,
+        TreeNodeControlComponent,
+        PTreeNodeService,
+        ContObjectControlComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -53,18 +57,22 @@ import { MatMenuModule } from '@angular/material/menu';
         TreeNavigateComponent,
         TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
-        TreeNodeColorStatusComponent
+        TreeNodeColorStatusComponent,
+        TreeNodeControlComponent,
+        ContObjectControlComponent
     ],
     entryComponents: [
     ],
     providers: [
-        PTreeNodeService,
+        /* PTreeNodeService, */
         PTreeNodeLinkedObjectService,
         TreeNavigateService,
         SubscrTreeService,
         SubscrPrefService,
         PTreeNodeMonitorService,
-        TreeNodeColorStatusService
+        TreeNodeColorStatusService,
+        TreeNodeControlService,
+        PTreeNodeService
     ],
     exports: [
         PortalObjectTreeComponent
