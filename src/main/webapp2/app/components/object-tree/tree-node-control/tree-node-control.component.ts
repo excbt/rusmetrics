@@ -3,6 +3,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { TreeNodeControlService } from './tree-node-control.service';
 import { PTreeNode } from '../models/p-tree-node.model';
+import { JhiEventManager } from 'ng-jhipster';
 
 @Component({
     selector: 'jhi-tree-node-control',
@@ -17,7 +18,8 @@ export class TreeNodeControlComponent implements OnInit {
     nodeObjects: number[];
 
     constructor(private route: ActivatedRoute,
-                 private treeNodeControlService: TreeNodeControlService) {}
+                 private treeNodeControlService: TreeNodeControlService,
+                private eventManager: JhiEventManager) {}
 
     ngOnInit() {
 
@@ -34,6 +36,7 @@ export class TreeNodeControlComponent implements OnInit {
         console.log(treeNode);
         this.nodeObjects = this.treeNodeControlService.getNodeObjectIds(treeNode);
         console.log('TreeNodeControlComponent: nodeObjects: ', this.nodeObjects);
+        this.eventManager.broadcast({name: 'nodeObjectsChanged', content: this.nodeObjects});
     }
 
 }

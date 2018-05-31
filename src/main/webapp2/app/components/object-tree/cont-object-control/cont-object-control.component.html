@@ -1,3 +1,17 @@
+<!--
 <div *ngFor = "let contObject of contObjectList">
     {{contObject}}
-</div>
+</div>-->
+
+<p-table [value] = "contObjectControlList">
+    <ng-template pTemplate = "header">
+        <tr>
+            <th *ngFor = "let col of cols">{{col.caption}}</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate = "body" let-coc>
+        <tr>
+            <td *ngFor = "let col of cols">{{coc[col.name]}}</td>
+        </tr>
+    </ng-template>
+</p-table>

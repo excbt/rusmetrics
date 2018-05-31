@@ -24,14 +24,17 @@ import { objectTreeState,
         TreeNodeControlService,
         TreeNodeControlComponent,
         PTreeNodeService,
+        ContObjectControlService,
         ContObjectControlComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
 
 import { AngularSplitModule } from 'angular-split';
-
+// PRimeNG
 import { TreeModule } from 'primeng/tree';
+import { TableModule } from 'primeng/table';
+
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,7 +53,8 @@ import { MatMenuModule } from '@angular/material/menu';
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
-        ChartModule
+        ChartModule,
+        TableModule
     ],
     declarations: [
         PortalObjectTreeComponent,
@@ -72,7 +76,8 @@ import { MatMenuModule } from '@angular/material/menu';
         PTreeNodeMonitorService,
         TreeNodeColorStatusService,
         TreeNodeControlService,
-        PTreeNodeService
+        PTreeNodeService,
+        ContObjectControlService
     ],
     exports: [
         PortalObjectTreeComponent
