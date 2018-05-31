@@ -6,6 +6,8 @@
                 <mat-icon class="headerbar-mat-menu-icon img-vertical-align">menu</mat-icon>
             </button>
         </div>
+        <span *ngIf="pageTitleKey" class="pageTitle">{{pageTitleKey | translate}}</span>                    
+        <span *ngIf="!pageTitleKey && pageTitle" class="pageTitle">{{ pageTitle }}</span>                    
         <div class="ui-toolbar-group-right">
             <button mat-icon-button [matMenuTriggerFor]="menu">
                 <mat-icon class="headerbar-profile-menu-icon img-vertical-align">more_vert</mat-icon>
