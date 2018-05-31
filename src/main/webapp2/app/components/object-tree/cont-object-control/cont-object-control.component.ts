@@ -17,9 +17,9 @@ export class ContObjectControlComponent implements OnInit {
                 private contObjectControlService: ContObjectControlService) {}
 
     ngOnInit() {
-        
+
         this.contObjectControlService.initSvc();
-        
+
         this.cols = [
             {
                 name: 'coSettingMode',
@@ -50,24 +50,24 @@ export class ContObjectControlComponent implements OnInit {
                 caption: 'El'
             }
         ];
-        
+
         this.eventManager.subscribe('contObjectListChanged', (eventData) => {
             this.contObjectList = eventData.content;
             console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
             this.performContObjectList();
         });
     }
-    
+
     performContObjectList() {
         this.contObjectControlList = [];
-        
+
         this.contObjectList
             .map((co) => this.performContObjectListItem(co));
     }
-    
+
     performContObjectListItem(contObjectId: number) {
         this.contObjectControlService
             .loadMonitorState(contObjectId.toString())
-            .subscribe((res)=> this.contObjectControlList.push(res));
+            .subscribe((res) => this.contObjectControlList.push(res));
     }
 }
