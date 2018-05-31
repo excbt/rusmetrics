@@ -163,4 +163,11 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy, AfterViewI
         this.panel.hide();
     }
 
+    deleteTree() {
+        if (this.selectedRow && this.selectedRow.id) {
+            this.subscrObjectTreeService
+                .deleteTreeNodeNode({ id: this.selectedRow.id })
+                .subscribe((data) => this.refreshData());
+        }
+    }
 }

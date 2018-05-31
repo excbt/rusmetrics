@@ -667,9 +667,10 @@ public class SubscrObjectTreeService {
 
         BooleanExpression subscriberExpr = qSubscrObjectTree.deleted.eq(0)
             .and(qSubscrObjectTree.parentId.isNull())
-            .and(portalUserIds.isRma()
-                ? qSubscrObjectTree.rmaSubscriberId.eq(subscriberId).or(qSubscrObjectTree.subscriberId.eq(subscriberId))
-                : qSubscrObjectTree.subscriberId.eq(subscriberId));
+            .and(qSubscrObjectTree.subscriberId.eq(subscriberId));
+//            .and(portalUserIds.isRma()
+//                ? qSubscrObjectTree.rmaSubscriberId.eq(subscriberId).or(qSubscrObjectTree.subscriberId.eq(subscriberId))
+//                : qSubscrObjectTree.subscriberId.eq(subscriberId));
 
 
 

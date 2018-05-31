@@ -7,19 +7,21 @@
         <button *ngIf="selectedNode" mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, selectedNode.data, 'child')">
             <mat-icon mat-list-icon>library_add</mat-icon>
         </button>
-        <span class="buttonSpacer"></span>
-        <span class="buttonSpacer"></span>
-        <button *ngIf="selectedNode?.data.parentId && !selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+        <button *ngIf="selectedNode?.data.parentId" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny, 'propertyEnabled': !selectedNode?.data?.isLinkDeny}">filter_9_plus</mat-icon>
+        </button>
+        <!-- <button *ngIf="selectedNode?.data.parentId && selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
             <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny}">filter_9_plus</mat-icon>
-        </button>
-        <button *ngIf="selectedNode?.data.parentId && selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
-            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny}">close</mat-icon>
-        </button>
-
+        </button> -->
+        <span class="buttonSpacer"></span>
+        <span class="buttonSpacer"></span>
     </div>
     <div toolbar-right>
         <button *ngIf="selectedNode?.data.parentId" mat-icon-button color="warn">
             <mat-icon mat-list-icon (click)="deleteNode(selectedNode.data)">delete</mat-icon>
+        </button>
+        <button *ngIf="!selectedNode?.data.parentId" mat-icon-button color="warn">
+            <mat-icon mat-list-icon >delete</mat-icon>
         </button>
     </div>
 </jhi-exc-toolbar>

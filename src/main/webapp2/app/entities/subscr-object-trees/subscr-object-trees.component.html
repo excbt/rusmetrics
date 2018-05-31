@@ -25,23 +25,14 @@
 <p-table [value]="subscrObjectTreeData" selectionMode="single" [(selection)]="selectedRow" (onRowSelect)="selectRow($event)">
     <ng-template pTemplate="header">
         <tr>
-            <th> {{'global.field.id' | translate}} </th>
+            <!-- <th> {{'global.field.id' | translate}} </th> -->
             <th> {{'subscrObjectTree.objectName' | translate}}</th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
         <tr [pSelectableRow]="rowData">
-            <td>{{rowData.id}}</td>
+            <!-- <td>{{rowData.id}}</td> -->
             <td>{{rowData.objectName}}</td>
-            <!-- <td pEditableColumn>
-                <p-cellEditor>
-                    <ng-template pTemplate="input">
-                        <input type="text" [(ngModel)]="subscrObjectTreeData.objectName">
-                    </ng-template>
-                    <ng-template pTemplate="output">
-                        {{subscrObjectTreeData.objectName}}
-                    </ng-template>
-                </p-cellEditor>             -->
         </tr>
     </ng-template>
 </p-table>

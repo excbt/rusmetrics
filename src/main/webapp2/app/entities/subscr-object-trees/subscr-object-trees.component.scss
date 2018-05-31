@@ -1,35 +1,8 @@
-// =======
-.toolbar-row .ui-corner-all {
-    height: 2.5em;
-    border-radius: 0 !important;    
-}
-
-.toolbal-row {
-    height: 2em;
-}
-
-.subscr-object-grid {
-    display: flex;
-}
-
 .search-input {
     font-size: 80%;
     height: 25px;
 }
 
-mat-toolbar.nmc-tree-nav-toolbar {
-    min-height: 32px; 
-    background-color: rgb(231, 235, 245);
-    border-top: 1px solid #41719c;
-    border-bottom: 1px solid #41719c;    
-}
-
-.nmc-tree-nav-toolbar mat-toolbar-row {
-    height: 32px;
-    padding-left: 0;
-    padding-right: 4px;
-}
-
-.spacer {
-    flex: 1 1 auto;
+.buttonSpacer {
+    padding-left:40px; 
 }
