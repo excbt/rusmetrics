@@ -101,7 +101,7 @@ public class SubscrObjectTreeResource {
 
         Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
 
-        Page<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVMPage(portalUserIdsService.getCurrentIds(), subscriberId, pageable);
+        Page<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVMPage(portalUserIdsService.getCurrentIds(), subscriberId, searchString, pageable);
         return ApiResponse.responseOK(result);
     }
 

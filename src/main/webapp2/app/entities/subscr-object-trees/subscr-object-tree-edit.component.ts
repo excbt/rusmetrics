@@ -40,9 +40,15 @@ export class SubscrObjectTreeEditComponent implements OnDestroy {
         private eventManager: JhiEventManager
     ) {
         this.subscrObjectTreeService.currentObjectTreeId$.subscribe((id) => {
-            this.rootNodeId = id;
-            this.selectedNode = null;
-            this.loadData(id);
+            if (id !== this.rootNodeId) {
+                this.rootNodeId = id;
+                this.selectedNode = null;
+                if (id) {
+                    this.loadData(id);
+                } else {
+                    this.objectTree = [];
+                }
+            }
         });
 
         this.registerChangeInTree();

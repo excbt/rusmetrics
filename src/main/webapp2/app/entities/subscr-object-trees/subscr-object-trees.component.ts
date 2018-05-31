@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SubscrObjectTree, SubscrObjectTreeModificationEvent } from './subscr-object-tree.model';
@@ -9,17 +9,26 @@ import { ExcPageSize, ExcPageSorting, defaultPageSize, defaultPageSizeOptions } 
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { FormControl } from '@angular/forms';
 import { JhiEventManager } from 'ng-jhipster';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { merge } from 'rxjs/observable/merge';
+import { tap } from 'rxjs/operators';
+import { MatSort, MatPaginator } from '@angular/material';
+import { ExcSearchToolService } from '../../shared-blocks/exc-tools/exc-search-tool-service';
 
 @Component({
     selector: 'jhi-subscr-object-trees',
     templateUrl: './subscr-object-trees.component.html',
     styleUrls: ['../blocks/list-form.scss', './subscr-object-trees.component.scss']
 })
-export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
+export class SubscrObjectTreesComponent implements OnInit, OnDestroy, AfterViewInit {
 
     @ViewChild('op')
     panel: OverlayPanel;
+
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+
+    @ViewChild('searchString')
+    searchStringInput: ElementRef;
 
     newItemName: string;
 
@@ -36,6 +45,8 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
     pageSizeOptions = defaultPageSizeOptions;
 
     private eventSubscription: Subscription;
+    private searchToolService = new ExcSearchToolService();
+    private searchString: string;
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
@@ -44,6 +55,11 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute
     ) {
         this.dataSource = new SubscrObjectTreeDataSource(this.subscrObjectTreeService);
+        this.modelSubjectSubsribe();
+        this.registerChangeInTree();
+    }
+
+    modelSubjectSubsribe() {
         this.dataSource.modelSubject.asObservable().subscribe((data) => {
             this.subscrObjectTreeData = data;
 
@@ -58,15 +74,22 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
             }
 
             if (data && (data.length > 0) && this.selectedRow) {
-                this.subscrObjectTreeService.selectNode(this.selectedRow.id);
+                this.sendNodeId(this.selectedRow.id);
             } else if (data && (data.length > 0) && !this.selectedRow) {
-                this.subscrObjectTreeService.selectNode(data[0].id);
+                this.sendNodeId(data[0].id);
                 this.selectedRow = data[0];
             } else {
                 this.selectedRow = rowCandidate;
             }
+
+            if (data.length === 0) {
+                this.sendNodeId(null);
+            }
         });
-        this.registerChangeInTree();
+    }
+
+    sendNodeId(id: number) {
+        this.subscrObjectTreeService.selectNode(id);
     }
 
     registerChangeInTree() {
@@ -83,6 +106,25 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
           );
         this.initSearch();
         this.displayedColumns = ['id', 'objectName'];
+
+        // on sort or paginate events, load a new page
+        merge(this.paginator.page).pipe(
+            tap(() => {
+                this.initSearch();
+            })
+        ).subscribe();
+
+        this.searchToolService.searchString$.subscribe((arg) => {
+            this.paginator.pageIndex = 0;
+            this.initSearch(arg);
+            this.searchString = arg;
+        });
+
+    }
+
+    ngAfterViewInit() {
+        Observable.fromEvent(this.searchStringInput.nativeElement, 'keyup')
+        .subscribe((data) => this.searchToolService.filterInput(this.searchStringInput.nativeElement.value));
     }
 
     ngOnDestroy() {
@@ -91,9 +133,14 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy {
         }
     }
 
-    initSearch() {
-        console.log('Init Search');
-        this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
+    initSearch(search?: string) {
+        // this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: new ExcPageSize() });
+        const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
+        this.dataSource.findPage ({ pageSorting: new ExcPageSorting(), pageSize: pSize, searchString: search  });
+    }
+
+    refreshData() {
+        this.initSearch(this.searchString);
     }
 
     selectRow(event) {

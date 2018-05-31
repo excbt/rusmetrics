@@ -3,10 +3,7 @@ package ru.excbt.datafuse.nmk.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -658,9 +655,11 @@ public class SubscrObjectTreeService {
 		return resultList;
 	}
 
+
 	@Transactional( readOnly = true)
 	public Page<SubscrObjectTreeVM> selectSubscrObjectTreeShortVMPage(final PortalUserIds portalUserIds,
                                                                       Long subscriberId,
+                                                                      String searchString,
                                                                       Pageable pageable) {
 
 
@@ -672,8 +671,15 @@ public class SubscrObjectTreeService {
                 ? qSubscrObjectTree.rmaSubscriberId.eq(subscriberId).or(qSubscrObjectTree.subscriberId.eq(subscriberId))
                 : qSubscrObjectTree.subscriberId.eq(subscriberId));
 
+
+
         WhereClauseBuilder whereClauseBuilder = new WhereClauseBuilder().and(subscriberExpr);
 
+        if (searchString != null) {
+            BooleanExpression searchCondition  = QueryDSLUtil.buildSearchCondition(searchString,
+                (s1) -> qSubscrObjectTree.objectName.toLowerCase().like(QueryDSLUtil.lowerCaseLikeStr.apply(s1)));
+            whereClauseBuilder.and(searchCondition);
+        }
 
         Page<SubscrObjectTree> subscrObjectTreePage = subscrObjectTreeRepository.findAll(whereClauseBuilder, pageable);
 
