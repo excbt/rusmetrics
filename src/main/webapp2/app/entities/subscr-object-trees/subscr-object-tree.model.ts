@@ -24,3 +24,5 @@ export interface SubscrObjectTreeVM {
     objectName?: string;
     isLinkDeny?: boolean;
 }
+
+export const SubscrObjectTreeModificationEvent = 'SubscrObjectTreeModification';

@@ -1,9 +1,29 @@
 <jhi-exc-toolbar>
+    <div toolbar-left>
+        <button *ngIf="selectedNode" mat-icon-button (click)="editNodeDialog($event, opEditNodeDialog, selectedNode.data)">
+            <mat-icon mat-list-icon>edit</mat-icon>
+        </button>
+        <span class="buttonSpacer"></span>
+        <button *ngIf="selectedNode" mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, selectedNode.data, 'child')">
+            <mat-icon mat-list-icon>library_add</mat-icon>
+        </button>
+        <span class="buttonSpacer"></span>
+        <span class="buttonSpacer"></span>
+        <button *ngIf="selectedNode?.data.parentId && !selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny}">filter_9_plus</mat-icon>
+        </button>
+        <button *ngIf="selectedNode?.data.parentId && selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny}">close</mat-icon>
+        </button>
+
+    </div>
+    <div toolbar-right>
+        <button *ngIf="selectedNode?.data.parentId" mat-icon-button color="warn">
+            <mat-icon mat-list-icon (click)="deleteNode(selectedNode.data)">delete</mat-icon>
+        </button>
+    </div>
 </jhi-exc-toolbar>
-<div>
-    <h3>{{nameOfTree}}</h4>
-</div>
-<p-treeTable [value]="objectTree">
+<p-treeTable [value]="objectTree" selectionMode="single" [(selection)]="selectedNode">
     <!-- ContObjectAccess -->
     <!--  -->
     <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
@@ -12,40 +32,6 @@
         </ng-template>
     </p-column>
 
-    <p-column header="{{'subscrObjectTree.nodeProperties' | translate}}" [style]="{'width': '20rem', 'text-align': 'left'}">
-        <ng-template let-col let-node="rowData" pTemplate="body">
-            <!-- isLinkDeny -->
-            <button *ngIf="node.data.parentId && !node.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(node.data)">
-                <mat-icon [ngClass]="{'propertyDisabled': node.data?.isLinkDeny}">filter_9_plus</mat-icon>
-            </button>
-            <button *ngIf="node.data.parentId && node.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(node.data)">
-                <mat-icon [ngClass]="{'propertyDisabled': node.data?.isLinkDeny}">close</mat-icon>
-            </button>
-        </ng-template>
-    </p-column>
-
-
-    <p-column header="{{'subscrObjectTree.actionTitle' | translate}}" [style]="{'width': '20rem', 'text-align': 'left'}">
-        <ng-template let-col let-node="rowData" pTemplate="body">
-
-            <button *ngIf="node.data.parentId" mat-icon-button (click)="editNodeDialog($event, opEditNodeDialog, node.data)">
-                <mat-icon>edit</mat-icon>
-            </button>
-
-            <button *ngIf="node.data.parentId" mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, node.data, 'sibling')">
-                <mat-icon>add</mat-icon>
-            </button>
-
-            <button mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, node.data, 'child')">
-                <mat-icon>library_add</mat-icon>
-            </button>
-
-            <button mat-icon-button (click)="deleteNode(node.data)">
-                    <mat-icon>delete</mat-icon>
-            </button>
-                
-        </ng-template>
-    </p-column>
 </p-treeTable>
 
 <p-overlayPanel #opAddNodeDialog [appendTo]="'body'">

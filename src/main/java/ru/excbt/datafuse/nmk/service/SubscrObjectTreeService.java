@@ -918,18 +918,24 @@ public class SubscrObjectTreeService {
 
         if (editedNodeOpt.isPresent()) {
             editedNode = editedNodeOpt.get();
-            subscrObjectTreeMapper.updateTreeFromVM(editedNode, vm);
-            editedNode.setObjectTreeType( vm.getObjectTreeType() );
-            editedNode.setObjectName( vm.getObjectName() );
-            editedNode.setObjectDescription( vm.getObjectDescription() );
-            editedNode.setIsLinkDeny( vm.getIsLinkDeny() );
-            editedNode.setVersion( vm.getVersion() );
+            if (editedNode.getParent() != null) {
+                editedNode.setObjectName( vm.getObjectName() );
+                editedNode.setObjectDescription( vm.getObjectDescription() );
+                editedNode.setIsLinkDeny( vm.getIsLinkDeny() );
+                editedNode.setVersion( vm.getVersion() );
+
+            } else {
+                editedNode.setObjectName( vm.getObjectName() );
+                editedNode.setVersion( vm.getVersion() );
+            }
         } else {
             return Optional.empty();
         }
 
         SubscrObjectTree resultNode = subscrObjectTreeRepository.saveAndFlush(editedNode);
-        entityManager.refresh(editedNode.getParent());
+        if (editedNode.getParent() != null) {
+            entityManager.refresh(editedNode.getParent());
+        }
 
         return Optional.ofNullable(subscrObjectTreeMapper.toVMShort(resultNode));
     }

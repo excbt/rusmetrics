@@ -8,9 +8,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 @Injectable()
 export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree> implements OnDestroy {
 
-    private selectedNodeIdSubject = new BehaviorSubject<number>(null);
+    private currentObjectTreeIdSubject = new BehaviorSubject<number>(null);
 
-    public selectedNodeId$ = this.selectedNodeIdSubject.asObservable();
+    public currentObjectTreeId$ = this.currentObjectTreeIdSubject.asObservable();
 
     private treeTypeSuffix1 = 'contObjectTreeType1/';
 
@@ -26,11 +26,11 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
     }
 
     ngOnDestroy() {
-        this.selectedNodeIdSubject.complete();
+        this.currentObjectTreeIdSubject.complete();
     }
 
     public selectNode(id: number) {
-        this.selectedNodeIdSubject.next(id);
+        this.currentObjectTreeIdSubject.next(id);
     }
 
     getContObjectType1(id: number): Observable<SubscrObjectTree> {
