@@ -5,9 +5,17 @@ import { excSlideInDownAnimation } from '../exc-animations';
 
 @Component({
   selector: 'jhi-exc-form-template',
-  templateUrl: `./exc-form-template.component.html`,
+  template: `
+    <div>
+      <ng-content></ng-content>
+    </div>`,
   animations: [ excSlideInDownAnimation ],
-  styleUrls: ['./exc-form-template.component.scss']
+  styles: [`
+    :host {
+      display: flex;
+      padding: 0%;
+      width: 100%;
+    }`]
 })
 export class ExcFormTemplateComponent {
   @HostBinding('@routeAnimation') routeAnimation = true;

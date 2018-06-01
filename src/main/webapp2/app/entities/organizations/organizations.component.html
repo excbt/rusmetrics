@@ -1,251 +1,245 @@
 <jhi-exc-form-template>
     <!-- <jhi-form-search></jhi-form-search>     -->
 
-    <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscrTitle" 
-        [createEnabled]="true" [propertiesEnabled]="true" [reportEnabled]="true"
-        (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
+    <jhi-exc-list-form-menu *ngIf="subscriberMode" headerKey="organizations.subscrTitle" [createEnabled]="true" [propertiesEnabled]="true"
+        [reportEnabled]="true" (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 
-    <jhi-exc-list-form-menu *ngIf="!subscriberMode" headerKey="organizations.masterTitle" 
-        [createEnabled]="false" [propertiesEnabled]="true" [reportEnabled]="true"
-        (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
+    <jhi-exc-list-form-menu *ngIf="!subscriberMode" headerKey="organizations.masterTitle" [createEnabled]="false" [propertiesEnabled]="true"
+        [reportEnabled]="true" (createAction)="navigateNew()" (propertiesAction)="navigateEdit()">
     </jhi-exc-list-form-menu>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-        <mat-progress-bar  color="primary" mode="indeterminate">
+        <mat-progress-bar color="primary" mode="indeterminate">
         </mat-progress-bar>
     </div>
 
+    <div class="exc-data-frame">
 
-    <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
-        matSortDisableClear>
+        <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
-        <ng-container matColumnDef="edit">
-            <mat-header-cell *matHeaderCellDef class="edit-column-width">
-                <mat-header-cell *matHeaderCellDef class="organization-header edit-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
-                </mat-checkbox>
-            </mat-header-cell>
-            <mat-cell *matCellDef="let organization" class="edit-column-width">
-                <button mat-button (click)="editNavigate(organization.id)">
-                    <mat-icon>edit</mat-icon>
-                </button>
-            </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="edit">
+                <mat-header-cell *matHeaderCellDef class="edit-column-width">
+                    <mat-header-cell *matHeaderCellDef class="organization-header edit-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+                    </mat-checkbox>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let organization" class="edit-column-width">
+                    <button mat-button (click)="editNavigate(organization.id)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="select" >
-            <mat-header-cell *matHeaderCellDef class="select-column-width">
-                <!-- <mat-checkbox 
+            <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef class="select-column-width">
+                    <!-- <mat-checkbox 
                     (change)="$event ? selection.clear() : null"
                     [checked]="!selection.isEmpty()"
                     [indeterminate]="!selection.isEmpty()"
                     >
                 </mat-checkbox> -->
-            </mat-header-cell>     
-            <mat-cell *matCellDef="let row" class="select-column-width">
-                <mat-checkbox 
-                    color="primary"
-                    (click)="$event.stopPropagation()"
-                    (change)="$event ? selection.toggle(row) : null"
-                    [checked]="selection.isSelected(row)">
-                </mat-checkbox>
-            </mat-cell>               
-        </ng-container>
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row" class="select-column-width">
+                    <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null" [checked]="selection.isSelected(row)">
+                    </mat-checkbox>
+                </mat-cell>
+            </ng-container>
 
-        <ng-container matColumnDef="id">
-            <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization" class="id-column-width"> {{organization.id}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="organizationName">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.organizationName}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="organizationFullName">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationFullName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.organizationFullName}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="organizationFullAddress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationFullAddress' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.organizationFullAddress}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="exCode">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.exCode' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.exCode}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="exSystem">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.exSystem' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.exSystem}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="flagRso">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagRso' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.flagRso}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="flagManagement">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagManagement' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.flagManagement}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="flagRma">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagRma' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.flagRma}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="keyname">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.keyname' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.keyname}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="isDevMode">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.isDevMode' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.isDevMode}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="flagCm">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagCm' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.flagCm}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="organizationDescription">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationDescription' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.organizationDescription}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="isCommon">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.isCommon' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.isCommon}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="rmaSubscriberId">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.rmaSubscriberId' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.rmaSubscriberId}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="flagServ">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagServ' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.flagServ}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="inn">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.inn' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.inn}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="kpp">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.kpp' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.kpp}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="okpo">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.okpo' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.okpo}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="ogrn">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.ogrn' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.ogrn}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="legalAddress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.legalAddress' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.legalAddress}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="factAddress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.factAddress' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.factAddress}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="postAddress">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.postAddress' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.postAddress}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="reqAccount">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqAccount' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.reqAccount}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="reqBankName">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqBankName' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.reqBankName}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="reqCorrAccount">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqCorrAccount' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.reqCorrAccount}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="reqBik">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqBik' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.reqBik}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="contactPhone">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.contactPhone}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="contactPhone2">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone2' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.contactPhone2}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="contactPhone3">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone3' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.contactPhone3}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="contactEmail">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactEmail' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.contactEmail}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="siteUrl">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.siteUrl' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.siteUrl}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="directorFio">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.directorFio' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.directorFio}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="chiefAccountantFio">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.chiefAccountantFio' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.chiefAccountantFio}} </mat-cell>
-        </ng-container>
-        
-        <ng-container matColumnDef="organizationTypeId">
-            <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationTypeId' | translate}} </mat-header-cell>
-            <mat-cell *matCellDef="let organization"> {{organization.organizationTypeId}} </mat-cell>
-        </ng-container>
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization" class="id-column-width"> {{organization.id}} </mat-cell>
+            </ng-container>
 
-        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
-    </mat-table>
+            <ng-container matColumnDef="organizationName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.organizationName}} </mat-cell>
+            </ng-container>
 
-    <mat-paginator [length]="totalElements" [pageSize]="pageSize"
-                   [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+            <ng-container matColumnDef="organizationFullName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationFullName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.organizationFullName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="organizationFullAddress">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationFullAddress' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.organizationFullAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="exCode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.exCode' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.exCode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="exSystem">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.exSystem' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.exSystem}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="flagRso">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagRso' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.flagRso}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="flagManagement">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagManagement' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.flagManagement}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="flagRma">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagRma' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.flagRma}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="keyname">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.keyname' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.keyname}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="isDevMode">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.isDevMode' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.isDevMode}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="flagCm">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagCm' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.flagCm}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="organizationDescription">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationDescription' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.organizationDescription}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="isCommon">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.isCommon' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.isCommon}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="rmaSubscriberId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.rmaSubscriberId' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.rmaSubscriberId}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="flagServ">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.flagServ' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.flagServ}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="inn">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.inn' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.inn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="kpp">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.kpp' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.kpp}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="okpo">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.okpo' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.okpo}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="ogrn">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.ogrn' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.ogrn}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="legalAddress">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.legalAddress' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.legalAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="factAddress">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.factAddress' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.factAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="postAddress">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.postAddress' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.postAddress}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reqAccount">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqAccount' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.reqAccount}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reqBankName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqBankName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.reqBankName}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reqCorrAccount">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqCorrAccount' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.reqCorrAccount}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="reqBik">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.reqBik' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.reqBik}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contactPhone">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.contactPhone}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contactPhone2">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone2' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.contactPhone2}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contactPhone3">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactPhone3' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.contactPhone3}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="contactEmail">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.contactEmail' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.contactEmail}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="siteUrl">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.siteUrl' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.siteUrl}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="directorFio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.directorFio' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.directorFio}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="chiefAccountantFio">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.chiefAccountantFio' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.chiefAccountantFio}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="organizationTypeId">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'organization.organizationTypeId' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let organization"> {{organization.organizationTypeId}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+        </mat-table>
+
+        <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
 
 
-    <!-- Navigation -->
-    <div>
+        <!-- Navigation -->
+        <div>
 
-        <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
-            icon="fa-arrow-left" routerLink="/classifiers"></button>
-    
-        <button *ngIf="subscriberMode" pButton type="button" label="{{'organizations.masterTitle' | translate}}" class="ui-button-info" 
-            icon="fa-arrow-ban" routerLink="/organizations"></button>
+            <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" icon="fa-arrow-left"
+                routerLink="/classifiers"></button>
 
-        <button *ngIf="!subscriberMode" pButton type="button" label="{{'organizations.subscrTitle' | translate}}" class="ui-button-info" 
-            icon="fa-arrow-ban" routerLink="/subscr/organizations"></button>
-    
+            <button *ngIf="subscriberMode" pButton type="button" label="{{'organizations.masterTitle' | translate}}" class="ui-button-info"
+                icon="fa-arrow-ban" routerLink="/organizations"></button>
+
+            <button *ngIf="!subscriberMode" pButton type="button" label="{{'organizations.subscrTitle' | translate}}" class="ui-button-info"
+                icon="fa-arrow-ban" routerLink="/subscr/organizations"></button>
+
+        </div>
     </div>
-                                                       
+
 </jhi-exc-form-template>

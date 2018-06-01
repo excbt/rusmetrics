@@ -6,7 +6,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { Subscription } from 'rxjs';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
-import { Principal } from '../../shared';
 
 @Component({
   selector: 'jhi-organizations',
@@ -24,7 +23,6 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
   subscriberMode: boolean;
 
   constructor(private organizationService: OrganizationsService,
-              private principal: Principal,
               router: Router,
               activatedRoute: ActivatedRoute) {
     super({modificationEventName: organizationModification},
@@ -51,7 +49,7 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
 
   navigateEdit() {
 
-    const superAdminMode = this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN']);
+    const superAdminMode =  false; // this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN']);
 
     if (!this.selection.isEmpty()) {
       if (this.subscriberMode || superAdminMode) {
