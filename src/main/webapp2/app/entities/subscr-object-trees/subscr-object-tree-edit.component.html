@@ -17,11 +17,11 @@
         <span class="buttonSpacer"></span>
     </div>
     <div toolbar-right>
-        <button *ngIf="selectedNode?.data.parentId" mat-icon-button color="warn">
-            <mat-icon mat-list-icon (click)="deleteNode(selectedNode.data)">delete</mat-icon>
+        <button *ngIf="selectedNode && !selectedNode?.data.parentId" mat-icon-button color="warn" (click)="confirmTreeDelete()">
+                <mat-icon mat-list-icon >delete</mat-icon>
         </button>
-        <button *ngIf="!selectedNode?.data.parentId" mat-icon-button color="warn">
-            <mat-icon mat-list-icon >delete</mat-icon>
+        <button *ngIf="selectedNode && selectedNode?.data.parentId" mat-icon-button color="warn" (click)="confirmNodeDelete()">
+            <mat-icon mat-list-icon>delete</mat-icon>
         </button>
     </div>
 </jhi-exc-toolbar>
@@ -30,11 +30,21 @@
     <!--  -->
     <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
         <ng-template let-node="rowData" pTemplate="body">
-            {{node.data.objectName}}
+            <span [ngClass]="{'propertyDisabled': node?.data?.parentId && node?.data?.isLinkDeny}">{{node.data.objectName}}</span>
         </ng-template>
     </p-column>
 
 </p-treeTable>
+
+<p-confirmDialog *ngIf="selectedNode"
+    header="{{ ( (!selectedNode.data?.parentId) ? 'subscrObjectTree.captions.deleteDialog.titleTree' : 'subscrObjectTree.captions.deleteDialog.titleNode') | translate}}" 
+    message="{{'subscrObjectTree.captions.deleteDialog.confirmation' | translate}}" icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="{{'subscrObjectTree.captions.deleteDialog.no' | translate}}" class="ui-button-secondary" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="{{'subscrObjectTree.captions.deleteDialog.yes' | translate}}" class="ui-button-warning" (click)="cd.accept()"></button>
+    </p-footer>    
+</p-confirmDialog>
+
 
 <p-overlayPanel #opAddNodeDialog [appendTo]="'body'">
     <!-- <span>{{'subscrObjectTree.newObject' | translate}}</span> -->

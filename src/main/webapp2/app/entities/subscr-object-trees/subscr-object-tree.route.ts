@@ -6,7 +6,7 @@ export const subscrObjectTreeManageRoute: Route = {
     path: 'subscr-object-trees-manage',
     component: SubscrObjectTreeManageComponent,
     data: {
-        pageTitle: 'subscrObjectTree.title'
+        pageTitle: 'subscrObjectTree.captions.title'
     },
     canActivate: [UserRouteAccessService]
 };

@@ -1,5 +1,5 @@
 <p-overlayPanel #op appendTo="body">
-    <span>{{'subscrObjectTree.newObject' | translate}}</span>
+    <span>{{'subscrObjectTree.captions.newObject' | translate}}</span>
     <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNew()" [(ngModel)]="newItemName">
     <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNew()"></button>
     <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelNew()"></button>

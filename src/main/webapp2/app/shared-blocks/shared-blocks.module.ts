@@ -46,6 +46,8 @@ import { ContextMenuModule } from 'primeng/contextmenu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
@@ -81,6 +83,7 @@ import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
       ContextMenuModule,
       ScrollPanelModule,
       TableModule,
+      ConfirmDialogModule,
       // 3rd party modules
       AngularSplitModule
   ],
@@ -135,6 +138,7 @@ import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
     MenubarModule,
     ScrollPanelModule,
     TableModule,
+    ConfirmDialogModule,
     // 3rd party modules
     AngularSplitModule
   ]

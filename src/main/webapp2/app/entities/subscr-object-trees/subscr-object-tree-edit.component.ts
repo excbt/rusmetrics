@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { SubscrObjectTreeService } from './subscr-object-tree.service';
-import { TreeNode } from 'primeng/api';
+import { TreeNode, ConfirmationService } from 'primeng/api';
 import {
     SubscrObjectTree,
     SubscrObjectTreeVM,
@@ -13,6 +13,7 @@ import { DEFAULT_RESIZE_TIME } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'jhi-subscr-object-tree-edit',
+    providers: [ConfirmationService],
     templateUrl: './subscr-object-tree-edit.component.html',
     styleUrls: ['./subscr-object-tree-edit.component.scss']
 })
@@ -37,7 +38,8 @@ export class SubscrObjectTreeEditComponent implements OnDestroy {
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
-        private eventManager: JhiEventManager
+        private eventManager: JhiEventManager,
+        private confirmationService: ConfirmationService
     ) {
         this.subscrObjectTreeService.currentObjectTreeId$.subscribe((id) => {
             if (id !== this.rootNodeId) {
@@ -123,13 +125,13 @@ export class SubscrObjectTreeEditComponent implements OnDestroy {
         };
         this.dialogHeaderKey =
             mode === 'child'
-                ? 'subscrObjectTree.childActionTitle'
-                : 'subscrObjectTree.siblingsActionTitle';
+                ? 'subscrObjectTree.captions.childActionTitle'
+                : 'subscrObjectTree.captions.siblingsActionTitle';
         overlaypanel.toggle(event);
     }
 
     editNodeDialog(event, overlaypanel: OverlayPanel, node: SubscrObjectTree) {
-        this.dialogHeaderKey = 'subscrObjectTree.renameTitle';
+        this.dialogHeaderKey = 'subscrObjectTree.captions.renameTitle';
         this.currentObjectTreeNode = Object.assign({}, node);
         overlaypanel.toggle(event);
     }
@@ -192,6 +194,45 @@ export class SubscrObjectTreeEditComponent implements OnDestroy {
             this.subscrObjectTreeService
                 .deleteTreeNodeNode({ id: node.id })
                 .subscribe((data) => this.loadData(this.rootNodeId));
+        }
+    }
+
+    deleteTree(node: SubscrObjectTree) {
+        this.currentObjectTreeNode = null;
+        if (node && node.id) {
+            this.subscrObjectTreeService
+                .deleteTreeNodeNode({ id: node.id })
+                .subscribe((data) => {
+                        this.eventManager.broadcast({name: SubscrObjectTreeModificationEvent, id: null});
+                        this.objectTree = [];
+                        this.selectedNode = null;
+                    });
+        }
+    }
+
+    confirmNodeDelete() {
+        if (this.selectedNode) {
+            this.confirmationService.confirm({
+                message: null,
+                accept: () => {
+                    this.deleteNode(this.selectedNode.data);
+                },
+                reject: () => {
+                }
+            });
+        }
+    }
+
+    confirmTreeDelete() {
+        if (this.selectedNode) {
+            this.confirmationService.confirm({
+                message: null,
+                accept: () => {
+                    this.deleteTree(this.selectedNode.data);
+                },
+                reject: () => {
+                }
+            });
         }
     }
 }
