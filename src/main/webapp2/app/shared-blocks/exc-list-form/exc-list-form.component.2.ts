@@ -16,7 +16,7 @@ import {
 } from 'rxjs/operators';
 import { ExcListDatasourceProvider, ExcListFormParams } from './exc-list-form.params';
 
-export abstract class ExcListFormComponent2<T> implements OnInit, OnDestroy, AfterViewInit {
+export abstract class ExcListForm2Component<T> implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;

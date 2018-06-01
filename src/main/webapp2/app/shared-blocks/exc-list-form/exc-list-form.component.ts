@@ -131,4 +131,8 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     this.router.navigate([this.router.url, entityId, 'edit']);
   }
 
+  highlightRowId(data) {
+    this.selectedRowIndex = data.id;
+    this.selectedRowData = data;
+  }
 }

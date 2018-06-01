@@ -1,6 +1,11 @@
 <jhi-exc-form-template>
     <jhi-exc-list-form-menu headerKey="deviceModel.listTitle">
     </jhi-exc-list-form-menu>
+    <jhi-exc-toolbar>
+        <div toolbar-right>
+            <jhi-exc-search-input></jhi-exc-search-input>
+        </div>
+    </jhi-exc-toolbar>
 
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
         <mat-progress-bar color="primary" mode="indeterminate">
@@ -72,9 +77,7 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"
-                [ngClass]="{'exc-mat-table-row-highlight': selectedRowIndex == row.id}" 
-                (click)="highlightRow(row)"></mat-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
 
         </mat-table>
 

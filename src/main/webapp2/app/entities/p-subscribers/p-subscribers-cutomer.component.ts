@@ -13,7 +13,7 @@ import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc
 })
 export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['select', 'id', 'subscriberName', 'organizationInn', 'organizationName'];
+    displayedColumns = ['id', 'subscriberName', 'organizationInn', 'organizationName'];
 
     subscriberMode = 'NORMAL';
 
@@ -30,8 +30,8 @@ export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscri
     }
 
     navigateEdit() {
-        if (!this.selection.isEmpty()) {
-          this.router.navigate(['customers', this.selection.selected[0].id, 'edit']);
+        if (this.selectedRowIndex) {
+          this.router.navigate(['customers', this.selectedRowIndex, 'edit']);
         }
     }
 

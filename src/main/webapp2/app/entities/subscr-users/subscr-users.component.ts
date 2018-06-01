@@ -13,7 +13,7 @@ import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc
 })
 export class SubscrUsersComponent extends ExcListFormComponent<SubscrUser> implements OnDestroy {
 
-    displayedColumns = ['select', 'id', 'userName'];
+    displayedColumns = ['id', 'userName'];
 
     constructor(
         private subscrUserService: SubscrUserService,
@@ -28,10 +28,10 @@ export class SubscrUsersComponent extends ExcListFormComponent<SubscrUser> imple
     }
 
     navigateEdit() {
-        if (!this.selection.isEmpty()) {
+        if (this.selectedRowIndex) {
             // this.router.navigate([this.router.url, entityId, 'edit']);
             // console.log('route:' + ['subscr-users', this.selection.selected[0].id, 'edit']);
-            this.router.navigate(['subscr-users', this.selection.selected[0].id, 'edit']);
+            this.router.navigate(['subscr-users', this.selectedRowIndex, 'edit']);
             // super.navigateEdit(this.selection.selected[0].id);
         }
       }

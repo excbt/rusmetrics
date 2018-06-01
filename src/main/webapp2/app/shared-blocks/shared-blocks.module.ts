@@ -113,6 +113,7 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     ExcToolbarComponent,
+    ExcSearchInputComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,
