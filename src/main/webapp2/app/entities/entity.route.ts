@@ -12,6 +12,7 @@ import { subscrUsersRoute, subscrUserEditRoute } from './subscr-users/subscr-use
 import { subscrAccessDashboardRoute, subscrAccessManageRoute } from './subscr-access/subscr-access.route';
 import { UserRouteAccessService } from '../shared';
 import { deviceModelsRoute } from './device-models/device-model.route';
+import { subscrObjectTreeManageRoute } from './subscr-object-trees/subscr-object-tree.route';
 
 const ENTITY_ROUTES = [
     organizationsRoute,
@@ -28,7 +29,8 @@ const ENTITY_ROUTES = [
     subscrUserEditRoute,
     subscrAccessDashboardRoute,
     subscrAccessManageRoute,
-    deviceModelsRoute
+    deviceModelsRoute,
+    subscrObjectTreeManageRoute
 ];
 
 export const entityState: Routes = [{

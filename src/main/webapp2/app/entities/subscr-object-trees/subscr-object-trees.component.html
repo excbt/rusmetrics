@@ -1,0 +1,59 @@
+<p-overlayPanel #op appendTo="body">
+    <span>{{'subscrObjectTree.captions.newObject' | translate}}</span>
+    <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNew()" [(ngModel)]="newItemName">
+    <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNew()"></button>
+    <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelNew()"></button>
+</p-overlayPanel>
+<jhi-exc-toolbar>
+    <div toolbar-left>
+        <button mat-icon-button (click)="op.show($event, actualTarget)">
+            <mat-icon mat-list-icon>add</mat-icon>
+        </button>
+    </div>
+    <input toolbar-right class="search-input" type="text" pInputText #searchString>
+    <button toolbar-right mat-icon-button (click)="refreshData()">
+        <mat-icon mat-list-icon>refresh</mat-icon>
+    </button>
+
+</jhi-exc-toolbar>
+<div #actualTarget></div>
+<div class="spinner-container" *ngIf="dataSource.loading$ | async">
+    <mat-progress-bar color="primary" mode="indeterminate">
+    </mat-progress-bar>
+</div>
+
+<p-table [value]="subscrObjectTreeData" selectionMode="single" [(selection)]="selectedRow" (onRowSelect)="selectRow($event)">
+    <ng-template pTemplate="header">
+        <tr>
+            <!-- <th> {{'global.field.id' | translate}} </th> -->
+            <th> {{'subscrObjectTree.objectName' | translate}}</th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData>
+        <tr [pSelectableRow]="rowData">
+            <!-- <td>{{rowData.id}}</td> -->
+            <td>{{rowData.objectName}}</td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<!-- 
+        
+        
+        <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header > {{'global.field.id' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscrObjectTree" > {{subscrObjectTree.id}} </mat-cell>
+            </ng-container>
+            
+            <ng-container matColumnDef="objectName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrObjectTree.objectName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let subscrObjectTree"> {{subscrObjectTree.objectName}} </mat-cell>
+            </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+            
+        </mat-table> -->
+
+<mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>

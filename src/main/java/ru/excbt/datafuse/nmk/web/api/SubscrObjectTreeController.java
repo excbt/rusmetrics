@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -26,6 +27,10 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * User SubscrObjectTreeResource. It will be deleted
+ */
+@Deprecated
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrObjectTreeController extends AbstractSubscrApiResource {
@@ -72,7 +77,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 *
 	 */
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class ObjectNameHolder {
+	public static class ObjectNameVM {
 		private String objectName;
 
 		private Long templateId;
@@ -218,7 +223,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.POST,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
-			@RequestBody ObjectNameHolder requestBody, HttpServletRequest request) {
+                                                    @RequestBody ObjectNameVM requestBody, HttpServletRequest request) {
 
 		checkNotNull(requestBody);
 

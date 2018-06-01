@@ -7,7 +7,7 @@ export const subscrAccessDashboardRoute: Route = {
     path: 'subscr-access-dashboard',
     component: SubscrAccessDashboardComponent,
     data: {
-        pageTitle: 'subscrUsers.main.title',
+        pageTitle: 'global.menu.subscrAccessDashboard.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
     },
     canActivate: [UserRouteAccessService]
@@ -17,7 +17,7 @@ export const subscrAccessManageRoute: Route = {
     path: 'subscr-access-manage',
     component: SubscrAccessManageComponent,
     data: {
-        pageTitle: 'subscrUsers.main.title',
+        pageTitle: 'global.menu.subscrAccessDashboard.subscrAccessManage.title',
         authorities: ['ROLE_SUBSCR_ADMIN', 'ROLE_ADMIN']
     },
     canActivate: [UserRouteAccessService]

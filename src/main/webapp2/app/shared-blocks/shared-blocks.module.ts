@@ -45,6 +45,12 @@ import { TreeTableModule } from 'primeng/treetable';
 import { ContextMenuModule } from 'primeng/contextmenu';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
+import { TableModule } from 'primeng/table';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+
+// 3rd Party Modules
+import { AngularSplitModule } from 'angular-split';
+import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
 
 @NgModule({
   imports: [
@@ -74,7 +80,11 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
       AutoCompleteModule,
       TreeTableModule,
       ContextMenuModule,
-      ScrollPanelModule
+      ScrollPanelModule,
+      TableModule,
+      ConfirmDialogModule,
+      // 3rd party modules
+      AngularSplitModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -83,7 +93,8 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     ExcTopHeaderComponent,
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
-    ExcSearchFieldComponent
+    ExcSearchFieldComponent,
+    ExcToolbarComponent
   ],
   entryComponents: [
   ],
@@ -98,7 +109,9 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
+    ExcToolbarComponent,
     // NG Material module
+    MatToolbarModule,
     MatGridListModule,
     MatInputModule,
     MatPaginatorModule,
@@ -122,7 +135,11 @@ import { ScrollPanelModule } from 'primeng/scrollpanel';
     CardModule,
     InputTextModule,
     MenubarModule,
-    ScrollPanelModule
+    ScrollPanelModule,
+    TableModule,
+    ConfirmDialogModule,
+    // 3rd party modules
+    AngularSplitModule
   ]
 })
 export class PortalSharedBlocksModule {}

@@ -36,7 +36,7 @@ matSortDisableClear>
 </ng-container>
 
 <ng-container matColumnDef="userName">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userName' | translate}} </mat-header-cell>
+<mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userName' | translate}} </mat-header-cell>
     <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userName}} </mat-cell>
 </ng-container>
 
@@ -100,10 +100,8 @@ matSortDisableClear>
 [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
 
 <div>
-    
     <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
-    icon="fa-arrow-left" routerLink="/subscr-access"></button>
-    
+    icon="fa-arrow-left" routerLink="/subscr-access-dashboard"></button>
 </div>
 
 

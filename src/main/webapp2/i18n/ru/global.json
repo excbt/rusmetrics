@@ -47,8 +47,11 @@
             "operator": {
                 "title": "Оператор"
             },
-            "subscrAccess": {
-                "title": "Управление доступом"
+            "subscrAccessDashboard": {
+                "title": "Управление доступом",
+                "subscrAccessManage": {
+                    "title": "Подписка на объекты"
+                }
             },
             "settings": {
                 "title": "Настройки"

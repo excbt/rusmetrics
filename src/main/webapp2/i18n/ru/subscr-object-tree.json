@@ -1,0 +1,42 @@
+{
+    "subscrObjectTree": {
+        "captions": {
+            "title": "Иерархии",
+            "search": "Поиск",
+            "newObject": "Новый элемент",
+            "actionTitle": "Действия",
+            "nodeProperties": "Свойства узла",
+            "siblingsActionTitle": "Добавить узел",
+            "addActionTitle": "Добавить дочерний узел",
+            "childActionTitle": "Добавить дочерний узел",
+            "editActionTitle": "Редактирование узла",
+            "renameTitle": "Переименовать",
+            "addSibling": "Добавить",
+            "addChild": "Добавить",
+            "deleteDialog": {
+                "title": "Удаление узла",
+                "titleTree": "Удаление иерархии",
+                "titleNode": "Удаление узла",
+                "confirmation": "Вы дейстивтельно хотите продолжить?",
+                "yes": "Да",
+                "no": "Нет"
+            }
+        },
+        "id": "id",
+        "parentId": "parentId",
+        "rmaSubscriberId": "rmaSubscriberId",
+        "subscriberId": "subscriberId",
+        "isRma": "isRma",
+        "objectTreeType": "objectTreeType",
+        "objectName": "Имя иерархии",
+        "nodeName": "Имя узла",
+        "objectDescription": "objectDescription",
+        "objectComemnt": "objectComemnt",
+        "devComment": "devComment",
+        "templateId": "templateId",
+        "templateItemId": "templateItemId",
+        "isLinkDeny": "Запретить привязку объектов",
+        "isSingleObject": "Только один объект",
+        "treeMode": "treeMode"        
+    }
+}
