@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
+import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { SubscrUser } from './subscr-user.model';
 import { SubscrUserService } from './subscr-user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { SubscrUserDataSource } from './subscr-user.datasource';
+import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.params';
 
 @Component({
     selector: 'jhi-subscr-users',

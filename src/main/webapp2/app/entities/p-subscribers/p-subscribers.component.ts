@@ -1,10 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
+import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PSubscriberService } from './p-subscriber.service';
 import { PSubscriberDataSource } from './p-subscriber.datasource';
 import { Subscription } from 'rxjs';
+import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.params';
 
 @Component({
     selector: 'jhi-p-subscribers',

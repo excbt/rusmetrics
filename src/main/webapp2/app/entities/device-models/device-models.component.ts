@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
+import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { DeviceModel } from './device-model.model';
 import { DeviceModelService } from './device-model.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DeviceModelDataSource } from './device-model.datasource';
+import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.params';
 
 @Component({
     selector: 'jhi-device-models',

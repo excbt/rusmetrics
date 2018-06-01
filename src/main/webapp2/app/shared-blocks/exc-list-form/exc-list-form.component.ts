@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
+import { OnInit, OnDestroy, ViewChild, AfterViewInit, EventEmitter } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
@@ -7,6 +7,7 @@ import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagina
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
 import { ExcListFormMenuComponent } from '..';
 import {
@@ -16,16 +17,7 @@ import {
   tap
   // , delay
 } from 'rxjs/operators';
-
-export interface ExcListDatasourceProvider<T> {
-  getDataSource: () => ExcAbstractPageDataSource<T>;
-}
-
-export interface ExcListFormParams {
-  modificationEventName?: string;
-  onSaveUrl?: string;
-  onDeleteUrl?: string;
-}
+import { ExcListDatasourceProvider, ExcListFormParams } from './exc-list-form.params';
 
 export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, AfterViewInit {
 
@@ -34,6 +26,9 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
   selection: SelectionModel<T>;
+
+  selectedRowData: T;
+  selectedRowIndex: number = -1;
 
   private routeDataSubscription: Subscription;
   // private routeUrlSubscription: Subscription;
@@ -79,14 +74,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   ngAfterViewInit() {
     // server side search
     if (this.formMenu && this.formMenu.searchAction) {
-      this.formMenu.searchAction.pipe(
-        distinctUntilChanged(),
-        tap((arg) => {
-          this.searchString = arg;
-          this.paginator.pageIndex = 0;
-          this.loadList(arg);
-        })
-      ).subscribe();
+      this.registerSearchEvent(this.formMenu.searchAction.asObservable());
     }
 
     // reset the paginator after sorting
@@ -96,10 +84,24 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     merge(this.sort.sortChange, this.paginator.page).pipe(
           tap(() => {
             this.loadList();
-            console.log('from change');
+            this.selectedRowIndex = null;
+            this.selectedRowData = null;
           })
       ).subscribe();
 
+  }
+
+  registerSearchEvent(event: Observable<string>) {
+      if (event) {
+        event.pipe(
+          distinctUntilChanged(),
+          tap((arg) => {
+            this.searchString = arg;
+            this.paginator.pageIndex = 0;
+            this.loadList(arg);
+          })
+        ).subscribe();
+      }
   }
 
   ngOnDestroy() {
