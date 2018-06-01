@@ -9,7 +9,6 @@ import {
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { JhiEventManager } from 'ng-jhipster';
 import { Subscription } from 'rxjs';
-import { DEFAULT_RESIZE_TIME } from '@angular/cdk/scrolling';
 
 @Component({
     selector: 'jhi-subscr-object-tree-edit',

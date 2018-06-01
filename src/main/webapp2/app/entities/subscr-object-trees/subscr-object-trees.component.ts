@@ -1,19 +1,15 @@
 import { Component, OnInit, ElementRef, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
-import { Router, ActivatedRoute } from '@angular/router';
 import { SubscrObjectTree, SubscrObjectTreeModificationEvent } from './subscr-object-tree.model';
 import { SubscrObjectTreeService } from './subscr-object-tree.service';
 import { SubscrObjectTreeDataSource } from './subscr-object-tree.datasource';
-import { TreeNode } from 'primeng/api';
-import { ExcPageSize, ExcPageSorting, defaultPageSize, defaultPageSizeOptions } from '../../shared-blocks';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { FormControl } from '@angular/forms';
 import { JhiEventManager } from 'ng-jhipster';
 import { Observable, Subscription } from 'rxjs';
 import { merge } from 'rxjs/observable/merge';
 import { tap } from 'rxjs/operators';
-import { MatSort, MatPaginator } from '@angular/material';
+import { MatPaginator } from '@angular/material';
 import { ExcSearchToolService } from '../../shared-blocks/exc-tools/exc-search-tool-service';
+import { defaultPageSizeOptions, defaultPageSize, ExcPageSize, ExcPageSorting } from '../../shared-blocks';
 
 @Component({
     selector: 'jhi-subscr-object-trees',
@@ -50,9 +46,7 @@ export class SubscrObjectTreesComponent implements OnInit, OnDestroy, AfterViewI
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
-        private eventManager: JhiEventManager,
-        private router: Router,
-        private activatedRoute: ActivatedRoute
+        private eventManager: JhiEventManager
     ) {
         this.dataSource = new SubscrObjectTreeDataSource(this.subscrObjectTreeService);
         this.modelSubjectSubsribe();

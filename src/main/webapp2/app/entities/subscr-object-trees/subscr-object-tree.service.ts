@@ -1,5 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { ExcAbstractService, ServiceParams, defaultPageSuffix } from '../../shared-blocks/exc-tools/exc-abstract-service';
+import { ExcAbstractService, defaultPageSuffix } from '../../shared-blocks/exc-tools/exc-abstract-service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SubscrObjectTree, SubscrObjectTreeVM } from './subscr-object-tree.model';
 import { ExcPage, ExcPageParams } from '../../shared-blocks';
