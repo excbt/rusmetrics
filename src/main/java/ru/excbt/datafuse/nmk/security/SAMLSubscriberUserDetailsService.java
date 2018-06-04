@@ -31,7 +31,8 @@ import ru.excbt.datafuse.nmk.data.service.SystemUserService;
  *
  */
 @Service
-public class SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
+public class
+SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SAMLSubscriberUserDetailsService.class);
 
