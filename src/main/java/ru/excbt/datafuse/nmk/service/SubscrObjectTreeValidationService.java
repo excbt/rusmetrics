@@ -21,20 +21,20 @@ public class SubscrObjectTreeValidationService {
         this.subscrObjectTreeRepository = subscrObjectTreeRepository;
     }
 
-    /**
-     *
-     * @param subscriberParam
-     * @param subscrObjectTreeId
-     */
-    @Transactional( readOnly = true)
-    public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-
-        if (!checkValidSubscriberOk(subscriberParam, subscrObjectTreeId)) {
-            throw new PersistenceException(
-                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
-        }
-
-    }
+//    /**
+//     *
+//     * @param subscriberParam
+//     * @param subscrObjectTreeId
+//     */
+//    @Transactional( readOnly = true)
+//    public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
+//
+//        if (!checkValidSubscriberOk(subscriberParam, subscrObjectTreeId)) {
+//            throw new PersistenceException(
+//                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
+//        }
+//
+//    }
 
     @Transactional( readOnly = true)
     public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
@@ -52,6 +52,7 @@ public class SubscrObjectTreeValidationService {
      * @param subscrObjectTreeId
      * @return
      */
+    @Deprecated
     @Transactional( readOnly = true)
     public boolean checkValidSubscriberOk(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
         Objects.requireNonNull(portalUserIds);
@@ -63,6 +64,18 @@ public class SubscrObjectTreeValidationService {
         return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
 
     }
+
+    @Transactional( readOnly = true)
+    public boolean checkValidSubscriberOk_new(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+        Objects.requireNonNull(portalUserIds);
+        Objects.requireNonNull(subscrObjectTreeId);
+
+        Long checkTreeSubscriberId = selectSubscriberId(subscrObjectTreeId);
+
+        return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
+
+    }
+
 
     private Long selectRmaSubscriberId(final Long subscrObjectTreeId) {
         List<Long> ids = subscrObjectTreeRepository.selectRmaSubscriberIds(subscrObjectTreeId);

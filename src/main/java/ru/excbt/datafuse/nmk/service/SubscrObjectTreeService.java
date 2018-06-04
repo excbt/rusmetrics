@@ -21,10 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.QSubscrObjectTree;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
-import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
@@ -40,6 +37,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 
 @Service
@@ -781,7 +779,6 @@ public class SubscrObjectTreeService {
 
     @Transactional
     public Optional<SubscrObjectTreeVM> addSubscrObjectTreeNode(SubscrObjectTreeVM vm,
-                                                                ObjectTreeTypeKeyname objectTreeType,
                                                                 PortalUserIds portalUserIds,
                                                                 Long subscriberId,
                                                                 String addMode) {
@@ -878,5 +875,39 @@ public class SubscrObjectTreeService {
 
         return Optional.ofNullable(subscrObjectTreeMapper.toVMShort(resultNode));
     }
+
+    @Transactional
+    public boolean addContObjectsToNode(Long subsrObjectTreeId,
+                                        Long nodeId,
+                                     PortalUserIds portalUserIds,
+                                     Long subscriberId,
+                                     SubscrObjectTreeDataVM dataVM) {
+
+	    if (dataVM == null || dataVM.getContObjectIds() == null) {
+	        return false;
+        }
+
+        if (dataVM.getContObjectIds().isEmpty()) {
+	        return true;
+        }
+
+        List<Long> existingContObjectIds = subscrObjectTreeContObjectService
+            .selectTreeContObjectIdsAllLevels_new(portalUserIds, nodeId);
+
+	    long checkCount = dataVM.getContObjectIds().stream().filter(existingContObjectIds::equals).count();
+
+	    if (checkCount > 0) {
+            throw new PersistenceException(
+                String.format("Twice link ContObjects for subscrObjectTreeId(%d) is not allowed", nodeId));
+        }
+
+        subscrObjectTreeContObjectService.addTreeContObjects(portalUserIds, nodeId,
+            dataVM.getContObjectIds());
+
+        return true;
+
+    }
+
+
 
 }

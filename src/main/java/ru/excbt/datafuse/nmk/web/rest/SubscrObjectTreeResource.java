@@ -11,12 +11,13 @@ import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
 import ru.excbt.datafuse.nmk.service.vm.ContObjectShortInfoVM;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
-
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/subscr-object-trees")
@@ -156,7 +157,7 @@ public class SubscrObjectTreeResource {
         Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
 
         Optional<SubscrObjectTreeVM> resultTree = subscrObjectTreeVM.getId() == null
-            ? subscrObjectTreeService.addSubscrObjectTreeNode(subscrObjectTreeVM, checkTreeType.get(), portalUserIdsService.getCurrentIds(), subscriberId, addMode)
+            ? subscrObjectTreeService.addSubscrObjectTreeNode(subscrObjectTreeVM, portalUserIdsService.getCurrentIds(), subscriberId, addMode)
             : subscrObjectTreeService.updateSubscrObjectTreeNode(subscrObjectTreeVM, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
 
         return resultTree.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build()) ;
@@ -185,5 +186,35 @@ public class SubscrObjectTreeResource {
 
         return Optional.ofNullable(treeType);
     }
+
+    @PutMapping(value = "/{objectTreeType}/add-cont-objects")
+    public ResponseEntity<?> putObjectTreeAddContObjects(@PathVariable("objectTreeType") String objectTreeType,
+                                                         @RequestParam(value = "rootNodeId") Long subscrObjectTreeId,
+                                                         @RequestParam(value = "nodeId") Long nodeId,
+                                                         @RequestBody SubscrObjectTreeDataVM dataVM) {
+        Optional<ObjectTreeTypeKeyname> checkTreeType = checkTreeType((objectTreeType));
+        if (!checkTreeType.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        subscrObjectTreeService.addContObjectsToNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(value = "/{objectTreeType}/remove-cont-objects")
+    public ResponseEntity<?> putObjectTreeRemoveContObjects(@PathVariable("objectTreeType") String objectTreeType,
+                                                         @RequestParam(value = "rootNodeId") Long subscrObjectTreeId,
+                                                         @RequestParam(value = "nodeId") Long nodeId,
+                                                         @RequestBody SubscrObjectTreeDataVM dataVM) {
+        Optional<ObjectTreeTypeKeyname> checkTreeType = checkTreeType((objectTreeType));
+        if (!checkTreeType.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        subscrObjectTreeService.addContObjectsToNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

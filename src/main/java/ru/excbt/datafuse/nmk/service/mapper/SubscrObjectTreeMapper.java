@@ -27,6 +27,7 @@ public interface SubscrObjectTreeMapper {
     @Mapping(target = "deleted", ignore = true)
     void updateTreeFromVM (@MappingTarget SubscrObjectTree subscrObjectTree, SubscrObjectTreeVM vm);
 
+    SubscrObjectTreeVM toVM(SubscrObjectTreeDTO subscrObjectTree);
 
     SubscrObjectTree toEntity(SubscrObjectTreeVM vm);
 }

@@ -7,17 +7,24 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.data.service.util.EntityAutomation;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscriberAccessService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrObjectTreeMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
@@ -26,6 +33,8 @@ import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
@@ -49,6 +58,12 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
     private MockMvcRestWrapper mockMvcRestWrapper;
     @Autowired
     private ContObjectService contObjectService;
+
+    @Autowired
+    private SubscrObjectTreeMapper subscrObjectTreeMapper;
+
+    @Autowired
+    private SubscriberAccessService subscriberAccessService;
 
     @Before
     public void setUp() throws Exception {
@@ -128,7 +143,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         newNode1.setObjectName("Child Node 1");
 
 
-        Optional<SubscrObjectTreeVM> child1Result = subscrObjectTreeService.addSubscrObjectTreeNode(newNode1, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(),"child");
+        Optional<SubscrObjectTreeVM> child1Result = subscrObjectTreeService.addSubscrObjectTreeNode(newNode1, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(),"child");
 
         assertTrue(child1Result.isPresent());
 
@@ -147,12 +162,9 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
     public void putSubscrObjectTreeNodeUpdate() throws Exception {
 
         ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1;
+        Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
 
-        String newTreeName = "My Test Node Tree";
-        Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
-            .addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
-
-        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeVM parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -161,7 +173,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         newNode1.setObjectName("Child Node 1");
 
 
-        Optional<SubscrObjectTreeVM> child1Result = subscrObjectTreeService.addSubscrObjectTreeNode(newNode1, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(),"child");
+        Optional<SubscrObjectTreeVM> child1Result = subscrObjectTreeService.addSubscrObjectTreeNode(newNode1, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(),"child");
 
         SubscrObjectTreeVM editedNode = child1Result.get();
         editedNode.setObjectName("Edited Object Name");
@@ -179,4 +191,58 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects").testGet();
     }
 
+    /**
+     *
+     * @return
+     */
+    private Optional<SubscrObjectTreeVM> createTestObjectTree() {
+        ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1;
+
+        String newTreeName = "My Test Node Tree";
+        Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
+            .addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+        return resultTree.map(subscrObjectTreeMapper::toVM);
+    }
+
+    private Optional<SubscrObjectTreeVM> createChildNode(SubscrObjectTreeVM parentNode) {
+        SubscrObjectTreeVM newNode1 = new SubscrObjectTreeVM();
+        newNode1.setParentId(parentNode.getId());
+        newNode1.setObjectName("Child Node 1 " + System.currentTimeMillis());
+        Optional<SubscrObjectTreeVM> child1Result = subscrObjectTreeService.addSubscrObjectTreeNode(newNode1, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(),"child");
+        return child1Result;
+    }
+
+    private Subscriber testSubscriber() {
+        return new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void testPut() throws Exception {
+        Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
+        assertTrue(resultTree.isPresent());
+        Optional<SubscrObjectTreeVM> childNode = createChildNode(resultTree.get());
+        assertTrue(childNode.isPresent());
+
+        ContObject contObject = EntityAutomation.createContObject("New Cont Object", contObjectService, portalUserIdsService.getCurrentIds());
+
+        subscriberAccessService.grantContObjectAccess(contObject, testSubscriber());
+
+        SubscrObjectTreeDataVM dataVM = new SubscrObjectTreeDataVM().addIds(contObject.getId());
+
+        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/add-cont-objects")
+            .requestBuilder(b -> b.param("rootNodeId", resultTree.get().getId().toString())
+                                .param("nodeId", childNode.get().getId().toString()))
+            .testPut(dataVM);
+
+        restPortalMockMvc.perform(get("/api/subscr-object-trees/contObjectTreeType1/add-cont-objects")
+            .param("rootNodeId", resultTree.get().getId().toString())
+            .param("nodeId", childNode.get().getId().toString())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().is4xxClientError());
+
+
+    }
 }
