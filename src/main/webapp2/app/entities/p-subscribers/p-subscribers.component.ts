@@ -45,10 +45,9 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> imp
     }
 
     navigateEdit() {
-        if (!this.selection.isEmpty()) {
-
-          this.router.navigate([this.subscriberMode === 'NORMAL' ? 'customers' : 'partners', this.selection.selected[0].id, 'edit']);
+        if (this.selectedRowIndex) {
+          this.router.navigate([this.subscriberMode === 'NORMAL' ? 'customers' : 'partners', this.selectedRowIndex, 'edit']);
         }
-      }
+    }
 
 }

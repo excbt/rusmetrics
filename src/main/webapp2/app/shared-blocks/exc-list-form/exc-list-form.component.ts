@@ -5,7 +5,6 @@ import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
 import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
@@ -24,8 +23,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
-
-  selection: SelectionModel<T>;
 
   selectedRowData: T;
   selectedRowIndex: number = -1;
@@ -49,7 +46,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   ) {
       const initialSelection = [];
       const allowMultiSelect = false;
-      this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
 
       this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {

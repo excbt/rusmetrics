@@ -35,4 +35,8 @@ export class PSubscribersCustomerComponent extends ExcListFormComponent<PSubscri
         }
     }
 
+    navigateBack() {
+        this.router.navigate(['partner-dashboard']);
+    }
+
 }

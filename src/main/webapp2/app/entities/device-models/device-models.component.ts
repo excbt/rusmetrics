@@ -27,9 +27,4 @@ export class DeviceModelsComponent extends ExcListFormComponent<DeviceModel> {
         return {getDataSource: () => new DeviceModelDataSource(this.deviceModelService)};
     }
 
-    highlightRow(data) {
-        this.selectedRowIndex = data.id;
-        this.selectedRowData = data;
-    }
-
 }
