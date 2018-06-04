@@ -32,7 +32,7 @@
 
             <ng-container matColumnDef="select">
                 <mat-header-cell *matHeaderCellDef class="select-column-width">
-                    <!-- <mat-checkbox 
+                    <!-- <mat-checkbox  
                     (change)="$event ? selection.clear() : null"
                     [checked]="!selection.isEmpty()"
                     [indeterminate]="!selection.isEmpty()"
@@ -221,7 +221,9 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" 
+                [ngClass]="{'exc-mat-table-row-highlight': selectedRowIndex == row.id}" class="cell-table" 
+                (click)="highlightRow(row)"></mat-row>
         </mat-table>
 
         <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>

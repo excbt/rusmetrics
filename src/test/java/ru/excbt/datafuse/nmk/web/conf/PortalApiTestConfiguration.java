@@ -11,14 +11,13 @@ import org.springframework.boot.autoconfigure.admin.SpringApplicationAdminJmxAut
 import org.springframework.boot.autoconfigure.data.rest.RepositoryRestMvcAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ActiveProfiles;
-import ru.excbt.datafuse.nmk.config.AsyncConfiguration;
-import ru.excbt.datafuse.nmk.config.Constants;
-import ru.excbt.datafuse.nmk.config.DefaultProfileUtil;
-import ru.excbt.datafuse.nmk.config.PortalProperties;
+import ru.excbt.datafuse.nmk.config.*;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
@@ -36,11 +35,13 @@ import java.util.Collection;
  */
 @EnableAutoConfiguration(exclude = {
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class})
-@ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config"},
+@ComponentScan(basePackages = {"ru.excbt.datafuse.nmk.config", "ru.excbt.datafuse.nmk.security"},
     excludeFilters = {
     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
         value = {
-            AsyncConfiguration.class
+            AsyncConfiguration.class,
+            MetricsConfiguration.class,
+            CacheConfiguration.class
         })
 })
 @EnableConfigurationProperties({PortalProperties.class})
@@ -51,6 +52,9 @@ public class PortalApiTestConfiguration {
 
 	@Inject
 	private Environment env;
+
+	@MockBean
+	private CacheManager cacheManager;
 
 	/**
 	 * Initializes PortalApplication.

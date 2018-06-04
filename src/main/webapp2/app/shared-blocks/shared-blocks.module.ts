@@ -51,6 +51,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
 import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
+import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.component';
 
 @NgModule({
   imports: [
@@ -94,7 +95,8 @@ import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
     ExcListFormMenuComponent,
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
-    ExcToolbarComponent
+    ExcToolbarComponent,
+    ExcSearchInputComponent
   ],
   entryComponents: [
   ],
@@ -102,6 +104,7 @@ import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
+    ExcSearchInputComponent,
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
@@ -110,6 +113,7 @@ import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     ExcToolbarComponent,
+    ExcSearchInputComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,

@@ -8,29 +8,22 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
-import { ExcListFormMenuComponent } from '..';
 import {
-  // debounceTime,
   distinctUntilChanged,
-  // startWith,
   tap
-  // , delay
 } from 'rxjs/operators';
 import { ExcListDatasourceProvider, ExcListFormParams } from './exc-list-form.params';
 
-export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, AfterViewInit {
+export abstract class ExcListForm2Component<T> implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
   selectedRowData: T;
   selectedRowIndex: number = -1;
 
   private routeDataSubscription: Subscription;
-  // private routeUrlSubscription: Subscription;
 
-  // routeUrlSergments: UrlSegment[];
   dataSource: ExcAbstractPageDataSource<T>;
 
   public searchString: String;
@@ -38,6 +31,8 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   totalElements: number;
   pageSize = defaultPageSize;
   pageSizeOptions = defaultPageSizeOptions;
+
+  private rowSelectionSubscription: Subscription;
 
   constructor(
     readonly params: ExcListFormParams,
@@ -66,9 +61,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   ngAfterViewInit() {
     // server side search
-    if (this.formMenu && this.formMenu.searchAction) {
-      this.registerSearchEvent(this.formMenu.searchAction.asObservable());
-    }
 
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
@@ -86,7 +78,10 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   registerSearchEvent(event: Observable<string>) {
       if (event) {
-        event.pipe(
+        if (this.rowSelectionSubscription) {
+          this.rowSelectionSubscription.unsubscribe();
+        }
+        this.rowSelectionSubscription = event.pipe(
           distinctUntilChanged(),
           tap((arg) => {
             this.searchString = arg;
@@ -99,6 +94,9 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
 
   ngOnDestroy() {
     this.routeDataSubscription.unsubscribe();
+    if (this.rowSelectionSubscription) {
+      this.rowSelectionSubscription.unsubscribe();
+    }
     // this.routeUrlSubscription.unsubscribe();
   }
 
@@ -107,6 +105,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   loadList(search?: string) {
+    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
     const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     this.dataSource.findPage ({pageSorting: sorting, pageSize: pSize, searchString: search});
@@ -124,8 +123,4 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     this.router.navigate([this.router.url, entityId, 'edit']);
   }
 
-  highlightRowId(data) {
-    this.selectedRowIndex = data.id;
-    this.selectedRowData = data;
-  }
 }

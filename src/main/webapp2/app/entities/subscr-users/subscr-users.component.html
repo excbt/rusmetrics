@@ -93,7 +93,9 @@ matSortDisableClear>
 </ng-container>
 
 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-<mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+<mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"
+    [ngClass]="{'exc-mat-table-row-highlight': selectedRowIndex === row.id}" 
+    (click)="highlightRowId(row)"></mat-row>
 
 </mat-table>     
 

@@ -5,6 +5,6 @@ export const operatorDashboardRoute: Route = {
     path: 'operator-dashboard',
     component: OperatorDashboardComponent,
     data: {
-        pageTitle: 'classifiers.title'
+        pageTitle: 'global.menu.operator.dashboard.title'
     }
 };

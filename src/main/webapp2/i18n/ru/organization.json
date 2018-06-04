@@ -1,8 +1,8 @@
 {
     "organizations": {
         "title": "Организации",
-        "subscrTitle": "Мои организации",
-        "masterTitle": "Все организации",
+        "subscrTitle": "Локальный справочник",
+        "masterTitle": "Мастер справочник",
         "one": {
             "id": "Код",
             "name": "Название"

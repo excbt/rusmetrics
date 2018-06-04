@@ -1,7 +1,11 @@
 {
     "subscrObjectTree": {
+        "widget": {
+            "title": "Управление иерархиями"
+        },
         "captions": {
             "title": "Иерархии",
+            "listTitle": "Иерархии",
             "search": "Поиск",
             "newObject": "Новый элемент",
             "actionTitle": "Действия",
