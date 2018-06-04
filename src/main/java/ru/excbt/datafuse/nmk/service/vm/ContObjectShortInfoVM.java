@@ -18,5 +18,7 @@ public class ContObjectShortInfoVM {
 
     private String buildingTypeCategory;
 
+    private String contObjectFullAddress;
+
 
 }
