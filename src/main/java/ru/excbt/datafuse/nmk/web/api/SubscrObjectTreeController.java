@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeValidationService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -40,6 +41,8 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
     private final SubscrObjectTreeService subscrObjectTreeService;
 
+    private final SubscrObjectTreeValidationService subscrObjectTreeValidationService;
+
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
     private final SubscrContEventNotificationService subscrContEventNotificationService;
@@ -54,12 +57,13 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	@Autowired
     public SubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
-                                      SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
+                                      SubscrObjectTreeValidationService subscrObjectTreeValidationService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
                                       SubscrContEventNotificationService subscrContEventNotificationService,
                                       SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
                                       SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
                                       ContObjectService contObjectService, ObjectAccessService objectAccessService) {
         this.subscrObjectTreeService = subscrObjectTreeService;
+        this.subscrObjectTreeValidationService = subscrObjectTreeValidationService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
@@ -479,7 +483,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	private ResponseEntity<?> checkSubscriberResponse(final Long subscrObjectTreeId) {
 
 		Long rmaSubscriberId = getRmaSubscriberId();
-		if (!subscrObjectTreeService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
+		if (!subscrObjectTreeValidationService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
 		}
 		return null;

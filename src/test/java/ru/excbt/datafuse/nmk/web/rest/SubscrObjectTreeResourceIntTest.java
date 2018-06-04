@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
+import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
@@ -46,6 +47,8 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
     private SubscrObjectTreeResource subscrObjectTreeResource;
 
     private MockMvcRestWrapper mockMvcRestWrapper;
+    @Autowired
+    private ContObjectService contObjectService;
 
     @Before
     public void setUp() throws Exception {
@@ -53,7 +56,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscrObjectTreeResource = new SubscrObjectTreeResource(subscrObjectTreeService, portalUserIdsService);
+        subscrObjectTreeResource = new SubscrObjectTreeResource(subscrObjectTreeService, portalUserIdsService, contObjectService);
 
         this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrObjectTreeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

@@ -1061,7 +1061,7 @@ public class ContObjectService implements SecuredRoles {
 
     @Transactional( readOnly = true)
     public List<ContObjectDTO> mapToDTO(List<ContObject> contObjects) {
-        return contObjects.stream().map((i) -> contObjectMapper.toDto(i)).collect(Collectors.toList());
+        return contObjects.stream().map(contObjectMapper::toDto).collect(Collectors.toList());
     }
 
     @Transactional( readOnly = true)
@@ -1073,7 +1073,7 @@ public class ContObjectService implements SecuredRoles {
     @Transactional(readOnly = true)
     public List<ContObjectShortInfoVM> findShortInfo (PortalUserIds portalUserIds) {
 	    return contObjectAccessRepository.findAllContObjects(portalUserIds.getSubscriberId()).stream()
-            .map(i -> contObjectMapper.toShortInfoVM(i)).collect(Collectors.toList());
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
     }
 
 }
