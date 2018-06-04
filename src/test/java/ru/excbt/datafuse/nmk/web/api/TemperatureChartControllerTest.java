@@ -1,19 +1,17 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+
+import java.util.Date;
 
 @Transactional
 public class TemperatureChartControllerTest extends AnyControllerTest {
