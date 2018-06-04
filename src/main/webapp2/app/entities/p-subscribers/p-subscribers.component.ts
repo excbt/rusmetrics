@@ -50,4 +50,8 @@ export class PSubscribersComponent extends ExcListFormComponent<PSubscriber> imp
         }
     }
 
+    navigateBack() {
+        this.router.navigate(['']);
+    }
+
 }

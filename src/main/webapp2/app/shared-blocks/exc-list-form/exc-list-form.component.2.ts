@@ -1,15 +1,13 @@
-import { OnInit, OnDestroy, ViewChild, AfterViewInit, EventEmitter } from '@angular/core';
+import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
 import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
 import { Observable } from 'rxjs/Observable';
 import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
-import { ExcListFormMenuComponent } from '..';
 import {
   distinctUntilChanged,
   tap
@@ -41,9 +39,6 @@ export abstract class ExcListForm2Component<T> implements OnInit, OnDestroy, Aft
     readonly router: Router,
     readonly activatedRoute: ActivatedRoute,
   ) {
-      const initialSelection = [];
-      const allowMultiSelect = false;
-
       this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;

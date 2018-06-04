@@ -1,4 +1,4 @@
-import { OnInit, OnDestroy, ViewChild, AfterViewInit, EventEmitter } from '@angular/core';
+import { OnInit, OnDestroy, ViewChild, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { MatPaginator } from '@angular/material/paginator';
 import { merge } from 'rxjs/observable/merge';
@@ -44,9 +44,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     readonly router: Router,
     readonly activatedRoute: ActivatedRoute,
   ) {
-      const initialSelection = [];
-      const allowMultiSelect = false;
-
       this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;

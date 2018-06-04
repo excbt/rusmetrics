@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ElementRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ElementRef, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import { ExcSearchToolService } from '../exc-tools/exc-search-tool-service';
 
