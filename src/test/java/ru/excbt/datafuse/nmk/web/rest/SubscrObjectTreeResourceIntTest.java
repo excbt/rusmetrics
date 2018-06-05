@@ -34,6 +34,7 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -220,7 +221,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
      *
      */
     @Test
-    public void testPut() throws Exception {
+    public void testPutAdd() throws Exception {
         Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
         assertTrue(resultTree.isPresent());
         Optional<SubscrObjectTreeVM> childNode = createChildNode(resultTree.get());
@@ -237,11 +238,40 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
                                 .param("nodeId", childNode.get().getId().toString()))
             .testPut(dataVM);
 
-        restPortalMockMvc.perform(get("/api/subscr-object-trees/contObjectTreeType1/add-cont-objects")
+        restPortalMockMvc.perform(put("/api/subscr-object-trees/contObjectTreeType1/add-cont-objects")
             .param("rootNodeId", resultTree.get().getId().toString())
             .param("nodeId", childNode.get().getId().toString())
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dataVM))
             .accept(MediaType.APPLICATION_JSON))
-            .andExpect(status().is4xxClientError());
+            .andExpect(status().is2xxSuccessful());
+
+
+    }
+
+
+    @Test
+    public void testPutRemove() throws Exception {
+        Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
+        assertTrue(resultTree.isPresent());
+        Optional<SubscrObjectTreeVM> childNode = createChildNode(resultTree.get());
+        assertTrue(childNode.isPresent());
+
+        ContObject contObject = EntityAutomation.createContObject("New Cont Object", contObjectService, portalUserIdsService.getCurrentIds());
+
+        subscriberAccessService.grantContObjectAccess(contObject, testSubscriber());
+
+        SubscrObjectTreeDataVM dataVM = new SubscrObjectTreeDataVM().addIds(contObject.getId());
+
+        subscrObjectTreeService.addContObjectsToNode(resultTree.get().getId(), childNode.get().getId(), portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+
+        restPortalMockMvc.perform(put("/api/subscr-object-trees/contObjectTreeType1/remove-cont-objects")
+            .param("rootNodeId", resultTree.get().getId().toString())
+            .param("nodeId", childNode.get().getId().toString())
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(dataVM))
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().is2xxSuccessful());
 
 
     }

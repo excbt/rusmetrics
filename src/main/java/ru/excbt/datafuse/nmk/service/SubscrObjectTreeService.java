@@ -11,10 +11,8 @@ import javax.persistence.PersistenceException;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +32,6 @@ import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrObjectTreeMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
-import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
@@ -891,6 +887,8 @@ public class SubscrObjectTreeService {
 	        return true;
         }
 
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subsrObjectTreeId);
+
         List<Long> existingContObjectIds = subscrObjectTreeContObjectService
             .selectTreeContObjectIdsAllLevels_new(portalUserIds, nodeId);
 
@@ -902,6 +900,30 @@ public class SubscrObjectTreeService {
         }
 
         subscrObjectTreeContObjectService.addTreeContObjects(portalUserIds, nodeId,
+            dataVM.getContObjectIds());
+
+        return true;
+
+    }
+
+    @Transactional
+    public boolean removeContObjectsFromNode(Long subsrObjectTreeId,
+                                        Long nodeId,
+                                     PortalUserIds portalUserIds,
+                                     Long subscriberId,
+                                     SubscrObjectTreeDataVM dataVM) {
+
+	    if (dataVM == null || dataVM.getContObjectIds() == null) {
+	        return false;
+        }
+
+        if (dataVM.getContObjectIds().isEmpty()) {
+	        return true;
+        }
+
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subsrObjectTreeId);
+
+        subscrObjectTreeContObjectService.removeTreeContObjects(portalUserIds, nodeId,
             dataVM.getContObjectIds());
 
         return true;

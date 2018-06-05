@@ -197,8 +197,8 @@ public class SubscrObjectTreeResource {
             return ResponseEntity.badRequest().build();
         }
 
-        subscrObjectTreeService.addContObjectsToNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
-        return ResponseEntity.ok().build();
+        boolean result = subscrObjectTreeService.addContObjectsToNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+        return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
     @PutMapping(value = "/{objectTreeType}/remove-cont-objects")
@@ -211,8 +211,8 @@ public class SubscrObjectTreeResource {
             return ResponseEntity.badRequest().build();
         }
 
-        subscrObjectTreeService.addContObjectsToNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
-        return ResponseEntity.ok().build();
+        boolean result = subscrObjectTreeService.removeContObjectsFromNode(subscrObjectTreeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+        return result ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 
 

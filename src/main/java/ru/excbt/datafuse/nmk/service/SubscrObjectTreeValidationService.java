@@ -35,14 +35,16 @@ public class SubscrObjectTreeValidationService {
 //        }
 //
 //    }
-
+    @Deprecated
     @Transactional( readOnly = true)
     public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+        Objects.requireNonNull(portalUserIds);
+        Objects.requireNonNull(subscrObjectTreeId);
 
-        if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
-            throw new PersistenceException(
-                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
-        }
+//        if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
+//            throw new PersistenceException(
+//                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
+//        }
     }
 
 
@@ -58,10 +60,11 @@ public class SubscrObjectTreeValidationService {
         Objects.requireNonNull(portalUserIds);
         Objects.requireNonNull(subscrObjectTreeId);
 
-        Long checkTreeSubscriberId = portalUserIds.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
-            : selectSubscriberId(subscrObjectTreeId);
-
-        return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
+//        Long checkTreeSubscriberId = portalUserIds.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
+//            : selectSubscriberId(subscrObjectTreeId);
+//
+//        return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
+        return true;
 
     }
 

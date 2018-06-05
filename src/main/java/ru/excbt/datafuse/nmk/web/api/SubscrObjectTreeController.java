@@ -462,7 +462,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 			@Override
 			public List<ContObjectMonitorDTO> processAndReturnResult() {
-				subscrObjectTreeContObjectService.deleteTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.removeTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
 
                 List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
