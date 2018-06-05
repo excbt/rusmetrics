@@ -172,6 +172,7 @@ public class SubscrObjectTreeContObjectService {
 		}
 
 		subscrObjectTreeContObjectRepository.save(saveContObjects);
+        subscrObjectTreeContObjectRepository.flush();
 	}
 
     /**
@@ -199,6 +200,7 @@ public class SubscrObjectTreeContObjectService {
 		}
 
 		subscrObjectTreeContObjectRepository.delete(deleteContObjects);
+        subscrObjectTreeContObjectRepository.flush();
 	}
 
     /**

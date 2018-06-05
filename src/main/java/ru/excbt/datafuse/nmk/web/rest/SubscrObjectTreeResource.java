@@ -163,19 +163,41 @@ public class SubscrObjectTreeResource {
         return resultTree.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build()) ;
     }
 
+    public enum LinkFilter {
+        AVAILABLE,
+        LINKED
+    }
+
     @GetMapping("/{objectTreeType}/cont-objects")
     public ResponseEntity<?> getContObjectShortInfo(@PathVariable("objectTreeType") String objectTreeType,
-                                                    @RequestParam(name = "nodeId", required = false) Long nodeId) {
+                                                    @RequestParam(name = "rootNodeId", required = false) Long rootNodeId,
+                                                    @RequestParam(name = "nodeId", required = false) Long nodeId,
+                                                    @RequestParam(name = "linkFilter", required = false) LinkFilter linkFilter) {
 
         Optional<ObjectTreeTypeKeyname> checkTreeType = checkTreeType((objectTreeType));
         if (!checkTreeType.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
+        if (linkFilter == LinkFilter.LINKED) {
+
+            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(rootNodeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfoOnlyIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
+            return ResponseEntity.ok(shortInfoVMList);
+
+        } else if (linkFilter == LinkFilter.AVAILABLE) {
+
+            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(rootNodeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfoExceptIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
+            return ResponseEntity.ok(shortInfoVMList);
+
+        }
+
         List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfo(portalUserIdsService.getCurrentIds());
         return ResponseEntity.ok(shortInfoVMList);
-    }
 
+
+    }
 
     private Optional<ObjectTreeTypeKeyname> checkTreeType(String objectTreeType) {
         ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);

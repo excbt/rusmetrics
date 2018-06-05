@@ -187,9 +187,62 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/{id}", parent.getId()).testGet();
     }
 
+    private class TestTreeCreator {
+
+        private final SubscrObjectTreeVM root;
+        private final SubscrObjectTreeVM child1;
+
+        public TestTreeCreator() {
+
+            Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
+            assertTrue(resultTree.isPresent());
+            Optional<SubscrObjectTreeVM> childNode = createChildNode(resultTree.get());
+            assertTrue(childNode.isPresent());
+            ContObject contObject = EntityAutomation.createContObject("New Cont Object", contObjectService, portalUserIdsService.getCurrentIds());
+            subscriberAccessService.grantContObjectAccess(contObject, testSubscriber());
+            SubscrObjectTreeDataVM dataVM = new SubscrObjectTreeDataVM().addIds(contObject.getId());
+            subscrObjectTreeService.addContObjectsToNode(resultTree.get().getId(), childNode.get().getId(), portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId(), dataVM);
+
+            this.root = resultTree.get();
+            this.child1 = childNode.get();
+        }
+    }
+
+
     @Test
-    public void getContObjects() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects").testGet();
+    public void getContObjectsAll() throws Exception {
+        TestTreeCreator testTreeCreator = new TestTreeCreator();
+
+        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects")
+            .requestBuilder(b -> b
+                .param("rootNodeId", testTreeCreator.root.getId().toString())
+                .param("nodeId", testTreeCreator.child1.getId().toString()))
+            .testGet();
+    }
+
+    @Test
+    public void getContObjectsAvailable() throws Exception {
+
+        TestTreeCreator testTreeCreator = new TestTreeCreator();
+
+        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects")
+            .requestBuilder(b -> b.param("linkFilter", "AVAILABLE")
+                .param("rootNodeId", testTreeCreator.root.getId().toString())
+                .param("nodeId", testTreeCreator.child1.getId().toString()))
+            .testGet();
+    }
+
+    @Test
+    public void getContObjectsLinked() throws Exception {
+
+        TestTreeCreator testTreeCreator = new TestTreeCreator();
+
+        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects")
+            .requestBuilder(b -> b.param("linkFilter", "LINKED")
+                .param("rootNodeId", testTreeCreator.root.getId().toString())
+                .param("nodeId", testTreeCreator.child1.getId().toString())
+            )
+            .testGet();
     }
 
     /**

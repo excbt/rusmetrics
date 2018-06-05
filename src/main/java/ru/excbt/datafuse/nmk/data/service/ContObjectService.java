@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Tuple;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -1075,5 +1076,20 @@ public class ContObjectService implements SecuredRoles {
 	    return contObjectAccessRepository.findAllContObjects(portalUserIds.getSubscriberId()).stream()
             .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ContObjectShortInfoVM> findShortInfoExceptIds_access(PortalUserIds portalUserIds, List<Long> ids) {
+	    List<Long> checkIds = (ids == null || ids.isEmpty()) ? Arrays.asList(Long.MIN_VALUE) : ids;
+        return contObjectAccessRepository.findAllContObjectsExceptIds(portalUserIds.getSubscriberId(), checkIds).stream()
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContObjectShortInfoVM> findShortInfoOnlyIds_access(PortalUserIds portalUserIds, List<Long> ids) {
+        List<Long> checkIds = (ids == null || ids.isEmpty()) ? Arrays.asList(Long.MIN_VALUE) : ids;
+        return contObjectAccessRepository.findAllContObjectsOnlyIds(portalUserIds.getSubscriberId(), checkIds).stream()
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
+    }
+
 
 }
