@@ -84,7 +84,7 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
         return this.getContObjects(treeNodeVM, this.linkFilterLinked);
     }
 
-    putContObjectData(nodeVM: TreeNodeVM, data: TreeDataVM): Observable<any> {
+    putContObjectDataAdd(nodeVM: TreeNodeVM, data: TreeDataVM): Observable<any> {
         let reqParams = new HttpParams();
         if (nodeVM && nodeVM.rootNodeId) {
             reqParams = reqParams.set('rootNodeId', '' + nodeVM.rootNodeId);
@@ -93,6 +93,17 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
             reqParams = reqParams.set('nodeId', '' + nodeVM.nodeId);
         }
         return this.http.put<any>(this.resourceUrl + this.treeTypeSuffix1 + 'add-cont-objects', data, {params: reqParams});
+    }
+
+    putContObjectDataRemode(nodeVM: TreeNodeVM, data: TreeDataVM): Observable<any> {
+        let reqParams = new HttpParams();
+        if (nodeVM && nodeVM.rootNodeId) {
+            reqParams = reqParams.set('rootNodeId', '' + nodeVM.rootNodeId);
+        }
+        if (nodeVM && nodeVM.nodeId) {
+            reqParams = reqParams.set('nodeId', '' + nodeVM.nodeId);
+        }
+        return this.http.put<any>(this.resourceUrl + this.treeTypeSuffix1 + 'remove-cont-objects', data, {params: reqParams});
     }
 
 }

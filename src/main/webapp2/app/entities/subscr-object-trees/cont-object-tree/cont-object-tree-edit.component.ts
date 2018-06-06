@@ -72,11 +72,11 @@ export class ContObjectTreeEditComponent implements OnInit {
               )
             : [];
 
-        const treeNode = new NodeData('TREE_NODE', objectTree);
+        const optionalData: OptionalNodeData = {dataType: 'TREE_NODE', subscrNode: objectTree};
 
         const result: TreeNode = {
             label: objectTree.objectName,
-            data: treeNode,
+            data: optionalData,
             children: childrenList,
             expanded: true
         };
@@ -95,30 +95,57 @@ export class ContObjectTreeEditComponent implements OnInit {
     }
 
     dragFromTreeStart(event, node: TreeNode) {
-        if (node.data && node.data.type && node.data.type === 'CONT_OBJECT') {
-            console.log('Drag From Tree: ' + JSON.stringify(node.data) + ' parent nodeId: ' + node.parent.data.content.id);
+        if (node.data && node.data.dataType && node.data.dataType === 'CONT_OBJECT') {
+            console.log('Drag From Tree: ' + JSON.stringify(node.data) + ' parent nodeId: ' + node.parent.data.subscrNode.id);
             this.draggableNode = node;
         }
     }
 
     dropToTree(event, destNode: TreeNode) {
-        if (destNode.data.content.type = 'TREE_NODE') {
-            console.log('nodeId: ' + JSON.stringify(destNode.data.content.id));
+        if (destNode.data.subscrNode.type = 'TREE_NODE') {
+            console.log('nodeId: ' + JSON.stringify(destNode.data.subscrNode.id));
             const rId = this.currentTree.id;
-            const nId = destNode.data.content.id;
+            const nId = destNode.data.subscrNode.id;
             const objId = this.draggableContObject.contObjectId;
-            this.subscrObjectTreeService.putContObjectData(
+            this.subscrObjectTreeService.putContObjectDataAdd(
                 {rootNodeId: rId, nodeId: nId},
                 {contObjectIds: [objId]})
                 .subscribe(() => {
                     this.addDraggableToNode(destNode);
-                    this.removeContObject(objId);
+                    this.removeContObjectFromAvailable(objId);
+                });
+        } else {
+            this.draggableNode = null;
+        }
+    }
+
+    dropFromTree(event) {
+        if (this.draggableNode && this.draggableNode.parent) {
+            const rId = this.currentTree.id;
+            const nId = this.draggableNode.parent.data.subscrNode.id;
+            const objId = this.draggableNode.data.contObject.contObjectId;
+            this.subscrObjectTreeService.putContObjectDataAdd(
+                {rootNodeId: rId, nodeId: nId},
+                {contObjectIds: [objId]})
+                .subscribe(() => {
+                    this.removeDraggabeFromNode(this.draggableNode);
+                    this.addContObjectToAvailable(this.draggableNode.data.contObject);
                 });
         }
     }
 
-    removeContObject(id: number) {
+    removeContObjectFromAvailable(id: number) {
         this.availableContObjects = this.availableContObjects.filter((d) => d.contObjectId !== id);
+    }
+
+    addContObjectToAvailable(contObject: ContObjectShortVM) {
+        if (contObject) {
+            const co = Object.assign({}, contObject);
+            this.availableContObjects.push(co);
+            this.availableContObjects.sort( (a, b) => {
+                return a.uiCaption.toLocaleLowerCase().localeCompare(b.uiCaption.toLocaleLowerCase());
+            });
+        }
     }
 
     addDraggableToNode(destNode: TreeNode) {
@@ -127,12 +154,15 @@ export class ContObjectTreeEditComponent implements OnInit {
         destNode.children.push(newNode);
     }
 
+    removeDraggabeFromNode(srcNode: TreeNode) {
+        srcNode.parent.children = srcNode.parent.children
+            .filter((node) => node.data.dataType === 'CONT_OBJECT' && node.data.contObject.contObjectId !== srcNode.data.contObject.contObjectId);
+    }
+
     loadContObjectData(destNode: TreeNode) {
-        console.log('Load Data Action');
-        if ((destNode.data.nodeType === 'TREE_NODE') && !destNode.data.content.isLinkDeny) {
-            this.subscrObjectTreeService.getContObjectsLinked({rootNodeId: this.currentTree.id, nodeId: destNode.data.content.id})
+        if ((destNode.data.dataType === 'TREE_NODE') && !destNode.data.subscrNode.isLinkDeny) {
+            this.subscrObjectTreeService.getContObjectsLinked({rootNodeId: this.currentTree.id, nodeId: destNode.data.subscrNode.id})
             .subscribe((data) => {
-                console.log('loaded ' + data.length + ' items');
                 const treeNodes = data.map((co) => this.convertContObjectVMToTreeNode(co));
                 treeNodes.forEach((n) => destNode.children.push(n));
             });
@@ -141,11 +171,11 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     convertContObjectVMToTreeNode(contObjectVM: ContObjectShortVM): TreeNode {
 
-        const treeNode = new NodeData('CONT_OBJECT', contObjectVM);
+        const optionalData: OptionalNodeData = {dataType: 'CONT_OBJECT', contObject: contObjectVM};
 
         const newNode: TreeNode = {
             label: contObjectVM.uiCaption,
-            data: treeNode,
+            data: optionalData,
             icon: 'exc-icon-building-default-16',
             expanded: false
         };
@@ -154,15 +184,8 @@ export class ContObjectTreeEditComponent implements OnInit {
 
 }
 
-export class NodeData {
-    constructor(
-        readonly nodeType: string,
-        readonly content: SubscrObjectTree | ContObjectShortVM
-    ) {}
-}
-
 export interface OptionalNodeData {
-    nodeType: string;
-    objectTree?: SubscrObjectTree;
+    dataType: string;
+    subscrNode?: SubscrObjectTree;
     contObject?: ContObjectShortVM;
 }
