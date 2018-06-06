@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,6 +78,16 @@ public class SubscrObjectTreeResource {
         }
 
         List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(checkTreeType.get(), portalUserIdsService.getCurrentIds());
+        return ResponseEntity.ok(result);
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping(value = "")
+    public ResponseEntity<?> getSubscrObjectTreeListAll() {
+        List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(null, portalUserIdsService.getCurrentIds());
         return ResponseEntity.ok(result);
     }
 
@@ -174,26 +185,38 @@ public class SubscrObjectTreeResource {
                                                     @RequestParam(name = "nodeId", required = false) Long nodeId,
                                                     @RequestParam(name = "linkFilter", required = false) LinkFilter linkFilter) {
 
+        Long searchNodeId;
+
+        if (nodeId != null) {
+            searchNodeId = nodeId;
+        } else {
+            searchNodeId = rootNodeId;
+        }
+
         Optional<ObjectTreeTypeKeyname> checkTreeType = checkTreeType((objectTreeType));
         if (!checkTreeType.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
-        if (linkFilter == LinkFilter.LINKED) {
+        List<ContObjectShortInfoVM> shortInfoVMList;
+        if (linkFilter == LinkFilter.LINKED && searchNodeId != null) {
 
-            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(rootNodeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
-            List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfoOnlyIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
-            return ResponseEntity.ok(shortInfoVMList);
+            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            shortInfoVMList = contObjectService.findShortInfoOnlyIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
 
-        } else if (linkFilter == LinkFilter.AVAILABLE) {
+        } else if (linkFilter == LinkFilter.AVAILABLE && searchNodeId != null) {
 
-            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(rootNodeId, nodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
-            List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfoExceptIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
-            return ResponseEntity.ok(shortInfoVMList);
+            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            shortInfoVMList = contObjectService.findShortInfoExceptIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
 
+        } else {
+            shortInfoVMList = contObjectService.findShortInfo(portalUserIdsService.getCurrentIds());
         }
 
-        List<ContObjectShortInfoVM> shortInfoVMList = contObjectService.findShortInfo(portalUserIdsService.getCurrentIds());
+        if (shortInfoVMList != null) {
+            Comparator<ContObjectShortInfoVM> vmComparator = Comparator.comparing(ContObjectShortInfoVM::getNameSortingKey, Comparator.nullsLast(Comparator.naturalOrder()));
+            shortInfoVMList.sort(vmComparator);
+        }
         return ResponseEntity.ok(shortInfoVMList);
 
 

@@ -1,0 +1,63 @@
+<split direction="horizontal">
+    <split-area size="25">
+        <div>
+            <jhi-exc-toolbar>
+            </jhi-exc-toolbar>
+            <p-dropdown [options]="treeList" [(ngModel)]="selectedTreeShort" optionLabel="objectName" [style]="{'width':'100%'}" (onChange)="treeChange($event)"></p-dropdown>
+
+            <p-treeTable [value]="objectTree" >
+                <!--  -->
+                <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
+                    <ng-template let-node="rowData" pTemplate="body">
+                        <!-- Cont Objects -->
+                        <i *ngIf="node?.data?.nodeType === 'CONT_OBJECT'" class="exc-icon-building-default-16"></i>
+                        <span *ngIf="node?.data?.nodeType === 'CONT_OBJECT'" 
+                        [ngClass]="{'contObjectNode': node.data.nodeType === 'CONT_OBJECT'}" pDraggable="fromTree" 
+                            (onDragStart)="dragFromTreeStart($event, node)">
+                                {{node.label}}</span>
+
+                        <!-- Tree Nodes -->
+                        <i *ngIf="node?.data?.nodeType === 'TREE_NODE'" class="fa fa-folder" 
+                            [ngClass]="{'propertyDisabled': node?.data?.content?.isLinkDeny, 'propertyRoot': !node?.data?.content?.parentId}"></i>
+
+                        <!-- Root & isLinkDeny === true -->
+                        <span *ngIf="node?.data?.nodeType === 'TREE_NODE' && (!node?.data?.content?.parentId || node?.data?.content?.isLinkDeny)" 
+                            [ngClass]="{'propertyDisabled': node?.data?.content?.parentId, 'propertyRoot': !node?.data?.content?.parentId}">
+                            {{node.label}}</span>
+
+                        <!-- Children & isLinkDeny === false -->
+                        <span *ngIf="node?.data?.nodeType === 'TREE_NODE' && (node?.data?.content?.parentId && !node?.data?.content?.isLinkDeny)" 
+                            pDroppable="toTree" [ngClass]="{'propertyDisabled': false}" (onDrop)="dropToTree($event, node)" >
+                            
+                            {{node.label}}</span>
+                        
+                    </ng-template>
+                </p-column>
+
+            </p-treeTable>
+        </div>
+    </split-area>
+    <split-area size="75">
+        <div>
+            <jhi-exc-toolbar>
+            </jhi-exc-toolbar>
+
+            <h2>Cont Objects</h2>
+            <p-table [value]="availableContObjects" pDroppable="fromTree">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <!-- <th> {{'global.field.id' | translate}} </th> -->
+                        <th> {{'subscrObjectTree.objectName' | translate}}</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowData>
+                    <tr pDraggable="toTree" (onDragStart)="dragToTreeStart($event, rowData)">
+                        <!-- <td>{{rowData.id}}</td> -->
+                        <td>{{ rowData.uiCaption }}</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+
+        </div>
+    </split-area>
+</split>

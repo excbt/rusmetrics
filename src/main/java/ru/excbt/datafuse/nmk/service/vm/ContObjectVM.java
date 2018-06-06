@@ -58,4 +58,5 @@ public class ContObjectVM {
     private String buildingTypeCategory;
 
     private Integer numOfStories;
+
 }

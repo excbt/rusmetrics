@@ -1086,7 +1086,10 @@ public class ContObjectService implements SecuredRoles {
 
     @Transactional(readOnly = true)
     public List<ContObjectShortInfoVM> findShortInfoOnlyIds_access(PortalUserIds portalUserIds, List<Long> ids) {
-        List<Long> checkIds = (ids == null || ids.isEmpty()) ? Arrays.asList(Long.MIN_VALUE) : ids;
+	    if (ids.isEmpty()) {
+	        return Collections.emptyList();
+        }
+        List<Long> checkIds = ids;
         return contObjectAccessRepository.findAllContObjectsOnlyIds(portalUserIds.getSubscriberId(), checkIds).stream()
             .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
     }

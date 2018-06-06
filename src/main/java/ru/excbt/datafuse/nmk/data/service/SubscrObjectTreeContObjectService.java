@@ -272,15 +272,15 @@ public class SubscrObjectTreeContObjectService {
     /**
      *
      * @param portalUserIds
-     * @param subscrObjectTreeId
+     * @param nodeId
      * @return
      */
     @Transactional( readOnly = true)
     public List<Long> selectTreeContObjectIdsAllLevels_new(final PortalUserIds portalUserIds,
-                                                            final Long subscrObjectTreeId) {
-        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subscrObjectTreeId);
+                                                            final Long nodeId) {
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, nodeId);
         String storedProcName = " portal.get_subscr_cont_object_tree_cont_object_ids_subscr({0},{1})";
-        return selectTreeContObjectIdsAllLevelsInt (portalUserIds, subscrObjectTreeId, storedProcName);
+        return selectTreeContObjectIdsAllLevelsInt (portalUserIds, nodeId, storedProcName);
 
     }
 

@@ -1,7 +1,12 @@
 {
     "subscrObjectTree": {
         "widget": {
-            "title": "Управление иерархиями"
+            "title": "Управление иерархиями",
+            "treeListTitle": "Иерархии",
+            "contObjectTreeTitle": "Привязка объектов учета"
+        },
+        "contObjectEdit": {
+            "title": "Привязка объектов учета"
         },
         "captions": {
             "title": "Иерархии",
