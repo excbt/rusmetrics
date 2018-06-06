@@ -13,7 +13,10 @@ import { ContObjectControlDataSource } from './cont-object-control.datasource';
 
 @Component({
     selector: 'jhi-cont-object-control',
-    templateUrl: './cont-object-control.component.html'
+    templateUrl: './cont-object-control.component.html',
+    styleUrls: [
+        './cont-object-control.component.scss'
+    ]
 })
 export class ContObjectControlComponent implements OnInit {
     @Input() contObjectList: number[];
@@ -33,33 +36,49 @@ export class ContObjectControlComponent implements OnInit {
         this.cols = [
             {
                 name: 'coSettingMode',
-                caption: 'Режим'
+                caption: 'Режим',
+                type: 'text',
+                displayed: false
             },
             {
                 name: 'coBuildingType',
-                caption: 'Тип здания'
+                caption: 'Тип здания',
+                type: 'text',
+                displayed: false
             },
             {
                 name: 'coName',
-                caption: 'Название'
+                caption: 'Название',
+                type: 'text',
+                displayed: true
             },
             {
                 name: 'coHeat',
-                caption: 'Heat'
+                caption: 'Тепло',
+                type: 'img',
+                displayed: true
             },
             {
                 name: 'coHw',
-                caption: 'Hw'
+                caption: 'ГВС',
+                type: 'img',
+                displayed: true
             },
             {
                 name: 'coCw',
-                caption: 'Cw'
+                caption: 'ХВС',
+                type: 'img',
+                displayed: true
             },
             {
                 name: 'coEl',
-                caption: 'El'
+                caption: 'Э/эн',
+                type: 'img',
+                displayed: true
             }
         ];
+
+        this.displayedColumns = this.cols.filter((col) => col.displayed).map((col) => col.name);
 
         this.dataSource = new ContObjectControlDataSource(this.contObjectControlService);
 
@@ -97,4 +116,6 @@ export class ContObjectControlComponent implements OnInit {
 export interface ContObjectControlColumn {
     name: string;
     caption: string;
+    type: string;
+    displayed: boolean;
 }

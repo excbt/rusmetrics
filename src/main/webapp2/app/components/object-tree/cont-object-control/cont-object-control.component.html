@@ -20,6 +20,17 @@
 
 
 <mat-table #table [dataSource] = "dataSource">
+
+    <ng-container *ngFor = "let column of cols " [matColumnDef] = "column.name">
+        <mat-header-cell *matHeaderCellDef>
+            {{column.caption}}
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem">
+            <span *ngIf = "column.type === 'text'" >{{elem[column.name]}}</span>
+            <div *ngIf = "column.type === 'img'" [class] = "'nmc-img-state nmc-' + elem[column.name] + '-state'"></div>
+        </mat-cell>
+    </ng-container>
+<!--
     <ng-container matColumnDef = "coName">
         <mat-header-cell *matHeaderCellDef>
             Название
@@ -28,6 +39,41 @@
             {{elem.coName}}
         </mat-cell>
     </ng-container>
+    
+
+    <ng-container matColumnDef = "coHeat">
+        <mat-header-cell *matHeaderCellDef>
+            Тепло
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem">            
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef = "coHw">
+        <mat-header-cell *matHeaderCellDef>
+            ГВС
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem" [class] = "elem.coHw">            
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef = "coCw">
+        <mat-header-cell *matHeaderCellDef>
+            ХВС
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem" [class] = "elem.coCw">            
+        </mat-cell>
+    </ng-container>
+    
+    <ng-container matColumnDef = "coEl">
+        <mat-header-cell *matHeaderCellDef>
+            Э/эн
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem" [class] = "elem.coEl">            
+        </mat-cell>
+    </ng-container>
+-->
+    
 <!--
     <ng-container matColumnDef = "caption">
         <mat-header-cell *matHeaderCellDef>
