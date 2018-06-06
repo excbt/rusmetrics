@@ -3,6 +3,7 @@
     {{contObject}}
 </div>-->
 
+<!--
 <p-table [value] = "contObjectControlList">
     <ng-template pTemplate = "header">
         <tr>
@@ -15,3 +16,29 @@
         </tr>
     </ng-template>
 </p-table>
+-->
+
+
+<mat-table #table [dataSource] = "dataSource">
+    <ng-container matColumnDef = "coName">
+        <mat-header-cell *matHeaderCellDef>
+            Название
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem">
+            {{elem.coName}}
+        </mat-cell>
+    </ng-container>
+<!--
+    <ng-container matColumnDef = "caption">
+        <mat-header-cell *matHeaderCellDef>
+            Заголовок
+        </mat-header-cell>
+        <mat-cell *matCellDef = "let elem">
+            {{elem.caption}}
+        </mat-cell>
+    </ng-container>
+-->
+    
+    <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
+    <mat-row *matRowDef = "let row; columns: displayedColumns;"></mat-row>
+</mat-table>
