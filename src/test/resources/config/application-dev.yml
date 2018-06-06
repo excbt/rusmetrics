@@ -132,6 +132,8 @@ portal:
         allow-credentials: true
         max-age: 1800
 
+    extraSettings:
+        skipAccessSchedule: true
 raw:
     datasource:
         databaseName: test_dataraw
