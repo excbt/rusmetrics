@@ -20,11 +20,15 @@ export class ContObjectTreeEditComponent implements OnInit {
     objectTree: TreeNode[];
     selectedNode: TreeNode;
 
+    selectedNodes: TreeNode[] = [];
+
     availableContObjects: ContObjectShortVM[];
 
     private draggableContObject: ContObjectShortVM;
 
     private draggableNode: TreeNode;
+
+    private draggableNodes: TreeNode[] = [];
 
     private selectedTreeSubject = new BehaviorSubject<number>(null);
 
@@ -94,9 +98,14 @@ export class ContObjectTreeEditComponent implements OnInit {
     }
 
     dragFromTreeStart(event, node: TreeNode) {
+        this.draggableNodes = this.selectedNodes;
         if (node.data && node.data.dataType && node.data.dataType === 'CONT_OBJECT') {
             console.log('Drag From Tree: ' + JSON.stringify(node.data) + ' parent nodeId: ' + node.parent.data.subscrNode.id);
             this.draggableNode = node;
+
+            if (this.draggableNodes && this.draggableNodes.length === 0) {
+                this.draggableNodes = [node];
+            }
         }
     }
 
@@ -115,10 +124,11 @@ export class ContObjectTreeEditComponent implements OnInit {
                 });
         } else {
             this.draggableNode = null;
+            this.draggableNodes = [];
         }
     }
 
-    dropFromTree(event) {
+    dropFromTreeSingle(event) {
         if (this.draggableNode && this.draggableNode.parent) {
             const rId = this.currentTree.id;
             const nId = this.draggableNode.parent.data.subscrNode.id;
@@ -130,6 +140,26 @@ export class ContObjectTreeEditComponent implements OnInit {
                     this.removeDraggabeFromNode(this.draggableNode);
                     this.addContObjectToAvailable(this.draggableNode.data.contObject);
                 });
+        }
+    }
+
+    dropFromTree2(event) {
+        if (this.draggableNodes && this.draggableNodes.length > 0) {
+            const rId = this.currentTree.id;
+            const nIds = this.draggableNodes.map((n) => n.parent.data.subscrNode.id).filter((value, index, self) => self.indexOf(value) === index);
+            const objIds = this.draggableNodes.map((n) => n.data.contObject.contObjectId);
+            console.log('nIds: ' + nIds + ' objIds ' + objIds);
+            if (nIds.length === 1) {
+                this.subscrObjectTreeService.putContObjectDataRemove(
+                    {rootNodeId: rId, nodeId: nIds[0]},
+                    {contObjectIds: objIds})
+                    .subscribe(() => {
+                            this.draggableNodes.forEach((n) => this.removeDraggabeFromNode(n));
+                            this.draggableNodes.forEach((n) => this.addContObjectToAvailable(n.data.contObject));
+                    });
+            }
+        } else {
+            console.log('No drop');
         }
     }
 
@@ -191,6 +221,19 @@ export class ContObjectTreeEditComponent implements OnInit {
         // this.optContObjectNodes.filter((n) => nodeContObjectIds.indexOf(n.contObject.contObjectId) === -1)
         //     .forEach((n) => n.selected = false);
         node.data.selected = !node.data.selected;
+        if (node.data.selected) {
+            this.selectedNodes.push(node);
+        } else {
+            // this.selectedNodes.po
+            const index = this.selectedNodes.indexOf(node, 0);
+            if (index > -1) {
+                this.selectedNodes.splice(index, 1);
+            }
+        }
+
+        let nodes = '';
+        this.selectedNodes.forEach((n) => nodes = nodes + ', ' + n.data.contObject.contObjectId);
+        console.log('Nodes ids:' + nodes);
     }
 
 }

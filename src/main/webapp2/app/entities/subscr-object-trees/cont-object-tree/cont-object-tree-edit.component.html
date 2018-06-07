@@ -12,11 +12,10 @@
                         <!-- Cont Objects -->
                         <div *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="tree-row tree-row-width" 
                             [ngClass]="{'exc-row-highlight': node?.data?.selected, 'selected-border': node?.data?.selected}"
-                                (click)="clickContObjectRow($event, node)">
+                                pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)">
                             <i class="exc-icon-building-default-16"></i>
                             <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
-                            [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}" pDraggable="fromTree" 
-                                (onDragStart)="dragFromTreeStart($event, node)">
+                            [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}" (click)="clickContObjectRow($event, node)">
                                     {{node.label}}</span>
                         </div>
 
@@ -50,7 +49,7 @@
             </jhi-exc-toolbar>
 
             <h2>Cont Objects</h2>
-            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree($event)">
+            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree2($event)">
                 <ng-template pTemplate="header">
                     <tr>
                         <!-- <th> {{'global.field.id' | translate}} </th> -->

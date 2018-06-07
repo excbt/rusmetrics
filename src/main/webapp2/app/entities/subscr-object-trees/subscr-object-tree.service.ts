@@ -95,7 +95,7 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
         return this.http.put<any>(this.resourceUrl + this.treeTypeSuffix1 + 'add-cont-objects', data, {params: reqParams});
     }
 
-    putContObjectDataRemode(nodeVM: TreeNodeVM, data: TreeDataVM): Observable<any> {
+    putContObjectDataRemove(nodeVM: TreeNodeVM, data: TreeDataVM): Observable<any> {
         let reqParams = new HttpParams();
         if (nodeVM && nodeVM.rootNodeId) {
             reqParams = reqParams.set('rootNodeId', '' + nodeVM.rootNodeId);
