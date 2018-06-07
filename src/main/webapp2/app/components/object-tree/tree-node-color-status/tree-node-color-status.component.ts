@@ -34,6 +34,9 @@ export class TreeNodeColorStatusComponent implements OnInit {
     nodeGraphData: any;
     nodeGraphOptions: any;
     doughnuts: any;
+    selectedContObjects: number[];
+    contObjectIdsLoading = false;
+    private treeNodeId: string;
 
     private chartBgColors: string[];
     private chartLabels: string[];
@@ -121,12 +124,14 @@ export class TreeNodeColorStatusComponent implements OnInit {
 //        this.route.data.subscribe((data) => console.log('Route data: ', data));
         const tmp = this.route.paramMap.pipe(
             switchMap((params: ParamMap) => {
+                
+                this.treeNodeId = params.get('treeNodeId');
                 for (const res in this.resources) {
                     if (this.resources.hasOwnProperty(res)) {
-                        this.initResourceChart(params.get('treeNodeId'), this.resources[res]);
+                        this.initResourceChart(this.treeNodeId, this.resources[res]);
                     }
                 }
-                return this.treeNodeColorStatusService.loadCommonData(params.get('treeNodeId'));
+                return this.treeNodeColorStatusService.loadCommonData(this.treeNodeId);
             })
         );
 
@@ -275,6 +280,22 @@ export class TreeNodeColorStatusComponent implements OnInit {
                 this.doughnuts[resource].data.datasets[0].data[2] = colorObj.contObjectCount;
                 break;
         }
+    }
+    
+//    nodeColorStatusDetailsObserver
+    
+    selectData(event) {
+        console.log(event);
+        this.contObjectIdsLoading = true;
+//        loadNodeColorStatusDetails(nodeId, levelColor, resourceName)
+        const statusPosition: number = event.element._index;
+        const resourceName: string = event.element._chart.options.name ? event.element._chart.options.name : null;        
+        this.treeNodeColorStatusService
+            .loadNodeColorStatusDetails(this.treeNodeId, this.statusKeynames[statusPosition], resourceName)
+            .subscribe((res) => {this.selectedContObjects = res.contObjectIds;
+                                 this.contObjectIdsLoading = false;
+                                 console.log(this.selectedContObjects);
+                                });
     }
 
 }

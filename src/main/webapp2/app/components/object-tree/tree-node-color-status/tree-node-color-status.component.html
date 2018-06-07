@@ -16,6 +16,7 @@ Tree node id: {{treeNodeId}}
               height = "380px"
               width = "370px"
               style = "float: right;"
+              (onDataSelect) = "selectData($event)"
               >
            </p-chart>
        </div>
@@ -31,6 +32,7 @@ Tree node id: {{treeNodeId}}
                      type = "doughnut"
                      [data] = "doughnuts[resources[dougRow.val + dougCol.val - 1]].data"                     
                      [options] = "doughnuts[resources[dougRow.val + dougCol.val - 1]].options"
+                     (onDataSelect) = "selectData($event)"
                       >
                        
                    </p-chart>
@@ -66,7 +68,10 @@ Tree node id: {{treeNodeId}}
         </div>
     </div>
    </div>
-   <div class = "ui-g-12" style = "height: 42.7vh;">
+   <div class = "ui-g-12">
+<!--    style = "height: 42.7vh;">-->
 <!--       Cont object control component-->
+        <jhi-cont-object-control *ngIf = "!contObjectIdsLoading" [contObjectList] = "selectedContObjects" style = "height: 36vh; overflow: auto; display: flex; flex-direction: column">
+        </jhi-cont-object-control>
    </div>
 </div>
