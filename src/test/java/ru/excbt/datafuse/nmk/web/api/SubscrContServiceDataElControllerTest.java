@@ -1,10 +1,8 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;

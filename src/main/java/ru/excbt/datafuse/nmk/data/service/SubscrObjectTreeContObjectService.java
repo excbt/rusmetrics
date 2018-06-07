@@ -1,75 +1,79 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.sql.SQLQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeContObject;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeContObjectRepository;
-import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
-import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeValidationService;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class SubscrObjectTreeContObjectService implements SecuredRoles {
+public class SubscrObjectTreeContObjectService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrObjectTreeContObjectService.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrObjectTreeContObjectService.class);
 
-	@Autowired
-	private SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
+	private final SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository;
 
-	@Autowired
-	private SubscrObjectTreeService subscrObjectTreeService;
 
-	@PersistenceContext(unitName = "nmk-p")
-	protected EntityManager em;
+	private final SubscrObjectTreeValidationService subscrObjectTreeValidationService;
 
-    @Autowired
-	protected ObjectAccessService objectAccessService;
+	protected final EntityManager em;
+
+	protected final ObjectAccessService objectAccessService;
+
+    private final QueryDSLService queryDSLService;
+
+    public SubscrObjectTreeContObjectService(SubscrObjectTreeContObjectRepository subscrObjectTreeContObjectRepository, SubscrObjectTreeValidationService subscrObjectTreeValidationService, EntityManager em, ObjectAccessService objectAccessService, QueryDSLService queryDSLService) {
+        this.subscrObjectTreeContObjectRepository = subscrObjectTreeContObjectRepository;
+        this.subscrObjectTreeValidationService = subscrObjectTreeValidationService;
+        this.em = em;
+        this.objectAccessService = objectAccessService;
+        this.queryDSLService = queryDSLService;
+    }
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @return
      */
 	@Transactional( readOnly = true)
-	protected List<ContObject> selectTreeContObjects2(final SubscriberParam subscriberParam,
+	protected List<ContObject> selectTreeContObjects2(final PortalUserIds portalUserIds,
 			final Long subscrObjectTreeId) {
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @return
      */
 	@Transactional( readOnly = true)
-	public List<ContObject> selectTreeContObjects(final SubscriberParam subscriberParam,
+	public List<ContObject> selectTreeContObjects(final PortalUserIds portalUserIds,
 			final Long subscrObjectTreeId) {
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 		List<ContObject> result = subscrObjectTreeContObjectRepository.selectContObjects(subscrObjectTreeId);
-		if (subscriberParam.isRma()) {
-            objectAccessService.setupRmaHaveSubscr(subscriberParam,result);
+		if (portalUserIds.isRma()) {
+            objectAccessService.setupRmaHaveSubscr(portalUserIds,result);
 		}
 
 		return result.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).collect(Collectors.toList());
@@ -78,28 +82,28 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @return
      */
 	@Transactional( readOnly = true)
-	public List<Long> selectTreeContObjectIds(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+	public List<Long> selectTreeContObjectIds(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 		return subscrObjectTreeContObjectRepository.selectContObjectIds(subscrObjectTreeId);
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @param contObjectIds
      */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void saveTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
+	public void saveTreeContObjects(final PortalUserIds portalUserIds, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
 
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -132,18 +136,18 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @param contObjectIds
      */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void addTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
+	public void addTreeContObjects(final PortalUserIds portalUserIds, final Long subscrObjectTreeId,
 			final List<Long> contObjectIds) {
 
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+//        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subscrObjectTreeId);
 
-		boolean isLinkDeny = subscrObjectTreeService.selectIsLinkDeny(subscrObjectTreeId);
+		boolean isLinkDeny = subscrObjectTreeValidationService.selectIsLinkDeny(subscrObjectTreeId);
 
 		if (isLinkDeny) {
 			throw new PersistenceException(
@@ -168,20 +172,21 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 		}
 
 		subscrObjectTreeContObjectRepository.save(saveContObjects);
+        subscrObjectTreeContObjectRepository.flush();
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      * @param contObjectIds
      */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void deleteTreeContObjects(final SubscriberParam subscriberParam, final Long subscrObjectTreeId,
-			final List<Long> contObjectIds) {
+	public void removeTreeContObjects(final PortalUserIds portalUserIds, final Long subscrObjectTreeId,
+                                      final List<Long> contObjectIds) {
 
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -195,18 +200,19 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 		}
 
 		subscrObjectTreeContObjectRepository.delete(deleteContObjects);
+        subscrObjectTreeContObjectRepository.flush();
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param subscrObjectTreeId
      */
-	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void deleteTreeContObjectsAll(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
+	public void deleteTreeContObjectsAll(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
 
-        subscrObjectTreeService.checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
@@ -214,50 +220,69 @@ public class SubscrObjectTreeContObjectService implements SecuredRoles {
 		subscrObjectTreeContObjectRepository.delete(contObjects);
 	}
 
+
+    private final static class StoredProcResultPaths {
+        private static final NumberPath<Long> contObjectId = Expressions.numberPath(Long.class, "cont_object_id");
+    }
+
+
+    private List<Long> selectTreeContObjectIdsAllLevelsInt(final PortalUserIds portalUserIds,
+                                                       final Long subscrObjectTreeId,
+                                                       String storedProcName) {
+
+        StringTemplate storedProcFunction = Expressions.stringTemplate(storedProcName,
+            Expressions.asNumber(portalUserIds.getSubscriberId()),
+            Expressions.asNumber(subscrObjectTreeId));
+
+        List<Long> resultList = queryDSLService.doReturningWork((c) -> {
+            SQLQuery<Long> query = new SQLQuery<>(c, QueryDSLService.templates)
+                .select(StoredProcResultPaths.contObjectId)
+                .from(storedProcFunction);
+            List<Long> resultIds = query.fetch();
+            return resultIds;
+        });
+
+        return resultList;
+    }
+
+
     /**
      *
      * @param portalUserIds
      * @param subscrObjectTreeId
      * @return
      */
+    @Deprecated
 	@Transactional( readOnly = true)
 	public List<Long> selectTreeContObjectIdsAllLevels(final PortalUserIds portalUserIds,
 			final Long subscrObjectTreeId) {
 
-        subscrObjectTreeService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
-
-		List<Long> resultList = new ArrayList<>();
-
-		ColumnHelper columnHelper = new ColumnHelper("cont_object_id");
-		StringBuilder sqlString = new StringBuilder();
-		sqlString.append(" SELECT ");
-		sqlString.append(columnHelper.build());
-		sqlString.append(" FROM ");
-
-		String funcName;
-
-		if (portalUserIds.isRma()) {
-			funcName = " portal.get_subscr_cont_object_tree_cont_object_ids_rma(:p_subscriber_id,:p_subscr_object_tree_id); ";
-		} else {
-			funcName = " portal.get_subscr_cont_object_tree_cont_object_ids_subscr(:p_subscriber_id,:p_subscr_object_tree_id); ";
-		}
-
-		sqlString.append(funcName);
-
-		Query q1 = em.createNativeQuery(sqlString.toString());
-		q1.setParameter("p_subscriber_id", portalUserIds.getSubscriberId());
-		q1.setParameter("p_subscr_object_tree_id", subscrObjectTreeId);
-
-		List<?> queryResultList = q1.getResultList();
-
-        for (Object object : queryResultList) {
-            BigInteger value = DBRowUtil.asBigInteger(object,
-                () -> new PersistenceException(String.format("Invalid return result for %s, subscrObjectTreeId = %d",
-                    funcName, subscrObjectTreeId)));
-            resultList.add(value.longValue());
+        String storedProcName;
+        if (portalUserIds.isRma()) {
+            storedProcName = " portal.get_subscr_cont_object_tree_cont_object_ids_rma({0},{1}) ";
+        } else {
+            storedProcName = " portal.get_subscr_cont_object_tree_cont_object_ids_subscr({0},{1})";
         }
 
-		return resultList;
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
+	    return selectTreeContObjectIdsAllLevelsInt (portalUserIds, subscrObjectTreeId, storedProcName);
+
 	}
+
+    /**
+     *
+     * @param portalUserIds
+     * @param nodeId
+     * @return
+     */
+    @Transactional( readOnly = true)
+    public List<Long> selectTreeContObjectIdsAllLevels_new(final PortalUserIds portalUserIds,
+                                                            final Long nodeId) {
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, nodeId);
+        String storedProcName = " portal.get_subscr_cont_object_tree_cont_object_ids_subscr({0},{1})";
+        return selectTreeContObjectIdsAllLevelsInt (portalUserIds, nodeId, storedProcName);
+
+    }
+
 
 }

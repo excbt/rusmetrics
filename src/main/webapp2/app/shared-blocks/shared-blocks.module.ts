@@ -47,6 +47,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ScrollPanelModule } from 'primeng/scrollpanel';
 import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { DragDropModule } from 'primeng/dragdrop';
 
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
@@ -142,6 +144,8 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     ScrollPanelModule,
     TableModule,
     ConfirmDialogModule,
+    DropdownModule,
+    DragDropModule,
     // 3rd party modules
     AngularSplitModule
   ]

@@ -68,6 +68,7 @@ import { SubscrObjectTreeService } from './subscr-object-trees/subscr-object-tre
 import { SubscrObjectTreeEditComponent } from './subscr-object-trees/subscr-object-tree-edit.component';
 import { DeviceModels2Component } from './device-models/device-models.component.2';
 import { SubscrObjectTreeWidgetComponent } from './subscr-object-trees/subscr-object-tree-widget.component';
+import { ContObjectTreeEditComponent } from './subscr-object-trees/cont-object-tree/cont-object-tree-edit.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -125,7 +126,8 @@ import { SubscrObjectTreeWidgetComponent } from './subscr-object-trees/subscr-ob
         SubscrObjectTreesComponent,
         SubscrObjectTreeManageComponent,
         SubscrObjectTreeEditComponent,
-        SubscrObjectTreeWidgetComponent
+        SubscrObjectTreeWidgetComponent,
+        ContObjectTreeEditComponent
     ],
     entryComponents: [
     ],

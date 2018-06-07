@@ -1,25 +1,13 @@
 package ru.excbt.datafuse.nmk.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.*;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.QSubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
@@ -36,11 +24,19 @@ import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrObjectTreeMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
-import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
-import ru.excbt.datafuse.nmk.security.SecuredRoles;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class SubscrObjectTreeService {
@@ -61,13 +57,15 @@ public class SubscrObjectTreeService {
 
     private final EntityManager entityManager;
 
+    private final SubscrObjectTreeValidationService subscrObjectTreeValidationService;
 
-    public SubscrObjectTreeService(SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeTemplateService subscrObjectTreeTemplateService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeMapper subscrObjectTreeMapper, EntityManager entityManager) {
+    public SubscrObjectTreeService(SubscrObjectTreeRepository subscrObjectTreeRepository, SubscrObjectTreeTemplateService subscrObjectTreeTemplateService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService, SubscrObjectTreeMapper subscrObjectTreeMapper, EntityManager entityManager, SubscrObjectTreeValidationService subscrObjectTreeValidationService) {
         this.subscrObjectTreeRepository = subscrObjectTreeRepository;
         this.subscrObjectTreeTemplateService = subscrObjectTreeTemplateService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
         this.subscrObjectTreeMapper = subscrObjectTreeMapper;
         this.entityManager = entityManager;
+        this.subscrObjectTreeValidationService = subscrObjectTreeValidationService;
     }
 
     /**
@@ -79,7 +77,7 @@ public class SubscrObjectTreeService {
 	 *
 	 */
 	private interface CheckConditionOperator {
-		public boolean checkCondition(SubscrObjectTree node);
+		boolean checkCondition(SubscrObjectTree node);
 	}
 
 	/**
@@ -91,9 +89,9 @@ public class SubscrObjectTreeService {
 	 *
 	 */
 	private interface TreeNodeOperator {
-		public void doOperation(SubscrObjectTree node);
+		void doOperation(SubscrObjectTree node);
 
-		public static enum TYPE {
+		enum TYPE {
 			PRE, POST
 		}
 
@@ -300,27 +298,27 @@ public class SubscrObjectTreeService {
 	/**
 	 *
 	 * @param tree
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 */
-	private void initTreeSubscriber(SubscrObjectTree tree, SubscriberParam subscriberParam) {
-		if (subscriberParam.isRma()) {
-			tree.setRmaSubscriberId(subscriberParam.getSubscriberId());
+	private void initTreeSubscriber(SubscrObjectTree tree, PortalUserIds portalUserIds) {
+		if (portalUserIds.isRma()) {
+			tree.setRmaSubscriberId(portalUserIds.getSubscriberId());
 		} else {
-			tree.setSubscriberId(subscriberParam.getSubscriberId());
+			tree.setSubscriberId(portalUserIds.getSubscriberId());
 		}
-		tree.setIsRma(subscriberParam.isRma());
+		tree.setIsRma(portalUserIds.isRma());
 	}
 
     /**
      *
-     * @param subscriberParam
+     * @param portalUserIds
      * @param templateId
      * @return
      */
-	public SubscrObjectTree newSubscrObjectTree(SubscriberParam subscriberParam, Long templateId) {
+	public SubscrObjectTree newSubscrObjectTree(PortalUserIds portalUserIds, Long templateId) {
 		SubscrObjectTree root = new SubscrObjectTree();
 
-		initTreeSubscriber(root, subscriberParam);
+		initTreeSubscriber(root, portalUserIds);
 
 		root.setTemplateId(templateId);
 		if (templateId != null) {
@@ -363,36 +361,6 @@ public class SubscrObjectTreeService {
 		node.getChildObjectList().add(child);
 		return child;
 	}
-
-	/**
-	 *
-	 * @param node
-	 * @param objectName
-	 * @param searchLevel
-	 * @param level
-	 * @return
-	 */
-	//	private SubscrObjectTree _searchObject(SubscrObjectTree node, String objectName, Integer searchLevel, int level) {
-	//		checkNotNull(node);
-	//		checkNotNull(objectName);
-	//
-	//		checkArgument(level >= 0);
-	//
-	//		if (objectName.equals(node.getObjectName()) && (searchLevel == null || searchLevel.equals(level))) {
-	//			return node;
-	//		}
-	//
-	//		if (node.getChildObjectList() != null && !node.getChildObjectList().isEmpty()) {
-	//			for (SubscrObjectTree child : node.getChildObjectList()) {
-	//				SubscrObjectTree result = _searchObject(child, objectName, searchLevel, level + 1);
-	//				if (result != null) {
-	//					return result;
-	//				}
-	//			}
-	//		}
-	//
-	//		return null;
-	//	}
 
 	/**
 	 *
@@ -508,9 +476,9 @@ public class SubscrObjectTreeService {
 	 */
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void deleteRootSubscrObjectTree(final SubscriberParam subscriberParam, Long subscrObjectTreeId) {
+	public void deleteRootSubscrObjectTree(final PortalUserIds portalUserIds, Long subscrObjectTreeId) {
 
-		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 
 		SubscrObjectTree node = selectSubscrObjectTree(subscrObjectTreeId);
 		if (node.getParent() != null) {
@@ -519,10 +487,9 @@ public class SubscrObjectTreeService {
 							subscrObjectTreeId));
 		}
 		checkNotNull(node);
-		//subscrObjectTreeRepository.save(_softDeleteSubscrObjectTree(node));
-		_deleteTreeContObjects(subscriberParam, node);
+		_deleteTreeContObjects(portalUserIds, node);
 
-		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels(subscriberParam,
+		List<Long> contObjectIds = subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels_new(portalUserIds,
 				subscrObjectTreeId);
 
 		if (!contObjectIds.isEmpty()) {
@@ -540,10 +507,10 @@ public class SubscrObjectTreeService {
 	 */
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.SUBSCR_ADMIN })
 	@Transactional
-	public void deleteChildSubscrObjectTreeNode(final SubscriberParam subscriberParam, Long subscrObjectTreeId,
+	public void deleteChildSubscrObjectTreeNode(final PortalUserIds portalUserIds, Long subscrObjectTreeId,
 			Long childSubscrObjectTreeId) {
 
-		checkValidSubscriber(subscriberParam, subscrObjectTreeId);
+        subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);
 
 		SubscrObjectTree node = selectSubscrObjectTree(subscrObjectTreeId);
 		checkNotNull(node);
@@ -557,7 +524,7 @@ public class SubscrObjectTreeService {
 
 		logger.info("Found child node {}", childToDelete.getId());
 
-		_deleteTreeContObjects(subscriberParam, childToDelete);
+		_deleteTreeContObjects(portalUserIds, childToDelete);
 		_deleteTreeNode(childToDelete);
 	}
 
@@ -585,14 +552,14 @@ public class SubscrObjectTreeService {
 	 * @param node
 	 * @return
 	 */
-	private SubscrObjectTree _deleteTreeContObjects(final SubscriberParam subscriberParam,
+	private SubscrObjectTree _deleteTreeContObjects(final PortalUserIds portalUserIds,
 			final SubscrObjectTree node) {
 		checkNotNull(node);
 		TreeNodeOperator operator = (i) -> {
 			if (i == null || i.getId() == null) {
 				return;
 			}
-			subscrObjectTreeContObjectService.deleteTreeContObjectsAll(subscriberParam, i.getId());
+			subscrObjectTreeContObjectService.deleteTreeContObjectsAll(portalUserIds, i.getId());
 		};
 		return _subscrObjectTreeOperation(node, operator, TreeNodeOperator.TYPE.POST);
 	}
@@ -631,7 +598,7 @@ public class SubscrObjectTreeService {
      * @return
      */
 	@Transactional( readOnly = true)
-	public List<SubscrObjectTreeVM> selectSubscrObjectTreeShortVM(final PortalUserIds portalUserIds) {
+	public List<SubscrObjectTreeVM> selectSubscrObjectTreeShortVM(ObjectTreeTypeKeyname objectTreeTypeKeyname, final PortalUserIds portalUserIds) {
 
 
 		List<Object[]> results = portalUserIds.isRma()
@@ -659,6 +626,7 @@ public class SubscrObjectTreeService {
 	@Transactional( readOnly = true)
 	public Page<SubscrObjectTreeVM> selectSubscrObjectTreeShortVMPage(final PortalUserIds portalUserIds,
                                                                       Long subscriberId,
+                                                                      ObjectTreeTypeKeyname treeTypeKeyname,
                                                                       String searchString,
                                                                       Pageable pageable) {
 
@@ -667,7 +635,8 @@ public class SubscrObjectTreeService {
 
         BooleanExpression subscriberExpr = qSubscrObjectTree.deleted.eq(0)
             .and(qSubscrObjectTree.parentId.isNull())
-            .and(qSubscrObjectTree.subscriberId.eq(subscriberId));
+            .and(qSubscrObjectTree.subscriberId.eq(subscriberId))
+            .and(qSubscrObjectTree.objectTreeType.eq(treeTypeKeyname.getKeyname()));
 //            .and(portalUserIds.isRma()
 //                ? qSubscrObjectTree.rmaSubscriberId.eq(subscriberId).or(qSubscrObjectTree.subscriberId.eq(subscriberId))
 //                : qSubscrObjectTree.subscriberId.eq(subscriberId));
@@ -711,59 +680,12 @@ public class SubscrObjectTreeService {
 		return ids.isEmpty() ? null : ids.get(0);
 	}
 
-	/**
-	 *
-	 * @param subscrObjectTreeId
-	 * @return
-	 */
-	@Transactional( readOnly = true)
-	public boolean selectIsLinkDeny(final Long subscrObjectTreeId) {
-		List<Boolean> ids = subscrObjectTreeRepository.selectIsLinkDeny(subscrObjectTreeId);
-		return ids.isEmpty() ? false : Boolean.TRUE.equals(ids.get(0));
-	}
+//	@Transactional( readOnly = true)
+//	public boolean selectIsLinkDeny(final Long subscrObjectTreeId) {
+//		List<Boolean> ids = subscrObjectTreeRepository.selectIsLinkDeny(subscrObjectTreeId);
+//		return ids.isEmpty() ? false : Boolean.TRUE.equals(ids.get(0));
+//	}
 
-    /**
-     *
-     * @param subscriberParam
-     * @param subscrObjectTreeId
-     */
-	@Transactional( readOnly = true)
-	public void checkValidSubscriber(final SubscriberParam subscriberParam, final Long subscrObjectTreeId) {
-
-		if (!checkValidSubscriberOk(subscriberParam, subscrObjectTreeId)) {
-			throw new PersistenceException(
-					String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
-		}
-
-	}
-
-    @Transactional( readOnly = true)
-    public void checkValidSubscriber(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
-
-        if (!checkValidSubscriberOk(portalUserIds, subscrObjectTreeId)) {
-            throw new PersistenceException(
-                String.format("SubscrObjectTree (id=%d) is not valid for subscriber", subscrObjectTreeId));
-        }
-    }
-
-
-    /**
-     *
-     * @param portalUserIds
-     * @param subscrObjectTreeId
-     * @return
-     */
-	@Transactional( readOnly = true)
-	public boolean checkValidSubscriberOk(final PortalUserIds portalUserIds, final Long subscrObjectTreeId) {
-		checkNotNull(portalUserIds);
-		checkNotNull(subscrObjectTreeId);
-
-		Long checkTreeSubscriberId = portalUserIds.isRma() ? selectRmaSubscriberId(subscrObjectTreeId)
-				: selectSubscriberId(subscrObjectTreeId);
-
-		return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
-
-	}
 
 	/**
 	 *
@@ -830,6 +752,7 @@ public class SubscrObjectTreeService {
     }
 
     public boolean deleteSubscrObjectTreeNode(Long treeNodeId,
+                                              ObjectTreeTypeKeyname objectTreeType,
                                               PortalUserIds portalUserIds,
                                               Long subscriberId) {
         SubscrObjectTree deleteCanidate = subscrObjectTreeRepository.findOne(treeNodeId);
@@ -842,6 +765,10 @@ public class SubscrObjectTreeService {
             return false;
         }
 
+        if (!deleteCanidate.getObjectTreeType().equals(objectTreeType.getKeyname())) {
+            return false;
+        }
+
         deleteCanidate.setDeleted(1);
         subscrObjectTreeRepository.saveAndFlush(deleteCanidate);
         return true;
@@ -849,7 +776,6 @@ public class SubscrObjectTreeService {
 
     @Transactional
     public Optional<SubscrObjectTreeVM> addSubscrObjectTreeNode(SubscrObjectTreeVM vm,
-                                                                ObjectTreeTypeKeyname objectTreeType,
                                                                 PortalUserIds portalUserIds,
                                                                 Long subscriberId,
                                                                 String addMode) {
@@ -946,5 +872,81 @@ public class SubscrObjectTreeService {
 
         return Optional.ofNullable(subscrObjectTreeMapper.toVMShort(resultNode));
     }
+
+    @Transactional
+    public boolean addContObjectsToNode(Long subscrObjectTreeId,
+                                        Long nodeId,
+                                     PortalUserIds portalUserIds,
+                                     Long subscriberId,
+                                     SubscrObjectTreeDataVM dataVM) {
+
+	    if (dataVM == null || dataVM.getContObjectIds() == null) {
+	        return false;
+        }
+
+        if (dataVM.getContObjectIds().isEmpty()) {
+	        return true;
+        }
+
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subscrObjectTreeId);
+
+        List<Long> existingContObjectIds = subscrObjectTreeContObjectService
+            .selectTreeContObjectIdsAllLevels_new(portalUserIds, nodeId);
+
+	    long checkCount = dataVM.getContObjectIds().stream().filter(existingContObjectIds::equals).count();
+
+	    if (checkCount > 0) {
+            throw new PersistenceException(
+                String.format("Twice link ContObjects for subscrObjectTreeId(%d) is not allowed", nodeId));
+        }
+
+        subscrObjectTreeContObjectService.addTreeContObjects(portalUserIds, nodeId,
+            dataVM.getContObjectIds());
+
+        return true;
+
+    }
+
+    @Transactional
+    public boolean removeContObjectsFromNode(Long subscrObjectTreeId,
+                                        Long nodeId,
+                                     PortalUserIds portalUserIds,
+                                     Long subscriberId,
+                                     SubscrObjectTreeDataVM dataVM) {
+
+	    if (dataVM == null || dataVM.getContObjectIds() == null) {
+	        return false;
+        }
+
+        if (dataVM.getContObjectIds().isEmpty()) {
+	        return true;
+        }
+
+        subscrObjectTreeValidationService.checkValidSubscriberOk_new(portalUserIds, subscrObjectTreeId);
+
+        subscrObjectTreeContObjectService.removeTreeContObjects(portalUserIds, nodeId,
+            dataVM.getContObjectIds());
+
+        return true;
+
+    }
+
+
+    public List<Long> findNodeOnlyLinkedContObjectIds(Long nodeId,
+                                                      PortalUserIds portalUserIds,
+                                                      Long subscriberId) {
+
+	    return subscrObjectTreeContObjectService.selectTreeContObjectIds(portalUserIds, nodeId);
+
+    }
+
+    public List<Long> findAllLinkedContObjectIds(Long nodeId,
+                                              PortalUserIds portalUserIds,
+                                              Long subscriberId) {
+        return subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels_new(portalUserIds,
+            nodeId);
+    }
+
+
 
 }

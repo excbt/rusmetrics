@@ -25,4 +25,9 @@ export interface SubscrObjectTreeVM {
     isLinkDeny?: boolean;
 }
 
+export interface TreeNodeVM {
+    rootNodeId?: number;
+    nodeId?: number;
+}
+
 export const SubscrObjectTreeModificationEvent = 'SubscrObjectTreeModification';

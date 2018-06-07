@@ -28,6 +28,8 @@ public class PortalProperties {
 
     private final Datasource datasource = new Datasource();
 
+    private final ExtraSettings extraSettings = new ExtraSettings();
+
     public Async getAsync() {
         return async;
     }
@@ -50,6 +52,10 @@ public class PortalProperties {
 
     public Ribbon getRibbon() {
         return ribbon;
+    }
+
+    public ExtraSettings getExtraSettings() {
+        return extraSettings;
     }
 
     public static class Async {
@@ -450,6 +456,18 @@ public class PortalProperties {
             this.password = password;
         }
 
+    }
+
+    public static class ExtraSettings {
+        private boolean skipAccessSchedule;
+
+        public boolean getSkipAccessSchedule() {
+            return skipAccessSchedule;
+        }
+
+        public void setSkipAccessSchedule(boolean skipAccessSchedule) {
+            this.skipAccessSchedule = skipAccessSchedule;
+        }
     }
 
 
