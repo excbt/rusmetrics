@@ -1,16 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { SubscrObjectTreeService } from '../subscr-object-tree.service';
-import { JhiEventManager } from 'ng-jhipster';
-import { ConfirmationService, TreeNode } from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 import { SubscrObjectTree } from '../subscr-object-tree.model';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model';
 
 @Component({
     selector: 'jhi-cont-object-tree-edit',
     templateUrl: './cont-object-tree-edit.component.html',
-    styleUrls: ['./cont-object-tree-edit.component.scss'],
-    providers: [ConfirmationService]
+    styleUrls: ['./cont-object-tree-edit.component.scss']
 })
 export class ContObjectTreeEditComponent implements OnInit {
 
@@ -34,8 +32,6 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
-        private eventManager: JhiEventManager,
-        private confirmationService: ConfirmationService
     ) { }
 
     ngOnInit() {
