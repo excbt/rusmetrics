@@ -48,7 +48,7 @@ export class ContObjectControlService {
 //        private coCw: string,
 //        private coEl: string
 
-console.log(monitorState);
+// console.log(monitorState);
         const settingMode = monitorState.contObjectShortInfo.currentSettingMode;
         const buildingType = monitorState.contObjectShortInfo.buildingType;
         const name = monitorState.contObjectShortInfo.contObjectFullName;

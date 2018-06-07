@@ -38,13 +38,13 @@ export class ContObjectControlComponent implements OnInit {
                 name: 'coSettingMode',
                 caption: 'Режим',
                 type: 'text',
-                displayed: false
+                displayed: true
             },
             {
                 name: 'coBuildingType',
                 caption: 'Тип здания',
                 type: 'text',
-                displayed: false
+                displayed: true
             },
             {
                 name: 'coName',

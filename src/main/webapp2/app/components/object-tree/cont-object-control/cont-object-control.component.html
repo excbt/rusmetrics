@@ -1,90 +1,118 @@
-<!--
-<div *ngFor = "let contObject of contObjectList">
-    {{contObject}}
-</div>-->
+<div class = "cont-object-control">
+    <!--
+    <div *ngFor = "let contObject of contObjectList">
+        {{contObject}}
+    </div>-->
 
-<!--
-<p-table [value] = "contObjectControlList">
-    <ng-template pTemplate = "header">
-        <tr>
-            <th *ngFor = "let col of cols">{{col.caption}}</th>
-        </tr>
-    </ng-template>
-    <ng-template pTemplate = "body" let-coc>
-        <tr>
-            <td *ngFor = "let col of cols">{{coc[col.name]}}</td>
-        </tr>
-    </ng-template>
-</p-table>
--->
+    <!--
+    <p-table [value] = "contObjectControlList">
+        <ng-template pTemplate = "header">
+            <tr>
+                <th *ngFor = "let col of cols">{{col.caption}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate = "body" let-coc>
+            <tr>
+                <td *ngFor = "let col of cols">{{coc[col.name]}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    -->
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-table #table [dataSource] = "dataSource" class = "nmc-data-table">
+
+    <!--
+        <ng-container *ngFor = "let column of cols " [matColumnDef] = "column.name">
+            <mat-header-cell *matHeaderCellDef>
+                {{column.caption}}
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <span *ngIf = "column.type === 'text'" >{{elem[column.name]}}</span>
+                <div *ngIf = "column.type === 'img'" [class] = "'nmc-img-state nmc-' + elem[column.name] + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+    -->
+
+       <ng-container matColumnDef = "coSettingMode" cssClassFiendlyName = "nmc-col-setting-mode">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-setting-mode">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-setting-mode">            
+                <div [class] = "'nmc-' + elem.coSettingMode + '-mode'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coBuildingType">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-building">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-building">
+    <!--            {{elem.coBuildingType}} -->
+                <div class = "nmc-building-default-24"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coName">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-name">
+                Название
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-name">
+                {{elem.coName}}
+            </mat-cell>
+        </ng-container>
 
 
-<mat-table #table [dataSource] = "dataSource">
+        <ng-container matColumnDef = "coHeat">
+            <mat-header-cell *matHeaderCellDef>
+                Тепло
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <div [class] = "'nmc-img-state nmc-' + elem.coHeat + '-state'"></div>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container *ngFor = "let column of cols " [matColumnDef] = "column.name">
-        <mat-header-cell *matHeaderCellDef>
-            {{column.caption}}
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem">
-            <span *ngIf = "column.type === 'text'" >{{elem[column.name]}}</span>
-            <div *ngIf = "column.type === 'img'" [class] = "'nmc-img-state nmc-' + elem[column.name] + '-state'"></div>
-        </mat-cell>
-    </ng-container>
-<!--
-    <ng-container matColumnDef = "coName">
-        <mat-header-cell *matHeaderCellDef>
-            Название
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem">
-            {{elem.coName}}
-        </mat-cell>
-    </ng-container>
-    
+        <ng-container matColumnDef = "coHw">
+            <mat-header-cell *matHeaderCellDef>
+                ГВС
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <div [class] = "'nmc-img-state nmc-' + elem.coHw + '-state'"></div>
+            </mat-cell>
+        </ng-container>
 
-    <ng-container matColumnDef = "coHeat">
-        <mat-header-cell *matHeaderCellDef>
-            Тепло
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem">            
-        </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef = "coHw">
-        <mat-header-cell *matHeaderCellDef>
-            ГВС
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem" [class] = "elem.coHw">            
-        </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef = "coCw">
-        <mat-header-cell *matHeaderCellDef>
-            ХВС
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem" [class] = "elem.coCw">            
-        </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef = "coEl">
-        <mat-header-cell *matHeaderCellDef>
-            Э/эн
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem" [class] = "elem.coEl">            
-        </mat-cell>
-    </ng-container>
--->
-    
-<!--
-    <ng-container matColumnDef = "caption">
-        <mat-header-cell *matHeaderCellDef>
-            Заголовок
-        </mat-header-cell>
-        <mat-cell *matCellDef = "let elem">
-            {{elem.caption}}
-        </mat-cell>
-    </ng-container>
--->
-    
-    <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
-    <mat-row *matRowDef = "let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+        <ng-container matColumnDef = "coCw">
+            <mat-header-cell *matHeaderCellDef>
+                ХВС
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">            
+                <div [class] = "'nmc-img-state nmc-' + elem.coCw + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coEl">
+            <mat-header-cell *matHeaderCellDef>
+                Э/эн
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">          
+                <div [class] = "'nmc-img-state nmc-' + elem.coEl + '-state'"></div>  
+            </mat-cell>
+        </ng-container>
+
+    <!--
+        <ng-container matColumnDef = "caption">
+            <mat-header-cell *matHeaderCellDef>
+                Заголовок
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                {{elem.caption}}
+            </mat-cell>
+        </ng-container>
+    -->
+
+        <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
+        <mat-row *matRowDef = "let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

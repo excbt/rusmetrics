@@ -1,3 +1,8 @@
+.nmc-data-table {
+    height: 87.5vh;
+    overflow: auto;
+}
+
 .nmc-img-state {
     height: 16px;
     width: 16px;
@@ -19,3 +24,18 @@
     background: url(../../../../content/images/object-trees/states/object-state-null.png);
 }
 
+.nmc-col-setting-mode {
+    flex-grow: 0.2;
+}
+
+.nmc-col-building {
+    flex-grow: 0.2;
+}
+
+.nmc-col-name {
+    flex-grow: 2;
+}
+
+.spinner-container mat-spinner {
+    margin: 130px auto 0 auto;
+}

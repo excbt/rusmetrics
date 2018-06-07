@@ -40,7 +40,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTableModule } from '@angular/material';
+import { MatTableModule, MatProgressSpinnerModule } from '@angular/material';
 // import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
@@ -57,7 +57,8 @@ import { MatTableModule } from '@angular/material';
         MatMenuModule,
         ChartModule,
         TableModule,
-        MatTableModule
+        MatTableModule,
+        MatProgressSpinnerModule
     ],
     declarations: [
         PortalObjectTreeComponent,
