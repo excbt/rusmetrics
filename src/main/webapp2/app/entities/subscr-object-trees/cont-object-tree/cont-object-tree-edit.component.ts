@@ -30,6 +30,8 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     private selectedTreeId$ = this.selectedTreeSubject.asObservable();
 
+    private optContObjectNodes: OptionalNodeData[] = [];
+
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
     ) { }
@@ -44,6 +46,7 @@ export class ContObjectTreeEditComponent implements OnInit {
         this.selectedTreeId$.filter((id) => id !== null && id !== undefined).flatMap((id) => this.subscrObjectTreeService.getContObjectType1(id))
             .subscribe((data) => {
                 this.currentTree = data;
+                this.optContObjectNodes = [];
                 this.objectTree = [this.convertTreeDataToTreeNode(data)];
             });
 
@@ -161,6 +164,7 @@ export class ContObjectTreeEditComponent implements OnInit {
             .subscribe((data) => {
                 const treeNodes = data.map((co) => this.convertContObjectVMToTreeNode(co));
                 treeNodes.forEach((n) => destNode.children.push(n));
+                treeNodes.forEach((n) => this.optContObjectNodes.push(n.data));
             });
         }
     }
@@ -184,4 +188,5 @@ export interface OptionalNodeData {
     dataType: string;
     subscrNode?: SubscrObjectTree;
     contObject?: ContObjectShortVM;
+    selected?: boolean;
 }

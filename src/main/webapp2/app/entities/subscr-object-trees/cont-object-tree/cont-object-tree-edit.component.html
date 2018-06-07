@@ -7,7 +7,7 @@
 
             <p-treeTable [value]="objectTree" >
                 <!--  -->
-                <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
+                <p-column>
                     <ng-template let-node="rowData" pTemplate="body">
                         <!-- Cont Objects -->
                         <i *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="exc-icon-building-default-16"></i>
