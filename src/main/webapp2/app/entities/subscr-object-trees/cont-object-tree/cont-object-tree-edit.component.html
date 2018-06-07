@@ -10,26 +10,33 @@
                 <p-column>
                     <ng-template let-node="rowData" pTemplate="body">
                         <!-- Cont Objects -->
-                        <i *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="exc-icon-building-default-16"></i>
-                        <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
-                        [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}" pDraggable="fromTree" 
-                            (onDragStart)="dragFromTreeStart($event, node)">
-                                {{node.label}}</span>
+                        <div *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="tree-row tree-row-width" 
+                            [ngClass]="{'exc-row-highlight': node?.data?.selected, 'selected-border': node?.data?.selected}"
+                                (click)="clickContObjectRow($event, node)">
+                            <i class="exc-icon-building-default-16"></i>
+                            <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
+                            [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}" pDraggable="fromTree" 
+                                (onDragStart)="dragFromTreeStart($event, node)">
+                                    {{node.label}}</span>
+                        </div>
 
-                        <!-- Tree Nodes -->
-                        <i *ngIf="node?.data?.dataType === 'TREE_NODE'" class="fa fa-folder" 
-                            [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.isLinkDeny, 'propertyRoot': !node?.data?.subscrNode?.parentId}"></i>
+                        <!-- Tree Nodes Icon -->
+                        <div *ngIf="node?.data?.dataType === 'TREE_NODE'" class="tree-row">
+                            <i class="fa fa-folder" [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.isLinkDeny, 'propertyRoot': !node?.data?.subscrNode?.parentId}"></i>
+                        </div>
 
                         <!-- Root & isLinkDeny === true -->
-                        <span *ngIf="node?.data?.dataType === 'TREE_NODE' && (!node?.data?.subscrNode?.parentId || node?.data?.subscrNode?.isLinkDeny)" 
-                            [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.parentId, 'propertyRoot': !node?.data?.subscrNode?.parentId}">
-                            {{node.label}}</span>
+                        <div *ngIf="node?.data?.dataType === 'TREE_NODE' && (!node?.data?.subscrNode?.parentId || node?.data?.subscrNode?.isLinkDeny)" class="tree-row">
+                                <span *ngIf="node?.data?.dataType === 'TREE_NODE' && (!node?.data?.subscrNode?.parentId || node?.data?.subscrNode?.isLinkDeny)" 
+                                [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.parentId, 'propertyRoot': !node?.data?.subscrNode?.parentId}">
+                                {{node.label}}</span>
+                        </div>
 
                         <!-- Children & isLinkDeny === false -->
-                        <span *ngIf="node?.data?.dataType === 'TREE_NODE' && (node?.data?.subscrNode?.parentId && !node?.data?.subscrNode?.isLinkDeny)" 
-                            pDroppable="toTree" [ngClass]="{'propertyDisabled': false}" (onDrop)="dropToTree($event, node)" >
-                            
+                        <div *ngIf="node?.data?.dataType === 'TREE_NODE' && (node?.data?.subscrNode?.parentId && !node?.data?.subscrNode?.isLinkDeny)" class="tree-row">
+                            <span pDroppable="toTree" [ngClass]="{'propertyDisabled': false}" (onDrop)="dropToTree($event, node)" >
                             {{node.label}}</span>
+                        </div>
                         
                     </ng-template>
                 </p-column>

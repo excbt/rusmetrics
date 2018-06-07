@@ -9,13 +9,33 @@
 }
 
 .contObjectNode {
+    display: inline-block;
     color: blue;
     font-size: 80%;
 }
 
 .exc-icon-building-default-16 {
-    display: inline-block;
     height: 16px;
     width: 16px;
     background: url(../../../../content/images/buildings/building16.png);
+}
+
+.tree-row {
+    display: inline-block;
+    padding-left: 2px;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0;
+    margin: 1px;
+}
+
+.tree-row-width {
+    width: 80%;
+}
+
+.selected-border {
+    border-width: 1px;
+    border-style: solid;
+    border-color: rgb(70, 68, 68);
+    margin: 0 !important;
 }

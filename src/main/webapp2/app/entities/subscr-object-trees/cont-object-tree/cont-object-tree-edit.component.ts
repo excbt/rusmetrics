@@ -182,6 +182,17 @@ export class ContObjectTreeEditComponent implements OnInit {
         return newNode;
     }
 
+    clickContObjectRow(event, node: TreeNode) {
+        // const nodeContObjectIds = node.parent.children.filter((n) => n.data.dataType === 'CONT_OBJECT')
+        //     .map((n) => n.data.contObject.contObjectId);
+
+        // nodeContObjectIds.forEach((id) => console.log('id: ' + id));
+
+        // this.optContObjectNodes.filter((n) => nodeContObjectIds.indexOf(n.contObject.contObjectId) === -1)
+        //     .forEach((n) => n.selected = false);
+        node.data.selected = !node.data.selected;
+    }
+
 }
 
 export interface OptionalNodeData {
