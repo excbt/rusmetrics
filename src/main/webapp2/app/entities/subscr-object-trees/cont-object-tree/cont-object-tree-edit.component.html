@@ -5,17 +5,19 @@
             </jhi-exc-toolbar>
             <p-dropdown [options]="treeList" [(ngModel)]="selectedTreeShort" optionLabel="objectName" [style]="{'width':'100%'}" (onChange)="treeChange($event)"></p-dropdown>
 
+            <div class="div-left-scrollable">
             <p-treeTable [value]="objectTree" >
                 <!--  -->
                 <p-column>
                     <ng-template let-node="rowData" pTemplate="body">
-                        <!-- Cont Objects -->
+                        <!-- Cont Objects pDraggable -->
                         <div *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="tree-row tree-row-width" 
                             [ngClass]="{'exc-row-highlight': node?.data?.selected, 'selected-border': node?.data?.selected}"
-                                pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)">
+                                (click)="clickTreeContObjectRow($event, node)"
+                                    pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)">
                             <i class="exc-icon-building-default-16"></i>
                             <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
-                            [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}" (click)="clickContObjectRow($event, node)">
+                            [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}">
                                     {{node.label}}</span>
                         </div>
 
@@ -31,9 +33,11 @@
                                 {{node.label}}</span>
                         </div>
 
-                        <!-- Children & isLinkDeny === false -->
-                        <div *ngIf="node?.data?.dataType === 'TREE_NODE' && (node?.data?.subscrNode?.parentId && !node?.data?.subscrNode?.isLinkDeny)" class="tree-row">
-                            <span pDroppable="toTree" [ngClass]="{'propertyDisabled': false}" (onDrop)="dropToTree($event, node)" >
+                        <!-- Children & isLinkDeny === false pDroppable  -->
+                        <div *ngIf="node?.data?.dataType === 'TREE_NODE' && (node?.data?.subscrNode?.parentId && !node?.data?.subscrNode?.isLinkDeny)" 
+                            class="tree-row tree-row-width" pDroppable="toTree" (onDrop)="dropContObjectToTree($event, node)">
+                            <span [ngClass]="{'propertyDisabled': false}" 
+                                >
                             {{node.label}}</span>
                         </div>
                         
@@ -41,25 +45,25 @@
                 </p-column>
 
             </p-treeTable>
+            </div>
         </div>
     </split-area>
     <split-area size="75">
         <div>
             <jhi-exc-toolbar>
             </jhi-exc-toolbar>
-
-            <h2>Cont Objects</h2>
-            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree2($event)">
+            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree($event)" [scrollable]="true" scrollHeight="810px">
                 <ng-template pTemplate="header">
                     <tr>
                         <!-- <th> {{'global.field.id' | translate}} </th> -->
-                        <th> {{'subscrObjectTree.objectName' | translate}}</th>
+                        <th> {{'subscrObjectTree.contObjectEdit.contObjectVmTitle' | translate}}</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData>
-                    <tr pDraggable="toTree" (onDragStart)="dragToTreeStart($event, rowData)">
+                    <tr pDraggable="toTree" (onDragStart)="dragToTreeStart($event, rowData)"
+                        [ngClass]="{'exc-row-highlight': selectedContObjectIds.indexOf(rowData.contObjectId) !== -1}">
                         <!-- <td>{{rowData.id}}</td> -->
-                        <td>{{ rowData.uiCaption }}</td>
+                        <td (click)="clickTableRow($event, rowData)"><span> {{ rowData.uiCaption }} </span></td>
                     </tr>
                 </ng-template>
             </p-table>

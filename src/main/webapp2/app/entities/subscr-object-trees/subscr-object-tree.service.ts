@@ -67,7 +67,7 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
             reqParams = reqParams.set('linkFilter', linkFilter);
         }
         if (treeNodeVM.rootNodeId) {
-            reqParams = reqParams.set('rootNode', treeNodeVM.rootNodeId + '');
+            reqParams = reqParams.set('rootNodeId', treeNodeVM.rootNodeId + '');
         }
         if (treeNodeVM.nodeId) {
             reqParams = reqParams.set('nodeId', treeNodeVM.nodeId + '');

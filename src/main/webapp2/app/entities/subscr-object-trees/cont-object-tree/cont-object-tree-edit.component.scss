@@ -39,3 +39,9 @@
     border-color: rgb(70, 68, 68);
     margin: 0 !important;
 }
+
+.div-left-scrollable {
+    height: 810px;
+    max-height: 810px;
+    overflow-y: auto;
+}

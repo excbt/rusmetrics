@@ -18,23 +18,20 @@ export class ContObjectTreeEditComponent implements OnInit {
     currentTree: SubscrObjectTree;
 
     objectTree: TreeNode[];
-    selectedNode: TreeNode;
-
-    selectedNodes: TreeNode[] = [];
 
     availableContObjects: ContObjectShortVM[];
 
-    private draggableContObject: ContObjectShortVM;
+    selectedContObjectIds: number[] = [];
+    private draggableContObjects: ContObjectShortVM[] = [];
 
-    private draggableNode: TreeNode;
-
+    private selectedNodes: TreeNode[] = [];
     private draggableNodes: TreeNode[] = [];
 
-    private selectedTreeSubject = new BehaviorSubject<number>(null);
+    private currentTreeSubject = new BehaviorSubject<number>(null);
 
-    private selectedTreeId$ = this.selectedTreeSubject.asObservable();
+    private currentTreeId$ = this.currentTreeSubject.asObservable();
 
-    private optContObjectNodes: OptionalNodeData[] = [];
+    private treeContObjectNodesData: OptionalNodeData[] = [];
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
@@ -44,27 +41,34 @@ export class ContObjectTreeEditComponent implements OnInit {
         this.subscrObjectTreeService.findAll().subscribe((data) => {
             this.treeList = data;
             if (data && data.length > 0) {
-                this.selectedTreeSubject.next(data[0].id);
+                this.currentTreeSubject.next(data[0].id);
             }
         });
-        this.selectedTreeId$.filter((id) => id !== null && id !== undefined).flatMap((id) => this.subscrObjectTreeService.getContObjectType1(id))
+        this.currentTreeId$.filter((id) => id !== null && id !== undefined).flatMap((id) => this.subscrObjectTreeService.getContObjectType1(id))
             .subscribe((data) => {
                 this.currentTree = data;
-                this.optContObjectNodes = [];
+                this.treeContObjectNodesData = [];
                 this.objectTree = [this.convertTreeDataToTreeNode(data)];
             });
 
-        this.selectedTreeId$.filter((id) => id !== null && id !== undefined)
+        this.currentTreeId$.filter((id) => id !== null && id !== undefined)
             .flatMap((id) => this.subscrObjectTreeService.getContObjectsAvailable({ rootNodeId: id}))
             .subscribe((data) => {
+                console.log('Load Cont Object Data');
                 this.availableContObjects = data;
+                this.clearSelection();
             });
 
     }
 
+    clearSelection() {
+        this.selectedContObjectIds = [];
+        this.selectedNodes = [];
+    }
+
     treeChange(event) {
         if (event && event.value && event.value.id) {
-            this.selectedTreeSubject.next(event.value.id);
+            this.currentTreeSubject.next(event.value.id);
         }
     }
 
@@ -94,77 +98,70 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     dragToTreeStart(event, co: ContObjectShortVM) {
         console.log('contObjectId: ' + co.contObjectId);
-        this.draggableContObject = co;
+        this.draggableContObjects = this.availableContObjects.filter((i) => this.selectedContObjectIds.indexOf(i.contObjectId) > -1);
+        if (this.draggableContObjects.indexOf(co) === -1) {
+            this.draggableContObjects.push(co);
+        }
     }
 
     dragFromTreeStart(event, node: TreeNode) {
-        this.draggableNodes = this.selectedNodes;
+        this.draggableNodes = this.selectedNodes.slice(0);
         if (node.data && node.data.dataType && node.data.dataType === 'CONT_OBJECT') {
             console.log('Drag From Tree: ' + JSON.stringify(node.data) + ' parent nodeId: ' + node.parent.data.subscrNode.id);
-            this.draggableNode = node;
-
-            if (this.draggableNodes && this.draggableNodes.length === 0) {
-                this.draggableNodes = [node];
+            if (this.draggableNodes && this.draggableNodes.indexOf(node) === -1) {
+                this.draggableNodes.push(node);
             }
         }
     }
 
-    dropToTree(event, destNode: TreeNode) {
+    dropContObjectToTree(event, destNode: TreeNode) {
         if (destNode.data.subscrNode.type = 'TREE_NODE') {
             console.log('nodeId: ' + JSON.stringify(destNode.data.subscrNode.id));
+            const workContObjects = this.draggableContObjects.splice(0);
             const rId = this.currentTree.id;
             const nId = destNode.data.subscrNode.id;
-            const objId = this.draggableContObject.contObjectId;
+            const objIds = workContObjects.map((co) => co.contObjectId).filter((value, index, self) => self.indexOf(value) === index);
             this.subscrObjectTreeService.putContObjectDataAdd(
                 {rootNodeId: rId, nodeId: nId},
-                {contObjectIds: [objId]})
+                {contObjectIds: objIds})
                 .subscribe(() => {
-                    this.addDraggableToNode(destNode);
-                    this.removeContObjectFromAvailable(objId);
-                });
-        } else {
-            this.draggableNode = null;
-            this.draggableNodes = [];
-        }
-    }
-
-    dropFromTreeSingle(event) {
-        if (this.draggableNode && this.draggableNode.parent) {
-            const rId = this.currentTree.id;
-            const nId = this.draggableNode.parent.data.subscrNode.id;
-            const objId = this.draggableNode.data.contObject.contObjectId;
-            this.subscrObjectTreeService.putContObjectDataAdd(
-                {rootNodeId: rId, nodeId: nId},
-                {contObjectIds: [objId]})
-                .subscribe(() => {
-                    this.removeDraggabeFromNode(this.draggableNode);
-                    this.addContObjectToAvailable(this.draggableNode.data.contObject);
+                    this.addDraggableToNode(destNode, workContObjects);
+                    this.removeContObjectsFromAvailable(objIds);
+                    this.selectedContObjectIds = [];
+                    this.draggableContObjects = [];
                 });
         }
+        // else {
+        //     this.draggableNodes = [];
+        // }
     }
 
-    dropFromTree2(event) {
+    dropFromTree(event) {
         if (this.draggableNodes && this.draggableNodes.length > 0) {
+            const workNodes = this.draggableNodes.splice(0);
             const rId = this.currentTree.id;
-            const nIds = this.draggableNodes.map((n) => n.parent.data.subscrNode.id).filter((value, index, self) => self.indexOf(value) === index);
-            const objIds = this.draggableNodes.map((n) => n.data.contObject.contObjectId);
-            console.log('nIds: ' + nIds + ' objIds ' + objIds);
+            const nIds = workNodes.map((n) => n.parent.data.subscrNode.id).filter((value, index, self) => self.indexOf(value) === index);
+            const objIds = workNodes.map((n) => n.data.contObject.contObjectId);
             if (nIds.length === 1) {
                 this.subscrObjectTreeService.putContObjectDataRemove(
                     {rootNodeId: rId, nodeId: nIds[0]},
                     {contObjectIds: objIds})
                     .subscribe(() => {
-                            this.draggableNodes.forEach((n) => this.removeDraggabeFromNode(n));
-                            this.draggableNodes.forEach((n) => this.addContObjectToAvailable(n.data.contObject));
+                            workNodes.forEach((n) => this.removeDraggabeFromNode(n));
+                            workNodes.forEach((n) => this.addContObjectToAvailable(n.data.contObject));
                     });
+            } else {
+                console.log('No single node');
             }
-        } else {
-            console.log('No drop');
         }
     }
 
     removeContObjectFromAvailable(id: number) {
         this.availableContObjects = this.availableContObjects.filter((d) => d.contObjectId !== id);
+    }
+
+    removeContObjectsFromAvailable(ids: number[]) {
+        this.availableContObjects = this.availableContObjects.filter((d) => ids.indexOf(d.contObjectId) === -1);
     }
 
     addContObjectToAvailable(contObject: ContObjectShortVM) {
@@ -177,10 +174,16 @@ export class ContObjectTreeEditComponent implements OnInit {
         }
     }
 
-    addDraggableToNode(destNode: TreeNode) {
-        const treeContObject = Object.assign({}, this.draggableContObject);
-        const newNode = this.convertContObjectVMToTreeNode(treeContObject);
-        destNode.children.push(newNode);
+    addDraggableToNode(destNode: TreeNode, workContObjects: ContObjectShortVM[]) {
+        workContObjects.forEach((co) => {
+            const newNode = this.convertContObjectVMToTreeNode(co);
+            destNode.children.push(newNode);
+        });
+        // const newChildren = destNode.children.splice(0);
+        destNode.children.sort((a, b) => {
+            return a.data.contObject.uiCaption.toLocaleLowerCase().localeCompare(a.data.contObject.uiCaption.toLocaleLowerCase());
+        });
+        // destNode.children = newChildren;
     }
 
     removeDraggabeFromNode(srcNode: TreeNode) {
@@ -194,7 +197,7 @@ export class ContObjectTreeEditComponent implements OnInit {
             .subscribe((data) => {
                 const treeNodes = data.map((co) => this.convertContObjectVMToTreeNode(co));
                 treeNodes.forEach((n) => destNode.children.push(n));
-                treeNodes.forEach((n) => this.optContObjectNodes.push(n.data));
+                treeNodes.forEach((n) => this.treeContObjectNodesData.push(n.data));
             });
         }
     }
@@ -212,7 +215,7 @@ export class ContObjectTreeEditComponent implements OnInit {
         return newNode;
     }
 
-    clickContObjectRow(event, node: TreeNode) {
+    clickTreeContObjectRow(event, node: TreeNode) {
         // const nodeContObjectIds = node.parent.children.filter((n) => n.data.dataType === 'CONT_OBJECT')
         //     .map((n) => n.data.contObject.contObjectId);
 
@@ -230,10 +233,22 @@ export class ContObjectTreeEditComponent implements OnInit {
                 this.selectedNodes.splice(index, 1);
             }
         }
+        this.selectedContObjectIds = [];
+        // let nodes = '';
+        // this.selectedNodes.forEach((n) => nodes = nodes + ', ' + n.data.contObject.contObjectId);
+        // console.log('Nodes ids:' + nodes);
+    }
 
-        let nodes = '';
-        this.selectedNodes.forEach((n) => nodes = nodes + ', ' + n.data.contObject.contObjectId);
-        console.log('Nodes ids:' + nodes);
+    clickTableRow(event, vm: ContObjectShortVM) {
+        const id = vm.contObjectId;
+        const i = this.selectedContObjectIds.indexOf(id);
+        if (i === -1) {
+            this.selectedContObjectIds.push(id);
+        } else {
+            this.selectedContObjectIds.splice(i, 1);
+        }
+        this.selectedNodes.forEach((n) => n.data.selected = false);
+        this.selectedNodes = [];
     }
 
 }

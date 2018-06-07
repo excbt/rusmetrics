@@ -6,7 +6,8 @@
             "contObjectTreeTitle": "Привязка объектов учета"
         },
         "contObjectEdit": {
-            "title": "Привязка объектов учета"
+            "title": "Привязка объектов учета",
+            "contObjectVmTitle": "Объекты учета"
         },
         "captions": {
             "title": "Иерархии",
