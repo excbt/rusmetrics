@@ -87,7 +87,7 @@ export class ContObjectControlComponent implements OnInit {
             console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
             this.performContObjectList();
         });
-        
+
         console.log('contObjectList: ', this.contObjectList);
         if (this.contObjectList && this.contObjectList.length > 0) {
             this.performContObjectList();

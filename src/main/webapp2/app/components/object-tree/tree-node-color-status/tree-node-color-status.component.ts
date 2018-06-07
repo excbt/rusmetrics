@@ -124,7 +124,7 @@ export class TreeNodeColorStatusComponent implements OnInit {
 //        this.route.data.subscribe((data) => console.log('Route data: ', data));
         const tmp = this.route.paramMap.pipe(
             switchMap((params: ParamMap) => {
-                
+
                 this.treeNodeId = params.get('treeNodeId');
                 for (const res in this.resources) {
                     if (this.resources.hasOwnProperty(res)) {
@@ -281,15 +281,15 @@ export class TreeNodeColorStatusComponent implements OnInit {
                 break;
         }
     }
-    
+
 //    nodeColorStatusDetailsObserver
-    
+
     selectData(event) {
         console.log(event);
         this.contObjectIdsLoading = true;
 //        loadNodeColorStatusDetails(nodeId, levelColor, resourceName)
         const statusPosition: number = event.element._index;
-        const resourceName: string = event.element._chart.options.name ? event.element._chart.options.name : null;        
+        const resourceName: string = event.element._chart.options.name ? event.element._chart.options.name : null;
         this.treeNodeColorStatusService
             .loadNodeColorStatusDetails(this.treeNodeId, this.statusKeynames[statusPosition], resourceName)
             .subscribe((res) => {this.selectedContObjects = res.contObjectIds;

@@ -68,9 +68,9 @@ export class TreeNodeColorStatusService {
         if (resourceName !== null) {
             getOpts = {
                 params: new HttpParams().set('contServiceType', resourceName)
-            }
+            };
         }
-        
+
         return this.http.get<StatusDetails>(url, getOpts);
     }
 }
