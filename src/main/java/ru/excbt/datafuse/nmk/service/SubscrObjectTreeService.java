@@ -932,12 +932,19 @@ public class SubscrObjectTreeService {
     }
 
 
-    public List<Long> findLinkedContObjectIds(Long nodeId,
-                                              PortalUserIds portalUserIds,
-                                              Long subscriberId) {
+    public List<Long> findNodeOnlyLinkedContObjectIds(Long nodeId,
+                                                      PortalUserIds portalUserIds,
+                                                      Long subscriberId) {
 
 	    return subscrObjectTreeContObjectService.selectTreeContObjectIds(portalUserIds, nodeId);
 
+    }
+
+    public List<Long> findAllLinkedContObjectIds(Long nodeId,
+                                              PortalUserIds portalUserIds,
+                                              Long subscriberId) {
+        return subscrObjectTreeContObjectService.selectTreeContObjectIdsAllLevels_new(portalUserIds,
+            nodeId);
     }
 
 

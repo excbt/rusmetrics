@@ -201,12 +201,12 @@ public class SubscrObjectTreeResource {
         List<ContObjectShortInfoVM> shortInfoVMList;
         if (linkFilter == LinkFilter.LINKED && searchNodeId != null) {
 
-            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            List<Long> exceptIds = subscrObjectTreeService.findNodeOnlyLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
             shortInfoVMList = contObjectService.findShortInfoOnlyIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
 
         } else if (linkFilter == LinkFilter.AVAILABLE && searchNodeId != null) {
 
-            List<Long> exceptIds = subscrObjectTreeService.findLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
+            List<Long> exceptIds = subscrObjectTreeService.findAllLinkedContObjectIds(searchNodeId, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
             shortInfoVMList = contObjectService.findShortInfoExceptIds_access(portalUserIdsService.getCurrentIds(), exceptIds);
 
         } else {

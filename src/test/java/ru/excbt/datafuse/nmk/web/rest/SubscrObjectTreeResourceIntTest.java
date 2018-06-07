@@ -233,6 +233,17 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
     }
 
     @Test
+    public void getContObjectsAvailable2() throws Exception {
+
+        TestTreeCreator testTreeCreator = new TestTreeCreator();
+
+        mockMvcRestWrapper.restRequest("/api/subscr-object-trees/contObjectTreeType1/cont-objects")
+            .requestBuilder(b -> b.param("linkFilter", "AVAILABLE")
+                .param("rootNodeId", String.valueOf(224941031)))
+            .testGet();
+    }
+
+    @Test
     public void getContObjectsLinked() throws Exception {
 
         TestTreeCreator testTreeCreator = new TestTreeCreator();
