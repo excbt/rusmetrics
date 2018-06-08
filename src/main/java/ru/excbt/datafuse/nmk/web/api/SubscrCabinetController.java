@@ -4,26 +4,26 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectCabinetInfo;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
 import ru.excbt.datafuse.nmk.data.service.CabinetMessageService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrCabinetService;
-import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.SubscrLdapException;
+import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -43,18 +43,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 @Controller
 @RequestMapping(value = "/api/subscr/subscrCabinet")
-public class SubscrCabinetController extends AbstractSubscrApiResource {
+public class SubscrCabinetController {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrCabinetController.class);
 
-	@Autowired
-	private SubscrCabinetService subscrCabinetService;
+	private final SubscrCabinetService subscrCabinetService;
 
-    @Autowired
-	private CabinetMessageService cabinetMessageService;
+	private final CabinetMessageService cabinetMessageService;
 
-    @Autowired
-    private CabinetMessageRepository cabinetMessageRepository;
+    private final CabinetMessageRepository cabinetMessageRepository;
+
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrCabinetController(SubscrCabinetService subscrCabinetService, CabinetMessageService cabinetMessageService, CabinetMessageRepository cabinetMessageRepository, PortalUserIdsService portalUserIdsService) {
+        this.subscrCabinetService = subscrCabinetService;
+        this.cabinetMessageService = cabinetMessageService;
+        this.cabinetMessageRepository = cabinetMessageRepository;
+        this.portalUserIdsService = portalUserIdsService;
+    }
 
     /**
      *
@@ -63,7 +69,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/contObjectCabinetInfo", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getContObjectCabinetInfo() {
 		List<ContObjectCabinetInfo> resultList = subscrCabinetService
-				.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+				.selectSubscrContObjectCabinetInfoList(portalUserIdsService.getCurrentIds().getSubscriberId());
 		checkNotNull(resultList);
 		return ApiResponse.responseOK(resultList);
 	}
@@ -81,15 +87,15 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 		ApiActionObjectProcess actionProcess = () -> {
 			for (Long contObjectId : cabinetContObjectList) {
 				try {
-					//SubscrCabinetInfo cabinetInfo =
-					subscrCabinetService.createSubscrUserCabinet(getCurrentSubscriber(), new Long[] { contObjectId });
+                    Subscriber subscriber = new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
+					subscrCabinetService.createSubscrUserCabinet(subscriber, new Long[] { contObjectId });
 				} catch (PersistenceException e) {
 					errExceptions.add(e);
 				} catch (SubscrLdapException e) {
 					errExceptions.add(e);
 				}
 			}
-			return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+			return subscrCabinetService.selectSubscrContObjectCabinetInfoList(portalUserIdsService.getCurrentIds().getSubscriberId());
 		};
 
 		ResponseEntity<?> result = ApiResponse.responseUpdate(actionProcess, (x) -> {
@@ -119,7 +125,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 					} catch (PersistenceException e) {
 					}
 				}
-				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(portalUserIdsService.getCurrentIds().getSubscriberId());
 			}
 		};
 		return ApiActionTool.processResponceApiActionUpdate(action);
@@ -147,7 +153,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 
 			@Override
 			public SubscrUserWrapper processAndReturnResult() {
-				return subscrCabinetService.saveCabinelSubscrUser(getSubscriberId(), entity);
+				return subscrCabinetService.saveCabinelSubscrUser(portalUserIdsService.getCurrentIds().getSubscriberId(), entity);
 			}
 		};
 
@@ -186,13 +192,13 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 
 				for (Long subscrUserId : subscrUserIds) {
 					try {
-						subscrCabinetService.saveCabinelSubscrUserPassword(getSubscriberId(), subscrUserId,
+						subscrCabinetService.saveCabinelSubscrUserPassword(portalUserIdsService.getCurrentIds().getSubscriberId(), subscrUserId,
 								PasswordUtils.generateRandomPassword());
 					} catch (PersistenceException e) {
 					}
 				}
 
-				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(getSubscriberId());
+				return subscrCabinetService.selectSubscrContObjectCabinetInfoList(portalUserIdsService.getCurrentIds().getSubscriberId());
 			}
 		};
 
@@ -215,7 +221,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
 				List<Long> result = new ArrayList<>();
 
 				for (Long subscrUserId : subscrUserIds) {
-					if (subscrCabinetService.sendSubscrUserPasswordEmailNotification(getCurrentSubscUserId(),
+					if (subscrCabinetService.sendSubscrUserPasswordEmailNotification(portalUserIdsService.getCurrentIds().getUserId(),
 							subscrUserId)) {
 						result.add(subscrUserId);
 					}
@@ -236,7 +242,7 @@ public class SubscrCabinetController extends AbstractSubscrApiResource {
                                                                      "If empty, message wil be sent to all cabinets", required = false)
                                                                  @RequestBody(required = false) final List<Long> subscrCabinetIds) {
 
-        UUID masterUuid =  cabinetMessageService.sendNotificationToCabinets(getSubscriberParam().asPortalUserIds(), messageSubject, messageBody, subscrCabinetIds);
+        UUID masterUuid =  cabinetMessageService.sendNotificationToCabinets(portalUserIdsService.getCurrentIds(), messageSubject, messageBody, subscrCabinetIds);
         List<Long> subscriberIds = cabinetMessageRepository.findMessageByMasterUuid(masterUuid)
             .stream().map(i -> i.getToPortalSubscriberId()).distinct().collect(Collectors.toList());
 	    return ResponseEntity.ok(subscriberIds);

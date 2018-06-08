@@ -29,6 +29,8 @@ import ru.excbt.datafuse.nmk.data.model.support.FileImportInfo;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.utils.FileWriterUtils;
@@ -55,19 +57,25 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataImpulseResource extends AbstractContServiceDataResource {
+public class SubscrContServiceDataImpulseResource  {
 
     private static final Logger log = LoggerFactory.getLogger(SubscrContServiceDataImpulseResource.class);
+
+    private final ContZPointService contZPointService;
 
 	private final ContServiceDataImpulseService contServiceDataImpulseService;
 
 	private final WebAppPropsService webAppPropsService;
 
+    private final PortalUserIdsService portalUserIdsService;
+
 	@Autowired
-    public SubscrContServiceDataImpulseResource(ContServiceDataImpulseService contServiceDataImpulseService,
-                                                WebAppPropsService webAppPropsService) {
+    public SubscrContServiceDataImpulseResource(ContZPointService contZPointService, ContServiceDataImpulseService contServiceDataImpulseService,
+                                                WebAppPropsService webAppPropsService, PortalUserIdsService portalUserIdsService) {
+        this.contZPointService = contZPointService;
         this.contServiceDataImpulseService = contServiceDataImpulseService;
         this.webAppPropsService = webAppPropsService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -101,8 +109,8 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 			}
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -125,7 +133,7 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
             return ApiResponse.responseBadRequest();
         }
 
-        SubscriberParam subscriberParam = getSubscriberParam();
+//        SubscriberParam subscriberParam = getSubscriberParam();
 
         List<CsvUtil.CheckFileResult> checkFileResults = CsvUtil.checkCsvFiles(multipartFiles);
         List<CsvUtil.CheckFileResult> isNotPassed = checkFileResults.stream().filter((i) -> !i.isPassed()).collect(Collectors.toList());
@@ -144,8 +152,8 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 
             String fileName = FilenameUtils.getName(multipartFile.getOriginalFilename());
 
-            String internalFilename = webAppPropsService.getSubscriberCsvPath(subscriberParam.getSubscriberId(),
-                subscriberParam.getSubscrUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
+            String internalFilename = webAppPropsService.getSubscriberCsvPath(portalUserIdsService.getCurrentIds().getSubscriberId(),
+                portalUserIdsService.getCurrentIds().getUserId(), trxId.toString().substring(30, 36) + '_' + fileName);
 
             File inFile = new File(internalFilename);
 
@@ -164,7 +172,7 @@ public class SubscrContServiceDataImpulseResource extends AbstractContServiceDat
 
         }
 
-        contServiceDataImpulseService.submitImportTask(getCurrentSubscUserId(), fileImportInfos);
+        contServiceDataImpulseService.submitImportTask(portalUserIdsService.getCurrentIds().getUserId(), fileImportInfos);
 
 	    return ApiResponse.responseOK();
     }

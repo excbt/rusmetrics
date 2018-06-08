@@ -7,10 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElProfile;
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElTech;
@@ -18,6 +15,8 @@ import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataSummary;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataElService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractContServiceDataResource;
 import ru.excbt.datafuse.nmk.web.api.support.RequestAnyDataSelector;
@@ -36,14 +35,23 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 15.12.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrContServiceDataElController extends AbstractContServiceDataResource {
+public class SubscrContServiceDataElController  {
 
-	@Autowired
-	private ContServiceDataElService contServiceDataElService;
+	private final ContServiceDataElService contServiceDataElService;
 
-	/**
+    private final ContZPointService contZPointService;
+
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrContServiceDataElController(ContServiceDataElService contServiceDataElService, ContZPointService contZPointService, PortalUserIdsService portalUserIdsService) {
+        this.contServiceDataElService = contServiceDataElService;
+        this.contZPointService = contZPointService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param contObjectId
 	 * @param contZPointId
@@ -73,8 +81,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 			}
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -106,8 +114,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -139,8 +147,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 	}
@@ -175,8 +183,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 			}
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataDateSort, pageable, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -207,8 +215,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 			}
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -240,8 +248,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 	}
@@ -277,8 +285,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataDateSort, pageable, pageSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceDataPaged(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataDateSort, pageable, pageSelector, contZPointService);
 
 		return resultResponse;
 
@@ -309,8 +317,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 			}
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 
@@ -333,8 +341,8 @@ public class SubscrContServiceDataElController extends AbstractContServiceDataRe
 
 		};
 
-		ResponseEntity<?> resultResponse = getResponseServiceData(contObjectId, contZPointId, timeDetailType,
-				fromDateStr, toDateStr, dataSelector);
+		ResponseEntity<?> resultResponse = AbstractContServiceDataResource.getResponseServiceData(contObjectId, contZPointId, timeDetailType,
+				fromDateStr, toDateStr, dataSelector, contZPointService);
 
 		return resultResponse;
 	}

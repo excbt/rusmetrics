@@ -10,13 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ContEvent;
 import ru.excbt.datafuse.nmk.data.model.support.PageInfoList;
 import ru.excbt.datafuse.nmk.data.service.ContEventService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.utils.ApiJodaDateFormatter;
@@ -33,16 +31,22 @@ import java.util.List;
  * @since 27.02.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscrContEventController extends AbstractSubscrApiResource {
+public class SubscrContEventController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContEventController.class);
 
-	@Autowired
-	private ContEventService contEventService;
+	private final ContEventService contEventService;
 
-	/**
+	private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrContEventController(ContEventService contEventService, PortalUserIdsService portalUserIdsService) {
+        this.contEventService = contEventService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param contObjectId
 	 * @return
@@ -60,7 +64,7 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/contObjects/events", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> listAll() {
-		Page<ContEvent> result = contEventService.selectEventsBySubscriber(getCurrentSubscriberId());
+		Page<ContEvent> result = contEventService.selectEventsBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ResponseEntity.ok(Lists.newArrayList(result.iterator()));
 	}
 
@@ -98,20 +102,20 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 					.withMillisOfSecond(999);
 
 			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndDateAndContObjectIds(
-					getCurrentSubscriberId(), startD, endOfDay, contObjectList);
+                portalUserIdsService.getCurrentIds().getSubscriberId(), startD, endOfDay, contObjectList);
 
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
 		if (contObjectList != null && contObjectList.size() > 0) {
-			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(getCurrentSubscriberId(),
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(portalUserIdsService.getCurrentIds().getSubscriberId(),
 					contObjectList);
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
-		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(getCurrentSubscriberId());
+		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 	}
@@ -153,20 +157,20 @@ public class SubscrContEventController extends AbstractSubscrApiResource {
 					.withMillisOfSecond(999);
 
 			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndDateAndContObjectIds(
-					getCurrentSubscriberId(), startD, endOfDay, contObjectList, pageable);
+                portalUserIdsService.getCurrentIds().getSubscriberId(), startD, endOfDay, contObjectList, pageable);
 
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
 		if (contObjectList != null && contObjectList.size() > 0) {
-			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(getCurrentSubscriberId(),
+			Page<ContEvent> resultPage = contEventService.selectBySubscriberAndContObjectIds(portalUserIdsService.getCurrentIds().getSubscriberId(),
 					contObjectList, pageable);
 			return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
 		}
 
-		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(getCurrentSubscriberId(), pageable);
+		Page<ContEvent> resultPage = contEventService.selectEventsBySubscriber(portalUserIdsService.getCurrentIds().getSubscriberId(), pageable);
 
 		return ResponseEntity.ok(new PageInfoList<ContEvent>(resultPage));
 
