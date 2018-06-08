@@ -1,87 +1,90 @@
 <jhi-exc-form-template>
     <jhi-exc-list-form-menu headerKey="deviceModel.listTitle">
     </jhi-exc-list-form-menu>
-        
+
     <div class="spinner-container" *ngIf="dataSource.loading$ | async">
-      <mat-progress-bar  color="primary" mode="indeterminate">
-      </mat-progress-bar>
+        <mat-progress-bar color="primary" mode="indeterminate">
+        </mat-progress-bar>
     </div>
 
+    <div class="exc-data-frame">
 
-    <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
-    matSortDisableClear>
+        <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear>
 
-    <ng-container matColumnDef="id">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel" class="id-column-width"> {{deviceModel.id}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="modelName">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelName' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelName}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="keyname">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.keyname' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.keyname}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="caption">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.caption' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.caption}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="modelComment">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelComment' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelComment}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="modelDescription">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelDescription' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelDescription}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="modelDriverType">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelDriverType' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelDriverType}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="metaVersion">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.metaVersion' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.metaVersion}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="isImpulse">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.isImpulse' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.isImpulse}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="defaultImpulseK">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.defaultImpulseK' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.defaultImpulseK}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="defaultImpulseMu">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.defaultImpulseMu' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.defaultImpulseMu}} </mat-cell>
-    </ng-container>
-    
-    <ng-container matColumnDef="deviceType">
-        <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.deviceType' | translate}} </mat-header-cell>
-        <mat-cell *matCellDef="let deviceModel"> {{deviceModel.deviceType}} </mat-cell>
-    </ng-container>
-    
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+            <ng-container matColumnDef="id">
+                <mat-header-cell *matHeaderCellDef mat-sort-header class="id-column-width"> {{'global.field.id' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel" class="id-column-width"> {{deviceModel.id}} </mat-cell>
+            </ng-container>
 
-</mat-table>     
+            <ng-container matColumnDef="modelName">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelName' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelName}} </mat-cell>
+            </ng-container>
 
-<mat-paginator [length]="totalElements" [pageSize]="pageSize"
-  [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
+            <ng-container matColumnDef="keyname">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.keyname' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.keyname}} </mat-cell>
+            </ng-container>
 
-<div>
-    <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
-    icon="fa-arrow-left" routerLink="/classifiers"></button>
-</div>
+            <ng-container matColumnDef="caption">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.caption' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.caption}} </mat-cell>
+            </ng-container>
 
-</jhi-exc-form-template>        
+            <ng-container matColumnDef="modelComment">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelComment' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelComment}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="modelDescription">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelDescription' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelDescription}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="modelDriverType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.modelDriverType' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.modelDriverType}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="metaVersion">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.metaVersion' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.metaVersion}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="isImpulse">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.isImpulse' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.isImpulse}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="defaultImpulseK">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.defaultImpulseK' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.defaultImpulseK}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="defaultImpulseMu">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.defaultImpulseMu' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.defaultImpulseMu}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="deviceType">
+                <mat-header-cell *matHeaderCellDef mat-sort-header> {{'deviceModel.deviceType' | translate}} </mat-header-cell>
+                <mat-cell *matCellDef="let deviceModel"> {{deviceModel.deviceType}} </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"
+                [ngClass]="{'exc-row-highlight': selectedRowIndex === row.id}" 
+                (click)="highlightRowId(row)"></mat-row>
+
+        </mat-table>
+
+        <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"></mat-paginator>
+
+        <div>
+            <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" icon="fa-arrow-left"
+                routerLink="/classifiers"></button>
+        </div>
+
+    </div>
+
+</jhi-exc-form-template>

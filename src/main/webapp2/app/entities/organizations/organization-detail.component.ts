@@ -32,4 +32,7 @@ export class OrganizationDetailComponent extends ExcDetailFormComponent {
         });
     }
 
+    navigateBack() {
+        this.router.navigate(['organizations']);
+    }
 }

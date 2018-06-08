@@ -14,6 +14,8 @@ import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeValidationService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
@@ -26,6 +28,10 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
+/**
+ * User SubscrObjectTreeResource. It will be deleted
+ */
+@Deprecated
 @Controller
 @RequestMapping(value = "/api/subscr")
 public class SubscrObjectTreeController extends AbstractSubscrApiResource {
@@ -34,6 +40,8 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 
     private final SubscrObjectTreeService subscrObjectTreeService;
+
+    private final SubscrObjectTreeValidationService subscrObjectTreeValidationService;
 
     private final SubscrObjectTreeContObjectService subscrObjectTreeContObjectService;
 
@@ -49,12 +57,13 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	@Autowired
     public SubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
-                                      SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
+                                      SubscrObjectTreeValidationService subscrObjectTreeValidationService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
                                       SubscrContEventNotificationService subscrContEventNotificationService,
                                       SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
                                       SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
                                       ContObjectService contObjectService, ObjectAccessService objectAccessService) {
         this.subscrObjectTreeService = subscrObjectTreeService;
+        this.subscrObjectTreeValidationService = subscrObjectTreeValidationService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
         this.subscrContEventNotificationService = subscrContEventNotificationService;
         this.subscrContEventNotifiicationStatusService = subscrContEventNotifiicationStatusService;
@@ -72,7 +81,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 *
 	 */
 	@JsonIgnoreProperties(ignoreUnknown = true)
-	public static class ObjectNameHolder {
+	public static class ObjectNameVM {
 		private String objectName;
 
 		private Long templateId;
@@ -218,7 +227,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/subscrObjectTree/{objectTreeType}", method = RequestMethod.POST,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createSubscrObjectTree(@PathVariable("objectTreeType") String objectTreeType,
-			@RequestBody ObjectNameHolder requestBody, HttpServletRequest request) {
+                                                    @RequestBody ObjectNameVM requestBody, HttpServletRequest request) {
 
 		checkNotNull(requestBody);
 
@@ -453,7 +462,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 			@Override
 			public List<ContObjectMonitorDTO> processAndReturnResult() {
-				subscrObjectTreeContObjectService.deleteTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.removeTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
 						contObjectIds);
 
                 List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
@@ -474,7 +483,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	private ResponseEntity<?> checkSubscriberResponse(final Long subscrObjectTreeId) {
 
 		Long rmaSubscriberId = getRmaSubscriberId();
-		if (!subscrObjectTreeService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
+		if (!subscrObjectTreeValidationService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
 		}
 		return null;

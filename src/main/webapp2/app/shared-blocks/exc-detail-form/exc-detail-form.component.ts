@@ -27,10 +27,10 @@ export abstract class ExcDetailFormComponent implements OnInit, OnDestroy {
     public enitityId$ = this.entityIdSubject.asObservable();
 
     constructor(
-                private params: ExcDetailFormParams,
-                private eventManager: JhiEventManager,
-                private router: Router,
-                private activatedRoute: ActivatedRoute) { }
+                readonly params: ExcDetailFormParams,
+                readonly eventManager: JhiEventManager,
+                readonly router: Router,
+                readonly activatedRoute: ActivatedRoute) { }
 
     ngOnInit() {
         this.paramsSubscription = this.activatedRoute.params.subscribe((params) => {

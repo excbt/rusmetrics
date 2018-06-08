@@ -1,26 +1,24 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.junit.Assert.assertNotNull;
 
 @WithMockUser(username = "ex1-cab-admin", password = "12345", roles = { "SUBSCR_USER", "SUBSCR_ADMIN",
 		"CONT_OBJECT_ADMIN", "ZPOINT_ADMIN", "SUBSCR_CREATE_CHILD", "SUBSCR_CREATE_CABINET" })

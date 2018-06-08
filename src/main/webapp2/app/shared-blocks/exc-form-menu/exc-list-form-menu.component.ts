@@ -10,7 +10,12 @@ import { ExcSearchToolService } from '../exc-tools/exc-search-tool-service';
 @Component({
   selector: 'jhi-exc-list-form-menu',
   templateUrl: './exc-list-form-menu.component.html',
-  styleUrls: ['../shared-blocks.scss']
+  styles: [`
+    .searchInput {
+      font-size: 80%;
+      height: 25px;
+      width: 30rem;
+  }`]
 })
 export class ExcListFormMenuComponent implements OnInit, AfterViewInit  {
   @Input() headerKey: string;

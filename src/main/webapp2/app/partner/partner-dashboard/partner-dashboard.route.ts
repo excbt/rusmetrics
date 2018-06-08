@@ -5,6 +5,6 @@ export const partnerDashboardRoute: Route = {
     path: 'partner-dashboard',
     component: PartnerDashboardComponent,
     data: {
-        pageTitle: 'classifiers.title'
+        pageTitle: 'global.menu.partner.dashboard.title'
     }
 };

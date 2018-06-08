@@ -22,6 +22,7 @@ public interface ContObjectMapper extends EntityMapper<ContObjectDTO, ContObject
     @Mapping(target = "contObjectId", source = "id")
     @Mapping(target = "contObjectName", source = "name")
     @Mapping(target = "contObjectFullName", source = "fullName")
+    @Mapping(target = "contObjectFullAddress", source = "fullAddress")
     ContObjectShortInfoVM toShortInfoVM(ContObject contObject);
 
     default ContObject contObjectFromId(Long id) {

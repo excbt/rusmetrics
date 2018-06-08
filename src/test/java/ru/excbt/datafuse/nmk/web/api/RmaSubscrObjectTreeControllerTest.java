@@ -21,13 +21,13 @@ import ru.excbt.datafuse.nmk.data.model.SubscrObjectTree;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeTemplateService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.ResultActionsTester;
-import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameHolder;
+import ru.excbt.datafuse.nmk.web.api.SubscrObjectTreeController.ObjectNameVM;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -136,7 +136,7 @@ public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
 
 		Long templateId = getAnyTemplate();
 
-		ObjectNameHolder tree = new ObjectNameHolder();
+		ObjectNameVM tree = new ObjectNameVM();
 		tree.setObjectName("Object 1");
 		tree.setTemplateId(templateId);
 
@@ -158,7 +158,7 @@ public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
     @Ignore
 	public void testSubscrObjectTreeCRUD() throws Exception {
 
-		ObjectNameHolder tree = new ObjectNameHolder();
+		ObjectNameVM tree = new ObjectNameVM();
 		tree.setObjectName("Object 1");
 
 		Long id = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testPost(tree).getLastId();
@@ -232,7 +232,7 @@ public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
 		assertTrue(template != null);
 		assertTrue(items.size() > 0);
 
-		ObjectNameHolder tree = new ObjectNameHolder();
+		ObjectNameVM tree = new ObjectNameVM();
 		tree.setObjectName("Поэтажный план 1");
 		tree.setTemplateId(template.getId());
 
@@ -302,7 +302,7 @@ public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
 
 		Long templateId = getAnyTemplate();
 
-		ObjectNameHolder tree = new ObjectNameHolder();
+		ObjectNameVM tree = new ObjectNameVM();
 		tree.setObjectName("Object 1");
 		tree.setTemplateId(templateId);
 

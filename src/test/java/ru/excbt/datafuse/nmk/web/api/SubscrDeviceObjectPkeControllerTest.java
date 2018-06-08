@@ -1,17 +1,16 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import java.util.Arrays;
-import java.util.List;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Transactional
 public class SubscrDeviceObjectPkeControllerTest extends AnyControllerTest {

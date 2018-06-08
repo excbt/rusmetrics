@@ -228,10 +228,10 @@ ui bootstrap tweaks
 //     display: none;
 // }
 
-.toolbar-container .ui-corner-all {
-    border-radius: 0;
-    height: 2.8em;
-}
+// .toolbar-container .ui-corner-all {
+//     border-radius: 0;
+//     height: 2.8em;
+// }
 
 .menu1-font-color {
     color: navy;
@@ -257,4 +257,18 @@ $alt-theme: mat-light-theme($alt-primary, $alt-accent);
 
 md-icon{
     font-family: 'Material Icons' !important;
+}
+
+.exc-data-frame { 
+    padding: 0%;
+    width: 98%;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+} 
+
+.exc-row-highlight{
+    // background: rgb(205, 217, 236); 
+    background-color: rgb(124, 157, 241) !important;
+    // background-color: rgb(231, 235, 245) !important;
 }

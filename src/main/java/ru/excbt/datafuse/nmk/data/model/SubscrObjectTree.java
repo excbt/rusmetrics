@@ -12,11 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import ru.excbt.datafuse.nmk.data.domain.JsonAbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 
@@ -35,12 +37,13 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 	private Long parentId;
 
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_id")
 	private SubscrObjectTree parent;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "parent", cascade = CascadeType.ALL)
-	private List<SubscrObjectTree> childObjectList = new ArrayList<SubscrObjectTree>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "parent", cascade = CascadeType.ALL)
+    @BatchSize(size = 10)
+	private List<SubscrObjectTree> childObjectList = new ArrayList<>();
 
 	@Column(name = "rma_subscriber_id")
 	private Long rmaSubscriberId;
@@ -81,5 +84,9 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
 	@JsonIgnore
 	@Column(name = "deleted")
 	private int deleted;
+
+	@NotNull
+    @Column(name = "tree_mode", updatable = false)
+    private String treeMode;
 
 }

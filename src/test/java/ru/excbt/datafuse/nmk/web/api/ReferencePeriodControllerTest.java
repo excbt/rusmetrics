@@ -18,7 +18,6 @@ import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;

@@ -3,10 +3,10 @@ import { OrganizationsService } from './organizations.service';
 import { OrganizationsDataSource } from './organizations.datasource';
 import { Organization, organizationModification } from './organization.model';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
+import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { Subscription } from 'rxjs';
 import { subscrUrlSuffix } from '../../shared-blocks/exc-tools/exc-constants';
-import { Principal } from '../../shared';
+import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.params';
 
 @Component({
   selector: 'jhi-organizations',
@@ -15,8 +15,8 @@ import { Principal } from '../../shared';
 })
 export class OrganizationsComponent extends ExcListFormComponent<Organization> implements OnDestroy, AfterViewInit {
 
-  private masterColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
-  private subscrColumns = ['select', 'id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
+  private masterColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
+  private subscrColumns = ['id', 'organizationName', 'inn', 'okpo', 'ogrn' ];
 
   displayedColumns = this.subscrColumns;
 
@@ -24,7 +24,6 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
   subscriberMode: boolean;
 
   constructor(private organizationService: OrganizationsService,
-              private principal: Principal,
               router: Router,
               activatedRoute: ActivatedRoute) {
     super({modificationEventName: organizationModification},
@@ -51,15 +50,20 @@ export class OrganizationsComponent extends ExcListFormComponent<Organization> i
 
   navigateEdit() {
 
-    const superAdminMode = this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN']);
+    const superAdminMode =  false; // this.principal.hasAnyAuthorityDirect(['ROLE_ADMIN']);
 
-    if (!this.selection.isEmpty()) {
+    if (this.selectedRowIndex) {
       if (this.subscriberMode || superAdminMode) {
-        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selection.selected[0].id, 'edit']);
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selectedRowIndex, 'edit']);
       } else {
-        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selection.selected[0].id]);
+        this.router.navigate([this.subscriberMode ? subscrUrlSuffix : '', 'organizations', this.selectedRowIndex]);
       }
     }
+  }
+
+  highlightRow(data) {
+    this.selectedRowIndex = data.id;
+    this.selectedRowData = data;
   }
 
 }

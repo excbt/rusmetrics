@@ -41,14 +41,20 @@
             "partner": {
                 "title": "Партнер",
                 "dashboard": {
-                    "title": ""
+                    "title": "Панель партнера"
                 }
             },
             "operator": {
-                "title": "Оператор"
+                "title": "Оператор",
+                "dashboard": {
+                    "title": "Панель оператора"
+                }
             },
-            "subscrAccess": {
-                "title": "Управление доступом"
+            "subscrAccessDashboard": {
+                "title": "Управление доступом",
+                "subscrAccessManage": {
+                    "title": "Подписка на объекты"
+                }
             },
             "settings": {
                 "title": "Настройки"

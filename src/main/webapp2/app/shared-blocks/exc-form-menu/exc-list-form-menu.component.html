@@ -1,20 +1,19 @@
-<mat-toolbar class="menu1-toolbar">
-    <button *ngIf="reportEnabled" mat-icon-button (click)="reportAction.next()">
-        <mat-icon mat-list-icon>save_alt</mat-icon>
-    </button>
-    <button *ngIf="propertiesEnabled" mat-icon-button (click)="propertiesAction.next()">
-        <mat-icon mat-list-icon>edit</mat-icon>
-    </button>
-    <button *ngIf="createEnabled" mat-icon-button (click)="createAction.next()">
-        <mat-icon mat-list-icon>add</mat-icon>
-    </button>
-    &nbsp;
-    <span class="menu1-header-toolbar">{{headerKey | translate}}</span>
-    <span class="spacer"></span>
-    <ng-content></ng-content>
-    <small jhiTranslate="form-search.title">Search field</small>&nbsp;
-    <input class="search1" type="text" pInputText #input>      
-</mat-toolbar>
+<jhi-exc-toolbar>
+    <div toolbar-left>
+
+        <button *ngIf="reportEnabled" mat-icon-button (click)="reportAction.next()">
+            <mat-icon mat-list-icon>save_alt</mat-icon>
+        </button>
+        <button *ngIf="propertiesEnabled" mat-icon-button (click)="propertiesAction.next()">
+            <mat-icon mat-list-icon>edit</mat-icon>
+        </button>
+        <button *ngIf="createEnabled" mat-icon-button (click)="createAction.next()">
+            <mat-icon mat-list-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-icon toolbar-right mat-list-icon>search</mat-icon>
+    <input toolbar-right class="searchInput" type="text" pInputText #input>
+</jhi-exc-toolbar>
 
 <!-- <p-menubar styleClass="menu1" [model]="items" [autoDisplay]="false">
     <div class="menu1-header" >

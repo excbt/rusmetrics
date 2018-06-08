@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.PortalProperties;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.*;
@@ -47,6 +48,8 @@ public class SubscriberAccessService {
 
     private final ContZPointRepository contZPointRepository;
 
+    private final PortalProperties portalProperties;
+
     private final static int ACCESS_TTL_WEEKS = 1;
     private final static TemporalAmount ACCESS_TTL = Period.ofWeeks(ACCESS_TTL_WEEKS);
 
@@ -62,13 +65,14 @@ public class SubscriberAccessService {
                                    ContZPointAccessHistoryRepository contZPointAccessHistoryRepository,
                                    ContObjectAccessRepository contObjectAccessRepository,
                                    ContObjectAccessHistoryRepository contObjectAccessHistoryRepository,
-                                   SubscrContObjectService subscrContObjectService, ContZPointRepository contZPointRepository) {
+                                   SubscrContObjectService subscrContObjectService, ContZPointRepository contZPointRepository, PortalProperties portalProperties) {
         this.contZPointAccessRepository = contZPointAccessRepository;
         this.contZPointAccessHistoryRepository = contZPointAccessHistoryRepository;
         this.contObjectAccessRepository = contObjectAccessRepository;
         this.contObjectAccessHistoryRepository = contObjectAccessHistoryRepository;
         this.subscrContObjectService = subscrContObjectService;
         this.contZPointRepository = contZPointRepository;
+        this.portalProperties = portalProperties;
     }
 
     /**
@@ -444,10 +448,12 @@ public class SubscriberAccessService {
     @Scheduled(cron = "0 */2 * * * ?")
     @Transactional
     public void sheduleCleanupAccessByTtl() {
-        processContObjectRevoke();
-        processContZPointRevoke();
-        cleanupContObjectAccess();
-        cleanupContZPointAccess();
+        if (!portalProperties.getExtraSettings().getSkipAccessSchedule()){
+            processContObjectRevoke();
+            processContZPointRevoke();
+            cleanupContObjectAccess();
+            cleanupContZPointAccess();
+        }
     }
 
 

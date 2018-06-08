@@ -16,6 +16,9 @@ spring:
         name: portal-DEV
     profiles:
         active: dev
+    cache:
+        type: NONE
+
 #        include: swagger
 #    devtools:
 #        restart:
@@ -62,12 +65,12 @@ spring:
         properties:
             hibernate.hbm2ddl.auto: validate
             hibernate.format_sql: true
-            hibernate.show_sql: true
-            hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
-            hibernate.generate_statistics: true
-            hibernate.cache.use_query_cache: true
-            hibernate.cache.use_second_level_cache: true
-            hibernate.use_sql_comments: true
+            hibernate.show_sql: false
+            hibernate.cache.region.factory_class: ru.excbt.datafuse.nmk.config.jpa.JCacheRegionFactory
+            hibernate.generate_statistics: false
+            hibernate.cache.use_query_cache: false
+            hibernate.cache.use_second_level_cache: false
+            hibernate.use_sql_comments: false
             #hibernate.cache.use_structured_entries: true
 
 #            naming:
@@ -129,6 +132,8 @@ portal:
         allow-credentials: true
         max-age: 1800
 
+    extraSettings:
+        skipAccessSchedule: true
 raw:
     datasource:
         databaseName: test_dataraw

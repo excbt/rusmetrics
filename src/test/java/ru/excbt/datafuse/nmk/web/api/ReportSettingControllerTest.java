@@ -3,10 +3,8 @@ package ru.excbt.datafuse.nmk.web.api;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -18,7 +16,6 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.ReportActionTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportSheduleTypeRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;

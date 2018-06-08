@@ -20,16 +20,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrPrefValue;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
-import ru.excbt.datafuse.nmk.data.service.SubscrObjectTreeService;
+import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.data.service.SubscrPrefService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 

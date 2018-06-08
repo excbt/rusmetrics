@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Tuple;
+import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
@@ -1061,7 +1062,7 @@ public class ContObjectService implements SecuredRoles {
 
     @Transactional( readOnly = true)
     public List<ContObjectDTO> mapToDTO(List<ContObject> contObjects) {
-        return contObjects.stream().map((i) -> contObjectMapper.toDto(i)).collect(Collectors.toList());
+        return contObjects.stream().map(contObjectMapper::toDto).collect(Collectors.toList());
     }
 
     @Transactional( readOnly = true)
@@ -1073,7 +1074,25 @@ public class ContObjectService implements SecuredRoles {
     @Transactional(readOnly = true)
     public List<ContObjectShortInfoVM> findShortInfo (PortalUserIds portalUserIds) {
 	    return contObjectAccessRepository.findAllContObjects(portalUserIds.getSubscriberId()).stream()
-            .map(i -> contObjectMapper.toShortInfoVM(i)).collect(Collectors.toList());
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public List<ContObjectShortInfoVM> findShortInfoExceptIds_access(PortalUserIds portalUserIds, List<Long> ids) {
+	    List<Long> checkIds = (ids == null || ids.isEmpty()) ? Arrays.asList(Long.MIN_VALUE) : ids;
+        return contObjectAccessRepository.findAllContObjectsExceptIds(portalUserIds.getSubscriberId(), checkIds).stream()
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ContObjectShortInfoVM> findShortInfoOnlyIds_access(PortalUserIds portalUserIds, List<Long> ids) {
+	    if (ids.isEmpty()) {
+	        return Collections.emptyList();
+        }
+        List<Long> checkIds = ids;
+        return contObjectAccessRepository.findAllContObjectsOnlyIds(portalUserIds.getSubscriberId(), checkIds).stream()
+            .map(contObjectMapper::toShortInfoVM).collect(Collectors.toList());
+    }
+
 
 }

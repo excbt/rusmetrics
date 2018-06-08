@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { ExcListFormComponent, ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.component';
+import { ExcListFormComponent } from '../../shared-blocks/exc-list-form/exc-list-form.component';
 import { PSubscriber } from './p-subscriber.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PSubscriberPartnerService } from './p-subscriber.service';
 import { PSubscriberDataSource } from './p-subscriber.datasource';
+import { ExcListDatasourceProvider } from '../../shared-blocks/exc-list-form/exc-list-form.params';
 
 @Component({
     selector: 'jhi-p-subscribers-partner',
@@ -12,7 +13,7 @@ import { PSubscriberDataSource } from './p-subscriber.datasource';
 })
 export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscriber> implements OnDestroy {
 
-    displayedColumns = ['select', 'id',  'subscriberName', 'organizationInn', 'organizationName'];
+    displayedColumns = ['id',  'subscriberName', 'organizationInn', 'organizationName'];
 
     subscriberMode = 'RMA';
 
@@ -29,9 +30,13 @@ export class PSubscribersPartnerComponent extends ExcListFormComponent<PSubscrib
     }
 
     navigateEdit() {
-        if (!this.selection.isEmpty()) {
-          this.router.navigate(['partners', this.selection.selected[0].id, 'edit']);
+        if (this.selectedRowIndex) {
+          this.router.navigate(['partners', this.selectedRowIndex, 'edit']);
         }
+    }
+
+    navigateBack() {
+        this.router.navigate(['operator-dashboard']);
     }
 
 }

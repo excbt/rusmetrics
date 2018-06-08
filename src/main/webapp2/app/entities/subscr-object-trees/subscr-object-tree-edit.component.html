@@ -1,0 +1,68 @@
+<jhi-exc-toolbar>
+    <div toolbar-left>
+        <button *ngIf="selectedNode" mat-icon-button (click)="editNodeDialog($event, opEditNodeDialog, selectedNode.data)">
+            <mat-icon mat-list-icon>edit</mat-icon>
+        </button>
+        <span class="buttonSpacer"></span>
+        <button *ngIf="selectedNode" mat-icon-button (click)="addNodeDialog($event, opAddNodeDialog, selectedNode.data, 'child')">
+            <mat-icon mat-list-icon>library_add</mat-icon>
+        </button>
+        <button *ngIf="selectedNode?.data.parentId" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny, 'propertyEnabled': !selectedNode?.data?.isLinkDeny}">filter_9_plus</mat-icon>
+        </button>
+        <!-- <button *ngIf="selectedNode?.data.parentId && selectedNode?.data?.isLinkDeny" mat-icon-button (click)="switchIsLinkDeny(selectedNode.data)">
+            <mat-icon [ngClass]="{'propertyDisabled': selectedNode?.data?.isLinkDeny}">filter_9_plus</mat-icon>
+        </button> -->
+        <span class="buttonSpacer"></span>
+        <span class="buttonSpacer"></span>
+    </div>
+    <div toolbar-right>
+        <button *ngIf="selectedNode && !selectedNode?.data.parentId" mat-icon-button color="warn" (click)="confirmTreeDelete()">
+                <mat-icon mat-list-icon >delete</mat-icon>
+        </button>
+        <button *ngIf="selectedNode && selectedNode?.data.parentId" mat-icon-button color="warn" (click)="confirmNodeDelete()">
+            <mat-icon mat-list-icon>delete</mat-icon>
+        </button>
+    </div>
+</jhi-exc-toolbar>
+<p-treeTable [value]="objectTree" selectionMode="single" [(selection)]="selectedNode">
+    <!-- ContObjectAccess -->
+    <!--  -->
+    <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
+        <ng-template let-node="rowData" pTemplate="body">
+            <span [ngClass]="{'propertyDisabled': node?.data?.parentId && node?.data?.isLinkDeny}">{{node.data.objectName}}</span>
+        </ng-template>
+    </p-column>
+
+</p-treeTable>
+
+<p-confirmDialog *ngIf="selectedNode"
+    header="{{ ( (!selectedNode.data?.parentId) ? 'subscrObjectTree.captions.deleteDialog.titleTree' : 'subscrObjectTree.captions.deleteDialog.titleNode') | translate}}" 
+    message="{{'subscrObjectTree.captions.deleteDialog.confirmation' | translate}}" icon="fa fa-question-circle" width="425" #cd>
+    <p-footer>
+        <button type="button" pButton icon="fa-close" label="{{'subscrObjectTree.captions.deleteDialog.no' | translate}}" class="ui-button-secondary" (click)="cd.reject()"></button>
+        <button type="button" pButton icon="fa-check" label="{{'subscrObjectTree.captions.deleteDialog.yes' | translate}}" class="ui-button-warning" (click)="cd.accept()"></button>
+    </p-footer>    
+</p-confirmDialog>
+
+
+<p-overlayPanel #opAddNodeDialog [appendTo]="'body'">
+    <!-- <span>{{'subscrObjectTree.newObject' | translate}}</span> -->
+    <div *ngIf="newEditVM">
+        <h5>{{ dialogHeaderKey | translate }}</h5>
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeAdd($event, opAddNodeDialog)" (keyup.esc)="cancelDialog($event, opAddNodeDialog)"
+            [(ngModel)]="newEditVM.objectName">
+        <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeAdd($event, opAddNodeDialog)"></button>
+        <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opAddNodeDialog)"></button>
+    </div>
+</p-overlayPanel>
+
+<p-overlayPanel #opEditNodeDialog [appendTo]="'body'">
+    <div *ngIf="currentObjectTreeNode">
+        <h5>{{ dialogHeaderKey | translate }}</h5>
+        <input toolbar-right class="search-input" type="text" pInputText (keyup.enter)="saveNodeEdit($event, opEditNodeDialog)" (keyup.esc)="cancelDialog($event, opEditNodeDialog)"
+            [(ngModel)]="currentObjectTreeNode.objectName">
+        <button pButton type="button" class="ui-button-primary" icon="fa-save" (click)="saveNodeEdit($event, opEditNodeDialog)"></button>
+        <button pButton type="button" class="ui-button-secondary" icon="fa-ban" (click)="cancelDialog($event, opEditNodeDialog)"></button>
+    </div>
+</p-overlayPanel>

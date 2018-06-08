@@ -7,9 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
-
-import static org.junit.Assert.*;
 
 @Transactional
 public class CabinetMessageResourceTest extends AnyControllerTest {

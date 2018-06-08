@@ -3,7 +3,7 @@
     (createAction)="navigateNew()" headerKey="subscrUsers.edit.title">
     </jhi-exc-edit-form-menu>
 
-    <br>
+    <div class="exc-data-frame">
     <form [formGroup]="entityForm">
         <div class="flex-column">
             <mat-form-field *ngIf="newFlag">
@@ -90,5 +90,5 @@
     <br>
     <jhi-exc-edit-buttons #editButtons [formGroup]="entityForm" (saveAction)="saveForm()" (revertAction)="revertForm()" (deleteAction)="deleteAction()"
     (backAction)="navigateBack()" [deleteDisabled]="true"></jhi-exc-edit-buttons>            
-
+    </div>
 </jhi-exc-form-template>    

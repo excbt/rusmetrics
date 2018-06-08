@@ -5,8 +5,8 @@ import { merge } from 'rxjs/observable/merge';
 import { ExcPageSize, ExcPageSorting } from '../exc-tools/exc-pagination';
 import { defaultPageSize, defaultPageSizeOptions } from '../exc-tools/exc-pagination';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SelectionModel } from '@angular/cdk/collections';
 import { Subscription } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
 import { ExcAbstractPageDataSource } from '../exc-tools/exc-abstract-page-datasource';
 import { ExcListFormMenuComponent } from '..';
 import {
@@ -16,16 +16,7 @@ import {
   tap
   // , delay
 } from 'rxjs/operators';
-
-export interface ExcListDatasourceProvider<T> {
-  getDataSource: () => ExcAbstractPageDataSource<T>;
-}
-
-export interface ExcListFormParams {
-  modificationEventName?: string;
-  onSaveUrl?: string;
-  onDeleteUrl?: string;
-}
+import { ExcListDatasourceProvider, ExcListFormParams } from './exc-list-form.params';
 
 export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, AfterViewInit {
 
@@ -33,7 +24,8 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(ExcListFormMenuComponent) formMenu: ExcListFormMenuComponent;
 
-  selection: SelectionModel<T>;
+  selectedRowData: T;
+  selectedRowIndex: number = -1;
 
   private routeDataSubscription: Subscription;
   // private routeUrlSubscription: Subscription;
@@ -52,10 +44,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     readonly router: Router,
     readonly activatedRoute: ActivatedRoute,
   ) {
-      const initialSelection = [];
-      const allowMultiSelect = false;
-      this.selection = new SelectionModel<T>(allowMultiSelect, initialSelection);
-
       this.routeDataSubscription = this.activatedRoute.data.subscribe((data) => {
         if (data['searchParams']) {
           this.searchString = data['searchParams'].searchParams;
@@ -79,14 +67,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   ngAfterViewInit() {
     // server side search
     if (this.formMenu && this.formMenu.searchAction) {
-      this.formMenu.searchAction.pipe(
-        distinctUntilChanged(),
-        tap((arg) => {
-          this.searchString = arg;
-          this.paginator.pageIndex = 0;
-          this.loadList(arg);
-        })
-      ).subscribe();
+      this.registerSearchEvent(this.formMenu.searchAction.asObservable());
     }
 
     // reset the paginator after sorting
@@ -96,10 +77,24 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     merge(this.sort.sortChange, this.paginator.page).pipe(
           tap(() => {
             this.loadList();
-            console.log('from change');
+            this.selectedRowIndex = null;
+            this.selectedRowData = null;
           })
       ).subscribe();
 
+  }
+
+  registerSearchEvent(event: Observable<string>) {
+      if (event) {
+        event.pipe(
+          distinctUntilChanged(),
+          tap((arg) => {
+            this.searchString = arg;
+            this.paginator.pageIndex = 0;
+            this.loadList(arg);
+          })
+        ).subscribe();
+      }
   }
 
   ngOnDestroy() {
@@ -112,7 +107,6 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   }
 
   loadList(search?: string) {
-    console.log('sort.active:' + this.sort.active + ', sort.direction:' + this.sort.direction);
     const sorting = new ExcPageSorting(this.sort.active, this.sort.direction);
     const pSize: ExcPageSize = new ExcPageSize(this.paginator.pageIndex, this.paginator.pageSize);
     this.dataSource.findPage ({pageSorting: sorting, pageSize: pSize, searchString: search});
@@ -130,4 +124,8 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
     this.router.navigate([this.router.url, entityId, 'edit']);
   }
 
+  highlightRowId(data) {
+    this.selectedRowIndex = data.id;
+    this.selectedRowData = data;
+  }
 }

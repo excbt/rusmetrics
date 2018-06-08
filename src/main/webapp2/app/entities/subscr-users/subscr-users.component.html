@@ -9,6 +9,7 @@
     </mat-progress-bar>
 </div>
 
+<div class="exc-data-frame">
 <mat-table class="list-form-table" #table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc"
 matSortDisableClear>
 
@@ -36,7 +37,7 @@ matSortDisableClear>
 </ng-container>
 
 <ng-container matColumnDef="userName">
-    <mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userName' | translate}} </mat-header-cell>
+<mat-header-cell *matHeaderCellDef mat-sort-header> {{'subscrUser.userName' | translate}} </mat-header-cell>
     <mat-cell *matCellDef="let subscrUser"> {{subscrUser.userName}} </mat-cell>
 </ng-container>
 
@@ -92,7 +93,9 @@ matSortDisableClear>
 </ng-container>
 
 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-<mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"></mat-row>
+<mat-row *matRowDef="let row; columns: displayedColumns;" class="cell-table"
+    [ngClass]="{'exc-row-highlight': selectedRowIndex === row.id}" 
+    (click)="highlightRowId(row)"></mat-row>
 
 </mat-table>     
 
@@ -100,11 +103,9 @@ matSortDisableClear>
 [pageSizeOptions]="pageSizeOptions"></mat-paginator>    
 
 <div>
-    
     <button pButton type="button" label="{{'entity.action.back' | translate}}" class="ui-button-secondary" 
-    icon="fa-arrow-left" routerLink="/subscr-access"></button>
-    
+    icon="fa-arrow-left" routerLink="/subscr-access-dashboard"></button>
 </div>
 
-
+</div>
 </jhi-exc-form-template>

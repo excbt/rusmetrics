@@ -62,6 +62,13 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher, MatPaginatorIntl } fro
 import { DeviceModelService } from './device-models/device-model.service';
 import { DeviceModelsComponent } from './device-models/device-models.component';
 import { DeviceModelsWidgetComponent } from './device-models/device-models-widget.component';
+import { SubscrObjectTreesComponent } from './subscr-object-trees/subscr-object-trees.component';
+import { SubscrObjectTreeManageComponent } from './subscr-object-trees/subscr-object-tree-manage.component';
+import { SubscrObjectTreeService } from './subscr-object-trees/subscr-object-tree.service';
+import { SubscrObjectTreeEditComponent } from './subscr-object-trees/subscr-object-tree-edit.component';
+import { DeviceModels2Component } from './device-models/device-models.component.2';
+import { SubscrObjectTreeWidgetComponent } from './subscr-object-trees/subscr-object-tree-widget.component';
+import { ContObjectTreeEditComponent } from './subscr-object-trees/cont-object-tree/cont-object-tree-edit.component';
 /* jhipster-needle-add-entity-module-import - JHipster will add entity modules imports here */
 
 @NgModule({
@@ -114,7 +121,13 @@ import { DeviceModelsWidgetComponent } from './device-models/device-models-widge
         ContObjectAccessComponent,
         StTemperatureChartComponent,
         DeviceModelsComponent,
-        DeviceModelsWidgetComponent
+        DeviceModels2Component,
+        DeviceModelsWidgetComponent,
+        SubscrObjectTreesComponent,
+        SubscrObjectTreeManageComponent,
+        SubscrObjectTreeEditComponent,
+        SubscrObjectTreeWidgetComponent,
+        ContObjectTreeEditComponent
     ],
     entryComponents: [
     ],
@@ -128,6 +141,7 @@ import { DeviceModelsWidgetComponent } from './device-models/device-models-widge
         SubscrUserService,
         ContObjectAccessService,
         DeviceModelService,
+        SubscrObjectTreeService,
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl }
     ],
@@ -139,7 +153,8 @@ import { DeviceModelsWidgetComponent } from './device-models/device-models-widge
         StTemperatureChartWidgetComponent,
         ContObjectAccessComponent,
         DeviceModelsComponent,
-        DeviceModelsWidgetComponent
+        DeviceModelsWidgetComponent,
+        SubscrObjectTreeWidgetComponent
     ]
 })
 export class PortalEntityModule {}

@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.repository.support.ObjectAccessRI;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +57,18 @@ public interface ContObjectAccessRepository extends JpaRepository<ContObjectAcce
         " SELECT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId )" +
         " ORDER BY co.fullAddress, co.id")
     List<ContObject> findAllContObjects(@Param("subscriberId") Long subscriberId);
+
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        " SELECT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId )" +
+        " AND co.id NOT IN (:idList)" +
+        " ORDER BY co.fullAddress, co.id")
+    List<ContObject> findAllContObjectsExceptIds(@Param("subscriberId") Long subscriberId, @Param("idList") Collection<Long> ids);
+
+    @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +
+        " SELECT a.contObjectId FROM ContObjectAccess a WHERE a.subscriberId = :subscriberId )" +
+        " AND co.id IN (:idList)" +
+        " ORDER BY co.fullAddress, co.id")
+    List<ContObject> findAllContObjectsOnlyIds(@Param("subscriberId") Long subscriberId, @Param("idList") Collection<Long> ids);
 
 
     @Query(" SELECT co FROM ContObject co WHERE co.deleted = 0 AND co.id IN ( " +

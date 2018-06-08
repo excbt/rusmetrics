@@ -1,26 +1,19 @@
 <jhi-exc-form-template>
-    <h1>
-        {{'global.menu.operator.title' | translate}}
-    </h1>
-    <br>
-    <div>
-        <div class="row">
-            <div class="col-sm">
-                <jhi-organizations-widget></jhi-organizations-widget>
-            </div>
-            <div class="col-sm">
-                <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
-                    <jhi-p-subscribers-widget subscrMode="partner"></jhi-p-subscribers-widget>
+    <div class="exc-data-frame">
+        <div>
+            <div class="row">
+                <div class="col-sm">
+                    <jhi-organizations-widget></jhi-organizations-widget>
                 </div>
-                <br>
-                <div *jhiHasAnyAuthority="'ROLE_SUBSCR_ADMIN'">
-                    <jhi-p-subscribers-widget subscrMode="customer"></jhi-p-subscribers-widget>
-                </div>    
-                
-            </div>
-            <div class="col-sm">
-                <jhi-operator-access-management-widget></jhi-operator-access-management-widget>
+                <div class="col-sm">
+                    <div *jhiHasAnyAuthority="'ROLE_ADMIN'">
+                        <jhi-p-subscribers-widget subscrMode="partner"></jhi-p-subscribers-widget>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <jhi-operator-access-management-widget></jhi-operator-access-management-widget>
+                </div>
             </div>
         </div>
-    </div>    
+    </div>
 </jhi-exc-form-template>

@@ -1,0 +1,17 @@
+
+mat-toolbar.exc-toolbar {
+    min-height: 32px; 
+    background-color: rgb(231, 235, 245);
+    border-top: 1px solid #41719c;
+    border-bottom: 1px solid #41719c;    
+}
+
+.exc-toolbar mat-toolbar-row {
+    height: 32px;
+    padding-left: 0;
+    padding-right: 4px;
+}
+
+.toolbar-spacer {
+    flex: 1 1 auto;
+}
