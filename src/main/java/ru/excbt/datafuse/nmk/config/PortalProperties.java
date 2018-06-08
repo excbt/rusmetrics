@@ -459,14 +459,32 @@ public class PortalProperties {
     }
 
     public static class ExtraSettings {
-        private boolean skipAccessSchedule;
+        private boolean skipAccessSchedule = false;
+        private boolean skipConsumptionTaskSchedule = false;
+        private boolean skipImportCabinetOutTaskSchedule = false;
 
-        public boolean getSkipAccessSchedule() {
+        public boolean isSkipAccessSchedule() {
             return skipAccessSchedule;
         }
 
         public void setSkipAccessSchedule(boolean skipAccessSchedule) {
             this.skipAccessSchedule = skipAccessSchedule;
+        }
+
+        public boolean isSkipConsumptionTaskSchedule() {
+            return skipConsumptionTaskSchedule;
+        }
+
+        public void setSkipConsumptionTaskSchedule(boolean skipConsumptionTaskSchedule) {
+            this.skipConsumptionTaskSchedule = skipConsumptionTaskSchedule;
+        }
+
+        public boolean isSkipImportCabinetOutTaskSchedule() {
+            return skipImportCabinetOutTaskSchedule;
+        }
+
+        public void setSkipImportCabinetOutTaskSchedule(boolean skipImportCabinetOutTaskSchedule) {
+            this.skipImportCabinetOutTaskSchedule = skipImportCabinetOutTaskSchedule;
         }
     }
 

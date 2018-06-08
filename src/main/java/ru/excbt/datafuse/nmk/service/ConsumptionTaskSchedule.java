@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.PortalProperties;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
 
 import java.util.Optional;
@@ -23,15 +24,22 @@ public class ConsumptionTaskSchedule {
     private final AtomicBoolean taskActive = new AtomicBoolean();
     private final AtomicBoolean isProcessingEnabled = new AtomicBoolean(true);
 
-    public ConsumptionTaskSchedule(ConsumptionService consumptionService, ConsumptionTaskService consumptionTaskService) {
+    private final PortalProperties portalProperties;
+
+    public ConsumptionTaskSchedule(ConsumptionService consumptionService, ConsumptionTaskService consumptionTaskService, PortalProperties portalProperties) {
         this.consumptionService = consumptionService;
         this.consumptionTaskService = consumptionTaskService;
+        this.portalProperties = portalProperties;
     }
 
 
     @Scheduled(cron = "0 */2 * * * ?")
     @Transactional
     public void processScheduleTasks() {
+
+        if (portalProperties.getExtraSettings().isSkipConsumptionTaskSchedule()) {
+            return;
+        }
 
         if (!isProcessingEnabled.get()) {
             log.warn("Processing is disabled");

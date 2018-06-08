@@ -448,7 +448,7 @@ public class SubscriberAccessService {
     @Scheduled(cron = "0 */2 * * * ?")
     @Transactional
     public void sheduleCleanupAccessByTtl() {
-        if (!portalProperties.getExtraSettings().getSkipAccessSchedule()){
+        if (!portalProperties.getExtraSettings().isSkipAccessSchedule()){
             processContObjectRevoke();
             processContZPointRevoke();
             cleanupContObjectAccess();

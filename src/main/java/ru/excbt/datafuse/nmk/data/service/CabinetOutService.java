@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.config.PortalProperties;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.repository.CabinetOutMeterDataQRepository;
@@ -42,18 +43,25 @@ public class CabinetOutService {
 
     private final ContServiceDataImpulseRepository contServiceDataImpulseRepository;
 
+    private final PortalProperties portalProperties;
+
     public CabinetOutService(CabinetOutMeterDataQRepository cabinetOutMeterDataQRepository,
-                             CabinetOutMeterDataRepository cabinetOutMeterDataRepository, DeviceObjectService deviceObjectService, ContZPointRepository contZPointRepository, ContServiceDataImpulseRepository contServiceDataImpulseRepository) {
+                             CabinetOutMeterDataRepository cabinetOutMeterDataRepository, DeviceObjectService deviceObjectService, ContZPointRepository contZPointRepository, ContServiceDataImpulseRepository contServiceDataImpulseRepository, PortalProperties portalProperties) {
         this.cabinetOutMeterDataQRepository = cabinetOutMeterDataQRepository;
         this.cabinetOutMeterDataRepository = cabinetOutMeterDataRepository;
         this.deviceObjectService = deviceObjectService;
         this.contZPointRepository = contZPointRepository;
         this.contServiceDataImpulseRepository = contServiceDataImpulseRepository;
+        this.portalProperties = portalProperties;
     }
 
 
     @Scheduled(cron = "0 */2 * * * ?")
     public void importCabinetOut() {
+
+        if (portalProperties.getExtraSettings().isSkipImportCabinetOutTaskSchedule()) {
+            return;
+        }
 
         if (!lock.tryLock()) {
             log.warn("importCabinetOut is locked");
