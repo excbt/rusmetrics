@@ -98,7 +98,7 @@ public class RmaDataSourceControllerTest extends PortalApiTest {
 	 * @throws Exception
 	 */
 	@Test
-//	@Ignore
+	@Ignore
 	public void testDataSourceCreateUpdateDelete() throws Exception {
 		SubscrDataSource dataSource = new SubscrDataSource();
 		dataSource.setDataSourceTypeKey(ExSystemKey.DEVICE.getKeyname());
