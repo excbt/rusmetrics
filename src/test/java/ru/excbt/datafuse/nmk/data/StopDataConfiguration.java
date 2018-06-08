@@ -1,7 +1,7 @@
-package ru.excbt.datafuse.nmk.web;
+package ru.excbt.datafuse.nmk.data;
 
 import org.springframework.boot.SpringBootConfiguration;
 
 @SpringBootConfiguration
-public class StopConfiguration {
+public class StopDataConfiguration {
 }
