@@ -1,9 +1,6 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.util.List;
-
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -14,26 +11,24 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
-
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ExSystemRepository;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
-import ru.excbt.datafuse.nmk.web.AnyControllerTest;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
-import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
+
+import java.util.List;
+
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 public class SystemInfoControllerTest extends PortalApiTest {
