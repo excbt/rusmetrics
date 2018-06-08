@@ -24,12 +24,15 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrTimeDetailTypeController extends AbstractSubscrApiResource {
+public class SubscrTimeDetailTypeController {
 
-	@Autowired
-	private TimeDetailTypeService timeDetailTypeService;
+	private final TimeDetailTypeService timeDetailTypeService;
 
-	/**
+    public SubscrTimeDetailTypeController(TimeDetailTypeService timeDetailTypeService) {
+        this.timeDetailTypeService = timeDetailTypeService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

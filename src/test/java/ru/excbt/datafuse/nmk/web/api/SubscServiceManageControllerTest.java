@@ -1,17 +1,28 @@
 package ru.excbt.datafuse.nmk.web.api;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrServiceAccess;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceAccessService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServiceItemService;
-import ru.excbt.datafuse.nmk.data.service.SubscrServicePackService;
+import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.AnyControllerTest;
+import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
+import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,22 +30,60 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertTrue;
 
-@Transactional
-public class SubscServiceManageControllerTest extends AnyControllerTest {
+@RunWith(SpringRunner.class)
+public class SubscServiceManageControllerTest extends PortalApiTest {
 
 	private final static long MANUAL_SUBSCRIBER_ID = 64166467;
 
 	@Autowired
-	private SubscrServiceAccessService subscrServiceSubscriberAccess;
+	private MappingJackson2HttpMessageConverter jacksonMessageConverter;
+
+	private MockMvc restPortalMockMvc;
 
 	@Autowired
-	private SubscrServiceItemService subscrServiceItemService;
+	private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-	@Autowired
-	private SubscrServicePackService subscrServicePackService;
+	@Mock
+	private PortalUserIdsService portalUserIdsService;
 
-	@Autowired
-	private CurrentSubscriberService currentSubscriberService;
+    @Autowired
+    private SubscrServiceAccessService subscrServiceSubscriberAccess;
+
+    @Autowired
+    private SubscrServiceItemService subscrServiceItemService;
+
+    @Autowired
+    private SubscrServicePackService subscrServicePackService;
+
+    @Autowired
+    private CurrentSubscriberService currentSubscriberService;
+
+    private SubscServiceManageController subscServiceManageController;
+    @Autowired
+    private SubscrPriceListService subscrPriceListService;
+    @Autowired
+    private SubscriberTimeService subscriberTimeService;
+    @Autowired
+    private SubscrServiceAccessService subscrServiceAccessService;
+
+    private MockMvcRestWrapper mockMvcRestWrapper;
+
+    @Before
+	public void setUp() throws Exception {
+	    MockitoAnnotations.initMocks(this);
+
+	    PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
+
+        subscServiceManageController = new SubscServiceManageController(subscrServicePackService, subscrServiceItemService, subscrPriceListService, subscriberTimeService, subscrServiceAccessService, portalUserIdsService);
+
+	    this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscServiceManageController)
+	        .setCustomArgumentResolvers(pageableArgumentResolver)
+	        .setMessageConverters(jacksonMessageConverter).build();
+
+        mockMvcRestWrapper = new MockMvcRestWrapper(restPortalMockMvc);
+	}
+
+
 
 	/**
 	 *
@@ -42,7 +91,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testPackGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/servicePackList"));
+        mockMvcRestWrapper.restRequest("/api/subscr/manage/service/servicePackList").testGet();
 	}
 
 	/**
@@ -51,7 +100,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testItemsGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/serviceItemList"));
+        mockMvcRestWrapper.restRequest("/api/subscr/manage/service/serviceItemList").testGet();
 	}
 
 	/**
@@ -60,7 +109,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testPricesGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/servicePriceList"));
+        mockMvcRestWrapper.restRequest("/api/subscr/manage/service/servicePriceList").testGet();
 	}
 
 	/**
@@ -69,7 +118,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testManualSubscriberAccessGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID)));
+        mockMvcRestWrapper.restRequest("/api/subscr/{id}/manage/service/access", MANUAL_SUBSCRIBER_ID).testGet();
 	}
 
 	/**
@@ -78,7 +127,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testCurrentSubscriberAccessGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/access"));
+        mockMvcRestWrapper.restRequest("/api/subscr//manage/service/access").testGet();
 	}
 
 	/**
@@ -115,7 +164,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 		}
 
 		String url = UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/access", MANUAL_SUBSCRIBER_ID));
-		_testUpdateJson(url, accessList, null);
+        mockMvcRestWrapper.restRequest(url).testPut(accessList);
 	}
 
 	/**
@@ -152,7 +201,7 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 		}
 
 		String url = UrlUtils.apiSubscrUrl("/manage/service/access");
-		_testUpdateJson(url, accessList, null);
+        mockMvcRestWrapper.restRequest(url).testPut(accessList);
 
 	}
 
@@ -162,12 +211,12 @@ public class SubscServiceManageControllerTest extends AnyControllerTest {
 	 */
 	@Test
 	public void testManualSubscriberPermissionsGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl(String.format("/%d/manage/service/permissions", MANUAL_SUBSCRIBER_ID)));
+        mockMvcRestWrapper.restRequest("/api/subscr/{id}/manage/service/permissions", MANUAL_SUBSCRIBER_ID).testGet();
 	}
 
 	@Test
 	public void testCurrentSubscriberPermissionsGet() throws Exception {
-		_testGetJson(UrlUtils.apiSubscrUrl("/manage/service/permissions"));
+        mockMvcRestWrapper.restRequest("/api/subscr/manage/service/permissions").testGet();
 	}
 
 }

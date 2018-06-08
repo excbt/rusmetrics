@@ -1,6 +1,5 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +14,9 @@ import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService;
 import ru.excbt.datafuse.nmk.data.service.DeviceObjectPkeService.PkeWarnSearchConditions;
+import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
@@ -26,15 +26,24 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 @Controller
 @RequestMapping(value = "/api/subscr/deviceObjects/pke")
-public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
+public class SubscrDeviceObjectPkeController {
 
-	@Autowired
-	protected DeviceObjectPkeService deviceObjectPkeService;
+	protected final DeviceObjectPkeService deviceObjectPkeService;
 
-	@Autowired
-	protected ContZPointService contZPointService;
+	protected final ContZPointService contZPointService;
 
-	/**
+	private final ObjectAccessService objectAccessService;
+
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrDeviceObjectPkeController(DeviceObjectPkeService deviceObjectPkeService, ContZPointService contZPointService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
+        this.deviceObjectPkeService = deviceObjectPkeService;
+        this.contZPointService = contZPointService;
+        this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @param deviceObjectId
 	 * @param beginDateStr
@@ -83,7 +92,7 @@ public class SubscrDeviceObjectPkeController extends AbstractSubscrApiResource {
 			return ApiResponse.responseBadRequest();
 		}
 
-		if (!canAccessContObject(contZPoint.getContObjectId())) {
+		if (!objectAccessService.checkContObjectId(contZPoint.getContObjectId(), portalUserIdsService.getCurrentIds())) {
 			//return responseForbidden();
 		}
 

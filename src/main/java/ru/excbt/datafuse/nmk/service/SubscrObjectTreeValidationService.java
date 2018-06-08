@@ -86,6 +86,9 @@ public class SubscrObjectTreeValidationService {
     }
 
     private Long selectSubscriberId(final Long subscrObjectTreeId) {
+        if (subscrObjectTreeId == null) {
+            return null;
+        }
         List<Long> ids = subscrObjectTreeRepository.selectSubscriberIds(subscrObjectTreeId);
         return ids.isEmpty() ? null : ids.get(0);
     }

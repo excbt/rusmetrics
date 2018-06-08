@@ -1,31 +1,38 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrSmsLog;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrSmsLogService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-@Controller
+@RestController
 @RequestMapping("/api/subscr/smsLog")
-public class SubscrSmsLogController extends AbstractSubscrApiResource {
+public class SubscrSmsLogController {
 
-	@Autowired
-	private SubscrSmsLogService subscrSmsLogService;
+	private final SubscrSmsLogService subscrSmsLogService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrSmsLogController(SubscrSmsLogService subscrSmsLogService, PortalUserIdsService portalUserIdsService) {
+        this.subscrSmsLogService = subscrSmsLogService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+
+    /**
 	 *
 	 * @param fromDateStr
 	 * @param toDateStr
@@ -45,7 +52,7 @@ public class SubscrSmsLogController extends AbstractSubscrApiResource {
 			return checkPeriod;
 		}
 
-		List<SubscrSmsLog> resultList = subscrSmsLogService.selectSmsLog(getRmaSubscriberId(),
+		List<SubscrSmsLog> resultList = subscrSmsLogService.selectSmsLog(portalUserIdsService.getCurrentIds().getRmaId(),
 				datePeriodParser.getLocalDatePeriod().buildEndOfDay());
 		return ApiResponse.responseOK(ObjectFilters.deletedFilter(resultList));
 	}
