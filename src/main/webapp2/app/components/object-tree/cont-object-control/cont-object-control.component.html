@@ -59,7 +59,9 @@
             <mat-header-cell *matHeaderCellDef class = "nmc-col-name">
                 Название
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem" class = "nmc-col-name">
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-name"
+              (click) = "clickObject(elem)"
+               >
                 {{elem.coName}}
             </mat-cell>
         </ng-container>
@@ -113,6 +115,14 @@
     -->
 
         <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
-        <mat-row *matRowDef = "let row; columns: displayedColumns;"></mat-row>
+        <mat-row *matRowDef = "let row; columns: displayedColumns;">
+        </mat-row>
     </mat-table>
+    
+<!--
+    <jhi-cont-object-event *ngIf = "contObjectEventViewFlag" [contObjectId] = "selectedObject">
+    
+    </jhi-cont-object-event>
+-->
+    
 </div>

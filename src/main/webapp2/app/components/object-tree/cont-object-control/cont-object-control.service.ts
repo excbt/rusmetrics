@@ -49,6 +49,7 @@ export class ContObjectControlService {
 //        private coEl: string
 
 // console.log(monitorState);
+        const contObjectId = monitorState.contObjectShortInfo.contObjectId;
         const settingMode = monitorState.contObjectShortInfo.currentSettingMode;
         const buildingType = monitorState.contObjectShortInfo.buildingType;
         const name = monitorState.contObjectShortInfo.contObjectFullName;
@@ -57,7 +58,7 @@ export class ContObjectControlService {
         const hwState = monitorStateWrapper.getHwState();
         const cwState = monitorStateWrapper.getCwState();
         const elState = monitorStateWrapper.getElState();
-        const cco: ContObjectControl = new ContObjectControl(settingMode, buildingType, name, heatState, hwState, cwState, elState);
+        const cco: ContObjectControl = new ContObjectControl(contObjectId, settingMode, buildingType, name, heatState, hwState, cwState, elState);
         return cco;
     }
 }

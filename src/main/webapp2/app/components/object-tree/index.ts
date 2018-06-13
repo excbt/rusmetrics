@@ -18,5 +18,7 @@ export * from './tree-node-information-container';
 export * from './cont-object-control';
 export * from './tree-node-control';
 
+export * from './cont-object-event';
+
 export * from './object-tree.route';
 export * from './object-tree.module';

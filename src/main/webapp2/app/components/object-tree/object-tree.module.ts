@@ -25,7 +25,10 @@ import { objectTreeState,
         TreeNodeControlComponent,
         PTreeNodeService,
         ContObjectControlService,
-        ContObjectControlComponent
+        ContObjectControlComponent,
+        ContObjectEventService,
+        ContObjectEventComponent,
+        ContObjectNoticeDialogComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -41,6 +44,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 // import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
@@ -58,7 +62,8 @@ import { MatTableModule, MatProgressSpinnerModule } from '@angular/material';
         ChartModule,
         TableModule,
         MatTableModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatDialogModule
     ],
     declarations: [
         PortalObjectTreeComponent,
@@ -67,9 +72,13 @@ import { MatTableModule, MatProgressSpinnerModule } from '@angular/material';
         TreeNodeInformationComponent,
         TreeNodeColorStatusComponent,
         TreeNodeControlComponent,
-        ContObjectControlComponent
+        ContObjectControlComponent,
+        ContObjectEventComponent,
+        ContObjectNoticeDialogComponent
     ],
     entryComponents: [
+        ContObjectNoticeDialogComponent,
+        ContObjectEventComponent
     ],
     providers: [
         /* PTreeNodeService, */
@@ -81,7 +90,8 @@ import { MatTableModule, MatProgressSpinnerModule } from '@angular/material';
         TreeNodeColorStatusService,
         TreeNodeControlService,
         PTreeNodeService,
-        ContObjectControlService
+        ContObjectControlService,
+        ContObjectEventService
     ],
     exports: [
         PortalObjectTreeComponent

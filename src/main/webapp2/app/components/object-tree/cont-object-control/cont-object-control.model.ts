@@ -1,5 +1,6 @@
 export class ContObjectControl {
-    constructor(public coSettingMode?: string,
+    constructor(public contObjectId: number,
+                public coSettingMode?: string,
                 public coBuildingType?: string,
                 public coName?: string,
                 public coHeat?: string,

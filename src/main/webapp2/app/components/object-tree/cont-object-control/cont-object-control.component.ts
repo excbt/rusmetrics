@@ -11,6 +11,9 @@ import { ContObjectControl } from './cont-object-control.model';
 
 import { ContObjectControlDataSource } from './cont-object-control.datasource';
 
+import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+
 @Component({
     selector: 'jhi-cont-object-control',
     templateUrl: './cont-object-control.component.html',
@@ -24,10 +27,14 @@ export class ContObjectControlComponent implements OnInit {
     cols: ContObjectControlColumn[];
     displayedColumns = ['coName'];
 
+    contObjectEventViewFlag = false;
+    selectedObject: ContObjectControl;
+
     dataSource: ContObjectControlDataSource;
 
     constructor(private eventManager: JhiEventManager,
-                private contObjectControlService: ContObjectControlService) {}
+                private contObjectControlService: ContObjectControlService,
+                private dialog: MatDialog) {}
 
     ngOnInit() {
 
@@ -115,6 +122,21 @@ export class ContObjectControlComponent implements OnInit {
         this.contObjectControlService
             .loadMonitorState(contObjectId.toString())
             .subscribe((res) => this.contObjectControlList.push(res));
+    }
+
+    clickObject(object) {
+        this.contObjectEventViewFlag = false;
+        console.log('Click object: ', object);
+        if (object && object.contObjectId) {
+
+            const dialogRef = this.dialog.open(ContObjectNoticeDialogComponent, {
+                height: '500px',
+                width: '700px',
+                data: {contObjectId: object.contObjectId, contObjectName: object.coName}
+            });
+
+            setTimeout(() => {this.contObjectEventViewFlag = true; this.selectedObject = object.contObjectId; console.log('Set time out: ', this.selectedObject); }, 500);
+        }
     }
 }
 
