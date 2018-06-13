@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.support.ContObjectShortInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContZPointShortInfo;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.repository.support.SubscrDeviceObjectNumber;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -90,12 +91,12 @@ public class SubscrContObjectServiceTest extends PortalDataTest {
 //        List<Tuple> resultRows = subscrContObjectRepository
 //				.selectSubscrDeviceObjectByNumber(getSubscriberParam().getSubscriberId(), Arrays.asList("104115"));
 
-		List<Tuple> resultRows2 = objectAccessService.findAllContZPointDeviceObjectsEx(portalUserIdsService.getCurrentIds().getSubscriberId(), Arrays.asList("111214"));
+		List<SubscrDeviceObjectNumber> resultRows2 = objectAccessService.findAllContZPointDeviceObjectsEx(portalUserIdsService.getCurrentIds().getSubscriberId(), Arrays.asList("111214"));
 
 		assertFalse(resultRows2.isEmpty());
 
-		for (Tuple t : resultRows2) {
-			logger.info("\nsubscriberId: {}, deviceObjectId:{}", t.get("subscriberId"), t.get("deviceObjectId"));
+		for (SubscrDeviceObjectNumber t : resultRows2) {
+			logger.info("\nsubscriberId: {}, deviceObjectId:{}", t.getSubscriberId(), t.getDeviceObjectId());
 
 		}
 

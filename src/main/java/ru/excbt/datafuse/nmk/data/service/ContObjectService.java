@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
+import ru.excbt.datafuse.nmk.repository.support.ContObjectMeterPeriod;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.SubscriberAccessService;
@@ -1020,18 +1021,18 @@ public class ContObjectService implements SecuredRoles {
 	@Transactional( readOnly = true)
 	public List<ContObjectMeterPeriodSettingsDTO> findMeterPeriodSettings(List<Long> contObjectIds) {
 
-		List<Tuple> values = contObjectRepository.findMeterPeriodSettings(contObjectIds);
-		Map<Long, ContObjectMeterPeriodSettingsDTO> resultMap = values.stream().map(i -> (Long) i.get(0)).distinct()
+		List<ContObjectMeterPeriod> values = contObjectRepository.findMeterPeriodSettings(contObjectIds);
+		Map<Long, ContObjectMeterPeriodSettingsDTO> resultMap = values.stream().map(i -> i.getId()).distinct()
 				.map(i -> new ContObjectMeterPeriodSettingsDTO().contObjectId(i))
 				.collect(Collectors.toMap(k -> k.getContObjectId(), v -> v));
 
 		values.forEach(i -> {
-			Long id = (Long) i.get(0);
+			Long id = i.getId();
 			try {
-				MeterPeriodSetting m = (MeterPeriodSetting) i.get(2);
-				resultMap.get(id).putSetting((String) i.get(1), m.getId());
+				MeterPeriodSetting m = i.getMeterPeriodSetting();
+				resultMap.get(id).putSetting(i.getKey(), m.getId());
 			} catch (Exception e) {
-				logger.error("V0:{}, V1:{}, V2:{}", i.get(0), i.get(1), i.get(2));
+//				logger.error("V0:{}, V1:{}, V2:{}", i.get(0), i.get(1), i.get(2));
 				throw e;
 			}
 

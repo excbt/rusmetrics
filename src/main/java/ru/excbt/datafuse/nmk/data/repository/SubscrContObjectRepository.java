@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.ContZPoint;
 import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.SubscrContObject;
 import ru.excbt.datafuse.nmk.data.repository.support.ContObjectRI;
+import ru.excbt.datafuse.nmk.repository.support.SubscrDeviceObjectNumber;
 
 import javax.persistence.Tuple;
 import java.util.List;
@@ -197,7 +198,7 @@ public interface SubscrContObjectRepository extends CrudRepository<SubscrContObj
 			+ " FROM SubscrContObject sco, ContZPoint zp INNER JOIN zp.deviceObject d LEFT JOIN d.deviceObjectDataSource ds"
 			+ " WHERE sco.subscriberId = :subscriberId AND sco.subscrEndDate IS NULL AND zp.contObjectId= "
 			+ " sco.contObjectId AND d.number IN (:deviceObjectNumbers) ")
-	List<Tuple> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,
-			@Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
+	List<SubscrDeviceObjectNumber> selectSubscrDeviceObjectByNumber(@Param("subscriberId") Long subscriberId,
+                                                                    @Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
 
 }

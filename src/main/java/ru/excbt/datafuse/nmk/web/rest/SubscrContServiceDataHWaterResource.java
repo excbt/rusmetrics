@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.*;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.repository.support.SubscrDeviceObjectNumber;
 import ru.excbt.datafuse.nmk.service.dto.ContServiceDataHWaterDTO;
 import ru.excbt.datafuse.nmk.service.utils.CsvUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
@@ -42,7 +43,6 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.service.WebAppPropsService;
 
-import javax.persistence.Tuple;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -742,20 +742,20 @@ public class SubscrContServiceDataHWaterResource {
 		logger.debug("Looking for subscriberId: {}, serials: {}", userIds.getSubscriberId(),
 				fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
-		List<Tuple> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(userIds.getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
+		List<SubscrDeviceObjectNumber> deviceObjectsData = objectAccessService.findAllContZPointDeviceObjectsEx(userIds.getSubscriberId(), fileNameDataList.stream().map(i -> i.deviceSerial).collect(Collectors.toList()));
 
 		deviceObjectsData.forEach(i -> logger.info("deviceObjectNumber: {}, tsNumber: {}, isManualLoading: {}",
-				i.get("deviceObjectNumber"), i.get("tsNumber"), i.get("isManualLoading")));
+				i.getDeviceObjectNumber(), i.getTsNumber(), i.getIsManualLoading()));
 
 		List<ServiceDataImportInfo> serviceDataImportInfos = new ArrayList<>();
 
-		Map<String, Tuple> filenameDBInfos = new HashMap<>();
+		Map<String, SubscrDeviceObjectNumber> filenameDBInfos = new HashMap<>();
 
 		for (FileNameData data : fileNameDataList) {
 
-			final List<Tuple> checkRows = deviceObjectsData.stream()
-					.filter(i -> data.deviceSerial.equals(i.get("deviceObjectNumber").toString())
-							&& data.tsNumber.equals(i.get("tsNumber").toString()))
+			final List<SubscrDeviceObjectNumber> checkRows = deviceObjectsData.stream()
+					.filter(i -> data.deviceSerial.equals(i.getDeviceObjectNumber())
+							&& data.tsNumber.equals(i.getTsNumber()))
 					.collect(Collectors.toList());
 
 			if (checkRows.size() == 0) {
@@ -772,9 +772,9 @@ public class SubscrContServiceDataHWaterResource {
 				continue;
 			}
 
-			final Tuple row = checkRows.get(0);
+			final SubscrDeviceObjectNumber row = checkRows.get(0);
 
-			if (!Boolean.TRUE.equals(DBRowUtil.asBoolean(row.get("isManualLoading")))) {
+			if (!Boolean.TRUE.equals(DBRowUtil.asBoolean(row.getIsManualLoading()))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
                     data.deviceSerial, data.tsNumber, data.fileName));
@@ -786,10 +786,10 @@ public class SubscrContServiceDataHWaterResource {
 		}
 
 		Collection<Long> loadContZPoints = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtil.asLong(i.get("contZPointId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.getContZPointId())).collect(Collectors.toSet());
 
 		Collection<Long> checkDataSourceIds = filenameDBInfos.values().stream()
-				.map(i -> DBRowUtil.asLong(i.get("subscrDataSourceId"))).collect(Collectors.toSet());
+				.map(i -> DBRowUtil.asLong(i.getSubscrDataSourceId())).collect(Collectors.toSet());
 
 
         ObjectAccessUtil accessUtil = objectAccessService.objectAccessUtil();
@@ -838,13 +838,13 @@ public class SubscrContServiceDataHWaterResource {
 				return ApiResponse.responseInternalServerError(ApiResult.error(e));
 			}
 
-			Tuple row = filenameDBInfos.get(fileName);
+            SubscrDeviceObjectNumber row = filenameDBInfos.get(fileName);
 
 			checkState(row != null);
 
 			ServiceDataImportInfo importInfo = new ServiceDataImportInfo(userIds.getSubscriberId(),
-					DBRowUtil.asLong(row.get("contObjectId")), DBRowUtil.asLong(row.get("contZPointId")),
-					DBRowUtil.asLong(row.get("deviceObjectId")), DBRowUtil.asLong(row.get("subscrDataSourceId")),
+					row.getContObjectId(), row.getContZPointId(),
+					row.getDeviceObjectId(), row.getSubscrDataSourceId(),
                 fileName, internalFilename);
 
 			serviceDataImportInfos.add(importInfo);
