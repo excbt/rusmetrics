@@ -827,6 +827,7 @@
                 <configuration>
                     <!-- Force alphabetical order to have a reproducible build -->
                     <runOrder>alphabetical</runOrder>
+                    <argLine>-Xmx2048M</argLine>
                 </configuration>
             </plugin>
             <plugin>
