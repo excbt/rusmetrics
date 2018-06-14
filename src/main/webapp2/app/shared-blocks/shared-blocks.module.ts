@@ -57,6 +57,7 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { ExcFrameComponent } from './exc-form-template/exc-frame.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -98,6 +99,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       PerfectScrollbarModule
   ],
   declarations: [
+    ExcFrameComponent,
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
@@ -118,6 +120,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
+    ExcFrameComponent,
     ExcSearchInputComponent,
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
