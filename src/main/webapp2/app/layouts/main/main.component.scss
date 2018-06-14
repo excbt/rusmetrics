@@ -22,10 +22,12 @@
     // padding-top: 0 !important;
     margin-top: 0% !important;
     margin-left: 0%;
-    border: none;
-    height: 92vh;
-//    border-top: 1px solid black;
+    border-style: none;
     border-radius: 0 !important;    
+    height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);
+    overflow: hidden;
+//    border-top: 1px solid black;
     width: 100%;
     background-color: #fff;
     position: relative;
@@ -37,12 +39,21 @@
     
 }
 
+.debug-frame {
+    border-style: dashed !important;
+    border-width: 1px;
+    border-color: rgb(250, 127, 127);    
+}
+
 .portal-container {
     margin-top: 0%;
     padding-top: 0%;
     padding-left: 0%;
     padding-right: 0%;
     // border-top: 0;
+    // margin-top: 1rem;
+    // margin-left: 1rem;
+    // margin-right: 1rem;
 }
 
 .portal-headerbar {

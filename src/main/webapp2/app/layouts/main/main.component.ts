@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, NavigationEnd } from '@angular/router';
 import { JhiLanguageHelper } from '../../shared';
+import { DEBUG_INFO_ENABLED } from '../../app.constants';
 
 @Component({
     selector: 'jhi-main',
@@ -28,5 +29,9 @@ export class JhiMainComponent implements OnInit {
                 this.jhiLanguageHelper.updateTitle(this.getPageTitle(this.router.routerState.snapshot.root));
             }
         });
+    }
+
+    showDebugFrame(): boolean {
+        return DEBUG_INFO_ENABLED;
     }
 }
