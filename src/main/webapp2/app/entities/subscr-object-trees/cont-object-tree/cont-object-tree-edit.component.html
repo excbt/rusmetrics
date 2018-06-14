@@ -4,8 +4,8 @@
             <jhi-exc-toolbar>
             </jhi-exc-toolbar>
             <p-dropdown [options]="treeList" [(ngModel)]="selectedTreeShort" optionLabel="objectName" [style]="{'width':'100%'}" (onChange)="treeChange($event)"></p-dropdown>
-
-            <div class="div-left-scrollable">
+            <perfect-scrollbar style="max-height: 810px;">
+            <div>
             <p-treeTable [value]="objectTree" >
                 <!--  -->
                 <p-column>
@@ -46,6 +46,7 @@
 
             </p-treeTable>
             </div>
+            </perfect-scrollbar>
         </div>
     </split-area>
     <split-area size="75">
