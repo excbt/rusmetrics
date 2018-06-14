@@ -41,11 +41,23 @@
 }
 
 .div-left-scrollable {
-    height: 810px;
-    max-height: 810px;
+    height: calc(100vh - 130px);
+    max-height: calc(100vh - 130px);
     overflow-y: auto;
 }
 
 .div-left-no-scroll {
     overflow-y: hidden;
 }
+
+.div-right-no-scroll {
+    height: calc(100vh - 95px);
+    max-height: calc(100vh - 95px);
+    // overflow-y: hidden;    
+}
+
+
+.scroll-bar-height {
+    overflow-y: auto;
+}
+
