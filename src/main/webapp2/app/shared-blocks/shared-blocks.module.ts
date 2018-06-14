@@ -54,6 +54,13 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { AngularSplitModule } from 'angular-split';
 import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
 import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   imports: [
@@ -87,7 +94,8 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
       TableModule,
       ConfirmDialogModule,
       // 3rd party modules
-      AngularSplitModule
+      AngularSplitModule,
+      PerfectScrollbarModule
   ],
   declarations: [
     ExcEditButtonsComponent,
@@ -103,6 +111,10 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
   entryComponents: [
   ],
   providers: [
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    }
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
@@ -147,7 +159,8 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     DropdownModule,
     DragDropModule,
     // 3rd party modules
-    AngularSplitModule
+    AngularSplitModule,
+    PerfectScrollbarModule
   ]
 })
 export class PortalSharedBlocksModule {}
