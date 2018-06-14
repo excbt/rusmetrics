@@ -30,7 +30,8 @@ import {
   MatToolbarModule,
   MatListModule,
   MatSelectModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatMenuModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -82,6 +83,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       MatSlideToggleModule,
       MatToolbarModule,
       MatListModule,
+      MatMenuModule,
       // PRIME NG
       CardModule,
       InputTextModule,
@@ -147,6 +149,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatTooltipModule,
     MatAutocompleteModule,
     MatSlideToggleModule,
+    MatMenuModule,
     // Prime NG mudule
     TreeTableModule,
     ContextMenuModule,

@@ -3,8 +3,17 @@
     <split-area size="25">
         <div class="div-left-no-scroll">
             <jhi-exc-toolbar>
+                <div toolbar-left class="exc-toolbal-menu-container">
+                    <button mat-icon-button [matMenuTriggerFor]="treeMenu" class="exc-toolbal-menu-btn">
+                        <mat-icon fontSet = "fa" fontIcon = "fa-sitemap"></mat-icon>
+                    </button>
+                    <mat-menu #treeMenu="matMenu">
+                    <button mat-menu-item *ngFor = "let subscrObjectTree of treeList" (click)="treeMenuChange(subscrObjectTree.id)">
+                        <span >{{subscrObjectTree.objectName}}</span>
+                    </button>                        
+                    </mat-menu>                     
+                </div>
             </jhi-exc-toolbar>
-            <p-dropdown [options]="treeList" [(ngModel)]="selectedTreeShort" optionLabel="objectName" [style]="{'width':'100%'}" (onChange)="treeChange($event)"></p-dropdown>
             <!-- <perfect-scrollbar class="scroll-bar-height"> -->
             <div class="div-left-scrollable" #divLeft>
             <p-treeTable [value]="objectTree" >

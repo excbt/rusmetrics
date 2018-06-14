@@ -13,7 +13,6 @@ import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model'
 export class ContObjectTreeEditComponent implements OnInit {
 
     treeList: SubscrObjectTree[];
-    selectedTreeShort: SubscrObjectTree;
 
     currentTree: SubscrObjectTree;
 
@@ -70,6 +69,10 @@ export class ContObjectTreeEditComponent implements OnInit {
         if (event && event.value && event.value.id) {
             this.currentTreeSubject.next(event.value.id);
         }
+    }
+
+    treeMenuChange(id: number) {
+        this.currentTreeSubject.next(id);
     }
 
     convertTreeDataToTreeNode(objectTree: SubscrObjectTree): TreeNode {
