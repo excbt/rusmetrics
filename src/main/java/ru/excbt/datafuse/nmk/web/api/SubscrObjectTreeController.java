@@ -16,6 +16,8 @@ import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeValidationService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
@@ -121,11 +123,11 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
-		SubscrObjectTree result = subscrObjectTreeService.selectSubscrObjectTree(rootSubscrObjectTreeId);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		SubscrObjectTreeDTO result = subscrObjectTreeService.findSubscrObjectTreeDTO(rootSubscrObjectTreeId);
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -142,11 +144,11 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
-		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(portalUserIdsService.getCurrentIds());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(treeType, portalUserIdsService.getCurrentIds());
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -166,7 +168,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 
@@ -200,7 +202,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		List<Long> contObjectIds = subscrObjectTreeContObjectService
@@ -236,7 +238,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(portalUserIdsService.getCurrentIds(),
@@ -285,7 +287,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -320,7 +322,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -351,7 +353,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -387,7 +389,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -443,7 +445,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -511,7 +513,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -530,7 +532,7 @@ public class SubscrObjectTreeController {
 				.selectCityMonitoryContEventsStatus(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return ApiResponse.responseOK(result);
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -553,7 +555,7 @@ public class SubscrObjectTreeController {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -572,7 +574,7 @@ public class SubscrObjectTreeController {
 				.selectCityMonitoryContEventsStatusV2(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return ApiResponse.responseOK(result);
+		return ResponseEntity.ok(result);
 	}
 
 }
