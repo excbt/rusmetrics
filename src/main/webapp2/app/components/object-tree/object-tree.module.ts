@@ -28,7 +28,8 @@ import { objectTreeState,
         ContObjectControlComponent,
         ContObjectEventService,
         ContObjectEventComponent,
-        ContObjectNoticeDialogComponent
+        ContObjectNoticeDialogComponent,
+        DateUtils
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -37,6 +38,8 @@ import { AngularSplitModule } from 'angular-split';
 // PRimeNG
 import { TreeModule } from 'primeng/tree';
 import { TableModule } from 'primeng/table';
+import { DialogModule } from 'primeng/dialog';
+import { CalendarModule } from 'primeng/calendar';
 
 // Angular Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -63,7 +66,9 @@ import { MatDialogModule } from '@angular/material/dialog';
         TableModule,
         MatTableModule,
         MatProgressSpinnerModule,
-        MatDialogModule
+        MatDialogModule,
+        DialogModule,
+        CalendarModule
     ],
     declarations: [
         PortalObjectTreeComponent,
@@ -91,7 +96,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         TreeNodeControlService,
         PTreeNodeService,
         ContObjectControlService,
-        ContObjectEventService
+        ContObjectEventService,
+        DateUtils
     ],
     exports: [
         PortalObjectTreeComponent

@@ -12,6 +12,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 export class PortalObjectTreeComponent implements OnInit {
 
     treeNodeId: number;
+    showEventFlag: boolean = false;
+    dateVal: Date = new Date();
 
     constructor() {
         this.treeNodeId = 777;
@@ -19,5 +21,9 @@ export class PortalObjectTreeComponent implements OnInit {
 
     ngOnInit() {
     }
+    
+//    showDialog() {
+//        this.showEventFlag = true;
+//    }
 
 }

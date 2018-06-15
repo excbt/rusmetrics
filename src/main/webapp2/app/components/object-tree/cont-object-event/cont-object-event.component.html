@@ -37,7 +37,7 @@
         
         <ng-container matColumnDef = "contEventDate">
            <mat-header-cell *matHeaderCellDef>
-               Data
+               Дата
            </mat-header-cell>
            <mat-cell *matCellDef = "let event">
                {{event.getContEventDisplayedDate()}}
@@ -47,7 +47,7 @@
         
         <ng-container matColumnDef = "contEventTime">
             <mat-header-cell *matHeaderCellDef>
-                Time
+                Время
             </mat-header-cell>
             <mat-cell *matCellDef = "let event">
                 {{event.getContEventDisplayedTime()}}
@@ -56,7 +56,7 @@
         
         <ng-container matColumnDef = "contEventMessage">
             <mat-header-cell *matHeaderCellDef class = "nmc-col-message">
-                Message
+                Сообщение
             </mat-header-cell>
             <mat-cell *matCellDef = "let event" class = "nmc-col-message">
                 {{event.getContEventDisplayedMessage()}}

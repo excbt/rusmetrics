@@ -1,4 +1,23 @@
 // import { MomentModule } from 'angular-2-moment/moment.module';
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class DateUtils {
+    
+    public dateOptions = {
+        firstDateOfWeek: 1,
+        dayNames: ['понедельник', 'вторник', 'среда', 'четверг', 'пятница', 'субботк', 'воскресенье'],
+        dayNamesShort: ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'],
+        dayNamesMin: ['П', 'В', 'С', 'Ч', 'П', 'С', 'В'],
+        monthNames: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
+        monthNamesShort: ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'],
+        today: 'Сегодня',
+        clear: 'Очистить'
+    }
+    
+    constructor() {}
+    
+}
 
 export class DateWrapper {
     

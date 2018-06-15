@@ -124,5 +124,73 @@
     
     </jhi-cont-object-event>
 -->
+<!--   *ngIf = "selectedObject && selectedObject.coName"-->
+<!--      <div *ngIf = "selectedObject && selectedObject.coName">-->
+       <p-dialog 
+          [header] = "selectedObject.coName" 
+          [(visible)] = "showEventFlag" 
+          [modal] = "false" 
+          [responsive] = "true" 
+          [width] = "800" 
+          [minWidth] = "731" 
+          [minY] = "70"
+          [maximizable] = "false"
+          [baseZIndex] = "-1000"
+          >
+          <p-header>
+              <mat-toolbar class = "nmc-nav-toolbar" style = "">  
+                <mat-toolbar-row 
+                    style = "">
+            
+                    <div class="float-left" *ngIf = "eventModeFlag">
+                        <button mat-icon-button (click)="setHistoryMode()"
+                         class ="nmc-history-toggle-btn"
+                          style = ""
+                           >
+<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                        </button>
+                        
+                    </div>
+                    
+                    <div class="float-left" *ngIf = "historyModeFlag">
+                        <button mat-icon-button (click)="setEventMode()"
+                         class ="nmc-event-toggle-btn"
+                          style = ""
+                           >
+<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                        </button>
+                        <p-calendar 
+                          [(ngModel)] = "historyDateRange"
+                           [locale] = "dateLocale"
+                           readonlyInput = "true"
+                           dateFormat = "dd.mm.yy"
+                           selectionMode = "range"
+                           [style] = "{'font-size': '14px', 'line-height': 1}">
+                            
+                        </p-calendar>
+                                                
+                        
+                    </div>    
+            
+                </mat-toolbar-row>
+            </mat-toolbar>
+          </p-header>      
+
     
+            <jhi-cont-object-event *ngIf = "showEventFlag && eventModeFlag" [contObjectId] = "selectedObject.contObjectId">
+
+            </jhi-cont-object-event>
+    
+            <p-footer>
+                <button 
+                    type = "button" 
+                    pButton 
+                     
+                    (click) = "showEventFlag = false" 
+                    label = "OK">
+                </button>
+            </p-footer>
+
+       </p-dialog>
+<!--    </div>    -->
 </div>

@@ -14,6 +14,8 @@ import { ContObjectControlDataSource } from './cont-object-control.datasource';
 import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
+import { DateUtils } from '../utils/date-utils';
+
 @Component({
     selector: 'jhi-cont-object-control',
     templateUrl: './cont-object-control.component.html',
@@ -27,16 +29,26 @@ export class ContObjectControlComponent implements OnInit {
     cols: ContObjectControlColumn[];
     displayedColumns = ['coName'];
 
-    contObjectEventViewFlag = false;
-    selectedObject: ContObjectControl;
-
+//    contObjectEventViewFlag = false;
+    selectedObject: ContObjectControl = new ContObjectControl(0, '', '', '' ,'');
     dataSource: ContObjectControlDataSource;
+    showEventFlag: boolean = false;
+    
+    eventModeFlag = true;
+    historyModeFlag = false;
+    historyDateRange: any;
+    dateLocale: any;
 
     constructor(private eventManager: JhiEventManager,
                 private contObjectControlService: ContObjectControlService,
-                private dialog: MatDialog) {}
+                private dialog: MatDialog,
+                private dateUtils: DateUtils) {}
 
     ngOnInit() {
+console.log('DateUtils: ', DateUtils);
+console.log('new DateUtils: ', new DateUtils());
+//console.log('dateUtils: ', this.dateUtils);
+        this.dateLocale = this.dateUtils.dateOptions;
 
         this.contObjectControlService.initSvc();
 
@@ -125,18 +137,31 @@ export class ContObjectControlComponent implements OnInit {
     }
 
     clickObject(object) {
-        this.contObjectEventViewFlag = false;
+//        this.contObjectEventViewFlag = false;
         console.log('Click object: ', object);
         if (object && object.contObjectId) {
 
-            const dialogRef = this.dialog.open(ContObjectNoticeDialogComponent, {
-                height: '500px',
-                width: '700px',
-                data: {contObjectId: object.contObjectId, contObjectName: object.coName}
-            });
-
-            setTimeout(() => {this.contObjectEventViewFlag = true; this.selectedObject = object.contObjectId; console.log('Set time out: ', this.selectedObject); }, 500);
+//            const dialogRef = this.dialog.open(ContObjectNoticeDialogComponent, {
+//                height: '500px',
+//                width: '700px',
+//                data: {contObjectId: object.contObjectId, contObjectName: object.coName}
+//            });
+//
+//            setTimeout(() => {this.contObjectEventViewFlag = true; this.selectedObject = object.contObjectId; console.log('Set time out: ', this.selectedObject); }, 500);
+            
+            this.showEventFlag = true;
+            this.selectedObject = object;
         }
+    }
+    
+    setHistoryMode() {
+        this.eventModeFlag = false;
+        this.historyModeFlag = true;
+    }
+    
+    setEventMode() {
+        this.historyModeFlag = false;
+        this.eventModeFlag = true;        
     }
 }
 

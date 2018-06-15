@@ -18,3 +18,19 @@
 .spinner-container mat-spinner {
     margin: 130px auto 0 auto;
 }
+
+.nmc-history-toggle-btn {
+    height: 24px;
+    width: 24px;
+    background: url(../../../../content/images/object-trees/calendar24.png);
+    border-radius: 0;
+    margin-top: 7px;
+}
+
+.nmc-event-toggle-btn {
+    height: 24px;
+    width: 24px;
+    background: url(../../../../content/images/object-trees/three_color24_light.png);
+    border-radius: 0;
+    margin-top: 7px;
+}

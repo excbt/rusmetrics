@@ -50,3 +50,20 @@
 .nmc-null-state {
     background: url(../../../content/images/object-trees/states/object-state-null.png);
 }
+
+mat-toolbar.nmc-nav-toolbar {
+    min-height: 32px; 
+    background-color: transparent; /*rgb(231, 235, 245);*/
+    border-top: 1px solid rgba(0, 0, 0, .12); /*#41719c;*/
+    border-bottom: 1px solid rgba(0, 0, 0, .12); /* #41719c;*/
+}
+
+.nmc-nav-toolbar mat-toolbar-row {
+    height: 32px;
+}
+
+.nmc-toolbar-btn {
+    height: 31px; 
+    width: 31px; 
+    line-height: 31px;
+}

@@ -1,3 +1,5 @@
+export * from './utils';
+
 export * from './object-tree.component';
 // export * from './object-tree.service';
 export * from './object-tree.datasource';
