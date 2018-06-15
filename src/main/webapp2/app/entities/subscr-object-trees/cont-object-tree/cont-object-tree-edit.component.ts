@@ -7,7 +7,7 @@ import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model'
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 
-const startLoadingDelay = 150;
+// const startLoadingDelay = 150;
 
 @Component({
     selector: 'jhi-cont-object-tree-edit',
