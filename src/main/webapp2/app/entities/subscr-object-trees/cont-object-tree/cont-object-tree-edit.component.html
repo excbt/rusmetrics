@@ -36,7 +36,7 @@
 
                         <!-- Tree Nodes Icon -->
                         <div *ngIf="node?.data?.dataType === 'TREE_NODE'" class="tree-row">
-                            <i class="fa fa-folder" [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.isLinkDeny, 'propertyRoot': !node?.data?.subscrNode?.parentId}"></i>
+                            <i class="fa fa-folder-open supa-icon" [ngClass]="{'propertyDisabled': node?.data?.subscrNode?.isLinkDeny, 'propertyRoot': !node?.data?.subscrNode?.parentId}"></i>
                         </div>
 
                         <!-- Root & isLinkDeny === true -->
@@ -67,11 +67,15 @@
             <jhi-exc-toolbar>
             </jhi-exc-toolbar>
             <div class="div-right-no-scroll">
-            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree($event)" [scrollable]="true" scrollHeight="97%">
+            <p-table [value]="availableContObjects" pDroppable="fromTree" (onDrop)="dropFromTree($event)" [scrollable]="true" scrollHeight="100%"
+                (sortFunction)="customTableSort($event)" [customSort]="true" sortMode="single">
                 <ng-template pTemplate="header">
                     <tr>
                         <!-- <th> {{'global.field.id' | translate}} </th> -->
-                        <th> {{'subscrObjectTree.contObjectEdit.contObjectVmTitle' | translate}}</th>
+                        <th [pSortableColumn]="'uiCaption'">
+                            {{'subscrObjectTree.contObjectEdit.contObjectVmTitle' | translate}}
+                            <p-sortIcon [field]="'uiCaption'"></p-sortIcon>
+                        </th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-rowData>
