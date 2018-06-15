@@ -16,15 +16,18 @@
             </jhi-exc-toolbar>
             <!-- <perfect-scrollbar class="scroll-bar-height"> -->
             <div class="div-left-scrollable" #divLeft>
-            <p-treeTable [value]="objectTree" >
+            <p-treeTable [value]="objectTree" [style] = "{'width': '100%', 'border': 'none'}">
                 <!--  -->
-                <p-column>
+                <!-- <p-column header="{{'subscrObjectTree.captions.nodeNames' | translate}}" [styleClass]="{'tree-header'}"> -->
+                <p-column header="{{'subscrObjectTree.captions.nodeNames' | translate}}" [style]="{'text-align': 'left', 'color': '#1b1d1f'}">
                     <ng-template let-node="rowData" pTemplate="body">
                         <!-- Cont Objects pDraggable -->
                         <div *ngIf="node?.data?.dataType === 'CONT_OBJECT'" class="tree-row tree-row-width" 
                             [ngClass]="{'exc-row-highlight': node?.data?.selected, 'selected-border': node?.data?.selected}"
                                 (click)="clickTreeContObjectRow($event, node)"
-                                    pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)">
+                                    pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)"
+                                    pDroppable="toTree" (onDrop)="dropContObjectToTree($event, node.parent)"    
+                                    >
                             <i class="exc-icon-building-default-16"></i>
                             <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
                             [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}">

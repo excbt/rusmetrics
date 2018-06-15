@@ -59,6 +59,7 @@ import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { ExcFrameComponent } from './exc-form-template/exc-frame.component';
+import { TreeModule } from 'primeng/tree';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -92,6 +93,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       CheckboxModule,
       AutoCompleteModule,
       TreeTableModule,
+      TreeModule,
       ContextMenuModule,
       ScrollPanelModule,
       TableModule,
@@ -151,6 +153,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     MatSlideToggleModule,
     MatMenuModule,
     // Prime NG mudule
+    TreeModule,
     TreeTableModule,
     ContextMenuModule,
     OverlayPanelModule,

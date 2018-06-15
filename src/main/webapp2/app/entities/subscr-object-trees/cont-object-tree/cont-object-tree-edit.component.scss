@@ -5,16 +5,19 @@
     color: rgb(202, 66, 66)
 }
 .propertyRoot {
-    color: blue;
+    color: rgb(202, 66, 66);
 }
 
 .contObjectNode {
-    display: inline-block;
+    // display: inline-block;
     color: blue;
     font-size: 80%;
 }
 
 .exc-icon-building-default-16 {
+    display: inline-block;
+    min-width: 16px;
+    min-height: 16px;
     height: 16px;
     width: 16px;
     background: url(../../../../content/images/buildings/building16.png);
@@ -27,10 +30,11 @@
     padding-bottom: 0;
     padding-right: 0;
     margin: 1px;
+    color: #1b1d1f;    
 }
 
 .tree-row-width {
-    width: 80%;
+    width: 85%;
 }
 
 .selected-border {
@@ -40,10 +44,25 @@
     margin: 0 !important;
 }
 
+.selected-border > span {
+    // filter: invert(100%);
+    color: white;
+}
+
+.exc-row-highlight > td {
+    // filter: invert(100%);
+    color: white;
+}
+
 .div-left-scrollable {
-    height: calc(100vh - 130px);
-    max-height: calc(100vh - 130px);
+    height: calc(100vh - 95px);
+    max-height: calc(100vh - 95px);
     overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.font-color {
+    color: #1b1d1f;
 }
 
 .div-left-no-scroll {

@@ -30,7 +30,8 @@
                 "confirmation": "Вы дейстивтельно хотите продолжить?",
                 "yes": "Да",
                 "no": "Нет"
-            }
+            },
+            "nodeNames": "Узлы иерархии"
         },
         "id": "id",
         "parentId": "parentId",

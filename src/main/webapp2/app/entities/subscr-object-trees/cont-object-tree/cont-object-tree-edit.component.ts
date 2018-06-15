@@ -4,6 +4,10 @@ import { TreeNode } from 'primeng/api';
 import { SubscrObjectTree } from '../subscr-object-tree.model';
 import { BehaviorSubject } from 'rxjs';
 import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model';
+import { catchError, finalize } from 'rxjs/operators';
+import { of } from 'rxjs/observable/of';
+
+const startLoadingDelay = 150;
 
 @Component({
     selector: 'jhi-cont-object-tree-edit',
@@ -19,6 +23,10 @@ export class ContObjectTreeEditComponent implements OnInit {
     objectTree: TreeNode[];
 
     availableContObjects: ContObjectShortVM[];
+
+    private leftLoadingSubject = new BehaviorSubject<boolean>(false);
+
+    leftTreeLoading$ = this.leftLoadingSubject.asObservable();
 
     selectedContObjectIds: number[] = [];
     private draggableContObjects: ContObjectShortVM[] = [];
@@ -43,11 +51,22 @@ export class ContObjectTreeEditComponent implements OnInit {
                 this.currentTreeSubject.next(data[0].id);
             }
         });
-        this.currentTreeId$.filter((id) => id !== null && id !== undefined).flatMap((id) => this.subscrObjectTreeService.getContObjectType1(id))
+
+        this.currentTreeId$.filter((id) => id !== null && id !== undefined)
+            .flatMap((id) => {
+                this.leftLoadingSubject.next(true);
+                this.startLoading();
+                return this.subscrObjectTreeService.getContObjectType1(id);
+            })
+            .pipe(
+                catchError(() => of(null)),
+                finalize(() => this.finishLoading())
+            )
             .subscribe((data) => {
                 this.currentTree = data;
                 this.treeContObjectNodesData = [];
                 this.objectTree = [this.convertTreeDataToTreeNode(data)];
+                this.finishLoading();
             });
 
         this.currentTreeId$.filter((id) => id !== null && id !== undefined)
@@ -58,6 +77,16 @@ export class ContObjectTreeEditComponent implements OnInit {
                 this.clearSelection();
             });
 
+    }
+
+    startLoading() {
+        this.leftLoadingSubject.next(true);
+        // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
+    }
+
+    finishLoading() {
+        this.leftLoadingSubject.next(false);
+        // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
     }
 
     clearSelection() {
