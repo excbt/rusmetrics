@@ -1,0 +1,21 @@
+/* Angular Material Custom Theme */
+@import '~@angular/material/theming';
+@include mat-core();
+
+$alt-primary: mat-palette($mat-grey,900);
+$alt-accent:  mat-palette($mat-grey, 500);
+$alt-theme: mat-light-theme($alt-primary, $alt-accent);
+
+.gray-alternative {
+    @include angular-material-theme($alt-theme);
+}
+
+.list-form-table {
+    @include angular-material-theme($alt-theme);    
+    min-height: 360px;
+    margin-top: 10px;
+}
+
+md-icon{
+    font-family: 'Material Icons' !important;
+}

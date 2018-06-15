@@ -60,6 +60,8 @@ import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { ExcFrameComponent } from './exc-form-template/exc-frame.component';
 import { TreeModule } from 'primeng/tree';
+import { BuildingTypeDecoderService } from './exc-ui-tools/building-type-decoder.service';
+import { BuildingTypeIconComponent } from './exc-ui-tools/building-type-icon.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -112,7 +114,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     ExcToolbarComponent,
-    ExcSearchInputComponent
+    ExcSearchInputComponent,
+    BuildingTypeIconComponent
   ],
   entryComponents: [
   ],
@@ -120,7 +123,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
-    }
+    },
+    BuildingTypeDecoderService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
@@ -135,6 +139,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcSearchFieldComponent,
     ExcToolbarComponent,
     ExcSearchInputComponent,
+    BuildingTypeIconComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,

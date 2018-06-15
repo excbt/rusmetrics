@@ -7,7 +7,8 @@
         },
         "contObjectEdit": {
             "title": "Привязка объектов учета",
-            "contObjectVmTitle": "Объекты учета"
+            "contObjectVmTitle": "Объекты учета",
+            "buildingTypeCategory": "Категория"
         },
         "captions": {
             "title": "Иерархии",

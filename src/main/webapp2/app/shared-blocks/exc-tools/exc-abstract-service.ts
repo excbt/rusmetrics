@@ -3,10 +3,7 @@ import { Observable } from 'rxjs/Observable';
 import { SERVER_API_URL } from '../../app.constants';
 import { ExcPage, ExcPageParams, ExcApiParams } from './';
 import { ExcEditFormEntityProvider } from '..';
-
-export interface ServiceParams {
-    apiUrl: string;
-}
+import { ServiceParams } from './exc-api-service';
 
 export const defaultPageSuffix = 'page/';
 

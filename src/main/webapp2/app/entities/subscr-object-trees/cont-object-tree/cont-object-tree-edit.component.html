@@ -28,7 +28,7 @@
                                     pDraggable="fromTree" (onDragStart)="dragFromTreeStart($event, node)"
                                     pDroppable="toTree" (onDrop)="dropContObjectToTree($event, node.parent)"    
                                     >
-                            <i class="exc-icon-building-default-16"></i>
+                            <i class="{{ getBuidingTypeIcon(node.data.contObject) }}"></i>
                             <span *ngIf="node?.data?.dataType === 'CONT_OBJECT'" 
                             [ngClass]="{'contObjectNode': node.data.dataType === 'CONT_OBJECT'}">
                                     {{node.label}}</span>
@@ -49,8 +49,7 @@
                         <!-- Children & isLinkDeny === false pDroppable  -->
                         <div *ngIf="node?.data?.dataType === 'TREE_NODE' && (node?.data?.subscrNode?.parentId && !node?.data?.subscrNode?.isLinkDeny)" 
                             class="tree-row tree-row-width" pDroppable="toTree" (onDrop)="dropContObjectToTree($event, node)">
-                            <span [ngClass]="{'propertyDisabled': false}" 
-                                >
+                            <span [ngClass]="{'propertyDisabled': false}" >
                             {{node.label}}</span>
                         </div>
                         
@@ -72,6 +71,8 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <!-- <th> {{'global.field.id' | translate}} </th> -->
+                        <th class="category-width">
+                        </th>
                         <th [pSortableColumn]="'uiCaption'">
                             {{'subscrObjectTree.contObjectEdit.contObjectVmTitle' | translate}}
                             <p-sortIcon [field]="'uiCaption'"></p-sortIcon>
@@ -82,7 +83,11 @@
                     <tr pDraggable="toTree" (onDragStart)="dragToTreeStart($event, rowData)"
                         [ngClass]="{'exc-row-highlight': selectedContObjectIds.indexOf(rowData.contObjectId) !== -1}">
                         <!-- <td>{{rowData.id}}</td> -->
-                        <td (click)="clickTableRow($event, rowData)"><span> {{ rowData.uiCaption }} </span></td>
+                        <td class="category-width">
+                            <jhi-exc-building-type-icon categoryName="{{ rowData.buildingTypeCategory }}"></jhi-exc-building-type-icon>
+                        </td>
+                        <td (click)="clickTableRow($event, rowData)">
+                            <span> {{ rowData.uiCaption }} </span></td>
                     </tr>
                 </ng-template>
             </p-table>

@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
+import { BuildingTypeDecoderService } from '../../../shared-blocks/exc-ui-tools/building-type-decoder.service';
 
 // const startLoadingDelay = 150;
 
@@ -42,6 +43,7 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
+        private buildingTypeDecoderService: BuildingTypeDecoderService
     ) { }
 
     ngOnInit() {
@@ -309,6 +311,10 @@ export class ContObjectTreeEditComponent implements OnInit {
 
             return (event.order * result);
         });
+    }
+
+    getBuidingTypeIcon(contObject: ContObjectShortVM): string {
+        return this.buildingTypeDecoderService.getIconName16(contObject.buildingTypeCategory);
     }
 
 }
