@@ -6,3 +6,11 @@
 .ui-table .ui-sortable-column.ui-state-highlight .ui-sortable-column-icon {
     color: #1b1d1f;
 }
+
+.exc-no-border-tool > .ui-treetable.ui-widget > .ui-treetable-tablewrapper > table > tbody {
+    border: none;
+}
+
+.exc-no-header-tool > .ui-treetable.ui-widget > .ui-treetable-tablewrapper > table > thead > tr > th {
+    display: none;
+}

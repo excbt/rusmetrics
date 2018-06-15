@@ -47,8 +47,8 @@
 }
 
 .div-left-scrollable {
-    height: calc(100vh - 95px);
-    max-height: calc(100vh - 95px);
+    height: calc(100vh - 95px - 34px);
+    max-height: calc(100vh - 95px - 34px);
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -80,4 +80,21 @@
 .category-width{
     width: 30px;
     text-align: center;
+}
+
+.fake-header {
+    height: 34px;
+    max-height: 34px;
+
+    background: #ebedf0;
+    border-color: #d9d9d9;
+    padding: .25em .5em;
+    overflow: hidden;
+    white-space: nowrap;
+    border-width: 1px;
+    border-style: solid;    
+
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    font-weight: bold;
 }
