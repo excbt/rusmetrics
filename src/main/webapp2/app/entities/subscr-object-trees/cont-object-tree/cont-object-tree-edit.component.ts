@@ -7,6 +7,7 @@ import { ContObjectShortVM } from '../../cont-objects/cont-object-shortVm.model'
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs/observable/of';
 import { BuildingTypeDecoderService } from '../../../shared-blocks/exc-ui-tools/building-type-decoder.service';
+import { LoadingStatusService } from '../../../shared-blocks/exc-tools/loading-status-service';
 
 // const startLoadingDelay = 150;
 
@@ -43,10 +44,14 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
-        private buildingTypeDecoderService: BuildingTypeDecoderService
+        private buildingTypeDecoderService: BuildingTypeDecoderService,
+        private loadingStatus: LoadingStatusService
     ) { }
 
     ngOnInit() {
+
+        this.loadingStatus.loading$.subscribe((d) => console.log('Loading ' + d));
+
         this.subscrObjectTreeService.findAll().subscribe((data) => {
             this.treeList = data;
             if (data && data.length > 0) {
