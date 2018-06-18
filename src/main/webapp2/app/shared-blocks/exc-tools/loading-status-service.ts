@@ -38,4 +38,9 @@ export class LoadingStatusService {
         // this.loadingSubject.next(false);
     }
 
+    stopRequestNoTimer() {
+        this.loadingDebug.next(false);
+        this.loadingSubject.next(false);
+    }
+
 }
