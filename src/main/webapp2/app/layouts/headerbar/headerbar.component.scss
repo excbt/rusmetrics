@@ -63,7 +63,9 @@
 
 .toolbar-container {
     //padding-top: 1em;
-    height: auto;
+    height: 50px;
+    max-height: 50px;
+    overflow: hidden;
     // padding: 0%,0%,0%,0%;
 }
 

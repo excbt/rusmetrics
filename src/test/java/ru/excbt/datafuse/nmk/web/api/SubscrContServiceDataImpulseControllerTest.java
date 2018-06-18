@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceDataImpulseUCsv;
 import ru.excbt.datafuse.nmk.data.service.ContServiceDataImpulseService;
+import ru.excbt.datafuse.nmk.data.service.ContZPointService;
 import ru.excbt.datafuse.nmk.data.service.ImpulseCsvService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
@@ -64,6 +65,8 @@ public class SubscrContServiceDataImpulseControllerTest extends PortalApiTest {
     private ContServiceDataImpulseService contServiceDataImpulseService;
     @Autowired
     private WebAppPropsService webAppPropsService;
+    @Autowired
+    private ContZPointService contZPointService;
 
     @Before
     public void setUp() throws Exception {
@@ -71,7 +74,7 @@ public class SubscrContServiceDataImpulseControllerTest extends PortalApiTest {
 
         PortalUserIdsMock.initMockService(portalUserIdsService, TestExcbtRmaIds.ExcbtRmaPortalUserIds);
 
-        subscrContServiceDataImpulseResource = new SubscrContServiceDataImpulseResource(contServiceDataImpulseService, webAppPropsService);
+        subscrContServiceDataImpulseResource = new SubscrContServiceDataImpulseResource(contZPointService, contServiceDataImpulseService, webAppPropsService, portalUserIdsService);
 
         this.restPortalMockMvc = MockMvcBuilders.standaloneSetup(subscrContServiceDataImpulseResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)

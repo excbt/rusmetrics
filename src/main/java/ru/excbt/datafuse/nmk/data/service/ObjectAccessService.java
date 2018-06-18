@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ObjectAccessInitializer;
 import ru.excbt.datafuse.nmk.data.repository.ContObjectAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointAccessRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContObjectRepository;
+import ru.excbt.datafuse.nmk.repository.support.SubscrDeviceObjectNumber;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
@@ -527,13 +528,13 @@ public class ObjectAccessService {
 
 
 
-    public List<Tuple> findAllContZPointDeviceObjectsEx (Long subscriberId, List<String> deviceObjectNumbers) {
+    public List<SubscrDeviceObjectNumber> findAllContZPointDeviceObjectsEx (Long subscriberId, List<String> deviceObjectNumbers) {
 
         if (deviceObjectNumbers.isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<Tuple> result;
+        List<SubscrDeviceObjectNumber> result;
         if (NEW_ACCESS) {
             result = contZPointAccessRepository.findAllDeviceObjectsEx(subscriberId, deviceObjectNumbers);
         } else {

@@ -2,23 +2,21 @@ import {
   Component,
   HostBinding} from '@angular/core';
 import { excSlideInDownAnimation } from '../exc-animations';
+import { DEBUG_INFO_ENABLED } from '../../app.constants';
 
 @Component({
   selector: 'jhi-exc-form-template',
-  template: `
-    <div>
-      <ng-content></ng-content>
-    </div>`,
+  templateUrl: './exc-form-template.component.html',
   animations: [ excSlideInDownAnimation ],
-  styles: [`
-    :host {
-      display: flex;
-      padding: 0%;
-      width: 100%;
-    }`]
+  styleUrls: ['./exc-form-template.component.scss']
 })
 export class ExcFormTemplateComponent {
   @HostBinding('@routeAnimation') routeAnimation = true;
   @HostBinding('style.display')   display = 'block';
   @HostBinding('style.position')  position = 'absolute';
+
+  showDebugFrame(): boolean {
+    return DEBUG_INFO_ENABLED;
+  }
+
 }

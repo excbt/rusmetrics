@@ -168,35 +168,6 @@ portal:
         max-age: 1800
 
 
-raw:
-    datasource:
-        databaseName: test_dataraw
-        databasePort: 6432
-        type: com.zaxxer.hikari.HikariDataSource
-        driverClassName: com.p6spy.engine.spy.P6SpyDriver
-        url: jdbc:p6spy:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
-        #url: ${raw.datasource.jdbcUrl}
-        name:
-        jndi-name:
-        username: dbuser1
-        password: exbt_123456
-        platform: POSTGRESQL
-        connectionTestQuery: SELECT 1
-        minimumIdle: 1
-        maximumPoolSize: 2
-        poolName: RawPool
-        #---tomcat:
-        maxActive: 5
-        initialSize: 1
-        minIdle: 1
-        maxIdle: 3
-#        hikari:
-#            connection-test-query: SELECT 1
-#            minimum-idle: 1
-#            maximum-pool-size: 2
-#            pool-name: RawPool
-
-
 slog:
     settings:
         schema: slog

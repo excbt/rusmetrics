@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.repository.support.ContZPointRI;
 import ru.excbt.datafuse.nmk.data.repository.support.ObjectAccessRI;
 import ru.excbt.datafuse.nmk.data.repository.support.SubscriberRI;
+import ru.excbt.datafuse.nmk.repository.support.SubscrDeviceObjectNumber;
 
 import javax.persistence.Tuple;
 import java.time.LocalDate;
@@ -95,8 +96,8 @@ public interface ContZPointAccessRepository extends JpaRepository<ContZPointAcce
         " WHERE a.subscriberId = :subscriberId AND zp.id = a.contZPointId AND d.number IN (:deviceObjectNumbers) " +
         " AND a.accessTtl IS NULL " +
         " AND zp.deleted = 0")
-    List<Tuple> findAllDeviceObjectsEx(@Param("subscriberId") Long subscriberId,
-                                       @Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
+    List<SubscrDeviceObjectNumber> findAllDeviceObjectsEx(@Param("subscriberId") Long subscriberId,
+                                                          @Param("deviceObjectNumbers") List<String> deviceObjectNumbers);
 
 
     @Query("SELECT a.contZPoint.contObjectId as contObjectId, count(a.contZPointId) FROM ContZPointAccess a " +

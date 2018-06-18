@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplate;
 import ru.excbt.datafuse.nmk.data.model.SubscrObjectTreeTemplateItem;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrObjectTreeTemplateRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
@@ -24,18 +25,18 @@ public class SubscrObjectTreeTemplateService {
 	@Autowired
 	private SubscrObjectTreeTemplateItemRepository subscrObjectTreeTemplateItemRepository;
 
-	/**
-	 *
-	 * @param rmaSubscriberTemplate
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
 	@Transactional( readOnly = true)
-	public List<SubscrObjectTreeTemplate> selectRmaSubscriberTemplates(SubscriberParam subscriberParam) {
-		checkNotNull(subscriberParam);
-		if (subscriberParam.isRma()) {
-			return subscrObjectTreeTemplateRepository.selectRmaSubscriberTemplates(subscriberParam.getSubscriberId());
+	public List<SubscrObjectTreeTemplate> selectRmaSubscriberTemplates(PortalUserIds portalUserIds) {
+		checkNotNull(portalUserIds);
+		if (portalUserIds.isRma()) {
+			return subscrObjectTreeTemplateRepository.selectRmaSubscriberTemplates(portalUserIds.getSubscriberId());
 		} else {
-			return subscrObjectTreeTemplateRepository.selectSubscriberTemplates(subscriberParam.getSubscriberId());
+			return subscrObjectTreeTemplateRepository.selectSubscriberTemplates(portalUserIds.getSubscriberId());
 		}
 	}
 

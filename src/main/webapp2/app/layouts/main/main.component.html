@@ -18,7 +18,7 @@
 =======
 -->
 <div class="container-fluid portal-container">
-    <div class="portal-card">
+    <div class="portal-card" [ngClass]="{'debug-frame': showDebugFrame()}">
 <!--  angular-5/new-ui-->
         <router-outlet name="primary"></router-outlet>
         <router-outlet name="popup"></router-outlet>

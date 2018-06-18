@@ -1,0 +1,44 @@
+.menu1-font-color {
+    color: navy;
+}
+
+.exc-data-frame { 
+    padding: 0%;
+    width: 98%;
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+} 
+
+.exc-row-highlight{
+    // background: rgb(205, 217, 236); 
+    background-color: rgb(124, 157, 241) !important;
+    // background-color: rgb(231, 235, 245) !important;
+}
+
+.exc-debug-frame {
+    border-style: dotted !important;
+    border-width: 1px;
+    border-color: rgb(252, 3, 3);    
+    border-radius: 0 !important;  
+}
+
+.exc-toolbal-menu-btn {
+    height: 31px; 
+    width: 31px; 
+    line-height: 31px;
+}
+
+.exc-toolbal-menu-container {
+    justify-content: center;
+}
+
+@mixin exc-icon-size($size) {
+    display: inline-block;
+    min-width: $size;
+    min-height: $size;
+    height: $size;
+    width: $size;
+}
+
+@import "exc-building-types";

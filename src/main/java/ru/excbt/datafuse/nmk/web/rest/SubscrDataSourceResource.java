@@ -38,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  */
 @RestController
+@RequestMapping("/api/rma")
 public class SubscrDataSourceResource {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrDataSourceResource.class);

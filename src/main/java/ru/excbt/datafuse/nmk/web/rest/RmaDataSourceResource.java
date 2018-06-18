@@ -16,8 +16,8 @@ import ru.excbt.datafuse.nmk.data.service.SubscrDataSourceService;
  * @since 12.10.2015
  *
  */
-@Controller
-@RequestMapping(value = "/api/rma")
+//@Controller
+//@RequestMapping(value = "/api/rma")
 public class RmaDataSourceResource extends SubscrDataSourceResource {
 
     @Autowired

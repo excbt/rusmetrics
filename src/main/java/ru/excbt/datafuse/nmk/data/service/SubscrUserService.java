@@ -4,7 +4,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,11 +11,12 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import ru.excbt.datafuse.nmk.data.domain.QAbstractPersistableEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
+import ru.excbt.datafuse.nmk.data.model.QSubscrUser;
+import ru.excbt.datafuse.nmk.data.model.SubscrRole;
+import ru.excbt.datafuse.nmk.data.model.SubscrUser;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
@@ -30,7 +30,6 @@ import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
-import ru.excbt.datafuse.nmk.service.dto.OrganizationDTO;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
@@ -212,14 +211,13 @@ public class SubscrUserService implements SecuredRoles {
 		checkNotNull(subscrUser.getSubscrRoles());
 		checkArgument(subscrUser.getDeleted() == 0);
 
-//		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriber().getId());
-//		subscrUser.setSubscriber(subscriber);
-
 		subscrUser.setUserName(subscrUser.getUserName().toLowerCase());
 
 		SubscrUser user = subscrUserRepository.save(subscrUser);
 
-        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(user.getUserName());
+		Optional.ofNullable(cacheManager).map(i -> i.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE))
+            .ifPresent(cm -> cm.evict(user.getUserName()));
+
 
 		LdapAction action = (u) -> {
 			ldapService.createUser(u);
@@ -261,9 +259,6 @@ public class SubscrUserService implements SecuredRoles {
 			throw new PersistenceException(String.format("SubscrUser (id=%d) is deleted", subscrUser.getId()));
 		}
 
-//		Subscriber subscriber = subscriberService.selectSubscriber(subscrUser.getSubscriberId());
-//		subscrUser.setSubscriber(subscriber);
-
 		String newPassword = null;
 
 		if (passwords != null && passwords.length != 0) {
@@ -277,7 +272,8 @@ public class SubscrUserService implements SecuredRoles {
 
 		SubscrUser result = subscrUserRepository.save(subscrUser);
 
-        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(result.getUserName());
+		Optional.ofNullable(cacheManager).map(i -> i.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE))
+            .ifPresent(cm -> cm.evict(result.getUserName()));
 
 		final String ldapPassword = newPassword;
 		if (ldapPassword != null) {

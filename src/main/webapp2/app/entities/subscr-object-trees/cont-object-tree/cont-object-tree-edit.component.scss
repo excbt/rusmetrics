@@ -5,19 +5,14 @@
     color: rgb(202, 66, 66)
 }
 .propertyRoot {
-    color: blue;
+    color: rgb(202, 66, 66);
 }
 
 .contObjectNode {
-    display: inline-block;
-    color: blue;
-    font-size: 80%;
-}
-
-.exc-icon-building-default-16 {
-    height: 16px;
-    width: 16px;
-    background: url(../../../../content/images/buildings/building16.png);
+    // display: inline-block;
+    // color: blue;
+    // font-size: 80%;
+    color: #1b1d1f;
 }
 
 .tree-row {
@@ -27,10 +22,11 @@
     padding-bottom: 0;
     padding-right: 0;
     margin: 1px;
+    color: #1b1d1f;    
 }
 
 .tree-row-width {
-    width: 80%;
+    width: 85%;
 }
 
 .selected-border {
@@ -40,8 +36,65 @@
     margin: 0 !important;
 }
 
+.selected-border > span {
+    // filter: invert(100%);
+    color: white;
+}
+
+.exc-row-highlight > td {
+    // filter: invert(100%);
+    color: white;
+}
+
 .div-left-scrollable {
-    height: 810px;
-    max-height: 810px;
+    height: calc(100vh - 95px - 34px);
+    max-height: calc(100vh - 95px - 34px);
     overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.font-color {
+    color: #1b1d1f;
+}
+
+.div-left-no-scroll {
+    overflow-y: hidden;
+}
+
+.div-right-no-scroll {
+    height: calc(100vh - 95px);
+    max-height: calc(100vh - 95px);
+    // overflow-y: hidden;    
+}
+
+
+.scroll-bar-height {
+    overflow-y: auto;
+}
+
+.supa-icon {
+    color: white;
+    text-shadow: #1b1d1f -1px 0, #1b1d1f 0 1px, #1b1d1f 1px 0, #1b1d1f 0 -1px;
+}
+
+.category-width{
+    width: 30px;
+    text-align: center;
+}
+
+.fake-header {
+    height: 34px;
+    max-height: 34px;
+
+    background: #ebedf0;
+    border-color: #d9d9d9;
+    padding: .25em .5em;
+    overflow: hidden;
+    white-space: nowrap;
+    border-width: 1px;
+    border-style: solid;    
+
+    font-family: "Roboto", "Trebuchet MS", Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    font-weight: bold;
 }

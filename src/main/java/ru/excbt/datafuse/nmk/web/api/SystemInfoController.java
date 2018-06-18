@@ -18,9 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.ExSystem;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ExSystemRepository;
-import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
-import ru.excbt.datafuse.nmk.data.service.SystemParamService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberUserDetailsService;
+import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.ApiConst;
@@ -44,27 +42,40 @@ import java.util.stream.Collectors;
  */
 @Controller
 @RequestMapping(value = "/api/systemInfo")
-public class SystemInfoController extends AbstractSubscrApiResource {
+public class SystemInfoController {
 
-	@Autowired
-	private SystemParamService systemParamService;
+    private final LdapService ldapService;
 
-	@Autowired
-	private SubscrUserService subscrUserService;
+    private final SystemParamService systemParamService;
 
-	@Autowired
-	private CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
+	private final SubscrUserService subscrUserService;
 
-	@Autowired
-	private SessionRegistry sessionRegistry;
+	private final CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService;
 
-	@Autowired
-	private ExSystemRepository exSystemRepository;
+	private final SessionRegistry sessionRegistry;
 
-	@Autowired
-	private ModelMapper modelMapper;
+	private final ExSystemRepository exSystemRepository;
 
-	/**
+	private final ModelMapper modelMapper;
+
+	private final CurrentSubscriberService currentSubscriberService;
+
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SystemInfoController(LdapService ldapService, SystemParamService systemParamService, SubscrUserService subscrUserService, CurrentSubscriberUserDetailsService currentSubscriberUserDetailsService, SessionRegistry sessionRegistry, ExSystemRepository exSystemRepository, ModelMapper modelMapper, CurrentSubscriberService currentSubscriberService, PortalUserIdsService portalUserIdsService) {
+        this.ldapService = ldapService;
+        this.systemParamService = systemParamService;
+        this.subscrUserService = subscrUserService;
+        this.currentSubscriberUserDetailsService = currentSubscriberUserDetailsService;
+        this.sessionRegistry = sessionRegistry;
+        this.exSystemRepository = exSystemRepository;
+        this.modelMapper = modelMapper;
+        this.currentSubscriberService = currentSubscriberService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+
+    /**
 	 *
 	 * @author kovtonyk
 	 *
@@ -98,9 +109,6 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 		}
 
 	}
-
-	@Autowired
-	private LdapService ldapService;
 
 	/**
 	 *
@@ -198,7 +206,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/invalidateAllSessions", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getInvalidateSessions() {
-		if (!isSystemUser()) {
+		if (!portalUserIdsService.isSystemUser()) {
 			return ApiResponse.responseForbidden();
 		}
 
@@ -222,7 +230,7 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/isCMode", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getIsCMode() {
-		return ApiResponse.responseOK(getSubscriberParam().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
+		return ApiResponse.responseOK(portalUserIdsService.getCurrentIds().getSubscrTypeKey().equals(SubscrTypeKey.TEST_CERTIFICATE));
 	}
 
 	/**

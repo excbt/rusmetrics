@@ -149,7 +149,9 @@ public class SubscrUserManageService {
         subscrUserMapper.updateSubscrUser(subscrUser, subscrUserDTO);
 
         SubscrUser savedSubscrUser = subscrUserRepository.save(subscrUser);
-        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(savedSubscrUser.getUserName());
+        Optional.ofNullable(cacheManager).map(i -> i.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE))
+            .ifPresent(cm -> cm.evict(savedSubscrUser.getUserName()));
+//        cacheManager.getCache(subscrUserRepository.USERS_BY_LOGIN_CACHE).evict(savedSubscrUser.getUserName());
 
         final String ldapPassword = newPassword;
         if (ldapPassword != null) {

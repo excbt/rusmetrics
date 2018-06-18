@@ -16,11 +16,12 @@ import ru.excbt.datafuse.nmk.data.model.types.ObjectTreeTypeKeyname;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeService;
 import ru.excbt.datafuse.nmk.service.SubscrObjectTreeValidationService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrObjectTreeDTO;
+import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,7 +35,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Deprecated
 @Controller
 @RequestMapping(value = "/api/subscr")
-public class SubscrObjectTreeController extends AbstractSubscrApiResource {
+public class SubscrObjectTreeController {
 
 	private static final String INVALID_SUBSCRIBER_MSG = "Invalid subscriberId (%d)";
 
@@ -55,13 +56,15 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 	private final ObjectAccessService objectAccessService;
 
+    private final PortalUserIdsService portalUserIdsService;
+
 	@Autowired
     public SubscrObjectTreeController(SubscrObjectTreeService subscrObjectTreeService,
                                       SubscrObjectTreeValidationService subscrObjectTreeValidationService, SubscrObjectTreeContObjectService subscrObjectTreeContObjectService,
                                       SubscrContEventNotificationService subscrContEventNotificationService,
                                       SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService,
                                       SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service,
-                                      ContObjectService contObjectService, ObjectAccessService objectAccessService) {
+                                      ContObjectService contObjectService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.subscrObjectTreeService = subscrObjectTreeService;
         this.subscrObjectTreeValidationService = subscrObjectTreeValidationService;
         this.subscrObjectTreeContObjectService = subscrObjectTreeContObjectService;
@@ -70,6 +73,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
         this.subscrContEventNotifiicationStatusV2Service = subscrContEventNotifiicationStatusV2Service;
         this.contObjectService = contObjectService;
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -119,11 +123,11 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
-		SubscrObjectTree result = subscrObjectTreeService.selectSubscrObjectTree(rootSubscrObjectTreeId);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		SubscrObjectTreeDTO result = subscrObjectTreeService.findSubscrObjectTreeDTO(rootSubscrObjectTreeId);
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -140,11 +144,11 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
-		List<SubscrObjectTree> result = subscrObjectTreeService.selectSubscrObjectTreeShort(getSubscriberParam());
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(treeType, portalUserIdsService.getCurrentIds());
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -164,17 +168,17 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 
         ApiAction action = new ApiActionEntityAdapter<Object>() {
             @Override
             public Object processAndReturnResult() {
-                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(portalUserIdsService.getCurrentIds(),
                     childSubscrObjectTreeId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
+                return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(), resultList);
             }
         };
 
@@ -198,18 +202,18 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		List<Long> contObjectIds = subscrObjectTreeContObjectService
-				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(portalUserIdsService.getCurrentIds(), rootSubscrObjectTreeId);
 		checkNotNull(contObjectIds);
 
         ApiAction action = new ApiActionEntityAdapter<Object>() {
             @Override
             public Object processAndReturnResult() {
-                List<ContObject> resultList = objectAccessService.findContObjectsExcludingIds(getSubscriberId(), contObjectIds);
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), ObjectFilters.deletedFilter(resultList));
+                List<ContObject> resultList = objectAccessService.findContObjectsExcludingIds(portalUserIdsService.getCurrentIds().getSubscriberId(), contObjectIds);
+                return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(), ObjectFilters.deletedFilter(resultList));
             }
         };
 
@@ -234,10 +238,10 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
-		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(getSubscriberParam(),
+		SubscrObjectTree subscrObjectTree = subscrObjectTreeService.newSubscrObjectTree(portalUserIdsService.getCurrentIds(),
 				requestBody.getTemplateId());
 
 		if (requestBody.getObjectName() != null) {
@@ -283,7 +287,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -318,7 +322,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -326,7 +330,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return checkResponse;
 		}
 
-		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteRootSubscrObjectTree(getSubscriberParam(), rootSubscrObjectTreeId);
+		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteRootSubscrObjectTree(portalUserIdsService.getCurrentIds(), rootSubscrObjectTreeId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 
@@ -349,7 +353,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -357,7 +361,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 			return checkResponse;
 		}
 
-		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteChildSubscrObjectTreeNode(getSubscriberParam(), rootSubscrObjectTreeId,
+		ApiAction action = (ApiActionAdapter) () -> subscrObjectTreeService.deleteChildSubscrObjectTreeNode(portalUserIdsService.getCurrentIds(), rootSubscrObjectTreeId,
                 childSubscrObjectTreeId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
@@ -385,7 +389,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -394,7 +398,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		}
 
 		List<Long> existsingContObjectIds = subscrObjectTreeContObjectService
-				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(portalUserIdsService.getCurrentIds(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (existsingContObjectIds.contains(id)) {
@@ -406,14 +410,14 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 			@Override
 			public List<ContObjectMonitorDTO> processAndReturnResult() {
-				subscrObjectTreeContObjectService.addTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.addTreeContObjects(portalUserIdsService.getCurrentIds(), childSubscrObjectTreeId,
 						contObjectIds);
 
 
-				List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+				List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(portalUserIdsService.getCurrentIds(),
                     childSubscrObjectTreeId);
 
-				return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
+				return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(), resultList);
 			}
 		};
 
@@ -441,7 +445,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		ResponseEntity<?> checkResponse = checkSubscriberResponse(rootSubscrObjectTreeId);
@@ -450,7 +454,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		}
 
 		List<Long> existingContObjectIds = subscrObjectTreeContObjectService
-				.selectTreeContObjectIdsAllLevels(getSubscriberParam(), rootSubscrObjectTreeId);
+				.selectTreeContObjectIdsAllLevels(portalUserIdsService.getCurrentIds(), rootSubscrObjectTreeId);
 
 		for (Long id : contObjectIds) {
 			if (!existingContObjectIds.contains(id)) {
@@ -462,13 +466,13 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 
 			@Override
 			public List<ContObjectMonitorDTO> processAndReturnResult() {
-				subscrObjectTreeContObjectService.removeTreeContObjects(getSubscriberParam(), childSubscrObjectTreeId,
+				subscrObjectTreeContObjectService.removeTreeContObjects(portalUserIdsService.getCurrentIds(), childSubscrObjectTreeId,
 						contObjectIds);
 
-                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+                List<ContObject> resultList = subscrObjectTreeContObjectService.selectTreeContObjects(portalUserIdsService.getCurrentIds(),
                     childSubscrObjectTreeId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(), resultList);
+                return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(), resultList);
 			}
 		};
 
@@ -482,8 +486,8 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 	 */
 	private ResponseEntity<?> checkSubscriberResponse(final Long subscrObjectTreeId) {
 
-		Long rmaSubscriberId = getRmaSubscriberId();
-		if (!subscrObjectTreeValidationService.checkValidSubscriberOk(getSubscriberParam(), subscrObjectTreeId)) {
+		Long rmaSubscriberId = portalUserIdsService.getCurrentIds().getRmaId();
+		if (!subscrObjectTreeValidationService.checkValidSubscriberOk(portalUserIdsService.getCurrentIds(), subscrObjectTreeId)) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest(INVALID_SUBSCRIBER_MSG, rmaSubscriberId));
 		}
 		return null;
@@ -509,7 +513,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -521,14 +525,14 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(portalUserIdsService.getCurrentIds(),
 				childSubscrObjectTreeId);
 
 		List<CityMonitorContEventsStatus> result = subscrContEventNotifiicationStatusService
-				.selectCityMonitoryContEventsStatus(getSubscriberParam(), contObjects,
+				.selectCityMonitoryContEventsStatus(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return ApiResponse.responseOK(result);
+		return ResponseEntity.ok(result);
 	}
 
 	/**
@@ -551,7 +555,7 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 		ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.findByUrl(objectTreeType);
 
 		if (treeType != ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1) {
-			return ApiResponse.responseBadRequest();
+			return ResponseEntity.badRequest().build();
 		}
 
 		LocalDatePeriodParser datePeriodParser = LocalDatePeriodParser.parse(fromDateStr, toDateStr);
@@ -563,14 +567,14 @@ public class SubscrObjectTreeController extends AbstractSubscrApiResource {
 					.format("Invalid parameters fromDateStr:{} is greater than toDateStr:{}", fromDateStr, toDateStr));
 		}
 
-		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(getSubscriberParam(),
+		List<ContObject> contObjects = subscrObjectTreeContObjectService.selectTreeContObjects(portalUserIdsService.getCurrentIds(),
 				childSubscrObjectTreeId);
 
 		List<CityMonitorContEventsStatusV2> result = subscrContEventNotifiicationStatusV2Service
-				.selectCityMonitoryContEventsStatusV2(getSubscriberParam(), contObjects,
+				.selectCityMonitoryContEventsStatusV2(portalUserIdsService.getCurrentIds(), contObjects,
 						datePeriodParser.getLocalDatePeriod().buildEndOfDay(), noGreenColor);
 
-		return ApiResponse.responseOK(result);
+		return ResponseEntity.ok(result);
 	}
 
 }

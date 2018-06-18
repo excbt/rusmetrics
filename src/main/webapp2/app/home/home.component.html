@@ -1,19 +1,21 @@
-<jhi-exc-form-template>
+<jhi-exc-frame>
     <div class="exc-data-frame">
         <div class="row">
             <div class="col-sm">
                 <span class="home-logo img-fluid rounded"></span>
             </div>
             <div class="col-sm">
-                <h3>Authorities for {{account?.login}}</h3>
-                <ul *ngIf="account && account.authorities">
-                    <li *ngFor="let auth of account.authorities">
-                        {{auth}}
-                    </li>
-                </ul>
+                <div *ngIf="account && account.login">
+                    <h3>Authorities for {{account?.login}}</h3>
+                    <ul *ngIf="account && account.authorities">
+                        <li *ngFor="let auth of account.authorities">
+                            {{auth}}
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="col-sm">
             </div>
         </div>
     </div>
-</jhi-exc-form-template>
+</jhi-exc-frame>

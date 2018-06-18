@@ -27,10 +27,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 15.12.2015
  *
  */
-public abstract class AbstractContServiceDataResource extends AbstractSubscrApiResource {
-
-	@Autowired
-	private ContZPointService contZPointService;
+public class AbstractContServiceDataResource  {
 
 	/**
 	 *
@@ -44,9 +41,9 @@ public abstract class AbstractContServiceDataResource extends AbstractSubscrApiR
 	 * @param dataSelector
 	 * @return
 	 */
-	protected <T> ResponseEntity<?> getResponseServiceDataPaged(long contObjectId, long contZPointId,
+	public static  <T> ResponseEntity<?> getResponseServiceDataPaged(long contObjectId, long contZPointId,
 			String timeDetailType, String fromDateStr, String toDateStr, String dataDateSort, Pageable pageable,
-			RequestPageDataSelector<T> dataSelector) {
+			RequestPageDataSelector<T> dataSelector, ContZPointService contZPointService) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);
@@ -111,8 +108,8 @@ public abstract class AbstractContServiceDataResource extends AbstractSubscrApiR
 	 * @param dataSelector
 	 * @return
 	 */
-	protected <T> ResponseEntity<?> getResponseServiceData(long contObjectId, long contZPointId, String timeDetailType,
-			String fromDateStr, String toDateStr, RequestAnyDataSelector<T> dataSelector) {
+	public static <T> ResponseEntity<?> getResponseServiceData(long contObjectId, long contZPointId, String timeDetailType,
+			String fromDateStr, String toDateStr, RequestAnyDataSelector<T> dataSelector, ContZPointService contZPointService) {
 
 		checkArgument(contObjectId > 0);
 		checkArgument(contZPointId > 0);

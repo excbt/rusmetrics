@@ -5,10 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.SubscrPriceItemVO;
@@ -17,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrServiceItem;
 import ru.excbt.datafuse.nmk.data.model.SubscrServicePack;
 import ru.excbt.datafuse.nmk.data.model.keyname.SubscrServicePermission;
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.AbstractEntityApiAction;
@@ -38,35 +36,40 @@ import java.util.stream.Collectors;
  * @since 24.09.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping(value = "/api/subscr")
-public class SubscServiceManageController extends AbstractSubscrApiResource {
+public class SubscServiceManageController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscServiceManageController.class);
 
-	@Autowired
-	private SubscrServicePackService subscrServicePackService;
+	private final SubscrServicePackService subscrServicePackService;
 
-	@Autowired
-	private SubscrServiceItemService subscrServiceItemService;
+	private final SubscrServiceItemService subscrServiceItemService;
 
-	@Autowired
-	private SubscrServicePriceService subscrServicePriceService;
+	private final SubscrPriceListService subscrPriceListService;
 
-	@Autowired
-	private SubscrServiceAccessService subscriberAccessService;
+	private final SubscriberTimeService subscriberTimeService;
 
-	@Autowired
-	private SubscrPriceListService subscrPriceListService;
+	private final SubscrServiceAccessService subscrServiceAccessService;
 
+    private final PortalUserIdsService portalUserIdsService;
 
-	/**
+    public SubscServiceManageController(SubscrServicePackService subscrServicePackService, SubscrServiceItemService subscrServiceItemService, SubscrPriceListService subscrPriceListService, SubscriberTimeService subscriberTimeService, SubscrServiceAccessService subscrServiceAccessService, PortalUserIdsService portalUserIdsService) {
+        this.subscrServicePackService = subscrServicePackService;
+        this.subscrServiceItemService = subscrServiceItemService;
+        this.subscrPriceListService = subscrPriceListService;
+        this.subscriberTimeService = subscriberTimeService;
+        this.subscrServiceAccessService = subscrServiceAccessService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
 	@RequestMapping(value = "/manage/service/servicePackList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePacks() {
-		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList(getSubscriberParam());
+		List<SubscrServicePack> packList = subscrServicePackService.selectServicePackList(portalUserIdsService.getCurrentIds());
 		List<SubscrServicePack> result = ObjectFilters.activeFilter(packList);
 		return ApiResponse.responseOK(result);
 	}
@@ -89,11 +92,11 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/manage/service/servicePriceList", method = RequestMethod.GET)
 	public ResponseEntity<?> getServicePrices() {
 		List<SubscrPriceItemVO> priceItems = new ArrayList<>();
-		logger.info("currentSubscriber: {}", getCurrentSubscriberId());
-		if (currentSubscriberService.isRma()) {
-			priceItems = subscrPriceListService.selectActiveRmaPriceListItemVOs(getCurrentSubscriberId());
+		logger.info("currentSubscriber: {}", portalUserIdsService.getCurrentIds().getSubscriberId());
+		if (portalUserIdsService.getCurrentIds().isRma()) {
+			priceItems = subscrPriceListService.selectActiveRmaPriceListItemVOs(portalUserIdsService.getCurrentIds().getSubscriberId());
 		} else {
-			priceItems = subscrPriceListService.selectActiveSubscrPriceListItemVOs(getCurrentSubscriberId());
+			priceItems = subscrPriceListService.selectActiveSubscrPriceListItemVOs(portalUserIdsService.getCurrentIds().getSubscriberId());
 		}
 		return ApiResponse.responseOK(priceItems);
 	}
@@ -114,7 +117,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
      */
 	@RequestMapping(value = "/manage/service/access", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServiceAccess() {
-		return ApiResponse.responseOK(subscriberServiceAccessList(getCurrentSubscriberId()));
+		return ApiResponse.responseOK(subscriberServiceAccessList(portalUserIdsService.getCurrentIds().getSubscriberId()));
 	}
 
 	/**
@@ -124,7 +127,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 */
 	private List<SubscrServiceAccess> subscriberServiceAccessList(Long subscriberId) {
 		java.time.LocalDate accessDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(subscriberId));
-		List<SubscrServiceAccess> result = subscriberAccessService.selectSubscriberServiceAccess(subscriberId,
+		List<SubscrServiceAccess> result = subscrServiceAccessService.selectSubscriberServiceAccess(subscriberId,
 				accessDate);
 
 		result.forEach((i) -> {
@@ -153,7 +156,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 			@Override
 			public void process() {
 				setResultEntity(
-						subscriberAccessService.processAccessList(subscriberId, java.time.LocalDate.now(), subscriberAccessList));
+                    subscrServiceAccessService.processAccessList(subscriberId, java.time.LocalDate.now(), subscriberAccessList));
 
 			}
 		};
@@ -174,7 +177,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 
 			@Override
 			public void process() {
-				setResultEntity(subscriberAccessService.processAccessList(getCurrentSubscriberId(), java.time.LocalDate.now(),
+				setResultEntity(subscrServiceAccessService.processAccessList(portalUserIdsService.getCurrentIds().getSubscriberId(), java.time.LocalDate.now(),
 						subscriberAccessList));
 
 			}
@@ -189,10 +192,10 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	 */
 	@RequestMapping(value = "/manage/service/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getCurrentServicePermissions() {
-        java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(getCurrentSubscriberId()));
+        java.time.LocalDate currentDate = LocalDateUtils.asLocalDate(subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds().getSubscriberId()));
 
 		List<SubscrServicePermission> permissions = subscrServiceAccessService
-				.selectSubscriberPermissions(getCurrentSubscriberId(), currentDate);
+				.selectSubscriberPermissions(portalUserIdsService.getCurrentIds().getSubscriberId(), currentDate);
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted(Comparator.comparing(AbstractKeynameEntity::getKeyname)).collect(Collectors.toList());
 		return ApiResponse.responseOK(result);
@@ -206,7 +209,7 @@ public class SubscServiceManageController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/{subscriberId}/manage/service/permissions", method = RequestMethod.GET)
 	public ResponseEntity<?> getSubscriberServicePermissions(@PathVariable("subscriberId") Long subscriberId) {
 		List<SubscrServicePermission> permissions = subscrServiceAccessService.selectSubscriberPermissions(subscriberId,
-				getSubscriberLocalDate(subscriberId));
+				subscriberTimeService.getSubscriberCurrentTime(portalUserIdsService.getCurrentIds()));
 		List<SubscrServicePermission> result = permissions.stream().filter((i) -> Boolean.TRUE.equals(i.getIsFront()))
 				.sorted(Comparator.comparing(AbstractKeynameEntity::getKeyname)).collect(Collectors.toList());
 		return ApiResponse.responseOK(result);

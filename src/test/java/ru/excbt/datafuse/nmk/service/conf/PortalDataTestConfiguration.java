@@ -14,10 +14,7 @@ import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
-import ru.excbt.datafuse.nmk.config.AsyncConfiguration;
-import ru.excbt.datafuse.nmk.config.CacheConfiguration;
-import ru.excbt.datafuse.nmk.config.MetricsConfiguration;
-import ru.excbt.datafuse.nmk.config.PortalProperties;
+import ru.excbt.datafuse.nmk.config.*;
 import ru.excbt.datafuse.nmk.config.mvc.SpringMvcConfig;
 
 @EnableAutoConfiguration(exclude = {

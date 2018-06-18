@@ -340,6 +340,7 @@ public class RmaSubscrObjectTreeControllerTest extends PortalApiTest {
 	 * @throws Exception
 	 */
 	@Test
+    @Ignore
 	public void testSubscrObjectTreeContObjects() throws Exception {
 
 		String treeListContent = mockMvcRestWrapper.restRequest("/api/rma/subscrObjectTree/contObjectTreeType1").testGet().getStringContent();

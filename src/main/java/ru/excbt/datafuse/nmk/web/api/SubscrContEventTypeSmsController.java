@@ -1,23 +1,20 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSmsAddr;
+import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrContEventTypeSmsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
 import ru.excbt.datafuse.nmk.web.api.support.ApiResult;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -33,14 +30,20 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @since 23.12.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping("/api/subscr/contEventSms")
-public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource {
+public class SubscrContEventTypeSmsController  {
 
-	@Autowired
-	private SubscrContEventTypeSmsService subscrContEventTypeSmsService;
+	private final SubscrContEventTypeSmsService subscrContEventTypeSmsService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscrContEventTypeSmsController(SubscrContEventTypeSmsService subscrContEventTypeSmsService, PortalUserIdsService portalUserIdsService) {
+        this.subscrContEventTypeSmsService = subscrContEventTypeSmsService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */
@@ -57,7 +60,7 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 	@RequestMapping(value = "/contEventTypes", method = RequestMethod.GET)
 	public ResponseEntity<?> getSmsContEventTypes() {
 		List<SubscrContEventTypeSms> result = subscrContEventTypeSmsService
-				.selectSubscrContEventTypeSms(getCurrentSubscriberId());
+				.selectSubscrContEventTypeSms(portalUserIdsService.getCurrentIds().getSubscriberId());
 		return ApiResponse.responseOK(result);
 	}
 
@@ -95,7 +98,8 @@ public class SubscrContEventTypeSmsController extends AbstractSubscrApiResource 
 
 			@Override
 			public SubscrContEventTypeSms processAndReturnResult() {
-				return subscrContEventTypeSmsService.createSubscrContEventTypeSms(getCurrentSubscriber(), contEventType,
+			    Subscriber subscriber = new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId());
+				return subscrContEventTypeSmsService.createSubscrContEventTypeSms(subscriber, contEventType,
 						smsAddrList);
 			}
 		};

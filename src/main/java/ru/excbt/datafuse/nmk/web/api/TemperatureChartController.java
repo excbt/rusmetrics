@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChart;
 import ru.excbt.datafuse.nmk.data.model.TemperatureChartItem;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.TemperatureChartService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.api.support.*;
@@ -24,14 +25,20 @@ import java.util.List;
 
 @Controller
 @RequestMapping(value = "/api/rma")
-public class TemperatureChartController extends AbstractSubscrApiResource {
+public class TemperatureChartController  {
 
 	private static final Logger logger = LoggerFactory.getLogger(TemperatureChartController.class);
 
-	@Autowired
-	private TemperatureChartService temperatureChartService;
+	private final TemperatureChartService temperatureChartService;
 
-	/**
+    private final PortalUserIdsService portalUserIdsService;
+
+    public TemperatureChartController(TemperatureChartService temperatureChartService, PortalUserIdsService portalUserIdsService) {
+        this.temperatureChartService = temperatureChartService;
+        this.portalUserIdsService = portalUserIdsService;
+    }
+
+    /**
 	 *
 	 * @return
 	 */

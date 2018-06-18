@@ -30,7 +30,8 @@ import {
   MatToolbarModule,
   MatListModule,
   MatSelectModule,
-  MatTooltipModule
+  MatTooltipModule,
+  MatMenuModule
   // ErrorStateMatcher,
   // ShowOnDirtyErrorStateMatcher
 } from '@angular/material';
@@ -54,6 +55,17 @@ import { DragDropModule } from 'primeng/dragdrop';
 import { AngularSplitModule } from 'angular-split';
 import { ExcToolbarComponent } from './exc-toolbar/exc-toolbar.component';
 import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.component';
+import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
+import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
+import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { ExcFrameComponent } from './exc-form-template/exc-frame.component';
+import { TreeModule } from 'primeng/tree';
+import { BuildingTypeDecoderService } from './exc-ui-tools/building-type-decoder.service';
+import { BuildingTypeIconComponent } from './exc-ui-tools/building-type-icon.component';
+
+const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
+  suppressScrollX: true
+};
 
 @NgModule({
   imports: [
@@ -74,6 +86,7 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
       MatSlideToggleModule,
       MatToolbarModule,
       MatListModule,
+      MatMenuModule,
       // PRIME NG
       CardModule,
       InputTextModule,
@@ -82,14 +95,17 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
       CheckboxModule,
       AutoCompleteModule,
       TreeTableModule,
+      TreeModule,
       ContextMenuModule,
       ScrollPanelModule,
       TableModule,
       ConfirmDialogModule,
       // 3rd party modules
-      AngularSplitModule
+      AngularSplitModule,
+      PerfectScrollbarModule
   ],
   declarations: [
+    ExcFrameComponent,
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
     ExcFormDetailFieldComponent,
@@ -98,14 +114,21 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     ExcEditFormMenuComponent,
     ExcSearchFieldComponent,
     ExcToolbarComponent,
-    ExcSearchInputComponent
+    ExcSearchInputComponent,
+    BuildingTypeIconComponent
   ],
   entryComponents: [
   ],
   providers: [
+    {
+      provide: PERFECT_SCROLLBAR_CONFIG,
+      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
+    },
+    BuildingTypeDecoderService
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
+    ExcFrameComponent,
     ExcSearchInputComponent,
     ExcEditButtonsComponent,
     ExcFormTemplateComponent,
@@ -116,6 +139,7 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     ExcSearchFieldComponent,
     ExcToolbarComponent,
     ExcSearchInputComponent,
+    BuildingTypeIconComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,
@@ -132,7 +156,9 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     MatTooltipModule,
     MatAutocompleteModule,
     MatSlideToggleModule,
+    MatMenuModule,
     // Prime NG mudule
+    TreeModule,
     TreeTableModule,
     ContextMenuModule,
     OverlayPanelModule,
@@ -147,7 +173,8 @@ import { ExcSearchInputComponent } from './exc-form-menu/exc-search-input.compon
     DropdownModule,
     DragDropModule,
     // 3rd party modules
-    AngularSplitModule
+    AngularSplitModule,
+    PerfectScrollbarModule
   ]
 })
 export class PortalSharedBlocksModule {}

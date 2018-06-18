@@ -4,7 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 
@@ -16,14 +18,17 @@ import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
  * @since 01.10.2015
  *
  */
-@Controller
+@RestController
 @RequestMapping("/api/subscr")
-public class SubscriberController extends AbstractSubscrApiResource {
+public class SubscriberController {
 
     private final ObjectAccessService objectAccessService;
 
-    public SubscriberController(ObjectAccessService objectAccessService) {
+    private final PortalUserIdsService portalUserIdsService;
+
+    public SubscriberController(ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService) {
         this.objectAccessService = objectAccessService;
+        this.portalUserIdsService = portalUserIdsService;
     }
 
     /**
@@ -33,7 +38,7 @@ public class SubscriberController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/info/subscriberContObjectCount", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberContObjectCount() {
-		int cnt = objectAccessService.findContObjectIds(getSubscriberId()).size();
+		int cnt = objectAccessService.findContObjectIds(portalUserIdsService.getCurrentIds().getSubscriberId()).size();
 		return ResponseEntity.ok(cnt);
 	}
 
