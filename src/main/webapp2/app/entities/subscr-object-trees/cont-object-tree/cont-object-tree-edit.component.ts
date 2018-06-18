@@ -38,11 +38,12 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     private treeContObjectNodesData: OptionalNodeData[] = [];
 
-    readonly loadingStatus = new LoadingStatusService();
+    // readonly loadingStatus = new LoadingStatusService();
 
     constructor(
         private subscrObjectTreeService: SubscrObjectTreeService,
-        private buildingTypeDecoderService: BuildingTypeDecoderService
+        private buildingTypeDecoderService: BuildingTypeDecoderService,
+        readonly loadingStatus: LoadingStatusService
     ) { }
 
     ngOnInit() {
@@ -58,43 +59,43 @@ export class ContObjectTreeEditComponent implements OnInit {
 
         this.currentTreeId$.filter((id) => id !== null && id !== undefined)
             .flatMap((id) => {
-                this.startLoading();
+                // this.startLoading();
                 return this.subscrObjectTreeService.getContObjectType1(id);
             })
             .pipe(
                 catchError(() => of(null)),
-                finalize(() => this.finishLoading())
+                finalize(() => {})
             )
             .subscribe((data) => {
                 this.currentTree = data;
                 this.treeContObjectNodesData = [];
                 this.objectTree = [this.convertTreeDataToTreeNode(data)];
-                this.finishLoading();
+                // this.finishLoading();
             });
 
         this.currentTreeId$.filter((id) => id !== null && id !== undefined)
             .flatMap((id) => {
-                this.startLoading();
+                // this.startLoading();
                 return this.subscrObjectTreeService.getContObjectsAvailable({ rootNodeId: id});
             })
             .subscribe((data) => {
                 console.log('Load Cont Object Data');
                 this.availableContObjects = data;
                 this.clearSelection();
-                this.finishLoading();
+                // this.finishLoading();
             });
 
     }
 
-    startLoading() {
-        this.loadingStatus.startRequest();
-        // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
-    }
+    // startLoading() {
+    //     this.loadingStatus.startRequest();
+    //     // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
+    // }
 
-    finishLoading() {
-        this.loadingStatus.stopRequest();
-        // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
-    }
+    // finishLoading() {
+    //     this.loadingStatus.stopRequest();
+    //     // Observable.timer(startLoadingDelay).takeUntil(this.leftLoadingSubject).subscribe(() => this.leftLoadingSubject.next(true));
+    // }
 
     clearSelection() {
         this.selectedContObjectIds = [];
@@ -160,7 +161,7 @@ export class ContObjectTreeEditComponent implements OnInit {
             const rId = this.currentTree.id;
             const nId = destNode.data.subscrNode.id;
             const objIds = workContObjects.map((co) => co.contObjectId).filter((value, index, self) => self.indexOf(value) === index);
-            this.startLoading();
+            // this.startLoading();
             this.subscrObjectTreeService.putContObjectDataAdd(
                 {rootNodeId: rId, nodeId: nId},
                 {contObjectIds: objIds})
@@ -169,7 +170,7 @@ export class ContObjectTreeEditComponent implements OnInit {
                     this.removeContObjectsFromAvailable(objIds);
                     this.selectedContObjectIds = [];
                     this.draggableContObjects = [];
-                    this.finishLoading();
+                    // this.finishLoading();
                 });
         }
         // else {
@@ -184,14 +185,14 @@ export class ContObjectTreeEditComponent implements OnInit {
             const nIds = workNodes.map((n) => n.parent.data.subscrNode.id).filter((value, index, self) => self.indexOf(value) === index);
             const objIds = workNodes.map((n) => n.data.contObject.contObjectId);
             if (nIds.length === 1) {
-                this.startLoading();
+                // this.startLoading();
                 this.subscrObjectTreeService.putContObjectDataRemove(
                     {rootNodeId: rId, nodeId: nIds[0]},
                     {contObjectIds: objIds})
                     .subscribe(() => {
                             workNodes.forEach((n) => this.removeDraggabeFromNode(n));
                             workNodes.forEach((n) => this.addContObjectToAvailable(n.data.contObject));
-                            this.finishLoading();
+                            // this.finishLoading();
                     });
             } else {
                 // console.log('No single node');
