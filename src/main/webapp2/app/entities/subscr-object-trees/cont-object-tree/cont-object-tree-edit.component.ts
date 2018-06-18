@@ -48,8 +48,6 @@ export class ContObjectTreeEditComponent implements OnInit {
 
     ngOnInit() {
 
-        this.loadingStatus.loading$.subscribe((d) => console.log('Loading ' + d));
-
         this.subscrObjectTreeService.findAll().subscribe((data) => {
             this.treeList = data;
             if (data && data.length > 0) {
@@ -79,7 +77,6 @@ export class ContObjectTreeEditComponent implements OnInit {
                 return this.subscrObjectTreeService.getContObjectsAvailable({ rootNodeId: id});
             })
             .subscribe((data) => {
-                console.log('Load Cont Object Data');
                 this.availableContObjects = data;
                 this.clearSelection();
                 // this.finishLoading();
@@ -128,7 +125,7 @@ export class ContObjectTreeEditComponent implements OnInit {
             expanded: true
         };
 
-        console.log('convert load id:' + objectTree.id + ' conditions ' + !objectTree.isLinkDeny + ' - ' + (objectTree.id !== this.currentTree.id));
+        // console.log('convert load id:' + objectTree.id + ' conditions ' + !objectTree.isLinkDeny + ' - ' + (objectTree.id !== this.currentTree.id));
         if (!objectTree.isLinkDeny && objectTree.id !== this.currentTree.id) {
             this.loadContObjectData(result);
         }
