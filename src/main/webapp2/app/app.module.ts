@@ -121,7 +121,8 @@ import { LoadingStatusService } from './shared-blocks/exc-tools/loading-status-s
             useClass: ErrorHandlerInterceptor,
             multi: true,
             deps: [
-                JhiEventManager
+                JhiEventManager,
+                LoadingStatusService
             ]
         },
         {
