@@ -28,7 +28,14 @@ export class LoadingStatusService {
     }
 
     stopRequest() {
-        this.loadingSubject.next(false);
+
+        timer(10).flatMap(() => this.loading$).filter((v) => v === true)
+            .subscribe(() => {
+                this.loadingSubject.next(false);
+            });
+
         this.loadingDebug.next(false);
+        // this.loadingSubject.next(false);
     }
+
 }
