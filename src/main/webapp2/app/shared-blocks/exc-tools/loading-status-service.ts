@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
 import { takeUntil } from 'rxjs/operators';
 
