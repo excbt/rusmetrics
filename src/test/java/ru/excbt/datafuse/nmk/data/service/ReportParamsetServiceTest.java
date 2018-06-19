@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.*;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
@@ -96,7 +97,7 @@ public class ReportParamsetServiceTest extends PortalDataTest {
 		ContObject co = contObjects.get(0);
 		ReportParamsetUnit unit = reportParamsetService.addUnitToParamset(reportParamset, co.getId());
 
-		List<ContObject> listCO = reportParamsetService.selectParamsetContObjects(reportParamset.getId());
+		List<ContObjectDTO> listCO = reportParamsetService.selectParamsetContObjects(reportParamset.getId());
 		assertTrue(listCO.size() > 0);
 
 		reportParamsetService.deleteUnitFromParamset(reportParamset.getId(), co.getId());
@@ -122,7 +123,7 @@ public class ReportParamsetServiceTest extends PortalDataTest {
 		// .findReportParamsetList(rt.getId());
 		// assertTrue(rpList.size() > 0);
 
-		List<ContObject> contObjects = reportParamsetService.selectParamsetAvailableContObjectUnits(-1,
+		List<ContObjectDTO> contObjects = reportParamsetService.selectParamsetAvailableContObjectUnits(-1,
 				portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		assertTrue(contObjects.size() > 0);

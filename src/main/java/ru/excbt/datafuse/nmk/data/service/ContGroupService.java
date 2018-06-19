@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.PersistenceException;
 
@@ -19,11 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
 import ru.excbt.datafuse.nmk.data.model.SubscrContGroupItem;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContGroupItemRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContGroupRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.dto.SubscrContGroupDTO;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrContGroupMapper;
 
 /**
  * Сервис для работы с группами ContGroup объектов ContObject
@@ -35,23 +41,33 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
  */
 
 @Service
-public class ContGroupService implements SecuredRoles {
+public class ContGroupService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportParamsetService.class);
 
-	@Autowired
-	private SubscrContGroupRepository contGroupRepository;
+	private final SubscrContGroupRepository contGroupRepository;
 
-	@Autowired
-	private SubscrContGroupItemRepository contGroupItemRepository;
+	private final SubscrContGroupItemRepository contGroupItemRepository;
 
-	/**
+	private final ContObjectMapper contObjectMapper;
+
+	private final SubscrContGroupMapper subscrContGroupMapper;
+
+    public ContGroupService(SubscrContGroupRepository contGroupRepository, SubscrContGroupItemRepository contGroupItemRepository, ContObjectMapper contObjectMapper, SubscrContGroupMapper subscrContGroupMapper) {
+        this.contGroupRepository = contGroupRepository;
+        this.contGroupItemRepository = contGroupItemRepository;
+        this.contObjectMapper = contObjectMapper;
+        this.subscrContGroupMapper = subscrContGroupMapper;
+    }
+
+    /**
 	 *
 	 * @param entity
 	 * @return
 	 */
+
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public SubscrContGroup createOne(SubscrContGroup entity, Long[] contObjectIds) {
 		checkNotNull(entity);
 		checkArgument(entity.isNew());
@@ -64,24 +80,39 @@ public class ContGroupService implements SecuredRoles {
 		return result;
 	}
 
+	@Transactional
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
+	public SubscrContGroupDTO createOne(SubscrContGroupDTO dto, Long[] contObjectIds) {
+		checkNotNull(dto);
+		checkArgument(dto.getId() == null);
+
+        SubscrContGroup subscrContGroup = subscrContGroupMapper.toEntity(dto);
+
+		SubscrContGroup savedEntity = contGroupRepository.save(subscrContGroup);
+		if (contObjectIds != null) {
+			updateObjectsToGroup(savedEntity.getId(), contObjectIds);
+		}
+
+		return subscrContGroupMapper.toDto(savedEntity);
+	}
 	/**
 	 *
 	 * @param entity
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteOne(SubscrContGroup entity) {
 		checkNotNull(entity);
 		contGroupRepository.delete(entity);
 	}
 
-	/**
-	 *
-	 * @param SubscrContGroup
-	 * @return
-	 */
+    /**
+     *
+     * @param entity
+     * @return
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public SubscrContGroup updateOne(SubscrContGroup entity) {
 		checkNotNull(entity);
 		checkArgument(!entity.isNew());
@@ -97,7 +128,7 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public SubscrContGroup updateOne(SubscrContGroup contGroup, Long[] contObjectIds) {
 		SubscrContGroup result = updateOne(contGroup);
 
@@ -107,11 +138,25 @@ public class ContGroupService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+	@Transactional
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
+	public SubscrContGroupDTO updateOne(SubscrContGroupDTO contGroupDTO, Long[] contObjectIds) {
+
+        Objects.requireNonNull(contGroupDTO.getId());
+
+        SubscrContGroup subscrContGroup = subscrContGroupMapper.toEntity(contGroupDTO);
+
+		if (contObjectIds != null) {
+			updateObjectsToGroup(subscrContGroup.getId(), contObjectIds);
+		}
+		return subscrContGroupMapper.toDto(subscrContGroup);
+	}
+
+    /**
+     *
+     * @param contGroupId
+     * @param objectIds
+     */
 	@Transactional
 	public void updateObjectsToGroup(final Long contGroupId, final Long[] objectIds) {
 		checkNotNull(contGroupId);
@@ -134,12 +179,13 @@ public class ContGroupService implements SecuredRoles {
 		}
 	}
 
-	/**
-	 *
-	 * @param reportParamsetUnitId
-	 */
+    /**
+     *
+     * @param contGroupId
+     * @param contObjectId
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteObjectsFromGroup(final Long contGroupId, final Long contObjectId) {
 		checkNotNull(contGroupId);
 		checkNotNull(contObjectId);
@@ -164,12 +210,12 @@ public class ContGroupService implements SecuredRoles {
 		contGroupItemRepository.delete(ids.get(0));
 	}
 
-	/**
-	 *
-	 * @param reportParamsetId
-	 * @param objectId
-	 * @return
-	 */
+    /**
+     *
+     * @param contGroupId
+     * @param objectId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public boolean checkContGroupObject(Long contGroupId, Long objectId) {
 		checkNotNull(contGroupId);
@@ -177,11 +223,12 @@ public class ContGroupService implements SecuredRoles {
 		return contGroupItemRepository.selectItemIds(contGroupId, objectId).size() > 0;
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contGroup
+     * @param objectId
+     * @return
+     */
 	@Transactional
 	public SubscrContGroupItem addObjectToGroup(SubscrContGroup contGroup, Long objectId) {
 		checkNotNull(contGroup);
@@ -202,11 +249,12 @@ public class ContGroupService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param contObject
-	 * @return
-	 */
+    /**
+     *
+     * @param contGroupId
+     * @param objectId
+     * @return
+     */
 	@Transactional
 	public SubscrContGroupItem addObjectToGroup(Long contGroupId, Long objectId) {
 		checkNotNull(contGroupId);
@@ -215,12 +263,12 @@ public class ContGroupService implements SecuredRoles {
 		return addObjectToGroup(cg, objectId);
 	}
 
-	/**
-	 *
-	 * @param id
-	 */
+    /**
+     *
+     * @param contGroupId
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteOne(Long contGroupId) {
 		checkNotNull(contGroupId);
 		if (contGroupRepository.exists(contGroupId)) {
@@ -253,35 +301,47 @@ public class ContGroupService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional( readOnly = true)
+	public List<ContObjectDTO> selectContGroupObjectsDTO(PortalUserIds portalUserIds, Long contGroupId) {
+		checkNotNull(contGroupId);
+		checkNotNull(portalUserIds);
+		List<ContObject> contObjectList = contGroupItemRepository.selectContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
+		return contObjectMapper.toDto(contObjectList);
+	}
+
+	@Transactional( readOnly = true)
 	public List<ContObject> selectContGroupObjects(PortalUserIds portalUserIds, Long contGroupId) {
 		checkNotNull(contGroupId);
 		checkNotNull(portalUserIds);
-		return contGroupItemRepository.selectContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
+		List<ContObject> contObjectList = contGroupItemRepository.selectContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
+		return contObjectList;
 	}
 
-	/**
-	 *
-	 * @param contGroupId
-	 * @param SubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @param contGroupId
+     * @return
+     */
 	@Transactional( readOnly = true)
-	public List<ContObject> selectAvailableContGroupObjects(PortalUserIds portalUserIds, Long contGroupId) {
+	public List<ContObjectDTO> selectAvailableContGroupObjects(PortalUserIds portalUserIds, Long contGroupId) {
 		checkNotNull(contGroupId);
 		checkNotNull(portalUserIds);
 
-		return contGroupItemRepository.selectAvailableContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
+        List<ContObject> contObjectList = contGroupItemRepository.selectAvailableContGroupObjects(portalUserIds.getSubscriberId(), contGroupId);
+
+		return contObjectMapper.toDto(contObjectList);
 	}
 
-	/**
-	 *
-	 * @param SubscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
 	@Transactional( readOnly = true)
-	public List<SubscrContGroup> selectSubscriberGroups(PortalUserIds portalUserIds) {
+	public List<SubscrContGroupDTO> selectSubscriberGroups(PortalUserIds portalUserIds) {
 		checkNotNull(portalUserIds);
-		return contGroupRepository.findBySubscriberId(portalUserIds.getSubscriberId());
+        List<SubscrContGroup> subscrContGroupList = contGroupRepository.findBySubscriberId(portalUserIds.getSubscriberId());
+        return subscrContGroupMapper.toDto(subscrContGroupList);
 	}
 
 }

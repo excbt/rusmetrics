@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ReportParamset;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
 import ru.excbt.datafuse.nmk.data.service.*;
@@ -356,7 +357,8 @@ public class ReportParamsetController  {
 	public ResponseEntity<?> getContObjectUnits(@PathVariable(value = "reportParamsetId") Long reportParamsetId) {
 
 		checkNotNull(reportParamsetId);
-		return ApiResponse.responseOK(() -> reportParamsetService.selectParamsetContObjects(reportParamsetId));
+		List<ContObjectDTO> contObjectDTOList = reportParamsetService.selectParamsetContObjects(reportParamsetId);
+		return ResponseEntity.ok(contObjectDTOList);
 	}
 
 	/**
@@ -370,8 +372,10 @@ public class ReportParamsetController  {
 
 		checkNotNull(reportParamsetId);
 
-		return ApiResponse.responseOK(() -> reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
-				portalUserIdsService.getCurrentIds().getSubscriberId()));
+		List<ContObjectDTO> contObjectDTOList = reportParamsetService.selectParamsetAvailableContObjectUnits(reportParamsetId,
+            portalUserIdsService.getCurrentIds().getSubscriberId());
+
+		return ResponseEntity.ok(contObjectDTOList);
 	}
 
 	/**

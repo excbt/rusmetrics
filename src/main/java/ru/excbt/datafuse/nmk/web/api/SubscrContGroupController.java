@@ -2,24 +2,22 @@ package ru.excbt.datafuse.nmk.web.api;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.excbt.datafuse.nmk.data.model.SubscrContGroup;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.ContGroupService;
-import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
+import ru.excbt.datafuse.nmk.service.dto.SubscrContGroupDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionVoidProcess;
-import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
+import ru.excbt.datafuse.nmk.web.rest.support.ApiResponse;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -56,11 +54,9 @@ public class SubscrContGroupController {
 
 		checkNotNull(contGroupId);
 
-		ApiActionObjectProcess action = () -> contGroupService.selectContGroupObjects(portalUserIdsService.getCurrentIds(), contGroupId);
+        List<ContObjectDTO> contObjectDTOList = contGroupService.selectContGroupObjectsDTO(portalUserIdsService.getCurrentIds(), contGroupId);
 
-		//List<ContObject> resultList = contGroupService.selectContGroupObjects(getSubscriberParam(), contGroupId);
-
-		return ApiResponse.responseOK(action);// ResponseEntity.ok(resultList);
+		return ResponseEntity.ok(contObjectDTOList);
 	}
 
 	/**
@@ -73,11 +69,9 @@ public class SubscrContGroupController {
 
 		checkNotNull(contGroupId);
 
-		ApiActionObjectProcess action = () -> {
-			return contGroupService.selectAvailableContGroupObjects(portalUserIdsService.getCurrentIds(), contGroupId);
-		};
+        List<ContObjectDTO> contObjectDTOList = contGroupService.selectAvailableContGroupObjects(portalUserIdsService.getCurrentIds(), contGroupId);
 
-		return ApiResponse.responseOK(action);
+		return ResponseEntity.ok(contObjectDTOList);
 	}
 
 	/**
@@ -87,11 +81,9 @@ public class SubscrContGroupController {
 	@RequestMapping(value = "", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscriberGroups() {
 
-		ApiActionObjectProcess action = () -> {
-			return contGroupService.selectSubscriberGroups(portalUserIdsService.getCurrentIds());
-		};
+		List<SubscrContGroupDTO> subscrContGroupDTOList = contGroupService.selectSubscriberGroups(portalUserIdsService.getCurrentIds());
 
-		return ApiResponse.responseOK(action);
+		return ResponseEntity.ok(subscrContGroupDTOList);
 
 	}
 
@@ -105,12 +97,14 @@ public class SubscrContGroupController {
 	@RequestMapping(value = "", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> createGroup(
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody final SubscrContGroup contGroup, final HttpServletRequest request) {
+			@RequestBody final SubscrContGroupDTO contGroup, final HttpServletRequest request) {
 
-		checkArgument(contGroup.isNew());
+		if (contGroup.getId() == null) {
+		    return ResponseEntity.badRequest().build();
+        }
 
-		ApiActionProcess<SubscrContGroup> process = () -> {
-			contGroup.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
+		ApiActionProcess<SubscrContGroupDTO> process = () -> {
+			contGroup.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
 			return contGroupService.createOne(contGroup, contObjectIds);
 		};
 
@@ -141,16 +135,16 @@ public class SubscrContGroupController {
 	@RequestMapping(value = "{contGroupId}", method = RequestMethod.PUT, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> updateGroup(@PathVariable(value = "contGroupId") final Long contGroupId,
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
-			@RequestBody final SubscrContGroup contGroup) {
+			@RequestBody final SubscrContGroupDTO contGroupDTO) {
 
 		checkNotNull(contGroupId);
-		checkNotNull(contGroup);
-		checkNotNull(contGroup.getId());
-		checkArgument(contGroup.getId().equals(contGroupId));
+		checkNotNull(contGroupDTO);
+		checkNotNull(contGroupDTO.getId());
+		checkArgument(contGroupDTO.getId().equals(contGroupId));
 
 		ApiActionObjectProcess action = () -> {
-			contGroup.setSubscriber(new Subscriber().id(portalUserIdsService.getCurrentIds().getSubscriberId()));
-			return contGroupService.updateOne(contGroup, contObjectIds);
+			contGroupDTO.setSubscriberId(portalUserIdsService.getCurrentIds().getSubscriberId());
+			return contGroupService.updateOne(contGroupDTO, contObjectIds);
 		};
 
 		return ApiActionTool.processResponceApiActionUpdate(action);
