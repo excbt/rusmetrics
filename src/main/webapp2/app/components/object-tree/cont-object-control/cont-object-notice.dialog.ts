@@ -15,12 +15,12 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
     @Input() showFlag: boolean;
     @Output() setShowFlag = new EventEmitter<boolean>();
 
-    historyDateRange: Date[];
+    historyDateRange: Date[] = [new Date(), new Date()];
 
     eventModeFlag = true;
     historyModeFlag = false;
 
-//    showHistoryFlag = false;    
+//    showHistoryFlag = false;
     dateLocale: any;
 
     constructor(private dateUtils: DateUtils) {
@@ -28,7 +28,10 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
     }
 
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        for (let propName in changes) {
+        for (const propName in changes) {
+            if (!changes.hasOwnProperty(propName)) {
+                continue;
+            }
             console.log('propName: ', propName);
             console.log('changedProp: ', changes[propName].currentValue);
         }
@@ -61,7 +64,7 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
 //        console.log('startDate: ', startDate);
 //        console.log('endDate: ', endDate);
     }
-    
+
     closeWindow() {
         this.showFlag = false;
         this.setShowFlag.emit(false);

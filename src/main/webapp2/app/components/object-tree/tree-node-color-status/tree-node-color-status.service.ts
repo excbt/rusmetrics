@@ -62,8 +62,8 @@ export class TreeNodeColorStatusService {
 //        if (angular.isDefined(resourceName) && resourceName !== null) {
 //            url += "?contServiceType=" + resourceName;
 //        }
-        console.log('resourceName: ', resourceName);
-        console.log('typeof resourceName: ', typeof resourceName);
+//        console.log('resourceName: ', resourceName);
+//        console.log('typeof resourceName: ', typeof resourceName);
         let getOpts = {};
         if (resourceName !== null) {
             getOpts = {

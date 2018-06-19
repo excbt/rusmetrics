@@ -14,7 +14,7 @@ import { ContObjectControlDataSource } from './cont-object-control.datasource';
 import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-//import { DateUtils } from '../utils/date-utils';
+// import { DateUtils } from '../utils/date-utils';
 
 @Component({
     selector: 'jhi-cont-object-control',
@@ -30,15 +30,15 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
     displayedColumns = ['coName'];
 
 //    contObjectEventViewFlag = false;
-    selectedObject: ContObjectControl = new ContObjectControl(0, '', '', '' ,'');
+    selectedObject: ContObjectControl = new ContObjectControl(0, '', '', '', '');
     dataSource: ContObjectControlDataSource;
-    showEventFlag: boolean = false;
-    
+    showEventFlag = false;
+
     eventModeFlag = true;
     historyModeFlag = false;
-    
+
     showHistoryFlag = false;
-    
+
     historyDateRange: any;
 //    dateLocale: any;
 
@@ -47,9 +47,9 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
                 private dialog: MatDialog) {}
 
     ngOnInit() {
-//console.log('DateUtils: ', DateUtils);
-//console.log('new DateUtils: ', new DateUtils());
-//console.log('dateUtils: ', this.dateUtils);
+// console.log('DateUtils: ', DateUtils);
+// console.log('new DateUtils: ', new DateUtils());
+// console.log('dateUtils: ', this.dateUtils);
 //        this.dateLocale = this.dateUtils.dateOptions;
 
         this.contObjectControlService.initSvc();
@@ -105,21 +105,24 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 
         this.eventManager.subscribe('contObjectListChanged', (eventData) => {
             this.contObjectList = eventData.content;
-            console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
+//            console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
             this.performContObjectList();
         });
 
-        console.log('contObjectList: ', this.contObjectList);
+//        console.log('contObjectList: ', this.contObjectList);
         if (this.contObjectList && this.contObjectList.length > 0) {
             this.performContObjectList();
         }
 
     }
-    
+
     ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
-        for (let propName in changes) {
-            console.log('COC: propName: ', propName);
-            console.log('COC: changedValue: ', changes[propName].currentValue);
+        for (const propName in changes) {
+            if (!changes.hasOwnProperty(propName)) {
+                continue;
+            }
+//            console.log('COC: propName: ', propName);
+//            console.log('COC: changedValue: ', changes[propName].currentValue);
         }
     }
 
@@ -147,7 +150,7 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 
     clickObject(object) {
 //        this.contObjectEventViewFlag = false;
-        console.log('Click object: ', object);
+//        console.log('Click object: ', object);
         if (object && object.contObjectId) {
 
 //            const dialogRef = this.dialog.open(ContObjectNoticeDialogComponent, {
@@ -157,7 +160,7 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 //            });
 //
 //            setTimeout(() => {this.contObjectEventViewFlag = true; this.selectedObject = object.contObjectId; console.log('Set time out: ', this.selectedObject); }, 500);
-            
+
             this.showEventFlag = true;
             this.selectedObject = object;
         }
@@ -166,24 +169,24 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
     getEventFlag(flag: boolean) {
         this.showEventFlag = flag;
     }
-    
+
 //    setHistoryMode() {
 //        this.eventModeFlag = false;
 //        this.historyModeFlag = true;
-//        
+//
 //        this.showHistoryFlag = true;
 //    }
-//    
+//
 //    setEventMode() {
 //        this.historyModeFlag = false;
 //        this.eventModeFlag = true;
-//        
+//
 //        this.showHistoryFlag = false;
 //    }
-//    
+//
 //    setDaterange() {
 //        console.log('historyDateRange: ', this.historyDateRange);
-        
+
 //        const format = this.dateUtils.getSystemFormat();
 //        const startDate: string = this.dateUtils.dateToString(this.historyDateRange[0], format);
 //        const endDate: string = this.dateUtils.dateToString(this.historyDateRange[1], format);

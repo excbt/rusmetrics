@@ -285,7 +285,7 @@ export class TreeNodeColorStatusComponent implements OnInit {
 //    nodeColorStatusDetailsObserver
 
     selectData(event) {
-        console.log(event);
+//        console.log(event);
         this.contObjectIdsLoading = true;
 //        loadNodeColorStatusDetails(nodeId, levelColor, resourceName)
         const statusPosition: number = event.element._index;
@@ -294,7 +294,7 @@ export class TreeNodeColorStatusComponent implements OnInit {
             .loadNodeColorStatusDetails(this.treeNodeId, this.statusKeynames[statusPosition], resourceName)
             .subscribe((res) => {this.selectedContObjects = res.contObjectIds;
                                  this.contObjectIdsLoading = false;
-                                 console.log(this.selectedContObjects);
+//                                 console.log(this.selectedContObjects);
                                 });
     }
 

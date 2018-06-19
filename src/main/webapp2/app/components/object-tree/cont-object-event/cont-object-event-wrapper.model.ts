@@ -28,17 +28,17 @@ export class ContObjectEventWrapper {
 
     getContEventDisplayedMessage(): string {
         let message = this.contObjectEvent.contEventType.name;
-        
-        if (this.contObjectEvent.hasOwnProperty("contEvent") && this.contObjectEvent.contEvent !== null && this.contObjectEvent.contEvent.hasOwnProperty("message")) {
-            message += ": " + this.contObjectEvent.contEvent.message;
+
+        if (this.contObjectEvent.hasOwnProperty('contEvent') && this.contObjectEvent.contEvent !== null && this.contObjectEvent.contEvent.hasOwnProperty('message')) {
+            message += ': ' + this.contObjectEvent.contEvent.message;
         }
         return message;
     }
-    
+
     getContServiceType(): string {
         return this.contObjectEvent.contServiceType.toLowerCase();
     }
-    
+
     getColorState(): string {
         return this.contObjectEvent.contEventLevelColorKeyname.toLowerCase();
     }

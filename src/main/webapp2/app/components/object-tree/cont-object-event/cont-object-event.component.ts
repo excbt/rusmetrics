@@ -22,12 +22,13 @@ export class ContObjectEventComponent implements OnInit {
     constructor(private contObjectEventService: ContObjectEventService) {}
 
     ngOnInit() {
-        console.log('ContObjectEventComponent: contObjectId: ', this.contObjectId);
+//        console.log('ContObjectEventComponent: contObjectId: ', this.contObjectId);
         if (this.contObjectId) {
             this.contObjectEventService
                 .loadEvents(this.contObjectId.toString())
-                .subscribe((res) => { 
-                    console.log(res); this.contObjectEventList = res; 
+                .subscribe((res) => {
+//                    console.log(res);
+                    this.contObjectEventList = res;
                     this.contObjectEventWrapperList = this.contObjectEventList
                         .map((coe) => {
                             const coew: ContObjectEventWrapper = new ContObjectEventWrapper(coe);
