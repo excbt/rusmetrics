@@ -7,6 +7,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import ru.excbt.datafuse.nmk.data.domain.ModelId;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriodParser;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionProcess;
@@ -135,7 +136,7 @@ public class ApiResponse {
 	 * @param actionProcess
 	 * @return
 	 */
-	public static <T extends ModelIdable<K>, K extends Serializable> ResponseEntity<?> responseCreate(
+	public static <T extends ModelId<K>, K extends Serializable> ResponseEntity<?> responseCreate(
         final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 		return ApiActionTool.processResponceApiActionCreate(actionProcess, uriLocationSupplier);
 

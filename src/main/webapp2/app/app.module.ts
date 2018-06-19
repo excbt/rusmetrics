@@ -48,6 +48,8 @@ import {
 } from './layouts';
 import { PartnerModule } from './partner/partner.module';
 import { OperatorModule } from './operator/operator.module';
+import { HttpSpinnerInterceptor } from './blocks/interceptor/http-spinner-interceptor';
+import { LoadingStatusService } from './shared-blocks/exc-tools/loading-status-service';
 // import { ClassifiersHomeComponent } from './classifiers/classifiers-home.component';
 // import { LeftMainMenuComponent } from './layouts/left-main-menu/left-main-menu.component';
 
@@ -108,10 +110,19 @@ import { OperatorModule } from './operator/operator.module';
         },
         {
             provide: HTTP_INTERCEPTORS,
+            useClass: HttpSpinnerInterceptor,
+            multi: true,
+            deps: [
+                LoadingStatusService
+            ]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
             useClass: ErrorHandlerInterceptor,
             multi: true,
             deps: [
-                JhiEventManager
+                JhiEventManager,
+                LoadingStatusService
             ]
         },
         {

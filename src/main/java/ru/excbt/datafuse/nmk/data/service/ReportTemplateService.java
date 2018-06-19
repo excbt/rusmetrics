@@ -1,32 +1,26 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
-import ru.excbt.datafuse.nmk.data.model.ReportMasterTemplateBody;
-import ru.excbt.datafuse.nmk.data.model.ReportParamset;
-import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
-import ru.excbt.datafuse.nmk.data.model.ReportTemplateBody;
-import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
+import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
-import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с шаблонами отчета
@@ -37,26 +31,29 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
  *
  */
 @Service
-public class ReportTemplateService implements SecuredRoles {
+public class ReportTemplateService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ReportTemplateService.class);
 
-	@Autowired
-	private ReportTemplateRepository reportTemplateRepository;
+	private final ReportTemplateRepository reportTemplateRepository;
 
-	@Autowired
-	private ReportTemplateBodyRepository reportTemplateBodyRepository;
+	private final ReportTemplateBodyRepository reportTemplateBodyRepository;
 
-	@Autowired
-	private ReportParamsetService reportParamsetService;
+	private final ReportParamsetRepository reportParamsetRepository;
 
-	@Autowired
-	private ReportMasterTemplateBodyService reportMasterTemplateBodyService;
+	private final ReportMasterTemplateBodyService reportMasterTemplateBodyService;
 
-	@Autowired
-	private ReportTypeService reportTypeService;
+	private final ReportTypeService reportTypeService;
 
-	/**
+    public ReportTemplateService(ReportTemplateRepository reportTemplateRepository, ReportTemplateBodyRepository reportTemplateBodyRepository, ReportParamsetRepository reportParamsetRepository, ReportMasterTemplateBodyService reportMasterTemplateBodyService, ReportTypeService reportTypeService) {
+        this.reportTemplateRepository = reportTemplateRepository;
+        this.reportTemplateBodyRepository = reportTemplateBodyRepository;
+        this.reportParamsetRepository = reportParamsetRepository;
+        this.reportMasterTemplateBodyService = reportMasterTemplateBodyService;
+        this.reportTypeService = reportTypeService;
+    }
+
+    /**
 	 *
 	 * @param reportTemplateId
 	 * @return
@@ -73,7 +70,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public ReportTemplate createOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(reportTemplate.isNew());
@@ -90,7 +87,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public ReportTemplate updateOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -114,7 +111,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN })
 	protected ReportTemplate updateOneAny(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -129,7 +126,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteOne(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -137,12 +134,12 @@ public class ReportTemplateService implements SecuredRoles {
 		deleteOne(reportTemplate.getId());
 	}
 
-	/**
-	 *
-	 * @param reportTemplate
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteOne(long reportTemplateId) {
 
 		if (checkCanUpdate(reportTemplateId)) {
@@ -161,7 +158,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @param reportTemplate
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN })
 	public void deleteOneCommon(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());
@@ -169,12 +166,12 @@ public class ReportTemplateService implements SecuredRoles {
 		deleteOneCommon(reportTemplate.getId());
 	}
 
-	/**
-	 *
-	 * @param reportTemplate
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     */
 	@Transactional
-	@Secured({ ROLE_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN })
 	public void deleteOneCommon(long reportTemplateId) {
 
 		if (checkIsCommon(reportTemplateId)) {
@@ -188,12 +185,12 @@ public class ReportTemplateService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param reportType
-	 * @param currentDate
-	 * @return
-	 */
+    /**
+     *
+     * @param reportType
+     * @param isActive
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<ReportTemplate> selectDefaultReportTemplates(ReportTypeKey reportType, boolean isActive) {
 		return reportTemplateRepository.selectCommonTemplates(reportType.getKeyname(), isActive);
@@ -216,12 +213,12 @@ public class ReportTemplateService implements SecuredRoles {
 		return  result;
 	}
 
-	/**
-	 *
-	 * @param reportType
-	 * @param isActive
-	 * @return
-	 */
+    /**
+     *
+     * @param reportTypeKey
+     * @param isActive
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<ReportTemplate> selectCommonReportTemplates(ReportTypeKey reportTypeKey, boolean isActive) {
 
@@ -231,12 +228,13 @@ public class ReportTemplateService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param reportType
-	 * @param currentDate
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param reportType
+     * @param isActive
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<ReportTemplate> getAllReportTemplates(long subscriberId, ReportTypeKey reportType, boolean isActive) {
 
@@ -298,36 +296,40 @@ public class ReportTemplateService implements SecuredRoles {
 		reportTemplateBodyRepository.save(rtb);
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @param reportTemplateBody
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     * @param body
+     * @param filename
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void saveReportTemplateBody(long reportTemplateId, byte[] body, String filename) {
 		saveReportTemplateBodyInternal(reportTemplateId, body, filename, false);
 	}
 
-	/**
-	 *
-	 * @param reportTemplateId
-	 * @param reportTemplateBody
-	 */
+    /**
+     *
+     * @param reportTemplateId
+     * @param body
+     * @param filename
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void saveReportTemplateBodyCompiled(long reportTemplateId, byte[] body, String filename) {
 
 		saveReportTemplateBodyInternal(reportTemplateId, body, filename, true);
 	}
 
-	/**
-	 *
-	 * @param srcReportTemplateId
-	 * @return
-	 */
+    /**
+     *
+     * @param srcId
+     * @param reportTemplate
+     * @param subscriber
+     * @return
+     */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public ReportTemplate createByTemplate(long srcId, ReportTemplate reportTemplate, Subscriber subscriber) {
 
 		checkNotNull(reportTemplate);
@@ -370,7 +372,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
+	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public ReportTemplate moveToArchive(long reportTemplateId) {
 
 		if (!checkCanUpdate(reportTemplateId)) {
@@ -378,7 +380,7 @@ public class ReportTemplateService implements SecuredRoles {
 					String.format("ReportTemplate with (id=%d) is not updatable", reportTemplateId));
 		}
 
-		List<ReportParamset> reportParamsetList = reportParamsetService.selectReportParamset(reportTemplateId, true);
+		List<ReportParamset> reportParamsetList = reportParamsetRepository.selectReportParamset(reportTemplateId, true);
 
 		if (reportParamsetList.size() > 0) {
 			return null;
@@ -476,7 +478,7 @@ public class ReportTemplateService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional
-	@Secured({ ROLE_ADMIN })
+	@Secured({ AuthoritiesConstants.ADMIN })
 	public ReportTemplate createCommonReportTemplate(ReportTypeKey reportTypeKey) {
 
 		checkNotNull(reportTypeKey);
@@ -516,12 +518,12 @@ public class ReportTemplateService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param reportTypeKey
-	 * @param isActive
-	 * @param isCompiled
-	 */
+    /**
+     *
+     * @param reportTypeKey
+     * @param reportTemplateId
+     * @param isCompiled
+     */
 	@Transactional
 	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey, long reportTemplateId, boolean isCompiled) {
 

@@ -1,3 +1,4 @@
+<p-blockUI [blocked]="loadingStatus.loadingTimer$ | async"></p-blockUI>
 <jhi-exc-frame>
 <split direction="horizontal">
     <split-area size="25">
@@ -90,7 +91,7 @@
                             <jhi-exc-building-type-icon categoryName="{{ rowData.buildingTypeCategory }}"></jhi-exc-building-type-icon>
                         </td>
                         <td (click)="clickTableRow($event, rowData)">
-                            <span> {{ rowData.uiCaption }} </span></td>
+                            <span> {{ rowData?.uiCaption }} </span></td>
                     </tr>
                 </ng-template>
             </p-table>

@@ -50,6 +50,7 @@ import { TableModule } from 'primeng/table';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DropdownModule } from 'primeng/dropdown';
 import { DragDropModule } from 'primeng/dragdrop';
+import { BlockUIModule } from 'primeng/blockui';
 
 // 3rd Party Modules
 import { AngularSplitModule } from 'angular-split';
@@ -62,6 +63,8 @@ import { ExcFrameComponent } from './exc-form-template/exc-frame.component';
 import { TreeModule } from 'primeng/tree';
 import { BuildingTypeDecoderService } from './exc-ui-tools/building-type-decoder.service';
 import { BuildingTypeIconComponent } from './exc-ui-tools/building-type-icon.component';
+import { LoadingStatusService } from './exc-tools/loading-status-service';
+import { LoadingSpinnerComponent } from './exc-ui-tools/progress-spinner.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -100,6 +103,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       ScrollPanelModule,
       TableModule,
       ConfirmDialogModule,
+      BlockUIModule,
       // 3rd party modules
       AngularSplitModule,
       PerfectScrollbarModule
@@ -115,7 +119,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcSearchFieldComponent,
     ExcToolbarComponent,
     ExcSearchInputComponent,
-    BuildingTypeIconComponent
+    BuildingTypeIconComponent,
+    LoadingSpinnerComponent
   ],
   entryComponents: [
   ],
@@ -124,7 +129,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
     },
-    BuildingTypeDecoderService
+    BuildingTypeDecoderService,
+    LoadingStatusService,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   exports: [
@@ -140,6 +146,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcToolbarComponent,
     ExcSearchInputComponent,
     BuildingTypeIconComponent,
+    LoadingSpinnerComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,
@@ -172,6 +179,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ConfirmDialogModule,
     DropdownModule,
     DragDropModule,
+    BlockUIModule,
     // 3rd party modules
     AngularSplitModule,
     PerfectScrollbarModule

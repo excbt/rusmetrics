@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.service.ContGroupService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberService;
 import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.dto.SubscrContGroupDTO;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
@@ -124,11 +125,11 @@ public class SubscrContGroupControllerTest extends PortalApiTest {
 	 */
 	@Test
 	public void testUpdateContGroup() throws Exception {
-		List<SubscrContGroup> contGroups = contGroupService
+		List<SubscrContGroupDTO> contGroups = contGroupService
 				.selectSubscriberGroups(currentSubscriberService.getSubscriberParam());
 
 		assertTrue(contGroups.size() > 0);
-		SubscrContGroup contGroup;
+		SubscrContGroupDTO contGroup;
 		if (contGroups.size() > 2) {
 			contGroup = contGroups.get(1);
 		} else {

@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest.support;
 
+import ru.excbt.datafuse.nmk.data.domain.ModelId;
 import ru.excbt.datafuse.nmk.data.domain.ModelIdable;
 import ru.excbt.datafuse.nmk.data.model.support.ModelIsNotValidException;
 import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
@@ -112,7 +113,7 @@ public final class ApiActionTool {
 	 * @param <T>
 	 * @param <K>
 	 */
-	private static abstract class ApiActionPersistableProcessWrapper<T extends ModelIdable<K>, K extends Serializable>
+	private static abstract class ApiActionPersistableProcessWrapper<T extends ModelId<K>, K extends Serializable>
 			extends ApiActionProcessWrapper<T> implements ApiActionAdapter, ApiActionLocation {
 
 		private ApiActionPersistableProcessWrapper() {
@@ -247,7 +248,7 @@ public final class ApiActionTool {
 	 * @param uriLocationSupplier
 	 * @return
 	 */
-	public static <T extends ModelIdable<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
+	public static <T extends ModelId<K>, K extends Serializable> ResponseEntity<?> processResponceApiActionCreate(
 			final ApiActionProcess<T> actionProcess, final Supplier<String> uriLocationSupplier) {
 
 		checkNotNull(actionProcess);

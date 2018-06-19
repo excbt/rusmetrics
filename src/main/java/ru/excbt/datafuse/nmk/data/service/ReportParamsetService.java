@@ -25,19 +25,18 @@ import ru.excbt.datafuse.nmk.data.model.ReportParamsetParamSpecial;
 import ru.excbt.datafuse.nmk.data.model.ReportParamsetUnit;
 import ru.excbt.datafuse.nmk.data.model.ReportTemplate;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.keyname.ReportType;
 import ru.excbt.datafuse.nmk.data.model.support.ReportMakerParam;
 import ru.excbt.datafuse.nmk.data.model.vo.ReportParamsetVO;
-import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamDirectoryItemRepository;
-import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
-import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitFilterRepository;
-import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
+import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.report.ReportOutputFileType;
 import ru.excbt.datafuse.nmk.report.ReportPeriodKey;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.JodaTimeUtils;
 
 /**
@@ -55,37 +54,43 @@ public class ReportParamsetService implements SecuredRoles {
 
 	private static final String REPORT_AUTO_SUFFIX = "REPORT_AUTO_SUFFIX";
 
-	@Autowired
-	private ReportParamsetRepository reportParamsetRepository;
+	private final ReportParamsetRepository reportParamsetRepository;
 
-	@Autowired
-	private ReportParamsetUnitRepository reportParamsetUnitRepository;
+	private final ReportParamsetUnitRepository reportParamsetUnitRepository;
 
-	@Autowired
-	private ReportParamsetUnitFilterRepository reportParamsetUnitFilterRepository;
+	private final ReportParamsetUnitFilterRepository reportParamsetUnitFilterRepository;
 
-	@Autowired
-	private ReportTemplateService reportTemplateService;
+	private final ReportTemplateRepository reportTemplateRepository;
 
-	@Autowired
-	private SubscriberService subscriberService;
+	private final SubscriberService subscriberService;
 
-	@Autowired
-	private ReportSheduleService reportSheduleService;
+	private final ReportSheduleService reportSheduleService;
 
-	@Autowired
-	private ReportMakerParamService reportMakerParamService;
+	private final ReportMakerParamService reportMakerParamService;
 
-	@Autowired
-	private SystemParamService systemParamService;
+	private final SystemParamService systemParamService;
 
-	@Autowired
-	private ReportTypeService reportTypeService;
+	private final ReportTypeService reportTypeService;
 
-	@Autowired
-	private ReportMetaParamDirectoryItemRepository reportMetaParamDirectoryItemRepository;
+	private final ReportMetaParamDirectoryItemRepository reportMetaParamDirectoryItemRepository;
 
-	/**
+	private final ContObjectMapper contObjectMapper;
+
+    public ReportParamsetService(ReportParamsetRepository reportParamsetRepository, ReportParamsetUnitRepository reportParamsetUnitRepository, ReportParamsetUnitFilterRepository reportParamsetUnitFilterRepository, ReportTemplateRepository reportTemplateRepository, SubscriberService subscriberService, ReportSheduleService reportSheduleService, ReportMakerParamService reportMakerParamService, SystemParamService systemParamService, ReportTypeService reportTypeService, ReportMetaParamDirectoryItemRepository reportMetaParamDirectoryItemRepository, ContObjectMapper contObjectMapper) {
+        this.reportParamsetRepository = reportParamsetRepository;
+        this.reportParamsetUnitRepository = reportParamsetUnitRepository;
+        this.reportParamsetUnitFilterRepository = reportParamsetUnitFilterRepository;
+        this.reportTemplateRepository = reportTemplateRepository;
+        this.subscriberService = subscriberService;
+        this.reportSheduleService = reportSheduleService;
+        this.reportMakerParamService = reportMakerParamService;
+        this.systemParamService = systemParamService;
+        this.reportTypeService = reportTypeService;
+        this.reportMetaParamDirectoryItemRepository = reportMetaParamDirectoryItemRepository;
+        this.contObjectMapper = contObjectMapper;
+    }
+
+    /**
 	 *
 	 * @param reportParamset
 	 * @return
@@ -347,8 +352,9 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional( readOnly = true)
-	public List<ContObject> selectParamsetContObjects(long reportParamsetId) {
-		return reportParamsetUnitRepository.selectContObjects(reportParamsetId);
+	public List<ContObjectDTO> selectParamsetContObjects(long reportParamsetId) {
+        List<ContObject> contObjectList = reportParamsetUnitRepository.selectContObjects(reportParamsetId);
+		return contObjectMapper.toDto(contObjectList);
 	}
 
 	/**
@@ -377,10 +383,10 @@ public class ReportParamsetService implements SecuredRoles {
 	 * @return
 	 */
 	@Transactional( readOnly = true)
-	public List<ContObject> selectParamsetAvailableContObjectUnits(long reportParamsetId, long subscriberId) {
+	public List<ContObjectDTO> selectParamsetAvailableContObjectUnits(long reportParamsetId, long subscriberId) {
 		List<ContObject> preResult = reportParamsetUnitRepository.selectAvailableContObjects(reportParamsetId,
 				subscriberId);
-		return ObjectFilters.deletedFilter(preResult);
+		return preResult.stream().filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).map(contObjectMapper::toDto).collect(Collectors.toList());
 	}
 
     /**
@@ -505,7 +511,7 @@ public class ReportParamsetService implements SecuredRoles {
 			ReportPeriodKey reportPeriod, ReportOutputFileType reportOutputFileType, long subscriberId,
 			Boolean isAutoGenerated) {
 
-		ReportTemplate reportTemplate = reportTemplateService.findOne(reportTemplateId);
+		ReportTemplate reportTemplate = reportTemplateRepository.findOne(reportTemplateId);
 		checkNotNull(reportTemplate, String.format("ReportTemplate (id=%d) not found", reportTemplateId));
 
 		Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
@@ -730,8 +736,8 @@ public class ReportParamsetService implements SecuredRoles {
 			}
 
             log.debug("ReportType: {} Looking for common templates", reportTypeKey);
-			List<ReportTemplate> commonTemplates = reportTemplateService.selectCommonReportTemplates(reportTypeKey,
-					true);
+			List<ReportTemplate> commonTemplates = reportTemplateRepository.selectCommonTemplates(reportTypeKey.getKeyname(),
+                true);
 			if (commonTemplates.isEmpty()) {
                 log.debug("ReportType: {} Common templates not found", reportTypeKey);
 				continue;
