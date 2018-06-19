@@ -1,7 +1,7 @@
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
-import { takeUntil, tap } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { ExcConsoleLogService } from './exc-console-log-service';
 
 const loadingDelayMillis = 10;

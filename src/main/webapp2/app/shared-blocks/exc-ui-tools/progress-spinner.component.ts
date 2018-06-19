@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { LoadingStatusService } from '../exc-tools/loading-status-service';
 
 @Component({
