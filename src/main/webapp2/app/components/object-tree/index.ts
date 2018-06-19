@@ -22,5 +22,7 @@ export * from './tree-node-control';
 
 export * from './cont-object-event';
 
+export * from './notice-viewer';
+
 export * from './object-tree.route';
 export * from './object-tree.module';

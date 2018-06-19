@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, SimpleChange } from '@angular/core';
 import { JhiEventManager } from 'ng-jhipster';
 import { ContObjectControlService } from './cont-object-control.service';
 import { Observable } from 'rxjs/Observable';
@@ -14,7 +14,7 @@ import { ContObjectControlDataSource } from './cont-object-control.datasource';
 import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
-import { DateUtils } from '../utils/date-utils';
+//import { DateUtils } from '../utils/date-utils';
 
 @Component({
     selector: 'jhi-cont-object-control',
@@ -23,7 +23,7 @@ import { DateUtils } from '../utils/date-utils';
         './cont-object-control.component.scss'
     ]
 })
-export class ContObjectControlComponent implements OnInit {
+export class ContObjectControlComponent implements OnInit, OnChanges {
     @Input() contObjectList: number[];
     contObjectControlList: ContObjectControl[];
     cols: ContObjectControlColumn[];
@@ -36,19 +36,21 @@ export class ContObjectControlComponent implements OnInit {
     
     eventModeFlag = true;
     historyModeFlag = false;
+    
+    showHistoryFlag = false;
+    
     historyDateRange: any;
-    dateLocale: any;
+//    dateLocale: any;
 
     constructor(private eventManager: JhiEventManager,
                 private contObjectControlService: ContObjectControlService,
-                private dialog: MatDialog,
-                private dateUtils: DateUtils) {}
+                private dialog: MatDialog) {}
 
     ngOnInit() {
-console.log('DateUtils: ', DateUtils);
-console.log('new DateUtils: ', new DateUtils());
+//console.log('DateUtils: ', DateUtils);
+//console.log('new DateUtils: ', new DateUtils());
 //console.log('dateUtils: ', this.dateUtils);
-        this.dateLocale = this.dateUtils.dateOptions;
+//        this.dateLocale = this.dateUtils.dateOptions;
 
         this.contObjectControlService.initSvc();
 
@@ -113,6 +115,13 @@ console.log('new DateUtils: ', new DateUtils());
         }
 
     }
+    
+    ngOnChanges(changes: {[propKey: string]: SimpleChange}) {
+        for (let propName in changes) {
+            console.log('COC: propName: ', propName);
+            console.log('COC: changedValue: ', changes[propName].currentValue);
+        }
+    }
 
     performContObjectList() {
 
@@ -153,16 +162,34 @@ console.log('new DateUtils: ', new DateUtils());
             this.selectedObject = object;
         }
     }
-    
-    setHistoryMode() {
-        this.eventModeFlag = false;
-        this.historyModeFlag = true;
+
+    getEventFlag(flag: boolean) {
+        this.showEventFlag = flag;
     }
     
-    setEventMode() {
-        this.historyModeFlag = false;
-        this.eventModeFlag = true;        
-    }
+//    setHistoryMode() {
+//        this.eventModeFlag = false;
+//        this.historyModeFlag = true;
+//        
+//        this.showHistoryFlag = true;
+//    }
+//    
+//    setEventMode() {
+//        this.historyModeFlag = false;
+//        this.eventModeFlag = true;
+//        
+//        this.showHistoryFlag = false;
+//    }
+//    
+//    setDaterange() {
+//        console.log('historyDateRange: ', this.historyDateRange);
+        
+//        const format = this.dateUtils.getSystemFormat();
+//        const startDate: string = this.dateUtils.dateToString(this.historyDateRange[0], format);
+//        const endDate: string = this.dateUtils.dateToString(this.historyDateRange[1], format);
+//        console.log('startDate: ', startDate);
+//        console.log('endDate: ', endDate);
+//    }
 }
 
 export interface ContObjectControlColumn {

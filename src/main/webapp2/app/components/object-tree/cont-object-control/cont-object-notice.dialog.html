@@ -1,19 +1,75 @@
-<!--
-Dialog: contObjectID {{data.contObjectId}}
-<br>
-Data:
-<pre>
-    {{data | json}}
-</pre>
--->
-<h2 mat-dialog-title>{{data.contObjectName}}</h2>
-<mat-dialog-content>
-    <jhi-cont-object-event [contObjectId] = "data.contObjectId">
+<p-dialog 
+          [header] = "contObject.coName" 
+          [(visible)] = "showFlag" 
+          [modal] = "false" 
+          [responsive] = "true" 
+          [width] = "800" 
+          [minWidth] = "731" 
+          [minY] = "70"
+          [maximizable] = "false"
+          [baseZIndex] = "-1000"
+          [closable] = "false"
+          >
+          <p-header>
+              <mat-toolbar class = "nmc-nav-toolbar" style = "">  
+                <mat-toolbar-row 
+                    style = "">
+            
+                    <div class="float-left" *ngIf = "eventModeFlag">
+                        <button mat-icon-button (click)="setHistoryMode()"
+                         class ="nmc-history-toggle-btn"
+                          style = ""
+                           >
+<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                        </button>
+                        
+                    </div>
+                    
+                    <div class="float-left" *ngIf = "historyModeFlag">
+                        <button mat-icon-button (click)="setEventMode()"
+                         class ="nmc-event-toggle-btn"
+                          style = ""
+                           >
+<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                        </button>
+                        <p-calendar 
+                          [(ngModel)] = "historyDateRange"
+                           [locale] = "dateLocale"
+                           readonlyInput = "true"
+                           dateFormat = "dd.mm.yy"
+                           selectionMode = "range"
+                           [style] = "{'font-size': '14px', 'line-height': 1, 'position': 'relative', 'bottom': '7px'}"
+                           (onClose) = "setDaterange()">
+                            
+                        </p-calendar>
+                                                
+                        
+                    </div>    
+            
+                </mat-toolbar-row>
+            </mat-toolbar>
+          </p-header>      
 
-    </jhi-cont-object-event>
-</mat-dialog-content>
-<mat-dialog-actions>
-    <button mat-button mat-dialog-close>
-        Ok
-    </button>
-</mat-dialog-actions>
+    
+            <jhi-cont-object-event *ngIf = "eventModeFlag" [contObjectId] = "contObject.contObjectId">
+
+            </jhi-cont-object-event>
+            
+            <jhi-notice-viewer *ngIf = "historyModeFlag" 
+                [contObjectIds] = "[contObject.contObjectId]"
+                [dateRange] = "historyDateRange"
+                >
+
+            </jhi-notice-viewer>
+    
+            <p-footer>
+                <button 
+                    type = "button" 
+                    pButton 
+                     
+                    (click) = "closeWindow()" 
+                    label = "OK">
+                </button>
+            </p-footer>
+
+       </p-dialog>

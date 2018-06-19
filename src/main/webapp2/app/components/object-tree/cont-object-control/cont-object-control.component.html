@@ -119,6 +119,13 @@
         </mat-row>
     </mat-table>
     
+    <jhi-cont-object-notice-dialog *ngIf = "showEventFlag"
+       [showFlag] = "showEventFlag"
+       (setShowFlag) = "getEventFlag($event)"
+       [contObject] = "selectedObject">
+        
+    </jhi-cont-object-notice-dialog>
+    
 <!--
     <jhi-cont-object-event *ngIf = "contObjectEventViewFlag" [contObjectId] = "selectedObject">
     
@@ -126,6 +133,7 @@
 -->
 <!--   *ngIf = "selectedObject && selectedObject.coName"-->
 <!--      <div *ngIf = "selectedObject && selectedObject.coName">-->
+<!--
        <p-dialog 
           [header] = "selectedObject.coName" 
           [(visible)] = "showEventFlag" 
@@ -136,6 +144,7 @@
           [minY] = "70"
           [maximizable] = "false"
           [baseZIndex] = "-1000"
+          [closable] = "false"
           >
           <p-header>
               <mat-toolbar class = "nmc-nav-toolbar" style = "">  
@@ -147,7 +156,7 @@
                          class ="nmc-history-toggle-btn"
                           style = ""
                            >
-<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>                           
                         </button>
                         
                     </div>
@@ -157,7 +166,7 @@
                          class ="nmc-event-toggle-btn"
                           style = ""
                            >
-<!--                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>-->                           
+                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>                           
                         </button>
                         <p-calendar 
                           [(ngModel)] = "historyDateRange"
@@ -165,7 +174,8 @@
                            readonlyInput = "true"
                            dateFormat = "dd.mm.yy"
                            selectionMode = "range"
-                           [style] = "{'font-size': '14px', 'line-height': 1}">
+                           [style] = "{'font-size': '14px', 'line-height': 1, 'position': 'relative', 'bottom': '7px'}"
+                           (onClose) = "setDaterange()">
                             
                         </p-calendar>
                                                 
@@ -180,6 +190,13 @@
             <jhi-cont-object-event *ngIf = "showEventFlag && eventModeFlag" [contObjectId] = "selectedObject.contObjectId">
 
             </jhi-cont-object-event>
+            
+            <jhi-notice-viewer *ngIf = "showHistoryFlag && historyModeFlag" 
+                [contObjectIds] = "[selectedObject.contObjectId]"
+                [dateRange] = "historyDateRange"
+                >
+
+            </jhi-notice-viewer>
     
             <p-footer>
                 <button 
@@ -192,5 +209,6 @@
             </p-footer>
 
        </p-dialog>
+-->
 <!--    </div>    -->
 </div>

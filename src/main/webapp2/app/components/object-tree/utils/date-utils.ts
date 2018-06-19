@@ -1,8 +1,15 @@
 // import { MomentModule } from 'angular-2-moment/moment.module';
 import { Injectable } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 @Injectable()
 export class DateUtils {
+    
+    private USER_DATE_TIME_FORMAT: string = 'dd.MM.yyyy HH:mm';
+    private USER_DATE_FORMAT: string = 'dd.MM.yyyy';
+    private USER_TIME_FORMAT: string = 'HH:mm';
+    private SYSTEM_DATE_TIME_FORMAT: string = 'yyyy-MM-dd HH:mm';
+    private SYSTEM_DATE_FORMAT: string = 'yyyy-MM-dd';
     
     public dateOptions = {
         firstDateOfWeek: 1,
@@ -16,6 +23,27 @@ export class DateUtils {
     }
     
     constructor() {}
+    
+    getSystemFormat(): string {
+        return this.SYSTEM_DATE_FORMAT;
+    }
+
+    dateToString(date: Date | number, formatString: string) {
+        const pipe = new DatePipe('en-US');
+console.log('dateUtils pipe: ', pipe.transform(date, formatString));
+//console.log('dateUtils formatDate: ', formatDate(date, formatString));
+//        return '';
+        return pipe.transform(date, formatString);
+//        return formatDate(date, formatString);
+        
+    }
+    
+    getUserTimeFormat() {
+        return this.USER_TIME_FORMAT;
+    }
+    getUserDateFormat() {
+        return this.USER_DATE_FORMAT;
+    }
     
 }
 

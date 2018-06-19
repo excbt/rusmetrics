@@ -29,7 +29,9 @@ import { objectTreeState,
         ContObjectEventService,
         ContObjectEventComponent,
         ContObjectNoticeDialogComponent,
-        DateUtils
+        DateUtils,
+        NoticeViewerService,
+        NoticeViewerComponent
        } from './';
 
 import { ResizableModule } from 'angular-resizable-element';
@@ -79,7 +81,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         TreeNodeControlComponent,
         ContObjectControlComponent,
         ContObjectEventComponent,
-        ContObjectNoticeDialogComponent
+        ContObjectNoticeDialogComponent,
+        NoticeViewerComponent
     ],
     entryComponents: [
         ContObjectNoticeDialogComponent,
@@ -97,7 +100,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         PTreeNodeService,
         ContObjectControlService,
         ContObjectEventService,
-        DateUtils
+        DateUtils,
+        NoticeViewerService
     ],
     exports: [
         PortalObjectTreeComponent
