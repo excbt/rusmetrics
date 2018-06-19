@@ -64,6 +64,7 @@ import { TreeModule } from 'primeng/tree';
 import { BuildingTypeDecoderService } from './exc-ui-tools/building-type-decoder.service';
 import { BuildingTypeIconComponent } from './exc-ui-tools/building-type-icon.component';
 import { LoadingStatusService } from './exc-tools/loading-status-service';
+import { LoadingSpinnerComponent } from './exc-ui-tools/progress-spinner.component';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true
@@ -118,7 +119,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcSearchFieldComponent,
     ExcToolbarComponent,
     ExcSearchInputComponent,
-    BuildingTypeIconComponent
+    BuildingTypeIconComponent,
+    LoadingSpinnerComponent
   ],
   entryComponents: [
   ],
@@ -144,6 +146,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ExcToolbarComponent,
     ExcSearchInputComponent,
     BuildingTypeIconComponent,
+    LoadingSpinnerComponent,
     // NG Material module
     MatToolbarModule,
     MatGridListModule,
