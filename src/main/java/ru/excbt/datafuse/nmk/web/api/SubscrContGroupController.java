@@ -99,7 +99,7 @@ public class SubscrContGroupController {
 			@RequestParam(value = "contObjectIds", required = false) final Long[] contObjectIds,
 			@RequestBody final SubscrContGroupDTO contGroup, final HttpServletRequest request) {
 
-		if (contGroup.getId() == null) {
+		if (contGroup.getId() != null) {
 		    return ResponseEntity.badRequest().build();
         }
 
