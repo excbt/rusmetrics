@@ -63,7 +63,7 @@ export class NoticeViewerComponent implements OnInit, OnChanges {
 // console.log(endDate);
             this.noticeService
                 .loadNotices(startDate, endDate, this.contObjectIds)
-                .subscribe((res) => {console.log(res); this.dataSource = res; });
+                .subscribe((res) => {/*console.log(res);*/this.dataSource = res; });
         }
     }
 }

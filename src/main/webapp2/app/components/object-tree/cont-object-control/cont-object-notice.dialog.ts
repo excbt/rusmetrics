@@ -32,13 +32,13 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
             if (!changes.hasOwnProperty(propName)) {
                 continue;
             }
-            console.log('propName: ', propName);
-            console.log('changedProp: ', changes[propName].currentValue);
+//            console.log('propName: ', propName);
+//            console.log('changedProp: ', changes[propName].currentValue);
         }
     }
 
     ngOnInit() {
-        console.log('showFlag: ', this.showFlag);
+//        console.log('showFlag: ', this.showFlag);
     }
 
     setHistoryMode() {
@@ -56,7 +56,7 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
     }
 
     setDaterange() {
-        console.log('historyDateRange: ', this.historyDateRange);
+//        console.log('historyDateRange: ', this.historyDateRange);
 
 //        const format = this.dateUtils.getSystemFormat();
 //        const startDate: string = this.dateUtils.dateToString(this.historyDateRange[0], format);
