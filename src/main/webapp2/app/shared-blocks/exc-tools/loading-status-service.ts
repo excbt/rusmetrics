@@ -1,46 +1,50 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { timer } from 'rxjs/observable/timer';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, tap } from 'rxjs/operators';
+import { ExcConsoleLogService } from './exc-console-log-service';
 
-const loadingDelayMillis = 100;
+const loadingDelayMillis = 10;
 
 @Injectable()
 export class LoadingStatusService {
-    private loadingSubject = new BehaviorSubject<boolean>(false);
+    private loadingTimerSubject = new BehaviorSubject<boolean>(false);
 
-    private loadingDebug = new BehaviorSubject<boolean>(false);
+    private loadingSignal = new BehaviorSubject<boolean>(false);
 
-    private loadingDebug$ = this.loadingDebug.asObservable();
+    private loadingSignal$ = this.loadingSignal.asObservable();
 
-    readonly loading$: Observable<boolean>;
+    readonly loadingTimer$ = this.loadingTimerSubject.asObservable();
+    readonly loading$ = this.loadingSignal.asObservable();
+
+    private consoleService = new ExcConsoleLogService();
 
     constructor() {
-        this.loading$ = this.loadingSubject.asObservable();
     }
 
     startRequest() {
-        this.loadingDebug.next(true);
-        const requestCompleteThreshosd$ = this.loadingDebug$.filter((v) => v === false);
+        this.loadingSignal.next(true);
+        const requestCompleteThreshosd$ = this.loadingSignal$.filter((v) => v === false);
         timer(loadingDelayMillis).pipe(
-             takeUntil(requestCompleteThreshosd$)
-        ).subscribe(() => this.loadingSubject.next(true));
+            takeUntil(requestCompleteThreshosd$)
+        ).subscribe(() => {
+            this.loadingTimerSubject.next(true);
+            this.consoleService.log('Loading timer TRUE');
+        });
+
     }
 
     stopRequest() {
-
-        timer(10).flatMap(() => this.loading$).filter((v) => v === true)
-            .subscribe(() => {
-                this.loadingSubject.next(false);
-            });
-
-        this.loadingDebug.next(false);
-        // this.loadingSubject.next(false);
+        this.loadingTimerSubject.next(false);
+        this.loadingSignal.next(false);
     }
 
-    stopRequestNoTimer() {
-        this.loadingDebug.next(false);
-        this.loadingSubject.next(false);
+    stopRequestNoTimer(err?: string) {
+        this.loadingSignal.next(false);
+        this.loadingTimerSubject.next(false);
+        if (err) {
+            this.consoleService.error(err);
+        }
     }
 
 }
