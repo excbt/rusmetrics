@@ -180,8 +180,8 @@ export class TreeNodeColorStatusComponent implements OnInit {
         };
 
         this.nodeGraphOptions = {
-            maintainAspectRatio: false,
-            responsive: true,
+            maintainAspectRatio: true,
+            responsive: false,
             scale: {
                 gridLines: {
                     color: 'rgba(0, 255, 0, 1)'
