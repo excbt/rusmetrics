@@ -268,6 +268,15 @@ export class TreeNodeColorStatusComponent implements OnInit {
             this.doughnuts[resource].allCount = 0;
 
             resp.forEach( (colorObj) => this.performResourceColorData(colorObj, resource));
+
+            // if all situations is 0 => set 'green' = 1 - draw green cicle - All OK.
+//            const checkedDataSet = this.doughnuts[resource].data.datasets[0];
+//            if (checkedDataSet.data[0] + checkedDataSet.data[1] + checkedDataSet.data[2] === 0) {
+//                this.doughnuts[resource].data.datasets[0].data[2] = 1;
+//                this.doughnuts[resource].data.labels = Object.assign({}, this.chartLabels);
+//                this.doughnuts[resource].data.labels[2] = 'Все ОК';
+//            }
+
         });
     }
 
