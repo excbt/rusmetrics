@@ -9,6 +9,11 @@
         <button mat-icon-button (click)="op.show($event, actualTarget)">
             <mat-icon mat-list-icon>add</mat-icon>
         </button>
+
+        <button mat-icon-button>
+            <mat-icon fontSet="fa" fontIcon="fa-eye" class="is-active-menu" (click)="activeFlag()"></mat-icon>
+        </button>
+    
     </div>
     <input toolbar-right class="search-input" type="text" pInputText #searchString>
     <button toolbar-right mat-icon-button (click)="refreshData()">
@@ -17,22 +22,29 @@
 
 </jhi-exc-toolbar>
 <div #actualTarget></div>
-<div class="spinner-container" *ngIf="dataSource.loading$ | async">
+<!-- <div class="spinner-container" *ngIf="dataSource.loading$ | async">
     <mat-progress-bar color="primary" mode="indeterminate">
     </mat-progress-bar>
-</div>
+</div> -->
 
 <p-table [value]="subscrObjectTreeData" selectionMode="single" [(selection)]="selectedRow" (onRowSelect)="selectRow($event)">
     <ng-template pTemplate="header">
         <tr>
             <!-- <th> {{'global.field.id' | translate}} </th> -->
             <th> {{'subscrObjectTree.objectName' | translate}}</th>
+            <th class="is-active-cell">
+                <mat-icon fontSet="fa" fontIcon="fa-eye"></mat-icon>
+            </th>
         </tr>
     </ng-template>
     <ng-template pTemplate="body" let-rowData>
         <tr [pSelectableRow]="rowData">
             <!-- <td>{{rowData.id}}</td> -->
             <td>{{rowData.objectName}}</td>
+            <td class="is-active-cell">
+                <mat-icon *ngIf="rowData.isActive" fontSet="fa" fontIcon="fa-eye"></mat-icon>
+                <mat-icon *ngIf="!rowData.isActive" fontSet="fa" fontIcon="fa-eye-slash" [ngClass]="{'not_active': true}"></mat-icon>
+            </td>
         </tr>
     </ng-template>
 </p-table>

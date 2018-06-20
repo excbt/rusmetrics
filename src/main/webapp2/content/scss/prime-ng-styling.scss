@@ -14,3 +14,8 @@
 .exc-no-header-tool > .ui-treetable.ui-widget > .ui-treetable-tablewrapper > table > thead > tr > th {
     display: none;
 }
+
+.ui-state-highlight {
+    background: rgb(124, 157, 241) !important;
+    border-color: rgb(124, 157, 241) !important;
+}

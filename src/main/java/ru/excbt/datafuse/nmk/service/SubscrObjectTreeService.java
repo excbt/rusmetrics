@@ -137,7 +137,7 @@ public class SubscrObjectTreeService {
     @Transactional( readOnly = true)
     public SubscrObjectTreeVM findSubscrObjectTreeVM(Long id) {
         SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
-        SubscrObjectTreeVM result = subscrObjectTreeMapper.toVMShort(ObjectFilters.deletedFilter(subscrObjectTree));
+        SubscrObjectTreeVM result = subscrObjectTreeMapper.toVM(ObjectFilters.deletedFilter(subscrObjectTree));
         return result;
     }
 
@@ -605,7 +605,7 @@ public class SubscrObjectTreeService {
 				? subscrObjectTreeRepository.selectRmaSubscrObjectTreeShort2(portalUserIds.getSubscriberId())
 				: subscrObjectTreeRepository.selectSubscrObjectTreeShort(portalUserIds.getSubscriberId());
 
-		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName");
+		ColumnHelper helper = new ColumnHelper("id", "subscriberId", "rmaSubscriberId", "objectTreeType", "objectName", "isActive");
 
 		List<SubscrObjectTreeVM> resultList = new ArrayList<>();
 
@@ -616,6 +616,7 @@ public class SubscrObjectTreeService {
 			t.setRmaSubscriberId(helper.getResultAsClass(row, "rmaSubscriberId", Long.class));
 			t.setObjectTreeType(helper.getResultAsClass(row, "objectTreeType", String.class));
 			t.setObjectName(helper.getResultAsClass(row, "objectName", String.class));
+			t.setIsActive(helper.getResultAsClass(row, "isActive", Boolean.class));;
 			resultList.add(t);
 		}
 
@@ -653,7 +654,7 @@ public class SubscrObjectTreeService {
 
         Page<SubscrObjectTree> subscrObjectTreePage = subscrObjectTreeRepository.findAll(whereClauseBuilder, pageable);
 
-        Page<SubscrObjectTreeVM> subscrObjectTreeVMPage = subscrObjectTreePage.map(subscrObjectTreeMapper::toVMShort);
+        Page<SubscrObjectTreeVM> subscrObjectTreeVMPage = subscrObjectTreePage.map(subscrObjectTreeMapper::toVM);
 
 		return subscrObjectTreeVMPage;
 	}
@@ -739,6 +740,7 @@ public class SubscrObjectTreeService {
         root.setSubscriberId(subscriberId);
         root.setIsLinkDeny(true);
         root.setTreeMode("TEMPLATE");
+        root.setIsActive(true);
 
 
         List<SubscrObjectTreeTemplateItem> templateItems = templateId != null
@@ -751,6 +753,27 @@ public class SubscrObjectTreeService {
         return Optional.ofNullable(subscrObjectTreeMapper.toDto(result));
     }
 
+    @Transactional
+    public Optional<SubscrObjectTreeVM> setActiveSubscrObjectTree(Long treeNodeId,
+                                             boolean isActive,
+                                             PortalUserIds portalUserIds,
+                                             Long subscriberId) {
+
+        SubscrObjectTree node = subscrObjectTreeRepository.findOne(treeNodeId);
+        if (node == null) {
+            Optional.empty();
+        }
+        if (!node.getSubscriberId().equals(subscriberId)) {
+            Optional.empty();
+        }
+
+        node.setIsActive(isActive);
+        SubscrObjectTree savedNode = subscrObjectTreeRepository.saveAndFlush(node);
+
+	    return Optional.ofNullable(subscrObjectTreeMapper.toVM(savedNode));
+    }
+
+    @Transactional
     public boolean deleteSubscrObjectTreeNode(Long treeNodeId,
                                               ObjectTreeTypeKeyname objectTreeType,
                                               PortalUserIds portalUserIds,
@@ -831,7 +854,7 @@ public class SubscrObjectTreeService {
         SubscrObjectTree resultNode = subscrObjectTreeRepository.saveAndFlush(editedNode);
 	    entityManager.refresh(parentNode);
 
-	    return Optional.ofNullable(subscrObjectTreeMapper.toVMShort(resultNode));
+	    return Optional.ofNullable(subscrObjectTreeMapper.toVM(resultNode));
     }
 
     @Transactional
@@ -870,7 +893,7 @@ public class SubscrObjectTreeService {
             entityManager.refresh(editedNode.getParent());
         }
 
-        return Optional.ofNullable(subscrObjectTreeMapper.toVMShort(resultNode));
+        return Optional.ofNullable(subscrObjectTreeMapper.toVM(resultNode));
     }
 
     @Transactional

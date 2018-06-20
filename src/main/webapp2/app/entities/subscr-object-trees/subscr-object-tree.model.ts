@@ -14,7 +14,8 @@ export class SubscrObjectTree {
         public templateId: number,        // Код шаблона иерархии
         public templateItemId: number,        // Код элемента шаблона
         public isLinkDeny: boolean,        // Признак "не привязывать объекты учета"
-        public treeMode: string
+        public treeMode: string,
+        public isActive: boolean
     ) { }
 }
 
@@ -23,6 +24,7 @@ export interface SubscrObjectTreeVM {
     parentId?: number;
     objectName?: string;
     isLinkDeny?: boolean;
+    isActive?: boolean;
 }
 
 export interface TreeNodeVM {

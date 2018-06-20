@@ -6,3 +6,23 @@
 .buttonSpacer {
     padding-left:40px; 
 }
+
+.is-active-cell {
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.is-active-menu {
+    font-size: 18px;
+}
+
+.is_active {
+    color: rgba(73, 214, 8, 0.815);
+    font-size: 18px;
+}
+
+.not_active {
+    color: rgb(202, 66, 66);
+    font-size: 18px;
+}

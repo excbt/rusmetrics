@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.service.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,5 +42,7 @@ public class SubscrObjectTreeDTO {
     private String treeMode;
 
     private int deleted;
+
+    private Boolean isActive;
 
 }

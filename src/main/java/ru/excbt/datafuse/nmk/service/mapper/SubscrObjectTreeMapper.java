@@ -13,9 +13,9 @@ public interface SubscrObjectTreeMapper {
     SubscrObjectTreeDTO toDto(SubscrObjectTree subscrObjectTree);
 
 //    @Mapping(target = "vmMode", ignore = true)
-//    SubscrObjectTreeVM toVM(SubscrObjectTree subscrObjectTree);
+//    SubscrObjectTreeVM dtoToVM(SubscrObjectTree subscrObjectTree);
 //
-    SubscrObjectTreeVM toVMShort(SubscrObjectTree subscrObjectTree);
+    SubscrObjectTreeVM toVM(SubscrObjectTree subscrObjectTree);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "parentId", ignore = true)
@@ -27,7 +27,7 @@ public interface SubscrObjectTreeMapper {
     @Mapping(target = "deleted", ignore = true)
     void updateTreeFromVM (@MappingTarget SubscrObjectTree subscrObjectTree, SubscrObjectTreeVM vm);
 
-    SubscrObjectTreeVM toVM(SubscrObjectTreeDTO subscrObjectTree);
+    SubscrObjectTreeVM dtoToVM(SubscrObjectTreeDTO subscrObjectTree);
 
     SubscrObjectTree toEntity(SubscrObjectTreeVM vm);
 }

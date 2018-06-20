@@ -3,6 +3,8 @@ package ru.excbt.datafuse.nmk.service.vm;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 public class SubscrObjectTreeVM {
@@ -34,5 +36,7 @@ public class SubscrObjectTreeVM {
     private int version;
 
     private String treeMode;
+
+    private Boolean isActive;
 
 }

@@ -25,10 +25,10 @@
         </button>
     </div>
 </jhi-exc-toolbar>
-<p-treeTable [value]="objectTree" selectionMode="single" [(selection)]="selectedNode">
+<p-treeTable [value]="objectTree" selectionMode="single" [(selection)]="selectedNode" [ngClass]="{'exc-no-border-tool': true}">
     <!-- ContObjectAccess -->
     <!--  -->
-    <p-column header="{{'subscrObjectTree.nodeName' | translate}}">
+    <p-column header="{{'subscrObjectTree.nodeName' | translate}}" [style]="{'text-align': 'left', 'color': '#1b1d1f'}">
         <ng-template let-node="rowData" pTemplate="body">
             <span [ngClass]="{'propertyDisabled': node?.data?.parentId && node?.data?.isLinkDeny}">{{node.data.objectName}}</span>
         </ng-template>

@@ -49,6 +49,7 @@
         "templateItemId": "templateItemId",
         "isLinkDeny": "Запретить привязку объектов",
         "isSingleObject": "Только один объект",
-        "treeMode": "treeMode"        
+        "treeMode": "treeMode",
+        "isActive": "Активна"
     }
 }
