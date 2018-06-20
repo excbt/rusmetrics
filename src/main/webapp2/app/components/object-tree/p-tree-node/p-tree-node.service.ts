@@ -10,8 +10,8 @@ export class PTreeNodeService {
     private resourceUrl = SERVER_API_URL + 'api/p-tree-node/';
     private resourceUrlSuffix = '/stub';
 
-    private ptrees: any;
-    private ptreesStub: any;
+//    private ptrees: any;
+//    private ptreesStub: any;
 
     constructor(private http: HttpClient) {}
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnChanges, SimpleChange } from '@angular/core';
-import { Notice } from './notice.model';
+// import { Notice } from './notice.model';
 import { NoticeViewerService } from './notice-viewer.service';
-import { Observable } from 'rxjs/observable';
+// import { Observable } from 'rxjs/observable';
 import { DateUtils } from '../utils';
 
 @Component({

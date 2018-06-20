@@ -11,8 +11,8 @@ import { DateUtils } from '../utils/date-utils';
 
 @Injectable()
 export class NoticeViewerService {
-    private DEFULT_PAGE = 0;
-    private DEFAULT_PAGE_SIZE = 100;
+//    private DEFULT_PAGE = 0;
+//    private DEFAULT_PAGE_SIZE = 100;
     private resourceUrl = SERVER_API_URL + 'api/subscr/contEvent/notifications/paged';
 
     constructor(private http: HttpClient,

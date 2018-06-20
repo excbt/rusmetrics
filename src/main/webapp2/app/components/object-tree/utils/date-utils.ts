@@ -45,34 +45,37 @@ export class DateUtils {
         return this.USER_DATE_FORMAT;
     }
 
+    getUserDateTimeFormat() {
+        return this.USER_DATE_TIME_FORMAT;
+    }
+
+    getSystemDateTimeFormat() {
+        return this.SYSTEM_DATE_TIME_FORMAT;
+    }
+
 }
 
 export class DateWrapper {
-
-    private USER_DATE_TIME_FORMAT = 'DD.MM.YYYY HH:mm';
-    private USER_DATE_FORMAT = 'DD.MM.YYYY';
-    private USER_TIME_FORMAT = 'HH:mm';
-    private SYSTEM_DATE_TIME_FORMAT = 'YYYY-MM-DD HH:mm';
 
     private year: number;
     private month: number;
     private day: number;
     private hour: number;
     private minute: number;
-    private second: number;
+//    private second: number;
 
     constructor(private dateArr: number[]) {
         // inputArr: [yyyy, MM, DD, HH, mm, ss, ???]
-        if (!dateArr || dateArr.length === 0) {
+        if (!this.dateArr || this.dateArr.length === 0) {
             console.warn('Date array is empty! ', dateArr);
             return;
         }
-        this.year = dateArr[0];
-        this.month = dateArr[1];
-        this.day = dateArr[2];
-        this.hour = dateArr[3];
-        this.minute = dateArr[4];
-        this.second = dateArr[5];
+        this.year = this.dateArr[0];
+        this.month = this.dateArr[1];
+        this.day = this.dateArr[2];
+        this.hour = this.dateArr[3];
+        this.minute = this.dateArr[4];
+//        this.second = dateArr[5];
     }
 
     private performDatePart(datePart: number): string {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+// import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { PTreeNode } from '../models/p-tree-node.model';
@@ -14,7 +14,7 @@ import { PTreeNodeService } from '../p-tree-node';
 export class TreeNodeControlService {
 //    private resourceUrl: string = SERVER_API_URL + 'api/p-tree-node-monitor/all-linked-objects';
 
-    constructor(private http: HttpClient,
+    constructor(/*private http: HttpClient,*/
                 private ptreeNodeService: PTreeNodeService) {}
 
 //    loadAllLinkedObjects(treeNodeId: string): Observable<PTreeNodeColorLinkedObject[]> {

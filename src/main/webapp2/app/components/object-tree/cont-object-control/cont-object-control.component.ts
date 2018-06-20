@@ -1,18 +1,18 @@
 import { Component, Input, OnInit, OnChanges, SimpleChange } from '@angular/core';
 import { JhiEventManager } from 'ng-jhipster';
 import { ContObjectControlService } from './cont-object-control.service';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { from } from 'rxjs/observable/from';
-import { merge } from 'rxjs/observable/merge';
-import { switchMap, mergeMap } from 'rxjs/operators';
+// import { Observable } from 'rxjs/Observable';
+// import { of } from 'rxjs/observable/of';
+// import { from } from 'rxjs/observable/from';
+// import { merge } from 'rxjs/observable/merge';
+// import { switchMap, mergeMap } from 'rxjs/operators';
 
 import { ContObjectControl } from './cont-object-control.model';
 
 import { ContObjectControlDataSource } from './cont-object-control.datasource';
 
-import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+// import { ContObjectNoticeDialogComponent } from './cont-object-notice.dialog';
+// import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 // import { DateUtils } from '../utils/date-utils';
 
@@ -43,8 +43,8 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 //    dateLocale: any;
 
     constructor(private eventManager: JhiEventManager,
-                private contObjectControlService: ContObjectControlService,
-                private dialog: MatDialog) {}
+                private contObjectControlService: ContObjectControlService) {}
+//                private dialog: MatDialog) {}
 
     ngOnInit() {
 // console.log('DateUtils: ', DateUtils);
