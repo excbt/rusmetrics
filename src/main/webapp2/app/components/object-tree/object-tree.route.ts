@@ -54,11 +54,17 @@ const OBJECT_TREE_ROUTES = [
             },
             {
                 path: 'tree-node-color-status/:treeNodeId',
-                component: TreeNodeColorStatusComponent
+                component: TreeNodeColorStatusComponent,
+                data: {
+                    pageTitle: 'objectTree.treeNodeColorStatus.title'
+                }
             },
             {
                 path: 'tree-node-control/:treeNodeId',
-                component: TreeNodeControlComponent
+                component: TreeNodeControlComponent,
+                data: {
+                    pageTitle: 'objectTree.TreeNodeControl.title'
+                }
             },
         ]
     }
