@@ -126,6 +126,10 @@ export class TreeNodeColorStatusComponent implements OnInit {
             switchMap((params: ParamMap) => {
 
                 this.treeNodeId = params.get('treeNodeId');
+
+                this.selectedContObjects = [];
+                this.contObjectIdsLoading = true;
+
                 for (const res in this.resources) {
                     if (this.resources.hasOwnProperty(res)) {
                         this.initResourceChart(this.treeNodeId, this.resources[res]);

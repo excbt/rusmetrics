@@ -25,7 +25,7 @@ export class TreeNavigateComponent implements OnInit {
     tree: TreeNode[];
     treeNodeLoading: boolean;
     subscrObjectTreeList: SubscrContObjectTreeType1[];
-    
+
     selectedNode: TreeNode = null;
 //    currentTree: subscrContObjectTreeType1;
 
@@ -74,14 +74,14 @@ console.log('Tree', this.tree);
 //    }
 
     loadNode(event) {
-        
-console.log(event);
+
+ console.log(event);
         if (event.node) {
             if (event.node === this.selectedNode) {
                 return false;
             }
             this.treeNodeLoading = true;
-            
+
             this.selectedNode = event.node;
             const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
             this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});

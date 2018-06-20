@@ -30,3 +30,13 @@
 .nmc-tree-nav-zpoint-green-node {
     color: rgb(110, 123, 144);
 }
+
+.ui-treenode-content-selected {
+    background-color: #eee;
+}
+
+.ui-state-highlight {
+    background-color: #eee;
+    border-color: #eee;
+    color: inherit;
+}
