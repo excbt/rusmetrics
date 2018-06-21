@@ -19,5 +19,4 @@ export class PortalObjectTreeComponent implements OnInit {
 
     ngOnInit() {
     }
-
 }

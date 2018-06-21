@@ -1,0 +1,71 @@
+<div class = "cont-object-event">
+<!--    Cont object event: contObjectId {{contObjectId}}-->
+
+<!--
+<div *ngFor = "let event of contObjectEventList">
+    <pre>
+        {{event | json}}
+    </pre>
+</div>
+-->
+
+<!--
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+-->
+
+    <mat-table #table [dataSource] = "dataSource" class = "nmc-data-table">    
+
+        <ng-container matColumnDef = "contServiceType">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-img">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let event" class = "nmc-col-img">            
+                <div [class] = "'nmc-' + event.getContServiceType() + '-icon'"></div>
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "contEventColorState">
+           <mat-header-cell *matHeaderCellDef class = "nmc-col-img">
+               
+           </mat-header-cell>
+            <mat-cell *matCellDef = "let event" class = "nmc-col-img">
+                <div [class] = "'nmc-img-state nmc-' + event.getColorState() + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "contEventDate">
+           <mat-header-cell *matHeaderCellDef>
+               Дата
+           </mat-header-cell>
+           <mat-cell *matCellDef = "let event">
+               {{event.getContEventDisplayedDate()}}
+           </mat-cell>
+            
+        </ng-container>
+        
+        <ng-container matColumnDef = "contEventTime">
+            <mat-header-cell *matHeaderCellDef>
+                Время
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let event">
+                {{event.getContEventDisplayedTime()}}
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "contEventMessage">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-message">
+                Сообщение
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let event" class = "nmc-col-message">
+                {{event.getContEventDisplayedMessage()}}
+            </mat-cell>
+        </ng-container>
+        
+        <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
+        <mat-row *matRowDef = "let row; columns: displayedColumns;">
+        </mat-row>
+        
+    </mat-table>
+</div>

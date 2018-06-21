@@ -23,13 +23,13 @@ export class TreeNodeInformationContainerComponent implements OnInit {
     }
 
     ngOnInit() {
-console.log('TreeNodeInformationContainerComponent: ngOnInit()');
-console.log('this.treeNodeId', this.treeNodeId);
+// console.log('TreeNodeInformationContainerComponent: ngOnInit()');
+// console.log('this.treeNodeId', this.treeNodeId);
         this.widgetList = [
-            {
+            /*{
                 caption: 'Информация',
                 url: 'tree-node-information'
-            },
+            },*/
             {
                 caption: 'Мониторинг',
                 url: 'tree-node-color-status'
@@ -39,7 +39,7 @@ console.log('this.treeNodeId', this.treeNodeId);
                 url: 'tree-node-control'
             }
         ];
-        this.currentWidget = this.widgetList[1];
+        this.currentWidget = this.widgetList[0];
 
         this.eventManager.subscribe('setTreeNode', (eventData) => this.changeNode(eventData));
     }

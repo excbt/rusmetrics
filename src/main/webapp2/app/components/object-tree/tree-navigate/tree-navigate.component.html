@@ -1,4 +1,4 @@
-<mat-toolbar class = "nmc-tree-nav-toolbar" style = "">  
+<mat-toolbar class = "nmc-nav-toolbar" style = "">  
     <mat-toolbar-row 
         style = "">
 <!--
@@ -38,9 +38,18 @@
 -->
     <p-tree [value] = "tree" 
     (onNodeExpand) = "loadNode($event)" 
-    [style] = "{'width': '100%', 'height': '87.5vh'}"    
+    (onNodeCollapse) = "loadNode($event)"
+    [style] = "{'width': '100%', 'height': '87.5vh', 'padding': '0 0 0 1rem', 'border': 'none'}"    
     [loading] = "treeNodeLoading"
+    selectionMode = "single"
+    [selection] = "selectedNode"
+    (onNodeSelect) = "loadNode($event)"
     >
+<!--
+    selectionMode = "single"
+    (onNodeSelect) = "nodeSelect($event)"
+    (onNodeClick) = "nodeClick($event)"
+-->
 <!--
         <ng-template let-node pTemplate = "default">
             <img [attrs.src] = "picture.path">

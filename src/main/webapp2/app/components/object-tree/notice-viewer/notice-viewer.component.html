@@ -1,0 +1,84 @@
+<div class = "cont-object-notice">
+<!--    Cont object notice: contObjectId {{contObjectId}}-->
+
+<!--
+<div *ngFor = "let notice of contObjectEventList">
+    <pre>
+        {{notice | json}}
+    </pre>
+</div>
+-->
+
+<!--
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+-->
+
+    <mat-table #table [dataSource] = "dataSource" class = "nmc-data-table">    
+
+        <ng-container matColumnDef = "noticeServiceType">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-img">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let notice" class = "nmc-col-img">            
+                <div [class] = "'nmc-' + notice.getContServiceType() + '-icon'"></div>
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "noticeColorState">
+           <mat-header-cell *matHeaderCellDef class = "nmc-col-img">
+               
+           </mat-header-cell>
+            <mat-cell *matCellDef = "let notice" class = "nmc-col-img">
+                <div [class] = "'nmc-img-state nmc-' + notice.getColorState() + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "noticeDate">
+           <mat-header-cell *matHeaderCellDef>
+               Дата
+           </mat-header-cell>
+           <mat-cell *matCellDef = "let notice">
+               {{notice.getDate()}}
+           </mat-cell>
+            
+        </ng-container>
+        
+        <ng-container matColumnDef = "noticeTime">
+            <mat-header-cell *matHeaderCellDef>
+                Время
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let notice">
+                {{notice.getTime()}}
+            </mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef = "noticeMessage">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-message">
+                Сообщение
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let notice" class = "nmc-col-message">
+                {{notice.getMessage()}}
+            </mat-cell>
+        </ng-container>
+        
+        <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
+        <mat-row *matRowDef = "let row; columns: displayedColumns;">
+        </mat-row>
+        
+    </mat-table>
+<!--
+    <div>
+        <pre>
+            {{ dateRange }}
+        </pre>
+    </div>
+    
+    <div>
+        <pre>
+            {{ contObjectIds }}
+        </pre>
+    </div>
+-->
+</div>

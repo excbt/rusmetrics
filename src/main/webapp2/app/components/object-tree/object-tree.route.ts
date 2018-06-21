@@ -2,7 +2,8 @@ import { Routes } from '@angular/router';
 import { PortalObjectTreeComponent,
 //        TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
-        TreeNodeColorStatusComponent
+        TreeNodeColorStatusComponent,
+        TreeNodeControlComponent
        } from './';
 // import { TreeNodeInformationContainerComponent } from './tree-node-information-container';
 // import { TreeNodeInformationComponent } from './tree-node-information';
@@ -53,7 +54,17 @@ const OBJECT_TREE_ROUTES = [
             },
             {
                 path: 'tree-node-color-status/:treeNodeId',
-                component: TreeNodeColorStatusComponent
+                component: TreeNodeColorStatusComponent,
+                data: {
+                    pageTitle: 'objectTree.treeNodeColorStatus.title'
+                }
+            },
+            {
+                path: 'tree-node-control/:treeNodeId',
+                component: TreeNodeControlComponent,
+                data: {
+                    pageTitle: 'objectTree.TreeNodeControl.title'
+                }
             },
         ]
     }

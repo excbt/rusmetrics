@@ -1,0 +1,214 @@
+<div class = "cont-object-control">
+    <!--
+    <div *ngFor = "let contObject of contObjectList">
+        {{contObject}}
+    </div>-->
+
+    <!--
+    <p-table [value] = "contObjectControlList">
+        <ng-template pTemplate = "header">
+            <tr>
+                <th *ngFor = "let col of cols">{{col.caption}}</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate = "body" let-coc>
+            <tr>
+                <td *ngFor = "let col of cols">{{coc[col.name]}}</td>
+            </tr>
+        </ng-template>
+    </p-table>
+    -->
+    <div class="spinner-container" *ngIf="dataSource.loading$ | async">
+        <mat-spinner></mat-spinner>
+    </div>
+
+    <mat-table #table [dataSource] = "dataSource" class = "nmc-data-table">
+
+    <!--
+        <ng-container *ngFor = "let column of cols " [matColumnDef] = "column.name">
+            <mat-header-cell *matHeaderCellDef>
+                {{column.caption}}
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <span *ngIf = "column.type === 'text'" >{{elem[column.name]}}</span>
+                <div *ngIf = "column.type === 'img'" [class] = "'nmc-img-state nmc-' + elem[column.name] + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+    -->
+
+       <ng-container matColumnDef = "coSettingMode" cssClassFiendlyName = "nmc-col-setting-mode">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-setting-mode">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-setting-mode">            
+                <div [class] = "'nmc-' + elem.coSettingMode + '-mode'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coBuildingType">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-building">
+
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-building">
+    <!--            {{elem.coBuildingType}} -->
+                <div class = "nmc-building-default-24"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coName">
+            <mat-header-cell *matHeaderCellDef class = "nmc-col-name">
+                Название
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-name"
+              (click) = "clickObject(elem)"
+               >
+                {{elem.coName}}
+            </mat-cell>
+        </ng-container>
+
+
+        <ng-container matColumnDef = "coHeat">
+            <mat-header-cell *matHeaderCellDef>
+                Тепло
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <div [class] = "'nmc-img-state nmc-' + elem.coHeat + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coHw">
+            <mat-header-cell *matHeaderCellDef>
+                ГВС
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                <div [class] = "'nmc-img-state nmc-' + elem.coHw + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coCw">
+            <mat-header-cell *matHeaderCellDef>
+                ХВС
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">            
+                <div [class] = "'nmc-img-state nmc-' + elem.coCw + '-state'"></div>
+            </mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef = "coEl">
+            <mat-header-cell *matHeaderCellDef>
+                Э/эн
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">          
+                <div [class] = "'nmc-img-state nmc-' + elem.coEl + '-state'"></div>  
+            </mat-cell>
+        </ng-container>
+
+    <!--
+        <ng-container matColumnDef = "caption">
+            <mat-header-cell *matHeaderCellDef>
+                Заголовок
+            </mat-header-cell>
+            <mat-cell *matCellDef = "let elem">
+                {{elem.caption}}
+            </mat-cell>
+        </ng-container>
+    -->
+
+        <mat-header-row *matHeaderRowDef = "displayedColumns"></mat-header-row>
+        <mat-row *matRowDef = "let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+    
+    <jhi-cont-object-notice-dialog *ngIf = "showEventFlag"
+       [showFlag] = "showEventFlag"
+       (setShowFlag) = "getEventFlag($event)"
+       [contObject] = "selectedObject">
+        
+    </jhi-cont-object-notice-dialog>
+    
+<!--
+    <jhi-cont-object-event *ngIf = "contObjectEventViewFlag" [contObjectId] = "selectedObject">
+    
+    </jhi-cont-object-event>
+-->
+<!--   *ngIf = "selectedObject && selectedObject.coName"-->
+<!--      <div *ngIf = "selectedObject && selectedObject.coName">-->
+<!--
+       <p-dialog 
+          [header] = "selectedObject.coName" 
+          [(visible)] = "showEventFlag" 
+          [modal] = "false" 
+          [responsive] = "true" 
+          [width] = "800" 
+          [minWidth] = "731" 
+          [minY] = "70"
+          [maximizable] = "false"
+          [baseZIndex] = "-1000"
+          [closable] = "false"
+          >
+          <p-header>
+              <mat-toolbar class = "nmc-nav-toolbar" style = "">  
+                <mat-toolbar-row 
+                    style = "">
+            
+                    <div class="float-left" *ngIf = "eventModeFlag">
+                        <button mat-icon-button (click)="setHistoryMode()"
+                         class ="nmc-history-toggle-btn"
+                          style = ""
+                           >
+                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>                           
+                        </button>
+                        
+                    </div>
+                    
+                    <div class="float-left" *ngIf = "historyModeFlag">
+                        <button mat-icon-button (click)="setEventMode()"
+                         class ="nmc-event-toggle-btn"
+                          style = ""
+                           >
+                            <mat-icon class="headerbar-mat-menu-icon">menu</mat-icon>                           
+                        </button>
+                        <p-calendar 
+                          [(ngModel)] = "historyDateRange"
+                           [locale] = "dateLocale"
+                           readonlyInput = "true"
+                           dateFormat = "dd.mm.yy"
+                           selectionMode = "range"
+                           [style] = "{'font-size': '14px', 'line-height': 1, 'position': 'relative', 'bottom': '7px'}"
+                           (onClose) = "setDaterange()">
+                            
+                        </p-calendar>
+                                                
+                        
+                    </div>    
+            
+                </mat-toolbar-row>
+            </mat-toolbar>
+          </p-header>      
+
+    
+            <jhi-cont-object-event *ngIf = "showEventFlag && eventModeFlag" [contObjectId] = "selectedObject.contObjectId">
+
+            </jhi-cont-object-event>
+            
+            <jhi-notice-viewer *ngIf = "showHistoryFlag && historyModeFlag" 
+                [contObjectIds] = "[selectedObject.contObjectId]"
+                [dateRange] = "historyDateRange"
+                >
+
+            </jhi-notice-viewer>
+    
+            <p-footer>
+                <button 
+                    type = "button" 
+                    pButton 
+                     
+                    (click) = "showEventFlag = false" 
+                    label = "OK">
+                </button>
+            </p-footer>
+
+       </p-dialog>
+-->
+<!--    </div>    -->
+</div>

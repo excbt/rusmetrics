@@ -1,0 +1,68 @@
+.nmc-cont-object-monitor-legend {
+    border-bottom: 1px solid rgb(95, 95, 95);
+    text-align: center;
+}
+
+.nmc-cont-object-monitor-legend div{
+    display: inline-block;
+}
+
+.nmc-cont-object-monitor-legend div p{
+    height: 16px; 
+    width: 32px; 
+    display: inline-block; 
+    margin: 5px 10px 0 5px;
+}
+
+.nmc-cont-object-monitor-doug-center {
+    position: relative; 
+    top: -90px; 
+/*    left: 72px;*/
+//    width: 70px;
+    
+    left: 62px;
+    width: 96px;
+    text-align: center;
+}
+.nmc-cont-object-monitor-doug-center img {
+    margin-bottom: 5px; 
+    margin-left: 2px;
+}
+.nmc-cont-object-monitor-doug-center p {
+    font-size: 18px; 
+//    margin-left: -2px;
+    padding-left: 5px;
+}
+
+.nmc-cw-icon {
+    height: 26px;
+    width: 26px;
+    background: url(../../../../content/images/object-trees/cw.png);
+    margin-left: 38px;
+}
+
+.nmc-hw-icon {
+    height: 26px;
+    width: 26px;
+    background: url(../../../../content/images/object-trees/hw.png);
+    margin-left: 38px;
+}
+
+.nmc-heat-icon {
+    height: 26px;
+    width: 26px;
+    background: url(../../../../content/images/object-trees/heat.png);
+    margin-left: 38px;
+}
+
+.nmc-el-icon {
+    height: 26px;
+    width: 26px;
+    background: url(../../../../content/images/object-trees/el.png);
+    margin-left: 38px;
+}
+
+.nmc-resource-doughnut {
+    height: 165px;
+    width: 320px;
+}

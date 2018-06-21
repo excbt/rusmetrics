@@ -62,6 +62,19 @@ export class TreeNodeColorStatusService {
 //        if (angular.isDefined(resourceName) && resourceName !== null) {
 //            url += "?contServiceType=" + resourceName;
 //        }
-        return this.http.get<TreeNodeColorStatus>(url, {params: new HttpParams().set('contServiceType', resourceName)});
+//        console.log('resourceName: ', resourceName);
+//        console.log('typeof resourceName: ', typeof resourceName);
+        let getOpts = {};
+        if (resourceName !== null) {
+            getOpts = {
+                params: new HttpParams().set('contServiceType', resourceName)
+            };
+        }
+
+        return this.http.get<StatusDetails>(url, getOpts);
     }
+}
+
+export class StatusDetails {
+    contObjectIds: number[];
 }

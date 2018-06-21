@@ -1,0 +1,16 @@
+{
+    "objectTree": {
+        "title": "Objects",        
+        "widget": {
+            "list": "list"
+        },
+        "treeNodeColorStatus" : {
+            "title": "Monitoring"
+        },
+        "TreeNodeControl" : {
+            "title": "Control"
+        }
+        
+
+    }
+}  
