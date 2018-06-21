@@ -1,0 +1,1 @@
+mvn sonar:sonar -Dsonar.branch=beta/portal-ng5
