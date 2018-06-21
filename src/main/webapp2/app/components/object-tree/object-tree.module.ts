@@ -29,6 +29,7 @@ import { objectTreeState,
         ContObjectEventService,
         ContObjectEventComponent,
         ContObjectNoticeDialogComponent,
+        ContObjectNoticeMatDialogComponent,
         DateUtils,
         NoticeViewerService,
         NoticeViewerComponent
@@ -82,6 +83,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         ContObjectControlComponent,
         ContObjectEventComponent,
         ContObjectNoticeDialogComponent,
+        ContObjectNoticeMatDialogComponent,
         NoticeViewerComponent
     ],
     entryComponents: [
