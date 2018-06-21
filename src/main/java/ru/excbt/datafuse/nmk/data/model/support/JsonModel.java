@@ -42,7 +42,6 @@ public interface JsonModel {
 			jsonBody = OBJECT_MAPPER.writeValueAsString(this);
 		} catch (JsonProcessingException e) {
 			log.error("Can't create json: {}", e);
-			e.printStackTrace();
 			jsonBody = null;
 		}
 		return jsonBody;

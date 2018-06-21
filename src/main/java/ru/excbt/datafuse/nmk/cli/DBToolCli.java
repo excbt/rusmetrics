@@ -19,7 +19,7 @@ import ru.excbt.datafuse.raw.data.service.DeviceObjectDataJsonService;
 
 public class DBToolCli extends AbstractDBToolCli {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger log = LoggerFactory
 			.getLogger(DBToolCli.class);
 
 	private static final PageRequest PAGE_LIMIT_1 = new PageRequest(0, 1);
@@ -34,11 +34,11 @@ public class DBToolCli extends AbstractDBToolCli {
 	@Autowired
 	private ReportService dbService;
 
-	
+
 	/**
-	 * 
+	 *
 	 * @param args
-	 * @throws SQLException 
+	 * @throws SQLException
 	 */
 	public static void main(String[] args) throws SQLException {
 		DBToolCli app = new DBToolCli();
@@ -50,14 +50,14 @@ public class DBToolCli extends AbstractDBToolCli {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void readJson() {
 		checkNotNull(deviceObjectDataJsonService);
 		List<DeviceObjectDataJson> dataJsonList = deviceObjectDataJsonService.selectDeviceObjectDataJson
 				(DEVICE_OBJECT_ID, TimeDetailKey.TYPE_24H, PAGE_LIMIT_1);
 
-		logger.info("Found Data: {}", dataJsonList.size());
+		log.info("Found Data: {}", dataJsonList.size());
 
 		if (dataJsonList.size() == 1) {
 
@@ -70,14 +70,14 @@ public class DBToolCli extends AbstractDBToolCli {
 
 			} catch (IOException e) {
 				// XXX Auto-generated catch block
-				e.printStackTrace();
+				log.error("readJson", e);
 			}
 		}
 
 	}
-	
 
 
-	
-	
+
+
+
 }

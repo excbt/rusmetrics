@@ -14,7 +14,7 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueDoubleAggregationDTO extends PDValueDTO {
 
-    public static String TYPE = "DoubleAgg";
+    public static final String TYPE = "DoubleAgg";
 
     @JsonInclude(value = Include.ALWAYS)
     @Getter

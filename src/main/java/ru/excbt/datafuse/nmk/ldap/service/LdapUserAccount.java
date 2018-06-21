@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 /**
  * Класс для работы с пользователем LDAP
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.10.2015
@@ -15,10 +15,10 @@ import java.util.Arrays;
  */
 public final class LdapUserAccount {
 
-	public final static String[] OBJECT_CLASS = new String[] { "inetOrgPerson", "inetuser", "organizationalPerson",
+	protected final static String[] OBJECT_CLASS = new String[] { "inetOrgPerson", "inetuser", "organizationalPerson",
 			"person", "posixAccount", "sunFMSAML2NameIdentifier", "top" };
 
-	public final static String[] OU_CLASS = new String[] { "organizationalUnit", "top" };
+    protected final static String[] OU_CLASS = new String[] { "organizationalUnit", "top" };
 
 	private final static String DEFAULT_EMAIL_DOMAIN = "@rusmetrics.ru";
 	private final static String HOME_DIR = "/home/";
@@ -36,7 +36,7 @@ public final class LdapUserAccount {
 	private final String businessCategory;
 
 	/**
-	 * 
+	 *
 	 * @param id
 	 * @param userName
 	 * @param names
@@ -66,7 +66,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param ou
 	 * @param username
 	 * @param names
@@ -76,7 +76,7 @@ public final class LdapUserAccount {
 	//	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getFirstName() {
@@ -84,7 +84,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getSecondName() {
@@ -92,7 +92,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getUserName() {
@@ -100,7 +100,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getMail() {
@@ -108,7 +108,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getHomeDirectory() {
@@ -116,7 +116,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getUidNumber() {
@@ -124,7 +124,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getGidNumber() {
@@ -132,7 +132,7 @@ public final class LdapUserAccount {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String[] getOrgUnits() {

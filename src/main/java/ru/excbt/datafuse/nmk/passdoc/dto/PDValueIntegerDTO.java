@@ -15,7 +15,7 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueIntegerDTO extends PDValueDTO implements PDValueObj<Integer> {
 
-    public static String TYPE = "Integer";
+    public static final String TYPE = "Integer";
 
     @JsonInclude(value = Include.ALWAYS)
     @DecimalMin(value = "0")

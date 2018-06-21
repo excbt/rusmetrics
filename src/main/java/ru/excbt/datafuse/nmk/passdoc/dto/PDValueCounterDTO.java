@@ -13,7 +13,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueCounter;
  */
 public class PDValueCounterDTO extends PDValueDTO {
 
-    public static String TYPE = "Counter";
+    public static final String TYPE = "Counter";
 
     @JsonInclude(value = Include.ALWAYS)
     @Getter
