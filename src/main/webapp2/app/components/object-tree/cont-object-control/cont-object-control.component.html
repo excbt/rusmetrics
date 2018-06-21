@@ -59,7 +59,7 @@
             <mat-header-cell *matHeaderCellDef class = "nmc-col-name">
                 Название
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem" class = "nmc-col-name"
+            <mat-cell *matCellDef = "let elem" class = "nmc-col-name nmc-clickable"
               (click) = "clickObject(elem)"
                >
                 {{elem.coName}}
@@ -71,7 +71,7 @@
             <mat-header-cell *matHeaderCellDef>
                 Тепло
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem"
+            <mat-cell *matCellDef = "let elem" class = "nmc-clickable"
                (click) = "clickObject(elem, 'heat')">
                 <div [class] = "'nmc-img-state nmc-' + elem.coHeat + '-state'"></div>
             </mat-cell>
@@ -81,7 +81,7 @@
             <mat-header-cell *matHeaderCellDef>
                 ГВС
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem"
+            <mat-cell *matCellDef = "let elem" class = "nmc-clickable"
                (click) = "clickObject(elem, 'hw')">
                 <div [class] = "'nmc-img-state nmc-' + elem.coHw + '-state'"></div>
             </mat-cell>
@@ -91,7 +91,7 @@
             <mat-header-cell *matHeaderCellDef>
                 ХВС
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem"
+            <mat-cell *matCellDef = "let elem" class = "nmc-clickable"
                (click) = "clickObject(elem, 'cw')">            
                 <div [class] = "'nmc-img-state nmc-' + elem.coCw + '-state'"></div>
             </mat-cell>
@@ -101,7 +101,7 @@
             <mat-header-cell *matHeaderCellDef>
                 Э/эн
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem"
+            <mat-cell *matCellDef = "let elem" class = "nmc-clickable"
                (click) = "clickObject(elem, 'el')">          
                 <div [class] = "'nmc-img-state nmc-' + elem.coEl + '-state'"></div>  
             </mat-cell>
