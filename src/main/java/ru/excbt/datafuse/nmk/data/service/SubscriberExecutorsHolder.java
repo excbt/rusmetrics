@@ -74,11 +74,12 @@ public class SubscriberExecutorsHolder {
 		synchronized (subscriberExecutors) {
 
 			while (true) {
-				boolean active = taskResults.stream().filter(i -> !i.isDone()).findAny().isPresent();
-				if (active == false) {
+				boolean active = taskResults.stream().anyMatch(i -> !i.isDone());
+				if (!active) {
 					break;
 				}
-				Thread.sleep(1000);
+                subscriberExecutors.wait(1000);
+//				Thread.sleep(1000);
 			}
 
 			for (ExecutorHolder holder : subscriberExecutors.values()) {

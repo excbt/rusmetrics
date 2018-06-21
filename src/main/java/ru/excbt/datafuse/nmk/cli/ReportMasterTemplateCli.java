@@ -72,7 +72,7 @@ public class ReportMasterTemplateCli {
 	}
 
     @PostConstruct
-    public void initApplication() throws  IOException {
+    public void initApplication() throws IOException, OperationNotSupportedException {
 
         log.info("Running with Spring profile(s) : {}", Arrays.toString(env.getActiveProfiles()));
         Collection<String> activeProfiles = Arrays.asList(env.getActiveProfiles());
@@ -105,7 +105,7 @@ public class ReportMasterTemplateCli {
 	 * @throws IOException
 	 */
 	private void loadReportMasterTemplate(ReportTypeKey reportTypeKey,
-			String fileResourceString, boolean isCompiled) throws IOException {
+			String fileResourceString, boolean isCompiled) throws IOException, OperationNotSupportedException {
 
 		String correctedFilename = FilenameUtils
 				.removeExtension(fileResourceString)
@@ -141,7 +141,7 @@ public class ReportMasterTemplateCli {
                     correctedFilename, isCompiled);
 
         } else {
-			new OperationNotSupportedException();
+			throw new OperationNotSupportedException();
 		}
 		checkState(res);
 
@@ -160,7 +160,7 @@ public class ReportMasterTemplateCli {
 	 * @throws IOException
 	 */
 	private void loadAllReportMasterTemplates(boolean isCompiled)
-			throws IOException {
+        throws IOException, OperationNotSupportedException {
 		loadReportMasterTemplate(ReportTypeKey.COMMERCE_REPORT,
 				ReportConstants.Files.COMM_FILE_COMPILED, isCompiled);
 

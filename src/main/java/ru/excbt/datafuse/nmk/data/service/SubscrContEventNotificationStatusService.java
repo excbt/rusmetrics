@@ -310,7 +310,6 @@ public class SubscrContEventNotificationStatusService {
 	 * @param subscriberId
 	 * @return
 	 */
-	@Transactional( readOnly = true)
 	private List<MonitorContEventTypeStatus> selectMonitorContEventTypeStatus(final Long subscriberId,
 			final Long contObjectId, final LocalDatePeriod datePeriod) {
 

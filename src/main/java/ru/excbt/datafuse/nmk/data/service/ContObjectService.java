@@ -900,7 +900,7 @@ public class ContObjectService implements SecuredRoles {
     public ContObjectMonitorDTO wrapContObjectMonitorDTO(PortalUserIds portalUserIds, ContObject contObject, final boolean contEventStats) {
         List<ContObjectMonitorDTO> list = wrapContObjectsMonitorDTO(portalUserIds, Arrays.asList(contObject));
         if (list != null) objectAccessService.readContObjectAccess(portalUserIds.getSubscriberId(), list);
-        return list.isEmpty() ? null : list.get(0);
+        return (list == null || list.isEmpty()) ? null : list.get(0);
     }
 
 	/**

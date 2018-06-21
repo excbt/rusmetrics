@@ -310,9 +310,9 @@ public class TariffPlanController  {
 	@RequestMapping(value = "/rsoOrganizations", method = RequestMethod.GET)
 	public ResponseEntity<?> getRsoOrganizations() {
 		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
-		List<OrganizationDTO> resultList = portalUserIdsService.isSystemUser() ? rsOrganizations
-				: rsOrganizations;
-		return ApiResponse.responseOK(resultList);
+//		List<OrganizationDTO> resultList = portalUserIdsService.isSystemUser() ? rsOrganizations
+//				: rsOrganizations;
+		return ApiResponse.responseOK(rsOrganizations);
 	}
 
 }

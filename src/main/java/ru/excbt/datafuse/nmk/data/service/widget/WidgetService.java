@@ -30,19 +30,29 @@ public abstract class WidgetService {
 		DAY, TODAY, YESTERDAY, WEEK, MONTH, YEAR
 	}
 
-	@SuppressWarnings("serial")
-	final static Map<MODES, TimeDetailKey> MODES_DETAIL_MAPS = Collections
-			.unmodifiableMap(new HashMap<MODES, TimeDetailKey>() {
-				{
-					put(MODES.DAY, TimeDetailKey.TYPE_1H);
-					put(MODES.TODAY, TimeDetailKey.TYPE_1H);
-					put(MODES.YESTERDAY, TimeDetailKey.TYPE_1H);
-					put(MODES.WEEK, TimeDetailKey.TYPE_24H);
-					put(MODES.MONTH, TimeDetailKey.TYPE_24H);
-					put(MODES.YEAR, TimeDetailKey.TYPE_1MON);
-				}
-			});
 
+
+//	s.pu
+//    s.put(MODES.DAY, TimeDetailKey.TYPE_1H);
+//    put(MODES.TODAY, TimeDetailKey.TYPE_1H);
+//    put(MODES.YESTERDAY, TimeDetailKey.TYPE_1H);
+//    put(MODES.WEEK, TimeDetailKey.TYPE_24H);
+//    put(MODES.MONTH, TimeDetailKey.TYPE_24H);
+//    put(MODES.YEAR, TimeDetailKey.TYPE_1MON);
+
+	@SuppressWarnings("serial")
+	final static Map<MODES, TimeDetailKey> MODES_DETAIL_MAPS;
+
+	static {
+        HashMap<MODES, TimeDetailKey> source = new HashMap<>();
+        source.put(MODES.DAY, TimeDetailKey.TYPE_1H);
+        source.put(MODES.TODAY, TimeDetailKey.TYPE_1H);
+        source.put(MODES.YESTERDAY, TimeDetailKey.TYPE_1H);
+        source.put(MODES.WEEK, TimeDetailKey.TYPE_24H);
+        source.put(MODES.MONTH, TimeDetailKey.TYPE_24H);
+        source.put(MODES.YEAR, TimeDetailKey.TYPE_1MON);
+        MODES_DETAIL_MAPS = Collections.unmodifiableMap(source);
+    }
 	/**
 	 *
 	 * @param dateTime
@@ -116,7 +126,7 @@ public abstract class WidgetService {
 	 *
 	 * @return
 	 */
-	public abstract Collection<MODES> getAvailableModes();
+	public abstract Collection<MODES> selectAvailableModes();
 
 	/**
 	 *
@@ -124,7 +134,7 @@ public abstract class WidgetService {
 	 * @return
 	 */
 	public boolean isModeSupported(String mode) {
-		return getAvailableModes().stream().map(MODES::name).filter(i -> i.equals(mode.toUpperCase())).findAny()
+		return selectAvailableModes().stream().map(MODES::name).filter(i -> i.equals(mode.toUpperCase())).findAny()
 				.isPresent();
 	}
 

@@ -714,8 +714,7 @@ public class ContServiceDataHWaterService  {
             Timestamp lastDateTimestamp = DBRowUtil.asTimestamp(row[1]);
 
 			if (lastDateTimestamp != null) {
-                TimeDetailLastDate item = new TimeDetailLastDate(timeDetailKeyname,
-                    lastDateTimestamp != null ? lastDateTimestamp.toLocalDateTime() : null);
+                TimeDetailLastDate item = new TimeDetailLastDate(timeDetailKeyname,lastDateTimestamp.toLocalDateTime());
                 resultList.add(item);
             }
 		}

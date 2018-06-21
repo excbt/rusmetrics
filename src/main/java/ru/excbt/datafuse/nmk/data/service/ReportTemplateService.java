@@ -110,8 +110,6 @@ public class ReportTemplateService {
 	 * @param reportTemplate
 	 * @return
 	 */
-	@Transactional
-	@Secured({ AuthoritiesConstants.ADMIN })
 	protected ReportTemplate updateOneAny(ReportTemplate reportTemplate) {
 		checkNotNull(reportTemplate);
 		checkArgument(!reportTemplate.isNew());

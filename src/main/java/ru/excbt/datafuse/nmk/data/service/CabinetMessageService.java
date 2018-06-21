@@ -134,7 +134,7 @@ public class CabinetMessageService {
             long r = updateClause.execute();
             return r;
         });
-        return Long.valueOf(count).intValue();
+        return java.lang.Math.toIntExact(count);
     }
 
     /**

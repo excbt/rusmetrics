@@ -8,8 +8,8 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 /**
- * 
- * 
+ *
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 23.03.2016
@@ -42,7 +42,7 @@ public class JodaTimeParser<T> {
 	public final static DateTimeFormatter DATE_FORMATTER = DateTimeFormat.forPattern(DATE_TEMPLATE);
 
 	/**
-	 * 
+	 *
 	 * @param parserArguments
 	 * @param dateValue
 	 * @param isEmpty
@@ -54,7 +54,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	protected JodaTimeParser() {
 		this.parserArguments = new ParserArguments();
@@ -63,7 +63,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public ParserArguments getParserArguments() {
@@ -71,7 +71,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isEmpty() {
@@ -79,7 +79,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public T getDateValue() {
@@ -87,7 +87,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public String getStringValue() {
@@ -95,7 +95,7 @@ public class JodaTimeParser<T> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateStr
 	 * @return
 	 */
@@ -121,13 +121,14 @@ public class JodaTimeParser<T> {
 			result = new JodaTimeParser<LocalDateTime>();
 		}
 
+		checkNotNull(result);
 		checkNotNull(result.parserArguments);
 
 		return result;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateStr
 	 * @return
 	 */
@@ -153,6 +154,7 @@ public class JodaTimeParser<T> {
 			result = new JodaTimeParser<LocalDate>();
 		}
 
+		checkNotNull(result);
 		checkNotNull(result.parserArguments);
 
 		return result;

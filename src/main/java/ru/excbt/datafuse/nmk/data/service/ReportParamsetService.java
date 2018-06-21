@@ -142,8 +142,6 @@ public class ReportParamsetService implements SecuredRoles {
      * @param reportParamset
      * @return
      */
-	@Transactional
-	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	protected ReportParamset updateReportParamset(ReportParamset reportParamset) {
 		checkNotNull(reportParamset);
 		checkArgument(!reportParamset.isNew());

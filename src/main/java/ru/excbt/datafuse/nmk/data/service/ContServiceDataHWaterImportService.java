@@ -203,8 +203,17 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			Comparator<ContServiceDataHWaterImport> comparator = Comparator
 					.comparing(ContServiceDataHWaterImport::getDataDate);
 
-			ContServiceDataHWaterImport minDateData = inDataHWaterImport.stream().min(comparator).get();
-			ContServiceDataHWaterImport maxDateData = inDataHWaterImport.stream().max(comparator).get();
+			ContServiceDataHWaterImport minDateData = inDataHWaterImport.stream().min(comparator).orElseGet(null);
+			ContServiceDataHWaterImport maxDateData = inDataHWaterImport.stream().max(comparator).orElseGet(null);
+
+			if (minDateData == null || maxDateData == null) {
+                SLogSessionUtil.failSession(session,
+                    "Ошибка. У данных не найдены даты", errorMessage);
+
+                throw new IllegalArgumentException(
+                    String.format(FileImportInfo.IMPORT_EXCEPTION_TEMPLATE, "Validate error", importInfo.getUserFileName()));
+            }
+
 
 			final SimpleDateFormat dateFormat = timeDetailKey.isTruncDate() ? new SimpleDateFormat("dd-MM-yyyy")
 					: new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");

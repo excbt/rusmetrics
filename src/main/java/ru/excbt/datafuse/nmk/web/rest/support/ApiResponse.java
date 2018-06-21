@@ -98,8 +98,8 @@ public class ApiResponse {
 	 *
 	 * @return
 	 */
-	public static ResponseEntity<?> responseContent(Optional<?> body) {
-		return body != null ? ResponseEntity.ok(body) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	public static ResponseEntity<?> responseContent(Optional<?> bodyOptional) {
+		return bodyOptional.map(ResponseEntity::ok).orElse(ResponseEntity.status(HttpStatus.NO_CONTENT).build());
 	}
 
     /**
