@@ -34,13 +34,14 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
     dataSource: ContObjectControlDataSource;
     showEventFlag = false;
 
-    eventModeFlag = true;
-    historyModeFlag = false;
+//    eventModeFlag = true;
+//    historyModeFlag = false;
 
-    showHistoryFlag = false;
+//    showHistoryFlag = false;
 
-    historyDateRange: any;
+//    historyDateRange: any;
 //    dateLocale: any;
+    selectedResource: string = null;
 
     constructor(private eventManager: JhiEventManager,
                 private contObjectControlService: ContObjectControlService) {}
@@ -148,7 +149,7 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
             .subscribe((res) => this.contObjectControlList.push(res));
     }
 
-    clickObject(object) {
+    clickObject(object: ContObjectControl, resource: string = null) {
 //        this.contObjectEventViewFlag = false;
 //        console.log('Click object: ', object);
         if (object && object.contObjectId) {
@@ -163,6 +164,7 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 
             this.showEventFlag = true;
             this.selectedObject = object;
+            this.selectedResource = resource;
         }
     }
 

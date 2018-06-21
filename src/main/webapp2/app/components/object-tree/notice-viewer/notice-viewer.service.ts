@@ -18,7 +18,7 @@ export class NoticeViewerService {
     constructor(private http: HttpClient,
                 private dateUtils: DateUtils) {}
 
-    loadNotices(startDate: string, endDate: string, contObjectIds: number[]): Observable<NoticeWrapper[]> {
+    loadNotices(startDate: string, endDate: string, contObjectIds: number[], contServiceTypes: string[] = null): Observable<NoticeWrapper[]> {
 // console.log('startDate ', startDate);
 // console.log('endDate ', endDate);
 // console.log('contObjectIds ', contObjectIds);
@@ -27,6 +27,9 @@ export class NoticeViewerService {
             .set('fromDate', startDate)
             .set('toDate', endDate);
         contObjectIds.forEach((id) => httpParams = httpParams.append('contObjectIds', id.toString()));
+        if (contServiceTypes && contServiceTypes !== null) {
+            contServiceTypes.forEach((type) => httpParams = httpParams.append('contServiceTypes', type));
+        }
 //        params.set('contObjectIds', contObjectIds);
 // console.log('http params: ', httpParams);
         return this.http.get<NoticeWrapperPaged>(url, {params: httpParams}).map((res) => this.prepareNotices(res.objects));

@@ -1,5 +1,5 @@
 <p-dialog 
-          [header] = "contObject.coName" 
+          [header] = "dialogHeader" 
           [(visible)] = "showFlag" 
           [modal] = "false" 
           [responsive] = "true" 
@@ -51,12 +51,16 @@
           </p-header>      
 
     
-            <jhi-cont-object-event *ngIf = "eventModeFlag" [contObjectId] = "contObject.contObjectId">
+            <jhi-cont-object-event *ngIf = "eventModeFlag" 
+                [contObjectId] = "contObject.contObjectId"
+                [contServiceType] = "contServiceType"
+                >
 
             </jhi-cont-object-event>
             
             <jhi-notice-viewer *ngIf = "historyModeFlag" 
                 [contObjectIds] = "[contObject.contObjectId]"
+                [contServiceTypes] = "[contServiceType]"
                 [dateRange] = "historyDateRange"
                 >
 

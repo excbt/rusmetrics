@@ -71,7 +71,8 @@
             <mat-header-cell *matHeaderCellDef>
                 Тепло
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem">
+            <mat-cell *matCellDef = "let elem"
+               (click) = "clickObject(elem, 'heat')">
                 <div [class] = "'nmc-img-state nmc-' + elem.coHeat + '-state'"></div>
             </mat-cell>
         </ng-container>
@@ -80,7 +81,8 @@
             <mat-header-cell *matHeaderCellDef>
                 ГВС
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem">
+            <mat-cell *matCellDef = "let elem"
+               (click) = "clickObject(elem, 'hw')">
                 <div [class] = "'nmc-img-state nmc-' + elem.coHw + '-state'"></div>
             </mat-cell>
         </ng-container>
@@ -89,7 +91,8 @@
             <mat-header-cell *matHeaderCellDef>
                 ХВС
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem">            
+            <mat-cell *matCellDef = "let elem"
+               (click) = "clickObject(elem, 'cw')">            
                 <div [class] = "'nmc-img-state nmc-' + elem.coCw + '-state'"></div>
             </mat-cell>
         </ng-container>
@@ -98,7 +101,8 @@
             <mat-header-cell *matHeaderCellDef>
                 Э/эн
             </mat-header-cell>
-            <mat-cell *matCellDef = "let elem">          
+            <mat-cell *matCellDef = "let elem"
+               (click) = "clickObject(elem, 'el')">          
                 <div [class] = "'nmc-img-state nmc-' + elem.coEl + '-state'"></div>  
             </mat-cell>
         </ng-container>
@@ -122,7 +126,8 @@
     <jhi-cont-object-notice-dialog *ngIf = "showEventFlag"
        [showFlag] = "showEventFlag"
        (setShowFlag) = "getEventFlag($event)"
-       [contObject] = "selectedObject">
+       [contObject] = "selectedObject"
+       [contServiceType] = "selectedResource">
         
     </jhi-cont-object-notice-dialog>
     

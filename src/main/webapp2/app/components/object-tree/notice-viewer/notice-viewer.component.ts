@@ -14,6 +14,7 @@ import { DateUtils } from '../utils';
 export class NoticeViewerComponent implements OnInit, OnChanges {
     @Input() dateRange: Date[];
     @Input() contObjectIds: number[];
+    @Input() contServiceTypes: string[];
 
     displayedColumns = ['noticeServiceType', 'noticeColorState', 'noticeDate', 'noticeTime', 'noticeMessage'];
 
@@ -62,7 +63,7 @@ export class NoticeViewerComponent implements OnInit, OnChanges {
 // console.log(startDate);
 // console.log(endDate);
             this.noticeService
-                .loadNotices(startDate, endDate, this.contObjectIds)
+                .loadNotices(startDate, endDate, this.contObjectIds, this.contServiceTypes)
                 .subscribe((res) => {/*console.log(res);*/this.dataSource = res; });
         }
     }

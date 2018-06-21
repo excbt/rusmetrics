@@ -14,6 +14,7 @@ import { DateWrapper } from '../utils/date-utils';
 })
 export class ContObjectEventComponent implements OnInit {
     @Input() contObjectId: number;
+    @Input() contServiceType: string;
     contObjectEventList: ContObjectEvent[];
     contObjectEventWrapperList: ContObjectEventWrapper[];
     dataSource: ContObjectEventWrapper[];
@@ -28,7 +29,13 @@ export class ContObjectEventComponent implements OnInit {
                 .loadEvents(this.contObjectId.toString())
                 .subscribe((res) => {
 //                    console.log(res);
-                    this.contObjectEventList = res;
+                // filter events with resource
+                    if (this.contServiceType && this.contServiceType !== null) {
+                        const filteredByResourceEvents = res.filter((event: ContObjectEvent) => event.contServiceType === this.contServiceType);
+                        this.contObjectEventList = filteredByResourceEvents;
+                    } else {
+                        this.contObjectEventList = res;
+                    }
                     this.contObjectEventWrapperList = this.contObjectEventList
                         .map((coe) => {
                             const coew: ContObjectEventWrapper = new ContObjectEventWrapper(coe);

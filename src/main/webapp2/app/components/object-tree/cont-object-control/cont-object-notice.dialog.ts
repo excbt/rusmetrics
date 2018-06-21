@@ -12,8 +12,26 @@ import { DateUtils } from '../utils/date-utils';
 })
 export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
     @Input() contObject: ContObjectControl;
+    @Input() contServiceType: string;
     @Input() showFlag: boolean;
     @Output() setShowFlag = new EventEmitter<boolean>();
+
+    public dialogHeader: string;
+
+    resources: any = {
+        heat: {
+            caption: 'Тепло'
+        },
+        hw: {
+            caption: 'ГВС'
+        },
+        cw: {
+            caption: 'ХВС'
+        },
+        el: {
+            caption: 'Э/эн'
+        }
+    };
 
     historyDateRange: Date[] = [new Date(), new Date()];
 
@@ -39,6 +57,8 @@ export class ContObjectNoticeDialogComponent implements OnChanges, OnInit {
 
     ngOnInit() {
 //        console.log('showFlag: ', this.showFlag);
+        this.dialogHeader = this.contObject.coName;
+        this.dialogHeader += this.contServiceType && this.contServiceType !== null ? ', ' + this.resources[this.contServiceType].caption : '';
     }
 
     setHistoryMode() {
