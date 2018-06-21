@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { SERVER_API_URL } from '../../../app.constants';
-import { Observable } from 'rxjs/observable';
+import { Observable } from 'rxjs/Observable';
 
 import { Notice } from './notice.model';
 import { NoticeWrapperPaged } from './notice-wrapper-paged.model';

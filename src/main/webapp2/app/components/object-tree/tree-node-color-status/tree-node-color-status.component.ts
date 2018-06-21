@@ -39,7 +39,7 @@ export class TreeNodeColorStatusComponent implements OnInit {
     private treeNodeId: string;
 
     private chartBgColors: string[];
-    private chartLabels: string[];
+    public chartLabels: string[];
     public resources: string[];
     public statusKeynames: string[];
 
