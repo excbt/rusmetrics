@@ -116,8 +116,8 @@ public class DeviceObjectService implements SecuredRoles {
 
         if (deviceObjectDataSource != null) {
             initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+            deviceObjectDataSource.deviceObjectId(deviceObject.getId());
         }
-        deviceObjectDataSource.deviceObjectId(deviceObject.getId());
         deviceObject.saveDeviceObjectCredentials();
 
         return saveDeviceObject(deviceObject, deviceObjectDataSource);
@@ -202,7 +202,7 @@ public class DeviceObjectService implements SecuredRoles {
         if (deviceObjectDataSource != null && dsi != null) {
             SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
             if (ds == null) {
-                DBExceptionUtil.entityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
+                throw DBExceptionUtil.newEntityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
             }
             deviceObjectDataSource.setSubscrDataSource(ds);
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
