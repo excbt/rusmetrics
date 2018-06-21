@@ -83,8 +83,7 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 		if (this.deviceObjectId == null || this.subscrDataSourceId == null) {
 			return false;
 		}
-		return this.subscrDataSourceId.equals(other.subscrDataSourceId)
-				&& this.subscrDataSourceId.equals(other.subscrDataSourceId);
+		return this.subscrDataSourceId.equals(other.subscrDataSourceId);
 	}
 
     @Override

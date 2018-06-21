@@ -269,7 +269,7 @@ public class TariffPlanService implements SecuredRoles {
 		return tariffPlanRepository.findOne(tariffPlanId);
 	}
 
-	@Transactional
+//	@Transactional
 	private void setOtherInactive(PortalUserIds portalUserIds, Long tariffPlanId, Long rsoOrganizationId,
 			Long tariffTypeId) {
 		List<TariffPlan> allTariffs = tariffPlanRepository.selectTariffPlanList(portalUserIds.getSubscriberId());

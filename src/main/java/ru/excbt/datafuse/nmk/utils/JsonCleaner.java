@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Работа с JSON
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 22.05.2015
@@ -29,7 +29,7 @@ public class JsonCleaner {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputJson
 	 * @return
 	 * @throws IOException
@@ -48,33 +48,35 @@ public class JsonCleaner {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		JsonFactory factory = new JsonFactory();
-		JsonGenerator generator = factory.createGenerator(baos);
 
-		Iterator<String> fieldNames = node.fieldNames();
-		generator.writeStartObject();
-		while (fieldNames.hasNext()) {
-			String fieldName = fieldNames.next();
-			String value = node.get(fieldName).asText();
+		try (JsonGenerator generator = factory.createGenerator(baos)) {
+            Iterator<String> fieldNames = node.fieldNames();
+            generator.writeStartObject();
+            while (fieldNames.hasNext()) {
+                String fieldName = fieldNames.next();
+                String value = node.get(fieldName).asText();
 
-			boolean pass = true;
-			for (String s : cleanString) {
-				if (value.equals(s)) {
-					pass = false;
-				}
-			}
-			if (pass) {
-				generator.writeFieldName(fieldName);
-				generator.writeString(value);
-			}
-		}
-		generator.writeEndObject();
-		generator.close();
+                boolean pass = true;
+                for (String s : cleanString) {
+                    if (value.equals(s)) {
+                        pass = false;
+                    }
+                }
+                if (pass) {
+                    generator.writeFieldName(fieldName);
+                    generator.writeString(value);
+                }
+            }
+            generator.writeEndObject();
+        }
+
+
 		return new String(baos.toByteArray(), UTF8);
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputJson
 	 * @param cleanArg
 	 * @return
@@ -85,7 +87,7 @@ public class JsonCleaner {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param inputJson
 	 * @return
 	 * @throws IOException

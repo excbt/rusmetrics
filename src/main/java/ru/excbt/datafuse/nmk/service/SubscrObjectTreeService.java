@@ -761,10 +761,10 @@ public class SubscrObjectTreeService {
 
         SubscrObjectTree node = subscrObjectTreeRepository.findOne(treeNodeId);
         if (node == null) {
-            Optional.empty();
+            return Optional.empty();
         }
         if (!node.getSubscriberId().equals(subscriberId)) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         node.setIsActive(isActive);

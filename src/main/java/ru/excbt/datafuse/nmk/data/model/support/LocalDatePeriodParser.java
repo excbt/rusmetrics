@@ -35,7 +35,7 @@ public class LocalDatePeriodParser {
 	private final ParserArguments parserArguments;
 
 	/**
-	 * 
+	 *
 	 */
 	public LocalDatePeriodParser() {
 		isEmpty = true;
@@ -60,7 +60,7 @@ public class LocalDatePeriodParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param dateFromStr
 	 * @param dateToStr
 	 */
@@ -90,6 +90,7 @@ public class LocalDatePeriodParser {
 			result = EMPTY_PARSER;
 		}
 
+		checkNotNull(result);
 		checkNotNull(result.parserArguments);
 
 		return result;

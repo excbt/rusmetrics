@@ -164,7 +164,7 @@ public class ContZPointConsumptionService {
      */
     private Optional<Double> sumDataValues(double[] values) {
         if (values == null) {
-            Optional.empty();
+           return Optional.empty();
         }
         double sum = 0;
         for (int i = 0; i < values.length; i++) {

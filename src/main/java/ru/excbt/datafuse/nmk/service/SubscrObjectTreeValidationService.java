@@ -75,7 +75,7 @@ public class SubscrObjectTreeValidationService {
 
         Long checkTreeSubscriberId = selectSubscriberId(subscrObjectTreeId);
 
-        return Long.valueOf(portalUserIds.getSubscriberId()).equals(checkTreeSubscriberId);
+        return portalUserIds.getSubscriberId().equals(checkTreeSubscriberId);
 
     }
 

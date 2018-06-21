@@ -13,13 +13,16 @@ public abstract class MinMaxCheck <T extends Comparable<T>> {
 	protected abstract boolean conditionPass(T arg);
 
 	public void check (T arg) {
-		if (arg != null) {
-			if (object == null) {
-				object = arg;
-			} else if (conditionPass(arg)) {
+//		if (arg != null) {
+			if (arg != null && (object == null || conditionPass(arg))) {
 				object = arg;
 			}
-		}
+//			if (object == null) {
+//				object = arg;
+//			} else if (conditionPass(arg)) {
+//				object = arg;
+//			}
+//		}
 	}
 
 	public T getObject() {

@@ -132,7 +132,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		if (!objectAccessService.checkContObjectIds(Arrays.asList(contObjectIds), parentSubscriber)) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) can't access contObjects (%s)",
-					parentSubscriber.getId(), contObjectIds.toString()));
+					parentSubscriber.getId(), Arrays.toString(contObjectIds)));
 		}
 
 		if (parentSubscriber.getChildLdapOu() == null) {
@@ -153,13 +153,13 @@ public class SubscrCabinetService implements SecuredRoles {
 			if (deviceObjects.isEmpty()) {
 				throw new PersistenceException(
 						String.format("Can't create Child Subscriber for contObjects=%s. DeviceObject is not found",
-								contObjectIds.toString()));
+								Arrays.toString(contObjectIds)));
 			}
 
 			if (deviceObjects.get(0).getNumber() == null) {
 				throw new PersistenceException(
 						String.format("Can't create Child Subscriber for contObjects=%s. DeviceObjectNumber is empty",
-								contObjectIds.toString()));
+                            Arrays.toString(contObjectIds)));
 			}
 
 			String deviceNumber = deviceObjects.get(0).getNumber();
@@ -201,7 +201,7 @@ public class SubscrCabinetService implements SecuredRoles {
 		if (!checkIfSubscriberCabinetsOK(parentSubscriber.getId())) {
 
 			throw new PersistenceException(
-					String.format("Can't create Child Subscriber for contObjects=%s", contObjectIds.toString()));
+					String.format("Can't create Child Subscriber for contObjects=%s", Arrays.toString(contObjectIds)));
 
 		}
 

@@ -49,7 +49,7 @@ public class CwWidgetService extends WidgetService {
 	 * @return
 	 */
 	@Override
-	public Collection<MODES> getAvailableModes() {
+	public Collection<MODES> selectAvailableModes() {
 		return availableModesCollection;
 	}
 
