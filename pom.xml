@@ -76,6 +76,7 @@
         <sonar.surefire.reportsPath>${project.testresult.directory}/surefire-reports</sonar.surefire.reportsPath>
         <sonar.tests>${project.basedir}/src/test/</sonar.tests>
         <sonar.host.url>http://192.168.84.125:9000</sonar.host.url>
+        <sonar.branch>beta/portal-ng5</sonar.branch>
         <p6spy.version>3.7.0</p6spy.version>
 
 	</properties>
