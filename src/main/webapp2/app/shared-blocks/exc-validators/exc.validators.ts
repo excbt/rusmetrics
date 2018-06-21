@@ -45,13 +45,13 @@ export class ExcCustomValidators {
         };
     }
 
-    static valuesEqualsUntouched(controlName: string): ValidatorFn {
-        return (control: AbstractControl): {[key: string]: any} => {
-            const otherControl = control.root.get(controlName);
-            const isOk =  (otherControl) ? (otherControl.value === control.value)  : false;
-            return !isOk ? {'valuesEquals': {value: control.value}} : null;
-        };
-    }
+    // static valuesEqualsUntouched(controlName: string): ValidatorFn {
+    //     return (control: AbstractControl): {[key: string]: any} => {
+    //         const otherControl = control.root.get(controlName);
+    //         const isOk =  (otherControl) ? (otherControl.value === control.value)  : false;
+    //         return !isOk ? {'valuesEquals': {value: control.value}} : null;
+    //     };
+    // }
 
 }
 

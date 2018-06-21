@@ -276,11 +276,11 @@ public class OrganizationService implements SecuredRoles {
 	public void deleteOrganization(final Long organizationId, final PortalUserIds portalUserIds) {
 	    Organization org = organizationRepository.findOne(organizationId);
        if (Boolean.TRUE.equals(org.getIsCommon())) {
-            DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
+           throw DBExceptionUtil.newAccessDeniedException(Organization.class, organizationId);
         }
 
         if (org.getSubscriber() != null && !portalUserIds.getSubscriberId().equals(org.getSubscriber().getId())) {
-            DBExceptionUtil.accessDeniedException(Organization.class, organizationId);
+            throw DBExceptionUtil.newAccessDeniedException(Organization.class, organizationId);
         }
 
         org.setDeleted(1);

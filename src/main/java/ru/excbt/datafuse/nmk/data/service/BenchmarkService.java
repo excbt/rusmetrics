@@ -38,9 +38,10 @@ public class BenchmarkService {
 	 */
 	public void setBenchmarkSubscriberId(Long benchmarkSubscriberId) {
 
-        Optional.ofNullable(subscriberRepository.findOne(benchmarkSubscriberId))
-            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, benchmarkSubscriberId));
-
+	    Subscriber subscriber = subscriberRepository.findOne(benchmarkSubscriberId);
+	    if (subscriber == null) {
+            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, benchmarkSubscriberId);
+        }
 		this.benchmarkSubscriberId = benchmarkSubscriberId;
 	}
 

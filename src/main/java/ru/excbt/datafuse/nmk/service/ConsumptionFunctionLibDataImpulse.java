@@ -11,8 +11,8 @@ public class ConsumptionFunctionLibDataImpulse {
     private ConsumptionFunctionLibDataImpulse() {
     }
 
-    public static ConsumptionFunction<ContServiceDataImpulse> EL_PWR = createInternal ("dataValue", MeasureUnitKey.PWR_KWT_H);
-    public static ConsumptionFunction<ContServiceDataImpulse> HWATER = createInternal ("dataValue", MeasureUnitKey.V_M3);
+    public static final ConsumptionFunction<ContServiceDataImpulse> EL_PWR = createInternal ("dataValue", MeasureUnitKey.PWR_KWT_H);
+    public static final ConsumptionFunction<ContServiceDataImpulse> HWATER = createInternal ("dataValue", MeasureUnitKey.V_M3);
 
     /**
      *

@@ -111,9 +111,9 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 			LocalDate sstMonth = sst.getSstDate() != null ? (new LocalDate(sst.getSstDate())).withDayOfMonth(1) : null;
 
 			if (sstMonth == null || checkMonth == null || !checkMonth.equals(sstMonth)) {
-				new IllegalArgumentException(
+				throw new IllegalArgumentException(
 						String.format("sstDate is not consistence. Required sstDate = %s, actual sstDate = %s ",
-								sst.getSstDate() != null ? sst.getSstDate().toString() : "null"));
+								sst.getSstDate() != null ? sst.getSstDate().toString() : "null", sstMonth != null ? sstMonth.toString() : "null"));
 			}
 
 			saveSst(sst);

@@ -235,7 +235,7 @@ public class ContEventMonitorWidgetService {
 
         ContObject contObject = contObjectRepository.findOne(contObjectId);
         if (contObject == null) {
-            DBExceptionUtil.entityNotFoundException(ContObject.class, contObjectId);
+            throw DBExceptionUtil.newEntityNotFoundException(ContObject.class, contObjectId);
         }
 
         Predicate<ContZPoint> checkAccess = objectAccessService.objectAccessUtil().checkContZPoint(portalUserIds);

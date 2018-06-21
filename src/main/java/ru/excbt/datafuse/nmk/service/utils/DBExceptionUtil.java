@@ -51,20 +51,20 @@ public class DBExceptionUtil {
      * @param id
      * @return
      */
-    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id) {
-        return entityNotFoundException(clazz, id, false);
-    }
+//    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id) {
+//        return newEntityNotFoundException(clazz, id, false);
+//    }
 
     /**
      * @param clazz
      * @param id
      * @return
      */
-    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
-        throw new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
-            (idKeyname ? "keyname" : "ID")
-            + "=" + id + " is not found");
-    }
+//    public static <T> PersistenceException entityNotFoundException(Class<T> clazz, Object id, boolean idKeyname) {
+//        throw new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
+//            (idKeyname ? "keyname" : "ID")
+//            + "=" + id + " is not found");
+//    }
 
 
     /**
@@ -75,10 +75,10 @@ public class DBExceptionUtil {
      * @param <T>
      * @return
      */
-    public static <T extends Persistable<?>> PersistenceException entityNotFoundException(Class<T> clazz, Object id, String keyname) {
-        throw new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
-            keyname + "=" + id + " is not found");
-    }
+//    public static <T extends Persistable<?>> PersistenceException entityNotFoundException(Class<T> clazz, Object id, String keyname) {
+//        throw new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
+//            keyname + "=" + id + " is not found");
+//    }
 
 
     /**
@@ -87,9 +87,9 @@ public class DBExceptionUtil {
      * @param <T>
      * @return
      */
-    public static <T extends Persistable<?>> AccessDeniedException accessDeniedException(Class<T> clazz, Object id) {
-        throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
-    }
+//    public static <T extends Persistable<?>> AccessDeniedException accessDeniedException(Class<T> clazz, Object id) {
+//        throw new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
+//    }
 
     public static <T extends Persistable<?>> AccessDeniedException newAccessDeniedException(Class<T> clazz, Object id) {
         return new AccessDeniedException("Can not access entity " + clazz.getSimpleName() + " with ID = " + id);
@@ -100,6 +100,11 @@ public class DBExceptionUtil {
         return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
             (idKeyname ? "keyname" : "ID")
             + "=" + id + " is not found");
+    }
+
+    public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id, String keyname) {
+        return new PersistenceException("Entity " + clazz.getSimpleName() + " with " +
+            keyname + "=" + id + " is not found");
     }
 
     public static <T> PersistenceException newEntityNotFoundException(Class<T> clazz, Object id) {

@@ -4,13 +4,15 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 @Injectable()
 export class MainMenuService {
 
-  private displayState: Boolean = false;
+  private displayState: boolean;
 
-  private toggleMenuSubject: BehaviorSubject<Boolean> =  new BehaviorSubject(false);
+  private toggleMenuSubject: BehaviorSubject<boolean> =  new BehaviorSubject(false);
 
   toggleMenuSubject$ = this.toggleMenuSubject.asObservable();
 
-  constructor() { }
+  constructor() {
+    this.displayState = false;
+   }
 
   toggleMainMenu() {
     console.log('toggle');

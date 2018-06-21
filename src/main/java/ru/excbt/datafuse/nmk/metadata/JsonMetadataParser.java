@@ -263,7 +263,7 @@ public class JsonMetadataParser {
 					continue;
 				}
 				// 2D array
-				if (valueNode.isArray() && idxs.length == 2) {
+				if (valueNode != null && valueNode.isArray() && idxs.length == 2) {
 					JsonNode arrayValue1D = findArrayElement(valueNode, idxs[0]);
 					checkNotNull(arrayValue1D);
 					checkState(arrayValue1D.isArray());

@@ -66,7 +66,7 @@ public class MockSubscriberService {
 		logger.warn("ATTENTION!!! Using MockUser");
 
 		return Optional.ofNullable(subscriberRepository.findOne(mockSubscriberId))
-            .orElseThrow(() -> DBExceptionUtil.entityNotFoundException(Subscriber.class, mockSubscriberId));
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, mockSubscriberId));
 
 	}
 }

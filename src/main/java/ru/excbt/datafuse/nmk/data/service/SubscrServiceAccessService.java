@@ -110,7 +110,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
 		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
 		if (subscriber == null) {
-            DBExceptionUtil.entityNotFoundException(Subscriber.class, subscriberId);
+            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, subscriberId);
         }
 		entity.setSubscriber(subscriber);
 
@@ -149,7 +149,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 
         Subscriber subscriber = subscriberRepository.findOne(subscriberId);
         if (subscriber == null) {
-            DBExceptionUtil.entityNotFoundException(Subscriber.class, subscriberId);
+            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, subscriberId);
         }
 
 		currentAccessList.stream().filter((i) -> i.getAccessEndDate() == null).forEach((c) -> {
