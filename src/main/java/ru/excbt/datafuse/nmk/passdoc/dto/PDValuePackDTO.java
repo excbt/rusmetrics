@@ -10,7 +10,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueString;
  */
 public class PDValuePackDTO extends PDValueDTO {
 
-    public static String TYPE = "Pack";
+    public static final String TYPE = "Pack";
 
     public static PDValuePackDTO newInstance(PDTableCell<?> pdTableCell) {
         checkValueTypeClass(PDTableCellValueString.class, pdTableCell);

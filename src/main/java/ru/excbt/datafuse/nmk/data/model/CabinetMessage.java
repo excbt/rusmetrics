@@ -22,8 +22,8 @@ public class CabinetMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public static CabinetMessageType DEFAULT_TYPE = CabinetMessageType.REQUEST;
-    public static CabinetMessageDirection DEFAULT_DIRECTION = CabinetMessageDirection.OUT;
+    public static final CabinetMessageType DEFAULT_TYPE = CabinetMessageType.REQUEST;
+    public static final CabinetMessageDirection DEFAULT_DIRECTION = CabinetMessageDirection.OUT;
 
     @Id
     private Long id;

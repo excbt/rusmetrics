@@ -6,7 +6,7 @@ import java.util.UUID;
 public class CityContObjectsServiceTypeInfo extends
 		CityContObjects<ContObjectServiceTypeInfo> {
 
-	public static CityContObjectsFactory<CityContObjectsServiceTypeInfo> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
+	public static final CityContObjectsFactory<CityContObjectsServiceTypeInfo> FACTORY_INSTANCE = new CityContObjectsServiceTypeInfoFactory();
 
 	static class CityContObjectsServiceTypeInfoFactory implements
 			CityContObjectsFactory<CityContObjectsServiceTypeInfo> {
@@ -19,12 +19,12 @@ public class CityContObjectsServiceTypeInfo extends
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4128928226356864846L;
 
 	/**
-	 * 
+	 *
 	 * @param cityFiasUUID
 	 */
 	protected CityContObjectsServiceTypeInfo(UUID cityFiasUUID) {
@@ -32,7 +32,7 @@ public class CityContObjectsServiceTypeInfo extends
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public List<ContObjectServiceTypeInfo> contObjectsServiceTypeInfo() {
@@ -40,7 +40,7 @@ public class CityContObjectsServiceTypeInfo extends
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	@Override
 	public List<ContObjectServiceTypeInfo> getCityObjects() {

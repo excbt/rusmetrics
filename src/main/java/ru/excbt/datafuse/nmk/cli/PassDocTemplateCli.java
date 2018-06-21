@@ -51,7 +51,6 @@ public class PassDocTemplateCli {
 
         } catch (JsonProcessingException e) {
             log.error("Can't create json: {}", e);
-            e.printStackTrace();
         }
 
         return jsonBody;
