@@ -111,7 +111,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
             .addSubscrObjectTree(newTreeName, null, ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
 
-        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -135,7 +135,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
             .addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
 
-        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -165,7 +165,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1;
         Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
 
-        SubscrObjectTreeVM parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeVM parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 

@@ -48,8 +48,8 @@ public class ConsumptionService {
 
     private static final Logger log = LoggerFactory.getLogger(ConsumptionService.class);
 
-    public static final String MD5_HASH_SECRET = "YsoB66IIyYlEFw50ObB2";
-    public static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
+    protected static final String MD5_HASH_SECRET = "YsoB66IIyYlEFw50ObB2";
+    protected static final byte[] MD5_HASH_SECRET_BYTES = MD5_HASH_SECRET.getBytes(Charset.forName("UTF8"));
 
 
     public static final String CONS_STATE_CALCULATED = "calculated";
@@ -391,7 +391,7 @@ public class ConsumptionService {
         try {
             return MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+            log.error("MD5 not found", e);
             return null;
         }
     }

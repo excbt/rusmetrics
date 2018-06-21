@@ -1,7 +1,7 @@
 /*
  * Jamm
  * Copyright (C) 2002 Dave Dribin and Keith Garner
- *  
+ *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -11,7 +11,7 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,7 +27,7 @@ import javax.naming.ldap.ExtendedResponse;
 
 /**
  * Класс для работы с LDAP
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 12.08.2015
@@ -35,7 +35,7 @@ import javax.naming.ldap.ExtendedResponse;
  */
 public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5594042500276868788L;
 
@@ -158,7 +158,7 @@ public class ModifyPasswordRequest implements ExtendedRequest, Serializable {
 	}
 
 	/** The OID of the modify password extended operation */
-	public static final String LDAP_EXOP_X_MODIFY_PASSWD = "1.3.6.1.4.1.4203.1.11.1";
+	private static final String LDAP_EXOP_X_MODIFY_PASSWD = "1.3.6.1.4.1.4203.1.11.1";
 	/** The BER tag for the modify password dn entry */
 	private static final byte LDAP_TAG_EXOP_X_MODIFY_PASSWD_ID = (byte) 0x80;
 	/** The BER tag for the modify password new password entry */

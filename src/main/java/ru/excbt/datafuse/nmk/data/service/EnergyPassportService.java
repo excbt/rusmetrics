@@ -249,7 +249,7 @@ public class EnergyPassportService {
         }
 
         passportData.updateFromDTO(energyPassportDataDTO);
-        if (section != null && section.get() != null) {
+        if (section.isPresent()) {
             passportData.setSectionId(section.get().getId());
         }
         passportDataRepository.save(passportData);
@@ -404,22 +404,9 @@ public class EnergyPassportService {
 
     /**
      * @param passportId
-     * @return
      */
-    private EnergyPassport findPassportChecked(Long passportId) {
-        EnergyPassport energyPassport = passportRepository.findOne(passportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
-        }
-        return energyPassport;
-    }
-
-    /**
-     * @param passportId
-     */
-    @Transactional
     protected void updateEnergyPassportFromTemplate(Long passportId) {
-        EnergyPassport energyPassport = findPassportChecked(passportId);
+        EnergyPassport energyPassport = passportRepository.findOne(passportId);
         if (energyPassport == null) {
             throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
         }
