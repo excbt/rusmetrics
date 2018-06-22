@@ -6,7 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -27,7 +27,7 @@ import java.util.Optional;
  */
 @Repository
 public interface ContObjectAccessRepository extends JpaRepository<ContObjectAccess, ContObjectAccess.PK>, ObjectAccessRI<ContObjectAccess>,
-    QueryDslPredicateExecutor<ContObjectAccess> {
+    QuerydslPredicateExecutor<ContObjectAccess> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContObjectAccess a " +
         " WHERE a.accessTtl IS NULL")

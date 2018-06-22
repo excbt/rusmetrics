@@ -1,7 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
@@ -23,7 +23,7 @@ import java.util.List;
  *
  */
 public interface SubscrContObjectRepository extends CrudRepository<SubscrContObject, Long>,
-    QueryDslPredicateExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
+    QuerydslPredicateExecutor<SubscrContObject>, ContObjectRI<SubscrContObject> {
 
 
 

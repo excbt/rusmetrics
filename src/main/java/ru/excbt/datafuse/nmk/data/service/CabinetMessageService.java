@@ -24,13 +24,11 @@ import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.sql.Connection;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -167,8 +165,9 @@ public class CabinetMessageService {
 
         cabinetMessageRepository.flush();
 
-        cabinetMessage = cabinetMessageRepository.findOne(id);
-        return cabinetMessageMapper.toDto(cabinetMessage);
+        Optional<CabinetMessage> opt = cabinetMessageRepository.findById(id);
+//        cabinetMessage = cabinetMessageRepository.findOne(id);
+        return opt.map(cabinetMessageMapper::toDto).orElseThrow(() -> new EntityNotFoundException(CabinetMessage.class, id));
     }
 
 
@@ -201,13 +200,13 @@ public class CabinetMessageService {
             throw new IllegalStateException("responseToId cannot be null");
         }
 
-        CabinetMessage responseToMessage = cabinetMessageRepository.findOne(cabinetMessageDTO.getResponseToId());
-        if (responseToMessage == null) {
+       Optional<CabinetMessage> responseToMessage = cabinetMessageRepository.findById(cabinetMessageDTO.getResponseToId());
+        if (!responseToMessage.isPresent()) {
             throw DBExceptionUtil.newEntityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
         }
 
         setFromFields (cabinetMessageDTO, userIds);
-        setResponseFields(cabinetMessageDTO, responseToMessage);
+        setResponseFields(cabinetMessageDTO, responseToMessage.get());
 
         return save(cabinetMessageDTO, userIds);
     }
@@ -242,8 +241,9 @@ public class CabinetMessageService {
     @Transactional(readOnly = true)
     public CabinetMessageDTO findOne(Long id) {
         log.debug("Request to get CabinetMessage : {}", id);
-        CabinetMessage cabinetMessage = cabinetMessageRepository.findOne(id);
-        return cabinetMessageMapper.toDto(cabinetMessage);
+        return cabinetMessageRepository.findById(id)
+            .map(cabinetMessageMapper::toDto)
+            .orElseThrow(() -> new EntityNotFoundException(CabinetMessage.class, id));
     }
 
     /**
@@ -261,9 +261,9 @@ public class CabinetMessageService {
     @Transactional(readOnly = true)
     public List<CabinetMessageDTO> findMessageChain(Long messageId) {
         log.debug("Request to get all CabinetMessages");
-        CabinetMessage cabinetMessage = cabinetMessageRepository.findOne(messageId);
+        Optional<CabinetMessage> cabinetMessageOpt = cabinetMessageRepository.findById(messageId);
 
-        if (cabinetMessage == null) {
+        if (!cabinetMessageOpt.isPresent()) {
             return Collections.emptyList();
         }
 

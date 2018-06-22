@@ -358,7 +358,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 			e.setDeviceObject(deviceObject);
 		}
 
-		List<ContZPointMetadata> result = Lists.newArrayList(contZPointMetadataRepository.save(entityList));
+		List<ContZPointMetadata> result = Lists.newArrayList(contZPointMetadataRepository.saveAll(entityList));
 
 		deleteOtherContZPointMetadata(contZPointId, deviceObject.getId());
 
