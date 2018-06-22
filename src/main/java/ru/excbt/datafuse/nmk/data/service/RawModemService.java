@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.RawModemModel;
 import ru.excbt.datafuse.nmk.data.repository.RawModemModelRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 @Service
 public class RawModemService implements SecuredRoles {
@@ -38,7 +39,8 @@ public class RawModemService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public RawModemModel selectRawModel(Long rawModemModelId) {
-		return rawModemModelRepository.findOne(rawModemModelId);
+		return rawModemModelRepository.findById(rawModemModelId)
+            .orElseThrow(() -> new EntityNotFoundException(RawModemModel.class, rawModemModelId));
 	}
 
 	/**
@@ -59,9 +61,10 @@ public class RawModemService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN })
 	@Transactional( readOnly = true)
 	public void deleteRawModemModel(Long rawModemModelId) {
-		RawModemModel deleteCadidate = rawModemModelRepository.findOne(rawModemModelId);
-		checkNotNull(rawModemModelId);
-		if (deleteCadidate == null || Boolean.TRUE.equals(deleteCadidate.getIsProtected())) {
+		RawModemModel deleteCadidate = rawModemModelRepository.findById(rawModemModelId)
+            .orElseThrow(() -> new EntityNotFoundException(RawModemModel.class, rawModemModelId));
+
+		if (Boolean.TRUE.equals(deleteCadidate.getIsProtected())) {
 			throw new AccessDeniedException(String.format("RawModemModel (id=%s) can't be deleted", rawModemModelId));
 		}
 		rawModemModelRepository.delete(deleteCadidate);

@@ -1,19 +1,10 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static com.google.common.base.Preconditions.checkState;
-
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ContEventType;
 import ru.excbt.datafuse.nmk.data.model.SubscrContEventTypeSms;
@@ -23,6 +14,12 @@ import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsAddrRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContEventTypeSmsRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static com.google.common.base.Preconditions.checkState;
 
 /**
  * Сервис для работы с настройкой смс уведомлений для событий
@@ -106,7 +103,7 @@ public class SubscrContEventTypeSmsService {
 			i.setSubscrContEventTypeSms(result);
 		});
 
-		subscrContEventTypeSmsAddrRepository.save(smsAddrList);
+		subscrContEventTypeSmsAddrRepository.saveAll(smsAddrList);
 
 		return result;
 	}
@@ -117,16 +114,13 @@ public class SubscrContEventTypeSmsService {
 	 */
 	@Transactional
 	public void deleteSubscrContEventTypeSms(Long subscrContEventTypeSmsId) {
-		SubscrContEventTypeSms sms = subscrContEventTypeSmsRepository.findOne(subscrContEventTypeSmsId);
-		if (sms == null) {
-			throw new PersistenceException(
-					String.format("SubscrContEventTypeSms (id=%d) is not found", subscrContEventTypeSmsId));
-		}
+		SubscrContEventTypeSms sms = subscrContEventTypeSmsRepository.findById(subscrContEventTypeSmsId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrContEventTypeSms.class, subscrContEventTypeSmsId));
 
 		List<SubscrContEventTypeSmsAddr> smsAddList = subscrContEventTypeSmsAddrRepository
 				.findBySubscrContEventTypeSmsId(subscrContEventTypeSmsId);
 
-		subscrContEventTypeSmsAddrRepository.save(EntityActions.softDelete(smsAddList));
+		subscrContEventTypeSmsAddrRepository.saveAll(EntityActions.softDelete(smsAddList));
 		subscrContEventTypeSmsRepository.save(EntityActions.softDelete(sms));
 	}
 

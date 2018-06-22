@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ReferencePeriod;
 import ru.excbt.datafuse.nmk.data.repository.ReferencePeriodRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с эталонным интервалом
@@ -61,7 +62,8 @@ public class ReferencePeriodService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public ReferencePeriod findOne(long referencePeriodId) {
-		return referencePeriodRepository.findOne(referencePeriodId);
+		return referencePeriodRepository.findById(referencePeriodId)
+            .orElseThrow(() -> new EntityNotFoundException(ReferencePeriod.class, referencePeriodId));
 	}
 
 	/**
@@ -140,16 +142,15 @@ public class ReferencePeriodService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param referencePeriod
-	 * @return
-	 */
+    /**
+     *
+     * @param referencePeriodId
+     */
 	@Secured({ ROLE_SUBSCR_USER })
 	@Transactional
 	public void deleteOne(long referencePeriodId) {
-		if (referencePeriodRepository.exists(referencePeriodId)) {
-			referencePeriodRepository.delete(referencePeriodId);
+		if (referencePeriodRepository.existsById(referencePeriodId)) {
+			referencePeriodRepository.deleteById(referencePeriodId);
 		} else {
 			throw new PersistenceException(String.format("ReperencePeriod with id=%d is not found", referencePeriodId));
 		}

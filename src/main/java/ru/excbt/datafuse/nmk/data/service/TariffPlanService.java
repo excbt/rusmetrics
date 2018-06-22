@@ -29,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.TariffOptionRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с тарифными планами
@@ -99,8 +100,8 @@ public class TariffPlanService implements SecuredRoles {
 					String.format("Default Tariff Plan for rsoOrganizationId:{} already exists", rsoOrganizationId));
 		}
 
-		Organization rso = organizationRepository.findOne(rsoOrganizationId);
-		checkNotNull(rso);
+		Organization rso = organizationRepository.findById(rsoOrganizationId)
+            .orElseThrow(() -> new EntityNotFoundException(Organization.class, rsoOrganizationId));
 
 		//Subscriber subscriber = subscriberService.selectSubscriber(subscriberId);
 
@@ -129,12 +130,12 @@ public class TariffPlanService implements SecuredRoles {
 		tariffPlanRepository.deleteTariffPlan(subscriberId, rsoOrganizationId);
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @param tariffPlan
-	 * @return
-	 */
+    /**
+     *
+     * @param portalUserIds
+     * @param tariffPlan
+     * @return
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public TariffPlan updateOne(PortalUserIds portalUserIds, TariffPlan tariffPlan) {
@@ -153,7 +154,8 @@ public class TariffPlanService implements SecuredRoles {
 					.format("TariffPlan(id=%d) can not be modified. endDate is before startDate", tariffPlan.getId()));
 		}
 
-		TariffPlan currentRec = tariffPlanRepository.findOne(tariffPlan.getId());
+		TariffPlan currentRec = tariffPlanRepository.findById(tariffPlan.getId())
+            .orElseThrow(() -> new EntityNotFoundException(TariffPlan.class, tariffPlan.getId()));
 
 		//AuditableTools.copyAuditableProps(currentRec, tariffPlan);
 
@@ -191,12 +193,10 @@ public class TariffPlanService implements SecuredRoles {
 		return tariffPlanRepository.save(tariffPlan);
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @param tariffPlan
-	 * @return
-	 */
+    /**
+     *
+     * @param tariffPlan
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(TariffPlan tariffPlan) {
@@ -211,17 +211,15 @@ public class TariffPlanService implements SecuredRoles {
 		tariffPlanRepository.delete(tariffPlan);
 	}
 
-	/**
-	 *
-	 * @param id
-	 * @param tariffPlan
-	 * @return
-	 */
+    /**
+     *
+     * @param tariffPlanId
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long tariffPlanId) {
-		TariffPlan tariffPlan = tariffPlanRepository.findOne(tariffPlanId);
-		checkNotNull(tariffPlan);
+		TariffPlan tariffPlan = tariffPlanRepository.findById(tariffPlanId)
+            .orElseThrow(() -> new EntityNotFoundException(TariffPlan.class, tariffPlanId));
 
 		deleteOne(tariffPlan);
 	}
@@ -266,7 +264,8 @@ public class TariffPlanService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public TariffPlan findOne(long tariffPlanId) {
-		return tariffPlanRepository.findOne(tariffPlanId);
+		return tariffPlanRepository.findById(tariffPlanId)
+            .orElseThrow(() -> new EntityNotFoundException(TariffPlan.class, tariffPlanId));
 	}
 
 //	@Transactional
@@ -281,7 +280,7 @@ public class TariffPlanService implements SecuredRoles {
 		modTariffs.forEach(i -> {
 			i.setIsDefault(false);
 		});
-		tariffPlanRepository.save(modTariffs);
+		tariffPlanRepository.saveAll(modTariffs);
 	}
 
 }

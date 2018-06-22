@@ -9,6 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskLogRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,8 @@ public class SubscrSessionTaskService {
 	 */
 	@Transactional( readOnly = true)
 	public SubscrSessionTask findSubscrSessionTask(Long id) {
-		return subscrSessionTaskRepository.findOne(id);
+		return subscrSessionTaskRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrSessionTask.class, id));
 	}
 
 	/**
@@ -53,7 +55,8 @@ public class SubscrSessionTaskService {
 	 */
 	@Transactional( readOnly = true)
 	public boolean getIsProgress(Long subscrSessionTaskId) {
-		SubscrSessionTask task = subscrSessionTaskRepository.findOne(subscrSessionTaskId);
+		SubscrSessionTask task = subscrSessionTaskRepository.findById(subscrSessionTaskId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrSessionTask.class, subscrSessionTaskId));
 		return Boolean.TRUE.equals(task.getTaskIsComplete());
 	}
 

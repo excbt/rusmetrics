@@ -351,11 +351,11 @@ public class PTreeNodeMonitorService {
                                                                   final Long nodeId,
                                                                   final List<PTreeNodeMonitorDTO> contObjectMonitorList) {
 
-        SubscrObjectTree node = subscrObjectTreeRepository.findOne(nodeId);
-        if (node == null) {
+        Optional<SubscrObjectTree> nodeOpt = subscrObjectTreeRepository.findById(nodeId);
+        if (!nodeOpt.isPresent()) {
             return Collections.emptyList();
         }
-        return findPTreeNodeMonitorElements(portalUserIds, node, Collections.unmodifiableList(contObjectMonitorList));
+        return findPTreeNodeMonitorElements(portalUserIds, nodeOpt.get(), Collections.unmodifiableList(contObjectMonitorList));
     }
 
     /**

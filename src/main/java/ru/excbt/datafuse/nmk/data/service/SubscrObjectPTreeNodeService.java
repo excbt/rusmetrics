@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.ObjectAccessUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -54,7 +55,8 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
 
     public PTreeNode readSubscrObjectTree (Long subscrObjectTreeId) {
-        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findById(subscrObjectTreeId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, subscrObjectTreeId));
 
         PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
 
@@ -65,7 +67,8 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
     @Transactional
     public PTreeNode readSubscrObjectTree (Long subscrObjectTreeId, Integer childLevel, PortalUserIds portalUserIds) {
-        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findById(subscrObjectTreeId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, subscrObjectTreeId));
 
         PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
 
@@ -84,7 +87,8 @@ public class SubscrObjectPTreeNodeService implements SecuredRoles {
 
     @Transactional
     public PTreeNode readSubscrObjectTreeStub (Long subscrObjectTreeId, Integer childLevel, PortalUserIds portalUserIds) {
-        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(subscrObjectTreeId);
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findById(subscrObjectTreeId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, subscrObjectTreeId));
 
         PTreeElement pTreeElement = SubscrObjectTreeTools.makeFromSubscrObjectTree(subscrObjectTree);
 

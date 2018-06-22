@@ -73,7 +73,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteSubscrPriceItems(Long subscrPriceListId) {
 		List<SubscrPriceItem> items = servicePriceItemRepository.findBySubscrPriceListId(subscrPriceListId);
-		servicePriceItemRepository.delete(items);
+		servicePriceItemRepository.deleteAll(items);
 	}
 
 	/**
@@ -97,11 +97,9 @@ public class SubscrPriceItemService implements SecuredRoles {
 			resultList.add(copySubscrPriceItem(i));
 		});
 
-		resultList.forEach(i -> {
-			i.setSubscrPriceList(dstSubscrPriceList);
-		});
+		resultList.forEach(i -> i.setSubscrPriceList(dstSubscrPriceList));
 
-		servicePriceItemRepository.save(resultList);
+		servicePriceItemRepository.saveAll(resultList);
 
 		return resultList;
 	}
@@ -166,8 +164,8 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 		updatePriceListValues(modifiedPriceItemIds, localDate);
 
-		servicePriceItemRepository.save(modifiedPriceItems);
-		servicePriceItemValueRepository.save(priceItemValues);
+		servicePriceItemRepository.saveAll(modifiedPriceItems);
+		servicePriceItemValueRepository.saveAll(priceItemValues);
 
 		return modifiedPriceItems;
 	}
@@ -233,9 +231,9 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 		updatePriceListValues(modifiedPriceItemIds, localDate);
 
-		servicePriceItemRepository.save(newPriceItems);
-		servicePriceItemRepository.save(modifiedPriceItems);
-		servicePriceItemValueRepository.save(priceItemValues);
+		servicePriceItemRepository.saveAll(newPriceItems);
+		servicePriceItemRepository.saveAll(modifiedPriceItems);
+		servicePriceItemValueRepository.saveAll(priceItemValues);
 
 		return modifiedPriceItems;
 	}
@@ -271,7 +269,7 @@ public class SubscrPriceItemService implements SecuredRoles {
 			allCurrentValues.addAll(currentValues);
 		});
 
-		servicePriceItemValueRepository.save(allCurrentValues);
+		servicePriceItemValueRepository.saveAll(allCurrentValues);
 
 	}
 

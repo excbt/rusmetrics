@@ -137,7 +137,7 @@ public class SubscrVCookieService {
 			_saveVCookieSubscrUser(vc, checkList);
 
 		}
-		return Lists.newArrayList(subscrVCookieRepository.save(entities));
+		return Lists.newArrayList(subscrVCookieRepository.saveAll(entities));
 	}
 
 	/**
@@ -161,7 +161,7 @@ public class SubscrVCookieService {
 			checkArgument(vc.getSubscrUserId() != null);
 			_saveVCookieSubscrUser(vc, checkList);
 		}
-		return Lists.newArrayList(subscrVCookieRepository.save(entities));
+		return Lists.newArrayList(subscrVCookieRepository.saveAll(entities));
 	}
 
 }

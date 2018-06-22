@@ -13,8 +13,8 @@ import ru.excbt.datafuse.nmk.data.repository.CabinetOutMeterDataRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContServiceDataImpulseRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +79,8 @@ public class CabinetOutService {
 
                 log.debug("Import CabinetOutMeterData:{}", q.getQId().getId());
 
-                CabinetOutMeterData meterData = cabinetOutMeterDataRepository.findOne(q.getQId().getId());
+                CabinetOutMeterData meterData = cabinetOutMeterDataRepository.findById(q.getQId().getId())
+                    .orElseThrow(() -> new EntityNotFoundException(CabinetOutMeterData.class, q.getQId().getId()));
                 if (meterData == null || meterData.getDeviceObjectId() == null) {
                     log.error("meterData check failed");
                     continue;

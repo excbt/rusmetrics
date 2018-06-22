@@ -37,10 +37,11 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 	@Autowired
 	private SubscrActionUserGroupRepository subscrActionUserGroupRepository;
 
-	/**
-	 *
-	 * @param reportParamsetUnitId
-	 */
+    /**
+     *
+     * @param subscrActionUserId
+     * @param subscrActionGroupId
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteUserGroup(final long subscrActionUserId, final long subscrActionGroupId) {
@@ -59,7 +60,7 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 					subscrActionUserId, subscrActionGroupId));
 		}
 
-		subscrActionUserGroupRepository.delete(ids.get(0));
+		subscrActionUserGroupRepository.deleteById(ids.get(0));
 	}
 
 	/**
@@ -76,12 +77,11 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 		subscrActionUserGroupRepository.save(item);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param userId
-	 * @param groupIds
-	 */
+    /**
+     *
+     * @param userId
+     * @param groupIds
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateUserToGroups(long userId, Long[] groupIds) {
@@ -108,12 +108,11 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param userId
-	 * @param groupIds
-	 */
+    /**
+     *
+     * @param groupId
+     * @param userIds
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void updateGroupToUsers(long groupId, Long[] userIds) {
@@ -166,23 +165,21 @@ public class SubscrActionUserGroupService implements SecuredRoles {
 		}
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param subscrActionGroupId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscrActionGroupId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<SubscrActionUser> selectUsersByGroup(long subscrActionGroupId) {
 		return subscrActionUserGroupRepository.selectUsersByGroup(subscrActionGroupId);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @param subscrActionUserId
-	 * @return
-	 */
+    /**
+     *
+     * @param subscrActionUserId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<SubscrActionGroup> selectGroupsByUser(long subscrActionUserId) {
 		return subscrActionUserGroupRepository.selectGroupsByUser(subscrActionUserId);

@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -310,10 +311,9 @@ public class SubscrPriceListService  {
 	@Secured({ AuthoritiesConstants.ADMIN, AuthoritiesConstants.RMA_SUBSCRIBER_ADMIN })
 	public SubscrPriceList createAnyDraftPriceList(Long srcPriceListId) {
 		checkNotNull(srcPriceListId);
-		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
-		if (srcPriceList == null) {
-			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
-		}
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findById(srcPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, srcPriceListId));
+
 		SubscrPriceList newPriceList = copyPriceList_L1(srcPriceList);
 		newPriceList.setPriceListLevel(srcPriceList.getPriceListLevel());
 		newPriceList.setIsActive(false);
@@ -354,10 +354,8 @@ public class SubscrPriceListService  {
 			throw new PersistenceException(String.format("Invalid Rma Subscriber Id (%d)", rmaSubscriber.getId()));
 		}
 
-		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
-		if (srcPriceList == null) {
-			throw new PersistenceException(String.format("ServicePriceList (id=%d) is not found", srcPriceListId));
-		}
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findById(srcPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, srcPriceListId));
 
 		if (srcPriceList.getPriceListLevel() != PRICE_LEVEL_NMC) {
 			throw new UnsupportedOperationException();
@@ -414,10 +412,8 @@ public class SubscrPriceListService  {
 	public SubscrPriceList createSubscrPriceList(Long srcPriceListId, Subscriber subscriber) {
 		checkNotNull(srcPriceListId);
 		checkNotNull(subscriber);
-		SubscrPriceList srcPriceList = subscrPriceListRepository.findOne(srcPriceListId);
-		if (srcPriceList == null) {
-			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", srcPriceListId));
-		}
+		SubscrPriceList srcPriceList = subscrPriceListRepository.findById(srcPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, srcPriceListId));
 
 		if (srcPriceList.getIsArchive()) {
 			throw new PersistenceException(String
@@ -556,7 +552,7 @@ public class SubscrPriceListService  {
 		});
 
 		if (!activePriceLists.isEmpty()) {
-			subscrPriceListRepository.save(activePriceLists);
+			subscrPriceListRepository.saveAll(activePriceLists);
 		}
 
 		return activePriceLists.size();
@@ -598,7 +594,7 @@ public class SubscrPriceListService  {
 		});
 
 		if (!activePriceLists.isEmpty()) {
-			subscrPriceListRepository.save(activePriceLists);
+			subscrPriceListRepository.saveAll(activePriceLists);
 		}
 		return activePriceLists.size();
 	}
@@ -615,10 +611,8 @@ public class SubscrPriceListService  {
 		checkNotNull(subscrPriceListId);
 		checkNotNull(startDate);
 
-		SubscrPriceList subscrPriceList = subscrPriceListRepository.findOne(subscrPriceListId);
-		if (subscrPriceList == null) {
-			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", subscrPriceListId));
-		}
+		SubscrPriceList subscrPriceList = subscrPriceListRepository.findById(subscrPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, subscrPriceListId));
 
 		if (subscrPriceList.getPriceListLevel() == null
 				|| subscrPriceList.getPriceListLevel() != PRICE_LEVEL_SUBSCRIBER) {
@@ -657,10 +651,8 @@ public class SubscrPriceListService  {
 		checkNotNull(startDate);
 		checkNotNull(subscrPriceListId);
 
-		SubscrPriceList subscrPriceList = subscrPriceListRepository.findOne(subscrPriceListId);
-		if (subscrPriceList == null) {
-			throw new PersistenceException(String.format("SubscrPriceList (id=%d) is not found", subscrPriceListId));
-		}
+		SubscrPriceList subscrPriceList = subscrPriceListRepository.findById(subscrPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, subscrPriceListId));
 
 		if (Boolean.TRUE.equals(subscrPriceList.getIsActive()) || Boolean.TRUE.equals(subscrPriceList.getIsArchive())) {
 			throw new PersistenceException(
@@ -685,7 +677,9 @@ public class SubscrPriceListService  {
 	 */
 	@Transactional( readOnly = true)
 	public SubscrPriceList findOne(Long subscrPriceListId) {
-		return subscrPriceListRepository.findOne(subscrPriceListId);
+		return subscrPriceListRepository.findById(subscrPriceListId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrPriceList.class, subscrPriceListId));
+
 	}
 
 	/**

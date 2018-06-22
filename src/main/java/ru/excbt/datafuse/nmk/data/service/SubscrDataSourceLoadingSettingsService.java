@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrDataSource;
 import ru.excbt.datafuse.nmk.data.model.SubscrDataSourceLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.SubscrDataSourceLoadingSettingsRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 @Service
 public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
@@ -26,14 +28,15 @@ public class SubscrDataSourceLoadingSettingsService implements SecuredRoles {
 	@Autowired
 	private SubscrDataSourceLoadingSettingsRepository subscrDataSourceLoadingSettingsRepository;
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param subscrDataSourceId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public SubscrDataSourceLoadingSettings findSubscrDataSourceLoadingSettings(Long subscrDataSourceId) {
-		SubscrDataSourceLoadingSettings result = subscrDataSourceLoadingSettingsRepository.findOne(subscrDataSourceId);
+		SubscrDataSourceLoadingSettings result = subscrDataSourceLoadingSettingsRepository.findById(subscrDataSourceId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrDataSourceLoadingSettings.class, subscrDataSourceId));
 		if (result.getSubscrDataSource() != null) {
 			result.setDataSourceName(result.getSubscrDataSource().getDataSourceName());
 		}
