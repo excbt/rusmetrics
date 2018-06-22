@@ -17,7 +17,7 @@ import { MainMenuService } from './main-menu.service';
 })
 export class LeftMainMenuComponent implements OnInit, OnDestroy {
 
-  display: Boolean;
+  display: boolean;
   mainMenuTogleSubscription: Subscription;
 
   constructor(
@@ -25,7 +25,7 @@ export class LeftMainMenuComponent implements OnInit, OnDestroy {
     // private router: Router
   ) {
     this.mainMenuTogleSubscription = this.mainMenuService.toggleMenuSubject$.subscribe(
-      (displayState: Boolean) => {
+      (displayState: boolean) => {
         this.display = displayState;
       });
   }

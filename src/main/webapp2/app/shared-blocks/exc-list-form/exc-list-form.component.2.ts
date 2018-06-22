@@ -26,7 +26,7 @@ export abstract class ExcListForm2Component<T> implements OnInit, OnDestroy, Aft
 
   dataSource: ExcAbstractPageDataSource<T>;
 
-  public searchString: String;
+  public searchString: string;
 
   totalElements: number;
   pageSize = defaultPageSize;
