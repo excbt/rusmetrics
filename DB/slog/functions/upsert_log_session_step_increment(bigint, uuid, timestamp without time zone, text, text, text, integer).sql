@@ -30,13 +30,14 @@ BEGIN
                 SELECT session_id,step_type,is_incremental
                 FROM   slog.log_session_step 
                 WHERE  session_id = par_session_id and step_type = par_step_type and is_incremental = true
+                    and step_date BETWEEN date_trunc('day', par_step_date - interval '1 day') and date_trunc('day', par_step_date + interval '1 day')
                 FOR UPDATE SKIP LOCKED
         )
-	update slog.log_session_step s
-	set 	sum_rows = sum_rows + v_inc_count, 
-		last_increment_date = GREATEST(last_increment_date, par_step_date)
-	FROM   lss
-	where s.session_id = par_session_id and s.step_type = par_step_type and s.is_incremental = true;
+        update slog.log_session_step s
+        set 	sum_rows = sum_rows + v_inc_count, 
+            last_increment_date = GREATEST(last_increment_date, par_step_date)
+        FROM   lss
+        where s.session_id = par_session_id and s.step_type = par_step_type and s.is_incremental = true;
         
         -- check if the row is found
         IF FOUND THEN
