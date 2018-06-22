@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.service.vm.ContObjectShortInfoVM;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import javax.persistence.Tuple;
@@ -131,16 +132,15 @@ public class ContObjectService implements SecuredRoles {
      */
     @Transactional( readOnly = true)
 	public ContObject findContObjectChecked(Long contObjectId) {
-		ContObject result = contObjectRepository.findOne(contObjectId);
-		if (result == null) {
-			throw new PersistenceException(String.format("ContObject(id=%d) is not found", contObjectId));
-		}
+		ContObject result = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
 		return result;
 	}
 
     @Transactional( readOnly = true)
     public Optional<ContObject> findContObjectOptional(Long contObjectId) {
-        ContObject result = contObjectRepository.findOne(contObjectId);
+        ContObject result = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
 
         return result != null ? Optional.of(result) : Optional.empty();
     }
@@ -189,10 +189,8 @@ public class ContObjectService implements SecuredRoles {
         Objects.requireNonNull(contObject.getId());
 
 
-		ContObject currContObject = contObjectRepository.findOne(contObject.getId());
-		if (currContObject == null) {
-			throw new PersistenceException(String.format("ContObject (ID=%d) not found", contObject.getId()));
-		}
+		ContObject currContObject = contObjectRepository.findById(contObject.getId())
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObject.getId()));
 
 		currContObject.updateFromContObject(contObject);
 
@@ -298,10 +296,8 @@ public class ContObjectService implements SecuredRoles {
 
         // Load existing contObject
         Long contObjectId = contObject.getId();
-        ContObject currContObject = contObjectRepository.findOne(contObjectId);
-        if (currContObject == null) {
-            throw new PersistenceException(String.format("ContObject (ID=%d) not found", contObject.getId()));
-        }
+        ContObject currContObject = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
         currContObject.updateFromContObject(contObject);
 
 
@@ -385,10 +381,8 @@ public class ContObjectService implements SecuredRoles {
 
         // Load existing contObject
         Long contObjectId = contObjectDTO.getId();
-        ContObject currContObject = contObjectRepository.findOne(contObjectId);
-        if (currContObject == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(ContObject.class, contObjectId);
-        }
+        ContObject currContObject = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
         currContObject.updateFromContObjectDTO(contObjectDTO);
 
 
@@ -728,7 +722,7 @@ public class ContObjectService implements SecuredRoles {
 		contObjectFiasList.forEach(i -> {
             EntityActions.softDelete(i);
 		});
-		contObjectFiasRepository.save(contObjectFiasList);
+		contObjectFiasRepository.saveAll(contObjectFiasList);
 
 		contObjectRepository.save(contObject);
 
@@ -990,13 +984,12 @@ public class ContObjectService implements SecuredRoles {
 		List<ContObject> contObjectList = new ArrayList<>();
 
 		if (contObjectMeterPeriodSettingsDTO.isSingle()) {
-			ContObject contObject = contObjectRepository.findOne(contObjectMeterPeriodSettingsDTO.getContObjectId());
-			if (contObject == null) {
-				throw DBExceptionUtil.newEntityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId());
-			}
+			ContObject contObject = contObjectRepository.findById(contObjectMeterPeriodSettingsDTO.getContObjectId())
+                .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectMeterPeriodSettingsDTO.getContObjectId()));
+
 			contObjectList.add(contObject);
 		} else if (contObjectMeterPeriodSettingsDTO.isMulti()) {
-			contObjectList.addAll(contObjectRepository.findAll(contObjectMeterPeriodSettingsDTO.getContObjectIds()));
+			contObjectList.addAll(contObjectRepository.findAllById(contObjectMeterPeriodSettingsDTO.getContObjectIds()));
 		}
 
 		contObjectList.forEach((contObject) -> {

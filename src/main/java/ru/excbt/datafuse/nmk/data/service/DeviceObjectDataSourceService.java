@@ -99,7 +99,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 		if (Boolean.TRUE.equals(deviceObjectDataSource.getIsActive()) && !currentActiveList.isEmpty()) {
 			currentActiveList.stream().filter(i -> !i.getId().equals(deviceObjectDataSource.getId()))
 					.forEach(i -> i.setIsActive(null));
-			deviceObjectDataSourceRepository.save(currentActiveList);
+			deviceObjectDataSourceRepository.saveAll(currentActiveList);
 		}
 		/////
 		return deviceObjectDataSourceRepository.save(deviceObjectDataSource);
@@ -115,7 +115,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	public void makeDeviceDataSourceInactive(Long deviceObjectId) {
 		List<DeviceObjectDataSource> deviceObjectDataSources = selectActiveDeviceObjectDataSource(deviceObjectId);
 		deviceObjectDataSources.forEach(i -> i.setIsActive(null));
-		deviceObjectDataSourceRepository.save(deviceObjectDataSources);
+		deviceObjectDataSourceRepository.saveAll(deviceObjectDataSources);
 	}
 
 

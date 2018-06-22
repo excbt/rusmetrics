@@ -31,6 +31,7 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.sql.Timestamp;
@@ -142,19 +143,15 @@ public class ContZPointService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public ContZPoint findOne(long contZpointId) {
-		ContZPoint result = contZPointRepository.findOne(contZpointId);
-		if (result != null && result.getDeviceObject() != null) {
-            result.getDeviceObject().getId();
-//			result.getDeviceObjects().forEach(j -> {
-//				j.loadLazyProps();
-//			});
-		}
+		ContZPoint result = contZPointRepository.findById(contZpointId)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZpointId));
 		return result;
 	}
 
 	@Transactional(readOnly = true)
 	public ContZPointFullVM findFullVM(long contZpointId) {
-		ContZPoint contZPoint = contZPointRepository.findOne(contZpointId);
+		ContZPoint contZPoint = contZPointRepository.findById(contZpointId)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZpointId));
 		return contZPointMapper.toFullVM(contZPoint);
 	}
 
@@ -209,7 +206,8 @@ public class ContZPointService implements SecuredRoles {
      * @return
      */
 	private LocalDateTime getLastDataDateAggr(final Long contZPointId) {
-        V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findOne(contZPointId);
+        V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findById(contZPointId)
+            .orElseThrow(() -> new EntityNotFoundException(V_LastDataDateAggr.class, contZPointId));
         return lastDataDateAggr != null ? lastDataDateAggr.getLastDataDate() : null;
     }
 
@@ -421,7 +419,8 @@ public class ContZPointService implements SecuredRoles {
         Objects.requireNonNull(contServiceTypeKey);
         Objects.requireNonNull(startDate);
 
-		ContServiceType contServiceType = contServiceTypeRepository.findOne(contServiceTypeKey.getKeyname());
+		ContServiceType contServiceType = contServiceTypeRepository.findById(contServiceTypeKey.getKeyname())
+            .orElseThrow(() -> new EntityNotFoundException(ContEventType.class, contServiceTypeKey.getKeyname()));
         Objects.requireNonNull(contServiceType);
 
 		ContZPoint result = new ContZPoint();
@@ -473,13 +472,11 @@ public class ContZPointService implements SecuredRoles {
             throw new IllegalArgumentException("ContZPointDTO must new");
         }
 
-        ContServiceType contServiceType = contServiceTypeRepository.findOne(contZPointDTO.getContServiceTypeKeyname());
-        Objects.requireNonNull(contServiceType);
+        ContServiceType contServiceType = contServiceTypeRepository.findById(contZPointDTO.getContServiceTypeKeyname())
+            .orElseThrow(() -> new EntityNotFoundException(ContServiceType.class, contZPointDTO.getContServiceTypeKeyname()));
 
-        DeviceObject deviceObject = deviceObjectRepository.findOne(contZPointDTO.getDeviceObjectId());
-        if (deviceObject == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(DeviceObject.class, contZPointDTO.getDeviceObjectId());
-        }
+        DeviceObject deviceObject = deviceObjectRepository.findById(contZPointDTO.getDeviceObjectId())
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class,  contZPointDTO.getDeviceObjectId()));
 
         ContZPoint contZPoint = contZPointMapper.toEntity(contZPointDTO);
         contZPoint.setDeviceObject(deviceObject);
@@ -641,7 +638,8 @@ public class ContZPointService implements SecuredRoles {
     @Secured({ ROLE_ZPOINT_ADMIN })
 	public ContZPointFullVM updateDTO_safe(ContZPointFullVM contZPointFullVM, Consumer<ContZPointFullVM> afterUpdateAction) {
 
-        ContZPoint currentContZPoint = contZPointRepository.findOne(contZPointFullVM.getId());
+        ContZPoint currentContZPoint = contZPointRepository.findById(contZPointFullVM.getId())
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZPointFullVM.getId()));
 
         currentContZPoint.setCustomServiceName(contZPointFullVM.getCustomServiceName());
 

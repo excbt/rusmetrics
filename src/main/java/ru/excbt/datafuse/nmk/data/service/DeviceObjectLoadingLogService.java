@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingLog;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingLogRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с протоколированием загрузки с прибора
@@ -34,7 +35,8 @@ public class DeviceObjectLoadingLogService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public DeviceObjectLoadingLog findOne(Long id) {
-		return deviceObjectLoadingLogRepository.findOne(id);
+		return deviceObjectLoadingLogRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObjectLoadingLog.class, id));
 	}
 
 	/**

@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.dto.SubscrContGroupDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrContGroupMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с группами ContGroup объектов ContObject
@@ -207,7 +208,7 @@ public class ContGroupService {
 							contGroupId, contObjectId));
 		}
 
-		contGroupItemRepository.delete(ids.get(0));
+		contGroupItemRepository.deleteById(ids.get(0));
 	}
 
     /**
@@ -271,12 +272,12 @@ public class ContGroupService {
 	@Secured({ AuthoritiesConstants.SUBSCR_USER, AuthoritiesConstants.SUBSCR_ADMIN })
 	public void deleteOne(Long contGroupId) {
 		checkNotNull(contGroupId);
-		if (contGroupRepository.exists(contGroupId)) {
+		if (contGroupRepository.existsById(contGroupId)) {
 			List<Long> ids = contGroupItemRepository.selectItemIds(contGroupId);
 			for (Long id : ids) {
-				contGroupItemRepository.delete(id);
+				contGroupItemRepository.deleteById(id);
 			}
-			contGroupRepository.delete(contGroupId);
+			contGroupRepository.deleteById(contGroupId);
 		} else {
 			throw new PersistenceException(String.format("Can't delete ContGroup(id=%d)", contGroupId));
 		}
@@ -291,7 +292,7 @@ public class ContGroupService {
 	@Transactional( readOnly = true)
 	public SubscrContGroup findOne(Long contGroupId) {
 		checkNotNull(contGroupId);
-		SubscrContGroup result = contGroupRepository.findOne(contGroupId);
+		SubscrContGroup result = contGroupRepository.findById(contGroupId).orElseThrow(() -> new EntityNotFoundException(SubscrContGroup.class, contGroupId));
 		return result;
 	}
 

@@ -174,7 +174,7 @@ public class ContManagementService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN })
 	public void deletePermanent(List<ContManagement> contManagements) {
 		checkNotNull(contManagements);
-		contManagementRepository.delete(contManagements);
+		contManagementRepository.deleteAll(contManagements);
 	}
 
 }

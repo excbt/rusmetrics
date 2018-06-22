@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.energypassport.EnergyPassportSectionTemp
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportSectionTemplateRepository;
 import ru.excbt.datafuse.nmk.data.repository.EnergyPassportTemplateRepository;
 import ru.excbt.datafuse.nmk.data.energypassport.EnergyPassport401_2014_Add;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -55,7 +56,9 @@ public class EnergyPassportTemplateService {
 
     @Transactional(readOnly = true)
     public EnergyPassportTemplateDTO findOneTemplate(Long id) {
-        EnergyPassportTemplate energyPassportTemplate = energyPassportTemplateRepository.findOne(id);
+        EnergyPassportTemplate energyPassportTemplate = energyPassportTemplateRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassportTemplate.class, id));
+
         EnergyPassportTemplateDTO result = energyPassportTemplate != null ?
             modelMapper.map(energyPassportTemplate, EnergyPassportTemplateDTO.class) : null;
 //        if (energyPassportTemplate.getSectionTemplates() != null)
