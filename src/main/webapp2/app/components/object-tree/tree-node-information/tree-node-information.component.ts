@@ -24,7 +24,7 @@ export class TreeNodeInformationComponent implements OnInit {
         this.route.paramMap.subscribe((params: ParamMap) => console.log(params.get('ptreeNodeId')));
         this.eventManager
             .subscribe('setTreeNode',
-                       (treeNodeId) => { this.treeNodeId = +treeNodeId.content;
+                       (treeNodeId) => { console.log(treeNodeId); this.treeNodeId = +(treeNodeId.content._id || treeNodeId.content.id || treeNodeId.content.nodeObject.id);
                                         console.log('TreeNodeInformationComponent: treeNodeId: ', treeNodeId);
                                        });
     }

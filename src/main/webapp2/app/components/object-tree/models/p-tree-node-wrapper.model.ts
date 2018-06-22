@@ -105,4 +105,8 @@ export class PTreeNodeWrapper {
 //            (this.ptreeNode.childNodes && this.ptreeNode.childNodes.length === 0 &&
 //             this.ptreeNode.linkedNodeObjects && this.ptreeNode.linkedNodeObjects.length === 0);
     }
+    
+    getNodeType() {
+        return this.ptreeNode.nodeType;
+    }
 }

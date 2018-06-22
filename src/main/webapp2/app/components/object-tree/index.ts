@@ -6,8 +6,9 @@ export * from './object-tree.datasource';
 
 export * from './p-tree-node';
 
-export * from './tree-navigate/tree-navigate.component';
-export * from './tree-navigate/tree-navigate.service';
+export * from './tree-navigate';
+// export * from './tree-navigate/tree-navigate.component';
+// export * from './tree-navigate/tree-navigate.service';
 
 export * from './subscr-tree';
 export * from './subscr-pref';

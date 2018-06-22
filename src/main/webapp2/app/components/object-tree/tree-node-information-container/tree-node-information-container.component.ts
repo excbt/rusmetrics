@@ -2,6 +2,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
 
+import { PTreeNodeService } from '../';
+import { TreeNodeInformationContainerService } from './tree-node-information-container.service';
+
+import { PTreeNode } from '../models/p-tree-node.model';
+import { PTreeNodeWrapper } from '../models/p-tree-node-wrapper.model';
+
 @Component({
     selector: 'jhi-tree-node-information-container',
     templateUrl: './tree-node-information-container.component.html',
@@ -17,7 +23,9 @@ export class TreeNodeInformationContainerComponent implements OnInit {
 
     constructor(private eventManager: JhiEventManager,
                  private router: Router,
-                 private route: ActivatedRoute
+                 private route: ActivatedRoute,
+                 private ptreeNodeService: PTreeNodeService,
+                 private treeNodeInformationContainerService: TreeNodeInformationContainerService
                 ) {
 
     }
@@ -45,16 +53,38 @@ export class TreeNodeInformationContainerComponent implements OnInit {
     }
 
     changeNode(event) {
-        const treeNodeId = event.content;
-        this.treeNodeId = +event.content;
-        console.log('TreeNodeInformationContainerComponent: treeNodeId: ', treeNodeId);
-        this.router.navigate([this.currentWidget.url, this.treeNodeId], {relativeTo: this.route});
+        console.log('EVENT: ', event);
+        const treeNodeId = event.content._id || event.content.id || event.content.nodeObject.id;
+//        const treeNodeId = event.content;
+        this.treeNodeId = +treeNodeId;
+//        console.log('TreeNodeInformationContainerComponent: treeNodeId: ', treeNodeId);
+        // get node type
+//        this.ptreeNodeService.loadPTreeNode(treeNodeId, 0).subscribe((resp) => this.successLoadNode(resp));
+        // get widget for node
+        this.successLoadNode(event.content);
+        // navigate to dest. source
+//        this.router.navigate([this.currentWidget.url, this.treeNodeId], {relativeTo: this.route});
     }
 
     changeWidget(widget) {
         console.log(widget);
         this.currentWidget = widget;
         this.router.navigate([widget.url, this.treeNodeId], {relativeTo: this.route});
+    }
+    
+    successLoadNode(node: PTreeNode) {
+        // get node type
+        const nodeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(node, null);
+        const nodeType: string = nodeWrapper.getNodeType();
+        
+        // get widget list for this type
+        this.widgetList = this.treeNodeInformationContainerService.getWidgetList(nodeType);
+        
+        // get current widget for this
+        this.currentWidget = this.treeNodeInformationContainerService.getCurrentWidget(nodeType);
+        
+        //navigate
+        this.router.navigate([this.currentWidget.url, this.treeNodeId], {relativeTo: this.route});
     }
 
 }

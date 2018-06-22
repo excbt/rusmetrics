@@ -44,7 +44,7 @@ export class TreeNavigateComponent implements OnInit {
         this.tree = this.treeNavService.getCurrentTree();
         this.treeNodeLoading = false;
 console.log('Tree', this.tree);
-        this.eventManager.broadcast({name: 'setTreeNode', content: this.tree[0].data._id});
+        this.eventManager.broadcast({name: 'setTreeNode', content: this.tree[0].data});
 //        this.onSetCurrentNodeId.emit(this.tree[0].data.getPTreeNodeId());
         this.subscrObjectTreeList = this.treeNavService.getSubscrObjectTreeList();
 //        this.tree = this.treeNavService.getTree();
@@ -84,7 +84,7 @@ console.log('Tree', this.tree);
 
             this.selectedNode = event.node;
             const ptreeNodeId = event.node.data._id || event.node.data.id || event.node.data.nodeObject.id;
-            this.eventManager.broadcast({name: 'setTreeNode', content: ptreeNodeId});
+            this.eventManager.broadcast({name: 'setTreeNode', content: event.node.data});
 
             if (event.node.data.nodeType !== 'ELEMENT') {
                 this.treeNodeLoading = false;
@@ -119,7 +119,7 @@ console.log(resp);
         this.treeNodeLoading = true;
         this.treeNavService.loadPTreeMonitorAndPTree(subscrObjectTree.id)
             .subscribe(() => {this.tree = this.treeNavService.getCurrentTree();
-                              this.eventManager.broadcast({name: 'setTreeNode', content: this.tree[0].data._id});
+                              this.eventManager.broadcast({name: 'setTreeNode', content: this.tree[0].data});
                               this.treeNodeLoading = false;
                              });
     }

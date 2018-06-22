@@ -17,6 +17,7 @@ import { objectTreeState,
         SubscrTreeService,
         SubscrPrefService,
         PTreeNodeMonitorService,
+        TreeNodeInformationContainerService,
         TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
         TreeNodeColorStatusService,
@@ -103,7 +104,8 @@ import { MatDialogModule } from '@angular/material/dialog';
         ContObjectControlService,
         ContObjectEventService,
         DateUtils,
-        NoticeViewerService
+        NoticeViewerService,
+        TreeNodeInformationContainerService
     ],
     exports: [
         PortalObjectTreeComponent

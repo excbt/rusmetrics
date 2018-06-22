@@ -3,7 +3,8 @@ import { PortalObjectTreeComponent,
 //        TreeNodeInformationContainerComponent,
         TreeNodeInformationComponent,
         TreeNodeColorStatusComponent,
-        TreeNodeControlComponent
+        TreeNodeControlComponent,
+        ContObjectControlComponent
        } from './';
 // import { TreeNodeInformationContainerComponent } from './tree-node-information-container';
 // import { TreeNodeInformationComponent } from './tree-node-information';
@@ -62,6 +63,13 @@ const OBJECT_TREE_ROUTES = [
             {
                 path: 'tree-node-control/:treeNodeId',
                 component: TreeNodeControlComponent,
+                data: {
+                    pageTitle: 'objectTree.TreeNodeControl.title'
+                }
+            },
+            {
+                path: 'cont-object-control/:contObjectId',
+                component: ContObjectControlComponent,
                 data: {
                     pageTitle: 'objectTree.TreeNodeControl.title'
                 }

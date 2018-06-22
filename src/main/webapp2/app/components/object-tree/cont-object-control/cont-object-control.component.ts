@@ -16,6 +16,8 @@ import { ContObjectControlDataSource } from './cont-object-control.datasource';
 
 // import { DateUtils } from '../utils/date-utils';
 
+import { ActivatedRoute, ParamMap } from '@angular/router';
+
 @Component({
     selector: 'jhi-cont-object-control',
     templateUrl: './cont-object-control.component.html',
@@ -44,7 +46,8 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
     selectedResource: string = null;
 
     constructor(private eventManager: JhiEventManager,
-                private contObjectControlService: ContObjectControlService) {}
+                private contObjectControlService: ContObjectControlService,
+                private route: ActivatedRoute) {}
 //                private dialog: MatDialog) {}
 
     ngOnInit() {
@@ -103,17 +106,35 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
         this.displayedColumns = this.cols.filter((col) => col.displayed).map((col) => col.name);
 
         this.dataSource = new ContObjectControlDataSource(this.contObjectControlService);
+        
+        if (this.contObjectList && this.contObjectList.length > 0) {
+            this.performContObjectList();
+        }
 
         this.eventManager.subscribe('contObjectListChanged', (eventData) => {
             this.contObjectList = eventData.content;
 //            console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
             this.performContObjectList();
         });
+        
+//        const tmp = this.route.paramMap.pipe(
+//            switchMap((params: ParamMap) => {
+//                this.contObjectList = [+params.get('treeNodeId')];
+////                return this.treeNodeControlService.loadPTreeNodeLinkedObjects(params.get('treeNodeId'));
+//            })
+//        );
+        
+        this.route.paramMap.subscribe((params: ParamMap) => {
+//            console.log('COC: subscribe on route pramas', params.get('contObjectId'));
+            if (!params.get('contObjectId') || params.get('contObjectId') === null) {
+                return;
+            }
+            this.contObjectList = [+params.get('contObjectId')];
+//            console.log('COC: contObjectList', this.contObjectList);
+            this.performContObjectList();
+        });
 
 //        console.log('contObjectList: ', this.contObjectList);
-        if (this.contObjectList && this.contObjectList.length > 0) {
-            this.performContObjectList();
-        }
 
     }
 

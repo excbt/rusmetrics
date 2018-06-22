@@ -25,6 +25,7 @@ export class TreeNodeControlComponent implements OnInit {
 
         const tmp = this.route.paramMap.pipe(
             switchMap((params: ParamMap) => {
+//                console.log('TreeNodeControlComponent: treeNodeId: ', params.get('treeNodeId'));
                 return this.treeNodeControlService.loadPTreeNodeLinkedObjects(params.get('treeNodeId'));
             })
         );
@@ -33,9 +34,9 @@ export class TreeNodeControlComponent implements OnInit {
     }
 
     performTreeNodeControlData(treeNode: PTreeNode) {
-        console.log(treeNode);
+//        console.log(treeNode);
         this.nodeObjects = this.treeNodeControlService.getNodeObjectIds(treeNode);
-        console.log('TreeNodeControlComponent: nodeObjects: ', this.nodeObjects);
+//        console.log('TreeNodeControlComponent: nodeObjects: ', this.nodeObjects);
         this.eventManager.broadcast({name: 'nodeObjectsChanged', content: this.nodeObjects});
     }
 
