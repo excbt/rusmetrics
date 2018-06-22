@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class TreeNodeInformationContainerService {
 
-    private COMMON_WIDGET_LIST: Widget[] = [];
+//    private COMMON_WIDGET_LIST: Widget[] = [];
     private ELEMENT_WIDGET_LIST: Widget[] = [
         {
             caption: 'Мониторинг',

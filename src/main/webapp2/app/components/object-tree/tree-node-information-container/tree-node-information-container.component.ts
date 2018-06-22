@@ -2,7 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { JhiEventManager } from 'ng-jhipster';
 
-import { PTreeNodeService } from '../';
+// import { PTreeNodeService } from '../';
 import { TreeNodeInformationContainerService } from './tree-node-information-container.service';
 
 import { PTreeNode } from '../models/p-tree-node.model';
@@ -24,7 +24,7 @@ export class TreeNodeInformationContainerComponent implements OnInit {
     constructor(private eventManager: JhiEventManager,
                  private router: Router,
                  private route: ActivatedRoute,
-                 private ptreeNodeService: PTreeNodeService,
+                 /*private ptreeNodeService: PTreeNodeService,*/
                  private treeNodeInformationContainerService: TreeNodeInformationContainerService
                 ) {
 
