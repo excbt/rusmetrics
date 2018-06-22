@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.service.utils.ColumnHelper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeDataVM;
 import ru.excbt.datafuse.nmk.service.vm.SubscrObjectTreeVM;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
@@ -104,7 +105,8 @@ public class SubscrObjectTreeService {
 	 */
 	@Transactional( readOnly = true)
 	public SubscrObjectTree selectSubscrObjectTree(Long id) {
-		return subscrObjectTreeRepository.findOne(id);
+		return subscrObjectTreeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, id));
 	}
 
     /**
@@ -114,7 +116,8 @@ public class SubscrObjectTreeService {
      */
 	@Transactional( readOnly = true)
 	public SubscrObjectTreeDTO findSubscrObjectTreeDTO(Long id) {
-	    SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
+	    SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, id));
         SubscrObjectTreeDTO dto = subscrObjectTreeMapper.toDto(ObjectFilters.deletedFilter(subscrObjectTree));
         sortChildObjects(dto);
 		return dto;
@@ -136,7 +139,8 @@ public class SubscrObjectTreeService {
 
     @Transactional( readOnly = true)
     public SubscrObjectTreeVM findSubscrObjectTreeVM(Long id) {
-        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findOne(id);
+        SubscrObjectTree subscrObjectTree = subscrObjectTreeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrObjectTree.class, id));
         SubscrObjectTreeVM result = subscrObjectTreeMapper.toVM(ObjectFilters.deletedFilter(subscrObjectTree));
         return result;
     }
@@ -759,16 +763,16 @@ public class SubscrObjectTreeService {
                                              PortalUserIds portalUserIds,
                                              Long subscriberId) {
 
-        SubscrObjectTree node = subscrObjectTreeRepository.findOne(treeNodeId);
-        if (node == null) {
+        Optional<SubscrObjectTree> nodeOpt = subscrObjectTreeRepository.findById(treeNodeId);
+        if (!nodeOpt.isPresent()) {
             return Optional.empty();
         }
-        if (!node.getSubscriberId().equals(subscriberId)) {
+        if (nodeOpt.get().getSubscriberId().equals(subscriberId)) {
             return Optional.empty();
         }
 
-        node.setIsActive(isActive);
-        SubscrObjectTree savedNode = subscrObjectTreeRepository.saveAndFlush(node);
+        nodeOpt.get().setIsActive(isActive);
+        SubscrObjectTree savedNode = subscrObjectTreeRepository.saveAndFlush(nodeOpt.get());
 
 	    return Optional.ofNullable(subscrObjectTreeMapper.toVM(savedNode));
     }
@@ -778,22 +782,22 @@ public class SubscrObjectTreeService {
                                               ObjectTreeTypeKeyname objectTreeType,
                                               PortalUserIds portalUserIds,
                                               Long subscriberId) {
-        SubscrObjectTree deleteCanidate = subscrObjectTreeRepository.findOne(treeNodeId);
+        Optional<SubscrObjectTree> deleteCanidate = subscrObjectTreeRepository.findById(treeNodeId);
 
-        if (deleteCanidate == null) {
+        if (!deleteCanidate.isPresent()) {
             return false;
         }
 
-        if (!deleteCanidate.getSubscriberId().equals(subscriberId) || !portalUserIds.isRma()) {
+        if (!deleteCanidate.get().getSubscriberId().equals(subscriberId) || !portalUserIds.isRma()) {
             return false;
         }
 
-        if (!deleteCanidate.getObjectTreeType().equals(objectTreeType.getKeyname())) {
+        if (!deleteCanidate.get().getObjectTreeType().equals(objectTreeType.getKeyname())) {
             return false;
         }
 
-        deleteCanidate.setDeleted(1);
-        subscrObjectTreeRepository.saveAndFlush(deleteCanidate);
+        deleteCanidate.get().setDeleted(1);
+        subscrObjectTreeRepository.saveAndFlush(deleteCanidate.get());
         return true;
     }
 
@@ -813,18 +817,19 @@ public class SubscrObjectTreeService {
 
 
 
-        SubscrObjectTree parentNode = subscrObjectTreeRepository.findOne(vm.getParentId());
+        Optional<SubscrObjectTree> parentNodeOpt = subscrObjectTreeRepository.findById(vm.getParentId());
 
-	    if (parentNode == null || !parentNode.getSubscriberId().equals(subscriberId)) {
+	    if (!parentNodeOpt.isPresent() || parentNodeOpt.filter(n -> !n.getSubscriberId().equals(subscriberId)).isPresent()) {
             return Optional.empty();
         }
 
-        if (ADD_MODE_SIBLING.equals(addMode) && parentNode.getParent() != null) {
+        SubscrObjectTree parentNode = parentNodeOpt.get();
+        if (ADD_MODE_SIBLING.equals(addMode) && parentNodeOpt.get().getParent() != null) {
 	        parentNode = parentNode.getParent();
         }
 
         Optional<SubscrObjectTree> editedNodeOpt = vm.getId() != null ?
-            Optional.ofNullable(subscrObjectTreeRepository.findOne(vm.getId())) :
+            subscrObjectTreeRepository.findById(vm.getId()) :
             Optional.empty();
 
         SubscrObjectTree editedNode;
@@ -867,7 +872,7 @@ public class SubscrObjectTreeService {
         }
 
         Optional<SubscrObjectTree> editedNodeOpt = vm.getId() != null ?
-            Optional.ofNullable(subscrObjectTreeRepository.findOne(vm.getId())) :
+            subscrObjectTreeRepository.findById(vm.getId()) :
             Optional.empty();
 
         SubscrObjectTree editedNode;

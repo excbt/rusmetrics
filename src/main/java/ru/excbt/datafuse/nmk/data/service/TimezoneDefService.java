@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.TimezoneDef;
 import ru.excbt.datafuse.nmk.data.repository.keyname.TimezoneDefRepository;
 import ru.excbt.datafuse.nmk.service.dto.TimezoneDefDTO;
 import ru.excbt.datafuse.nmk.service.mapper.TimezoneDefMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с временными зонами
@@ -95,7 +96,8 @@ public class TimezoneDefService {
 		if (keyname == null) {
 			return null;
 		}
-		return timezoneDefRepository.findOne(keyname);
+		return timezoneDefRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(TimezoneDef.class, keyname));
 	}
 
 }

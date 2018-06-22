@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.service.ContObjectQueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.util.*;
@@ -407,7 +408,8 @@ public class SubscrContEventNotificationService {
 	 */
 	@Transactional(readOnly = true)
 	public SubscrContEventNotification findNotification(Long id) {
-		SubscrContEventNotification result = subscrContEventNotificationRepository.findOne(id);
+		SubscrContEventNotification result = subscrContEventNotificationRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrContEventNotification.class, id));
 		initContEvent(result);
 		return result;
 	}
@@ -425,11 +427,8 @@ public class SubscrContEventNotificationService {
 		checkNotNull(isNew);
 
 		SubscrContEventNotification updateCandidate = subscrContEventNotificationRepository
-				.findOne(subscrContEventNotificationId);
-		if (updateCandidate == null) {
-			throw new PersistenceException(String.format("SubscrContEventNotification with id=%d is not found",
-					subscrContEventNotificationId));
-		}
+				.findById(subscrContEventNotificationId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrContEventNotification.class, subscrContEventNotificationId));
 
 		return updateNotificationRevision(portalUserIds, updateCandidate, isNew);
 

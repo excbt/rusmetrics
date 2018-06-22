@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -90,10 +91,10 @@ public class CustomPersistentRememberMeServices extends
 
 
         UserPersistentToken token;
-        V_FullUserInfo user = null;
+        Optional<V_FullUserInfo> userOpt;
         try {
             token = getPersistentToken(cookieTokens);
-            user = userRepository.findOne(token.getUserId());
+            userOpt = userRepository.findById(token.getUserId());
         } catch (CookieTheftException e) {
             // We catch CookieTheftException and throw RememberMeAuthenticationException,
             // because CookieTheftException doesn't redirect to login form
@@ -102,12 +103,12 @@ public class CustomPersistentRememberMeServices extends
         }
 
 
-        if (user == null) {
+        if (!userOpt.isPresent()) {
             log.error("User with ID: {} is not found in V_FullUserInfo", token.getUserId());
             throw new RememberMeAuthenticationException("Autologin failed due to data access problem");
         }
 
-        String login = user.getUserName();
+        String login = userOpt.get().getUserName();
 
         // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
         log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
@@ -184,27 +185,27 @@ public class CustomPersistentRememberMeServices extends
         }
         String presentedSeries = cookieTokens[0];
         String presentedToken = cookieTokens[1];
-        UserPersistentToken token = persistentTokenRepository.findOne(presentedSeries);
+        Optional<UserPersistentToken> tokenOpt = persistentTokenRepository.findById(presentedSeries);
 
-        if (token == null) {
+        if (!tokenOpt.isPresent()) {
             // No series match, so we can't authenticate using this cookie
             throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }
 
         // We have a match for this user/series combination
         //log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
-        if (!presentedToken.equals(token.getTokenValue())) {
+        if (!presentedToken.equals(tokenOpt.get().getTokenValue())) {
             // Token doesn't match series value. Delete this session and throw an exception.
-            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
+            persistentTokenRepository.deleteTokenBySeries(tokenOpt.get().getSeries());
             throw new CookieTheftException("Invalid remember-me token (Series/token) mismatch. Implies previous " +
                 "cookie theft attack.");
         }
 
-        if (token.getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
-            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
+        if (tokenOpt.get().getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
+            persistentTokenRepository.deleteTokenBySeries(tokenOpt.get().getSeries());
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }
-        return token;
+        return tokenOpt.get();
     }
 
     private String generateSeriesData() {

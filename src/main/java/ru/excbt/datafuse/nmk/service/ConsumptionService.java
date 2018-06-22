@@ -908,7 +908,7 @@ public class ConsumptionService {
 
         log.debug("End loop for: {} keys", periodDataMap.keySet().size());
 
-        consumptionRepository.save(consumptionDataList);
+        consumptionRepository.saveAll(consumptionDataList);
         consumptionRepository.flush();
 
         TaskDataCounter counter = new TaskDataCounter(inDataList.size(), consumptionDataList.size());

@@ -46,6 +46,7 @@ import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с абонентами
@@ -111,17 +112,14 @@ public class SubscriberService implements SecuredRoles {
     @Deprecated
 	@Transactional( readOnly = true)
 	public Subscriber selectSubscriber(Long subscriberId) {
-		Subscriber result = subscriberRepository.findOne(subscriberId);
-		if (result == null) {
-			throw new PersistenceException(String.format("Subscriber(id=%d) is not found", subscriberId));
-		}
-
+		Subscriber result = subscriberRepository.findById(subscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriberId));
 		return result;
 	}
 
 	@Transactional( readOnly = true)
 	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
-		return Optional.ofNullable(subscriberMapper.toDto(subscriberRepository.findOne(subscriberId)));
+		return subscriberRepository.findById(subscriberId).map(subscriberMapper::toDto);
 	}
 
 	/**
@@ -164,7 +162,7 @@ public class SubscriberService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public Optional<Subscriber> findOneSubscriber(Long subscriberId) {
-		return Optional.ofNullable(subscriberRepository.findOne(subscriberId));
+		return subscriberRepository.findById(subscriberId);
 	}
 
 	/**
@@ -221,24 +219,25 @@ public class SubscriberService implements SecuredRoles {
 	 * @return
 	 */
 	public Subscriber getLdapSubscriber(Long subscriberId) {
-		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-		if (subscriber == null) {
+		Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+		if (!subscriberOpt.isPresent()) {
 			return null;
 		}
-		if (Boolean.TRUE.equals(subscriber.getIsRma())) {
-			return subscriber;
+		if (Boolean.TRUE.equals(subscriberOpt.get().getIsRma())) {
+			return subscriberOpt.get();
 		}
 
-		if (subscriber.getRmaLdapOu() != null) {
-			return subscriber;
+		if (subscriberOpt.get().getRmaLdapOu() != null) {
+			return subscriberOpt.get();
 		}
 
-		if (subscriber.getRmaSubscriberId() == null) {
+		if (subscriberOpt.get().getRmaSubscriberId() == null) {
 			return null;
 		}
 
-		Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
-		return rmaSubscriber == null ? null : subscriber;
+		Optional<Subscriber> rmaSubscriberOpt = subscriberOpt
+            .flatMap(i -> subscriberRepository.findById(i.getRmaSubscriberId()));
+		return rmaSubscriberOpt.flatMap(i -> subscriberOpt).orElse(null);
 	}
 
 	/**
@@ -415,8 +414,8 @@ public class SubscriberService implements SecuredRoles {
      * @return
      */
 	public Long getRmaSubscriberId(PortalUserIds portalUserIds) {
-	    Subscriber s = Optional.ofNullable(subscriberRepository.findOne(portalUserIds.getSubscriberId()))
-            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, portalUserIds.getSubscriberId()));
+	    Subscriber s = subscriberRepository.findById(portalUserIds.getSubscriberId())
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, portalUserIds.getSubscriberId()));
 	    return s.getIsRma() ? s.getId() : s.getRmaSubscriberId();
     }
 
@@ -451,11 +450,8 @@ public class SubscriberService implements SecuredRoles {
 
     @Transactional(readOnly = true)
     public boolean checkParentSubscriber(Long subcriberId, PortalUserIds portalUserIds) {
-        Subscriber subscriber = subscriberRepository.findOne(subcriberId);
-        if (subscriber == null) {
-            return false;
-        }
-        return portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId());
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subcriberId);
+        return subscriberOpt.map(s -> portalUserIds.getSubscriberId().equals(s.getRmaSubscriberId())).orElse(false);
     }
     //public void
 }

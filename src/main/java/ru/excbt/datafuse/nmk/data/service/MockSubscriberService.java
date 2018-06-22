@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Optional;
 
@@ -65,8 +66,7 @@ public class MockSubscriberService {
 
 		logger.warn("ATTENTION!!! Using MockUser");
 
-		return Optional.ofNullable(subscriberRepository.findOne(mockSubscriberId))
-            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, mockSubscriberId));
-
+		return subscriberRepository.findById(mockSubscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, mockSubscriberId));
 	}
 }

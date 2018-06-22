@@ -24,6 +24,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBEntityUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.vm.SubscriberVM;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
@@ -84,9 +85,8 @@ public class SubscriberManageService {
 
         // Can Create Child LDAP ou set
         if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
-            Subscriber s = subscriberRepository.findOne(subscriber.getId());
-
-            DBEntityUtil.requireNotNull(s, subscriber.getId(), Subscriber.class);
+            Subscriber s = subscriberRepository.findById(subscriber.getId())
+                .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriber.getId()));
 
             if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
                 subscriber.setChildLdapOu(SubscriberLdapService.buildCabinetsOuName(subscriber.getId()));
@@ -214,21 +214,21 @@ public class SubscriberManageService {
         checkArgument(subscriberVM.getId() != null);
 
 
-        Subscriber existingSubscriber = subscriberRepository.findOne(subscriberVM.getId());
+        Optional<Subscriber> existingSubscriberOpt = subscriberRepository.findById(subscriberVM.getId());
 
-        if (existingSubscriber == null) {
+        if (!existingSubscriberOpt.isPresent()) {
             return Optional.empty();
         }
 
-        if (!portalUserIds.getSubscriberId().equals(existingSubscriber.getRmaSubscriberId())) {
+        if (!portalUserIds.getSubscriberId().equals(existingSubscriberOpt.get().getRmaSubscriberId())) {
             throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriberVM.getId());
         }
 
-        String childLdapOu = processLdapOus(existingSubscriber);
-        existingSubscriber.setChildLdapOu(childLdapOu);
+        String childLdapOu = processLdapOus(existingSubscriberOpt.get());
+        existingSubscriberOpt.get().setChildLdapOu(childLdapOu);
 
-        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
-        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
+        subscriberMapper.updateSubscriber(existingSubscriberOpt.get(), subscriberVM);
+        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriberOpt.get());
 
         // Make default Report Paramset
         reportParamsetService.createDefaultReportParamsets(updatedSubscriber);
@@ -251,21 +251,21 @@ public class SubscriberManageService {
         checkArgument(subscriberVM.getId() != null);
 
 
-        Subscriber existingSubscriber = subscriberRepository.findOne(subscriberVM.getId());
+        Optional<Subscriber> existingSubscriberOpt = subscriberRepository.findById(subscriberVM.getId());
 
-        if (existingSubscriber == null) {
+        if (!existingSubscriberOpt.isPresent()) {
             return Optional.empty();
         }
 
-        if (!Boolean.TRUE.equals(existingSubscriber.getIsRma())) {
+        if (!Boolean.TRUE.equals(existingSubscriberOpt.get().getIsRma())) {
             throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriberVM.getId());
         }
 
-        String childLdapOu = processLdapOus(existingSubscriber);
-        existingSubscriber.setChildLdapOu(childLdapOu);
+        String childLdapOu = processLdapOus(existingSubscriberOpt.get());
+        existingSubscriberOpt.get().setChildLdapOu(childLdapOu);
 
-        subscriberMapper.updateSubscriber(existingSubscriber, subscriberVM);
-        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriber);
+        subscriberMapper.updateSubscriber(existingSubscriberOpt.get(), subscriberVM);
+        Subscriber updatedSubscriber = subscriberRepository.save(existingSubscriberOpt.get());
 
         // Make default Report Paramset
         reportParamsetService.createDefaultReportParamsets(updatedSubscriber);
@@ -287,8 +287,8 @@ public class SubscriberManageService {
         Objects.requireNonNull(rmaSubscriberId);
 
 
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        DBEntityUtil.requireNotNull(subscriber, subscriberId, Subscriber.class);
+        Subscriber subscriber = subscriberRepository.findById(subscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriberId));
 
         if (!rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
             throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
@@ -313,15 +313,14 @@ public class SubscriberManageService {
         subscriber.setRmaSubscriberId(rmaSubscriberId);
         checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));
 
-        Subscriber checkSubscriber = subscriberRepository.findOne(subscriber.getId());
-        if (checkSubscriber == null || checkSubscriber.getDeleted() == 1) {
-            throw new PersistenceException(
-                String.format("Subscriber (id=%d) is not found or deleted", subscriber.getId()));
-        }
+        Subscriber checkSubscriber = subscriberRepository.findById(subscriber.getId())
+            .filter(s -> s.getDeleted() == 0)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriber.getId()));
 
         // Can Create Child LDAP ou set
         if (BooleanUtils.isTrue(subscriber.getCanCreateChild())) {
-            Subscriber s = subscriberRepository.findOne(subscriber.getId());
+            Subscriber s = checkSubscriber;
+            //subscriberRepository.findOne(subscriber.getId());
             if (s.getChildLdapOu() == null || s.getChildLdapOu().isEmpty()) {
                 subscriber.setChildLdapOu(subscriberLdapService.buildCabinetsOuName(subscriber.getId()));
             } else {
@@ -359,7 +358,8 @@ public class SubscriberManageService {
         Objects.requireNonNull(subscriberId);
         Objects.requireNonNull(rmaSubscriberId);
 
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
+        Subscriber subscriber = subscriberRepository.findById(subscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriberId));
         if (subscriber.getRmaSubscriberId() != null && !rmaSubscriberId.equals(subscriber.getRmaSubscriberId())) {
             throw new PersistenceException(String.format("Can't delete Subscriber (id=%d). Invalid RMA", subscriberId));
         }

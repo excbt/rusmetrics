@@ -1,15 +1,12 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkState;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
-import java.util.Optional;
+import static com.google.common.base.Preconditions.checkState;
 
 @Service
 public class BenchmarkService {
@@ -38,10 +35,9 @@ public class BenchmarkService {
 	 */
 	public void setBenchmarkSubscriberId(Long benchmarkSubscriberId) {
 
-	    Subscriber subscriber = subscriberRepository.findOne(benchmarkSubscriberId);
-	    if (subscriber == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, benchmarkSubscriberId);
-        }
+	    Subscriber subscriber = subscriberRepository.findById(benchmarkSubscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, benchmarkSubscriberId));
+
 		this.benchmarkSubscriberId = benchmarkSubscriberId;
 	}
 

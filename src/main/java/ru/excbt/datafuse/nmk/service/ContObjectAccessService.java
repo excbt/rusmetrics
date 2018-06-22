@@ -357,12 +357,12 @@ public class ContObjectAccessService {
     @Transactional
     public boolean grantContObjectAccess(PortalUserIds portalUserIds, Long subscriberId, Long contObjectId) {
         QContObjectAccess qContObjectAccess = QContObjectAccess.contObjectAccess;
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+        if (!subscriberOpt.isPresent()) {
             return false;
         }
 
-        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+        if (subscriberOpt.filter(s -> !portalUserIds.getSubscriberId().equals(s.getRmaSubscriberId())).isPresent()) {
             return false;
         }
 
@@ -397,12 +397,12 @@ public class ContObjectAccessService {
      */
     @Transactional
     public boolean revokeContObjectAccess(PortalUserIds portalUserIds, Long subscriberId, Long contObjectId) {
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+        if (!subscriberOpt.isPresent()) {
             return false;
         }
 
-        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+        if (subscriberOpt.filter(s -> !portalUserIds.getSubscriberId().equals(s.getRmaSubscriberId())).isPresent() ) {
             return false;
         }
 
@@ -414,12 +414,12 @@ public class ContObjectAccessService {
     @Transactional
     public boolean grantContZPointAccess(PortalUserIds portalUserIds, Long subscriberId, Long contZPointId) {
         QContZPointAccess qContZPointAccess = QContZPointAccess.contZPointAccess;
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+        if (!subscriberOpt.isPresent()) {
             return false;
         }
 
-        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+        if (subscriberOpt.filter(s -> !portalUserIds.getSubscriberId().equals(s.getRmaSubscriberId())).isPresent()) {
             return false;
         }
 
@@ -469,12 +469,12 @@ public class ContObjectAccessService {
      */
     @Transactional
     public boolean revokeContZPointAccess(PortalUserIds portalUserIds, Long subscriberId, Long contZPointId) {
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+        if (!subscriberOpt.isPresent()) {
             return false;
         }
 
-        if (!portalUserIds.getSubscriberId().equals(subscriber.getRmaSubscriberId())) {
+        if (subscriberOpt.filter(s -> !portalUserIds.getSubscriberId().equals(s.getRmaSubscriberId())).isPresent()) {
             return false;
         }
 

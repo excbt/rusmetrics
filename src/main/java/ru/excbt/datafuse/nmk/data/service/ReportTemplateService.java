@@ -2,7 +2,6 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,11 +12,13 @@ import ru.excbt.datafuse.nmk.data.repository.ReportTemplateBodyRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTemplateRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.security.AuthoritiesConstants;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -60,7 +61,8 @@ public class ReportTemplateService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportTemplate findOne(long reportTemplateId) {
-		ReportTemplate result = reportTemplateRepository.findOne(reportTemplateId);
+		ReportTemplate result = reportTemplateRepository.findById(reportTemplateId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportTemplate.class, reportTemplateId));
 		return result;
 	}
 
@@ -141,10 +143,10 @@ public class ReportTemplateService {
 	public void deleteOne(long reportTemplateId) {
 
 		if (checkCanUpdate(reportTemplateId)) {
-			if (reportTemplateBodyRepository.exists(reportTemplateId)) {
-				reportTemplateBodyRepository.delete(reportTemplateId);
+			if (reportTemplateBodyRepository.existsById(reportTemplateId)) {
+				reportTemplateBodyRepository.deleteById(reportTemplateId);
 			}
-			reportTemplateRepository.delete(reportTemplateId);
+			reportTemplateRepository.deleteById(reportTemplateId);
 		} else {
 			throw new PersistenceException(String.format("Can't delete report template (id=%d)", reportTemplateId));
 		}
@@ -173,10 +175,10 @@ public class ReportTemplateService {
 	public void deleteOneCommon(long reportTemplateId) {
 
 		if (checkIsCommon(reportTemplateId)) {
-			if (reportTemplateBodyRepository.exists(reportTemplateId)) {
-				reportTemplateBodyRepository.delete(reportTemplateId);
+			if (reportTemplateBodyRepository.existsById(reportTemplateId)) {
+				reportTemplateBodyRepository.deleteById(reportTemplateId);
 			}
-			reportTemplateRepository.delete(reportTemplateId);
+			reportTemplateRepository.deleteById(reportTemplateId);
 		} else {
 			throw new PersistenceException(String.format("Can't delete report template (id=%d)", reportTemplateId));
 		}
@@ -277,11 +279,14 @@ public class ReportTemplateService {
 	 */
 	private void saveReportTemplateBodyInternal(long reportTemplateId, byte[] body, String filename,
 			boolean isCompiled) {
-		ReportTemplateBody rtb = reportTemplateBodyRepository.findOne(reportTemplateId);
-		if (rtb == null) {
+		Optional<ReportTemplateBody> rtbOpt = reportTemplateBodyRepository.findById(reportTemplateId);
+        ReportTemplateBody rtb;
+		if (!rtbOpt.isPresent()) {
 			rtb = new ReportTemplateBody();
 			rtb.setReportTemplateId(reportTemplateId);
-		}
+		} else {
+		    rtb = rtbOpt.get();
+        }
 
 		if (isCompiled) {
 			rtb.setBodyCompiled(body);
@@ -336,8 +341,8 @@ public class ReportTemplateService {
 		checkNotNull(subscriber);
 		checkArgument(!subscriber.isNew());
 
-		ReportTemplate srcReportTemplate = reportTemplateRepository.findOne(srcId);
-		checkNotNull(srcReportTemplate, "Report Template not found. id=" + srcId);
+		ReportTemplate srcReportTemplate = reportTemplateRepository.findById(srcId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportTemplate.class, srcId));
 
 		reportTemplate.setReportTypeKeyname(srcReportTemplate.getReportTypeKeyname());
 		reportTemplate.setSubscriber(subscriber);
@@ -384,10 +389,9 @@ public class ReportTemplateService {
 			return null;
 		}
 
-		ReportTemplate rt = reportTemplateRepository.findOne(reportTemplateId);
-		if (rt == null) {
-			throw new PersistenceException(String.format("ReportTemplate (id=%d) not found", reportTemplateId));
-		}
+		ReportTemplate rt = reportTemplateRepository.findById(reportTemplateId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportTemplate.class, reportTemplateId));
+
 		if (!rt.is_active()) {
 			throw new PersistenceException(
 					String.format("ReportTemplate (id=%d) is alredy archived", reportTemplateId));
@@ -406,7 +410,8 @@ public class ReportTemplateService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportTemplateBody getReportTemplateBody(long reportTemplateId) {
-		return reportTemplateBodyRepository.findOne(reportTemplateId);
+		return reportTemplateBodyRepository.findById(reportTemplateId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportMasterTemplateBody.class, reportTemplateId));
 	}
 
 	/**
@@ -525,8 +530,8 @@ public class ReportTemplateService {
 	@Transactional
 	public void updateTemplateBodyFromMaster(ReportTypeKey reportTypeKey, long reportTemplateId, boolean isCompiled) {
 
-		ReportTemplate reportTemplate = reportTemplateRepository.findOne(reportTemplateId);
-		checkNotNull(reportTemplate);
+		ReportTemplate reportTemplate = reportTemplateRepository.findById(reportTemplateId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportTemplate.class, reportTemplateId));
 
 		ReportMasterTemplateBody reportMasterTemplateBody = reportMasterTemplateBodyService
 				.selectReportMasterTemplate(reportTypeKey);

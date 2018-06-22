@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.data.repository.keyname.DataSourceTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с источниками данных абонента
@@ -63,11 +64,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 	private void initSubscrDataSource(SubscrDataSource subscrDataSource) {
 		checkNotNull(subscrDataSource);
 		checkNotNull(subscrDataSource.getDataSourceTypeKey());
-		DataSourceType dataSourceType = dataSourceTypeRepository.findOne(subscrDataSource.getDataSourceTypeKey());
-		if (dataSourceType == null) {
-			throw new PersistenceException(
-					String.format("DataSourceType (id=%s) is not found", subscrDataSource.getDataSourceTypeKey()));
-		}
+		DataSourceType dataSourceType = dataSourceTypeRepository.findById(subscrDataSource.getDataSourceTypeKey())
+            .orElseThrow(() -> new EntityNotFoundException(DataSourceType.class, subscrDataSource.getDataSourceTypeKey()));
+
 		subscrDataSource.setDataSourceType(dataSourceType);
 		checkNotNull(subscrDataSource.getSubscriberId());
 		Subscriber subscriber = subscriberService.selectSubscriber(subscrDataSource.getSubscriberId());
@@ -121,10 +120,9 @@ public class SubscrDataSourceService implements SecuredRoles {
 	@Transactional
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOne(Long dataSourceId) {
-		SubscrDataSource dataSource = subscrDataSourceRepository.findOne(dataSourceId);
-		if (dataSource == null) {
-			throw new PersistenceException(String.format("SubscrDataSource (id=%d) is not found", dataSourceId));
-		}
+		SubscrDataSource dataSource = subscrDataSourceRepository.findById(dataSourceId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrDataSource.class, dataSourceId));
+
 		dataSource.setDeleted(1);
 		updateOne(dataSource);
 	}
@@ -193,8 +191,10 @@ public class SubscrDataSourceService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public SubscrDataSourceDTO findOne(Long dataSourceId) {
-        return Stream.of(subscrDataSourceRepository.findOne(dataSourceId))
-            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE).findFirst().map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
+        return subscrDataSourceRepository.findById(dataSourceId)
+            .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
+            .map(subscrDataSourceMapper::toDto)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrDataSource.class, dataSourceId));
 	}
 
 

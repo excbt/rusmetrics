@@ -1,28 +1,23 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.repository.*;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 @Service
 public class TemperatureChartService implements SecuredRoles {
@@ -85,13 +80,8 @@ public class TemperatureChartService implements SecuredRoles {
 	@Transactional(readOnly = true)
 	public List<TemperatureChart> selectTemperatureChartsByContZPointId(Long contZPointId) {
 
-	    ContZPoint contZPoint = contZPointRepository.findOne(contZPointId);
-
-		Long contObjectId = contZPoint != null ? contZPoint.getContObjectId() : null;
-		if (contObjectId == null) {
-			throw new PersistenceException(String.format("ContZPoint (id=%d) is invalid", contZPointId));
-		}
-
+		Long contObjectId = contZPointRepository.findById(contZPointId).map(ContZPoint::getContObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZPointId));
 		return selectTemperatureChartsByContObjectId(contObjectId);
 	}
 
@@ -135,7 +125,8 @@ public class TemperatureChartService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public TemperatureChart selectTemperatureChart(Long id) {
-		return temperatureChartRepository.findOne(id);
+		return temperatureChartRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(TemperatureChart.class, id));
 	}
 
 	/**
@@ -153,8 +144,8 @@ public class TemperatureChartService implements SecuredRoles {
 
 		//Organization rsoOrg = organizationService.selectOrganization(entity.getRsoOrganizationId());
 
-        Organization rsoOrg = Optional.ofNullable(organizationRepository.findOne(entity.getRsoOrganizationId()))
-            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, entity.getRsoOrganizationId()));
+        Organization rsoOrg = organizationRepository.findById(entity.getRsoOrganizationId())
+            .orElseThrow(() -> new EntityNotFoundException(Organization.class, entity.getRsoOrganizationId()));
 
 		if (!Boolean.TRUE.equals(rsoOrg.getFlagRso())) {
 			throw new IllegalArgumentException("Invalid rsoOrganizationId: " + entity.getRsoOrganizationId());
@@ -162,11 +153,9 @@ public class TemperatureChartService implements SecuredRoles {
 
 		entity.setRsoOrganization(rsoOrg);
 
-		LocalPlace localPlace = localPlaceRepository.findOne(entity.getLocalPlaceId());
+		LocalPlace localPlace = localPlaceRepository.findById(entity.getLocalPlaceId())
+            .orElseThrow(() -> new EntityNotFoundException(LocalPlace.class, entity.getLocalPlaceId()));
 
-		if (localPlace == null) {
-			throw new IllegalArgumentException("Invalid localPlaceId: " + entity.getLocalPlaceId());
-		}
 		entity.setLocalPlace(localPlace);
 
 		return temperatureChartRepository.save(entity);
@@ -179,10 +168,8 @@ public class TemperatureChartService implements SecuredRoles {
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
 	@Transactional
 	public void deleteTemperatureChart(Long id) {
-		TemperatureChart entity = temperatureChartRepository.findOne(id);
-		if (entity == null) {
-			throw new PersistenceException(String.format("TemperatureChart (id=%d) is not found", id));
-		}
+		TemperatureChart entity = temperatureChartRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(TemperatureChart.class, id));
 		temperatureChartRepository.save(EntityActions.softDelete(entity));
 	}
 
@@ -204,7 +191,8 @@ public class TemperatureChartService implements SecuredRoles {
      */
 	@Transactional( readOnly = true)
 	public TemperatureChartItem selectTemperatureChartItem(Long temperatureChartItemId) {
-		return temperatureChartItemRepository.findOne(temperatureChartItemId);
+		return temperatureChartItemRepository.findById(temperatureChartItemId)
+            .orElseThrow(() -> new EntityNotFoundException(TemperatureChartItem.class, temperatureChartItemId));
 	}
 
 	/**
@@ -223,12 +211,8 @@ public class TemperatureChartService implements SecuredRoles {
 		}
 
 		if (entity.getTemperatureChart() == null) {
-			TemperatureChart chart = temperatureChartRepository.findOne(entity.getTemperatureChartId());
-			if (chart == null) {
-				throw new PersistenceException(
-						String.format("TemperatureChart (id=%d) is not found", entity.getTemperatureChartId()));
-			}
-
+			TemperatureChart chart = temperatureChartRepository.findById(entity.getTemperatureChartId())
+                .orElseThrow(() -> new EntityNotFoundException(TemperatureChart.class, entity.getTemperatureChartId()));
 			entity.setTemperatureChart(chart);
 		}
 
@@ -242,10 +226,8 @@ public class TemperatureChartService implements SecuredRoles {
 	@Secured({ ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_ADMIN })
 	@Transactional
 	public void deleteTemperatureChartItem(Long id) {
-		TemperatureChartItem entity = temperatureChartItemRepository.findOne(id);
-		if (entity == null) {
-			throw new PersistenceException(String.format("TemperatureChartItem (id=%d) is not found", id));
-		}
+		TemperatureChartItem entity = temperatureChartItemRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(TemperatureChartItem.class, id));
 		temperatureChartItemRepository.save(EntityActions.softDelete(entity));
 	}
 

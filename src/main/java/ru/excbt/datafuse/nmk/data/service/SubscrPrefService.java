@@ -2,10 +2,7 @@ package ru.excbt.datafuse.nmk.data.service;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -133,7 +130,7 @@ public class SubscrPrefService implements SecuredRoles {
 
 		List<SubscrPrefValue> result = filterSubscriberPrefValues(portalUserIds.getSubscriberId(),
 				subscrTypeKey.getKeyname(), prefValueList);
-		return Lists.newArrayList(subscrPrefValueRepository.save(result));
+		return Lists.newArrayList(subscrPrefValueRepository.saveAll(result));
 	}
 
 	/**
@@ -231,13 +228,13 @@ public class SubscrPrefService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public List<String> selectSubscrPrefTreeTypes(String subscrPrefKeyname) {
-		SubscrPref subscrPref = subscrPrefRepository.findOne(subscrPrefKeyname);
+		Optional<SubscrPref> subscrPrefOpt = subscrPrefRepository.findById(subscrPrefKeyname);
 
-		if (subscrPref == null) {
+		if (!subscrPrefOpt.isPresent()) {
 			return new ArrayList<>();
 		}
 
-		if (!SUBSCR_OBJECT_TREE.equals(subscrPref.getSubscrPrefCategory())) {
+		if (!SUBSCR_OBJECT_TREE.equals(subscrPrefOpt.get().getSubscrPrefCategory())) {
 			return new ArrayList<>();
 		}
 

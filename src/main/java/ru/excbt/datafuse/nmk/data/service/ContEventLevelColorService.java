@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColor;
 import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContEventLevelColorRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для кэширования уровня событий ContEventLevelColor
@@ -43,8 +44,8 @@ public class ContEventLevelColorService {
 			return result;
 		}
 
-		result = contEventLevelColorRepository.findOne(colorKey.getKeyname());
-		checkNotNull(result);
+		result = contEventLevelColorRepository.findById(colorKey.getKeyname())
+            .orElseThrow(() -> new EntityNotFoundException(ContEventLevelColor.class, colorKey.getKeyname()));
 		colorMap.put(colorKey, result);
 
 		return result;
@@ -65,6 +66,7 @@ public class ContEventLevelColorService {
 	 * @return
 	 */
 	public ContEventLevelColor findOne(String keyname) {
-		return contEventLevelColorRepository.findOne(keyname);
+		return contEventLevelColorRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(ContEventLevelColor.class, keyname));
 	}
 }

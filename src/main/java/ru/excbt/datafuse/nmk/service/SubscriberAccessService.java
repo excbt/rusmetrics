@@ -142,7 +142,7 @@ public class SubscriberAccessService {
     private void startContZPointAccess(ContZPoint contZPoint, LocalDateTime accessDateTime, Subscriber subscriber) {
 
         ContZPointAccess.PK accessPK = new ContZPointAccess.PK().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
-        Optional<ContZPointAccess> checkExisting = Optional.ofNullable(contZPointAccessRepository.findOne(accessPK));
+        Optional<ContZPointAccess> checkExisting = contZPointAccessRepository.findById(accessPK);
         ContZPointAccess access = checkExisting.orElse(new ContZPointAccess().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId()));
 
         if (!checkExisting.isPresent() || (checkExisting.isPresent() && checkExisting.get().getRevokeTz() != null)) {
@@ -170,7 +170,7 @@ public class SubscriberAccessService {
         checkNotNull(currentDateTime);
 
         ContZPointAccess.PK accessPK = new ContZPointAccess.PK().subscriberId(subscriber.getId()).contZPointId(contZPoint.getId());
-        Optional<ContZPointAccess> checkExisting = Optional.ofNullable(contZPointAccessRepository.findOne(accessPK));
+        Optional<ContZPointAccess> checkExisting = contZPointAccessRepository.findById(accessPK);
 
         final LocalDateTime revokeDT = revokeDateTime != null ? revokeDateTime : LocalDateTime.now();
 
@@ -234,7 +234,7 @@ public class SubscriberAccessService {
                                        Subscriber subscriber) {
 
         ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
-        Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
+        Optional<ContObjectAccess> checkExisting = contObjectAccessRepository.findById(accessPK);
 
         ContObjectAccess access = checkExisting.orElse(new ContObjectAccess().subscriberId(subscriber.getId()).contObjectId(contObject.getId()));
 
@@ -287,7 +287,7 @@ public class SubscriberAccessService {
      */
     private void finishContObjectAccess(ContObject contObject, LocalDateTime revokeDateTime, ZonedDateTime currDateTime, Subscriber subscriber) {
         ContObjectAccess.PK accessPK = new ContObjectAccess.PK().subscriberId(subscriber.getId()).contObjectId(contObject.getId());
-        Optional<ContObjectAccess> checkExisting = Optional.ofNullable(contObjectAccessRepository.findOne(accessPK));
+        Optional<ContObjectAccess> checkExisting = contObjectAccessRepository.findById(accessPK);
 
         final LocalDateTime revokeDT = revokeDateTime != null ? revokeDateTime : LocalDateTime.now();
 

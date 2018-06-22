@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberTimeService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -108,10 +109,9 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		checkArgument(entity.getPackId() != null, "packId is not set");
 		checkNotNull(accessDate, "accessDate is not set");
 
-		Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-		if (subscriber == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, subscriberId);
-        }
+		Subscriber subscriber = subscriberRepository.findById(subscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriberId));
+
 		entity.setSubscriber(subscriber);
 
 		List<SubscrServiceAccess> currentAccessList = subscrServiceAccessRepository
@@ -147,10 +147,8 @@ public class SubscrServiceAccessService implements SecuredRoles {
 		List<SubscrServiceAccess> removeGrants = new ArrayList<>();
 		List<SubscrServiceAccess> addGrants = new ArrayList<>();
 
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(Subscriber.class, subscriberId);
-        }
+        Subscriber subscriber = subscriberRepository.findById(subscriberId)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriberId));
 
 		currentAccessList.stream().filter((i) -> i.getAccessEndDate() == null).forEach((c) -> {
 			Optional<SubscrServiceAccess> check1 = extraAccessList.stream().filter((i) -> i.equalsPackItem(c))
@@ -180,8 +178,8 @@ public class SubscrServiceAccessService implements SecuredRoles {
 			c.setAccessEndDate(LocalDateUtils.asDate(accessDate));
 		});
 
-		subscrServiceAccessRepository.save(addGrants);
-		subscrServiceAccessRepository.save(removeGrants);
+		subscrServiceAccessRepository.saveAll(addGrants);
+		subscrServiceAccessRepository.saveAll(removeGrants);
 
 		List<SubscrServiceAccess> newAccessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId,
             LocalDateUtils.asDate(accessDate));
@@ -237,7 +235,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 */
 	@Transactional
 	public void deleteOne(long entityId) {
-		subscrServiceAccessRepository.delete(entityId);
+		subscrServiceAccessRepository.deleteById(entityId);
 	}
 
 	/**
@@ -248,7 +246,7 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_RMA_SUBSCRIBER_ADMIN })
 	public void deleteSubscriberAccess(Long subscriberId) {
 		List<SubscrServiceAccess> accessList = subscrServiceAccessRepository.selectBySubscriberId(subscriberId);
-		subscrServiceAccessRepository.delete(accessList);
+		subscrServiceAccessRepository.deleteAll(accessList);
 	}
 
 	/**
@@ -323,10 +321,9 @@ public class SubscrServiceAccessService implements SecuredRoles {
 	 */
 	@Transactional
 	public List<SubscrServiceAccess> getPackSubscrServiceAccess(Long packId) {
-		SubscrServicePack subscrServicePack = subscrServicePackRepository.findOne(packId);
-		if (subscrServicePack == null) {
-			throw new PersistenceException(String.format("Service Pack (id=%d) is not found", packId));
-		}
+		SubscrServicePack subscrServicePack = subscrServicePackRepository.findById(packId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrServicePack.class, packId));
+
 
 		List<SubscrServicePack> subscrServicePackList = new ArrayList<>();
 		subscrServicePackList.add(subscrServicePack);

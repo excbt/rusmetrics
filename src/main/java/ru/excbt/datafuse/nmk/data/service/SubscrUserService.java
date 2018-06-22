@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -179,8 +180,9 @@ public class SubscrUserService implements SecuredRoles {
 	 */
 	@Transactional
 	public SubscrUserDTO findOne(Long subscrUserId) {
-        SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-        return new SubscrUserDTO(subscrUser);
+        SubscrUserDTO subscrUser = subscrUserRepository.findById(subscrUserId).map(SubscrUserDTO::new)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
+        return subscrUser;
 	}
 
 	/**
@@ -245,10 +247,8 @@ public class SubscrUserService implements SecuredRoles {
 //		checkNotNull(subscrUser.getSubscriberId());
 		checkNotNull(subscrUser.getSubscrRoles());
 
-		SubscrUser currentUser = subscrUserRepository.findOne(subscrUser.getId());
-		if (currentUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUser.getId()));
-		}
+		SubscrUser currentUser = subscrUserRepository.findById(subscrUser.getId())
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUser.getId()));
 
 		if (!currentUser.getUserName().equals(subscrUser.getUserName())) {
 			throw new PersistenceException(
@@ -311,10 +311,9 @@ public class SubscrUserService implements SecuredRoles {
 	public void deleteSubscrUser(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
-		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-		if (subscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
-		}
+		SubscrUser subscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
+
 		subscrUserRepository.save(EntityActions.softDelete(subscrUser));
 
 		// Delete from Ldap
@@ -339,10 +338,9 @@ public class SubscrUserService implements SecuredRoles {
 	public void deleteSubscrUserPermanent(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
-		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-		if (subscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
-		}
+		SubscrUser subscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
+
 		subscrUserRepository.delete(subscrUser);
 	}
 
@@ -438,7 +436,7 @@ public class SubscrUserService implements SecuredRoles {
 		List<Long> result = subscrUsers.stream().map(i -> i.getId()).collect(Collectors.toList());
 
 		// Delete from table
-		subscrUserRepository.delete(subscrUsers);
+		subscrUserRepository.deleteAll(subscrUsers);
 
 		return result;
 
@@ -451,10 +449,8 @@ public class SubscrUserService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_USER, ROLE_CABINET_USER })
 	@Transactional
 	public void clearSubscrUserPassword(Long subscrUserId) {
-		SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-		if (subscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
-		}
+		SubscrUser subscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
 
 		subscrUser.setPassword(null);
 		subscrUserRepository.save(subscrUser);

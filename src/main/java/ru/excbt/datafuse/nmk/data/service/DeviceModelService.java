@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.service.QueryDSLUtil;
 import ru.excbt.datafuse.nmk.service.dto.DeviceModelDTO;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceModelMapper;
 import ru.excbt.datafuse.nmk.service.utils.WhereClauseBuilder;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -105,7 +106,7 @@ public class DeviceModelService implements SecuredRoles {
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional
 	public void delete(Long id) {
-		deviceModelRepository.delete(id);
+		deviceModelRepository.deleteById(id);
 	}
 
 	/**
@@ -143,20 +144,21 @@ public class DeviceModelService implements SecuredRoles {
 	 */
 	@Transactional(readOnly = true)
 	public DeviceModel findDeviceModel(Long id) {
-		return deviceModelRepository.findOne(id);
+		return deviceModelRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceModel.class, id));
 	}
 
 	@Transactional(readOnly = true)
 	public DeviceModelDTO findDeviceModelDTO(Long id) {
 
-	    DeviceModelDTO deviceModelDTO = deviceModelMapper.toDto(deviceModelRepository.findOne(id));
+	    Optional<DeviceModelDTO> deviceModelDTOOpt = deviceModelRepository.findById(id).map(deviceModelMapper::toDto);
 
-	    if (deviceModelDTO != null) {
-	        deviceModelHeatRadiatorRepository.findByDeviceModel(deviceModelDTO.getId())
-                .forEach((i) -> deviceModelDTO.getHeatRadiatorKcs().put(i.getDeviceModelHeatRadiatorPK().getHeatRadiatorType().getId(), i.getKc()));
+	    if (deviceModelDTOOpt.isPresent()) {
+	        deviceModelHeatRadiatorRepository.findByDeviceModel(deviceModelDTOOpt.get().getId())
+                .forEach((i) -> deviceModelDTOOpt.get().getHeatRadiatorKcs().put(i.getDeviceModelHeatRadiatorPK().getHeatRadiatorType().getId(), i.getKc()));
         }
 
-		return deviceModelDTO;
+		return deviceModelDTOOpt.orElse(null);
 	}
 
 	/**

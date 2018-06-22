@@ -226,7 +226,7 @@ public class ContServiceDataHWaterImportService implements SecuredRoles {
 			session.web().trace("Загрузка данных в БД");
 
 			try {
-				contServiceDataHWaterImportRepository.save(inDataHWaterImport);
+				contServiceDataHWaterImportRepository.saveAll(inDataHWaterImport);
 			} catch (Exception e) {
 
                 SLogSessionUtil.failSession(session,

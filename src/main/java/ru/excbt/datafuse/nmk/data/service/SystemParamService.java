@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.keyname.SystemParam;
 import ru.excbt.datafuse.nmk.data.model.types.ParamType;
 import ru.excbt.datafuse.nmk.data.repository.keyname.SystemParamRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Optional;
 
@@ -37,15 +38,13 @@ public class SystemParamService {
 	 */
 
 	public String getParamValueAsString(final String keyname) {
-		SystemParam sp = systemParamRepository.findOne(keyname);
-		if (sp == null) {
-			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG, keyname));
-		}
+		SystemParam sp = systemParamRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(SystemParam.class, keyname));
 		return sp.getParamValue();
 	}
 
 	public Optional<String> findOptParamValueAsString(final String keyname) {
-		return Optional.ofNullable(systemParamRepository.findOne(keyname)).map(SystemParam::getParamValue);
+		return systemParamRepository.findById(keyname).map(SystemParam::getParamValue);
 	}
 
 	/**
@@ -54,10 +53,8 @@ public class SystemParamService {
 	 * @return
 	 */
 	public boolean getParamValueAsBoolean(final String keyname) {
-		SystemParam sp = systemParamRepository.findOne(keyname);
-		if (sp == null) {
-			throw new PersistenceException(String.format(PARAM_NOT_FOUND_MSG, keyname));
-		}
+		SystemParam sp = systemParamRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(SystemParam.class, keyname));
 
 		if (ParamType.BOOLEAN.name().equals(sp.getParamType())) {
 			Boolean value = Boolean.valueOf(sp.getParamValue());

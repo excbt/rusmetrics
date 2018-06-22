@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -95,10 +96,12 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 
 		checkNotNull(fileBytes);
 
-		ReportMasterTemplateBody entity = reportMasterTemplateBodyRepository.findOne(reportMasterTemplateBodyId);
-		if (entity == null) {
+		Optional<ReportMasterTemplateBody> entityOpt = reportMasterTemplateBodyRepository.findById(reportMasterTemplateBodyId);
+		if (!entityOpt.isPresent()) {
 			return false;
 		}
+
+		ReportMasterTemplateBody entity = entityOpt.get();
 
 		logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
 		byte[] bb = entity.getBodyCompiled();
@@ -146,10 +149,12 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 
 		checkNotNull(fileBytes);
 
-		ReportMasterTemplateBody entity = reportMasterTemplateBodyRepository.findOne(reportMasterTemplateBodyId);
-		if (entity == null) {
+		Optional<ReportMasterTemplateBody> entityOpt = reportMasterTemplateBodyRepository.findById(reportMasterTemplateBodyId);
+		if (!entityOpt.isPresent()) {
 			return false;
 		}
+
+		ReportMasterTemplateBody entity = entityOpt.get();
 
 		logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
 		byte[] bb = entity.getBodyCompiled();
@@ -197,10 +202,12 @@ public class ReportMasterTemplateBodyService implements SecuredRoles {
 
         checkNotNull(fileBytes);
 
-        ReportMasterTemplateBody entity = reportMasterTemplateBodyRepository.findOne(reportMasterTemplateBodyId);
-        if (entity == null) {
+        Optional<ReportMasterTemplateBody> entityOpt = reportMasterTemplateBodyRepository.findById(reportMasterTemplateBodyId);
+        if (!entityOpt.isPresent()) {
             return false;
         }
+
+        ReportMasterTemplateBody entity = entityOpt.get();
 
         logger.info("New File {} size {}", file.getAbsolutePath(), fileBytes.length);
         byte[] bb = entity.getBodyCompiled();

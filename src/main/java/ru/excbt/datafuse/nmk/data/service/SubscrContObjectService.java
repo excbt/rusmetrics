@@ -115,7 +115,7 @@ public class SubscrContObjectService implements SecuredRoles {
 				updateCandidate.add(i);
 			}
 		});
-		subscrContObjectRepository.save(updateCandidate);
+		subscrContObjectRepository.saveAll(updateCandidate);
 	}
 
 
