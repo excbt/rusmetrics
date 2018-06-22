@@ -33,10 +33,11 @@
 
 .ui-treenode-content-selected {
     background-color: #eee;
+//    background-color: #7c9df1;
 }
 
-.ui-state-highlight {
-    background-color: #eee;
-    border-color: #eee;
+.ui-treenode-label.ui-state-highlight {
+    background-color: #eee !important;
+    border-color: #eee !important;
     color: inherit;
 }
