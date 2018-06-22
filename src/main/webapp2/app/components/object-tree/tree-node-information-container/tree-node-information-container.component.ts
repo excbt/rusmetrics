@@ -71,19 +71,19 @@ export class TreeNodeInformationContainerComponent implements OnInit {
         this.currentWidget = widget;
         this.router.navigate([widget.url, this.treeNodeId], {relativeTo: this.route});
     }
-    
+
     successLoadNode(node: PTreeNode) {
         // get node type
         const nodeWrapper: PTreeNodeWrapper = new PTreeNodeWrapper(node, null);
         const nodeType: string = nodeWrapper.getNodeType();
-        
+
         // get widget list for this type
         this.widgetList = this.treeNodeInformationContainerService.getWidgetList(nodeType);
-        
+
         // get current widget for this
         this.currentWidget = this.treeNodeInformationContainerService.getCurrentWidget(nodeType);
-        
-        //navigate
+
+        // navigate
         this.router.navigate([this.currentWidget.url, this.treeNodeId], {relativeTo: this.route});
     }
 

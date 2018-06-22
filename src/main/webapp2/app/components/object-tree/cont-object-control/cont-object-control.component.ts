@@ -106,7 +106,7 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
         this.displayedColumns = this.cols.filter((col) => col.displayed).map((col) => col.name);
 
         this.dataSource = new ContObjectControlDataSource(this.contObjectControlService);
-        
+
         if (this.contObjectList && this.contObjectList.length > 0) {
             this.performContObjectList();
         }
@@ -116,14 +116,14 @@ export class ContObjectControlComponent implements OnInit, OnChanges {
 //            console.log('ContObjectControlComponent: contObjectList: ', this.contObjectList);
             this.performContObjectList();
         });
-        
+
 //        const tmp = this.route.paramMap.pipe(
 //            switchMap((params: ParamMap) => {
 //                this.contObjectList = [+params.get('treeNodeId')];
 ////                return this.treeNodeControlService.loadPTreeNodeLinkedObjects(params.get('treeNodeId'));
 //            })
 //        );
-        
+
         this.route.paramMap.subscribe((params: ParamMap) => {
 //            console.log('COC: subscribe on route pramas', params.get('contObjectId'));
             if (!params.get('contObjectId') || params.get('contObjectId') === null) {
