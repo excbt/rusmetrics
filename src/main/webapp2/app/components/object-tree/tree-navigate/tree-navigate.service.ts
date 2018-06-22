@@ -187,12 +187,12 @@ export class TreeNavigateService {
         };
 
         if (ptreeNodeWrapper.getPTreeNode().childNodes && !ptreeNodeWrapper.isContZpointNode()) {
-            ptreeNodeWrapper.getPTreeNode().childNodes.map((childNode) => {
+            ptreeNodeWrapper.getPTreeNode().childNodes.forEach((childNode) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(childNode));
             });
         }
         if (ptreeNodeWrapper.getPTreeNode().linkedNodeObjects && !ptreeNodeWrapper.isContZpointNode()) {
-            ptreeNodeWrapper.getPTreeNode().linkedNodeObjects.map((nodeObject) => {
+            ptreeNodeWrapper.getPTreeNode().linkedNodeObjects.forEach((nodeObject) => {
                 treeNode.children.push(this.convertPTreeNodeToPrimeNGTreeNode(nodeObject));
             });
         }
