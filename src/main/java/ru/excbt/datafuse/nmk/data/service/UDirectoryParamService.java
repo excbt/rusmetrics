@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryParam;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryParamRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с параметрами универсального справочника
@@ -46,10 +47,9 @@ public class UDirectoryParamService implements SecuredRoles {
 		if (arg.isNew()) {
 			recordToSave = new UDirectoryParam();
 		} else {
-			recordToSave = repository.findOne(arg.getId());
+			recordToSave = repository.findById(arg.getId())
+                .orElseThrow(() -> new EntityNotFoundException(UDirectoryParam.class, arg.getId()));
 		}
-
-		checkNotNull(recordToSave);
 
 		checkArgument(recordToSave.getVersion() == arg.getVersion());
 
@@ -77,10 +77,10 @@ public class UDirectoryParamService implements SecuredRoles {
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void delete(long id) {
-		if (!repository.exists(id)) {
+		if (!repository.existsById(id)) {
 			throw new PersistenceException();
 		}
-		repository.delete(id);
+		repository.deleteById(id);
 	}
 
 	/**
@@ -90,10 +90,8 @@ public class UDirectoryParamService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public UDirectoryParam findOne(long id) {
-		UDirectoryParam result = repository.findOne(id);
-		if (result != null) {
-			checkNotNull(result.getDirectory().getId());
-		}
+		UDirectoryParam result = repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UDirectoryParam.class, id));
 
 		return result;
 	}

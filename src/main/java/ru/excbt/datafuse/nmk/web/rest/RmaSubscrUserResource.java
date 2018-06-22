@@ -82,9 +82,9 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 			ApiResponse.responseForbidden();
 		}
 
-		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
-		if (subscriber == null || subscriber.getRmaSubscriberId() == null
-				|| !subscriber.getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
+		Optional<Subscriber> subscriberOpt = subscriberRepository.findById(rSubscriberId);
+		if (!subscriberOpt.isPresent() || subscriberOpt.get().getRmaSubscriberId() == null
+				|| !subscriberOpt.get().getRmaSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 			return ApiResponse.responseBadRequest();
 		}
 
@@ -109,14 +109,14 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 			@RequestParam(value = "newPassword", required = false) String newPassword,
 			@RequestBody SubscrUserDTO subscrUserDTO, HttpServletRequest request) {
 
-		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
-		if (subscriber == null) {
+		Optional<Subscriber> subscriberOpt = subscriberRepository.findById(rSubscriberId);
+		if (!subscriberOpt.isPresent()) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
         subscrUserDTO.setIsAdmin(Boolean.TRUE.equals(isAdmin));
         subscrUserDTO.setIsReadonly(Boolean.TRUE.equals(isReadonly));
 
-		return createSubscrUserInternal(subscriber, subscrUserDTO, newPassword, request);
+		return createSubscrUserInternal(subscriberOpt.get(), subscrUserDTO, newPassword, request);
 	}
 
 	/**
@@ -138,12 +138,12 @@ public class RmaSubscrUserResource extends SubscrUserResource {
 		//				: null;
 		String[] passwords = newPassword != null ? new String[] { oldPassword, newPassword } : null;
 
-		Subscriber subscriber = subscriberRepository.findOne(rSubscriberId);
-		if (subscriber == null) {
+		Optional<Subscriber> subscriberOpt = subscriberRepository.findById(rSubscriberId);
+		if (!subscriberOpt.isPresent()) {
 			return ApiResponse.responseBadRequest(ApiResult.badRequest("Subscriber is not found"));
 		}
 
-		return updateSubscrUserInternal(subscriber, subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
+		return updateSubscrUserInternal(subscriberOpt.get(), subscrUserId, isAdmin, isReadonly, subscrUser, passwords);
 	}
 
 	/**

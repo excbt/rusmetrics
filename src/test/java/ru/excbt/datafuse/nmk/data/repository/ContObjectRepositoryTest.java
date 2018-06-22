@@ -9,7 +9,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringRunner.class)
 public class ContObjectRepositoryTest extends PortalDataTest {
@@ -24,11 +27,11 @@ public class ContObjectRepositoryTest extends PortalDataTest {
 	public void testContObject() {
 		assertNotNull(contObjectRepository);
 
-		ContObject res = contObjectRepository.findOne(725L);
+		Optional<ContObject> res = contObjectRepository.findById(725L);
 
-		assertNotNull(res);
+		assertTrue(res.isPresent());
 
-		logger.info("Full Address {}", res.getFullAddress());
+		logger.info("Full Address {}", res.get().getFullAddress());
 	}
 
 }

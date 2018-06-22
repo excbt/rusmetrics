@@ -35,6 +35,7 @@ import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
 import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -490,7 +491,8 @@ public class SubscrDeviceObjectResourceTest extends PortalApiTest {
         contZPoint.setDeviceObject(createdDeviceObjects.get(1));
         contZPointService.updateContZPoint(contZPoint);
 
-        DeviceObject checkDeviceObject = deviceObjectRepository.findOne(createdDeviceObjects.get(0).getId());
+        DeviceObject checkDeviceObject = deviceObjectRepository.findById(createdDeviceObjects.get(0).getId())
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, createdDeviceObjects.get(0).getId()));
         assertThat(checkDeviceObject).isNotNull();
         assertThat(checkDeviceObject.getContObject()).isNotNull();
         assertThat(checkDeviceObject.getContObject().getId()).isNotNull();

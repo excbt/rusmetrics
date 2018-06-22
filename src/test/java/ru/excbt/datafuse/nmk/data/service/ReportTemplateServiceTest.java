@@ -21,6 +21,7 @@ import ru.excbt.datafuse.nmk.report.ReportConstants;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.utils.ResourceHelper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.io.File;
@@ -206,7 +207,8 @@ public class ReportTemplateServiceTest extends PortalDataTest {
 	 */
 	@Test
 	public void testLoadedReportTemplateBody() {
-		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository.findOne(TEST_REPORT_TEMPLATE_ID);
+		ReportTemplateBody reportTemplateBody = reportTemplateBodyRepository.findById(TEST_REPORT_TEMPLATE_ID)
+            .orElseThrow(() -> new EntityNotFoundException(ReportTemplateBody.class, TEST_REPORT_TEMPLATE_ID));
 		assertNotNull(reportTemplateBody);
 		byte[] fileBody = reportTemplateBody.getBody();
 		assertNotNull(fileBody);

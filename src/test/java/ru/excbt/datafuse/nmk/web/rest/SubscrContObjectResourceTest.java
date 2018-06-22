@@ -43,6 +43,7 @@ import ru.excbt.datafuse.nmk.utils.TestUtils;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -160,7 +161,7 @@ public class SubscrContObjectResourceTest extends PortalApiTest {
         contObjects.forEach(i -> {
             i.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriodSetting);
         });
-        contObjectRepository.save(contObjects);
+        contObjectRepository.saveAll(contObjects);
         contObjectRepository.flush();
 
 //        RequestExtraInitializer param = requestBuilder -> {
@@ -424,7 +425,8 @@ public class SubscrContObjectResourceTest extends PortalApiTest {
         Long contObjectId = findSubscriberContObjectIds().get(0);
         MeterPeriodSettingDTO setting = meterPeriodSettingService
             .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-        ContObject contObject = contObjectRepository.findOne(contObjectId);
+        ContObject contObject = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
         MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
 
         contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);
@@ -446,7 +448,8 @@ public class SubscrContObjectResourceTest extends PortalApiTest {
         Long contObjectId = findSubscriberContObjectIds().get(0);
         MeterPeriodSettingDTO setting = meterPeriodSettingService
             .save(MeterPeriodSettingDTO.builder().name("MySetting").build());
-        ContObject contObject = contObjectRepository.findOne(contObjectId);
+        ContObject contObject = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
         MeterPeriodSetting meterPeriod = new MeterPeriodSetting().id(setting.getId());
 
         contObject.getMeterPeriodSettings().put(ContServiceTypeKey.CW.getKeyname(), meterPeriod);

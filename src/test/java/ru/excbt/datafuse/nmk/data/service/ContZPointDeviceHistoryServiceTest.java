@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import javax.transaction.Transactional;
@@ -62,7 +63,8 @@ public class ContZPointDeviceHistoryServiceTest extends PortalDataTest {
         PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contZPointIds = objectAccessService.findAllContZPointIds(portalUserIds);
 
-        ContZPoint contZPoint = contZPointRepository.findOne(contZPointIds.get(0));
+        ContZPoint contZPoint = contZPointRepository.findById(contZPointIds.get(0))
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZPointIds.get(0)));
 
         contZPointDeviceHistoryService.saveHistory(contZPoint);
         contZPointDeviceHistoryService.saveHistory(contZPoint);
@@ -87,7 +89,8 @@ public class ContZPointDeviceHistoryServiceTest extends PortalDataTest {
         PortalUserIds portalUserIds = portalUserIdsService.getCurrentIds();
         List<Long> contZPointIds = objectAccessService.findAllContZPointIds(portalUserIds);
 
-        ContZPoint contZPoint = contZPointRepository.findOne(contZPointIds.get(0));
+        ContZPoint contZPoint = contZPointRepository.findById(contZPointIds.get(0))
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, contZPointIds.get(0)));
 
         contZPointDeviceHistoryService.saveHistory(contZPoint);
         List<ContZPointDeviceHistory> history = repository.findLastByContZPoint(contZPoint, new PageRequest(0, 1));

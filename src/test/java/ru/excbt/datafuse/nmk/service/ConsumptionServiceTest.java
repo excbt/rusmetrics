@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.domain.ContZPointConsumption;
 import ru.excbt.datafuse.nmk.repository.ContZPointConsumptionRepository;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.service.consumption.ConsumptionTask;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.time.LocalDate;
 
@@ -58,7 +59,8 @@ public class ConsumptionServiceTest extends PortalDataTest {
     @Transactional
     public void processHWaterOne() {
 
-        ContZPoint contZPoint = contZPointRepository.findOne(71843481L);
+        ContZPoint contZPoint = contZPointRepository.findById(71843481L)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, 71843481L));
 
         LocalDate day = LocalDate.of(2017, 5, 26);
 
@@ -178,7 +180,8 @@ public class ConsumptionServiceTest extends PortalDataTest {
     @Ignore
     public void processElOne() {
 
-        ContZPoint contZPoint = contZPointRepository.findOne(128551676L);
+        ContZPoint contZPoint = contZPointRepository.findById(128551676L)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, 128551676L));
 
         LocalDate day = LocalDate.of(2016, 10, 14);
 
@@ -235,7 +238,8 @@ public class ConsumptionServiceTest extends PortalDataTest {
     @Ignore
     public void processImpulseOne() {
 
-        ContZPoint contZPoint = contZPointRepository.findOne(128794022L);
+        ContZPoint contZPoint = contZPointRepository.findById(128794022L)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPoint.class, 128794022L));
 
         LocalDate day = LocalDate.of(2016, 12, 2);
         LocalDate endDay = day;

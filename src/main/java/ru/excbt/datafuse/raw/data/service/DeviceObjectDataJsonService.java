@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.raw.data.model.DeviceObjectDataJson;
 import ru.excbt.datafuse.raw.data.repository.DeviceObjectDataJsonRepository;
 
@@ -66,7 +67,8 @@ public class DeviceObjectDataJsonService {
 	 * @return
 	 */
 	public DeviceObjectDataJson findOne(long id) {
-		return deviceObjectDataJsonRepository.findOne(id);
+		return deviceObjectDataJsonRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObjectDataJson.class, id));
 	}
 
 }

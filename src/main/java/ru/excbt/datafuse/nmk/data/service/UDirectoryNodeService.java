@@ -18,6 +18,9 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.model.UDirectoryNode;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryNodeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+
+import java.util.Optional;
 
 /**
  * Сервис для работы с узлами универсального справочника
@@ -104,17 +107,17 @@ public class UDirectoryNodeService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public UDirectoryNode getRootNode(long nodeId) {
-		UDirectoryNode result = directoryNodeRepository.findOne(nodeId);
+		Optional<UDirectoryNode> nodeOpt = directoryNodeRepository.findById(nodeId);
 
-		if (result == null) {
+		if (!nodeOpt.isPresent()) {
 			return null;
 		}
 
-		if (!result.isRoot()) {
+		if (!nodeOpt.get().isRoot()) {
 			throw new IllegalArgumentException("Argument id = " + nodeId + " is not root element of Node Directory");
 		}
-		loadLazyChildNodes(result);
-		return result;
+		loadLazyChildNodes(nodeOpt.get());
+		return nodeOpt.get();
 	}
 
 	/**
@@ -124,7 +127,8 @@ public class UDirectoryNodeService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public UDirectoryNode findOne(long id) {
-		UDirectoryNode result = directoryNodeRepository.findOne(id);
+		UDirectoryNode result = directoryNodeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(UDirectoryNode.class, id));
 		loadLazyChildNodes(result);
 		return result;
 	}
@@ -138,7 +142,7 @@ public class UDirectoryNodeService implements SecuredRoles {
 	public void delete(final UDirectoryNode nodeDirectory) {
 		checkNotNull(nodeDirectory);
 		checkNotNull(nodeDirectory.getId());
-		directoryNodeRepository.delete(nodeDirectory.getId());
+		directoryNodeRepository.deleteById(nodeDirectory.getId());
 	}
 
 	/**
