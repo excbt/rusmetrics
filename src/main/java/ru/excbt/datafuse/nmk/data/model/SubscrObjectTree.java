@@ -89,4 +89,7 @@ public class SubscrObjectTree extends JsonAbstractAuditableModel implements Dele
     @Column(name = "tree_mode", updatable = false)
     private String treeMode;
 
+    @Column(name = "is_active")
+	private Boolean isActive = true;
+
 }

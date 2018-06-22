@@ -295,13 +295,13 @@ public class SubscrContZPointResource {
 			@RequestParam(value = "organizationId", required = false) Long organizationId) {
 		List<OrganizationDTO> rsOrganizations = organizationService.selectRsoOrganizations(portalUserIdsService.getCurrentIds());
 
-		List<OrganizationDTO> resultList = SecurityUtils.isSystemUser() ? rsOrganizations
-				: rsOrganizations;
+//		List<OrganizationDTO> resultList = SecurityUtils.isSystemUser() ? rsOrganizations
+//				: rsOrganizations;
             //ObjectFilters.devModeFilter(rsOrganizations);
 
-		organizationService.checkAndEnhanceOrganizations(resultList, organizationId);
+		organizationService.checkAndEnhanceOrganizations(rsOrganizations, organizationId);
 
-		return ApiResponse.responseOK(resultList);
+		return ApiResponse.responseOK(rsOrganizations);
 	}
 
 	/**

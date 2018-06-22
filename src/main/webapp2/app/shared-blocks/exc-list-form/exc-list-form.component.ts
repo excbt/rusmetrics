@@ -33,7 +33,7 @@ export abstract class ExcListFormComponent<T> implements OnInit, OnDestroy, Afte
   // routeUrlSergments: UrlSegment[];
   dataSource: ExcAbstractPageDataSource<T>;
 
-  public searchString: String;
+  public searchString: string;
 
   totalElements: number;
   pageSize = defaultPageSize;

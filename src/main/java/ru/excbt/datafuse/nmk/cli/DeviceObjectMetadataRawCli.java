@@ -20,21 +20,21 @@ import ru.excbt.datafuse.nmk.metadata.MetadataInfoHolder;
 
 public class DeviceObjectMetadataRawCli extends AbstractDBToolCli {
 
-	private static final Logger logger = LoggerFactory
+	private static final Logger log = LoggerFactory
 			.getLogger(DeviceObjectMetadataRawCli.class);
 
-	private final static String jsonFilename = "metadata_json/deviceObjectMetadataRaw.json";
+	private final static String JSON_FILENAME = "metadata_json/deviceObjectMetadataRaw.json";
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 * @throws IOException
 	 */
 	public static void main(String[] args) throws IOException {
 		DeviceObjectMetadataRawCli app = new DeviceObjectMetadataRawCli();
 		app.autowireBeans();
-		String inJson = readFile(jsonFilename, StandardCharsets.UTF_8);
-		logger.info("Loaded json: {}", inJson);
+		String inJson = readFile(JSON_FILENAME, StandardCharsets.UTF_8);
+		log.info("Loaded json: {}", inJson);
 
 		List<MetadataInfo> metadataList = new ArrayList<>();
 		{
@@ -54,18 +54,18 @@ public class DeviceObjectMetadataRawCli extends AbstractDBToolCli {
 		try {
 			List<MetadataFieldValue> fieldValues = JsonMetadataParser
 					.processJsonFieldValues(inJson, metadataList);
-			fieldValues.stream().forEach((val) -> logger.info("{}", val));
+			fieldValues.stream().forEach((val) -> log.info("{}", val));
 
 			checkState(metadataList.size() == fieldValues.size());
 
 		} catch (IOException e) {
-			e.printStackTrace();
+		    log.error("DeviceObjectMetadataRawCli", e);
 		}
 
 	}
 
 	/**
-	 * 
+	 *
 	 * @param path
 	 * @param encoding
 	 * @return

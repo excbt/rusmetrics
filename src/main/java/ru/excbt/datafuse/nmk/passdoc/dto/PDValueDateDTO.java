@@ -16,7 +16,7 @@ import java.time.LocalDate;
  */
 public class PDValueDateDTO extends PDValueDTO {
 
-    public static String TYPE = "Date";
+    public static final String TYPE = "Date";
 
     @JsonInclude(value = Include.ALWAYS)
     @Getter

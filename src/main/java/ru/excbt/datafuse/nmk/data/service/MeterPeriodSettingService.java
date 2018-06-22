@@ -116,7 +116,7 @@ public class MeterPeriodSettingService {
 			setting.setDeleted(1);
 			meterPeriodSettingRepository.save(setting);
 		} else {
-			DBExceptionUtil.entityNotFoundException (MeterPeriodSetting.class, id);
+			throw DBExceptionUtil.newEntityNotFoundException (MeterPeriodSetting.class, id);
 		}
 	}
 

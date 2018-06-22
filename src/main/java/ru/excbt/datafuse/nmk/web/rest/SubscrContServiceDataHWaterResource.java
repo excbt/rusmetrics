@@ -677,12 +677,12 @@ public class SubscrContServiceDataHWaterResource {
     private class FileNameData {
         final String fileName;
         final String deviceSerial;
-        final String tsNumber;
+        final String tsNumberString;
 
-        private FileNameData(String fileName, String deviceSerial, String tsNumber) {
+        private FileNameData(String fileName, String deviceSerial, String tsNumberString) {
             this.fileName = fileName;
             this.deviceSerial = deviceSerial;
-            this.tsNumber = tsNumber;
+            this.tsNumberString = tsNumberString;
         }
     }
 
@@ -755,20 +755,20 @@ public class SubscrContServiceDataHWaterResource {
 
 			final List<SubscrDeviceObjectNumber> checkRows = deviceObjectsData.stream()
 					.filter(i -> data.deviceSerial.equals(i.getDeviceObjectNumber())
-							&& data.tsNumber.equals(i.getTsNumber()))
+							&& i.getTsNumber() != null && data.tsNumberString.equals(i.getTsNumber().toString()))
 					.collect(Collectors.toList());
 
 			if (checkRows.size() == 0) {
 				fileNameErrorDesc
 						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не найдена. Файл: %s",
-								data.deviceSerial, data.tsNumber, data.fileName));
+								data.deviceSerial, data.tsNumberString, data.fileName));
 				continue;
 			}
 
 			if (checkRows.size() > 1) {
 				fileNameErrorDesc
 						.add(String.format("Точка учета с прибором № %s и теплосистемой № %s не уникальна. Файл: %s",
-                            data.deviceSerial, data.tsNumber, data.fileName));
+                            data.deviceSerial, data.tsNumberString, data.fileName));
 				continue;
 			}
 
@@ -777,7 +777,7 @@ public class SubscrContServiceDataHWaterResource {
 			if (!Boolean.TRUE.equals(DBRowUtil.asBoolean(row.getIsManualLoading()))) {
 				fileNameErrorDesc.add(String.format(
 						"Точка учета с прибором № %s и теплосистемой № %s не поддерживают ипорт данных из файла. Файл: %s",
-                    data.deviceSerial, data.tsNumber, data.fileName));
+                    data.deviceSerial, data.tsNumberString, data.fileName));
 				continue;
 			}
 

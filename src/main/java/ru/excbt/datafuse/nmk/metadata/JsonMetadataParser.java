@@ -23,7 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Класс для работы с метаданными прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 29.05.2015
@@ -43,7 +43,7 @@ public class JsonMetadataParser {
 	public final static List<String> SUPPORTED_FUNC = Collections.unmodifiableList(Arrays.asList(SUM_FUNCION));
 
 	/**
-	 * 
+	 *
 	 * @param metadataInfoList
 	 * @param propVar
 	 * @return
@@ -87,7 +87,7 @@ public class JsonMetadataParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentNode
 	 * @param strPattern
 	 * @return
@@ -117,7 +117,7 @@ public class JsonMetadataParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param propFunc
 	 * @param arg1
 	 * @param arg2
@@ -141,7 +141,7 @@ public class JsonMetadataParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param propFunc
 	 * @param nodes
 	 * @return
@@ -178,7 +178,7 @@ public class JsonMetadataParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param srcJson
 	 * @param metadataInfoList
 	 * @throws IOException
@@ -251,7 +251,7 @@ public class JsonMetadataParser {
 				checkState(idxs.length <= 2, "Only one and two dimentions array supported");
 
 				// 1D array
-				if (valueNode.isArray() && idxs.length == 1) {
+				if (valueNode != null && valueNode.isArray() && idxs.length == 1) {
 
 					JsonNode arrayValue = findArrayElement(valueNode, idxs[0]);
 					checkNotNull(arrayValue);
@@ -263,7 +263,7 @@ public class JsonMetadataParser {
 					continue;
 				}
 				// 2D array
-				if (valueNode.isArray() && idxs.length == 2) {
+				if (valueNode != null && valueNode.isArray() && idxs.length == 2) {
 					JsonNode arrayValue1D = findArrayElement(valueNode, idxs[0]);
 					checkNotNull(arrayValue1D);
 					checkState(arrayValue1D.isArray());
@@ -292,7 +292,7 @@ public class JsonMetadataParser {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param parentNode
 	 * @param idx
 	 * @return

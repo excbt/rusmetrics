@@ -306,8 +306,8 @@ public class ReportMakerParam {
 	 */
 	public ReportTypeKey getReportTypeKey() {
 		ReportTemplate rt = getParamserReportTemplate();
-		String key = rt.getReportTypeKeyname();
-		return rt != null ? ReportTypeKey.valueOf(key) : null;
+		String key = rt != null ? rt.getReportTypeKeyname() : null;
+		return key != null ? ReportTypeKey.valueOf(key) : null;
 	}
 
 	/**

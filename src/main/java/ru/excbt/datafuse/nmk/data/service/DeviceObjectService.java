@@ -114,8 +114,10 @@ public class DeviceObjectService implements SecuredRoles {
         DeviceObjectDataSource2 deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
             : new DeviceObjectDataSource2();
 
-        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
-        deviceObjectDataSource.deviceObjectId(deviceObject.getId());
+        if (deviceObjectDataSource != null) {
+            initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+            deviceObjectDataSource.deviceObjectId(deviceObject.getId());
+        }
         deviceObject.saveDeviceObjectCredentials();
 
         return saveDeviceObject(deviceObject, deviceObjectDataSource);
@@ -183,9 +185,10 @@ public class DeviceObjectService implements SecuredRoles {
         deviceObject.saveDeviceObjectCredentials();
 
         DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
-        deviceObjectDataSource.setDeviceObjectId(result.getId());
-
-        deviceObjectDataSourceService.saveDeviceDataSource2(deviceObjectDataSource);
+        if (deviceObjectDataSource != null) {
+            deviceObjectDataSource.setDeviceObjectId(result.getId());
+            deviceObjectDataSourceService.saveDeviceDataSource2(deviceObjectDataSource);
+        }
 
         //result.shareDeviceLoginInfo();
         return result;
@@ -199,7 +202,7 @@ public class DeviceObjectService implements SecuredRoles {
         if (deviceObjectDataSource != null && dsi != null) {
             SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
             if (ds == null) {
-                DBExceptionUtil.entityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
+                throw DBExceptionUtil.newEntityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
             }
             deviceObjectDataSource.setSubscrDataSource(ds);
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
@@ -499,8 +502,8 @@ public class DeviceObjectService implements SecuredRoles {
                 .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
                 .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
                 .filter(i -> Objects.nonNull(deviceObjectDataSource))
-                .filter(id -> deviceObjectDataSource != null &&
-                            id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+                .filter(dto -> deviceObjectDataSource != null &&
+                            dto.getId().equals(deviceObjectDataSource.getSubscrDataSource().getId()))
             .ifPresent(i -> {
                 deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
                 deviceObjectDataSource2Repository.save(deviceObjectDataSource);
@@ -560,8 +563,9 @@ public class DeviceObjectService implements SecuredRoles {
             .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
             .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
             .filter(i -> Objects.nonNull(deviceObjectDataSource))
-            .filter(id -> deviceObjectDataSource != null &&
-                id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+            .filter(dto -> dto.getId() != null)
+            .filter(dto -> deviceObjectDataSource != null &&
+                dto.getId().equals(deviceObjectDataSource.getSubscrDataSource().getId()))
             .ifPresent(i -> {
                 deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
                 deviceObjectDataSource2Repository.save(deviceObjectDataSource);

@@ -51,7 +51,6 @@ public class PassDocTemplateCli {
 
         } catch (JsonProcessingException e) {
             log.error("Can't create json: {}", e);
-            e.printStackTrace();
         }
 
         return jsonBody;
@@ -193,7 +192,7 @@ public class PassDocTemplateCli {
         System.out.println("======================================");
         String json1 = objectToJson(pdTable1);
 
-        if (!json.equals(json1)) {
+        if (json == null || !json.equals(json1)) {
             System.out.println("DESERIALIZATION IS NOT EQUALS");
         }
 
@@ -211,7 +210,7 @@ public class PassDocTemplateCli {
 
         System.out.println("======================================");
 
-        if (!jsonValues.equals(jsonValues2)) {
+        if (jsonValues == null || !jsonValues.equals(jsonValues2)) {
             System.out.println("jsonValues2: DESERIALIZATION IS NOT EQUALS");
         }
 

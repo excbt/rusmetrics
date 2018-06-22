@@ -12,7 +12,7 @@ import ru.excbt.datafuse.nmk.passdoc.PDTableCellValueString;
  */
 public class PDValueStringDTO extends PDValueDTO {
 
-    public static String TYPE = "String";
+    public static final String TYPE = "String";
 
     @JsonInclude(value = Include.ALWAYS)
     @Getter

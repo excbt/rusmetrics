@@ -15,7 +15,7 @@ import javax.validation.constraints.DecimalMin;
  */
 public class PDValueBooleanDTO extends PDValueDTO {
 
-    public static String TYPE = "Boolean";
+    public static final String TYPE = "Boolean";
 
     @JsonInclude(value = Include.ALWAYS)
     @Getter

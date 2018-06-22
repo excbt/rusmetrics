@@ -36,7 +36,7 @@ SAMLSubscriberUserDetailsService implements SAMLUserDetailsService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SAMLSubscriberUserDetailsService.class);
 
-	public static final String DUMMY_PASSWORD = "DUMMY_PASSWORD";
+	private static final String DUMMY_PASSWORD = "DUMMY_PASSWORD";
 
 	@Autowired
 	private SecuritySubscriberService subscriberService;

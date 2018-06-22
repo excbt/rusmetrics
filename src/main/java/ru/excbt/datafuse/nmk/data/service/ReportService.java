@@ -295,11 +295,7 @@ public class ReportService {
 			Map<String, Object> paramSpecialMap = reportMakerParamService.getParamSpecialValues(reportMakerParam);
 
 			long idParam = 0;
-			if (reportMakerParam.isSpecialIdParam()) {
-				idParam = reportMakerParam.getIdParam();
-			} else {
-				idParam = reportMakerParam.getIdParam();
-			}
+            idParam = reportMakerParam.getIdParam();
 
 			Supplier<String> keyValueStringer = () -> {
 				StringBuilder keyValue = new StringBuilder();

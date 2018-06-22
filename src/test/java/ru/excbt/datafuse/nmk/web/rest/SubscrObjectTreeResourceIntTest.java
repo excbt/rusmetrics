@@ -111,7 +111,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
             .addSubscrObjectTree(newTreeName, null, ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
 
-        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -135,7 +135,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
             .addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
 
-        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeDTO parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -165,7 +165,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         ObjectTreeTypeKeyname treeType = ObjectTreeTypeKeyname.CONT_OBJECT_TREE_TYPE_1;
         Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
 
-        SubscrObjectTreeVM parent = resultTree.orElseThrow(() -> DBExceptionUtil.entityNotFoundException(SubscrObjectTreeDTO.class, 0));
+        SubscrObjectTreeVM parent = resultTree.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(SubscrObjectTreeDTO.class, 0));
 
         assertNotNull(parent.getId());
 
@@ -266,7 +266,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
         String newTreeName = "My Test Node Tree";
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService
             .addSubscrObjectTree(newTreeName, null, treeType, portalUserIdsService.getCurrentIds(), portalUserIdsService.getCurrentIds().getSubscriberId());
-        return resultTree.map(subscrObjectTreeMapper::toVM);
+        return resultTree.map(subscrObjectTreeMapper::dtoToVM);
     }
 
     private Optional<SubscrObjectTreeVM> createChildNode(SubscrObjectTreeVM parentNode) {
@@ -338,5 +338,19 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
             .andExpect(status().is2xxSuccessful());
 
 
+    }
+
+    @Test
+    public void testSubscrObjectTreeActive() throws Exception {
+        Optional<SubscrObjectTreeVM> resultTree = createTestObjectTree();
+        assertTrue(resultTree.isPresent());
+        Optional<SubscrObjectTreeVM> childNode = createChildNode(resultTree.get());
+        assertTrue(childNode.isPresent());
+
+        restPortalMockMvc.perform(put("/api/subscr-object-trees/contObjectTreeType1/active")
+            .param("rootNodeId", resultTree.get().getId().toString())
+            .param("isActive", Boolean.FALSE.toString())
+            .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().is2xxSuccessful());
     }
 }

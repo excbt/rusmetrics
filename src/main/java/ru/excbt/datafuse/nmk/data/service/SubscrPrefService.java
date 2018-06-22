@@ -58,7 +58,7 @@ public class SubscrPrefService implements SecuredRoles {
 	/**
 	 *
 	 */
-	public static Comparator<SubscrPrefValue> SUBSCR_PREF_COMPARATOR = new Comparator<SubscrPrefValue>() {
+	public static final Comparator<SubscrPrefValue> SUBSCR_PREF_COMPARATOR = new Comparator<SubscrPrefValue>() {
 		@Override
 		public int compare(SubscrPrefValue o1, SubscrPrefValue o2) {
 

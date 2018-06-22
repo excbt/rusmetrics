@@ -106,4 +106,20 @@ export class SubscrObjectTreeService extends ExcAbstractService<SubscrObjectTree
         return this.http.put<any>(this.resourceUrl + this.treeTypeSuffix1 + 'remove-cont-objects', data, {params: reqParams});
     }
 
+    putSubscrObjectTreeActive(rootNodeId: number, isActive: boolean): Observable<SubscrObjectTreeVM> {
+        let reqParams = new HttpParams();
+        if (rootNodeId) {
+            reqParams = reqParams.set('rootNodeId', '' + rootNodeId);
+        } else {
+            Observable.empty();
+        }
+        if (isActive !== null || isActive !== undefined) {
+            reqParams = reqParams.set('isActive', '' + isActive);
+        } else {
+            Observable.empty();
+        }
+        return this.http.put<SubscrObjectTreeVM>(this.resourceUrl + this.treeTypeSuffix1 + 'active', null, {params: reqParams});
+
+    }
+
 }

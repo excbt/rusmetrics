@@ -267,10 +267,8 @@ public class SubscrPriceItemService implements SecuredRoles {
 
 		modifiedPriceItemIds.forEach(i -> {
 			List<SubscrPriceItemValue> currentValues = servicePriceItemValueRepository.selectSubscrPriceItemValue(i);
-			currentValues.forEach(cv -> {
-				cv.setValueEndDate(LocalDateUtils.asDate(endDate));
-			});
-			allCurrentValues.addAll(allCurrentValues);
+			currentValues.forEach(cv -> cv.setValueEndDate(LocalDateUtils.asDate(endDate)));
+			allCurrentValues.addAll(currentValues);
 		});
 
 		servicePriceItemValueRepository.save(allCurrentValues);

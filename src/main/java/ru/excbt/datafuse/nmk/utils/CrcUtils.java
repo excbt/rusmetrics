@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public class CrcUtils {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(CrcUtils.class);
+	private static final Logger log = LoggerFactory.getLogger(CrcUtils.class);
 
 	private CrcUtils() {
 
@@ -33,8 +33,8 @@ public class CrcUtils {
 						out.writeObject(obj);
 					}
 				} catch (IOException e) {
-					LOGGER.error("ObjectOutputStream error when writeObject: {}. index: {}",
-							obj != null ? obj.toString() : "NULL", idx);
+					log.error("ObjectOutputStream error when writeObject: {}. index: {}",
+							obj, idx);
 				}
 
 			}
@@ -42,7 +42,7 @@ public class CrcUtils {
 			bytes = bos.toByteArray();
 
 		} catch (IOException e1) {
-			LOGGER.error("ObjectOutputStream error when writeObject.");
+			log.error("ObjectOutputStream error when writeObject.");
 		}
 
 		if (bytes != null) {

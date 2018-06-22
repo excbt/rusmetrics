@@ -54,7 +54,6 @@ public class SubscrObjectTreeContObjectService {
      * @param subscrObjectTreeId
      * @return
      */
-	@Transactional( readOnly = true)
 	protected List<ContObject> selectTreeContObjects2(final PortalUserIds portalUserIds,
 			final Long subscrObjectTreeId) {
         subscrObjectTreeValidationService.checkValidSubscriber(portalUserIds, subscrObjectTreeId);

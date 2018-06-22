@@ -134,7 +134,7 @@ public class CabinetMessageService {
             long r = updateClause.execute();
             return r;
         });
-        return Long.valueOf(count).intValue();
+        return java.lang.Math.toIntExact(count);
     }
 
     /**
@@ -203,7 +203,7 @@ public class CabinetMessageService {
 
         CabinetMessage responseToMessage = cabinetMessageRepository.findOne(cabinetMessageDTO.getResponseToId());
         if (responseToMessage == null) {
-            throw DBExceptionUtil.entityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
+            throw DBExceptionUtil.newEntityNotFoundException(CabinetMessage.class, cabinetMessageDTO.getResponseToId());
         }
 
         setFromFields (cabinetMessageDTO, userIds);

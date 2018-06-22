@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import ru.excbt.datafuse.nmk.web.ApiConst;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -88,7 +90,8 @@ public class SubscrObjectTreeResource {
     @GetMapping(value = "")
     public ResponseEntity<?> getSubscrObjectTreeListAll() {
         List<SubscrObjectTreeVM> result = subscrObjectTreeService.selectSubscrObjectTreeShortVM(null, portalUserIdsService.getCurrentIds());
-        return ResponseEntity.ok(result);
+        List<SubscrObjectTreeVM> onlyActive = result.stream().filter(i -> Boolean.TRUE.equals(i.getIsActive())).collect(Collectors.toList());
+        return ResponseEntity.ok(onlyActive);
     }
 
     @DeleteMapping(value = "/{objectTreeType}/{nodeId}")
@@ -132,6 +135,7 @@ public class SubscrObjectTreeResource {
      */
     @RequestMapping(value = "/{objectTreeType}/new", method = RequestMethod.PUT,
         produces = ApiConst.APPLICATION_JSON_UTF8)
+    @ApiOperation("Adds new SubscrObjectTree")
     public ResponseEntity<?> putSubscrObjectTreeList(@PathVariable("objectTreeType") String objectTreeType,
                                                      @RequestParam("newTreeName") String newTreeName) {
 
@@ -146,6 +150,26 @@ public class SubscrObjectTreeResource {
         Optional<SubscrObjectTreeDTO> resultTree = subscrObjectTreeService.addSubscrObjectTree(newTreeName, null, checkTreeType.get(), portalUserIdsService.getCurrentIds(), subscriberId);
 
         return resultTree.map(ResponseEntity::ok).orElse(new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)) ;
+    }
+
+    @RequestMapping(value = "/{objectTreeType}/active", method = RequestMethod.PUT,
+        produces = ApiConst.APPLICATION_JSON_UTF8)
+    @ApiOperation("Set isActiveFlag SubscrObjectTree")
+    public ResponseEntity<?> putSubscrObjectTreeActive(@PathVariable("objectTreeType") String objectTreeType,
+                                                       @RequestParam("rootNodeId") Long rootNodeId,
+                                                       @RequestParam("isActive") boolean isActive) {
+
+        Optional<ObjectTreeTypeKeyname> checkTreeType = checkTreeType((objectTreeType));
+        if (!checkTreeType.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+
+        Long subscriberId = portalUserIdsService.getCurrentIds().getSubscriberId();
+
+        Optional<SubscrObjectTreeVM> optionalVM = subscrObjectTreeService.setActiveSubscrObjectTree(rootNodeId, isActive, portalUserIdsService.getCurrentIds(), subscriberId);
+
+        return optionalVM.map(ResponseEntity::ok).orElse(ResponseEntity.badRequest().build()) ;
     }
 
 
