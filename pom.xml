@@ -26,11 +26,13 @@
         <run.addResources>false</run.addResources>
 
 
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+
         <java-uuid-gen.version>3.1.4</java-uuid-gen.version>
 		<guava.version>18.0</guava.version>
 		<hikari.version>2.4.6</hikari.version>
         <pentaho.version>6.1.0.11-329</pentaho.version>
-        <hibernate.version>5.2.8.Final</hibernate.version>
+        <hibernate.version>5.2.17.Final</hibernate.version>
         <!--<hibernate.version>5.2.12.Final</hibernate.version>-->
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <lombok.version>1.16.18</lombok.version>
@@ -44,9 +46,6 @@
 
 
         <start-class>ru.excbt.datafuse.nmk.app.PortalApplication</start-class>
-
-        <!-- Dependency versions -->
-        <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
 
         <!-- Plugin versions -->
         <maven-clean-plugin.version>2.6.1</maven-clean-plugin.version>
@@ -115,12 +114,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>commons-logging</groupId>-->
+					<!--<artifactId>commons-logging</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
 		</dependency>
 
         <dependency>
@@ -334,7 +333,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- CSV -->
