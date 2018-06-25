@@ -129,8 +129,8 @@ public class SubscrObjectTreeContObjectService {
 			}
 		}
 
-		subscrObjectTreeContObjectRepository.save(saveContObjects);
-		subscrObjectTreeContObjectRepository.delete(deleteContObjects);
+		subscrObjectTreeContObjectRepository.saveAll(saveContObjects);
+		subscrObjectTreeContObjectRepository.deleteAll(deleteContObjects);
 	}
 
     /**
@@ -170,7 +170,7 @@ public class SubscrObjectTreeContObjectService {
 			}
 		}
 
-		subscrObjectTreeContObjectRepository.save(saveContObjects);
+		subscrObjectTreeContObjectRepository.saveAll(saveContObjects);
         subscrObjectTreeContObjectRepository.flush();
 	}
 
@@ -198,7 +198,7 @@ public class SubscrObjectTreeContObjectService {
 			}
 		}
 
-		subscrObjectTreeContObjectRepository.delete(deleteContObjects);
+		subscrObjectTreeContObjectRepository.deleteAll(deleteContObjects);
         subscrObjectTreeContObjectRepository.flush();
 	}
 
@@ -216,7 +216,7 @@ public class SubscrObjectTreeContObjectService {
 		List<SubscrObjectTreeContObject> contObjects = subscrObjectTreeContObjectRepository
 				.selectSubscrObjectTreeContObject(subscrObjectTreeId);
 
-		subscrObjectTreeContObjectRepository.delete(contObjects);
+		subscrObjectTreeContObjectRepository.deleteAll(contObjects);
 	}
 
 

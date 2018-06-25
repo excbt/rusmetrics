@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.EnergyPassportShortDTO;
 import ru.excbt.datafuse.nmk.data.model.vm.EnergyPassportVM;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
@@ -129,10 +130,9 @@ public class EnergyPassportService {
      */
     @Transactional
     public EnergyPassportDTO updatePassport(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
-        EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, energyPassportVM.getId());
-        }
+        EnergyPassport energyPassport = passportRepository.findById(energyPassportVM.getId())
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, energyPassportVM.getId()));
+
         energyPassport.setPassportDate(energyPassportVM.getPassportDate());
         energyPassport.setPassportName(energyPassportVM.getPassportName());
         energyPassport.setDescription(energyPassportVM.getDescription());
@@ -152,10 +152,9 @@ public class EnergyPassportService {
      */
     @Transactional
     public EnergyPassportShortDTO updatePassportShort(EnergyPassportVM energyPassportVM, Subscriber subscriber) {
-        EnergyPassport energyPassport = passportRepository.findOne(energyPassportVM.getId());
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, energyPassportVM.getId());
-        }
+        EnergyPassport energyPassport = passportRepository.findById(energyPassportVM.getId())
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, energyPassportVM.getId()));
+
         energyPassport.setPassportDate(energyPassportVM.getPassportDate());
         energyPassport.setPassportName(energyPassportVM.getPassportName());
         energyPassport.setDescription(energyPassportVM.getDescription());
@@ -169,9 +168,9 @@ public class EnergyPassportService {
 
         @Transactional
     public EnergyPassportDTO find(Long id) {
-        EnergyPassport energyPassport = passportRepository.findOne(id);
+        Optional<EnergyPassport> energyPassport = passportRepository.findById(id);
 
-        EnergyPassportDTO result = energyPassport != null ? energyPassport.getDTO() : null;
+        EnergyPassportDTO result = energyPassport.map(EnergyPassport::getDTO).orElse(null);
         if (result != null) {
             result.getSections().forEach((s) -> s.setEntries(findSectionEntries(s.getId())));
         }
@@ -198,10 +197,8 @@ public class EnergyPassportService {
 
     @Transactional
     public void delete(Long id, Subscriber subscriber) {
-        EnergyPassport energyPassport = passportRepository.findOne(id);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, id);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, id));
 
         if (!energyPassport.getSubscriber().equals(subscriber)) {
             throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriber.getId());
@@ -213,10 +210,9 @@ public class EnergyPassportService {
 
     @Transactional
     public EnergyPassportDataDTO savePassportData(EnergyPassportDataDTO energyPassportDataDTO) {
-        EnergyPassport passport = passportRepository.findOne(energyPassportDataDTO.getPassportId());
-        if (passport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, energyPassportDataDTO.getPassportId());
-        }
+        EnergyPassport passport = passportRepository.findById(energyPassportDataDTO.getPassportId())
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, energyPassportDataDTO.getPassportId()));
+
 
         Optional<EnergyPassportSection> section = passport.searchSection(energyPassportDataDTO.getSectionKey());
         if (!section.isPresent()) {
@@ -266,10 +262,8 @@ public class EnergyPassportService {
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> findPassportData(Long passportId) {
 
-        EnergyPassport energyPassport = passportRepository.findOne(passportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(passportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportId));
 
         List<EnergyPassportData> passportDataList = passportDataRepository.findByPassportId(passportId);
 
@@ -290,20 +284,19 @@ public class EnergyPassportService {
      */
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> findPassportData(Long passportId, Long sectionId, Long sectionEntryId) {
-        EnergyPassport energyPassport = passportRepository.findOne(passportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
-        }
-        Optional<EnergyPassportSection> section = energyPassport.getSections().stream().filter(i -> i.getId().equals(sectionId)).findFirst();
-        if (!section.isPresent()) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassportSection.class, sectionId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(passportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportId));
+
+
+        EnergyPassportSection section = energyPassport.getSections().stream().filter(i -> i.getId().equals(sectionId)).findFirst()
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassportSection.class, sectionId));
+
         List<EnergyPassportData> passportDataList = sectionEntryId == null ?
-            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.get().getSectionKey(),0L) :
-            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.get().getSectionKey(), sectionEntryId);
+            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.getSectionKey(),0L) :
+            passportDataRepository.findByPassportIdAndSectionEntry(passportId, section.getSectionKey(), sectionEntryId);
 
         if (passportDataList.isEmpty()) {
-            List<EnergyPassportDataDTO> newDataDTO = Arrays.asList(extractEnergyPassportData(section.get()));
+            List<EnergyPassportDataDTO> newDataDTO = Arrays.asList(extractEnergyPassportData(section));
             if (sectionEntryId != null) {
                 newDataDTO.forEach((i) -> i.setSectionEntryId(sectionEntryId));
             }
@@ -325,10 +318,9 @@ public class EnergyPassportService {
      */
     @Transactional(readOnly = true)
     public List<EnergyPassportDataDTO> extractEnergyPassportData(Long passportId) {
-        EnergyPassport energyPassport = passportRepository.findOne(passportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(passportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportId));
+
         return extractEnergyPassportData(energyPassport);
     }
 
@@ -365,7 +357,8 @@ public class EnergyPassportService {
 
         Long passportId = src.stream().mapToLong(EnergyPassportDataDTO::getPassportId).findFirst().getAsLong();
 
-        EnergyPassport pass = passportRepository.findOne(passportId);
+        EnergyPassport pass = passportRepository.findById(passportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportId));
 
         pass.getSections().forEach((i) -> {
             EnergyPassportDataDTO templateData = extractEnergyPassportData(i);
@@ -399,17 +392,16 @@ public class EnergyPassportService {
                 })
             );
 
-        energyPassportDataValueRepository.save(dataValues);
+        energyPassportDataValueRepository.saveAll(dataValues);
     }
 
     /**
      * @param passportId
      */
     protected void updateEnergyPassportFromTemplate(Long passportId) {
-        EnergyPassport energyPassport = passportRepository.findOne(passportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, passportId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(passportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportId));
+
         EnergyPassportTemplate template = energyPassport.getPassportTemplate();
         if (template != null) {
             template.getSectionTemplates().forEach((t) ->
@@ -435,7 +427,7 @@ public class EnergyPassportService {
                         .orElseGet(() -> energyPassportSectionCreator.apply(p, t)));
             }
         });
-        passportRepository.save(energyPassports);
+        passportRepository.saveAll(energyPassports);
     }
 
 
@@ -453,16 +445,14 @@ public class EnergyPassportService {
         EnergyPassportSectionEntry passportSectionEntry;
         if (energyPassportSectionEntryDTO.getId() == null) {
             passportSectionEntry = new EnergyPassportSectionEntry();
-            EnergyPassportSection passportSection = passportSectionRepository.findOne(energyPassportSectionEntryDTO.getSectionId());
-            if (passportSection == null) {
-                throw DBExceptionUtil.newEntityNotFoundException(EnergyPassportSection.class, energyPassportSectionEntryDTO.getSectionId());
-            }
+            EnergyPassportSection passportSection = passportSectionRepository.findById(energyPassportSectionEntryDTO.getSectionId())
+                .orElseThrow(() -> new EntityNotFoundException(EnergyPassportSection.class, energyPassportSectionEntryDTO.getSectionId()));
+
             passportSectionEntry.setSection(passportSection);
         } else {
-            passportSectionEntry = sectionEntryRepository.findOne(energyPassportSectionEntryDTO.getId());
-            if (passportSectionEntry == null) {
-                throw DBExceptionUtil.newEntityNotFoundException(EnergyPassportSectionEntry.class, energyPassportSectionEntryDTO.getId());
-            }
+            passportSectionEntry = sectionEntryRepository.findById(energyPassportSectionEntryDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException(EnergyPassportSectionEntry.class, energyPassportSectionEntryDTO.getId()));
+
         }
 
         passportSectionEntry.updateFromDTO(energyPassportSectionEntryDTO);
@@ -488,7 +478,7 @@ public class EnergyPassportService {
             idx++;
         }
 
-        sectionEntryRepository.save(entries);
+        sectionEntryRepository.saveAll(entries);
 
         return entries.stream().map((i) -> i.getDTO()).collect(Collectors.toList());
     }
@@ -501,19 +491,17 @@ public class EnergyPassportService {
 
     @Transactional
     public void deleteSectionEntry(Long energyPassportId, Long sectionId, Long entryId, Subscriber subscriber) {
-        EnergyPassport energyPassport = passportRepository.findOne(energyPassportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, energyPassportId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(energyPassportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, energyPassportId));
+
 
         if (!energyPassport.getSubscriber().equals(subscriber)) {
             throw DBExceptionUtil.newAccessDeniedException(Subscriber.class, subscriber.getId());
         }
 
-        EnergyPassportSectionEntry entry = sectionEntryRepository.findOne(entryId);
-        if (entry == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassportSectionEntry.class, entryId);
-        }
+        EnergyPassportSectionEntry entry = sectionEntryRepository.findById(entryId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassportSectionEntry.class, entryId));
+
 
         if (!entry.getSection().getId().equals(sectionId)) {
             throw DBExceptionUtil.newEntityNotFoundException(EnergyPassportSection.class, sectionId);
@@ -568,10 +556,9 @@ public class EnergyPassportService {
         Preconditions.checkNotNull(contObjectIds);
         Preconditions.checkNotNull(subscriber);
 
-        EnergyPassport energyPassport = passportRepository.findOne(energyPassportId);
-        if (energyPassport == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(EnergyPassport.class, energyPassportId);
-        }
+        EnergyPassport energyPassport = passportRepository.findById(energyPassportId)
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, energyPassportId));
+
         contObjectIds.forEach((i) -> energyPassport.getContObjects().add(new ContObject().id(i)));
         passportRepository.save(energyPassport);
 

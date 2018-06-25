@@ -146,12 +146,12 @@ public class TariffPlanController  {
 		}
 
 		if (tariffTypeId != null && tariffTypeId > 0) {
-			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
-			if (tt == null) {
+			Optional<TariffType> ttOpt = tariffTypeRepository.findById(tariffTypeId);
+			if (!ttOpt.isPresent()) {
 				return ApiResponse.responseBadRequest(ApiResult.validationError("Invalid tariffTypeId"));
 			}
 
-			tariffPlan.setTariffType(tt);
+			tariffPlan.setTariffType(ttOpt.get());
 		}
 
 		if (contObjectIds != null) {
@@ -211,11 +211,11 @@ public class TariffPlanController  {
 		}
 
 		if (tariffTypeId != null && tariffTypeId > 0) {
-			TariffType tt = tariffTypeRepository.findOne(tariffTypeId);
-			if (tt == null) {
+			Optional<TariffType> ttOpt = tariffTypeRepository.findById(tariffTypeId);
+			if (!ttOpt.isPresent()) {
 				return ApiResponse.responseBadRequest(ApiResult.badRequest("Invalid tariffTypeId"));
 			}
-			tariffPlan.setTariffType(tt);
+			tariffPlan.setTariffType(ttOpt.get());
 		}
 
 		if (contObjectIds != null) {
@@ -261,14 +261,7 @@ public class TariffPlanController  {
 	@RequestMapping(value = "/{tariffPlanId}", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> deleteOneTariff(@PathVariable("tariffPlanId") final long tariffPlanId) {
 
-		ApiAction action = new ApiActionAdapter() {
-
-			@Override
-			public void process() {
-				tariffPlanService.deleteOne(tariffPlanId);
-
-			}
-		};
+		ApiAction action = (ApiActionAdapter) () -> tariffPlanService.deleteOne(tariffPlanId);
 
 		return ApiActionTool.processResponceApiActionDelete(action);
 

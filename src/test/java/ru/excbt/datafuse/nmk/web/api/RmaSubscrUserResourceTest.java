@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.RmaSubscrUserResource;
 import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -111,8 +112,8 @@ public class RmaSubscrUserResourceTest extends PortalApiTest {
             .testPost(subscrUser)
             .getLastId();
 
-		subscrUser = subscrUserRepository.findOne(subscrUserId);
-		assertNotNull(subscrUser);
+		subscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
 
 		subscrUser.setUserComment("Modified By REST");
         mockMvcRestWrapper.restRequest("/api/rma/{id}/subscrUsers/{id2}", TEST_RMA_ID, subscrUserId).testPut(subscrUser);

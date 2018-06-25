@@ -70,7 +70,7 @@ public class OrganizationService implements SecuredRoles {
 
 	@Transactional( readOnly = true)
 	public Optional<Organization> findOneOrganization(final long id) {
-		return Optional.ofNullable(organizationRepository.findOne(id));
+		return organizationRepository.findById(id);
 	}
 
 //	/**
@@ -274,7 +274,9 @@ public class OrganizationService implements SecuredRoles {
 	@Transactional
     @Secured({ ROLE_ADMIN, ROLE_RMA_CONT_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteOrganization(final Long organizationId, final PortalUserIds portalUserIds) {
-	    Organization org = organizationRepository.findOne(organizationId);
+	   Optional<Organization> orgOpt = organizationRepository.findById(organizationId);
+       Organization org = orgOpt.orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Organization.class, organizationId));
+
        if (Boolean.TRUE.equals(org.getIsCommon())) {
            throw DBExceptionUtil.newAccessDeniedException(Organization.class, organizationId);
         }

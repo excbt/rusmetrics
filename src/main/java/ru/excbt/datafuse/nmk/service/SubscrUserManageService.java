@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.validators.UsernameValidator;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -86,7 +87,8 @@ public class SubscrUserManageService {
             throw new PersistenceException("User with name " + subscrUserDTO.getUserName() + "already exists");
         }
 
-        Subscriber subscriber = subscriberRepository.findOne(subscrUserDTO.getSubscriberId());
+        Subscriber subscriber = subscriberRepository.findById(subscrUserDTO.getSubscriberId())
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscrUserDTO.getSubscriberId()));
 
         SubscrUser subscrUser = subscrUserMapper.toEntity(subscrUserDTO);
 
@@ -117,11 +119,9 @@ public class SubscrUserManageService {
         boolean isAdmin = Boolean.TRUE.equals(subscrUserDTO.getIsAdmin());
         boolean isReadonly = Boolean.TRUE.equals(subscrUserDTO.getIsReadonly());
 
-        SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserDTO.getId());
+        SubscrUser subscrUser = subscrUserRepository.findById(subscrUserDTO.getId())
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserDTO.getId()));
 
-        if (subscrUser == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(SubscrUser.class, subscrUserDTO.getId());
-        }
         if (!subscrUser.getUserName().equals(subscrUserDTO.getUserName())) {
             throw new PersistenceException(
                 String.format("Changing username is not allowed. SubscrUser (id=%d)", subscrUser.getId()));

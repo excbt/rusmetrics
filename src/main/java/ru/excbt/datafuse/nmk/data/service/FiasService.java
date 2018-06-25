@@ -31,7 +31,7 @@ public class FiasService {
 
 	private static final Logger logger = LoggerFactory.getLogger(FiasService.class);
 
-	@PersistenceContext(unitName = "nmk-p")
+	@PersistenceContext
 	private EntityManager em;
 
 	private final ContObjectFiasRepository contObjectFiasRepository;

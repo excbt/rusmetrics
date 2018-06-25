@@ -40,25 +40,28 @@ public class PortalUserAuthenticationProvider implements AuthenticationProvider 
 
 	private static final Logger logger = LoggerFactory.getLogger(PortalUserAuthenticationProvider.class);
 
-	@Autowired
-	private SecuritySubscriberService subscriberService;
+	private final SecuritySubscriberService subscriberService;
 
-	@Autowired
-	private SecuritySubscrUserService subscrUserService;
+	private final SecuritySubscrUserService subscrUserService;
 
-	@Autowired
-	private SystemUserService systemUserService;
+	private final SystemUserService systemUserService;
 
-	@Autowired
-	private PasswordService passwordService;
+	private final PasswordService passwordService;
 
-	@Autowired
-	private LdapService ldapService;
+	private final LdapService ldapService;
 
-	@Autowired
-	private SubscrUserLoginLogService subscrUserLoginLogService;
+	private final SubscrUserLoginLogService subscrUserLoginLogService;
 
-	/**
+    public PortalUserAuthenticationProvider(SecuritySubscriberService subscriberService, SecuritySubscrUserService subscrUserService, SystemUserService systemUserService, PasswordService passwordService, LdapService ldapService, SubscrUserLoginLogService subscrUserLoginLogService) {
+        this.subscriberService = subscriberService;
+        this.subscrUserService = subscrUserService;
+        this.systemUserService = systemUserService;
+        this.passwordService = passwordService;
+        this.ldapService = ldapService;
+        this.subscrUserLoginLogService = subscrUserLoginLogService;
+    }
+
+    /**
 	 *
 	 */
 	@Override

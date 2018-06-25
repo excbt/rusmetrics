@@ -1,11 +1,6 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
@@ -34,6 +29,7 @@ import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
+import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.QueryDSLService;
 
@@ -54,11 +50,25 @@ public class ContZPointMetadataService implements SecuredRoles {
 				ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname()));
 	}
 
+    private final ContZPointMetadataRepository contZPointMetadataRepository;
+
+    private final DeviceMetadataService deviceMetadataService;
+
+    private final ContZPointService contZPointService;
+
+    private final ContZPointRepository contZPointRepository;
+
+    private final DeviceObjectDataSourceService deviceObjectDataSourceService;
+
+    private final QueryDSLService queryDSLService;
+
+
     @Autowired
-    public ContZPointMetadataService(ContZPointMetadataRepository contZPointMetadataRepository, DeviceMetadataService deviceMetadataService, ContZPointService contZPointService, DeviceObjectDataSourceService deviceObjectDataSourceService, QueryDSLService queryDSLService) {
+    public ContZPointMetadataService(ContZPointMetadataRepository contZPointMetadataRepository, DeviceMetadataService deviceMetadataService, ContZPointService contZPointService, ContZPointRepository contZPointRepository, DeviceObjectDataSourceService deviceObjectDataSourceService, QueryDSLService queryDSLService) {
         this.contZPointMetadataRepository = contZPointMetadataRepository;
         this.deviceMetadataService = deviceMetadataService;
         this.contZPointService = contZPointService;
+        this.contZPointRepository = contZPointRepository;
         this.deviceObjectDataSourceService = deviceObjectDataSourceService;
         this.queryDSLService = queryDSLService;
     }
@@ -71,15 +81,6 @@ public class ContZPointMetadataService implements SecuredRoles {
 		private Integer tsNumber;
 	}
 
-	private final ContZPointMetadataRepository contZPointMetadataRepository;
-
-	private final DeviceMetadataService deviceMetadataService;
-
-	private final ContZPointService contZPointService;
-
-	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
-
-    private final QueryDSLService queryDSLService;
 
 	/**
 	 *
@@ -244,9 +245,9 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 */
 	public List<EntityColumn> selectContZPointDestDB(Long contZPointId) {
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+		Optional<ContZPoint> zpointOpt = contZPointRepository.findById(contZPointId);
 
-		if (zpoint != null && HWATER_SERVICES.contains(zpoint.getContServiceTypeKeyname())) {
+		if (zpointOpt.isPresent() && HWATER_SERVICES.contains(zpointOpt.get().getContServiceTypeKeyname())) {
 			return HWATER_COLUMNS.stream().sorted().map(i -> new EntityColumn(i, "NUMERIC")).collect(Collectors.toList());
 		}
 
@@ -279,21 +280,21 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 */
 	private ContZPointMetadataKey findContZPointMetadataKey(Long contZPointId) {
 
-		ContZPoint zpoint = contZPointService.findOne(contZPointId);
+		Optional<ContZPoint> zpointOpt = contZPointRepository.findById(contZPointId);
 
-		if (zpoint == null) {
+		if (!zpointOpt.isPresent()) {
 			return null;
 		}
 
-		DeviceObject deviceObject = findDeviceObject(zpoint);
+		DeviceObject deviceObject = findDeviceObject(zpointOpt.get());
 		if (deviceObject == null) {
 			return null;
 		}
 
 		ContZPointMetadataKey result = new ContZPointMetadataKey();
-		result.tsNumber = zpoint.getTsNumber();
-		result.contZPoint = zpoint;
-		result.contZPointId = zpoint.getId();
+		result.tsNumber = zpointOpt.get().getTsNumber();
+		result.contZPoint = zpointOpt.get();
+		result.contZPointId = zpointOpt.get().getId();
 		result.deviceObject = deviceObject;
 		result.deviceObjectId = deviceObject.getId();
 
@@ -358,7 +359,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 			e.setDeviceObject(deviceObject);
 		}
 
-		List<ContZPointMetadata> result = Lists.newArrayList(contZPointMetadataRepository.save(entityList));
+		List<ContZPointMetadata> result = Lists.newArrayList(contZPointMetadataRepository.saveAll(entityList));
 
 		deleteOtherContZPointMetadata(contZPointId, deviceObject.getId());
 

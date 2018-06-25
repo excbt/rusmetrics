@@ -15,7 +15,7 @@ import javax.persistence.PersistenceUnit;
 @Service
 public class DBSessionService {
 
-    @PersistenceContext(unitName = "nmk-p")
+    @PersistenceContext
     private EntityManager em;
 
     private final EntityManagerFactory entityManagerFactory;

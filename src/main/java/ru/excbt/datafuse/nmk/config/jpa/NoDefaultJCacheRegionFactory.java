@@ -30,13 +30,12 @@ import org.hibernate.cache.spi.CacheDataDescription;
  */
 @SuppressWarnings("serial")
 public class NoDefaultJCacheRegionFactory extends JCacheRegionFactory {
+    public static final String EXCEPTION_MESSAGE = "All Hibernate caches should be created upfront. Please update CacheConfiguration.java to add";
 
-    public static final String EXCEPTION_MESSAGE = "All Hibernate caches should be created upfront. " +
-        "Please update CacheConfiguration.java to add";
+    public NoDefaultJCacheRegionFactory() {
+    }
 
-    @Override
-    protected Cache<Object, Object> createCache(String regionName, Properties properties, CacheDataDescription
-        metadata) {
-        throw new IllegalStateException(EXCEPTION_MESSAGE + " " + regionName);
+    protected Cache<Object, Object> createCache(String regionName, Properties properties, CacheDataDescription metadata) {
+        throw new IllegalStateException("All Hibernate caches should be created upfront. Please update CacheConfiguration.java to add " + regionName);
     }
 }

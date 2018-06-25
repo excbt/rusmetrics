@@ -18,6 +18,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrStPlanMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.List;
@@ -83,7 +84,8 @@ public class SubscrStPlanServiceTest extends PortalDataTest {
         SubscrStPlanDTO saved = service.saveStPlanDTO(mapper.toDto(stPlan), portalUserIdsService.getCurrentIds());
         assertNotNull(saved);
 
-        SubscrStPlan checkSaved = subscrStPlanRepository.findOne(saved.getId());
+        SubscrStPlan checkSaved = subscrStPlanRepository.findById(saved.getId())
+            .orElseThrow(() -> new EntityNotFoundException(SubscrStPlan.class, saved.getId()));
         assertNotNull(checkSaved);
         assertNotNull(checkSaved.getPlanCharts());
 //        assertTrue(checkSaved.getPlanCharts().size() > 0);

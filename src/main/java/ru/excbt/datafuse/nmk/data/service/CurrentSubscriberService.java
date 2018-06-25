@@ -5,6 +5,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Optional;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -229,8 +230,8 @@ public class CurrentSubscriberService {
 			return null;
 		}
 
-		V_FullUserInfo result = fullUserInfoRepository.findOne(subscriberUserDetails.getId());
-		return result == null ? null : new V_FullUserInfo(result);
+		Optional<V_FullUserInfo> result = fullUserInfoRepository.findById(subscriberUserDetails.getId());
+		return result.map(V_FullUserInfo::new).orElse(null);
 	}
 
 	/**

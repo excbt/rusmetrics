@@ -8,12 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.ObjectTag;
 import ru.excbt.datafuse.nmk.data.model.ObjectTagInfo;
-import ru.excbt.datafuse.nmk.data.util.GroupUtil;
-import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagGlobalRepository;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagInfoRepository;
 import ru.excbt.datafuse.nmk.data.repository.ObjectTagRepository;
+import ru.excbt.datafuse.nmk.service.dto.ObjectTagDTO;
 import ru.excbt.datafuse.nmk.service.dto.ObjectTagInfoDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ObjectTagGlobalMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ObjectTagInfoMapper;
@@ -75,11 +74,14 @@ public class ObjectTagService {
 
         ObjectTag.PK tagPK = objectTagMapper.toEntityPK(dto);
         tagPK.setSubscriberId(portalUserIds.getSubscriberId());
-        ObjectTag tag = objectTagRepository.findOne(tagPK);
-        if (tag == null) {
+        Optional<ObjectTag> tagOpt = objectTagRepository.findById(tagPK);
+        ObjectTag tag;
+        if (!tagOpt.isPresent()) {
             tag = objectTagMapper.toEntity(dto);
             tag.setSubscriberId(portalUserIds.getSubscriberId());
             tag = objectTagRepository.saveAndFlush(tag);
+        } else {
+            tag = tagOpt.get();
         }
         return objectTagMapper.toDto(tag);
     }
@@ -112,11 +114,14 @@ public class ObjectTagService {
             .map(dto -> {
                 ObjectTag.PK tagPK = objectTagMapper.toEntityPK(dto);
                 tagPK.setSubscriberId(portalUserIds.getSubscriberId());
-                ObjectTag tag = objectTagRepository.findOne(tagPK);
-                if (tag == null) {
+                Optional<ObjectTag> tagOpt = objectTagRepository.findById(tagPK);
+                ObjectTag tag;
+                if (!tagOpt.isPresent()) {
                     tag = objectTagMapper.toEntity(dto);
                     tag.setSubscriberId(portalUserIds.getSubscriberId());
                     tag = objectTagRepository.saveAndFlush(tag);
+                } else {
+                    tag = tagOpt.get();
                 }
                 return tag;
             }).collect(Collectors.toList());
@@ -152,8 +157,8 @@ public class ObjectTagService {
     public boolean deleteTag(ObjectTagDTO dto, PortalUserIds portalUserIds) {
         ObjectTag.PK tagPK = objectTagMapper.toEntityPK(dto);
         tagPK.setSubscriberId(portalUserIds.getSubscriberId());
-        ObjectTag tag = objectTagRepository.findOne(tagPK);
-        if (tag == null) {
+        Optional<ObjectTag> tagOpt = objectTagRepository.findById(tagPK);
+        if (!tagOpt.isPresent()) {
             return false;
         }
         return true;
@@ -178,7 +183,7 @@ public class ObjectTagService {
         ObjectTagInfo.PK pk = objectTagInfoMapper.toPK(objectTagInfoDTO);
         pk.setSubscriberId(portalUserIds.getSubscriberId());
 
-        return Optional.ofNullable(objectTagInfoRepository.findOne(pk)).map(i -> objectTagInfoMapper.toDto(i)).orElse(null);
+        return objectTagInfoRepository.findById(pk).map(objectTagInfoMapper::toDto).orElse(null);
 
     }
 
@@ -194,7 +199,7 @@ public class ObjectTagService {
             newTagInfos.add(newObjectTagInfo);
         }
 
-        objectTagInfoRepository.save(newTagInfos);
+        objectTagInfoRepository.saveAll(newTagInfos);
         objectTagInfoRepository.flush();
 
         List<ObjectTagInfoDTO> resultTagInfo = objectTagInfoMapper.toDto(newTagInfos);
@@ -210,10 +215,10 @@ public class ObjectTagService {
         ObjectTagInfo.PK pk = objectTagInfoMapper.toPK(tagInfoDTO);
         pk.setSubscriberId(portalUserIds.getSubscriberId());
 
-        ObjectTagInfo tagInfo = objectTagInfoRepository.findOne(pk);
-        if (tagInfo != null) {
-            tagInfo.setDeleted(1);
-            objectTagInfoRepository.saveAndFlush(tagInfo);
+        Optional<ObjectTagInfo> tagInfoOpt = objectTagInfoRepository.findById(pk);
+        if (tagInfoOpt.isPresent()) {
+            tagInfoOpt.get().setDeleted(1);
+            objectTagInfoRepository.saveAndFlush(tagInfoOpt.get());
         }
     }
 

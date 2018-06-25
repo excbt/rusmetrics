@@ -16,6 +16,7 @@ import ru.excbt.datafuse.nmk.data.model.ReportShedule;
 import ru.excbt.datafuse.nmk.data.repository.ReportSheduleRepository;
 import ru.excbt.datafuse.nmk.report.ReportActionKey;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с расписаниями отчетов
@@ -46,11 +47,11 @@ public class ReportSheduleService implements SecuredRoles {
 		return result;
 	}
 
-	/**
-	 *
-	 * @param dateTime
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<ReportShedule> selectReportShedule(long subscriberId) {
 		List<ReportShedule> result = reportSheduleRepository.findBySubscriberId(subscriberId);
@@ -160,7 +161,8 @@ public class ReportSheduleService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public ReportShedule findOne(long reportSheduleId) {
-		ReportShedule result = reportSheduleRepository.findOne(reportSheduleId);
+		ReportShedule result = reportSheduleRepository.findById(reportSheduleId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportShedule.class, reportSheduleId));
 		result.getReportParamset().getParamSpecialList().size();
 		return result;
 	}
@@ -172,7 +174,7 @@ public class ReportSheduleService implements SecuredRoles {
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long reportSheduleId) {
-		reportSheduleRepository.delete(reportSheduleId);
+		reportSheduleRepository.deleteById(reportSheduleId);
 	}
 
 	/**

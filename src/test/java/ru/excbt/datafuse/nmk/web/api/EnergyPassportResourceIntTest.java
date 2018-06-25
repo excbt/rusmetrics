@@ -36,6 +36,7 @@ import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 import ru.excbt.datafuse.nmk.web.rest.EnergyPassportResource;
 import ru.excbt.datafuse.nmk.web.rest.TestUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.JsonResultViewer;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
@@ -187,7 +188,8 @@ public class EnergyPassportResourceIntTest extends PortalApiTest {
 
         mockMvcWrapper.restRequest("/api/subscr/energy-passports").testPut(vm);
 
-        EnergyPassport energyPassport = energyPassportRepository.findOne(passportDTO.getId());
+        EnergyPassport energyPassport = energyPassportRepository.findById(passportDTO.getId())
+            .orElseThrow(() -> new EntityNotFoundException(EnergyPassport.class, passportDTO.getId()));
         Assert.assertEquals(vm.getDescription(), energyPassport.getDescription());
         Assert.assertEquals(vm.getPassportName(), energyPassport.getPassportName());
         Assert.assertEquals(vm.getPassportDate(), energyPassport.getPassportDate());

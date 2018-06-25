@@ -24,7 +24,7 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
  * @since 23.10.2015
  *
  */
-@Service
+//@Service
 public class LoginSucessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginSucessHandler.class);

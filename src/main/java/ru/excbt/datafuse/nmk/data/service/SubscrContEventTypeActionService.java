@@ -57,13 +57,13 @@ public class SubscrContEventTypeActionService {
 		return ObjectFilters.deletedFilter(preResult);
 	}
 
-	/**
-	 *
-	 * @param subscriber
-	 * @param contEventType
-	 * @param smsAddrList
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriber
+     * @param contEventType
+     * @param subscrContEventTypeActions
+     * @return
+     */
 	@Transactional
 	public List<SubscrContEventTypeAction> updateSubscrContEventTypeActions(Subscriber subscriber,
 			ContEventType contEventType, List<SubscrContEventTypeAction> subscrContEventTypeActions) {
@@ -99,7 +99,7 @@ public class SubscrContEventTypeActionService {
 		});
 
 		List<SubscrContEventTypeAction> result = Lists
-				.newArrayList(subscrContEventTypeActionRepository.save(currentActions));
+				.newArrayList(subscrContEventTypeActionRepository.saveAll(currentActions));
 
 		return result;
 	}

@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ru.excbt.datafuse.nmk.data.model.keyname.KeyStore;
 import ru.excbt.datafuse.nmk.data.repository.keyname.KeyStoreRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с параметрами системы
@@ -40,8 +41,8 @@ public class KeyStoreService {
 	 * @return
 	 */
 	public String getKeyStoreValue(String keyname) {
-		KeyStore ks = keyStoreRepository.findOne(keyname);
-		checkNotNull(ks, "keyname " + keyname + " for keystore not found");
+		KeyStore ks = keyStoreRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(KeyStore.class, keyname));
 		return ks.getKeyValue();
 	}
 

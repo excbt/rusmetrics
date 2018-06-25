@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 @Transactional(readOnly = true)
 public class SubscriberTimeService {
 
-    @PersistenceContext(unitName = "nmk-p")
+    @PersistenceContext
     private EntityManager em;
 
     /**

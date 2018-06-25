@@ -1,23 +1,20 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import ru.excbt.datafuse.nmk.data.model.SubscrActionGroup;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionGroupRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы с привязкой заданий абонентов и пользователей
@@ -30,7 +27,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 @Service
 public class SubscrActionGroupService implements SecuredRoles {
 
-	private static final Logger logger = LoggerFactory.getLogger(SubscrActionGroupService.class);
+	private static final Logger log = LoggerFactory.getLogger(SubscrActionGroupService.class);
 
 	@Autowired
 	private SubscrActionGroupRepository subscrActionGroupRepository;
@@ -48,14 +45,15 @@ public class SubscrActionGroupService implements SecuredRoles {
 		return subscrActionGroupRepository.findBySubscriberId(subscriberId);
 	}
 
-	/**
-	 *
-	 * @param subscriberId
-	 * @return
-	 */
+    /**
+     *
+     * @param id
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public SubscrActionGroup findOne(long id) {
-		return subscrActionGroupRepository.findOne(id);
+		return subscrActionGroupRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrActionGroup.class, id));
 	}
 
 	/**
@@ -137,20 +135,18 @@ public class SubscrActionGroupService implements SecuredRoles {
 		subscrActionGroupRepository.delete(entity);
 	}
 
-	/**
-	 *
-	 * @param entity
-	 * @return
-	 */
+    /**
+     *
+     * @param id
+     */
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
-		if (subscrActionGroupRepository.exists(id)) {
+		if (subscrActionGroupRepository.existsById(id)) {
 			subscrActionUserGroupService.deleteByGroup(id);
-			subscrActionGroupRepository.delete(id);
+			subscrActionGroupRepository.deleteById(id);
 		} else {
-			throw new PersistenceException(
-					String.format("Object %s(id=%d) is not found", SubscrActionGroup.class.getName(), id));
+			throw new EntityNotFoundException(SubscrActionGroup.class, id);
 		}
 
 	}

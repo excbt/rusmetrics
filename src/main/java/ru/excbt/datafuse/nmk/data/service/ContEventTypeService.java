@@ -1,19 +1,19 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
+import ru.excbt.datafuse.nmk.data.model.ContEventType;
+import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-
-import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
-import ru.excbt.datafuse.nmk.data.model.ContEventType;
-import ru.excbt.datafuse.nmk.data.repository.ContEventTypeRepository;
 
 /**
  * Сервис для работы с типами событий ContEventType
@@ -41,7 +41,7 @@ public class ContEventTypeService {
 	 * @return
 	 */
 	public ContEventType findOne(Long contServiceTypeId) {
-		return contEventTypeRepository.findOne(contServiceTypeId);
+		return contEventTypeRepository.findById(contServiceTypeId).orElseThrow(() -> new EntityNotFoundException(ContEventType.class, contServiceTypeId));
 	}
 
 	/**

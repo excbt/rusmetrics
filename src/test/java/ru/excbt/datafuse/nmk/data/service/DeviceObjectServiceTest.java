@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.modelmapper.DeviceObjectToDTOMapping;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
 import java.util.List;
@@ -102,7 +103,8 @@ public class DeviceObjectServiceTest extends PortalDataTest {
 
     @Test
     public void testSubscrDataSource() {
-	    DeviceObject deviceObject = deviceObjectRepository.findOne(486L);
+	    DeviceObject deviceObject = deviceObjectRepository.findById(486L)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, 468L));
 	    log.info("ActiveDataSource, {}", deviceObject.getActiveDataSource());
 	    log.info("EditDataSourceInfo, {}", deviceObject.getEditDataSourceInfo());
 

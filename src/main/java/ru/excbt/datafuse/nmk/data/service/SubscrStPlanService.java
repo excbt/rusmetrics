@@ -11,6 +11,7 @@ import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanChartRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrStPlanRepository;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrStPlanMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -98,8 +99,8 @@ public class SubscrStPlanService {
 
     @Transactional
     public void delete (Long id, PortalUserIds portalUserIds) {
-        SubscrStPlan stPlan = subscrStPlanRepository.findOne(id);
-        Preconditions.checkNotNull(stPlan);
+        SubscrStPlan stPlan = subscrStPlanRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrStPlan.class, id));
         Preconditions.checkArgument(stPlan.getSubscriberId().equals(portalUserIds.getSubscriberId()));
         stPlan.setDeleted(1);
         subscrStPlanRepository.saveAndFlush(stPlan);

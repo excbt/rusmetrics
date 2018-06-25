@@ -14,6 +14,7 @@ import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.SubscriberLdapService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import static org.junit.Assert.*;
 
@@ -114,7 +115,8 @@ public class LdapServiceTest extends PortalDataTest {
     @Ignore
 	@Test
 	public void testCreateCabinetsOU() throws Exception {
-		SubscrUser subscrUser = subscrUserRepository.findOne(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID);
+		SubscrUser subscrUser = subscrUserRepository.findById(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID));
 
 		String subscriberName = subscrUser.getSubscriber().getSubscriberName();
 		Long subscriberId = subscrUser.getSubscriber().getId();

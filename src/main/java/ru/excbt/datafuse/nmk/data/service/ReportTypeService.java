@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.data.repository.ReportMetaParamSpecialRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportTypeContServiceTypeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ReportTypeRepository;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с типами отчетов
@@ -73,7 +74,8 @@ public class ReportTypeService {
 	 * @return
 	 */
 	public ReportType selectReportType(String keyname) {
-		return reportTypeRepository.findOne(keyname);
+		return reportTypeRepository.findById(keyname)
+            .orElseThrow(() -> new EntityNotFoundException(ReportType.class, keyname));
 	}
 
 	/**

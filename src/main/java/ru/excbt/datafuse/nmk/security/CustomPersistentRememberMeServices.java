@@ -2,6 +2,7 @@ package ru.excbt.datafuse.nmk.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Optional;
 
 /**
  * Custom implementation of Spring Security's RememberMeServices.
@@ -72,7 +74,7 @@ public class CustomPersistentRememberMeServices extends
 
     private final V_FullUserInfoRepository userRepository;
 
-    @Inject
+    @Autowired
     public CustomPersistentRememberMeServices(PortalProperties portalProperties,
                                               org.springframework.security.core.userdetails.UserDetailsService userDetailsService,
                                               UserPersistentTokenRepository persistentTokenRepository,
@@ -90,10 +92,10 @@ public class CustomPersistentRememberMeServices extends
 
 
         UserPersistentToken token;
-        V_FullUserInfo user = null;
+        Optional<V_FullUserInfo> userOpt;
         try {
             token = getPersistentToken(cookieTokens);
-            user = userRepository.findOne(token.getUserId());
+            userOpt = userRepository.findById(token.getUserId());
         } catch (CookieTheftException e) {
             // We catch CookieTheftException and throw RememberMeAuthenticationException,
             // because CookieTheftException doesn't redirect to login form
@@ -102,12 +104,12 @@ public class CustomPersistentRememberMeServices extends
         }
 
 
-        if (user == null) {
+        if (!userOpt.isPresent()) {
             log.error("User with ID: {} is not found in V_FullUserInfo", token.getUserId());
             throw new RememberMeAuthenticationException("Autologin failed due to data access problem");
         }
 
-        String login = user.getUserName();
+        String login = userOpt.get().getUserName();
 
         // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
         log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
@@ -157,14 +159,13 @@ public class CustomPersistentRememberMeServices extends
      * current user, so when he logs out from one browser, all his other sessions are destroyed.
      */
     @Override
-    @Transactional
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         String rememberMeCookie = extractRememberMeCookie(request);
         if (rememberMeCookie != null && rememberMeCookie.length() != 0) {
             try {
                 String[] cookieTokens = decodeCookie(rememberMeCookie);
                 UserPersistentToken token = getPersistentToken(cookieTokens);
-                persistentTokenRepository.deleteTokenBySeries(token.getSeries());
+                persistentTokenRepository.delete(token);
             } catch (InvalidCookieException ice) {
                 log.info("Invalid cookie, no persistent token could be deleted", ice);
             } catch (RememberMeAuthenticationException rmae) {
@@ -184,27 +185,27 @@ public class CustomPersistentRememberMeServices extends
         }
         String presentedSeries = cookieTokens[0];
         String presentedToken = cookieTokens[1];
-        UserPersistentToken token = persistentTokenRepository.findOne(presentedSeries);
+        Optional<UserPersistentToken> tokenOpt = persistentTokenRepository.findById(presentedSeries);
 
-        if (token == null) {
+        if (!tokenOpt.isPresent()) {
             // No series match, so we can't authenticate using this cookie
             throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }
 
         // We have a match for this user/series combination
         //log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
-        if (!presentedToken.equals(token.getTokenValue())) {
+        if (!presentedToken.equals(tokenOpt.get().getTokenValue())) {
             // Token doesn't match series value. Delete this session and throw an exception.
-            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
+            persistentTokenRepository.delete(tokenOpt.get());
             throw new CookieTheftException("Invalid remember-me token (Series/token) mismatch. Implies previous " +
                 "cookie theft attack.");
         }
 
-        if (token.getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
-            persistentTokenRepository.deleteTokenBySeries(token.getSeries());
+        if (tokenOpt.get().getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
+            persistentTokenRepository.delete(tokenOpt.get());
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }
-        return token;
+        return tokenOpt.get();
     }
 
     private String generateSeriesData() {
@@ -223,5 +224,9 @@ public class CustomPersistentRememberMeServices extends
         setCookie(
             new String[]{token.getSeries(), token.getTokenValue()},
             TOKEN_VALIDITY_SECONDS, request, response);
+    }
+
+    protected boolean rememberMeRequested(HttpServletRequest request, String parameter) {
+      return super.rememberMeRequested(request, parameter);
     }
 }

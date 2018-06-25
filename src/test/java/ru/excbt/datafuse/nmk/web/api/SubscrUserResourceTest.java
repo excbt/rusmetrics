@@ -33,6 +33,7 @@ import ru.excbt.datafuse.nmk.service.dto.SubscrUserDTO;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrUserMapper;
 import ru.excbt.datafuse.nmk.web.PortalApiTest;
 import ru.excbt.datafuse.nmk.web.rest.SubscrUserResource;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.nmk.web.rest.util.MockMvcRestWrapper;
 import ru.excbt.datafuse.nmk.web.rest.util.PortalUserIdsMock;
 
@@ -111,8 +112,8 @@ public class SubscrUserResourceTest extends PortalApiTest {
             .testPost(subscrUser).getLastId();
 
 //            _testCreateJson(UrlUtils.apiSubscrUrl("/subscrUsers"), subscrUser, params);
-		subscrUser = subscrUserRepository.findOne(subscrUserId);
-		assertNotNull(subscrUser);
+		subscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
 
 		subscrUser.setUserComment("Modified By REST");
 
@@ -186,7 +187,8 @@ public class SubscrUserResourceTest extends PortalApiTest {
             .requestBuilder(b -> b.param("newPassword", "my-pass12345"))
             .testPost(subscrUserDTO).getLastId();
 
-        SubscrUser checkUser = subscrUserRepository.findOne(subscrUserId);
+        SubscrUser checkUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
         assertThat(checkUser.getUserName(), equalTo(subscrUserDTO.getUserName()));
     }
 

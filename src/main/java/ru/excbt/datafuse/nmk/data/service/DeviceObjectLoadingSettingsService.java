@@ -15,6 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObject;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectLoadingSettings;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectLoadingSettingsRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с настройками загрузки с прибора
@@ -37,7 +38,8 @@ public class DeviceObjectLoadingSettingsService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public DeviceObjectLoadingSettings findOne(Long id) {
-		return deviceObjectLoadingSettingsRepository.findOne(id);
+		return deviceObjectLoadingSettingsRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObjectLoadingSettings.class, id));
 	}
 
 	/**

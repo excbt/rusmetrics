@@ -129,6 +129,11 @@ public class MockMvcRestWrapper {
             return this;
         }
 
+        public RestRequest testGet2xx() throws Exception {
+            testGetAndReturn(Optional.of(status().is2xxSuccessful()));
+            return this;
+        }
+
         public RestRequest testGet(ResultMatcher resultMatcher) throws Exception {
             testGetAndReturn(Optional.ofNullable(resultMatcher));
             return this;

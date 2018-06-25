@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.SubscrActionUser;
 import ru.excbt.datafuse.nmk.data.repository.SubscrActionUserRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с пользователями заданий абонентов
@@ -51,7 +52,8 @@ public class SubscrActionUserService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public SubscrActionUser findOne(long id) {
-		return subscrActionUserRepository.findOne(id);
+		return subscrActionUserRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrActionUser.class, id));
 	}
 
 	/**
@@ -131,12 +133,11 @@ public class SubscrActionUserService implements SecuredRoles {
 	@Transactional
 	@Secured({ ROLE_SUBSCR_USER, ROLE_SUBSCR_ADMIN })
 	public void deleteOne(long id) {
-		if (subscrActionUserRepository.exists(id)) {
+		if (subscrActionUserRepository.existsById(id)) {
 			subscrActionUserGroupService.deleteByUser(id);
-			subscrActionUserRepository.delete(id);
+			subscrActionUserRepository.deleteById(id);
 		} else {
-			throw new PersistenceException(
-					String.format("Object %s(id=%d) is not found", SubscrActionUser.class.getName(), id));
+			throw new EntityNotFoundException(SubscrActionUser.class, id);
 
 		}
 	}

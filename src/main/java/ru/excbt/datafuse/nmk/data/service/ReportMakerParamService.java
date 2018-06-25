@@ -25,6 +25,7 @@ import ru.excbt.datafuse.nmk.data.repository.ReportParamsetRepository;
 import ru.excbt.datafuse.nmk.data.repository.ReportParamsetUnitRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.report.ReportTypeKey;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с параметрами отчета
@@ -68,7 +69,8 @@ public class ReportMakerParamService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findById(reportParamsetId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportParamset.class, reportParamsetId));
 
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_OFF);
 
@@ -81,7 +83,8 @@ public class ReportMakerParamService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId) {
-		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findById(reportParamsetId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportParamset.class, reportParamsetId));
 
 		return reportMakerParamFactory(reportParamset, null, PREVIEW_ON);
 
@@ -94,7 +97,8 @@ public class ReportMakerParamService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParam(long reportParamsetId, Long[] contObjectIds) {
-		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findById(reportParamsetId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportParamset.class, reportParamsetId));
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_OFF);
 	}
 
@@ -105,7 +109,8 @@ public class ReportMakerParamService {
 	 */
 	@Transactional( readOnly = true)
 	public ReportMakerParam newReportMakerParamPreview(long reportParamsetId, Long[] contObjectIds) {
-		ReportParamset reportParamset = reportParamsetRepository.findOne(reportParamsetId);
+		ReportParamset reportParamset = reportParamsetRepository.findById(reportParamsetId)
+            .orElseThrow(() -> new EntityNotFoundException(ReportParamset.class, reportParamsetId));
 		return reportMakerParamFactory(reportParamset, contObjectIds, PREVIEW_ON);
 	}
 

@@ -28,6 +28,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.Lists;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import static ru.excbt.datafuse.nmk.security.AuthoritiesConstants.ADMIN;
 import static ru.excbt.datafuse.nmk.security.AuthoritiesConstants.SUBSCR_ADMIN;
@@ -76,8 +77,9 @@ public class MeterPeriodSettingService {
 	 */
 	@Transactional( readOnly = true)
 	public MeterPeriodSettingDTO findOne(Long id) {
-		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
-		return setting != null && setting.getDeleted() == 0 ? modelMapper.map(setting, MeterPeriodSettingDTO.class) : null;
+        return meterPeriodSettingRepository.findById(id)
+            .filter(i -> i.getDeleted() == 0)
+            .map(i -> modelMapper.map(i, MeterPeriodSettingDTO.class)).orElse(null);
 	}
 
 	/**
@@ -90,7 +92,8 @@ public class MeterPeriodSettingService {
 	public MeterPeriodSettingDTO save(MeterPeriodSettingDTO meterPeriodSettingDTO) {
 
 		if (meterPeriodSettingDTO.getId() != null) {
-			MeterPeriodSetting check = meterPeriodSettingRepository.findOne(meterPeriodSettingDTO.getId());
+			MeterPeriodSetting check = meterPeriodSettingRepository.findById(meterPeriodSettingDTO.getId())
+                .orElseThrow(() -> new EntityNotFoundException(MeterPeriodSetting.class, meterPeriodSettingDTO.getId()));
 			if (!check.getSubscriberId().equals(portalUserIdsService.getCurrentIds().getSubscriberId())) {
 				throw new AccessDeniedException("Invalid subscriber Id");
 			}
@@ -111,7 +114,9 @@ public class MeterPeriodSettingService {
 	@Transactional
 	@Secured({ SUBSCR_ADMIN, ADMIN })
 	public void delete(Long id) {
-		MeterPeriodSetting setting = meterPeriodSettingRepository.findOne(id);
+		MeterPeriodSetting setting = meterPeriodSettingRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(MeterPeriodSetting.class, id));
+
 		if (setting != null) {
 			setting.setDeleted(1);
 			meterPeriodSettingRepository.save(setting);

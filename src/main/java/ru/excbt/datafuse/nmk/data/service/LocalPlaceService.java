@@ -17,6 +17,7 @@ import ru.excbt.datafuse.nmk.data.model.WeatherPlace;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceRepository;
 import ru.excbt.datafuse.nmk.data.repository.WeatherPlaceRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 @Service
 public class LocalPlaceService implements SecuredRoles {
@@ -52,7 +53,8 @@ public class LocalPlaceService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public LocalPlace findLocalPlace(Long id) {
-		return localPlaceRepository.findOne(id);
+		return localPlaceRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(LocalPlace.class, id));
 	}
 
 	/**

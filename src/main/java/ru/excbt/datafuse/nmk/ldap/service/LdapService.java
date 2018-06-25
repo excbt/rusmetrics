@@ -48,13 +48,16 @@ public class LdapService {
 		private final static String INET_USER_STATUS_INACTIVE = "Inactive";
 	}
 
-	@Autowired
-	private LdapTemplate ldapTemplate;
+	private final LdapTemplate ldapTemplate;
 
-	@Autowired
-	private LdapConfig ldapConfig;
+	private final LdapConfig ldapConfig;
 
-	/**
+    public LdapService(LdapTemplate ldapTemplate, LdapConfig ldapConfig) {
+        this.ldapTemplate = ldapTemplate;
+        this.ldapConfig = ldapConfig;
+    }
+
+    /**
 	 *
 	 * @param username
 	 * @param oldPassword
@@ -93,18 +96,15 @@ public class LdapService {
 
 		String dnString = getDnForUser(username);
 
-		ldapTemplate.executeReadOnly(new ContextExecutor<Object>() {
-			@Override
-			public Object executeWithContext(DirContext ctx) throws NamingException {
-				if (!(ctx instanceof LdapContext)) {
-					throw new IllegalArgumentException(
-							"Extended operations require LDAPv3 - " + "Context must be of type LdapContext");
-				}
-				LdapContext ldapContext = (LdapContext) ctx;
-				ExtendedRequest er = new ModifyPasswordRequest(dnString, newPassword);
-				return ldapContext.extendedOperation(er);
-			}
-		});
+		ldapTemplate.executeReadOnly((ContextExecutor<Object>) ctx -> {
+            if (!(ctx instanceof LdapContext)) {
+                throw new IllegalArgumentException(
+                        "Extended operations require LDAPv3 - " + "Context must be of type LdapContext");
+            }
+            LdapContext ldapContext = (LdapContext) ctx;
+            ExtendedRequest er = new ModifyPasswordRequest(dnString, newPassword);
+            return ldapContext.extendedOperation(er);
+        });
 
 		return true;
 	}

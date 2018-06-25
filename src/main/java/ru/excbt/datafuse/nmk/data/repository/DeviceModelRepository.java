@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import java.util.List;
 
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 import ru.excbt.datafuse.nmk.data.model.DeviceModel;
@@ -15,7 +15,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceModel;
  * @since 24.02.2015
  *
  */
-public interface DeviceModelRepository extends CrudRepository<DeviceModel, Long>, QueryDslPredicateExecutor<DeviceModel> {
+public interface DeviceModelRepository extends CrudRepository<DeviceModel, Long>, QuerydslPredicateExecutor<DeviceModel> {
 
 	public List<DeviceModel> findByExSystem(String exSystem);
 

@@ -27,6 +27,7 @@ import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.slog.service.SLogSessionUtil;
 import ru.excbt.datafuse.nmk.slog.service.SLogWriterService;
 import ru.excbt.datafuse.nmk.utils.DateInterval;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionStatuses;
 import ru.excbt.datafuse.slogwriter.service.SLogSessionT1;
 
@@ -131,20 +132,17 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
         Long rmaSubscriberId;
         {
-            SubscrUser subscrUser = subscrUserRepository.findOne(subscrUserId);
-            if (subscrUser == null) {
+            Optional<SubscrUser> subscrUserOpt = subscrUserRepository.findById(subscrUserId);
+            if (!subscrUserOpt.isPresent()) {
 
-                SystemUser systemUser = systemUserRepository.findOne(subscrUserId);
-                if (systemUser == null) {
-                    log.error("subscrUser is not found");
-                    throw new IllegalStateException("subscrUserId=" + subscrUserId + " is not found");
-                } else {
-                    rmaSubscriberId = systemUser.getSubscriber().getIsRma() ? systemUser.getSubscriber().getId() :
-                        systemUser.getSubscriber().getRmaSubscriberId();
-                }
+                SystemUser systemUser = systemUserRepository.findById(subscrUserId)
+                    .orElseThrow(() -> new EntityNotFoundException(SystemUser.class, subscrUserId));
+                rmaSubscriberId = systemUser.getSubscriber().getIsRma() ? systemUser.getSubscriber().getId() :
+                    systemUser.getSubscriber().getRmaSubscriberId();
+
             } else {
-                rmaSubscriberId = subscrUser.getSubscriber().getIsRma() ? subscrUser.getSubscriber().getId() :
-                    subscrUser.getSubscriber().getRmaSubscriberId();
+                rmaSubscriberId = subscrUserOpt.get().getSubscriber().getIsRma() ? subscrUserOpt.get().getSubscriber().getId() :
+                    subscrUserOpt.get().getSubscriber().getRmaSubscriberId();
             }
         }
 
@@ -341,7 +339,7 @@ public class ContServiceDataImpulseService implements SecuredRoles {
 
             try {
 
-                impulseImportRepository.save(impulseImportList);
+                impulseImportRepository.saveAll(impulseImportList);
             } catch (IllegalStateException e) {
                 session.web().error("Ошибка при загрузке данных");
                 SLogSessionUtil.failSession(session,

@@ -4,14 +4,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.LogSession;
 import ru.excbt.datafuse.nmk.data.model.SubscrSessionTask;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskLogRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscrSessionTaskRepository;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -42,9 +45,16 @@ public class SubscrSessionTaskService {
 	 * @return
 	 */
 	@Transactional( readOnly = true)
-	public SubscrSessionTask findSubscrSessionTask(Long id) {
-		return subscrSessionTaskRepository.findOne(id);
+	public SubscrSessionTask findSubscrSessionTaskChecked(Long id) {
+		return subscrSessionTaskRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrSessionTask.class, id));
 	}
+
+
+    @Transactional( readOnly = true)
+    public Optional<SubscrSessionTask> findSubscrSessionTask(Long id) {
+        return subscrSessionTaskRepository.findById(id).filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE);
+    }
 
 	/**
 	 *
@@ -53,7 +63,8 @@ public class SubscrSessionTaskService {
 	 */
 	@Transactional( readOnly = true)
 	public boolean getIsProgress(Long subscrSessionTaskId) {
-		SubscrSessionTask task = subscrSessionTaskRepository.findOne(subscrSessionTaskId);
+		SubscrSessionTask task = subscrSessionTaskRepository.findById(subscrSessionTaskId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrSessionTask.class, subscrSessionTaskId));
 		return Boolean.TRUE.equals(task.getTaskIsComplete());
 	}
 

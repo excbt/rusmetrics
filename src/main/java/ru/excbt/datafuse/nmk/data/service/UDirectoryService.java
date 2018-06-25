@@ -20,6 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.data.repository.UDirectoryRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с универсальным справочником
@@ -40,21 +41,19 @@ public class UDirectoryService implements SecuredRoles {
 	@Autowired
 	private SubscriberService subscriberService;
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param subscriberId
+     * @param uDirectoryId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public UDirectory findOne(long subscriberId, final long uDirectoryId) {
 		if (!checkAvailableDirectory(subscriberId, uDirectoryId)) {
 			return null;
 		}
-		UDirectory result = directoryRepository.findOne(uDirectoryId);
-		if (result == null) {
-			logger.debug("UDirectory (id={}) not found", uDirectoryId);
-			return null;
-		}
+		UDirectory result = directoryRepository.findById(uDirectoryId)
+            .orElseThrow(() -> new EntityNotFoundException(UDirectory.class, uDirectoryId));
 		return result;
 	}
 
@@ -113,11 +112,8 @@ public class UDirectoryService implements SecuredRoles {
 				throw new PersistenceException(
 						"SubscrOrgId: " + subscrOrgId + ". Directory with ID: " + directoryId + " is not found");
 			}
-			recordToSave = directoryRepository.findOne(directoryId);
-			if (recordToSave == null) {
-				throw new PersistenceException(
-						"SubscrOrgId: " + subscrOrgId + ". Directory with ID: " + directoryId + " is not found");
-			}
+			recordToSave = directoryRepository.findById(directoryId)
+                .orElseThrow(() -> new EntityNotFoundException(UDirectory.class, directoryId));
 		}
 
 		recordToSave.setDirectoryDescription(entity.getDirectoryDescription());
@@ -142,7 +138,7 @@ public class UDirectoryService implements SecuredRoles {
 					"SubscriberId: " + subscriberId + ". Directory with ID: " + directoryId + " is not found");
 		}
 
-		directoryRepository.delete(directoryId);
+		directoryRepository.deleteById(directoryId);
 
 	}
 

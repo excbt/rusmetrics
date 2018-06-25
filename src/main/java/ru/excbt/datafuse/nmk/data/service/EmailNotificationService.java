@@ -30,20 +30,20 @@ public class EmailNotificationService implements SecuredRoles {
 		return emailNotificationRepository.save(entity);
 	}
 
-	/***
-	 *
-	 * @param fromSubscrUserId
-	 */
+    /**
+     *
+     * @param subscrUserId
+     */
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional
 	public void deleteEmailNotifications(Long subscrUserId) {
 		List<EmailNotification> emailNotifications = emailNotificationRepository.findByFromSubscrUserId(subscrUserId);
 
-		emailNotificationRepository.delete(emailNotifications);
+		emailNotificationRepository.deleteAll(emailNotifications);
 
 		emailNotifications = emailNotificationRepository.findByToSubscrUserId(subscrUserId);
 
-		emailNotificationRepository.delete(emailNotifications);
+		emailNotificationRepository.deleteAll(emailNotifications);
 	}
 
 	/**

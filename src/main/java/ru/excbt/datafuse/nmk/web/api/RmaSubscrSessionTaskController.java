@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -61,8 +62,8 @@ public class RmaSubscrSessionTaskController  {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getSubscrSessionTask(@PathVariable("id") Long id) {
-		SubscrSessionTask result = subscrSessionTaskService.findSubscrSessionTask(id);
-		return ApiResponse.responseOK(ObjectFilters.deletedFilter(result));
+		Optional<SubscrSessionTask> result = subscrSessionTaskService.findSubscrSessionTask(id);
+		return result.map(ResponseEntity::ok).orElse(ResponseEntity.ok().build());
 	}
 
 	/**

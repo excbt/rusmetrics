@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class SubscriberRepositoryTest extends PortalDataTest {
 
 	@Test
 	public void testSubscrRole() {
-		Subscriber sr = subscrOrgRepository.findOne(728L);
+		Subscriber sr = subscrOrgRepository.findById(728L)
+            .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, 728L));
 		assertNotNull(sr);
 		logger.debug("subscrRole ID {}", sr.getId());
 		assertNotNull(sr.getOrganization());

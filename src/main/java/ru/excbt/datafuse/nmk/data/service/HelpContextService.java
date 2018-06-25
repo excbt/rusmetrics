@@ -1,21 +1,18 @@
 package ru.excbt.datafuse.nmk.data.service;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
-
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import ru.excbt.datafuse.nmk.data.model.HelpContext;
 import ru.excbt.datafuse.nmk.data.repository.HelpContextRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
+
+import java.util.List;
+
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Сервис для работы со справкой
@@ -37,11 +34,11 @@ public class HelpContextService implements SecuredRoles {
 	@Autowired
 	private SystemParamService systemParamService;
 
-	/**
-	 *
-	 * @param id
-	 * @return
-	 */
+    /**
+     *
+     * @param anchorId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public HelpContext findByAnchorId(String anchorId) {
 		List<HelpContext> preResult = helpContextRepository.findByAnchorId(anchorId);
@@ -121,10 +118,8 @@ public class HelpContextService implements SecuredRoles {
 		checkNotNull(helpContext);
 		checkArgument(!helpContext.isNew());
 
-		HelpContext currHelpContext = helpContextRepository.findOne(helpContext.getId());
-		if (currHelpContext == null) {
-			throw new PersistenceException(String.format("HelpContext (id = %d) is not found", helpContext.getId()));
-		}
+		HelpContext currHelpContext = helpContextRepository.findById(helpContext.getId())
+            .orElseThrow(() -> new EntityNotFoundException(HelpContext.class, helpContext.getId()));
 
 		currHelpContext.setHelpUrl(helpContext.getHelpUrl());
 		return helpContextRepository.save(currHelpContext);

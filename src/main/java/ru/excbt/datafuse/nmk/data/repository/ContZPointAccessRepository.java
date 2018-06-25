@@ -2,7 +2,7 @@ package ru.excbt.datafuse.nmk.data.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.query.Param;
 import ru.excbt.datafuse.nmk.data.model.ContObjectAccess;
 import ru.excbt.datafuse.nmk.data.model.ContZPoint;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public interface ContZPointAccessRepository extends JpaRepository<ContZPointAccess, ContZPointAccess.PK>,
     SubscriberRI<ContZPointAccess>, ContZPointRI<ContZPointAccess>, ObjectAccessRI<ContZPointAccess>,
-    QueryDslPredicateExecutor<ContZPointAccess> {
+    QuerydslPredicateExecutor<ContZPointAccess> {
 
     @Query("SELECT distinct a.subscriber.id FROM ContZPointAccess a")
     List<Long> findAllSubscriberIds();

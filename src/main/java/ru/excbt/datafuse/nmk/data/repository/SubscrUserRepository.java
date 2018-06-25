@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.querydsl.QueryDslPredicateExecutor;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUser;
  * @since 26.02.2015
  *
  */
-public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long>, QueryDslPredicateExecutor<SubscrUser> {
+public interface SubscrUserRepository extends CrudRepository<SubscrUser, Long>, QuerydslPredicateExecutor<SubscrUser> {
 
     String USERS_BY_LOGIN_CACHE = "usersByLogin";
 

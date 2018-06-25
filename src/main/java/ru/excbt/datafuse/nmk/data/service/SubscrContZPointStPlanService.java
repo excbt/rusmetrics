@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.SubscrContZPointStPlanDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.SubscrContZPointStPlanRepository;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrContZPointStPlanMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -58,8 +59,8 @@ public class SubscrContZPointStPlanService {
 
     @Transactional
     public void delete (Long id, PortalUserIds portalUserIds) {
-        SubscrContZPointStPlan zPointStPlan = repository.findOne(id);
-        Preconditions.checkNotNull(zPointStPlan);
+        SubscrContZPointStPlan zPointStPlan = repository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrContZPointStPlan.class, id));
         Preconditions.checkArgument(zPointStPlan.getSubscriberId().equals(portalUserIds.getSubscriberId()));
         zPointStPlan.setDeleted(1);
         repository.saveAndFlush(zPointStPlan);

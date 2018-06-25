@@ -3,33 +3,31 @@
  */
 package ru.excbt.datafuse.nmk.config.mvc;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.EnumSet;
-
-import javax.inject.Inject;
-import javax.servlet.*;
-
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
-import org.springframework.boot.context.embedded.MimeMappings;
+import org.springframework.boot.web.server.MimeMappings;
+import org.springframework.boot.web.server.WebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.boot.web.servlet.server.ConfigurableServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.config.PortalProperties;
+
+import javax.servlet.*;
+import java.io.File;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.EnumSet;
 
 /**
  * Configuration of web application with Servlet 3.0 APIs.
@@ -40,7 +38,7 @@ import ru.excbt.datafuse.nmk.config.PortalProperties;
  *
  */
 @Configuration
-public class WebConfigurer implements ServletContextInitializer, EmbeddedServletContainerCustomizer {
+public class WebConfigurer implements ServletContextInitializer, WebServerFactoryCustomizer<WebServerFactory> {
 
 	private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
@@ -55,41 +53,23 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         this.env = env;
         this.portalProperties = portalProperties;
     }
-	/**
-	 *
-	 * @param container
-	 */
-	@Override
-	public void customize(ConfigurableEmbeddedServletContainer container) {
-		MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
-		// IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
-		mappings.add("html", "text/html;charset=utf-8");
-		// CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
-		mappings.add("json", "text/html;charset=utf-8");
-		container.setMimeMappings(mappings);
 
-		// When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
-		setLocationForStaticAssets(container);
+	private void setLocationForStaticAssets(WebServerFactory server) {
 
-	}
+        if (server instanceof ConfigurableServletWebServerFactory) {
+            ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
+            File root;
+            String prefixPath = resolvePathPrefix();
+            if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+                root = new File(prefixPath + "target/www/");
+            } else {
+                root = new File(prefixPath + "src/main/webapp/");
+            }
+            if (root.exists() && root.isDirectory()) {
+                servletWebServer.setDocumentRoot(root);
+            }
+        }
 
-	private void setLocationForStaticAssets(ConfigurableEmbeddedServletContainer container) {
-		File root;
-		String prefixPath = resolvePathPrefix();
-		if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
-			root = new File(prefixPath + "target/www/");
-		} else {
-			root = new File(prefixPath + "src/main/webapp/");
-		}
-		if (root.exists() && root.isDirectory()) {
-			container.setDocumentRoot(root);
-		}
-//        File root;
-//        String prefixPath = resolvePathPrefix();
-//        root = new File(prefixPath + "target/www/");
-//        if (root.exists() && root.isDirectory()) {
-//            container.setDocumentRoot(root);
-//        }
 	}
 
 	/**
@@ -170,6 +150,21 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
             //source.registerCorsConfiguration("/app/**", config);
         }
         return new CorsFilter(source);
+    }
+
+    @Override
+    public void customize(WebServerFactory server) {
+        MimeMappings mappings = new MimeMappings(MimeMappings.DEFAULT);
+        // IE issue, see https://github.com/jhipster/generator-jhipster/pull/711
+        mappings.add("html", "text/html;charset=utf-8");
+        // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
+        mappings.add("json", "text/html;charset=utf-8");
+        ConfigurableServletWebServerFactory servletWebServer = (ConfigurableServletWebServerFactory) server;
+        servletWebServer.setMimeMappings(mappings);
+
+        // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
+        setLocationForStaticAssets(server);
+
     }
 
 

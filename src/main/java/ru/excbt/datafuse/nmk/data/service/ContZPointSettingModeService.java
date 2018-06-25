@@ -19,6 +19,7 @@ import ru.excbt.datafuse.nmk.data.model.keyname.ContObjectSettingModeType;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointSettingModeRepository;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ContObjectSettingModeTypeRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с настройками точки учета
@@ -127,7 +128,7 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	@Deprecated
 	private void delete(long id) {
 		checkArgument(id > 0);
-		settingModeRepository.delete(id);
+		settingModeRepository.deleteById(id);
 	}
 
 	/**
@@ -165,7 +166,8 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public ContZPointSettingMode findOne(long contZPointSettingModeId) {
-		return settingModeRepository.findOne(contZPointSettingModeId);
+		return settingModeRepository.findById(contZPointSettingModeId)
+            .orElseThrow(() -> new EntityNotFoundException(ContZPointSettingMode.class, contZPointSettingModeId));
 	}
 
 	/**
@@ -177,6 +179,6 @@ public class ContZPointSettingModeService implements SecuredRoles {
 	public void deleteByContZPoint(Long contZPointId) {
 		checkNotNull(contZPointId);
 		List<ContZPointSettingMode> deleteCandidate = findSettingByContZPointId(contZPointId);
-		settingModeRepository.delete(deleteCandidate);
+		settingModeRepository.deleteAll(deleteCandidate);
 	}
 }

@@ -646,7 +646,7 @@ public class ContServiceDataHWaterService  {
 
 		});
 
-		contServiceDataHWaterRepository.save(inData);
+		contServiceDataHWaterRepository.saveAll(inData);
 
 	}
 
@@ -688,7 +688,7 @@ public class ContServiceDataHWaterService  {
 							outFile.getAbsolutePath(), contZpointId));
 		}
 
-		contServiceDataHWaterRepository.delete(deleteCandidate);
+		contServiceDataHWaterRepository.deleteAll(deleteCandidate);
 
 		return deleteCandidate;
 	}

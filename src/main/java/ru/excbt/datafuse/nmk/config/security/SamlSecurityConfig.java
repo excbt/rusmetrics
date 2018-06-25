@@ -91,7 +91,6 @@ import ru.excbt.datafuse.nmk.security.PortalUserAuthenticationProvider;
 @EnableGlobalMethodSecurity(securedEnabled = true)
 @PropertySource(value = "classpath:META-INF/saml-idp.properties")
 @ComponentScan(basePackages = { "org.springframework.security.saml" })
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @Profile(value = "SAML")
 public class SamlSecurityConfig extends WebSecurityConfigurerAdapter {
 

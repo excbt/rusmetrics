@@ -26,11 +26,13 @@
         <run.addResources>false</run.addResources>
 
 
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+
         <java-uuid-gen.version>3.1.4</java-uuid-gen.version>
 		<guava.version>18.0</guava.version>
 		<hikari.version>2.4.6</hikari.version>
         <pentaho.version>6.1.0.11-329</pentaho.version>
-        <hibernate.version>5.2.8.Final</hibernate.version>
+        <hibernate.version>5.2.17.Final</hibernate.version>
         <!--<hibernate.version>5.2.12.Final</hibernate.version>-->
         <mapstruct.version>1.2.0.Final</mapstruct.version>
         <lombok.version>1.16.18</lombok.version>
@@ -45,13 +47,11 @@
 
         <start-class>ru.excbt.datafuse.nmk.app.PortalApplication</start-class>
 
-        <!-- Dependency versions -->
-        <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-
         <!-- Plugin versions -->
         <maven-clean-plugin.version>2.6.1</maven-clean-plugin.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
         <maven-war-plugin.version>2.6</maven-war-plugin.version>
+        <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
         <sonar-maven-plugin.version>3.2</sonar-maven-plugin.version>
         <frontend-maven-plugin.version>1.6</frontend-maven-plugin.version>
 
@@ -78,6 +78,9 @@
         <sonar.host.url>http://192.168.84.125:9000</sonar.host.url>
         <p6spy.version>3.7.0</p6spy.version>
 
+        <jhipster-dependencies.version>2.0.13</jhipster-dependencies.version>
+        <querydsl.version>4.2.1</querydsl.version>
+
 	</properties>
 
 	<prerequisites>
@@ -88,9 +91,22 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.13.RELEASE</version>
+		<version>2.0.3.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.github.jhipster</groupId>
+                <artifactId>jhipster-dependencies</artifactId>
+                <version>${jhipster-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- jhipster-needle-maven-add-dependency-management -->
+        </dependencies>
+    </dependencyManagement>
 
 	<dependencies>
 		<!-- Spring -->
@@ -98,12 +114,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>commons-logging</groupId>
-					<artifactId>commons-logging</artifactId>
-				</exclusion>
-			</exclusions>
+			<!--<exclusions>-->
+				<!--<exclusion>-->
+					<!--<groupId>commons-logging</groupId>-->
+					<!--<artifactId>commons-logging</artifactId>-->
+				<!--</exclusion>-->
+			<!--</exclusions>-->
 		</dependency>
 
         <dependency>
@@ -181,9 +197,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>org.springframework.ldap</groupId>
-			<artifactId>spring-ldap-core</artifactId>
-			<version>2.0.3.RELEASE</version>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-ldap</artifactId>
+			<version>2.0.8.RELEASE</version>
 		</dependency>
 
 		<dependency>
@@ -211,6 +227,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
+            <version>6.0.10.Final</version>
 		</dependency>
 
         <dependency>
@@ -316,7 +333,6 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-			<scope>provided</scope>
 		</dependency>
 
 		<!-- CSV -->
@@ -735,6 +751,16 @@
                 <name>jcenter</name>
                 <url>http://jcenter.bintray.com</url>
             </repository>
+
+            <repository>
+                <id>spring-libs-release</id>
+                <name>Spring Releases</name>
+                <url>https://repo.spring.io/libs-release</url>
+                <snapshots>
+                    <enabled>false</enabled>
+                </snapshots>
+            </repository>
+
 	</repositories>
 
 

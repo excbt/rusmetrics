@@ -25,8 +25,8 @@ import ru.excbt.datafuse.nmk.service.dto.ContZPointMonitorStateDTO;
 import ru.excbt.datafuse.nmk.service.mapper.ContEventCategoryMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointMapper;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -233,10 +233,8 @@ public class ContEventMonitorWidgetService {
      */
     public ContObjectMonitorStateDTO findContObjectMonitorState (Long contObjectId, PortalUserIds portalUserIds) {
 
-        ContObject contObject = contObjectRepository.findOne(contObjectId);
-        if (contObject == null) {
-            throw DBExceptionUtil.newEntityNotFoundException(ContObject.class, contObjectId);
-        }
+        ContObject contObject = contObjectRepository.findById(contObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(ContObject.class, contObjectId));
 
         Predicate<ContZPoint> checkAccess = objectAccessService.objectAccessUtil().checkContZPoint(portalUserIds);
         Predicate<Long> contZPointIdAccess = objectAccessService.objectAccessUtil().checkContZPointId(portalUserIds);

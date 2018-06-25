@@ -23,6 +23,7 @@ import ru.excbt.datafuse.nmk.service.QueryDSLService;
 import ru.excbt.datafuse.nmk.service.SubscriberAccessService;
 import ru.excbt.datafuse.nmk.service.SubscriberService;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDateTime;
@@ -404,7 +405,8 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		SubscrUser entitySubsrUser = entity.getSubscrUser();
 
-		SubscrUser currentSubscrUser = subscrUserRepository.findOne(entitySubsrUser.getId());
+		SubscrUser currentSubscrUser = subscrUserRepository.findById(entitySubsrUser.getId())
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, entitySubsrUser.getId()));
 		checkCabinerSubscrUserValid(parentSubscriberId, entitySubsrUser.getId(), currentSubscrUser);
 
 		currentSubscrUser.setUserComment(entitySubsrUser.getUserComment());
@@ -444,10 +446,8 @@ public class SubscrCabinetService implements SecuredRoles {
 	public SubscrUser selectCabinelSubscrUser(Long subscrUserId) {
 		checkNotNull(subscrUserId);
 
-		SubscrUser currentSubscrUser = subscrUserRepository.findOne(subscrUserId);
-		if (currentSubscrUser == null) {
-			throw new PersistenceException(String.format("SubscrUser (id=%d) is not found", subscrUserId));
-		}
+		SubscrUser currentSubscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
 
 		if (!SubscrTypeKey.CABINET.getKeyname().equals(currentSubscrUser.getSubscriber().getSubscrType())) {
 			throw new IllegalArgumentException("SubscrUser (id=%d) is not of type CABINET");
@@ -470,7 +470,8 @@ public class SubscrCabinetService implements SecuredRoles {
 		checkNotNull(subscrUserId);
 		checkNotNull(password);
 
-		SubscrUser currentSubscrUser = subscrUserRepository.findOne(subscrUserId);
+		SubscrUser currentSubscrUser = subscrUserRepository.findById(subscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, subscrUserId));
 
 		checkCabinerSubscrUserValid(parentSubscriberId, subscrUserId, currentSubscrUser);
 
@@ -498,14 +499,11 @@ public class SubscrCabinetService implements SecuredRoles {
 	@Secured({ ROLE_SUBSCR_CREATE_CABINET, ROLE_ADMIN })
 	@Transactional
 	public boolean sendSubscrUserPasswordEmailNotification(Long fromSubscrUserId, Long toSubscrUserId) {
-		SubscrUser fromSubscrUser = subscrUserRepository.findOne(fromSubscrUserId);
-		SubscrUser toSubscrUser = subscrUserRepository.findOne(toSubscrUserId);
+		SubscrUser fromSubscrUser = subscrUserRepository.findById(fromSubscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, fromSubscrUserId));
 
-		if (fromSubscrUser == null || toSubscrUser == null) {
-			throw new PersistenceException(
-					String.format("Invalid user for send email (fromSubscrUserId=%d, toSubscrUserId=%d) ",
-							fromSubscrUserId, toSubscrUserId));
-		}
+		SubscrUser toSubscrUser = subscrUserRepository.findById(toSubscrUserId)
+            .orElseThrow(() -> new EntityNotFoundException(SubscrUser.class, toSubscrUserId));
 
 		if (toSubscrUser.getPassword() == null) {
 			return false;

@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.service.mapper.DeviceObjectMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с приборами
@@ -200,10 +201,9 @@ public class DeviceObjectService implements SecuredRoles {
      */
     private void initDeviceObjectDataSource(ActiveDataSourceInfoDTO dsi, DeviceObjectDataSource2 deviceObjectDataSource) {
         if (deviceObjectDataSource != null && dsi != null) {
-            SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
-            if (ds == null) {
-                throw DBExceptionUtil.newEntityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId());
-            }
+            SubscrDataSource ds = subscrDataSourceRepository.findById(dsi.getSubscrDataSourceId())
+                .orElseThrow(() -> new EntityNotFoundException(SubscrDataSource.class, dsi.getSubscrDataSourceId()));
+
             deviceObjectDataSource.setSubscrDataSource(ds);
             deviceObjectDataSource.setSubscrDataSourceAddr(dsi.getSubscrDataSourceAddr());
             deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
@@ -258,7 +258,7 @@ public class DeviceObjectService implements SecuredRoles {
 					String.format("Delete DeviceObject(id=%d) with exSystem=%s is not supported ", deviceObjectId,
 							deviceObject.getExSystemKeyname()));
 		}
-		deviceObjectRepository.delete(deviceObjectId);
+		deviceObjectRepository.deleteById(deviceObjectId);
 	}
 
 	/**
@@ -343,7 +343,8 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public DeviceObject selectDeviceObject(long id) {
-		DeviceObject result = deviceObjectRepository.findOne(id);
+		DeviceObject result = deviceObjectRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, id));
 //		if (result != null) {
 //			result.loadLazyProps();
 //		}
@@ -352,14 +353,18 @@ public class DeviceObjectService implements SecuredRoles {
 
 	@Transactional( readOnly = true)
 	public DeviceObjectFullVM selectDeviceObjectFullVM(long id) {
-		DeviceObject result = deviceObjectRepository.findOne(id);
-		return deviceObjectMapper.toFullVM(result);
+        DeviceObjectFullVM result = deviceObjectRepository.findById(id).map(deviceObjectMapper::toFullVM)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, id));
+		return result;
 	}
 
 	@Transactional( readOnly = true)
 	public DeviceObjectFullVM selectDeviceObjectFullVM_Rma(long id) {
-		DeviceObject result = deviceObjectRepository.findOne(id);
-		return deviceObjectMapper.toFullVM(result).shareDeviceLoginInfo(result);
+		Optional<DeviceObject> resultOpt = deviceObjectRepository.findById(id);
+        return resultOpt
+                .map(deviceObjectMapper::toFullVM)
+            .map(i -> i.shareDeviceLoginInfo(resultOpt.orElse(null)))
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, id));
 	}
 
 	/**
@@ -392,7 +397,8 @@ public class DeviceObjectService implements SecuredRoles {
 		deviceObject.setIsManual(true);
 
 		DeviceObject oldDeviceObject = deviceObject.isNew() ? null
-				: deviceObjectRepository.findOne(deviceObject.getId());
+				: deviceObjectRepository.findById(deviceObject.getId())
+                    .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, deviceObject.getId()));
 
 		boolean isNew = deviceObject.isNew();
 		if (deviceObject.getDeviceObjectLastInfo() != null) {
@@ -609,10 +615,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObject(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
-		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
-		if (deviceObject == null) {
-			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", deviceObjectId));
-		}
+		DeviceObject deviceObject = deviceObjectRepository.findById(deviceObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, deviceObjectId));
+
 		deviceObject.setDeleted(1);
 		deviceObjectRepository.save(deviceObject);
 	}
@@ -625,10 +630,8 @@ public class DeviceObjectService implements SecuredRoles {
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	public void deleteDeviceObjectPermanent(Long deviceObjectId) {
 		checkNotNull(deviceObjectId);
-		DeviceObject deviceObject = deviceObjectRepository.findOne(deviceObjectId);
-		if (deviceObject == null) {
-			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", deviceObjectId));
-		}
+		DeviceObject deviceObject = deviceObjectRepository.findById(deviceObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, deviceObjectId));
 
 		Optional.ofNullable(deviceObject)
             .map(DeviceObject::getDeviceObjectDataSource)
@@ -701,7 +704,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public V_DeviceObjectTimeOffset selectDeviceObjsetTimeOffset(Long deviceObjectId) {
-		return deviceObjectId != null ? deviceObjectRepository.findOne(deviceObjectId).getTimeOffset() : null;
+        return deviceObjectRepository.findById(deviceObjectId).map(DeviceObject::getTimeOffset).orElse(null);
 	}
 
     /**
@@ -718,8 +721,7 @@ public class DeviceObjectService implements SecuredRoles {
 
     @Transactional( readOnly = true)
     public SubscrDataSourceDTO selectDeviceObjectSubscrDataSource(long deviceObjectId) {
-        DeviceObject result = deviceObjectRepository.findOne(deviceObjectId);
-        return Optional.ofNullable(result)
+        return deviceObjectRepository.findById(deviceObjectId)
             .map(DeviceObject::getDeviceObjectDataSource)
             .map(DeviceObjectDataSource2::getSubscrDataSource)
             .map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);

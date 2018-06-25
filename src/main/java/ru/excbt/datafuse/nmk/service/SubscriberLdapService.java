@@ -10,6 +10,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.service.utils.DBEntityUtil;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -67,8 +68,9 @@ public class SubscriberLdapService {
 
         if (Boolean.TRUE.equals(subscriber.getIsChild())) {
             rmaOu = ldapOuProvider.apply(subscriber.getParentSubscriberId());
-            Subscriber parentSubscriber = subscriberRepository.findOne(subscriber.getParentSubscriberId());
-            DBEntityUtil.requireNotNull(parentSubscriber, subscriber.getParentSubscriberId(), Subscriber.class);
+            Subscriber parentSubscriber = subscriberRepository.findById(subscriber.getParentSubscriberId())
+                .orElseThrow(() -> new EntityNotFoundException(Subscriber.class, subscriber.getParentSubscriberId()));
+
             childLdapOu = parentSubscriber.getChildLdapOu();
 
             orgUnits = new String[] { rmaOu, childLdapOu };
@@ -96,29 +98,32 @@ public class SubscriberLdapService {
      */
     @Transactional( readOnly = true)
     public String getRmaLdapOu(Long subscriberId) {
-        Subscriber subscriber = subscriberRepository.findOne(subscriberId);
-        if (subscriber == null) {
+        Optional<Subscriber> subscriberOpt = subscriberRepository.findById(subscriberId);
+        if (!subscriberOpt.isPresent()) {
             return null;
         }
-        if (Boolean.TRUE.equals(subscriber.getIsRma())) {
-            return subscriber.getRmaLdapOu();
+        if (Boolean.TRUE.equals(subscriberOpt.get().getIsRma())) {
+            return subscriberOpt.get().getRmaLdapOu();
         }
 
-        if (subscriber.getRmaLdapOu() != null) {
-            return subscriber.getRmaLdapOu();
+        if (subscriberOpt.get().getRmaLdapOu() != null) {
+            return subscriberOpt.get().getRmaLdapOu();
         }
 
-        if (subscriber.getRmaSubscriberId() == null) {
+        if (subscriberOpt.get().getRmaSubscriberId() == null) {
             return null;
         }
 
-        Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
-        return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
+        return subscriberOpt.flatMap(s -> subscriberRepository.findById(s.getRmaSubscriberId()))
+            .map(Subscriber::getRmaLdapOu).orElse(null);
+
+//        Subscriber rmaSubscriber = subscriberRepository.findOne(subscriber.getRmaSubscriberId());
+//        return rmaSubscriber == null ? null : rmaSubscriber.getRmaLdapOu();
     }
 
     @Transactional( readOnly = true)
     public Optional<String> findRmaLdapOu(Long subscriberId) {
-        Optional<Subscriber> subscriber =  Optional.ofNullable(subscriberId).map(subscriberRepository::findOne);
+        Optional<Subscriber> subscriber =  Optional.ofNullable(subscriberId).flatMap(subscriberRepository::findById);
 
         Optional<String> currOU = subscriber.filter(s -> Boolean.TRUE.equals(s.getIsRma()))
             .map(Subscriber::getRmaLdapOu);
@@ -171,7 +176,7 @@ public class SubscriberLdapService {
         if (Boolean.TRUE.equals(subscriber.getIsChild())) {
             rmaOu = Optional.ofNullable(subscriber.getParentSubscriberId()).flatMap(this::findRmaLdapOu).orElse("");
             childLdapOu = Optional.ofNullable(subscriber.getParentSubscriberId())
-                .map(subscriberRepository::findOne).map(Subscriber::getChildLdapOu).orElse("");
+                .flatMap(subscriberRepository::findById).map(Subscriber::getChildLdapOu).orElse("");
             orgUnits = new String[] { rmaOu, childLdapOu };
         } else {
             rmaOu = Optional.of(subscriber.getId()).flatMap(this::findRmaLdapOu).orElse("");

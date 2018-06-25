@@ -24,14 +24,18 @@ import ru.excbt.datafuse.nmk.data.model.SubscrUserLoginLog;
 @Service
 public class SubscrUserLoginLogService {
 
-	@PersistenceContext(unitName = "nmk-p")
-	private EntityManager em;
+//	@PersistenceContext
+	private final EntityManager em;
 
-	/**
-	 *
-	 * @param subscriber
-	 * @param subscrUser
-	 */
+    public SubscrUserLoginLogService(EntityManager em) {
+        this.em = em;
+    }
+
+    /**
+     *
+     * @param subscrUserId
+     * @param userName
+     */
 	@Transactional
 	public void registerLogin(Long subscrUserId, String userName) {
 		checkNotNull(subscrUserId);

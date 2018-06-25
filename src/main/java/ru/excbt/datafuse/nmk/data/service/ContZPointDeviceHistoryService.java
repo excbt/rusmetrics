@@ -13,6 +13,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContZPointDeviceHistoryDTO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointDeviceHistoryRepository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectRepository;
 import ru.excbt.datafuse.nmk.service.mapper.ContZPointDeviceHistoryMapper;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -70,7 +71,8 @@ public class ContZPointDeviceHistoryService {
             DeviceObject deviceObject;
             if (contZPoint.getDeviceObject().getLastModifiedBy() == null) {
                 log.warn("contZPoint.deviceObject is from DTO. Spring Data Jpa Bug");
-                deviceObject = deviceObjectRepository.findOne(contZPoint.getDeviceObject().getId());
+                deviceObject = deviceObjectRepository.findById(contZPoint.getDeviceObject().getId())
+                .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, contZPoint.getDeviceObject().getId()));
             } else {
                 deviceObject = contZPoint.getDeviceObject();
             }

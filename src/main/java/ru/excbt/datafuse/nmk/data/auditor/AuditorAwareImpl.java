@@ -1,12 +1,12 @@
 package ru.excbt.datafuse.nmk.data.auditor;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.stereotype.Component;
-import ru.excbt.datafuse.nmk.config.Constants;
 import ru.excbt.datafuse.nmk.data.constant.SecurityConstraints;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+
+import java.util.Optional;
 
 /**
  * Компонент для аудита сущностей
@@ -20,10 +20,9 @@ import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
 public class AuditorAwareImpl implements AuditorAware<Long> {
 
 	@Override
-	public Long getCurrentAuditor() {
-        SubscriberUserDetails userDetails = SecurityUtils.getPortalUserDetails();
-		return (userDetails == null) ? SecurityConstraints.SYSTEM_ID :
-            userDetails.getId();
+	public Optional<Long> getCurrentAuditor() {
+        Optional<SubscriberUserDetails> userDetailsOpt = Optional.ofNullable(SecurityUtils.getPortalUserDetails());
+		return Optional.of(userDetailsOpt.map(SubscriberUserDetails::getId).orElse(SecurityConstraints.SYSTEM_ID));
 	}
 
 }

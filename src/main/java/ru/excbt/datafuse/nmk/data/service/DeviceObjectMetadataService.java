@@ -30,6 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.DeviceObjectMetadataTransformHistory;
 import ru.excbt.datafuse.nmk.data.repository.*;
 import ru.excbt.datafuse.nmk.metadata.JsonMetadataParser;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 /**
  * Сервис для работы с метаданными прибора
@@ -96,7 +97,8 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	 */
 	@Transactional( readOnly = true)
 	public DeviceObjectMetadata findOne(Long deviceObjectMetadataId) {
-		return deviceObjectMetadataRepository.findOne(deviceObjectMetadataId);
+		return deviceObjectMetadataRepository.findById(deviceObjectMetadataId)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObjectMetadata.class, deviceObjectMetadataId));
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 					String.format("Modifying metadata for deviceObjectId=%d is not possible", deviceObjectId));
 		});
 
-		return Lists.newArrayList(deviceObjectMetadataRepository.save(deviceObjectMetadataList));
+		return Lists.newArrayList(deviceObjectMetadataRepository.saveAll(deviceObjectMetadataList));
 
 	}
 
@@ -161,7 +163,7 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 			dst.setMetaVersion(src.getMetaVersion());
 			newMetadata.add(dst);
 		});
-		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
+		return Lists.newArrayList(deviceObjectMetadataRepository.saveAll(newMetadata));
 	}
 
 	/**
@@ -173,25 +175,23 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 	@Transactional
 	public void deleteDeviceObjectMetadata(Long deviceObjectId) {
 		List<DeviceObjectMetadata> metadata = selectDeviceObjectMetadata(deviceObjectId);
-		deviceObjectMetadataRepository.delete(metadata);
+		deviceObjectMetadataRepository.deleteAll(metadata);
 	}
 
-	/**
-	 *
-	 * @param srcDeviceModelId
-	 * @param destDeviceObjectId
-	 * @return
-	 */
+    /**
+     *
+     * @param deviceModelId
+     * @param destDeviceObjectId
+     * @return
+     */
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
 	@Transactional
 	public List<DeviceObjectMetadata> copyDeviceMetadata(Long deviceModelId, Long destDeviceObjectId) {
 
 		checkNotNull(deviceModelId, "deviceModelId is null");
 
-		DeviceObject deviceObject = deviceObjectMetadata.findOne(destDeviceObjectId);// .selectDeviceObject(destDeviceObjectId);
-		if (deviceObject == null) {
-			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", destDeviceObjectId));
-		}
+		DeviceObject deviceObject = deviceObjectMetadata.findById(destDeviceObjectId)
+            .orElseThrow(() -> new EntityNotFoundException(DeviceObject.class, destDeviceObjectId));
 
 		if (!deviceModelId.equals(deviceObject.getDeviceModelId())) {
 			throw new PersistenceException(String.format(
@@ -233,15 +233,14 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 			newMetadata.add(dst);
 		});
 
-		return Lists.newArrayList(deviceObjectMetadataRepository.save(newMetadata));
+		return Lists.newArrayList(deviceObjectMetadataRepository.saveAll(newMetadata));
 	}
 
-	/**
-	 *
-	 * @param contZPointId
-	 * @param deviceMetadataType
-	 * @return
-	 */
+    /**
+     *
+     * @param contZPointId
+     * @return
+     */
 	@Transactional( readOnly = true)
 	public List<DeviceObjectMetadata> selectByContZPoint(Long contZPointId) {
 		List<DeviceObjectMetadata> result = new ArrayList<>();
@@ -357,10 +356,10 @@ public class DeviceObjectMetadataService implements SecuredRoles {
 		logger.trace("transform history count: {}", tranformHistoryList.size());
 		logger.trace("deleted count: {}", deleteMetadataList.size());
 
-		deviceObjectMetadataRepository.save(newDeviceMetadataList);
-		deviceObjectMetadataTransformRepository.save(transformMetadataList);
-		deviceObjectMetadataTransformHistoryRepository.save(tranformHistoryList);
-		deviceObjectMetadataRepository.delete(deleteMetadataList);
+		deviceObjectMetadataRepository.saveAll(newDeviceMetadataList);
+		deviceObjectMetadataTransformRepository.saveAll(transformMetadataList);
+		deviceObjectMetadataTransformHistoryRepository.saveAll(tranformHistoryList);
+		deviceObjectMetadataRepository.deleteAll(deleteMetadataList);
 
 		result = !transformMetadataList.isEmpty() || !newDeviceMetadataList.isEmpty() || !tranformHistoryList.isEmpty()
 				|| !deleteMetadataList.isEmpty();

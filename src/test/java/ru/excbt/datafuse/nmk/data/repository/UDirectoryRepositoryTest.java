@@ -8,10 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 import ru.excbt.datafuse.nmk.data.model.UDirectory;
 import ru.excbt.datafuse.nmk.service.conf.PortalDataTest;
+import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
 
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -46,8 +46,8 @@ public class UDirectoryRepositoryTest extends PortalDataTest {
 
 	@Test
 	public void testFindOne() {
-		UDirectory nd = directoryRepository.findOne(TEST_DIRECTORY_ID);
-		assertNotNull(nd);
+		UDirectory nd = directoryRepository.findById(TEST_DIRECTORY_ID)
+            .orElseThrow(() -> new EntityNotFoundException(UDirectory.class, TEST_DIRECTORY_ID));
 	}
 
 }
