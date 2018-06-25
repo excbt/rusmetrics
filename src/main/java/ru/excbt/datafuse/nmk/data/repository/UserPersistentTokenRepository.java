@@ -19,9 +19,9 @@ public interface UserPersistentTokenRepository extends JpaRepository<UserPersist
 
     List<UserPersistentToken> findByTokenDateBefore(LocalDate localDate);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE from UserPersistentToken p where p.series=:series")
-    void deleteTokenBySeries(@Param("series") String series);
+//    @Modifying
+//    @Transactional
+//    @Query("DELETE from UserPersistentToken p where p.series=:series")
+//    void deleteTokenBySeries(@Param("series") String series);
 
 }

@@ -27,9 +27,6 @@ public class UDirectoryNodeServiceTest extends PortalDataTest {
 	@Autowired
 	private UDirectoryNodeService nodeDirectoryService;
 
-    @PersistenceUnit(unitName="nmk-p")
-    private EntityManagerFactory emf;
-
 	@Test
 	public void testGetAndSaveNode() {
 

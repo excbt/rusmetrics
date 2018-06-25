@@ -72,7 +72,7 @@ public class SubscriberService implements SecuredRoles {
 
     private static QSubscriber qSubscriber = QSubscriber.subscriber;
 
-    @PersistenceContext(unitName = "nmk-p")
+    @PersistenceContext
     protected EntityManager em;
 
 	protected final SubscriberRepository subscriberRepository;

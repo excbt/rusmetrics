@@ -47,7 +47,7 @@ public class ContServiceDataHWaterDeltaService {
 
 	private static final Logger logger = LoggerFactory.getLogger(ContServiceDataHWaterDeltaService.class);
 
-	@PersistenceContext(unitName = "nmk-p")
+	@PersistenceContext
 	private EntityManager em;
 
 	private final ContObjectService contObjectService;

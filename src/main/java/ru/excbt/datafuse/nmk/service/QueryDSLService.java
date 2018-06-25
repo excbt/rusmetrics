@@ -29,7 +29,7 @@ public class QueryDSLService {
 
     public static final SQLTemplates templates = PostgreSQLTemplates.builder().printSchema().build();
 
-    @PersistenceContext(unitName = "nmk-p")
+    @PersistenceContext
     private EntityManager em;
 
 

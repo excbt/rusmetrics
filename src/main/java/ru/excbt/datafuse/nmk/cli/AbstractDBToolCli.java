@@ -18,7 +18,7 @@ public abstract class AbstractDBToolCli {
 
 	protected ApplicationContext appContext;
 
-	@PersistenceContext(unitName = "nmk-p")
+	@PersistenceContext
 	protected EntityManager entityManager;
 
 	// @PersistenceContext(unitName="dataraw")

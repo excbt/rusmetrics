@@ -98,7 +98,7 @@ public class ReportService {
 	@Autowired
 	private JasperDatabaseConnectionSettings jasperConfig;
 
-	@PersistenceContext(unitName = "nmk-p")
+	@PersistenceContext
 	private EntityManager em;
 
 	public final ReportServiceProps serviceProps = new ReportServiceProps();
