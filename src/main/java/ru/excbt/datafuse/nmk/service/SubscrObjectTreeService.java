@@ -767,7 +767,7 @@ public class SubscrObjectTreeService {
         if (!nodeOpt.isPresent()) {
             return Optional.empty();
         }
-        if (nodeOpt.get().getSubscriberId().equals(subscriberId)) {
+        if (!nodeOpt.get().getSubscriberId().equals(subscriberId)) {
             return Optional.empty();
         }
 

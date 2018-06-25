@@ -205,10 +205,8 @@ public class ContZPointService implements SecuredRoles {
      * @param contZPointId
      * @return
      */
-	private LocalDateTime getLastDataDateAggr(final Long contZPointId) {
-        V_LastDataDateAggr lastDataDateAggr = v_lastDataDateAggrRepository.findById(contZPointId)
-            .orElseThrow(() -> new EntityNotFoundException(V_LastDataDateAggr.class, contZPointId));
-        return lastDataDateAggr != null ? lastDataDateAggr.getLastDataDate() : null;
+	private Optional<LocalDateTime> getLastDataDateAggr(final Long contZPointId) {
+        return v_lastDataDateAggrRepository.findById(contZPointId).map(V_LastDataDateAggr::getLastDataDate);
     }
 
 
@@ -234,7 +232,7 @@ public class ContZPointService implements SecuredRoles {
 //                LocalDateUtils.asLocalDateTime(minCheck.getValue()));
 
 			if (zPointLastDate == null) {
-			    zPointLastDate = getLastDataDateAggr(zp.getId());
+                zPointLastDate = getLastDataDateAggr(zp.getId()).orElse(null);
             }
 
 			LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);
@@ -268,7 +266,7 @@ public class ContZPointService implements SecuredRoles {
                 date -> contServiceDataElConsRepository.selectLastDataDateByZPointMax(zp.getId(), LocalDateUtils.asDate(date)));
 
             if (zPointLastDate == null) {
-                zPointLastDate = getLastDataDateAggr(zp.getId());
+                zPointLastDate = getLastDataDateAggr(zp.getId()).orElse(null);
             }
 
             LocalDateTime startDay = zPointLastDate == null ? null : zPointLastDate.truncatedTo(ChronoUnit.DAYS);

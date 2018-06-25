@@ -6,11 +6,13 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrint;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -351,6 +353,7 @@ public class SubscrObjectTreeResourceIntTest extends PortalApiTest {
             .param("rootNodeId", resultTree.get().getId().toString())
             .param("isActive", Boolean.FALSE.toString())
             .accept(MediaType.APPLICATION_JSON))
+            .andDo(MockMvcResultHandlers.print())
             .andExpect(status().is2xxSuccessful());
     }
 }

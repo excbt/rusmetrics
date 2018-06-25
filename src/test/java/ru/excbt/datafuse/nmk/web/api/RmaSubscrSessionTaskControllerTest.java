@@ -89,7 +89,7 @@ public class RmaSubscrSessionTaskControllerTest extends PortalApiTest {
 	 */
 	@Test
 	public void testGetSubscrSessionTask() throws Exception {
-        mockMvcRestWrapper.restRequest("/api/rma/subscrSessionTask/{id1}", 127990560).testGet();
+        mockMvcRestWrapper.restRequest("/api/rma/subscrSessionTask/{id1}", 127990560).testGet2xx();
 //		_testGetJson();
 	}
 

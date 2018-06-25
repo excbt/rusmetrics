@@ -12,6 +12,7 @@ import ru.excbt.datafuse.nmk.data.model.LocalPlace;
 import ru.excbt.datafuse.nmk.data.model.LocalPlaceTemperatureSst;
 import ru.excbt.datafuse.nmk.data.model.WeatherForecastCalc;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
+import ru.excbt.datafuse.nmk.data.repository.LocalPlaceRepository;
 import ru.excbt.datafuse.nmk.data.repository.LocalPlaceTemperatureSstRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.web.rest.errors.EntityNotFoundException;
@@ -20,6 +21,7 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,16 +30,21 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(LocalPlaceTemperatureSstService.class);
 
-	@Autowired
-	private LocalPlaceTemperatureSstRepository localPlaceTemperatureSstRepository;
+	private final LocalPlaceTemperatureSstRepository localPlaceTemperatureSstRepository;
 
-	@Autowired
-	private LocalPlaceService localPlaceService;
 
-	@Autowired
-	private WeatherForecastService weatherForecastService;
+    private final LocalPlaceRepository localPlaceRepository;
 
-	/**
+
+    private final WeatherForecastService weatherForecastService;
+
+    public LocalPlaceTemperatureSstService(LocalPlaceTemperatureSstRepository localPlaceTemperatureSstRepository, LocalPlaceRepository localPlaceRepository, WeatherForecastService weatherForecastService) {
+        this.localPlaceTemperatureSstRepository = localPlaceTemperatureSstRepository;
+        this.localPlaceRepository = localPlaceRepository;
+        this.weatherForecastService = weatherForecastService;
+    }
+
+    /**
 	 *
 	 * @param localPlaceId
 	 * @return
@@ -67,10 +74,13 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 		checkNotNull(entity.getLocalPlaceId());
 		checkNotNull(entity.getSstDate());
 
-		LocalPlace localPlace = localPlaceService.findLocalPlace(entity.getLocalPlaceId());
-		if (localPlace == null) {
-			throw new PersistenceException(String.format("LocalPlace (id=%d) is not found", entity.getLocalPlaceId()));
-		}
+//		LocalPlace localPlace = localPlaceService.findLocalPlace(entity.getLocalPlaceId());
+
+        Optional<LocalPlace> localPlaceOpt = localPlaceRepository.findById(entity.getLocalPlaceId());
+
+        if (!localPlaceOpt.isPresent()) {
+            throw new EntityNotFoundException(LocalPlace.class, entity.getLocalPlaceId());
+        }
 
 		LocalPlaceTemperatureSst sst = null;
 		if (!entity.isNew()) {
@@ -169,9 +179,11 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 	 */
 	@Transactional
 	public void initMonthNoCheck(Long localPlaceId, LocalDate sstDate) {
-		LocalPlace localPlace = localPlaceService.findLocalPlace(localPlaceId);
+//		LocalPlace localPlace = localPlaceService.findLocalPlace(localPlaceId);
 
-		if (localPlace == null) {
+		Optional<LocalPlace> localPlaceOpt = localPlaceRepository.findById(localPlaceId);
+
+		if (!localPlaceOpt.isPresent()) {
 		    logger.warn("LocalPlace with ID: {} is not found", localPlaceId);
 		    return;
         }
@@ -183,7 +195,7 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 		List<LocalPlaceTemperatureSst> newSsts = new ArrayList<>();
 		while (date.isBefore(endDate)) {
 			LocalPlaceTemperatureSst newSst = new LocalPlaceTemperatureSst();
-			newSst.setLocalPlace(localPlace);
+			newSst.setLocalPlace(localPlaceOpt.get());
 			newSst.setSstDate(date.toDate());
 
 			newSsts.add(newSst);
@@ -225,24 +237,26 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 		    return monthSstList;
         }
 
-		LocalPlace localPlace = localPlaceService.findLocalPlace(monthSstList.get(0).getLocalPlaceId());
+//		LocalPlace localPlace = localPlaceService.findLocalPlace(monthSstList.get(0).getLocalPlaceId());
 
-		if (localPlace == null) {
+		Optional<LocalPlace> localPlaceOpt = localPlaceRepository.findById(monthSstList.get(0).getLocalPlaceId());
+
+		if (!localPlaceOpt.isPresent()) {
 		    return monthSstList;
         }
 
-		if (localPlace.getWeatherPlaceId() == null) {
+		if (localPlaceOpt.get().getWeatherPlaceId() == null) {
 			return monthSstList;
 		}
 
 		for (LocalPlaceTemperatureSst sst : monthSstList) {
 
-			if (!localPlace.getId().equals(sst.getLocalPlaceId())) {
+			if (!localPlaceOpt.get().getId().equals(sst.getLocalPlaceId())) {
 				throw new IllegalStateException("LocalPlaceTemperatureSst is not consistence");
 			}
 
 			List<WeatherForecastCalc> forecastCalcList = weatherForecastService
-					.selectWeatherForecastCalc(localPlace.getWeatherPlaceId(), sst.getSstDate());
+					.selectWeatherForecastCalc(localPlaceOpt.get().getWeatherPlaceId(), sst.getSstDate());
 
 			if (forecastCalcList.size() == 1) {
 				WeatherForecastCalc forecastCalc = forecastCalcList.get(0);
