@@ -22,9 +22,6 @@ import org.springframework.security.web.firewall.HttpFirewall;
 import org.springframework.web.filter.CorsFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
 import ru.excbt.datafuse.nmk.config.PortalProperties;
-import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
-import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
-import ru.excbt.datafuse.nmk.security.CustomPersistentRememberMeServices;
 import ru.excbt.datafuse.nmk.security.PortalUserAuthenticationProvider;
 
 @Configuration
@@ -38,7 +35,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	private final PortalUserAuthenticationProvider userAuthenticationProvider;
 
-//    private final RememberMeServices rememberMeServices;
+    private final RememberMeServices rememberMeServices;
 
     private final PortalProperties portalProperties;
 
@@ -46,20 +43,14 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final SecurityProblemSupport problemSupport;
 
-    private final UserPersistentTokenRepository userPersistentTokenRepository;
-
-    private final V_FullUserInfoRepository v_fullUserInfoRepository;
-
     @Autowired
-    public LocalSecurityConfig(PortalUserAuthenticationProvider userAuthenticationProvider, PortalProperties portalProperties, CorsFilter corsFilter, SecurityProblemSupport problemSupport, UserPersistentTokenRepository userPersistentTokenRepository, V_FullUserInfoRepository v_fullUserInfoRepository) {
+    public LocalSecurityConfig(PortalUserAuthenticationProvider userAuthenticationProvider, RememberMeServices rememberMeServices, PortalProperties portalProperties, CorsFilter corsFilter, SecurityProblemSupport problemSupport) {
         this.userAuthenticationProvider = userAuthenticationProvider;
         //this.authenticationSuccessHandler = authenticationSuccessHandler;
-//        this.rememberMeServices = rememberMeServices;
+        this.rememberMeServices = rememberMeServices;
         this.portalProperties = portalProperties;
         this.corsFilter = corsFilter;
         this.problemSupport = problemSupport;
-        this.userPersistentTokenRepository = userPersistentTokenRepository;
-        this.v_fullUserInfoRepository = v_fullUserInfoRepository;
     }
 
     @Autowired
@@ -125,7 +116,7 @@ public class LocalSecurityConfig extends WebSecurityConfigurerAdapter {
             .accessDeniedHandler(problemSupport)
         .and()
             .rememberMe()
-            .rememberMeServices(new CustomPersistentRememberMeServices(portalProperties, userDetailsService(), userPersistentTokenRepository, v_fullUserInfoRepository))
+            .rememberMeServices(rememberMeServices)
             .rememberMeParameter("remember-me")
             .key(portalProperties.getSecurity().getRememberMe().getKey())
        .and()

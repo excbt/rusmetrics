@@ -52,7 +52,7 @@ import java.util.Optional;
  * The main algorithm comes from Spring Security's PersistentTokenBasedRememberMeServices, but this class
  * couldn't be cleanly extended.
  */
-//@Service
+@Service
 public class CustomPersistentRememberMeServices extends
     AbstractRememberMeServices {
 
@@ -74,6 +74,7 @@ public class CustomPersistentRememberMeServices extends
 
     private final V_FullUserInfoRepository userRepository;
 
+    @Autowired
     public CustomPersistentRememberMeServices(PortalProperties portalProperties,
                                               org.springframework.security.core.userdetails.UserDetailsService userDetailsService,
                                               UserPersistentTokenRepository persistentTokenRepository,
