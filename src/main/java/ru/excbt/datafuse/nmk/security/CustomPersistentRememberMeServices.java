@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.security;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +20,13 @@ import ru.excbt.datafuse.nmk.data.model.UserPersistentToken;
 import ru.excbt.datafuse.nmk.data.model.V_FullUserInfo;
 import ru.excbt.datafuse.nmk.data.repository.UserPersistentTokenRepository;
 import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
+import ru.excbt.datafuse.nmk.service.util.RandomUtil;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -63,12 +66,9 @@ public class CustomPersistentRememberMeServices extends
 
     private static final int TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * TOKEN_VALIDITY_DAYS;
 
-    private static final int DEFAULT_SERIES_LENGTH = 16;
+    private static final long UPGRADED_TOKEN_VALIDITY_MILLIS = 5000l;
 
-    private static final int DEFAULT_TOKEN_LENGTH = 16;
-
-    private SecureRandom random;
-
+    private final PersistentTokenCache<UpgradedRememberMeToken> upgradedTokenCache;
 
     private final UserPersistentTokenRepository persistentTokenRepository;
 
@@ -83,48 +83,43 @@ public class CustomPersistentRememberMeServices extends
         super(portalProperties.getSecurity().getRememberMe().getKey(), userDetailsService);
         this.persistentTokenRepository = persistentTokenRepository;
         this.userRepository = subscrUserRepository;
-        random = new SecureRandom();
+        upgradedTokenCache = new PersistentTokenCache<>(UPGRADED_TOKEN_VALIDITY_MILLIS);
     }
+
 
     @Override
     protected UserDetails processAutoLoginCookie(String[] cookieTokens, HttpServletRequest request,
                                                  HttpServletResponse response) {
 
+        synchronized (this) { // prevent 2 authentication requests from the same user in parallel
+            String login = null;
+            UpgradedRememberMeToken upgradedToken = upgradedTokenCache.get(cookieTokens[0]);
+            if (upgradedToken != null) {
+                login = upgradedToken.getUserLoginIfValid(cookieTokens);
+                log.debug("Detected previously upgraded login token for user '{}'", login);
+            }
 
-        UserPersistentToken token;
-        Optional<V_FullUserInfo> userOpt;
-        try {
-            token = getPersistentToken(cookieTokens);
-            userOpt = userRepository.findById(token.getUserId());
-        } catch (CookieTheftException e) {
-            // We catch CookieTheftException and throw RememberMeAuthenticationException,
-            // because CookieTheftException doesn't redirect to login form
-            log.error("CookieTheftException: {}", e);
-            throw new RememberMeAuthenticationException("Autologin failed due to token problem");
+            if (login == null) {
+                UserPersistentToken token = getPersistentToken(cookieTokens);
+                Optional<V_FullUserInfo> userOpt = userRepository.findById(token.getUserId());
+
+                // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
+                log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
+                token.setTokenDate(LocalDate.now());
+                token.setTokenValue(RandomUtil.generateTokenData());
+                token.setIpAddress(request.getRemoteAddr());
+                token.setUserAgent(request.getHeader("User-Agent"));
+                try {
+                    persistentTokenRepository.saveAndFlush(token);
+                } catch (DataAccessException e) {
+                    log.error("Failed to update token: ", e);
+                    throw new RememberMeAuthenticationException("Autologin failed due to data access problem", e);
+                }
+                addCookie(token, request, response);
+                upgradedTokenCache.put(cookieTokens[0], new UpgradedRememberMeToken(cookieTokens, login));
+            }
+            return getUserDetailsService().loadUserByUsername(login);
         }
-
-
-        if (!userOpt.isPresent()) {
-            log.error("User with ID: {} is not found in V_FullUserInfo", token.getUserId());
-            throw new RememberMeAuthenticationException("Autologin failed due to data access problem");
-        }
-
-        String login = userOpt.get().getUserName();
-
-        // Token also matches, so login is valid. Update the token value, keeping the *same* series number.
-        log.debug("Refreshing persistent login token for user '{}', series '{}'", login, token.getSeries());
-        token.setTokenDate(LocalDate.now());
-        token.setTokenValue(generateTokenData());
-        token.setIpAddress(request.getRemoteAddr());
-        token.setUserAgent(request.getHeader("User-Agent"));
-        try {
-            persistentTokenRepository.saveAndFlush(token);
-            addCookie(token, request, response);
-        } catch (DataAccessException e) {
-            log.error("Failed to update token: ", e);
-            throw new RememberMeAuthenticationException("Autologin failed due to data access problem", e);
-        }
-        return getUserDetailsService().loadUserByUsername(login);
     }
 
     @Override
@@ -136,9 +131,9 @@ public class CustomPersistentRememberMeServices extends
         log.debug("Creating new persistent login for user {}", login);
         UserPersistentToken token = userRepository.findOneByUserNameIgnoreCase(login).map(u -> {
             UserPersistentToken t = new UserPersistentToken();
-            t.setSeries(generateSeriesData());
+            t.setSeries(RandomUtil.generateSeriesData());
             t.setUserId(u.getId());
-            t.setTokenValue(generateTokenData());
+            t.setTokenValue(RandomUtil.generateTokenData());
             t.setTokenDate(LocalDate.now());
             t.setIpAddress(request.getRemoteAddr());
             t.setUserAgent(request.getHeader("User-Agent"));
@@ -151,6 +146,7 @@ public class CustomPersistentRememberMeServices extends
             log.error("Failed to save persistent token ", e);
         }
     }
+
 
     /**
      * When logout occurs, only invalidate the current token, and not all user sessions.
@@ -179,46 +175,35 @@ public class CustomPersistentRememberMeServices extends
      * Validate the token and return it.
      */
     private UserPersistentToken getPersistentToken(String[] cookieTokens) {
+
         if (cookieTokens.length != 2) {
             throw new InvalidCookieException("Cookie token did not contain " + 2 +
                 " tokens, but contained '" + Arrays.asList(cookieTokens) + "'");
         }
         String presentedSeries = cookieTokens[0];
         String presentedToken = cookieTokens[1];
-        Optional<UserPersistentToken> tokenOpt = persistentTokenRepository.findById(presentedSeries);
-
-        if (!tokenOpt.isPresent()) {
+        Optional<UserPersistentToken> optionalToken = persistentTokenRepository.findById(presentedSeries);
+        if (!optionalToken.isPresent()) {
             // No series match, so we can't authenticate using this cookie
             throw new RememberMeAuthenticationException("No persistent token found for series id: " + presentedSeries);
         }
-
+        UserPersistentToken token = optionalToken.get();
         // We have a match for this user/series combination
-        //log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
-        if (!presentedToken.equals(tokenOpt.get().getTokenValue())) {
+        log.info("presentedToken={} / tokenValue={}", presentedToken, token.getTokenValue());
+        if (!presentedToken.equals(token.getTokenValue())) {
             // Token doesn't match series value. Delete this session and throw an exception.
-            persistentTokenRepository.delete(tokenOpt.get());
+            persistentTokenRepository.delete(token);
             throw new CookieTheftException("Invalid remember-me token (Series/token) mismatch. Implies previous " +
                 "cookie theft attack.");
         }
 
-        if (tokenOpt.get().getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
-            persistentTokenRepository.delete(tokenOpt.get());
+        if (token.getTokenDate().plusDays(TOKEN_VALIDITY_DAYS).isBefore(LocalDate.now())) {
+            persistentTokenRepository.delete(token);
             throw new RememberMeAuthenticationException("Remember-me login has expired");
         }
-        return tokenOpt.get();
+        return token;
     }
 
-    private String generateSeriesData() {
-        byte[] newSeries = new byte[DEFAULT_SERIES_LENGTH];
-        random.nextBytes(newSeries);
-        return new String(Base64.encode(newSeries));
-    }
-
-    private String generateTokenData() {
-        byte[] newToken = new byte[DEFAULT_TOKEN_LENGTH];
-        random.nextBytes(newToken);
-        return new String(Base64.encode(newToken));
-    }
 
     private void addCookie(UserPersistentToken token, HttpServletRequest request, HttpServletResponse response) {
         setCookie(
@@ -226,7 +211,26 @@ public class CustomPersistentRememberMeServices extends
             TOKEN_VALIDITY_SECONDS, request, response);
     }
 
-    protected boolean rememberMeRequested(HttpServletRequest request, String parameter) {
-      return super.rememberMeRequested(request, parameter);
+    private static class UpgradedRememberMeToken implements Serializable {
+
+        private static final long serialVersionUID = 1L;
+
+        private final String[] upgradedToken;
+
+        private final String userLogin;
+
+        UpgradedRememberMeToken(String[] upgradedToken, String userLogin) {
+            this.upgradedToken = upgradedToken;
+            this.userLogin = userLogin;
+        }
+
+        String getUserLoginIfValid(String[] currentToken) {
+            if (currentToken[0].equals(this.upgradedToken[0]) &&
+                currentToken[1].equals(this.upgradedToken[1])) {
+                return this.userLogin;
+            }
+            return null;
+        }
     }
+
 }
