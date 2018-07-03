@@ -18,11 +18,13 @@ import ru.excbt.datafuse.nmk.data.model.dto.ExSystemDto;
 import ru.excbt.datafuse.nmk.data.model.keyname.ExSystem;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.keyname.ExSystemRepository;
+import ru.excbt.datafuse.nmk.data.service.PortalUserIdsService;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService;
 import ru.excbt.datafuse.nmk.data.service.SystemParamService;
 import ru.excbt.datafuse.nmk.data.service.CurrentSubscriberUserDetailsService;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.dto.V_FullUserInfoDTO;
 import ru.excbt.datafuse.nmk.web.ApiConst;
 import ru.excbt.datafuse.nmk.web.rest.support.AbstractSubscrApiResource;
 import ru.excbt.datafuse.nmk.web.api.support.ApiActionObjectProcess;
@@ -63,6 +65,9 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 
 	@Autowired
 	private ModelMapper modelMapper;
+
+    @Autowired
+	private PortalUserIdsService portalUserIdsService;
 
 	/**
 	 *
@@ -109,9 +114,9 @@ public class SystemInfoController extends AbstractSubscrApiResource {
 	@RequestMapping(value = "/fullUserInfo", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
 	public ResponseEntity<?> getFullUserInfo() {
 
-		V_FullUserInfo result = currentSubscriberService.getFullUserInfo();
+		V_FullUserInfoDTO result = currentSubscriberService.getFullUserInfoDTO(portalUserIdsService.getCurrentIds().getUserId());
 		if (result == null) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.noContent().build();
 		}
 		return ResponseEntity.ok(result);
 	}

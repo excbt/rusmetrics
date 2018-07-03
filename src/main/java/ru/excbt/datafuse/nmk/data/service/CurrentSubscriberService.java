@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
@@ -17,6 +18,8 @@ import ru.excbt.datafuse.nmk.data.repository.V_FullUserInfoRepository;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
 import ru.excbt.datafuse.nmk.security.SubscriberUserDetails;
+import ru.excbt.datafuse.nmk.service.dto.V_FullUserInfoDTO;
+import ru.excbt.datafuse.nmk.service.mapper.V_FullUserInfoMapper;
 
 /**
  * Класс для работы с текущим абонентом
@@ -39,14 +42,19 @@ public class CurrentSubscriberService {
 
 	private final V_FullUserInfoRepository fullUserInfoRepository;
 
+	private final V_FullUserInfoMapper v_fullUserInfoMapper;
+
+
+
 	private final CurrentSubscriberUserDetailsService subscriberUserDetailsService;
 
 
-    public CurrentSubscriberService(SubscriberService subscriberService, MockSubscriberService mockSubscriberService, MockUserService mockUserService, V_FullUserInfoRepository fullUserInfoRepository, CurrentSubscriberUserDetailsService subscriberUserDetailsService) {
+    public CurrentSubscriberService(SubscriberService subscriberService, MockSubscriberService mockSubscriberService, MockUserService mockUserService, V_FullUserInfoRepository fullUserInfoRepository, V_FullUserInfoMapper v_fullUserInfoMapper, CurrentSubscriberUserDetailsService subscriberUserDetailsService) {
         this.subscriberService = subscriberService;
         this.mockSubscriberService = mockSubscriberService;
         this.mockUserService = mockUserService;
         this.fullUserInfoRepository = fullUserInfoRepository;
+        this.v_fullUserInfoMapper = v_fullUserInfoMapper;
         this.subscriberUserDetailsService = subscriberUserDetailsService;
     }
 
@@ -219,6 +227,16 @@ public class CurrentSubscriberService {
 		V_FullUserInfo result = fullUserInfoRepository.findOne(subscriberUserDetails.getId());
 		return result == null ? null : new V_FullUserInfo(result);
 	}
+
+
+    public V_FullUserInfoDTO getFullUserInfoDTO(Long userId) {
+
+        Optional<V_FullUserInfo> info = Optional.ofNullable(fullUserInfoRepository.findOne(userId));
+
+        V_FullUserInfoDTO result = info.map(v_fullUserInfoMapper::toDto).orElse(null);
+
+        return result;
+    }
 
 	/**
 	 *
