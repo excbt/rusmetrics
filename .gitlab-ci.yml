@@ -1,0 +1,123 @@
+image: gitlab.local.excbt.ru:5050/common/jfrog-cli
+
+stages:
+    - prepare
+    - build
+    - artifactory
+    - docker build
+
+init:
+    stage: prepare
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+        - .maven
+    before_script:
+    - export MAVEN_USER_HOME=`pwd`/.maven
+    script:
+    - git clone http://gitlab.local.excbt.ru/common/artifactory-settings.git
+    - cd artifactory-settings
+    - git checkout template
+    - cd ..
+    - mkdir -p $MAVEN_USER_HOME
+    - cp ./artifactory-settings/settings.xml $MAVEN_USER_HOME/settings.xml
+    - sed -i 's,ARTIFACTORY_URL,'$ARTIFACTORY_URL',g' $MAVEN_USER_HOME/settings.xml
+#    only:
+#        refs:
+#        - master
+#        - develop
+#        - tags
+
+maven:
+    stage: build
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+        - .maven
+    before_script:
+    - export MAVEN_USER_HOME=`pwd`/.maven
+    script:
+    - ./mvnw compile -s $MAVEN_USER_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw test -s $MAVEN_USER_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw verify -s $MAVEN_USER_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - export POM_APP_VERSION=$(./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version |
+        sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }')
+    - echo "Display POM_APP_VERSION $POM_APP_VERSION"
+    - echo $POM_APP_VERSION > target/app-version.info
+    artifacts:
+        paths:
+        - target/app-version.info
+        # Uncomment following to expire the artifacts after defined period, https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts-expire_in
+        # expire_in: 90 day
+#    only:
+#        refs:
+#        - master
+#        - develop
+#        - tags
+
+artifactory:
+    stage: artifactory
+#    image: gitlab.local.excbt.ru:5050/common/jfrog-cli
+    cache:
+        key: "$CI_COMMIT_REF_SLUG"
+        paths:
+        - .maven
+    dependencies:
+    - maven
+    before_script:
+    - export MAVEN_USER_HOME=`pwd`/.maven
+    - ./mvnw verify -s $MAVEN_USER_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - /jfrog rt config --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --password=$ARTIFACTORY_PASS
+    - /jfrog rt c show
+    - export M2_HOME=/usr/share/maven
+    script:
+    - /jfrog rt mvn "install -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME" /configuration.yml --build-name=gitlabci-maven-artifactory --build-number=$CI_JOB_ID
+    - /jfrog rt bce gitlabci-maven-artifactory $CI_JOB_ID
+    - /jfrog rt bp gitlabci-maven-artifactory $CI_JOB_ID
+    artifacts:
+        paths:
+        - target/*.war
+        - target/app-version.info
+    only:
+#        refs:
+#        - master
+#        - develop
+#        - tags
+        variables:
+        - $ARTIFACTORY_URL
+
+excbt image :
+    stage: docker build
+    image: docker:stable
+    services:
+    - name: gitlab.local.excbt.ru:5050/docker/dind:latest
+      alias: docker
+    variables:
+        DOCKER_HOST: tcp://docker:2375/
+        DOCKER_DRIVER: overlay2
+        CONTAINER_IMAGE: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
+    dependencies:
+    - artifactory
+    script:
+    - export POM_APP_VERSION=$(cat target/app-version.info)
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    - docker pull $CONTAINER_IMAGE:latest || true
+    - cp ./src/main/docker/entrypoint.sh ./target/entrypoint.sh
+    - docker build --cache-from $CONTAINER_IMAGE:latest
+      -f ./src/main/docker/Dockerfile
+      --tag $CONTAINER_IMAGE:latest
+      --tag $CONTAINER_IMAGE:$CI_COMMIT_SHA
+      --tag $CONTAINER_IMAGE:$POM_APP_VERSION
+      ./target/
+    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHA
+    - docker push $CONTAINER_IMAGE:$POM_APP_VERSION
+    - docker push $CONTAINER_IMAGE:latest
+    when: manual
+    only:
+        #        refs:
+#        - master
+#        - develop
+#        - tags
+        variables:
+        - $CI_REGISTRY == $PUBLISH_REGISTRY
+
