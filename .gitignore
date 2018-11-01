@@ -224,3 +224,4 @@ release.properties
 
 /patches
 
+.cache-loader
