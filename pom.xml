@@ -6,7 +6,7 @@
 	<artifactId>nmk-p</artifactId>
 	<name>nmk-p</name>
 	<packaging>war</packaging>
-	<version>1.0.0-BUILD-SNAPSHOT</version>
+	<version>1.10</version>
 
 
 	<properties>
