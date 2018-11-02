@@ -11,17 +11,17 @@ init:
     cache:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
-        - .maven
+        - .maven_settings
     before_script:
-    - export MAVEN_USER_HOME=`pwd`/.maven
+    - export MAVEN_SETTINGS_HOME=`pwd`/.maven_settings
     script:
     - git clone http://gitlab.local.excbt.ru/common/artifactory-settings.git
     - cd artifactory-settings
     - git checkout template
     - cd ..
-    - mkdir -p $MAVEN_USER_HOME
-    - cp ./artifactory-settings/settings.xml $MAVEN_USER_HOME/settings.xml
-    - sed -i 's,ARTIFACTORY_URL,'$ARTIFACTORY_URL',g' $MAVEN_USER_HOME/settings.xml
+    - mkdir -p $MAVEN_SETTINGS_HOME
+    - cp ./artifactory-settings/settings.xml $MAVEN_SETTINGS_HOME/settings.xml
+    - sed -i 's,ARTIFACTORY_URL,'$ARTIFACTORY_URL',g' $MAVEN_SETTINGS_HOME/settings.xml
 #    only:
 #        refs:
 #        - master
@@ -34,12 +34,14 @@ maven:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
         - .maven
+        - .maven_settings
     before_script:
     - export MAVEN_USER_HOME=`pwd`/.maven
+    - export MAVEN_SETTINGS_HOME=`pwd`/.maven_settings
     script:
-    - ./mvnw compile -s $MAVEN_USER_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./mvnw test -s $MAVEN_USER_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
-    - ./mvnw verify -s $MAVEN_USER_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw compile -s $MAVEN_SETTINGS_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw test -s $MAVEN_SETTINGS_HOME/settings.xml -Dmaven.repo.local=$MAVEN_USER_HOME
+    - ./mvnw verify -s $MAVEN_SETTINGS_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
     - export POM_APP_VERSION=$(./mvnw org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version |
         sed -n -e '/^\[.*\]/ !{ /^[0-9]/ { p; q } }')
     - echo "Display POM_APP_VERSION $POM_APP_VERSION"
@@ -48,7 +50,7 @@ maven:
         paths:
         - target/app-version.info
         # Uncomment following to expire the artifacts after defined period, https://docs.gitlab.com/ee/ci/yaml/README.html#artifacts-expire_in
-        # expire_in: 90 day
+        expire_in: 1 day
 #    only:
 #        refs:
 #        - master
@@ -62,16 +64,18 @@ artifactory:
         key: "$CI_COMMIT_REF_SLUG"
         paths:
         - .maven
+        - .maven_settings
     dependencies:
     - maven
     before_script:
     - export MAVEN_USER_HOME=`pwd`/.maven
-    - ./mvnw verify -s $MAVEN_USER_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
+    - export MAVEN_SETTINGS_HOME=`pwd`/.maven_settings
+    - ./mvnw verify -s $MAVEN_SETTINGS_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME
     - /jfrog rt config --url=$ARTIFACTORY_URL --user=$ARTIFACTORY_USER --password=$ARTIFACTORY_PASS
     - /jfrog rt c show
     - export M2_HOME=/usr/share/maven
     script:
-    - /jfrog rt mvn "install -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME" /configuration.yml --build-name=gitlabci-maven-artifactory --build-number=$CI_JOB_ID
+    - /jfrog rt mvn "install -s $MAVEN_SETTINGS_HOME/settings.xml -Pprod -DskipTests -Dmaven.repo.local=$MAVEN_USER_HOME" /configuration.yml --build-name=gitlabci-maven-artifactory --build-number=$CI_JOB_ID
     - /jfrog rt bce gitlabci-maven-artifactory $CI_JOB_ID
     - /jfrog rt bp gitlabci-maven-artifactory $CI_JOB_ID
     artifacts:
@@ -86,8 +90,7 @@ artifactory:
         variables:
         - $ARTIFACTORY_URL
 
-excbt image :
-    stage: docker build
+.docker_img:
     image: docker:stable
     services:
     - name: gitlab.local.excbt.ru:5050/docker/dind:latest
@@ -98,23 +101,28 @@ excbt image :
         CONTAINER_IMAGE: $CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG
     dependencies:
     - artifactory
-    script:
-    - export POM_APP_VERSION=$(cat target/app-version.info)
+    before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
-    - docker pull $CONTAINER_IMAGE:latest || true
     - cp ./src/main/docker/entrypoint.sh ./target/entrypoint.sh
+    - cp ../src/main/docker/Dockerfile ./target/Dockerfile
+    - export POM_APP_VERSION=$(cat target/app-version.info)
+
+excbt image :
+    extends: .docker_img
+    stage: docker build
+    script:
     - docker build --cache-from $CONTAINER_IMAGE:latest
-      -f ./src/main/docker/Dockerfile
-      --tag $CONTAINER_IMAGE:latest
-      --tag $CONTAINER_IMAGE:$CI_COMMIT_SHA
-      --tag $CONTAINER_IMAGE:$POM_APP_VERSION
-      ./target/
-    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHA
-    - docker push $CONTAINER_IMAGE:$POM_APP_VERSION
+        -f ./target/Dockerfile
+        --tag $CONTAINER_IMAGE:latest
+        --tag $CONTAINER_IMAGE:$CI_JOB_ID
+        --tag $CONTAINER_IMAGE:$CI_COMMIT_SHA
+        ./target/
     - docker push $CONTAINER_IMAGE:latest
+    - docker push $CONTAINER_IMAGE:$CI_JOB_ID
+    - docker push $CONTAINER_IMAGE:$CI_COMMIT_SHA
     when: manual
     only:
-        #        refs:
+#        refs:
 #        - master
 #        - develop
 #        - tags
