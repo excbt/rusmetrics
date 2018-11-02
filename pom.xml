@@ -15,7 +15,7 @@
 		<guava.version>18.0</guava.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<hikari.version>2.4.6</hikari.version>
-        <pentaho.version>6.1.0.11-329</pentaho.version>
+        <pentaho.version>6.1.0.19-384</pentaho.version>
         <hibernate.version>5.2.8.Final</hibernate.version>
         <mapstruct.version>1.2.0.CR1</mapstruct.version>
         <maven-compiler-plugin.version>3.6.0</maven-compiler-plugin.version>
@@ -414,7 +414,7 @@
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
 			<artifactId>nmkreports</artifactId>
-			<version>0.0.2</version>
+			<version>0.0.2.2</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.postgresql</groupId>
@@ -582,12 +582,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-            <!--<exclusions>-->
-                <!--<exclusion>-->
-                    <!--<groupId>com.vaadin.external.google</groupId>-->
-                    <!--<artifactId>android-json</artifactId>-->
-                <!--</exclusion>-->
-            <!--</exclusions>-->
+            <exclusions>
+                <exclusion>
+                    <groupId>com.vaadin.external.google</groupId>
+                    <artifactId>android-json</artifactId>
+                </exclusion>
+            </exclusions>
 		</dependency>
 
 		<dependency>
@@ -602,48 +602,7 @@
             <version>1.0.3</version>
         </dependency>
 
-
 	</dependencies>
-
-
-	<repositories>
-		<repository>
-			<id>in-project</id>
-			<name>local-maven-repo</name>
-			<url>file://${project.basedir}/libs</url>
-		</repository>
-        <repository>
-            <id>pentaho-releases</id>
-            <url>http://nexus.pentaho.org/content/groups/omni</url>
-        </repository>
-            <repository>
-                <snapshots>
-                    <enabled>false</enabled>
-                </snapshots>
-                <id>jcenter-releases</id>
-                <name>jcenter</name>
-                <url>http://jcenter.bintray.com</url>
-            </repository>
-	</repositories>
-
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>jcenter-snapshots</id>
-            <name>jcenter</name>
-            <url>http://oss.jfrog.org/artifactory/oss-snapshot-local/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>jcenter-releases</id>
-            <name>jcenter</name>
-            <url>http://jcenter.bintray.com</url>
-        </pluginRepository>
-    </pluginRepositories>
-
-
 
 	<build>
 		<finalName>${rp.build.warname}</finalName>
