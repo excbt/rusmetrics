@@ -104,7 +104,7 @@ artifactory:
     before_script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     - cp ./src/main/docker/entrypoint.sh ./target/entrypoint.sh
-    - cp ../src/main/docker/Dockerfile ./target/Dockerfile
+    - cp ./src/main/docker/Dockerfile ./target/Dockerfile
     - export POM_APP_VERSION=$(cat target/app-version.info)
 
 excbt image :
