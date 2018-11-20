@@ -5,13 +5,24 @@ ENV SPRING_OUTPUT_ANSI_ENABLED=ALWAYS \
     JHIPSTER_SLEEP=0 \
     JAVA_OPTS=""
 
+RUN mkdir -p /usr/share/fonts
+RUN apk add --no-cache ttf-dejavu
+
+RUN rm -rf \
+    /var/lib/apt/lists/* \
+    /tmp/* \
+    /var/tmp/*
+
+ENV TZ=Europe/Moscow
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Add a jhipster user to run our application so that it doesn't need to run as root
-RUN adduser -D -s /bin/sh sys101
-WORKDIR /home/sys101
+RUN adduser -D -s /bin/sh portal
+WORKDIR /home/portal
 
 ADD entrypoint.sh entrypoint.sh
-RUN chmod 755 entrypoint.sh && chown sys101:sys101 entrypoint.sh
-USER sys101
+RUN chmod 755 entrypoint.sh && chown portal:portal entrypoint.sh
+USER portal
 
 ADD *.war app.war
 
