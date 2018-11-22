@@ -16,27 +16,27 @@ spring:
         name: portal
     profiles:
         active: prod
-#        include: swagger
-#    devtools:
-#        restart:
-#            enabled: true
-#        livereload:
-#            enabled: false # we use gulp + BrowserSync for livereload
-#    jackson:
-#        serialization.indent_output: true
-#    datasource:
-#        type: com.zaxxer.hikari.HikariDataSource
-#        #driver-class-name: org.postgresql.Driver
-#        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
-#        name:
-#        jndi-name:
-#        username: postgres
-#        password: 12345
-#        hikari:
-#            #connection-test-query: SELECT 1 FROM DUAL
-#            minimum-idle: 3
-#            maximum-pool-size: 5
-#            pool-name: master
+    #        include: swagger
+    #    devtools:
+    #        restart:
+    #            enabled: true
+    #        livereload:
+    #            enabled: false # we use gulp + BrowserSync for livereload
+    #    jackson:
+    #        serialization.indent_output: true
+    #    datasource:
+    #        type: com.zaxxer.hikari.HikariDataSource
+    #        #driver-class-name: org.postgresql.Driver
+    #        jdbcUrl: jdbc:postgresql://192.168.84.26:5432/datafuse
+    #        name:
+    #        jndi-name:
+    #        username: postgres
+    #        password: 12345
+    #        hikari:
+    #            #connection-test-query: SELECT 1 FROM DUAL
+    #            minimum-idle: 3
+    #            maximum-pool-size: 5
+    #            pool-name: master
 
     jackson:
         serialization.write_dates_as_timestamps: false
@@ -65,7 +65,7 @@ portal:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         #driver-class-name: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        url: jdbc:postgresql://77.221.157.162:6432/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -93,11 +93,11 @@ portal:
             time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
             max-entries: 100 # Number of objects in each cache entry
 
-#        hikari:
-#            connection-test-query: SELECT 1
-#            minimum-idle: 3
-#            maximum-pool-size: 20
-#            pool-name: master
+    #        hikari:
+    #            connection-test-query: SELECT 1
+    #            minimum-idle: 3
+    #            maximum-pool-size: 20
+    #            pool-name: master
 
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
@@ -125,7 +125,7 @@ raw:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://109.120.159.198:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        url: jdbc:postgresql://77.221.157.162:6432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
@@ -155,13 +155,13 @@ slog:
         driverClassName: org.postgresql.Driver
         username: dbuser1
         password: Y[Q^1>f{
-        jdbcUrl: jdbc:postgresql://109.120.159.198/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
+        jdbcUrl: jdbc:postgresql://77.221.157.162:6432/datafuse?useUnicode=yes&characterEncoding=UTF-8ApplicationName=PortalSlog
         url: ${slog.datasource.jdbcUrl}
         #dataSource.pool.size=2
         schema: slog
 
 ldap:
-    url: ldap://109.120.149.52:11389
+    url: ldap://otrs.local.excbt.ru:389
     base: dc=nmk,dc=ru
     user: cn=Directory Manager
     password: exbt_123456
