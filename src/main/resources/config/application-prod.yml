@@ -161,7 +161,8 @@ slog:
         schema: slog
 
 ldap:
-    url: ldap://otrs.local.excbt.ru:389
+#    url: ldap://otrs.local.excbt.ru:389
+    url: ldap://10.42.50.47:1389
     base: dc=nmk,dc=ru
     user: cn=Directory Manager
     password: exbt_123456
