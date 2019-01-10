@@ -145,7 +145,7 @@ angular.module('portalNMC')
                 if (angular.isArray(controlObjectsCopy) && controlObjectsCopy.length > 0) {
                     tempArr.forEach(function (elem, index) {
                         controlObjectsCopy.some(function (oldElem) {
-                            if (oldElem.contObjectId == elem.contObjectId) {
+                            if (oldElem.contObjectInfo.contObjectId == elem.contObjectInfo.contObjectId) {
                                 if (!mainSvc.checkUndefinedNull(oldElem.selected)) {
                                     elem.selected = oldElem.selected;
                                 }
@@ -284,7 +284,7 @@ angular.module('portalNMC')
                 var tmp = [];
                 $scope.objects.forEach(function (elem) {
                     if (elem.selected == true) {
-                        tmp.push(elem.contObjectId);
+                        tmp.push(elem.contObjectInfo.contObjectId);
                     }
                 });
 //                    if ($scope.objectCtrlSettings.allSelected == true){
@@ -813,7 +813,7 @@ angular.module('portalNMC')
 //                        $scope.objectsOnPage = $scope.objects;
                     tempArr = [];
                     $scope.objects.forEach(function (elem) {
-                        if (angular.isDefined(elem.contObjectFullName) && elem.contObjectFullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
+                        if (angular.isDefined(elem.contObjectInfo.fullName) && elem.contObjectInfo.fullName.toUpperCase().indexOf(searchString.toUpperCase()) != -1) {
                             tempArr.push(elem);
                         }
                     });
@@ -1600,7 +1600,7 @@ angular.module('portalNMC')
                 $scope.data.currentObjectData = objectData;
                 openMeterPeriodsModalFlag = true;
                 multiPeriodSettingFlag = false;
-                getMeterPeriodByObject(objectData.contObjectId);
+                getMeterPeriodByObject(objectData.contObjectInfo.contObjectId);
             };
                 
             $scope.setMeterPeriodsInit = function () {
