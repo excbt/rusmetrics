@@ -652,8 +652,8 @@ app.controller('MonitorMapCtrl', ['$rootScope', '$scope', '$compile', '$cookies'
     }, 500);
     
     function initCtrl() {
-        $scope.data.currentTree = monitorSvc.getMonitorSettings().currentTree;
-        $scope.data.currentTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
+        $scope.currentTree = monitorSvc.getMonitorSettings().currentTree;
+        $scope.currentTreeNode = monitorSvc.getMonitorSettings().currentTreeNode;
     }
     
     initCtrl();
