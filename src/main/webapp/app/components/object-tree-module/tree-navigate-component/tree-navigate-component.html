@@ -80,7 +80,7 @@
                 </div>
             </div>
         </div>
-        <div class = "row" ng-if = "!($ctrl.data.trees.length > 0)">
+        <div class = "row" ng-if = "!($ctrl.data.trees.length > 0) || !($ctrl.objectCtrlSettings.isTreeView == true)">
             <div class = "paddingLeft20 paddingTop25">
                 {{$ctrl.noTreesMessage}}
             </div>
