@@ -131,5 +131,11 @@
                 $('#changePasswordModal').modal('hide');
             }, errorCallback);
         };
+        
+        function initCtrl() {
+            vm.displayedUserInfo = $rootScope.userInfo;
+        }
+        
+        initCtrl();
     }
 })();

@@ -3534,6 +3534,15 @@ div.nmc-energy-simple-line > div {
     outline: 5px solid lightgray;
 }
 
+/* Header user info*/
+.nmc-header-user-info {
+    font-size: 10px;
+    padding: 0 5px;
+}
+.nmc-header-user-info > p {
+    margin: 0;
+}
+
 
 /*Material: menu item*/
 .nmc-md-menu-item {
