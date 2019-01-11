@@ -342,7 +342,7 @@ angular.module('portalNMC')
                 if (mainSvc.checkUndefinedNull(obj)) {
                     objectIds = prepareObjectsIdsArray();
                 } else {
-                    objectIds.push(obj.contObjectId);
+                    objectIds.push(obj.contObjectInfo.contObjectId);
                 }
                 if (objectIds.length == 0) {
                     return "Cabinet array is empty.";
@@ -1539,7 +1539,7 @@ angular.module('portalNMC')
                 
             function findObjectByIdAndSetPeriod(objArr, omp) {
                 objArr.some(function (obj) {
-                    if (obj.contObjectId === omp.contObjectId && !mainSvc.checkUndefinedNull(omp.meterPeriodSettings)) {
+                    if (obj.contObjectInfo.contObjectId === omp.contObjectId && !mainSvc.checkUndefinedNull(omp.meterPeriodSettings)) {
                         obj.meterPeriodSettings = omp.meterPeriodSettings;
                         return true;
                     }
@@ -1657,7 +1657,7 @@ angular.module('portalNMC')
 //console.log(inputData);
                 var result = {};
                 if (mainSvc.checkUndefinedNull($scope.data.currentObjectData) //|| mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo) 
-                || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectId)) {
+                || mainSvc.checkUndefinedNull($scope.data.currentObjectData.contObjectInfo.contObjectId)) {
                     console.log("Current object data is incorrect.");
                     return false;
                 }
