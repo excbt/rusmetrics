@@ -20,7 +20,7 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 public class SystemInfoControllerTest extends AnyControllerTest {
 
 	@Test
-//    @Ignore
+    @Ignore
 	public void testFullUserInfo() throws Exception {
 		_testGetJson("/api/systemInfo/fullUserInfo");
 	}
