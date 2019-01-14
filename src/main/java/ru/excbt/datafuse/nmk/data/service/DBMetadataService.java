@@ -1,14 +1,24 @@
 package ru.excbt.datafuse.nmk.data.service;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 
 import javax.persistence.Query;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
@@ -23,11 +33,11 @@ public class DBMetadataService {
 				Arrays.asList("id", "created_date", "last_modified_date", "created_by", "last_modified_by"));
 	}
 
-	private final DBSessionService dbSessionService;
+	private final QueryDSLService queryDSLService;
 
 	@Autowired
-    public DBMetadataService(DBSessionService dbSessionService) {
-        this.dbSessionService = dbSessionService;
+    public DBMetadataService(QueryDSLService queryDSLService) {
+        this.queryDSLService = queryDSLService;
     }
 
     private static class ColumnHolder {
@@ -72,34 +82,21 @@ public class DBMetadataService {
 		}
 	}
 
-    /**
-     *
-     * @param columnHolder
-     * @param schemaName
-     * @param tableName
-     * @return
-     */
-	protected List<Object[]> columnQueryTool(ColumnHolder columnHolder, String schemaName, String tableName) {
 
-		StringBuilder sqlString = new StringBuilder();
-		sqlString.append(" SELECT ");
-		sqlString.append(columnHolder.build());
-		sqlString.append(" FROM information_schema.columns ");
-		sqlString.append(" WHERE table_schema = :tableSchema ");
-		sqlString.append(" AND table_name = :tableName ");
-		sqlString.append(" ORDER BY ordinal_position");
+    private final static class SchemaPaths {
 
-		Query q1 = dbSessionService.getSession().createNativeQuery(sqlString.toString());
+        private final static RelationalPath<Object> columnsPath = new RelationalPathBase<>(
+            Object.class,
+            "v",
+            "information_schema",
+            "columns");
 
-		q1.setParameter("tableSchema", schemaName);
-		q1.setParameter("tableName", tableName);
+        private final static StringPath columnName = Expressions.stringPath(columnsPath, "column_name");
+        private final static StringPath dataType = Expressions.stringPath(columnsPath,"data_type");
+        private final static StringPath tableSchema = Expressions.stringPath(columnsPath, "table_schema");
+        private final static StringPath tableName = Expressions.stringPath(columnsPath, "table_name");
 
-		@SuppressWarnings("unchecked")
-		List<Object[]> result = q1.getResultList();
-		checkNotNull(result);
-
-		return result;
-	}
+    }
 
 	/**
 	 *
@@ -109,26 +106,20 @@ public class DBMetadataService {
 	 */
 
 	public List<EntityColumn> selectTableEntityColumns(String schemaName, String tableName, boolean isSkipColumns) {
-		List<EntityColumn> result = new ArrayList<>();
+		List<EntityColumn> result;
+        result = queryDSLService.doReturningWork((c) -> {
+            SQLQuery<Tuple> query = new SQLQuery<>(c, QueryDSLService.templates);
+            query.select(SchemaPaths.columnName, SchemaPaths.dataType).from(SchemaPaths.columnsPath)
+                .where(SchemaPaths.tableSchema.eq(schemaName).and(SchemaPaths.tableName.eq(tableName)));
+            List<Tuple> resultList = query.fetch();
 
-		ColumnHolder columnHolder = new ColumnHolder(
-				new String[] { "table_schema", "table_name", "column_name", "ordinal_position", "data_type" }, null);
+            return resultList.stream()
+                .map(i -> new EntityColumn(i.get(SchemaPaths.columnName), i.get(SchemaPaths.dataType)))
+                .filter(ec -> !(isSkipColumns && SKIP_COLUMNS.contains(ec.getColumnName())))
+                .collect(Collectors.toList());
+        });
 
-		List<Object[]> resultColumns = columnQueryTool(columnHolder, schemaName, tableName);
-
-		resultColumns.forEach(i -> {
-			String columnName = columnHolder.getStringResult(i, "column_name");
-			String dataType = columnHolder.getStringResult(i, "data_type");
-
-			if (isSkipColumns && SKIP_COLUMNS.contains(columnName)) {
-				return;
-			}
-
-			EntityColumn entityColumn = new EntityColumn(columnName, dataType);
-			result.add(entityColumn);
-		});
-
-		return result;
+        return result;
 	}
 
 }

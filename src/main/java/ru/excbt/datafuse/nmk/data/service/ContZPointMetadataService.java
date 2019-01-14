@@ -9,8 +9,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
 
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.NumberPath;
+import com.querydsl.core.types.dsl.StringPath;
+import com.querydsl.sql.RelationalPath;
+import com.querydsl.sql.RelationalPathBase;
+import com.querydsl.sql.SQLQuery;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
@@ -23,16 +29,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
-import ru.excbt.datafuse.nmk.data.model.ContZPoint;
-import ru.excbt.datafuse.nmk.data.model.ContZPointMetadata;
-import ru.excbt.datafuse.nmk.data.model.DeviceMetadata;
-import ru.excbt.datafuse.nmk.data.model.DeviceObject;
-import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.*;
 import ru.excbt.datafuse.nmk.data.model.support.DeviceMetadataInfo;
 import ru.excbt.datafuse.nmk.data.model.support.EntityColumn;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointMetadataRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
 
 @Service
 public class ContZPointMetadataService implements SecuredRoles {
@@ -46,11 +49,21 @@ public class ContZPointMetadataService implements SecuredRoles {
 		HWATER_COLUMNS = Collections.unmodifiableList(
 				Arrays.asList("t_in", "t_out", "t_cold", "t_outdoor", "m_in", "m_out", "m_delta", "v_in", "v_out",
 						"v_delta", "h_in", "h_out", "h_delta", "p_in", "p_out", "p_delta", "work_time", "fail_time"));
+
 		HWATER_SERVICES = Collections.unmodifiableList(Arrays.asList(ContServiceTypeKey.HEAT.getKeyname(),
 				ContServiceTypeKey.CW.getKeyname(), ContServiceTypeKey.HW.getKeyname()));
 	}
 
-	private class ContZPointMetadataKey {
+    @Autowired
+    public ContZPointMetadataService(ContZPointMetadataRepository contZPointMetadataRepository, DeviceMetadataService deviceMetadataService, ContZPointService contZPointService, DeviceObjectDataSourceService deviceObjectDataSourceService, QueryDSLService queryDSLService) {
+        this.contZPointMetadataRepository = contZPointMetadataRepository;
+        this.deviceMetadataService = deviceMetadataService;
+        this.contZPointService = contZPointService;
+        this.deviceObjectDataSourceService = deviceObjectDataSourceService;
+        this.queryDSLService = queryDSLService;
+    }
+
+    private class ContZPointMetadataKey {
 		private Long contZPointId;
 		private Long deviceObjectId;
 		private ContZPoint contZPoint;
@@ -58,20 +71,15 @@ public class ContZPointMetadataService implements SecuredRoles {
 		private Integer tsNumber;
 	}
 
-	@Autowired
-	private ContZPointMetadataRepository contZPointMetadataRepository;
+	private final ContZPointMetadataRepository contZPointMetadataRepository;
 
-	@Autowired
-	private DeviceMetadataService deviceMetadataService;
+	private final DeviceMetadataService deviceMetadataService;
 
-	@Autowired
-	private ContZPointService contZPointService;
+	private final ContZPointService contZPointService;
 
-	@Autowired
-	private DeviceObjectDataSourceService deviceObjectDataSourceService;
+	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
 
-    @Autowired
-	private DBSessionService dbSessionService;
+    private final QueryDSLService queryDSLService;
 
 	/**
 	 *
@@ -191,9 +199,8 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 */
 	public List<EntityColumn> buildSrcProps(List<ContZPointMetadata> metadataList) {
 
-		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null).map(i -> {
-			return new EntityColumn(i.getSrcProp());
-		}).distinct().sorted().collect(Collectors.toList());
+		List<EntityColumn> result = metadataList.stream().filter(i -> i.getMetaNumber() != null)
+            .map(i -> new EntityColumn(i.getSrcProp())).distinct().sorted().collect(Collectors.toList());
 
 		return result;
 	}
@@ -240,9 +247,7 @@ public class ContZPointMetadataService implements SecuredRoles {
 		ContZPoint zpoint = contZPointService.findOne(contZPointId);
 
 		if (zpoint != null && HWATER_SERVICES.contains(zpoint.getContServiceTypeKeyname())) {
-			return HWATER_COLUMNS.stream().sorted().map(i -> {
-				return new EntityColumn(i, "NUMERIC");
-			}).collect(Collectors.toList());
+			return HWATER_COLUMNS.stream().sorted().map(i -> new EntityColumn(i, "NUMERIC")).collect(Collectors.toList());
 		}
 
 		return new ArrayList<>();
@@ -379,6 +384,24 @@ public class ContZPointMetadataService implements SecuredRoles {
 
 	}
 
+
+	private final static class MetadataInfoPaths {
+
+        private final static RelationalPath<Object> viewPath = new RelationalPathBase<>(
+            Object.class,
+            "v",
+            DBMetadata.SCHEME_PORTAL,
+            "v_device_object_metadata_info");
+
+        private final static StringPath srcProp = Expressions.stringPath(viewPath, "src_prop");
+        private final static StringPath deviceMapping = Expressions.stringPath(viewPath,"device_mapping");
+        private final static StringPath deviceMappingInfo = Expressions.stringPath(viewPath, "device_mapping_info");
+        private static final NumberPath<Long> deviceObjectId = Expressions.numberPath(Long.class, viewPath,"device_object_id");
+        private final static StringPath deviceMetadataType = Expressions.stringPath(viewPath, "device_metadata_type");
+
+    }
+
+
 	/**
 	 *
 	 * @param deviceObjectId
@@ -387,37 +410,39 @@ public class ContZPointMetadataService implements SecuredRoles {
 	 */
 	private Map<String, List<String>> selectSrcPropsDeviceMapping(Long deviceObjectId, String deviceMetadataType) {
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("SELECT src_prop, device_mapping, device_mapping_info ");
-		sb.append(" FROM portal.v_device_object_metadata_info ");
-		sb.append("WHERE device_object_id = :par_device_object_id AND ");
-		sb.append(" device_metadata_type = :par_device_metadata_type ");
 
-		Query qry = dbSessionService.getSession().createNativeQuery(sb.toString());
-		qry.setParameter("par_device_object_id", deviceObjectId);
-		qry.setParameter("par_device_metadata_type", deviceMetadataType);
+        Map<String, List<String>> workResult =queryDSLService.doReturningWork((c) -> {
 
-		List<?> qryResult = qry.getResultList();
+            SQLQuery<Tuple> query = new SQLQuery<>(c, QueryDSLService.templates);
 
-		final Map<String, List<String>> resultMap = new HashMap<>();
-		for (Object row : qryResult) {
-			if (row instanceof Object[]) {
-				Object[] rowArray = (Object[]) row;
-				String srcProp = (String) rowArray[0];
-				String deviceMapping = (String) rowArray[1];
-				String deviceMappingInfo = (String) rowArray[2];
-				List<String> mList = resultMap.get(srcProp);
-				if (mList == null) {
-					mList = new ArrayList<>();
-					mList.add(deviceMapping);
-					mList.add(deviceMappingInfo);
-					resultMap.put(srcProp, mList);
-				} else {
-					logger.warn("SrcProp {} already exists in deviceObjectId={}", srcProp, deviceObjectId);
-				}
-			}
-		}
-		return resultMap;
+            List<Tuple> resultList = query.select(
+                MetadataInfoPaths.srcProp,
+                MetadataInfoPaths.deviceMapping,
+                MetadataInfoPaths.deviceMappingInfo)
+
+                .from(MetadataInfoPaths.viewPath)
+                .where(
+                    MetadataInfoPaths.deviceObjectId.eq(deviceObjectId)
+                        .and(MetadataInfoPaths.deviceMetadataType.eq(deviceMetadataType))).fetch();
+
+            final Map<String, List<String>> resultMap = new HashMap<>();
+            for (Tuple t : resultList) {
+                    String srcProp = t.get(MetadataInfoPaths.srcProp);
+                    List<String> mList = resultMap.get(srcProp);
+                    if (mList == null) {
+                        mList = new ArrayList<>();
+                        mList.add(t.get(MetadataInfoPaths.deviceMapping));
+                        mList.add(t.get(MetadataInfoPaths.deviceMappingInfo));
+                        resultMap.put(srcProp, mList);
+                    } else {
+                        logger.warn("SrcProp {} already exists in deviceObjectId={}", srcProp, deviceObjectId);
+                    }
+            }
+
+            return resultMap;
+        });
+
+        return workResult;
 
 	}
 

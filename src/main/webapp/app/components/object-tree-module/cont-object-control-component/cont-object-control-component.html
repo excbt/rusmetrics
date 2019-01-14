@@ -1,0 +1,411 @@
+<div style = "min-width: 1000px;">
+<!--
+<md-toolbar>
+    <div class = "md-toolbar-tools"  ng-init = "$ctrl.searchFlag = false">
+        <div flex ng-show = "$ctrl.searchFlag != true">
+        </div>
+        <div flex ng-show = "$ctrl.searchFlag == true" >
+          <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
+              <input style = "background-color: white; width: 94%; border: 1px solid rgb(95, 95, 95);" id="searchInput" type="text" ng-model = "$ctrl.mainFilter"/>
+              <div class="button-group">
+                  <a style = "text-decoration: underline; margin-left: 5px; cursor: pointer; color: rgb(95, 95, 95);"
+                     ng-click = "$ctrl.searching()" title = "найти">
+                      Найти
+                  </a>
+              </div>
+          </md-input-container>
+        </div>
+        <md-button class = "md-icon-button nmc-md-ltb-btn" aria-label = "Поиск" 
+             ng-click = "$ctrl.startSearch()">
+          <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+        </md-button>
+    </div>
+</md-toolbar>
+-->
+<!--    Cont object controller view-->
+   <div id = "nmc-ctrl-cmp-toolbarheader-id" 
+       class = "container-fluid" style = "position: absolute; top: -28px; left: 0px; right: 0px; width: 96.4%; z-index: 2; margin-left: 50px;">
+<!--     margin-left: 50px;-->
+      <div class = "row">
+          <div class = "col-xs-12 noPadding">
+            <div class = "input-group filter nmc-search-form" style = "width: 100%;">   
+<!--
+                <span class = "input-group-addon nmc-search-form-addon">
+                    <i class = "glyphicon glyphicon-search nmc-search-form-button"></i>
+                </span>
+-->
+                <input ng-if = "$ctrl.searchFlag"
+                id = "nmc-ctrl-cmp-search-btn-id"
+                title = "Введите текст для поиска" 
+                type = "text" 
+                class = "form-control nmc-text-input-form" 
+                ng-model = "$ctrl.filter"
+                ng-change = "$ctrl.filterObjects($ctrl.filter)"
+                style = "border-color: rgb(95, 95, 95); border-radius: 0;">
+                <span class = "input-group-addon" style = "background: transparent; border: none; padding: 0 3px 6px 3px">
+                    <i class = "btn btn-xs glyphicon nmc-ctrl-cmp-search-btn"
+                        ng-class = "{'glyphicon-remove': $ctrl.searchFlag}"                    
+                        ng-click = "$ctrl.toggleSearch()"
+                    >
+                        <img ng-if = "!$ctrl.searchFlag" 
+                        src = "components\object-tree-module\cont-object-control-component\search26.png"
+                        style = "width: 16px; height: 16px; margin-top: -6px; margin-left: 3px;"
+                        />
+                    </i>
+                    
+                </span>
+            </div>
+          </div>
+         <!--             <div class = "pull-right">-->
+<!--
+          <div class = "col-xs-offset-3 col-xs-3 noPadding">
+              <div>
+                  <label class="nmc-form-label">Всего:</label>
+                  <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="($ctrl.objects | filter: $ctrl.filter).length">
+              </div>
+          </div>
+-->
+       </div>
+<!--
+       <div class = "row">
+           <div class = "col-xs-12 paddingBottom10">
+
+           </div>
+
+        </div>
+-->
+    </div>
+    
+    <!--    Непрокручиваямая шапка -->
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+            <tr class="nmc-ctrl-cmp-table-header">
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
+<!--                    Режим-->
+                </th>
+                <th ng-repeat = "column in $ctrl.columns track by $index" 
+                   ng-class = "column.headerClass"
+                   ng-style = "{'padding-left' : $index === 0 ? '17px' : '5px'}"
+                   >
+<!--
+                    <span ng-switch on = "column.type">
+                       <span ng-switch-when = "img">
+                           <img style = "height: 21px; width: 21px;"
+                           ng-src = "{{column.imgPath}}">
+                       </span>
+                       <span ng-switch-default>
+-->
+                           <span>{{column.caption}}</span>
+<!--
+                       </span>
+                    </span>
+-->
+                    <i ng-if = "column.type === 'text'"
+                      class = "glyphicon" 
+                       ng-class = "{'glyphicon-sort-by-alphabet': !$ctrl.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': $ctrl.orderBy.asc}" 
+                       ng-show = " $ctrl.orderBy.field == '{{column.name}}'"
+                       ng-click = "$ctrl.setOrderBy(column.name)"
+                        style = "cursor: pointer;"
+                       >
+                    </i>
+<!--
+                    <i ng-if = "true"
+                       class = "glyphicon glyphicon-filter"
+                        ng-click = "$ctrl.setFilterBy(column.name)">
+                    </i>
+-->
+                    <div  ng-if = "column.type === 'img'"
+                       class="btn-group" style = "cursor: pointer;">
+                        <i  ng-show = "!column.setFilterFlag"
+                            title = "фильтр" 
+                            type = "button" 
+                            class = "dropdown-toggle" 
+                            data-toggle = "dropdown" 
+                            aria-haspopup = "true" 
+                            aria-expanded = "false"
+                            
+                        >
+                        <img style = "margin-bottom: -10px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/filter16-white.png">
+                        
+<!--
+                            <i ng-if = "true"
+                               class = "glyphicon glyphicon-filter"
+                                ng-click = "$ctrl.setFilterBy(column.name)">
+                            </i>
+-->
+                        </i>
+                      <ul
+                        class="dropdown-menu" 
+                        style = "margin-top: 5px; min-width: 20px;">
+<!--                        <li style="color: rgb(95, 95, 95)">test IMG</li>-->
+                        <li ng-repeat = "fvalue in column.filterValues track by $index">
+                            <a href=""
+                              ng-click = "$ctrl.setColorFilter(column, fvalue)">
+                               <img 
+                                class = "marginRight2 nmc-p-tree-status-img" 
+                                ng-src = "{{fvalue}}"
+                                />
+                            </a>
+                            
+                        </li>                        
+                      </ul>
+<!--
+                      <ul ng-if = "column.type === 'img'"
+                        class="dropdown-menu" >
+                          <li style="color: rgb(95, 95, 95)">Test no img</li>
+                        <li 
+                           style="color: rgb(95, 95, 95)" ng-repeat = "fvalue in column.filterValues track by $index">
+                            <a>{{fvalue}}</a>
+                        </li>                        
+                      </ul>
+-->
+                    </div>
+                    <i ng-show = "column.setFilterFlag"
+                       class = ""
+                       ng-click = "$ctrl.removeColorFilter(column)"
+                        style = "cursor: pointer;">
+                       
+                        <img style = "margin-bottom: -10px;"
+                        ng-src = "components/object-tree-module/cont-object-control-component/filters/cancel-filter16-white.png">    
+                    </i>
+                    
+<!--
+                    <i ng-if = "column.setFilterFlag"
+                       class = "glyphicon glyphicon-remove"
+                       ng-click = "$ctrl.removeColorFilter(column)">
+                        
+                    </i>
+-->
+                </th>
+            </tr>
+    </table>
+    <div id="divWithContObjectControlTable" class="nmc-cont-object-control-main-div" when-scrolled="$ctrl.addMoreObjectsOnPage()">
+        <table class = "crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table nmc-parent-object-table noMargin"
+            >
+<!--            scroll-to-top="{{$ctrl.EVENTS.OBJECT_CLICK}}"-->
+            
+            <tr class = "nmc-ctrl-cmp-table-header nmc-hide">
+               
+                <th class = "col-xs-1 nmc-td-for-button">
+<!--                nmc-td-for-button-object-control">-->
+<!--                        Режим-->
+                </th>
+                <th ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass">
+                    {{column.caption}}
+                </th>
+            </tr>
+            
+
+<!--            <tr ng-repeat = "object in $ctrl.objects | filter: filter | orderBy: $ctrl.orderBy.field : $ctrl.orderBy.asc track by $index">-->
+            <tr ng-repeat = "object in $ctrl.objectsOnPage track by $index" ng-init = "contObjectIndex = $index"
+            ng-class="{'nmc-ctrl-cmp-bg-distinguish': object.isSelected}"
+            ng-click = "$ctrl.selectObject(object)">
+<!--
+               <td ng-if = "object.loading" class = "col-xs-1">
+                   <div ng-show = "object.loading" class="nmc-loading">
+                        <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
+                    </div>
+               </td>
+-->
+               <td>
+                   <table style = "width: 100%;">
+                       <tr>
+                            <td class = "col-xs-1 nmc-td-for-button">
+<!--                             nmc-td-for-button-object-control">-->
+<!--
+                         <i ng-class = "$ctrl.getIconCssClass($index)"
+                                 
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 20px; padding-left: 12px; color: white"
+                                  ng-style = "{'text-shadow': $ctrl.getTextShadow($index)}"
+                                  >
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
+                               </i>
+-->
+
+<!--
+                              <img class="pull-right"
+                              ng-click = "$ctrl.showObjectWidget(object, $index)"
+                               ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon($index)}}"
+                               style = "padding-left: 12px; height: 24px; width: 36px;"
+                               />
+-->
+                              
+<!--
+                               <i class = "btn btn-xs glyphicon glyphicon-home pull-right"
+                                 
+                                  ng-click = "$ctrl.showObjectWidget(object, $index)"
+                                  
+                                  style = "font-size: 14px; padding-left: 12px; color: #80a3c1"
+                                  ng-style = "{'color': $even ? '#ffc000' : '#ff0000'}"
+                                  >
+                                  
+                              ng-class = "{'glyphicon-menu-right': !object.showWidgetFlag, 'glyphicon-menu-down': object.showWidgetFlag}"     
+                               </i>
+-->
+<!--
+                                <img class = "marginRight2 pull-right" 
+                                height = "12"
+                                width = "12"
+                                ng-src = "{{object.modeImgSrc}}"
+                                style = "margin-top: 10px;">
+-->
+                                <img class = "marginRight2 nmc-p-tree-status-img pull-right" 
+                                ng-src = "{{object.modeImgSrc}}"
+                                style = "margin-top: 7px;">
+
+                            </td>
+                            <td ng-repeat = "column in $ctrl.columns track by $index" ng-class = "column.headerClass"
+                               style = "padding: 5px 0;">
+                              
+                               <div ng-switch on = "column.type">
+                                   <div ng-switch-when = "contObjectType">
+<!--
+<pre>
+    {{object | json}}
+</pre>
+-->
+                                       <img class="pull-left"
+                                          ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, null, $event)"
+                                          ng-src = "{{object.buildingTypeCategoryIconPath}}"                                           
+                                           style = "height: 24px; width: 24px; cursor: pointer;"
+                                       />
+<!--                                       ng-src = "components/object-tree-module/cont-object-control-component/buildings/{{$ctrl.getIcon(contObjectIndex)}}"-->
+                                   </div>
+                                    <div ng-switch-when = "img" style = "padding-left: 10%;">
+                                        <img ng-if = "object[column.name]"
+                                        style = "cursor: pointer;"
+                                        class = "marginRight2 nmc-p-tree-status-img" 
+                                        ng-src = "{{object[column.name]}}"
+                                        ng-click = "$ctrl.showObjectWidgetAtDialog(object, contObjectIndex, column.name, $event)"
+                                                                       
+                                        />
+<!--                                        ng-click = "$ctrl.showObjectWidget(object, contObjectIndex, column.name)"         -->
+<!--                                   {{column.name}}-->
+                                    </div>
+                                   <div ng-switch-default>
+                                       <div ng-show = "object.loading" class="nmc-loading" style = "display: inline;">
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
+                                       </div>
+                                        {{object[column.name]}} <span ng-if = "$ctrl.isSystemuser()"> (id = {{object['id']}})</span>
+                                   </div>
+                                </div>
+                            </td>
+                       </tr>
+<!--
+                       <tr ng-if = "object.showWidgetFlag"
+                         style = "border-top: 1px solid rgb(95, 95, 95)"
+                         >
+-->
+<!--                          <td ng-attr-colspan = "{{$ctrl.columns.length + 1}}">-->
+<!--
+                              <div ng-if = "$ctrl.contZpointFilterValue === null">
+                                  <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "0"
+                                       cont-zpoint-name = "null"
+                                       cont-zpoint-type = "null"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+                              </div>
+-->
+                             
+<!--
+                              <div ng-if = "$ctrl.contZpointFilterValue !== null"
+                                ng-repeat = "zpoint in object.zpoints | contZpointType: $ctrl.contZpointFilterValue track by $index"
+                                class = "col-xs-6 paddingBottom15">
+-->
+
+<!--
+                                   <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #aaa; border-radius: 5px;">
+                                       <span ng-show='title' ng-bind='title'></span>
+                                       <div ng-show='isLoading'>Загрузка...</div>
+                                       <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                                       <ng-widget ng-show = "!isLoading && !isError"
+                                           src = "zpoint.widgetOptions.type"
+                                           options = "zpoint.widgetOptions">
+
+                                        </ng-widget>
+                                   </div>
+-->
+<!--
+                                   <cont-zpoint-monitor-component 
+                                       cont-zpoint-id = "zpoint.id"
+                                       cont-zpoint-name = "zpoint.customServiceName"
+                                       cont-zpoint-type = "zpoint.contServiceTypeKeyname"
+                                   >                                                                          
+                                   </cont-zpoint-monitor-component>
+-->
+<!--
+                                   <pre>
+                                   {{zpoint | json}}
+                                   </pre>
+-->
+
+<!--                                 </div>-->
+<!--                          </td>-->
+                           
+<!--                       </tr>-->
+                   </table>
+                </td>
+            </tr>
+            
+        </table>
+
+    </div>
+<!--    <ng-pop-up option = "$ctrl.ngPopupConfig"></ng-pop-up>-->
+    
+    <div id="eventWindowModal" 
+         class="modal fade nmc-modal-window" 
+         role="dialog"
+         aria-labelledby="deleteLabel" 
+         tabindex="-1"
+          data-backdrop="static"
+         >
+
+        <div class="modal-dialog  modal-content nmc-modal-dialog-low" style = "height: 300px; max-height: 66vh; min-height: 300px;">
+            <div class="modal-header nmc-modal-header">
+                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 id="deleteLabel" class="nmc-h3">
+                    {{$ctrl.selectedObject.caption}} <span ng-show = "$ctrl.contZpointFilterValue" class = "marginRight5">,</span>{{$ctrl.resources[$ctrl.contZpointFilterValue].caption}}
+                </h3>
+            </div>
+            <div class="modal-body nmc-modal-body"  style = "min-height: 250px; position: absolute; width: 100%; top: 19px;
+               bottom: 15px;">
+                <cont-zpoint-monitor-component ng-if = "$ctrl.viewEventWindowFlag"
+                   cont-object-id = "$ctrl.selectedObject.id" 
+                   cont-zpoint-id = "0" 
+                   cont-zpoint-name = "null" 
+                   cont-zpoint-type = "$ctrl.contZpointFilterValue"
+                   monitor-status = "$ctrl.getMonitorStatusFromIconPath($ctrl.selectedObject[$ctrl.contZpointFilterValue])"
+                   >
+                    
+                </cont-zpoint-monitor-component>
+            </div>
+            <div class="modal-footer nmc-modal-footer" style = "position: absolute; width: 100%; bottom: 0;">
+<!--                    <div class="container-fluid">-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-xs-offset-6 col-xs-3">-->                            
+                                <input  
+                                       type="submit" 
+                                       class="btn btn-xs btn-primary nmc-save-button"                                       
+                                       value="Ok" 
+                                       data-dismiss="modal"/>
+<!--                            </div>-->
+
+<!--                            <div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">-->                            
+<!--
+                                <button class="btn btn-xs btn-default nmc-cancel-button" data-dismiss="modal"
+                                    ng-click="exit();">
+                                    Отменить
+                                </button>
+-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>		-->
+            </div>
+        </div>
+    </div>
+</div>

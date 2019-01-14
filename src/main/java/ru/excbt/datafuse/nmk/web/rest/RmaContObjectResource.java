@@ -1,5 +1,6 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import com.codahale.metrics.annotation.Timed;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
@@ -8,10 +9,7 @@ import ru.excbt.datafuse.nmk.data.model.dto.ContObjectMonitorDTO;
 import ru.excbt.datafuse.nmk.data.service.*;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 import ru.excbt.datafuse.nmk.web.ApiConst;
-import ru.excbt.datafuse.nmk.web.api.support.ApiAction;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionEntityLocationAdapter;
-import ru.excbt.datafuse.nmk.web.api.support.ApiActionLocation;
+import ru.excbt.datafuse.nmk.web.api.support.*;
 
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -28,7 +26,9 @@ import ru.excbt.datafuse.nmk.web.rest.support.ApiActionTool;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.google.common.base.Preconditions.*;
 
@@ -48,41 +48,45 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 
 	private final SubscriberAccessService subscriberAccessService;
 	private final ObjectAccessService objectAccessService;
+    private final SubscriberService subscriberService;
 
-
-    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService1) {
-        super(contObjectService, contGroupService, organizationService, contObjectFiasService, meterPeriodSettingService, objectAccessService);
+	@Autowired
+    public RmaContObjectResource(ContObjectService contObjectService, ContGroupService contGroupService, OrganizationService organizationService, ContObjectFiasService contObjectFiasService, MeterPeriodSettingService meterPeriodSettingService, ObjectAccessService objectAccessService, PortalUserIdsService portalUserIdsService, SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService1, SubscriberService subscriberService) {
+        super(contObjectService, contGroupService, organizationService, contObjectFiasService, meterPeriodSettingService, objectAccessService, portalUserIdsService);
         this.subscriberAccessService = subscriberAccessService;
         this.objectAccessService = objectAccessService1;
+        this.subscriberService = subscriberService;
     }
 
     /**
 	 *
-	 * @param contObject
+	 * @param contObjectDTO
 	 * @return
 	 */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.POST, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> createContObject(
+    @Timed
+    public ResponseEntity<?> createContObject(
 			@RequestParam(value = "cmOrganizationId", required = false) Long cmOrganizationId,
-			final @RequestBody ContObject contObject, HttpServletRequest request) {
+			final @RequestBody ContObjectDTO contObjectDTO, HttpServletRequest request) {
 
-		checkNotNull(contObject);
+        Objects.requireNonNull(contObjectDTO);
 
-		if (!contObject.isNew()) {
+		if (contObjectDTO.getId() != null) {
 			return ResponseEntity.badRequest().build();
 		}
 
-		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
+		LocalDate rmaBeginDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		ApiActionLocation action = new ApiActionEntityLocationAdapter<ContObjectMonitorDTO, Long>(request) {
 
 			@Override
 			public ContObjectMonitorDTO processAndReturnResult() {
-				ContObject result = contObjectService.automationCreate(contObject, getCurrentSubscriberId(),
+				ContObject result = contObjectService.automationCreate(contObjectDTO,
+                        portalUserIdsService.getCurrentIds().getSubscriberId(),
                         LocalDateUtils.asLocalDate(rmaBeginDate.toDate()),
 						cmOrganizationId);
 
-				return contObjectService.wrapContObjectMonitorDTO(getSubscriberParam(),result,false);
+				return contObjectService.wrapContObjectMonitorDTO(portalUserIdsService.getCurrentIds(),result,false);
 			}
 
 			@Override
@@ -102,7 +106,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
      */
 	@RequestMapping(value = "/contObjects/{contObjectId}", method = RequestMethod.DELETE,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
+    @Timed
+    public ResponseEntity<?> deleteContObject(@PathVariable("contObjectId") Long contObjectId) {
 
 		checkNotNull(contObjectId);
 
@@ -110,7 +115,7 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			return ApiResponse.responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 
 		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteContObject(contObjectId, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
@@ -124,15 +129,16 @@ public class RmaContObjectResource extends SubscrContObjectResource {
      * @return
      */
 	@RequestMapping(value = "/contObjects", method = RequestMethod.DELETE, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
+    @Timed
+    public ResponseEntity<?> deleteContObjects(@RequestParam("contObjectIds") Long[] contObjectIds) {
 
 		checkNotNull(contObjectIds);
 
-		if (!canAccessContObject(contObjectIds)) {
+		if (!canAccessContObject(Arrays.asList(contObjectIds))) {
 			return ApiResponse.responseForbidden();
 		}
 
-		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(getCurrentSubscriberId());
+		LocalDate subscrEndDate = subscriberService.getSubscriberCurrentDateJoda(portalUserIdsService.getCurrentIds().getSubscriberId());
 
 		ApiAction action = (ApiActionAdapter) () -> contObjectService.deleteManyContObjects(contObjectIds, LocalDateUtils.asLocalDate(subscrEndDate.toDate()));
 
@@ -145,16 +151,17 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@Override
 	@RequestMapping(value = "/contObjects", method = RequestMethod.GET, produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
+    @Timed
+    public ResponseEntity<?> getContObjects(@RequestParam(value = "contGroupId", required = false) Long contGroupId,
                                             @RequestParam(value = "meterPeriodSettingIds", required = false) List<Long> meterPeriodSettingIds) {
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ApiActionEntityAdapter() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
                 List<ContObject> resultList = findContObjectsByAccess(contGroupId, true, false,meterPeriodSettingIds);
                     //selectRmaContObjects(contGroupId, false, meterPeriodSettingIds);;
-
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
+                List<ContObjectMonitorDTO> contObjectMonitorDTOS = contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(),resultList,false);
+                return contObjectMonitorDTOS;
             }
         };
 
@@ -168,14 +175,15 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+    @Timed
+    public ResponseEntity<?> getSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ContObjectMonitorDTOResponse() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
                 List<ContObject> resultList = objectAccessService.findContObjectsNoTtl(subscriberId);
 
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
+                return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(),resultList,false);
             }
         };
 
@@ -188,15 +196,18 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/availableContObjects", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
+    @Timed
+    public ResponseEntity<?> getAvailableSubscrContObjects(@PathVariable("subscriberId") Long subscriberId) {
 
 
-        ApiAction action = new ContObjectDTOResponse() {
+        ApiAction action = new ContObjectMonitorDTOResponse() {
             @Override
-            public List<? extends ContObjectDTO> processAndReturnResult() {
-                List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(subscriberId, getCurrentSubscriberId());
+            public List<ContObjectMonitorDTO> processAndReturnResult() {
+                List<ContObject> resultList = objectAccessService.findRmaAvailableContObjects(
+                    subscriberId,
+                    portalUserIdsService.getCurrentIds().getSubscriberId());
 
-                return contObjectService.wrapContObjectsMonitorDTO(getSubscriberParam(),resultList,false);
+                return contObjectService.wrapContObjectsMonitorDTO(portalUserIdsService.getCurrentIds(),resultList,false);
             }
         };
 
@@ -210,7 +221,8 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/{subscriberId}/subscrContObjects", method = RequestMethod.PUT,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
+    @Timed
+    public ResponseEntity<?> updateSubscrContObjects(@PathVariable("subscriberId") Long subscriberId,
 			@RequestBody List<Long> contObjectIds) {
 
 		checkNotNull(subscriberId);
@@ -223,10 +235,13 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 			@Override
 			public List<ContObjectDTO> processAndReturnResult() {
 
-                subscriberAccessService.updateContObjectIdsAccess(new Subscriber().id(subscriberId), contObjectIds, LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()));
+                subscriberAccessService.updateContObjectIdsAccess(
+                    contObjectIds,
+                    LocalDateUtils.asLocalDateTime(subscrBeginDate.toDate()),
+                    new Subscriber().id(subscriberId));
                 List<ContObject> contObjects = objectAccessService.findContObjects(subscriberId);
                 List<ContObjectDTO> result = contObjectService.mapToDTO(contObjects);
-                objectAccessService.setupRmaHaveSubscrDTO(getSubscriberParam(), result);
+                objectAccessService.setupRmaHaveSubscrDTO(portalUserIdsService.getCurrentIds(), result);
 				return result;
 			}
 		};
@@ -241,8 +256,9 @@ public class RmaContObjectResource extends SubscrContObjectResource {
 	 */
 	@RequestMapping(value = "/contObjects/{contObjectId}/subscribers", method = RequestMethod.GET,
 			produces = ApiConst.APPLICATION_JSON_UTF8)
-	public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
-		List<Long> resultList = objectAccessService.findSubscriberIdsByRma(getRmaSubscriberId(), contObjectId);
+    @Timed
+    public ResponseEntity<?> getContObjectSubscribers(@PathVariable("contObjectId") Long contObjectId) {
+		List<Long> resultList = objectAccessService.findSubscriberIdsByRma(portalUserIdsService.getCurrentIds().getRmaId(), contObjectId);
 		return ApiResponse.responseOK(resultList);
 	}
 

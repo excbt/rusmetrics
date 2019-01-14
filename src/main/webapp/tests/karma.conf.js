@@ -10,14 +10,14 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
-
+    frameworks: ['jasmine'],      
 
     // list of files / patterns to load in the browser
     files: [
-      '../app/bower_components/angular-1.4.1/angular.min.js',
+      /*'../app/bower_components/angular-1.4.1/angular.js',
+      '../app/bower_components/angular-1.4.1/angular-mocks.js',
       '../app/vendor_components/RightsJS/right.js',
-      '../app/vendor_components/RightsJS/right-resizable.js',
+      '../app/vendor_components/RightsJS/right-resizable.js',      
       '../app/bower_components/jquery/dist/jquery.js',
       '../app/bower_components/bootstrap/dist/js/bootstrap.js',
       '../app/bower_components/angular-1.4.1/angular-animate.js',
@@ -26,6 +26,23 @@ module.exports = function(config) {
       '../app/bower_components/angular-1.4.1/angular-route.js',
       '../app/bower_components/angular-1.4.1/angular-sanitize.js',
       '../app/bower_components/angular-1.4.1/angular-touch.js',
+      */
+      '../app/bower_components/angular/angular.js',
+      '../app/bower_components/angular-mocks/angular-mocks.js',
+      
+      '../app/bower_components/jquery/dist/jquery.js',
+
+      '../app/bower_components/bootstrap/dist/js/bootstrap.js',
+
+      '../app/bower_components/angular-animate/angular-animate.js',
+      '../app/bower_components/angular-cookies/angular-cookies.js',
+      '../app/bower_components/angular-resource/angular-resource.js',
+      '../app/bower_components/angular-route/angular-route.js',
+      '../app/bower_components/angular-sanitize/angular-sanitize.js',
+      '../app/bower_components/angular-touch/angular-touch.js',
+
+      '../app/bower_components/angular-ui-router/release/angular-ui-router.js',
+
       '../app/bower_components/jquery-ui/jquery-ui.js',
       '../app/bower_components/toastr/toastr.js',
       '../app/bower_components/moment/moment.js',
@@ -51,14 +68,23 @@ module.exports = function(config) {
       '../app/vendor_components/leaflet-1.0.0-b1/leaflet.js',
       '../app/vendor_components/angular-leaflet-directive-master/dist/angular-leaflet-directive.js',
       '../app/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.js',
-      '../app/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js',
-      '../app/bower_components/angular-1.4.1/angular-mocks.js',
-      '../app/scripts/app.js',
+      '../app/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js',      
+      '../app/bower_components/jasmine-jquery/lib/jasmine-jquery.js',
+      '../app/bower_components/angular-ui-layout/src/ui-layout.js',
+      '../app/scripts/app-module.js',
+      '../app/scripts/app-config.js',
+      '../app/scripts/app-constant.js',
+      '../app/scripts/app-run.js',
+      '../app/scripts/app-filter.js',
+      '../app/scripts/app-directive.js',
+      '../app/scripts/app-ui-route.js',
       '../app/scripts/services/*.js',
       '../app/scripts/directives/*.js',
       '../app/scripts/controllers/*.js',
       '../tests/*Spec.js',
-      '../tests/**/*Spec.js'
+      '../tests/**/*Spec.js',
+
+      {pattern: '../tests/mock/*.json', watched: true, serve: true, included: false}
     ],
 
 
@@ -107,6 +133,10 @@ module.exports = function(config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    client: {
+      captureConsole: true
+    }
   })
 }

@@ -1,6 +1,9 @@
 package ru.excbt.datafuse.nmk.data.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Getter;
+import lombok.Setter;
 import org.mapstruct.factory.Mappers;
 import ru.excbt.datafuse.nmk.service.mapper.ContEventTypeMapper;
 
@@ -13,18 +16,16 @@ public class ContEventTypeDTO {
 
     private String keyname;
 
-    private String caption;
-
     private String name;
 
     private Long parentId;
 
+    @JsonIgnore
     private Integer contEventLevel;
-
-    private String contEventCategory;
 
     private String contEventCategoryKeyname;
 
+    @JsonIgnore
     private Long reverseId;
 
     private Boolean isBaseEvent;
@@ -33,11 +34,16 @@ public class ContEventTypeDTO {
 
     private Boolean isScalarEvent;
 
+    @JsonIgnore
     private Boolean isDevMode;
 
+    @JsonIgnore
     private Boolean isSmsNotification;
 
+    @JsonIgnore
     private String smsMessageTemplate;
+
+    private String levelColor;
 
     public Long getId() {
         return id;
@@ -53,14 +59,6 @@ public class ContEventTypeDTO {
 
     public void setKeyname(String keyname) {
         this.keyname = keyname;
-    }
-
-    public String getCaption() {
-        return caption;
-    }
-
-    public void setCaption(String caption) {
-        this.caption = caption;
     }
 
     public String getName() {
@@ -85,14 +83,6 @@ public class ContEventTypeDTO {
 
     public void setContEventLevel(Integer contEventLevel) {
         this.contEventLevel = contEventLevel;
-    }
-
-    public String getContEventCategory() {
-        return contEventCategory;
-    }
-
-    public void setContEventCategory(String contEventCategory) {
-        this.contEventCategory = contEventCategory;
     }
 
     public String getContEventCategoryKeyname() {
@@ -157,5 +147,13 @@ public class ContEventTypeDTO {
 
     public void setSmsMessageTemplate(String smsMessageTemplate) {
         this.smsMessageTemplate = smsMessageTemplate;
+    }
+
+    public String getLevelColor() {
+        return levelColor;
+    }
+
+    public void setLevelColor(String levelColor) {
+        this.levelColor = levelColor;
     }
 }

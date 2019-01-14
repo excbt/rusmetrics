@@ -4,8 +4,8 @@
   <!-- Навигационная полоса -->
     <ul class="nav nav-tabs" role="tablist">
         <li id="object_list_2nd_menu_item" role="presentation" class="nmc-hide active"><a id="monitorTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Список объектов</a></li>
-        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
-        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
+        <li id="monitor_map_2nd_menu_item" ng-hide="isTestMode()" role="presentation" class="nmc-hide"><a class="nmc-main-tab-button" href="#/notices/monitor_map/" aria-controls="monitor_map" role="tab" data-target="#monitor_map" data-toggle="tab">Карта</a></li>        
+        <li id="notice_2nd_menu_item" ng-hide="isCabinet()" role="presentation"><a class="nmc-main-tab-button" href="#/notices/list/" aria-controls="notices" role="tab" data-target="#notices" data-toggle="tab">Уведомления</a></li>        
         
         <li ng-if="isSystemuser()" id="object_map_2nd_menu_item" role="presentation">
             <a class="nmc-main-tab-button" 
@@ -579,10 +579,10 @@
                         <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
                             <tr>
                                 <td class="col-sm-3">
-                                    <label for="inputName">Наименование</label>
+                                    <label for="inputCustomServiceName">Наименование</label>
                                 </td>
                                 <td class="col-sm-9 nmc-text-align-left">
-                                	<input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName">
+                                	<input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputCustomServiceName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName">
                                 </td>
                             </tr>
                             <tr>
@@ -1281,9 +1281,9 @@
                                             </td>
                                         </tr> -->
                                         <tr>
-                                            <td class="col-sm-3"><label for="inputName">Наименование</label>
+                                            <td class="col-sm-3"><label for="inputFullName">Наименование</label>
                                             </td>
-                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                            <td class="col-sm-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputFullName" placeholder="Наименование"  ng-model="currentObject.fullName">
                                             </td>
                                         </tr>
                                         <tr>

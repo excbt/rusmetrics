@@ -4,7 +4,7 @@ import java.net.URI;
 
 /**
  * Интерфейс для работы с action при POST
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.05.2015
@@ -12,5 +12,5 @@ import java.net.URI;
  */
 public interface ApiActionLocation extends ApiAction {
 
-	public URI getLocation();
+	URI getLocation();
 }

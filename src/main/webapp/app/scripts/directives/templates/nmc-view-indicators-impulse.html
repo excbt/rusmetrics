@@ -1,0 +1,527 @@
+<div>
+<!-- *************************************************************************************************** -->
+<!--                        Страница "Показания"                                                        -->
+<!-- *************************************************************************************************** -->
+<!--<div><a href="#/">Портал</a> / <a href="#/objects_edit/" >Объекты </a> / Системы - точки учета</div>-->
+<!--
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li><a href="#/objects_edit/">Объекты</a><span class="divider"></span></li>
+        <li class="active">Системы - точки учета</li>
+    </ul>
+</div> 
+-->
+
+<div id="zpoint_indicator_page" ng-controller = "ImpulseIndicatorsCtrl" style = "min-width: 1290px;">
+<div class="col-xs-10 noPadding nmc-main-workspace-header">
+<!--
+    <h3 class="noMargin nmc-page-header">
+        Показания &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>&gt;
+    </h3>
+-->
+    <h3 class="noMargin nmc-page-header">
+        {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span>  - {{contZPointName}} <span ng-if="isSystemuser()">(id = {{contZPoint}})</span>
+    </h3>
+    <h4 ng-if="deviceModel || deviceSN"
+        class="nmc-h4"
+        >
+        Прибор учета 
+        <span ng-if="deviceModel">: <span ng-bind="deviceModel"></span></span> 
+        <span ng-if="deviceSN">, s\n: <span ng-bind="deviceSN"></span></span>
+    </h4>
+</div>
+<div class="col-xs-2">
+    <div class="pull-right nmc-hide">
+        <div class="btn-group nmc-line-right">
+            <span ng-if="isSystemuser()">
+                <i title="Сохранить показания в CSV файл в формате, который потом можно загрузить" 
+                   ng-disabled="data.length==0" 
+                   class="btn glyphicon glyphicon-download" 
+                   ng-click="saveIndicatorsToFile('/noAbs')">
+                </i>
+            </span>    
+            <i ng-hide="!isManualLoading"
+               title="Загрузить показания из CSV файла" 
+               class="btn glyphicon glyphicon-download-alt gly-rotate-180" 
+               ng-click="uploader.clearQueue()" 
+               data-target="#upLoadFileModal" 
+               data-toggle="modal">
+            </i>
+            <i ng-hide="!isManualLoading"
+               title="Удалить показания" 
+               ng-disabled="data.length==0" 
+               class="btn glyphicon glyphicon-trash nmc-button-trash" 
+               ng-click="" 
+               data-target="#deleteIndicatorsModal" 
+               data-toggle="modal">
+            </i>
+        </div>  
+        <div class="btn-group">
+            <i id="indicator_download_button" 
+               title="Сохранить показания в CSV файл" 
+               ng-disabled="data.length==0" 
+               class="btn glyphicon glyphicon-download-alt nmc-hide" 
+               ng-click="saveIndicatorsToFile('')">
+            </i>
+        </div>    
+    </div>
+</div>  
+<div class="col-xs-12 noPadding marginBottom10 nmc-main-workspace-header">
+    <hr>
+</div>
+<div class="container-fluid nmc-indicator-table-with-fixed-header">
+    <div class="container-fluid">
+        <div class="row" ng-show="!ctrlSettings.loading">   
+            <div class="col-xs-12 col-md-12 noPadding marginBottom10">
+                <div class="col-xs-3 col-md-3 noPadding">
+                    <div class="col-xs-4 col-md-4 noPadding paddingTop5">
+                        <label class="nmc-form-label">
+                            Задайте период</label>
+                    </div>    
+    <!--                <div ng-controller="DataRangeSettings" class="col-md-8">-->
+                    <div class="col-xs-8 col-md-8 noPadding paddingRight5">
+                            <div class="input-group">
+                                <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                                <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                    type="text" ng-model="impulseIndicatorDates" options="dateRangeOptsRu" readonly/>
+    <!--
+                                <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                    type="text" ng-model="indicatorDates" options="queryDateOptsIndicatorRu"/>
+    -->
+                            </div> 
+                    </div>
+
+                </div>
+                <div class="col-xs-2 col-md-2 noPadding paddingRight5 marginRight5">
+                        <div class="col-xs-3 col-md-3 noPadding paddingTop5">            
+                            <label class="nmc-form-label">
+                                     Показания
+                            </label>
+                        </div>
+                        <div class="col-xs-8 col-md-8">
+                            <select class="form-control nmc-input-data nmc-select-form" ng-model="detailType" ng-change="changeTimeDetailType()">
+<!--
+                                <option selected value="24h">Суточные</option>
+                                <option value="1h">Часовые</option>
+-->
+                                <option value="">Потребление</option>
+                                <option value="_abs">Интеграторы</option>
+                            </select>
+                        </div>
+                </div>
+                <div class="col-xs-2 col-md-2 noPadding paddingRight5 marginRight5">
+                        <div class="col-xs-8 col-md-8">
+                            <select class="form-control nmc-input-data nmc-select-form" ng-model="timeType" ng-change="changeTimeDetailType()">
+                                <option value="24h">Суточные</option>
+                                <option value="1h">Часовые</option>
+                                <option value="1mon">Ежемесячные</option>
+<!--                                <option value="1h_abs">Интеграторы</option>-->
+                            </select>
+                        </div>
+                </div>
+<!--
+                <div ng-show="indicatorModes.length > 0"
+                     class="col-xs-3 col-md-3 noPadding nmc-div-indicator-mode">
+-->
+<!--
+                        <div class="col-xs-4 col-md-4 noPadding paddingTop5">            
+                                <label class="nmc-form-label">
+                                     Представление</label>
+                        </div>
+-->
+<!--                        <div class="col-xs-8 col-md-8">-->
+<!--                            <div class="input-group">-->
+<!--
+                                <select class="form-control nmc-input-data nmc-select-form"
+                                        ng-model="currentIndicatorMode"
+                                        ng-options="imode.caption for imode in indicatorModes"
+                                        ng-change="changeIndicatorMode()"
+                                        >
+                                    
+                                </select>
+-->
+<!--
+                                <div class="input-group-btn">
+                                    <p class="btn btn-xs btn-default nmc-button-refresh"
+                                       ng-click="openIndicatorPrefsEditor()"
+                                       >
+                                        ...
+                                    </p>
+                                </div>
+-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                </div>-->
+                <div class="col-xs-1 col-md-1 noPadding nmc-div-refresh">
+                    <p title="Обновить показания" class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" ng-click="getData(1)"></p>
+                </div>
+                <div class="col-xs-3 col-md-3 noPadding nmc-div-indicator-per-page">    
+
+                     <div class="col-xs-7 col-md-7 noPadding">
+                        <label class="nmc-form-label">Записей на странице:</label>
+                <!--         <input type="number" min="1" max="100" class="form-control inputDigitalData" ng-model="noticesPerPage">-->
+                        <select class="form-control nmc-input-digital-data nmc-select-form" ng-model="indicatorsPerPage"    >
+                            <option>100</option>
+                            <option>150</option>
+                            <option>200</option>
+<!--
+                            <option>15</option>
+                            <option>25</option>
+                            <option>50</option>
+                            <option>75</option>
+                            <option>100</option>
+-->
+                        </select>
+                    </div>
+                    <div class="col-xs-5 col-md-5 noPadding">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="totalIndicators">
+                    </div>
+
+                </div>
+                <div class="col-xs-2 col-md-2 noPadding nmc-div-indicator-mode">
+                </div>
+            </div>    
+        </div>
+        <div class="row" ng-show="ctrlSettings.loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+
+        <div class="row" 
+             class="nmc-hide" 
+             ng-show="(data.length == 0) && !ctrlSettings.loading">
+            <h3 class="nmc-h3">Данных по этой точке учета за указанный период нет.</h3>
+        </div>
+        <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
+            <div class="col-xs-3 noPadding"> 
+    <!--        Непрокручиваемая шапка таблицы показаний-->
+<!--            style="margin-bottom: -20px;"-->
+            <table id="indicatorTableHeader" class="nmc-table-nowrap-data1 nmc-main-table noMarginBottom" 
+                   ng-class="tableDef.tableClass" >
+                <tr ng-class="tableDef.headerClassTR">
+<!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate', column.headerClass}"-->
+<!--                    ng-class="{'nmc-text-align-center':column.fieldName=='dataDate'}"-->
+                    <th ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'"  
+                        ng-attr-id="{{'indicators_head_'+column.fieldName}}"                         
+                        ng-class = "column.headerClass"
+                        ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">
+                        {{column.header}}
+                        <i class="nmc-button-sort glyphicon" 
+                           ng-class="{'glyphicon-sort-by-alphabet': ctrlSettings.orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !ctrlSettings.orderBy.asc}" 
+                           ng-show="ctrlSettings.orderBy.field == '{{column.fieldName}}'" 
+                           ng-click="setOrderBy(column.fieldName)">
+                        </i>                        
+                    </th>
+                </tr>
+                <tr ng-if="deviceMu" 
+                    ng-class="tableDef.headerClassTR">
+                    <th ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'"  
+                        ng-attr-id="{{'indicators_head1_'+column.fieldName}}"                         
+                        ng-class = "column.headerClass"
+                        ng-style="{'min-width': intotalColumns[column.fieldName].ngstyle+'px'}">                        
+                        <span ng-if="column.dataType==='temperature'">&deg;C</span>
+                        <span ng-if="column.fieldName==='dataValue'">
+                            <span ng-bind="deviceMu"></span>
+                        </span>
+                    </th>
+                </tr>
+                
+<!--                style="opacity:0;"-->
+<!--
+                <tr ng-repeat="indicator in [data[0]] | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
+                    class="nmc-transparent">
+                    <td ng-repeat="column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                        class="nmc-text-align-right" 
+                        ng-class="column.headerClass" 
+                        ng-attr-id="{{'indicators_tdh_'+column.fieldName}}">
+                        {{indicator[column.fieldName]}}
+                        <span ng-if="column.fieldName==='dataDate'&&isSystemuser()">(id = {{indicator['id']}})</span>
+                    </td>
+                </tr>
+-->
+            </table>
+    <!--        конец Шапки-->
+            </div>
+        </div>
+    </div>
+    <div id="divIndicatorTable" class="col-xs-3 nmc-indicator-table-without-fixed-header noPadding">
+        <div id="divCFIndicatorTable" class="container-fluid">
+        <div class="row" ng-show="(data.length >0) && !ctrlSettings.loading">
+<!--            style="margin-top: -79px;"-->
+            <div class="col-xs-12 noPadding"> 
+            <table class="nmc-table-nowrap-data nmc-main-table nmc-table-hide-impulse" 
+                   ng-class="tableDef.tableClass">
+    <!--            Скрытая шапка - используется для подстройки размеров Непрокручиваемой шапки-->
+                <tr ng-class = "tableDef.headerClassTR">
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: 'isvisible'" 
+                        ng-class = "column.headerClass" 
+                        ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
+                        {{column.header}}
+                        
+                    </th>
+
+                </tr>
+                <tr ng-class = "tableDef.headerClassTR">
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: 'isvisible'" 
+                        ng-class = "column.headerClass" 
+                        ng-attr-id = "{{'indicators_th_' + column.fieldName}}">
+                        {{column.header}}
+                        
+                    </th>
+
+                </tr>
+<!--
+                <tr ng-if = "deviceMu" 
+                    ng-class = "tableDef.headerClassTR">
+                    <th ng-repeat = "column in tableDef.columns | columnFilter: timeDetailType | columnFilter: 'isvisible'" 
+                        ng-class = "column.headerClass" 
+                        ng-attr-id = "{{'indicators_th2_' + column.fieldName}}">
+                        <span ng-if = "column.dataType === 'temperature'">&deg;C</span>
+                        <span ng-if="column.fieldName==='dataValue'">
+                            <span ng-bind="deviceMu"></span>
+                        </span>
+                    </th>
+
+                </tr>
+-->
+                <tr dir-paginate="indicator in data | filter: indicatorsfilter | itemsPerPage: indicatorsPerPage" 
+                    total-items="totalIndicators" 
+                    current-page="pagination.current"
+                    ng-class="indicator.dataClass"
+                    >
+                    <td ng-repeat="column in tableDef.columns | columnFilter: 'isvisible'" 
+                        class="nmc-text-align-right" 
+                        ng-class="column.headerClass" 
+                        ng-attr-id="{{'indicators_td_'+column.fieldName}}">
+                        {{indicator[column.fieldName]}}
+                        <span ng-if="column.fieldName === 'dataDate' && isSystemuser()">(id = {{indicator['id']}})</span>
+                    </td>
+                </tr>
+                <tr class="nmc-hide">
+                    <td>{{onTableLoad()}}</td>
+                </tr>
+            </table>
+            </div>
+<!--
+            <div class="col-xs-8">
+                
+            </div>
+-->
+        </div>    
+        <div class="row" ng-show="(data.length > 0) && !ctrlSettings.loading">
+            <div class="col-xs-12">
+                <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/public/bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+            </div>
+        </div>
+    <!--    In total-->
+<!--
+        <div class="row" ng-show="data.length > 0 && timeDetailType != '1h_abs' && !ctrlSettings.loading">
+            <table class="nmc-table-nowrap-data nmc-main-table crud-grid table table-lighter table-bordered table-condensed table-hover">
+                <tr class="nmc-main-table-header">
+                    <th id="totals_th_head" 
+                        class="col-md-3" 
+                        ng-style="{'min-width': totals_th_head_style+'px'}">
+                    </th>
+                    <th ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
+                        ng-class="column.class" 
+                        ng-attr-id="{{'totals_th_'+column.fieldName}}" 
+                        ng-style="{'min-width': column.ngstyle+'px'}">
+                        {{column.header}}<span ng-if="column.dataType === 'temperature'">,&deg;C</span>
+                            <img ng-class="column.imgclass" 
+                                 ng-src="{{column.imgpath}}"
+                                 ng-attr-title="{{column.title}}"/>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="col-md-3" ng-style="{width: totals_th_head_style+'px'}">Среднее значение:</td>
+                    <td ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
+                        class="nmc-text-align-right" 
+                        ng-class="{'nmc-text-align-right':summary.average[column.fieldName]!='-','nmc-text-align-center':summary.average[column.fieldName]==='-'}" 
+                        ng-style="{'min-width': column.ngstyle+'px'}">
+                        {{summary.average[column.fieldName]}}
+                    </td>
+                </tr> 
+                <tr>
+                    <td class="col-md-3 nmc-totals-indicator-highlight" 
+                        ng-style="{width: totals_th_head_style+'px'}">Итого:</td>
+                    <td ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
+                        class="nmc-text-align-right nmc-totals-indicator-highlight" 
+                        ng-class="{'nmc-text-align-right': summary.totals[column.fieldName] != '-', 'nmc-text-align-center': summary.totals[column.fieldName] === '-'}" 
+                        ng-style="{'min-width': column.ngstyle + 'px'}">
+                        {{summary.totals[column.fieldName]}}
+                    </td>
+                </tr> 
+                <tr>
+                    <td class="col-md-3 nmc-totals-indicator-highlight" 
+                        ng-style="{width: totals_th_head_style+'px'}">
+                        <span title="Разность между интеграторами на конец и начало периода.">Итого по интеграторам:</span>
+                    </td>
+                    <td  ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
+                        ng-attr-id="{{'total'+column.fieldName}}" 
+                        class="nmc-text-align-right nmc-totals-indicator-highlight" 
+                        ng-class="{'nmc-text-align-right': summary.diffs[column.fieldName] != '-', 'nmc-text-align-center': summary.diffs[column.fieldName] === '-'}" 
+                        ng-style="{width: column.ngstyle + 'px'}">
+                        {{summary.diffs[column.fieldName]}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-3" ng-style="{width: totals_th_head_style+'px', border: 0}">
+                    </td>
+                    <td  ng-repeat="column in intotalColumns | columnFilter: 'isvisible'" 
+                        class="nmc-text-align-right" 
+                        ng-style="{width: column.ngstyle+'px', border: 0}">
+                        <span ng-if="summary.diffs[column.fieldName] != '-' && column.fieldName != 'm_delta' && column.fieldName != 'v_delta'">
+                             <p ng-attr-id="{{'diffBtn'+column.fieldName}}" 
+                                class="btn btn-xs" >
+                                 <i title="Показать детали по интеграторам" 
+                                    class="glyphicon glyphicon-eject gly-rotate-180">
+                                 </i> 
+                            </p>
+                        </span>    
+
+                    </td>
+                </tr> 
+                <tr class="nmc-hide">
+                    <td>{{onTableLoad()}}</td>
+                </tr>
+            </table>    
+        </div>    
+-->
+        </div>
+    </div>
+<!--
+    <div class="row" ng-show="(data.length > 25) && !ctrlSettings.loading">
+        <div class="col-xs-12">
+            <dir-pagination-controls on-page-change="pageChanged(newPageNumber)" template-url="/public/bower_components/angular-utils-pagination/dirPagination.tpl.html"></dir-pagination-controls>
+        </div>
+    </div>
+-->
+</div>
+
+<!-- window: upload file-->
+<div id="upLoadFileModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="upLoadFileLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low ">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="upLoadFileLabel" class="nmc-h3">
+				Загрузка показаний из файла 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<div class="marginLeft15">
+                    <input type="file" nv-file-select uploader="uploader"/><br/>
+                  
+<!--                <div>-->
+                    <div class="marginLeft15" >
+                        Файл: <span ng-bind="uploader.queue[uploader.queue.length-1].file.name"></span><br/>
+<!--                        <button ng-click="item.upload()">Загрузить</button>-->
+                        <div class="progress" style="">
+                            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="70"
+  aria-valuemin="0" aria-valuemax="100" ng-style="{ 'width': uploader.queue[uploader.queue.length-1].progress + '%' }">
+                                {{uploader.queue[uploader.queue.length-1].progress + '%'}}
+                            </div>
+                        </div>
+
+                    </div>            
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="uploadFile()"
+								value="Загрузить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
+								Закрыть
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: delete indicators-->
+<div id="deleteIndicatorsModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteIndicatorsLabel" tabindex="-1">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteIndicatorsLabel" class="nmc-h3">
+				Удаление показаний 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<div class="marginLeft15">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="">
+                                    <label title="Задайте период, за который будут удалены показания" class="nmc-form-label">
+                                        
+                                        Задайте период:</label>
+                                </div>                                
+                                <div>
+                                        <div class="input-group">
+                                            <span class="input-group-addon nmc-date-interval-form-addon">с</span>
+                                            <input id="inputDeleteIndicatorDates"
+                                                   date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                                type="text" ng-model="date.deleteIndicatorDates" options="date.forDeleteDateRangeOptsRu"/>
+                                        </div> 
+                                </div>
+
+                            </div>                
+                        </div>
+                        <div class="row nmc-hide" ng-class="{'nmc-hide':!showLinkToFileFlag, 'nmc-show':showLinkToFileFlag}">
+                            <div>
+                                Ссылка на файл с удаленными данными:<a ng-attr-href="{{linkToFileWithDeleteData}}">{{fileWithDeleteData}}</a>
+                            </div>
+                        </div>
+                    </div>
+                
+				</div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="deleteData();"
+								value="Ок" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+</div>
+</div>

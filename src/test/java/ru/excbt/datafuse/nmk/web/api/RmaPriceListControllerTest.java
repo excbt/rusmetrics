@@ -22,7 +22,7 @@ import ru.excbt.datafuse.nmk.web.RequestExtraInitializer;
 
 
 @Transactional
-public class RmaPriceListControllerTest extends AnyControllerTest implements TestExcbtRmaIds {
+public class RmaPriceListControllerTest extends AnyControllerTest {
 
 	@Autowired
 	private SubscrPriceListService subscrPriceListService;
@@ -55,7 +55,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
     @Test
     @Transactional
 	public void testRmaPriceList() throws Exception {
-		_testGetJson(String.format("/api/rma/%d/priceList", EXCBT_RMA_SUBSCRIBER_ID));
+		_testGetJson(String.format("/api/rma/%d/priceList", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID));
 	}
 
 	/*
@@ -73,7 +73,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Test
     @Transactional
 	public void testSubscrPriceList() throws Exception {
-		_testGetJson(String.format("/api/rma/%d/priceList", EXCBT_SUBSCRIBER_ID));
+		_testGetJson(String.format("/api/rma/%d/priceList", TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID));
 	}
 
     /*
@@ -83,13 +83,13 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Test
     @Transactional
 	public void testMakeDraft() throws Exception {
-		List<SubscrPriceList> priceList = subscrPriceListService.selectActiveRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID,
+		List<SubscrPriceList> priceList = subscrPriceListService.selectActiveRmaPriceList(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
 				null);
 		assertTrue(priceList.size() > 0);
 		RequestExtraInitializer param = (builder) -> {
 			builder.param("srcPriceListId", priceList.get(0).getId().toString());
 		};
-		_testPostJson(String.format("/api/rma/%d/priceList", EXCBT_RMA_SUBSCRIBER_ID), param);
+		_testPostJson(String.format("/api/rma/%d/priceList", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID), param);
 	}
 
     /*
@@ -98,13 +98,13 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	@Test
     @Transactional
 	public void testUpdate() throws Exception {
-		List<SubscrPriceList> priceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID,
+		List<SubscrPriceList> priceLists = subscrPriceListService.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID,
 				null);
 		assertNotNull(priceLists);
 		assertTrue(priceLists.size() > 0);
 		SubscrPriceList priceList = priceLists.get(0);
 		priceList.setPriceListName(priceList.getPriceListName() + "(mod)");
-		_testUpdateJson(String.format("/api/rma/%d/priceList/%d", EXCBT_RMA_SUBSCRIBER_ID, priceList.getId()),
+		_testUpdateJson(String.format("/api/rma/%d/priceList/%d", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceList.getId()),
 				priceList);
 	}
 
@@ -116,10 +116,10 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 	public void testCreateSubscrPriceLists() throws Exception {
 
 		List<SubscrPriceList> subscrPriceLists = subscrPriceListService
-				.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID, EXCBT_SUBSCRIBER_ID);
+				.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID);
 
 		if (subscrPriceLists.size() == 0) {
-			subscrPriceLists = subscrPriceListService.selectDraftRmaPriceLists(EXCBT_RMA_SUBSCRIBER_ID, null);
+			subscrPriceLists = subscrPriceListService.selectDraftRmaPriceLists(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, null);
 		}
 
 		assertTrue(subscrPriceLists.size() > 0);
@@ -127,10 +127,10 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 		Long priceListId = subscrPriceLists.get(0).getId();
 
 		RequestExtraInitializer params = (builder) -> {
-			builder.param("subscriberIds", TestUtils.arrayToString(new long[] { EXCBT_SUBSCRIBER_ID }));
+			builder.param("subscriberIds", TestUtils.arrayToString(new long[] { TestExcbtRmaIds.EXCBT_SUBSCRIBER_ID }));
 			// builder.param("activeIds", arrayToString(new long[] {}));
 		};
-		_testPostJson(String.format("/api/rma/%d/priceList/%d/subscr", EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
+		_testPostJson(String.format("/api/rma/%d/priceList/%d/subscr", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceListId), params);
 	}
 
     /*
@@ -151,9 +151,9 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
     @Test
     @Transactional
 	public void testGetRmaPriceItemsVo() throws Exception {
-		Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+		Long priceListId = getAnyRmaPriceList(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID).getId();
 
-		_testGetJson(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, priceListId));
+		_testGetJson(String.format("/api/rma/%d/priceList/%d/items", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceListId));
 	}
 
     /*
@@ -164,7 +164,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
     @Transactional
 	public void testUpdateRmaPriceItemVOs() throws Exception {
 
-		Long priceListId = getAnyRmaPriceList(EXCBT_RMA_SUBSCRIBER_ID).getId();
+		Long priceListId = getAnyRmaPriceList(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID).getId();
 
 		List<SubscrPriceItemVO> priceItemsVO = subscrPriceItemService.findPriceItemVOs(priceListId);
 
@@ -178,7 +178,7 @@ public class RmaPriceListControllerTest extends AnyControllerTest implements Tes
 				oldVO.getPriceValue() != null ? oldVO.getPriceValue() * 0.9D : null);
 		// oldVO.setValue(null);
 
-		_testUpdateJson(String.format("/api/rma/%d/priceList/%d/items", EXCBT_RMA_SUBSCRIBER_ID, priceListId),
+		_testUpdateJson(String.format("/api/rma/%d/priceList/%d/items", TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID, priceListId),
 				priceItemsVO);
 	}
 

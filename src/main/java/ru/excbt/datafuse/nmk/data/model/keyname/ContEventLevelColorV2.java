@@ -1,24 +1,24 @@
 package ru.excbt.datafuse.nmk.data.model.keyname;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import lombok.Getter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.excbt.datafuse.nmk.data.domain.AbstractKeynameEntity;
 import ru.excbt.datafuse.nmk.data.model.DBMetadata;
 import ru.excbt.datafuse.nmk.data.model.markers.StatusColorObject;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "cont_event_level_color_v2")
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Getter
 public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
 		StatusColorObject {
 
@@ -67,4 +67,39 @@ public class ContEventLevelColorV2 extends AbstractKeynameEntity implements
 	    return this;
     }
 
+    public String getColorKey() {
+        return this.colorKey;
+    }
+
+    public String getCaption() {
+        return this.caption;
+    }
+
+    public String getColorDescription() {
+        return this.colorDescription;
+    }
+
+    public Integer getColorRank() {
+        return this.colorRank;
+    }
+
+    public Boolean getIsBadColor() {
+        return this.isBadColor;
+    }
+
+    public Boolean getIsBaseColor() {
+        return this.isBaseColor;
+    }
+
+    public Boolean getIsCriticalColor() {
+        return this.isCriticalColor;
+    }
+
+    public Integer getLevelFrom() {
+        return this.levelFrom;
+    }
+
+    public Integer getLevelTo() {
+        return this.levelTo;
+    }
 }

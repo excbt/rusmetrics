@@ -1,5 +1,7 @@
 package ru.excbt.datafuse.nmk.data.repository;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -10,19 +12,20 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 
 import ru.excbt.datafuse.nmk.data.model.ContServiceDataElCons;
+import ru.excbt.datafuse.nmk.repository.support.ConsuptionRepositoryRI;
 
 /**
  * Repository для ContServiceDataElCons
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 15.12.2015
  *
  */
-public interface ContServiceDataElConsRepository extends Repository<ContServiceDataElCons, Long> {
+public interface ContServiceDataElConsRepository extends Repository<ContServiceDataElCons, Long>, ConsuptionRepositoryRI<ContServiceDataElCons> {
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param beginDate
@@ -37,7 +40,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("endDate") Date endDate);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param beginDate
@@ -66,7 +69,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param timeDetailType
 	 * @param dataDate
@@ -80,7 +83,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 			@Param("timeDetailType") String[] timeDetailType, @Param("dataDate") Date dataDate, Pageable pageable);
 
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param pageable
 	 * @return
@@ -90,7 +93,7 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 
 	/**
 	 * No needed change order by.
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param fromDateTime
 	 * @param pageable
@@ -101,8 +104,13 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			@Param("fromDateTime") Date fromDateTime, Pageable pageable);
 
+	@Query("SELECT max(d.dataDate) FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND "
+			+ " d.dataDate >= :fromDateTime AND d.deleted = 0 ")
+	public List<Timestamp> selectLastDataDateByZPointMax(@Param("contZPointId") long contZPointId,
+                                                         @Param("fromDateTime") Date fromDateTime);
+
 	/**
-	 * 
+	 *
 	 * @param contZPointId
 	 * @param pageable
 	 * @return
@@ -112,13 +120,17 @@ public interface ContServiceDataElConsRepository extends Repository<ContServiceD
 	public List<ContServiceDataElCons> selectLastDataByZPoint(@Param("contZPointId") long contZPointId,
 			Pageable pageable);
 
-	/**
-	 * 
-	 * @param contZPointId
-	 * @return
-	 */
+	@Query("SELECT max(d.dataDate) FROM ContServiceDataElCons d " + " WHERE d.contZPointId = :contZPointId AND d.deleted = 0 ")
+	public List<Timestamp> selectLastDataDateByZPointMax(@Param("contZPointId") long contZPointId);
+
+    /**
+     *
+     * @param contZPointIds
+     * @return
+     */
 	@Query("SELECT d.contZPointId, d.timeDetailType, max(d.dataDate) FROM ContServiceDataElCons d "
 			+ " WHERE d.contZPointId in (:contZPointIds) AND d.deleted = 0 "
 			+ " GROUP BY d.contZPointId, d.timeDetailType")
 	public List<Object[]> selectTimeDetailLastDataByZPoint(@Param("contZPointIds") List<Long> contZPointIds);
+
 }

@@ -12,4 +12,16 @@ public interface OrganizationMapper {
 
     OrganizationDTO otganizationToDTO(Organization organization);
 
+    Organization.OrganizationInfo toShortInfo(Organization organization);
+
+
+    /**
+     *
+     * @param id
+     * @return
+     */
+    default Organization organizationFromId(Long id) {
+        return id != null ? new Organization().id(id) : null;
+    }
+
 }

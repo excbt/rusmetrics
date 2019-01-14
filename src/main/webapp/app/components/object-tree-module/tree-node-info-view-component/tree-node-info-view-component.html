@@ -1,0 +1,27 @@
+<div>
+    <div class = "container-fluid">
+<!--
+        <div class = "row"> 
+            <div class = "col-xs-12 paddingBottom10 paddingTop10">
+                
+            </div>
+        </div>
+-->
+        <div class = "row">
+           <div class = "col-xs-12">
+                <h4>Информация об узле:</h4>
+                <div ng-show = "$ctrl.nodeInfo.isLoading" class="nmc-loading" style = "display: inline;">
+                    <i class="fa fa-spinner fa-spin"></i> Загрузка информации...
+               </div>
+                <div ng-if = "$ctrl.node" ng-show = "!$ctrl.nodeInfo.isLoading"> 
+                    <p>Тип: {{$ctrl.nodeInfo.type}}</p>
+                    <p>{{$ctrl.nodeInfo.nameCaption}}: {{$ctrl.nodeInfo.name}}</p>
+            <!--        {{$ctrl.node.nodeName || $ctrl.node.nodeObject.fullName || $ctrl.node.nodeObject.customServiceName || $ctrl.node.nodeObject.number}}</p>-->
+                    <p>Количество дочерних узлов: {{$ctrl.nodeInfo.childCount || 0}}</p>
+                    <p>Количество дочерних объектов учета: {{$ctrl.nodeInfo.contObjectCount || 0}}</p>
+                </div>    
+            <!--    {{$ctrl.node}}-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,1345 @@
+<!--<div>Портал / Настройки / Отчеты</div>-->
+<!--
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li>Настройки<span class="divider"></span></li>
+        <li class="active">Отчеты</li>
+    </ul>
+</div>
+-->
+
+<div role = "tabpanel" class = "nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class = "nav nav-tabs" role = "tablist">
+        <li role = "presentation" class = "active"><a class = "nmc-main-tab-button" href = "" aria-controls = "report_settings" role = "tab" data-target = "#report_settings" data-toggle = "tab">Отчеты</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/object-view/" aria-controls = "object-view" data-target = "#object-view" role = "tab" data-toggle = "tab">Объекты</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/tariffs/" aria-controls = "tariffs" data-target = "#tariffs" role = "tab" data-toggle = "tab">Тарифы</a></li>        
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/object_groups/" aria-controls = "object_groups" data-target = "#object_groups" role = "tab" data-toggle = "tab">Группировка</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/contacts/" aria-controls = "contacts" data-target = "#contacts" role = "tab" data-toggle = "tab">Контакты</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/users/" aria-controls = "users" data-target = "#users" role = "tab" data-toggle = "tab">Пользователи</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/management_services" aria-controls = "contacts" data-target = "#contacts" role = "tab" data-toggle = "tab">Услуги</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/notices" aria-controls = "settings-notices" data-target = "#settings-notices" role = "tab" data-toggle = "tab">Уведомления</a></li>
+        <li ng-hide = "isTestMode()" role = "presentation"><a class = "nmc-main-tab-button" href = "#/settings/program" aria-controls = "settings-program" data-target = "#settings-program" role = "tab" data-toggle = "tab">Настройки программы</a></li>
+        <li ng-hide = "isTestMode()"
+            id = "meter_period_setting_2nd_menu_item" 
+            role = "presentation">
+            <a class = "nmc-main-tab-button"  
+               href = "#/settings/meter-period-setting/" 
+               aria-controls = "meter-period-setting" 
+               role = "tab" 
+               data-target = "#meter-period-setting" 
+               data-toggle = "tab">Настройка отчетных периодов
+            </a>
+        </li>
+        <li role = "presentation" ng-show = "isSystemViewInfo()"><a class = "nmc-main-tab-button" href = "#/settings/about-program/" aria-controls = "about-program" data-target = "#about-program" role = "tab" data-toggle = "tab">О программе</a></li>
+    </ul>
+
+    <div class = "tab-content">
+      <div role = "tabpanel" class = "tab-pane fade in active" id = "report_templates">
+      </div>
+    </div>
+</div>
+
+<!--
+<div class="nmc-main-workspace-header">
+    <h2 class="noMargin nmc-h2">Отчеты</h2>
+    <hr>
+</div>    
+-->
+<div role = "tabpanel" class = "nmc-tab-panel">
+
+  <!-- Навигационная полоса -->
+  <ul class = "nav nav-tabs" role = "tablist">
+    <li id = "paramset_3rd_menu_item" 
+        role = "presentation" 
+        class = "active">
+        <a class = "nmc-tab-button" 
+           href = "" 
+           aria-controls = "param_sets" 
+           data-target = "#param_sets" 
+           role = "tab" 
+           data-toggle = "tab">
+            Варианты отчетов
+        </a>
+      </li>
+<!--    <li id="report_template_3rd_menu_item" role="presentation" ><a class="nmc-tab-button" href="#/settings/reports/" aria-controls="report_templates" data-target="#report_templates"  role="tab" data-toggle="tab">Шаблоны</a></li>-->
+   <li id = "delivery_3rd_menu_item" 
+       role = "presentation" 
+       class = "nmc-hide">
+       <a class = "nmc-tab-button" 
+          href = "#/settings/delivery/" 
+          aria-controls = "mailing_lists" 
+          data-target = "#mailing_lists" 
+          role = "tab" 
+          data-toggle = "tab">
+           Рассылки
+       </a>
+      </li>  
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class = "tab-content">
+<!--      Варианты отчетов-->
+    <div role = "tabpanel" 
+         class = "tab-pane fade in active" 
+         id = "param_sets">
+        <!--       Активные / Архивные -->
+<!--
+        <ul class="nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role="tablist">
+            <li role="presentation" class="active nmc-toggle-active"><a class="nmc-toggle-button" href="" aria-controls="active_paramsets" data-target="#active_paramsets" role="tab" data-toggle="tab" ng-click="getActive();" >Действующие</a></li>
+            <li role="presentation" class="nmc-toggle-archive"><a class="nmc-toggle-button" href="" aria-controls="arhive_paramsets" data-target="#arhive_paramsets" role="tab" data-toggle="tab" ng-click="getArchive();">Архив</a></li>
+        </ul>
+-->
+        <ul class = "nav nav-pills marginLeft15 marginTop15 marginBottom15 nmc-toggle" role = "tablist">
+            <li ng-repeat = "category in categories | withReportTypes track by $index" 
+                role = "presentation" 
+                ng-class = "category.class">
+                <a 
+                   class = "nmc-toggle-button" 
+                   href = "" 
+                   aria-controls = "rep_paramsets" 
+                   data-target = "#rep_paramsets" 
+                   role = "tab" 
+                   data-toggle = "tab"
+                   ng-click = "setCurrentCategory(category)"> 
+                    {{category.caption}} 
+                </a>
+            </li>
+        </ul> 
+        <div class = "tab-content">
+<!--            Активные варианты-->
+            <div role = "tabpanel" class = "tab-pane fade in active nmc-main-tab-panel nmc-report-settings-main-div" id = "active_paramsets">
+<!--///////////////////////////////////////////////////////////////////////////////////////////// Data table                -->
+                  <!-- Навигационная полоса по категориям отчетов-->
+                <div class = "container-fluid" 
+                     ng-repeat = "serviceType in contServiceTypes | notEmptyContServiceTypesByReportTypes: currentCategory track by $index">
+                    <div class = "row noPadding">
+                        <div class = "btn-toolbar col-xs-1 nmc-btn-toolbar-in-paramset-table noPadding">
+                            <i title = "Скрыть / Показать" 
+                               class = "btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                               ng-class = "{'glyphicon-chevron-down': serviceType.reportTypesViewFlag, 'glyphicon-chevron-right': !serviceType.reportTypesViewFlag}" 
+                               ng-click = "serviceType.reportTypesViewFlag = !serviceType.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class = "col-xs-11 noPadding">
+                            <label class = "noMarginBottom marginTop5">{{serviceType.captionShort}}
+                                <small>(типов отчетов: <span ng-bind = "serviceType | reportTypesCountInCategoryByServiceType: currentCategory"></span>)</small>
+<!--                                <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>-->
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show = "serviceType.reportTypesViewFlag" class = "marginLeft10">
+                <table id = "datatabl" class = "table table-condensed noMarginBottom nmc-table-container">
+
+                <!--  Постороение таблицы с данными  -->
+                    <tr ng-repeat = "object in currentCategory.reportTypes | serviceTypesFilter: serviceType track by $index">
+                        <td>
+                            <table class = "crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
+<!--ng-class="{'nmc-tr-odd':($index%2===0)}"-->
+                                <tr >
+
+                                    <td class = "noPaddingI">
+
+                                        <div class = "btn-toolbar col-xs-1 nmc-btn-toolbar-in-paramset-table noPadding">
+
+                                            <i title = "Скрыть / Показать" 
+                                               class = "btn btn-xs glyphicon noMarginI nmc-button-in-table paddingLeft0" 
+                                               ng-class = "{'glyphicon-chevron-down': object.showGroupDetails[serviceType.keyname], 'glyphicon-chevron-right': !object.showGroupDetails[serviceType.keyname]}" 
+                                               ng-click = "toggleShowGroupDetails(object, serviceType);">
+                                            </i>
+
+                                        </div>
+                                        <div class = "col-xs-11 noPadding">
+                                            <label class = "noMarginBottom marginTop5">{{object.reportTypeName}}</label> 
+                                            <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+<!--
+                                            <a ng-disabled="isROfield()" 
+                                                     title="Добавить" 
+                                                     class="nmc-link-report-add" 
+                                                     ng-click="addParamSet(object)" 
+                                                     data-target="#main_properties" 
+                                                     data-toggle="tab"
+                                               
+                                               >Добавить
+                                            </a>                                            
+-->
+                                        </div>
+<!--
+                                        <div class="col-xs-2">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            
+                                        </div>
+-->
+                                    </td>
+
+                                </tr>
+                                <tr>
+
+                                    <!--          Внутренняя(раскрывающая) таблица с данными    -->
+                                <table id = "dataParamsetsTabl" 
+                                       class = "crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" 
+                                       ng-show = "object.showGroupDetails[serviceType.keyname]">
+                                    <thead>
+                                        <tr class = "nmc-child-table-header">
+                                            <th class = "nmc-td-for-buttons-paramset">
+                                                <div class = "btn-group">
+                                                    <i ng-disabled = "isROfield()" 
+                                                         title = "Добавить вариант отчета" 
+                                                         class = "btn nmc-button-add-orange" 
+                                                         ng-click = "addParamSet(object)" 
+                                                         data-target = "#main_properties" 
+                                                         data-toggle = "tab">
+                                                    </i>
+                                                    <i class = "btn nmc-button-preview-orange" 
+                                                        title = "Показать форму отчета"
+                                                        ng-click = "preview(object)">
+                                                    </i>
+                                                </div>
+                                            </th>
+                                            <th></th>
+                                            <th ng-repeat = "paramsetColumn in paramsetColumns" 
+                                                ng-class = "paramsetColumn.class">
+                                                {{paramsetColumn.header}}
+                                            </th>
+                                            <th class = "nmc-td-for-button">ZIP</th>
+<!--
+                                            <th>
+                                                Действует с
+                                            </th>
+-->
+                                            <th class = "nmc-td-for-button">
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                     <tr ng-repeat = "oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc"  
+                                         ng-dblclick = "getIndicators(oldObject)">
+
+                                         <td class = "nmc-td-for-buttons nmc-text-align-center">
+                                             <i title = "Редактировать" 
+                                                class = "btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                                                ng-click = "editParamSet(object,oldObject);" 
+                                                data-target = "#main_properties" 
+                                                data-toggle = "tab">
+                                             </i>                                                           
+<!--
+                                            <i ng-disabled="isROfield()" 
+                                               title="В архив" 
+                                               class="btn btn-xs glyphicon glyphicon-arrow-right nmc-button-in-table" 
+                                               ng-click="selectedItem(object, oldObject)" 
+                                               data-target="#moveToArchiveModal" 
+                                               data-toggle="modal">
+                                             </i>
+-->
+<!--
+                                             <a ng-disabled="isROfield()" 
+                                                     title="Показать пример" 
+                                                     class="nmc-link-report-add" 
+                                                     ng-click="preview(object)"                                                
+                                                >
+-->
+                                                 
+<!--                                            </a>-->
+                                             
+                                         </td>
+                                         <td class = "nmc-text-align-center">
+                                             <span ng-show = "oldObject.allRequiredParamsPassed">
+                                                 <i title = "Корректно заполнен" 
+                                                    class = "glyphicon glyphicon-thumbs-up">
+                                                 </i>
+                                             </span>
+                                         </td>
+                                         <td >
+                                             <span ng-class = "{'nmc-distinguish': oldObject._default}">{{oldObject.name}} 
+                                                 <span ng-show = "isSystemuser()"> (id = {{oldObject['id']}})</span>
+                                             </span>
+                                         </td>
+<!--
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
+                                         </td>
+-->
+                                         <td>
+                                             <span ng-class = "{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class = "{'nmc-distinguish': oldObject._default}">
+                                                 {{oldObject.outputFileType || "не задан"}}
+                                             </span>
+                                         </td>
+                                         <td>
+                                             <span ng-class = "{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileNameTemplate}}</span>
+                                         </td>
+                                         <td class = "nmc-text-align-center">
+                                             <span ng-show = "oldObject.outputFileType=='ZIP' || oldObject.outputFileZipped">
+                                                 <i title = "Архивировать" class = "fa fa-cube">
+                                                 </i>
+                                             </span>
+                                         </td>
+                                                                                  
+<!--
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">
+                                                 {{oldObject.activeStartDate | date:'dd.MM.yyyy'}}
+                                             </span>
+                                         </td>
+-->
+                                         <td>
+                                             <i ng-disabled = "isROfield()" 
+                                               title = "В архив" 
+                                               class = "btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                                               ng-click = "selectedItem(object, oldObject)" 
+                                               data-target = "#moveToArchiveModal" 
+                                               data-toggle = "modal">
+                                             </i>
+                                         </td>
+                                     </tr>
+                                    </table>         
+                                </tr>
+                            </table>  
+
+                    </td>     
+                    </tr>
+                    <!--        End Построение таблицы с данными-->
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+                        </div> <!-- reportTypeViewFlag -->
+                    </div> <!-- ng-repeat -->
+<!--
+                    </div>
+                    </div>
+-->
+<!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table - active               -->
+            </div>
+<!--            Архивные шаблоны-->
+             <div role = "tabpanel" class = "tab-pane fade nmc-report-settings-main-div" id = "arhive_paramsets">
+<!--///////////////////////////////////////////////////////////////////////////////////////////// Data table - Archive               -->
+                <div class = "container-fluid" ng-repeat = "category in categories">
+                    <div class = "row noPadding">
+                        <div class = "btn-toolbar col-xs-1 nmc-btn-toolbar-in-paramset-table">
+                            <i title = "Скрыть / Показать" 
+                               class = "btn btn-xs glyphicon noMargin nmc-button-in-table" 
+                               ng-class = "{'glyphicon-chevron-down': category.reportTypesViewFlag, 'glyphicon-chevron-right': !category.reportTypesViewFlag}" 
+                               ng-click = "category.reportTypesViewFlag = !category.reportTypesViewFlag">
+                            </i>
+                        </div>
+                        <div class = "col-xs-11 noPadding">
+                            <label class = "noMarginBottom marginTop5">
+                                {{category.caption}} <small>(типов отчетов: {{category.reportTypes.length || 0}})</small>
+                            </label>
+                        </div>
+                    </div>
+                    <div ng-show = "category.reportTypesViewFlag" class = "marginLeft15">
+                <table id = "datatabl" class = "table  table-condensed noMarginBottom nmc-table-container">
+
+                <!--  Постороение таблицы с данными  -->
+                    <tr ng-repeat = "object in category.reportTypes">
+                        <td>
+                            <table class = "crud-grid table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-parent-table"> 
+                                <tr>
+                                    <td ng-class = "column.class">
+                                        <div class = "btn-toolbar col-xs-1 nmc-btn-toolbar-in-paramset-table">
+                                            <i class = "btn btn-xs glyphicon noMarginI nmc-button-in-table paddingLeft0" 
+                                               ng-class = "{'glyphicon-chevron-down': object.showGroupDetails, 'glyphicon-chevron-right': !object.showGroupDetails}" 
+                                               ng-click = "toggleShowGroupDetails(object, serviceType);">
+                                            </i>
+
+                                        </div>
+                                        <div class = "col-xs-10 noPadding">
+                                            <label class = "noMarginBottom marginTop5">{{object.reportTypeName}}</label> <small>(вариантов: {{object.paramsetsCount || 0}})</small>
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                                <tr>
+
+                                    <!--          Внутренняя(раскрывающая) таблица с данными    -->
+<!--
+                                <table id="dataParamsetsTabl" class="crud-grid table table-lighter table-bordered table-condensed table-hover nmc-child-table noMarginBottom" ng-show="object.showGroupDetails">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th class="nmc-td-for-buttons"></th>
+                                            <th ng-repeat="paramsetColumn in paramsetColumns" ng-class="paramsetColumn.class">
+                                                {{paramsetColumn.header}}
+                                            </th>
+                                            <th>
+                                                В архиве с
+                                            </th>
+                                            <th class="nmc-td-for-button">
+                                            </th>
+                                        </tr>
+                                    </thead>    
+                                    <tr ng-repeat="oldObject in object.paramsets | orderBy:orderBy.field:!orderBy.asc" ng-click="" ng-dblclick="">
+
+                                        <td class="nmc-td-for-buttons">
+                                            <i title="Просмотреть" class="btn btn-xs glyphicon glyphicon-list nmc-button-in-table" ng-click="editParamSet(object,oldObject);" data-target="#main_properties" data-toggle="tab"></i>
+                                            <i ng-disabled="isROfield()" title="Создать новый действующий вариант на основании этого" class="btn btn-xs glyphicon glyphicon-share nmc-button-in-table" ng-click="createByTemplate(object, oldObject)" data-target="#main_properties" data-toggle="tab"></i>
+                                        </td>
+                                        <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.name}} <span ng-show="isSystemuser()"> (id = {{oldObject['id']}})</span></span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportTemplate.name}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.reportPeriod.caption}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.outputFileType || "не задан"}}</span>
+                                         </td>
+                                         <td>
+                                             <span ng-class="{'nmc-distinguish': oldObject._default}">{{oldObject.activeEndDate | date:'dd.MM.yyyy'}}</span>
+                                         </td>
+                                         <td><i ng-disabled="isROfield()" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="selectedItem(object, oldObject)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                                         </td>
+
+                                     </tr>
+                                    </table>         
+-->
+                                </tr>
+                            </table>  
+
+                    </td>     
+                    </tr>
+                    <!--        End Построение таблицы с данными-->
+                    <tr>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+                </div> <!-- reportTypeViewFlag -->
+            </div> <!-- ng-repeat -->
+<!--///////////////////////////////////////////////////////////////////////////////////////////// end Data table Archive               -->                 
+            </div>
+            
+        </div>
+        
+    </div>
+<!--      Шаблоны отчетов-->
+    <div role = "tabpanel" class = "tab-pane fade " id = "report_templates">Шаблоны
+    </div>
+<!--      Списки рассылок-->
+    <div role = "tabpanel" class = "tab-pane fade " id = "mailing_lists">Рассылки
+    </div>
+    
+  </div>
+
+</div>
+
+<!-- window: delete paramset-->
+<div id = "deleteObjectModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "deleteObjectLabel" tabindex = "-1" data-backdrop = "static">
+
+	<div class = "modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+			<h3 id = "deleteObjectLabel" class = "nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class = "modal-body nmc-modal-body">
+			<form name = "deleteContactForm" novalidate>
+				<p>
+					<label class = "text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class = "text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class = "modal-footer nmc-modal-footer">
+				<div class = "container-fluid">
+
+					<div class = "row">
+						<div class = "col-xs-offset-6 col-xs-3">
+							<input ng-disabled = "isROfield()" type = "submit" class = "btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click = "deleteObject(currentObject);"
+								value = "Удалить" />
+						</div>
+
+						<div class = "pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
+							<button class = "btn btn-xs btn-default btn-block" data-dismiss = "modal"
+								ng-click = "exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!-- Create paramset-->
+<div id = "createParamsetModal" 
+     class = "modal fade nmc-modal-window" 
+     role = "dialog"
+	aria-labelledby = "createParamsetLabel" 
+     tabindex = "-1"
+      data-backdrop = "static"
+     >
+    
+    <div class = "col-xs-2">
+    </div> 
+    <div class = "modal-sm col-xs-2" 
+         ng-class = "{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}">
+    </div>
+    <div class = "modal-dialog modal-content modal-sm col-xs-2 noPadding nmc-modal-dialog nmc-hide" 
+         ng-class = "{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
+            <div class = "modal-header nmc-modal-header">
+                <h3 class = "nmc-h3">{{headers.addObjects}}</h3>
+            </div>
+            <div class = "modal-body nmc-modal-body">
+                <div class = "container-fluid">
+                    <div class = "row-fluid">
+                        <div class = "noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list">
+
+<!--                                    <div id = "available_objects" class = "">-->
+                                    <table id = "table_objects_in_window" 
+                                           class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                                        <tr ng-repeat = "object in availableEntities track by $index">
+                                            <td>
+                                                <input ng-disabled = "isROfield()" 
+                                                       type = "checkbox" 
+                                                       ng-model = "object.selected" 
+                                                       class = "nmc-checkbox-form"/>
+                                                {{object.fullName || object.contGroupName || object.fullAddress || object.name}}
+                                            </td>
+                                        </tr>
+                                    </table>
+<!--                                    </div>-->
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class = "modal-footer nmc-modal-footer">
+                <div class = "container-fluid">
+                    <div class = "row">
+                        
+                        <div class = "col-xs-4 noPadding">
+                            <input ng-disabled = "isROfield()" 
+                                   class = "pull-left nmc-checkbox-form" 
+                                   ng-model = "ctrlSettings.selectedAll" 
+                                   type = "checkbox" 
+                                   ng-click = "selectAllAvailableEntities()"/>
+                            <p class = "nmc-p-in-modal-select-all"> Выбрать все
+                            </p>
+                        </div>
+                        <div class = "col-xs-offset-1 col-xs-3 noPadding">
+                            <input ng-disabled = "isROfield()" 
+                                   type = "submit" 
+                                   class = "btn btn-block btn-xs nmc-add-button-in-modal"
+                                ng-click = "addSelectedEntities()"
+                                value = "Добавить" />
+                        </div>
+
+                        <div class = "pull-right col-xs-offset-1 col-xs-3 noPadding">
+                            <button class = "btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right"
+                                ng-click = "showAvailableObjects_flag=false">
+                            </button>
+                        </div>
+
+                    </div>
+                </div>		
+            </div>
+
+    </div>
+
+	<div class = "modal-dialog  modal-content col-xs-7 noPadding nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" 
+                    class = "close nmc-close-button" 
+                    data-dismiss = "modal" 
+                    aria-label = "Close">
+                <span aria-hidden = "true">&times;</span>
+            </button>
+			<h3 id = "createParamsetLabel" 
+                ng-show = "createParamset_flag" 
+                class = "nmc-h3">
+				Создание варианта отчета
+			</h3>
+            <label id = "createParamsetLabel" 
+                   ng-show = "createByTemplate_flag" 
+                   class = "nmc-form-label">
+				Создание варианта отчета на основе архивного шаблона "{{archiveParamset.name}}"
+			</label>
+            <h3 id = "createParamsetLabel" 
+                ng-show = "!createParamset_flag" 
+                class = "nmc-h3">
+				Вариант отчета
+			</h3>
+            
+		</div>
+		<div class = "modal-body paddingLeftRight15 nmc-modal-body">                     
+            <div role = "tabpanel" class = "nmc-tab-panel">
+
+              <!-- Навигационная полоса для варианта отчета-->
+              <ul class = "nav nav-tabs" role = "tablist">
+                <li role = "presentation" class = "active" id = "main_properties_tab">
+                    <a class = "nmc-tab-button" href = "" aria-controls = "main_properties" data-target = "#main_properties" role = "tab" data-toggle = "tab" ng-click = "set_of_objects_flag=false; showAvailableObjects_flag=false;">
+                        Основные свойства
+                    </a>
+                </li>
+                <li role = "presentation" id = "extra_properties_tab" class = "nmc-hide" ng-class = "{'nmc-hide':!currentReportType.reportMetaParamSpecialList_flag, 'nmc-show':currentReportType.reportMetaParamSpecialList_flag}">
+                    <a class = "nmc-tab-button" href = "" aria-controls = "extra_properties" data-target = "#extra_properties" role = "tab" data-toggle = "tab" ng-click = "set_of_objects_flag=false; showAvailableObjects_flag=false;">
+                        Дополнительные свойства
+                    </a>
+                </li>  
+                <li role = "presentation" id = "set_of_objects_tab">
+                    <a class = "nmc-tab-button" href = "" aria-controls = "set_of_objects" data-target = "#set_of_objects" role = "tab" data-toggle = "tab" ng-click = "set_of_objects_flag=true;">Выбор объектов
+                    </a>
+                </li>
+<!--                  ng-show="(currentObject.reportTemplate.id!=null)&&(currentObject.reportPeriodKey!=null)"-->
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class = "tab-content">
+            <!--      Варианты отчетов-->
+                <div role = "tabpanel" class = "tab-pane fade in active" id = "main_properties">            
+                    <div class = "container-fluid noPadding">
+                        <div class = "row well noPadding noMargin">
+                            <div class = "col-xs-12 noPaddingBottom nmc-modal-panel-with-table">
+                                <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <tr>
+                                        <td class = "col-xs-3">
+                                            <label for = "inputType" class = "nmc-form-label noMargin">Тип отчета</label>
+                                        </td>
+                                        <td class = "col-xs-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td class = "col-xs-3">
+                                            <label for = "inputType" 
+                                                   class = "nmc-form-label">Шаблон отчета</label>
+                                        </td>
+                                        <td class = "col-xs-9 nmc-text-align-left">
+                                            <div class = "form-group noMarginBottom" 
+                                                 ng-class = "{'has-error': (currentObject.reportTemplate.id==null)}">
+                                            <select class = "form-control nmc-select-form"  
+                                                    ng-model = "currentObject.reportTemplate.id" 
+                                                    ng-options = "template.id as template.name for template in templatesForCurrentParaset" 
+                                                    ng-disabled = "isDisabled()">
+                                            </select>                                            
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class = "col-xs-3">
+                                            <label for = "inputName" class = "nmc-form-label">Наименование</label>
+                                        </td>
+                                        <td class = "col-xs-9 nmc-text-align-left">
+                                            <div class = "form-group noMarginBottom" 
+                                                 ng-class = "{'has-error': (!currentObject.name || currentObject.name == '')}">
+                                                <input class = "form-control nmc-text-input-form" 
+                                                   id = "inputName" 
+                                                   type = "text" 
+                                                   placeholder = "Наименование варианта" 
+                                                   ng-model = "currentObject.name" 
+                                                   ng-disabled = "isDisabled()">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for = "inputDescription" 
+                                                   class = "nmc-form-label">Описание</label>
+                                        </td>
+                                        <td class = "nmc-text-align-left">
+                                            <textarea class = "form-control nmc-textarea-form" 
+                                                      id = "inputDescription" 
+                                                      placeholder = "Описание" 
+                                                      ng-model = "currentObject.description" 
+                                                      ng-disabled = "isDisabled()">
+                                            </textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class = "col-xs-3">
+                                            <label for = "inputPeriod" 
+                                                   class = "nmc-form-label">Период</label>
+                                        </td>
+                                        <td class = "col-xs-9 nmc-text-align-left">
+                                            <div class = "col-xs-6 form-group noMarginBottom noPadding" 
+                                                 ng-class = "{'has-error':(currentObject.reportPeriodKey==null)}">
+                                                <select ng-disabled = "isDisabled()"
+                                                        class = "form-control nmc-input-data nmc-select-form" 
+                                                        id = "inputPeriod" 
+                                                        ng-model = "currentObject.reportPeriodKey" 
+                                                        ng-options = "period.keyname as period.caption for period in reportPeriods">
+                                                </select>
+                                                
+                                            </div>
+                                            <div ng-show = "currentReportPeriod.isSettlementDay == true" 
+                                                 class = "col-xs-6 noPadding"
+                                                 >
+                                                <label for = "inputSettlementDay">Расчетный день:</label>
+                                                <input
+                                                       id = "inputSettlementDay"
+                                                       class = "form-control nmc-text-input-form nmc-input-digital-data"
+                                                       ng-model = "currentObject.settlementDay"
+                                                       />
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr ng-show = "currentSign == null && currentReportPeriod.isSettlementMonth != true">
+                                        <td class = "col-xs-3">
+                                            <label for = "inputPeriod" class = "nmc-form-label">Укажите период</label>
+                                        </td>
+                                        <td class = "col-xs-9 nmc-text-align-left">
+                                            <div ng-disabled = "isDisabled()">
+                                                <span class = "form-group" 
+                                                      ng-class = "{'has-error':!checkDateInterval(psStartDateFormatted, psEndDateFormatted)}">
+                                                <div class = "col-xs-1 paddingTop5">
+                                                    <label class = "nmc-form-label">c</label></div>
+                                                <div class = "col-xs-5">
+<!--                                                    <input ng-disabled="isDisabled()" class="form-control nmc-input-data noMargin nmc-date-input-form" type="text" ng-model="paramsetStartDateFormat">-->
+<!--
+                                                    <input date-range-picker class="form-control date-picker nmc-date-interval-form"
+                                type="text" ng-model="paramsetStartDateFormatted" options="dateOptsParamsetRu"/>
+-->
+                                                    <input ng-disabled = "isDisabled()" 
+                                                           id = "inputSingleDateStart" 
+                                                           class = "form-control date-picker nmc-date-input-form"
+                                                           type = "text" 
+                                                           ng-model = "psStartDateFormatted"/> 
+                                                </div>    
+                                                <div class = "col-xs-1 paddingTop5">
+                                                    <label class = "nmc-form-label">по</label></div>
+                                                <div class = "col-xs-5">
+                                                    <input ng-disabled = "isDisabled()" 
+                                                           id = "inputSingleDateEnd" 
+                                                           class = "form-control date-picker nmc-date-input-form"
+                                                           type = "text" 
+                                                           ng-model = "psEndDateFormatted"/> 
+                                                </div>
+                                                </span>    
+                                            </div>    
+
+                                        </td>
+                                    </tr>
+                                    <tr ng-show = "currentReportPeriod.isSettlementMonth == true">
+                                        <td class = "col-xs-3">
+                                            <label for = "inputPeriod" class = "nmc-form-label">Укажите месяц</label>
+                                        </td>
+                                        <td class="col-xs-9 nmc-text-align-left">
+                                            <input  
+                                               id="inputSettlementMonth" 
+                                               class="form-control date-picker nmc-input-data nmc-date-input-form"
+                                               type="text" 
+                                               />   
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" class="col-xs-3 nmc-td-in-modal-input-file-template-label">
+                                            <label for="inputFileTemplate" 
+                                                   class="nmc-form-label noMargin">
+                                                Шаблон имени файла (<small>без расширения, допустимы только латинские символы и цифры</small>):</label>
+                                        </td>
+<!--
+                                        <td class="col-xs-9 nmc-text-align-left">
+                                            <input class="form-control nmc-text-input-form" 
+                                                   id="inputFileTemplate" 
+                                                   type=text  
+                                                   placeholder="Шаблон имени файла" 
+                                                   ng-model="currentObject.outputFileNameTemplate" 
+                                                   ng-disabled="isDisabled()">
+                                        </td>
+-->
+                                    </tr>
+                                    <tr>
+<!--
+                                        <td class="col-xs-3">
+                                            
+                                        </td>
+-->
+                                        <td colspan = "2" class = "col-xs-9 nmc-text-align-left nmc-td-in-modal-input-file-template">
+                                            <input class = "form-control nmc-text-input-form" 
+                                                   id = "inputFileTemplate" 
+                                                   type = "text" 
+                                                   ng-model = "currentObject.outputFileNameTemplate" 
+                                                   ng-disabled = "isDisabled()"                                                   
+                                                   >
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-xs-3">
+                                            <label for="inputFileType" class="nmc-form-label">Тип файла</label>
+                                        </td>
+                                        <td class="col-xs-9 nmc-text-align-left">
+                                            <select class="form-control nmc-input-data nmc-select-form" 
+                                                    id="inputFileType" 
+                                                    ng-model="currentObject.outputFileType" 
+                                                    ng-disabled="isDisabled()" 
+                                                    ng-options="fileType for fileType in fileTypes"> 
+                                            </select>
+                                        </td>
+                                    </tr>                                                                
+<!--
+                                    <tr>
+                                        <td class="col-xs-3">
+                                            <label for="inputStartDate" 
+                                                   class="nmc-form-label">Действует с:</label>
+                                        </td>
+                                        <td class="nmc-text-align-left col-xs-9">
+-->
+
+<!--                                            <input class="form-control  marginRight28 nmc-input-data nmc-date-input-form" type="date" id="inputStartDate" placeholder="дд.ММ.гггг"  ng-model="activeStartDateFormat" ng-disabled="isDisabled()">-->
+                                            
+<!--
+                                            <input ng-disabled="isDisabled()" 
+                                                   id="inputStartDate" 
+                                                   class="form-control marginRight28 date-picker nmc-input-data nmc-date-input-form"
+                                                   type="text" 
+                                                   ng-model="activeStartDateFormatted"/> 
+                                        </td>
+
+                                    </tr>
+-->
+                                    <tr ng-if="currentObject.activeEndDate">
+                                        <td class="col-xs-3">
+                                            <label for="inputValue" 
+                                                   class="nmc-form-label">Дата отправки в архив:</label>
+                                        </td>
+                                        <td class="col-xs-9 nmc-text-align-left">{{currentObject.activeEndDate | date:'dd.MM.yyyy'}} 
+                                        </td>
+                                    </tr>                                    
+<!--
+                                    <tr>
+                                        <td colspan="2" class="col-xs-3">
+                                            <label class="nmc-form-label noMargin">
+                                                * Допустимо использование только латинских символов и цифр</label>
+                                        </td>
+                                    </tr>
+-->
+<!--
+                                    <tr>
+                                        <td colspan="2" class="col-xs-3"><input ng-model="currentObject.showParamsBeforeRunReport" ng-disabled="!checkRequiredFieldsOnSave()" type=checkbox class="nmc-checkbox-form">Показывать параметры отчета перед запуском.
+                                        </td>
+                                    </tr>
+-->
+<!--
+                                    <tr class="nmc-tr-striped">
+                                        <td colspan="2" class="col-xs-3">
+                                            <input type=checkbox 
+                                                   ng-model="currentObject._default" 
+                                                   class="nmc-checkbox-form">По умолчанию
+                                        </td>
+                                    </tr>
+                                    <tr class="nmc-tr-striped">
+                                        <td colspan="2" class="col-xs-3">
+                                            <input ng-disabled="checkOutputFileZipped()" 
+                                                   type=checkbox 
+                                                   ng-model="currentObject.outputFileZipped" 
+                                                   class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
+                                        </td>
+                                    </tr>
+                                    <tr class="nmc-tr-striped">
+                                        <td colspan="2" class="col-xs-3">
+                                            <input type=checkbox 
+                                                   ng-model="currentObject.isContextLaunch" 
+                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для абонентов).
+                                        </td>
+                                    </tr>
+                                    <tr class="nmc-tr-striped">
+                                        <td colspan="2" class="col-xs-3">
+                                            <input type=checkbox 
+                                                   ng-model="currentObject.isContextLaunchChild" 
+                                                   class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для пользователей объектов).
+                                        </td>
+                                    </tr>
+-->
+
+                                </table>
+
+                            </div>
+                            <div class="row well noPadding noMargin">
+<!--
+                                <div class="col-xs-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject._default" 
+                                               class="nmc-checkbox-form">По умолчанию
+                                    
+                                </div>
+-->
+                                <div class="col-xs-12">
+                                    
+                                        <input ng-disabled="checkOutputFileZipped()" 
+                                               type=checkbox 
+                                               ng-model="currentObject.outputFileZipped" 
+                                               class="nmc-checkbox-form" >Упаковывать файлы отчета в ZIP архив.
+                                    
+                                </div>
+                                <div class="col-xs-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject.isContextLaunch" 
+                                               class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для абонентов).
+                                    
+                                </div>
+                                <div class="col-xs-12">
+                                    
+                                        <input type=checkbox 
+                                               ng-model="currentObject.isContextLaunchChild" 
+                                               class="nmc-checkbox-form" >Разрешить вызов из меню объекта (для пользователей объектов).
+                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                  </div> 
+<!--                  Вкладка с дополнительными свойствами -->
+                  <div role="tabpanel" 
+                       class="tab-pane fade " 
+                       id="extra_properties">
+                       <div class="container-fluid noPadding">
+                            <div class="row well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                                <div class="col-xs-12 noPadding marginBottom10 nmc-modal-panel-with-table">
+    <!--
+                        <div class="container-fluid noPadding">
+                            <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table">
+    -->
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-repeat="paramSpecial in currentParamSpecialList">
+<!--
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                ng-class="{'col-xs-9': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-xs-3': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 2 : 1}}"
+                                                >
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                ng-class="{'col-xs-12': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-xs-6': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-disabled': isSpecialParamDisabled(paramSpecial, currentParamSpecialList), 'paddingLeft20I': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 3 : 1}}"
+                                                >
+                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'"
+                                                      class="nmc-sp-sbool marginLeft15">
+                                                    <input type="checkbox" 
+                                                           class="nmc-checkbox-form" 
+                                                           id="inputSpecParam" 
+                                                           ng-model="paramSpecial.boolValue"
+                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                           ng-required="paramSpecial.paramSpecialRequired">
+                                                </span>
+<!--                                                <label for="inputType" class="nmc-form-label">-->
+                                                <label ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATE_PERIOD' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_DATETIME_PERIOD'"
+                                                       for="inputType" class="nmc-form-label"
+                                                       ng-class="{'marginLeft15': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-sp-sbool': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL'}"
+                                                       >    
+                                                    {{paramSpecial.paramSpecialCaption}}
+<!--
+                                                    <small ng-if="isSystemuser()">
+                                                        order = {{paramSpecial.reportMetaParamFullOrder}}
+                                                    </small>
+-->
+                                                </label>
+                                                <div ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATE_PERIOD' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_DATETIME_PERIOD'"
+                                                     class="form-group">
+                                                    <div class="col-xs-6 noPadding paddingTop5 paddingRight5 nmc-text-align-right">
+                                                        <label class="nmc-form-label">{{paramSpecial.paramSpecialCaption}}: c</label>
+                                                    </div>
+                                                    <div class="col-xs-6 noPadding">
+                                                        <input class="form-control nmc-text-input-form" 
+                                                               id="inputSpecParam" 
+                                                               type = "date"  
+                                                               ng-model="paramSpecial.startDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </div>   
+                                                </div>
+                                            </td>
+                                            
+<!--
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || (paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION' && paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '')"
+                                                class="col-xs-9 nmc-text-align-left nmc-dotted-border-top"
+                                                colspan="2"                                                
+                                                >
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'"
+                                                class="col-xs-12 nmc-text-align-left"
+                                                ng-class="{'nmc-dotted-border-top': $index !== 0}"
+                                                colspan="3"                                                
+                                                >
+                                                <span ng-if="paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH'">
+                                                    <input type="checkbox" 
+                                                           class="nmc-checkbox-form" 
+                                                           id="inputSpecParam" 
+                                                           ng-model="paramSpecial.boolValue"
+                                                           ng-disabled="isDisabled()"
+                                                           ng-required="paramSpecial.paramSpecialRequired">
+                                                </span>                                                
+<!--                                                <label for="inputType" class="nmc-form-label">-->
+                                                <label ng-if="(paramSpecial.paramSpecialCaption && paramSpecial.paramSpecialCaption !== '') || (paramSpecial.reportMetaParamCategory.caption && paramSpecial.reportMetaParamCategory.caption !== '')"
+                                                       for="inputType" class="nmc-form-label">                                                                                                    
+                                                    {{paramSpecial.reportMetaParamCategory.caption || paramSpecial.paramSpecialCaption}}
+<!--
+                                                    <small ng-if="isSystemuser()">
+                                                        order = {{paramSpecial.reportMetaParamFullOrder}}
+                                                    </small>
+-->
+                                                </label>
+                                            </td>
+                                            
+    <!--
+                                            <td class="col-xs-9 nmc-text-align-left">{{currentReportType.reportTypeName}}
+                                            </td>
+    -->
+<!--
+                                            <td class="nmc-text-align-left"
+                                                ng-class="{'col-xs-3': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-xs-9': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-dotted-border-top': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION'}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 1 : 2}}"
+                                                >
+-->
+                                            <td ng-if="paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_SWITCH' && paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_CATEGORY_CAPTION'"
+                                                class="nmc-text-align-left"
+                                                ng-class="{'col-xs-6': paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL', 'col-xs-6': paramSpecial.paramSpecialTypeKeyname !== 'SPECIAL_BOOL', 'nmc-dotted-border-top': (paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_SWITCH' || paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_CATEGORY_CAPTION') && $index !== 0}"
+                                                ng-attr-colspan="{{paramSpecial.paramSpecialTypeKeyname === 'SPECIAL_BOOL' ? 1 : 2}}">
+                                                <div ng-switch on="paramSpecial.paramSpecialTypeKeyname">
+                                                    <span ng-switch-when="SPECIAL_STRING">
+                                                        <input class="form-control nmc-text-input-form" 
+                                                               id="inputSpecParam" 
+                                                               type = "text"  
+                                                               ng-model="paramSpecial.textValue" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_NUMERIC">
+                                                        <input class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                                               id="inputSpecParam" 
+                                                               type = "text"  
+                                                               ng-model="paramSpecial.numericValue" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+<!--
+                                                    <span ng-switch-when="SPECIAL_DATE">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="date"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATETIME">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="date"  
+                                                               placeholder="" 
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired">
+                                                    </span>
+-->
+                                                    <span ng-switch-when="SPECIAL_DATE">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam"
+                                                               ng-attr-id="{{'inputSpecialDate' + paramSpecial.reportMetaParamSpecialId}}"
+                                                               type="text"  
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)"
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATETIME">
+                                                        <input class="form-control nmc-text-input-form nmc-spec-date" 
+                                                               id="inputSpecParam" 
+                                                               type="text"  
+                                                               ng-model="paramSpecial.oneDateValueFormatted" 
+                                                               ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                               ng-required="paramSpecial.paramSpecialRequired"
+                                                               readonly
+                                                               >
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATETIME_PERIOD">
+<!--
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                        
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+-->
+                                                        <div ng-disabled="isDisabled()">
+                                                            <span class="form-group" >
+<!--
+                                                                <div class="col-xs-1 paddingTop5">
+                                                                    <label class="nmc-form-label">c</label>
+                                                                </div>
+                                                                <div class="col-xs-5">
+                                                                    <input class="form-control nmc-text-input-form" 
+                                                                           id="inputSpecParam" 
+                                                                           type="date"  
+                                                                           placeholder="" 
+                                                                           ng-model="paramSpecial.startDateValueFormatted" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                                           ng-required="paramSpecial.paramSpecialRequired">
+                                                                </div>    
+-->
+                                                                <div class="col-xs-2 paddingTop5">
+                                                                    <label class="nmc-form-label">по</label>
+                                                                </div>
+                                                                <div class="col-xs-6 noPadding">
+                                                                    <input class="form-control nmc-text-input-form" 
+                                                                           id="inputSpecParam" 
+                                                                           type="date"  
+                                                                           ng-model="paramSpecial.endDateValueFormatted" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                                           ng-required="paramSpecial.paramSpecialRequired">
+                                                                </div>
+                                                            </span>    
+                                                        </div> 
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_DATE_PERIOD">
+<!--
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.startDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+                                                        
+                                                        <input class="form-control nmc-text-input-form" id="inputSpecParam" type=date  placeholder="" ng-show="paramSpecial.paramSpecialTypeKeyname==='SPECIAL_PERIOD_DATE'" ng-model="paramSpecial.endDateValue" ng-disabled="isDisabled()" ng-required="paramSpecial.paramSpecialRequired">
+-->
+                                                        <div ng-disabled="isDisabled()">
+                                                            <span class="form-group" >
+<!--
+                                                                <div class="col-xs-1 paddingTop5">
+                                                                    <label class="nmc-form-label">c</label>
+                                                                </div>
+                                                                <div class="col-xs-5">
+                                                                    <input class="form-control nmc-text-input-form" 
+                                                                           id="inputSpecParam" 
+                                                                           type=date  
+                                                                           placeholder="" 
+                                                                           ng-model="paramSpecial.startDateValueFormatted" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                                           ng-required="paramSpecial.paramSpecialRequired">
+                                                                </div>    
+-->
+                                                                <div class="col-xs-2 paddingTop5">
+                                                                    <label class="nmc-form-label">по</label>
+                                                                </div>
+                                                                <div class="col-xs-6 noPadding">
+                                                                    <input class="form-control nmc-text-input-form" 
+                                                                           id="inputSpecParam" 
+                                                                           type = "date" 
+                                                                           ng-model = "paramSpecial.endDateValueFormatted" 
+                                                                           ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" ng-required="paramSpecial.paramSpecialRequired">
+                                                                </div>
+                                                            </span>    
+                                                        </div> 
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_BOOL">
+                                                       
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_CATEGORY_SWITCH">
+                                                        
+                                                    </span>
+                                                    <span ng-switch-when="SPECIAL_CATEGORY_CAPTION">
+                                                        
+                                                    </span>
+<!--
+                                                    <span ng-switch-when="SPECIAL_PERIOD_DATE">
+                                                    </span>
+-->
+                                                    <span ng-switch-default>
+                                                        <select class="form-control nmc-text-input-form" 
+                                                                id="inputSpecParam" 
+                                                                ng-model="paramSpecial.directoryValue" 
+                                                                ng-disabled="isSpecialParamDisabled(paramSpecial, currentParamSpecialList)" 
+                                                                ng-required="paramSpecial.paramSpecialRequired" 
+                                                                ng-options="specvalue[paramSpecial.specialTypeDirectoryValue] as specvalue[paramSpecial.specialTypeDirectoryCaption] for specvalue in paramSpecial.specialTypeDirectoryValues">
+                                                        </select> 
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                </table>    
+
+                            </div>
+                        </div>
+                    </div>
+                </div>   
+<!--               Вкладка с выбранными объектами   -->
+                <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid ">
+                            <div class="col-xs-12 noPadding nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
+                                <div><label class="nmc-form-label">Выбранные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
+                                        <tr ng-repeat="object in selectedObjects track by $index">
+                                            <td>
+                                                {{object.fullName}}
+                                            </td>
+                                            <td><button ng-disabled="isDisabled()" 
+                                                        class="btn btn-xs nmc-remove-button" 
+                                                        ng-click="removeSelectedObject(object)">
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>    
+                </div>
+                </div>	
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+					<div class="row">
+                        <div class=" col-xs-3">
+                            <div class="btn-group">
+                              <button ng-disabled="isDisabled()" title="Добавить объекты" type="button" class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" 
+                                      ng-click="prepareObjectsList()" 
+                                      ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">
+                                  Добавить объекты
+<!--                                <span class="caret"></span>-->
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="" ng-click="viewAvailableObjects(false);">Из списка объектов</a></li>
+                                <li><a href="" ng-click="viewAvailableObjects(true);">Из группы объектов</a></li> 
+                              </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-offset-3 col-xs-3">
+							<input ng-disabled="isDisabled()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="checkAndSaveParamset(currentReportType.paramsets, currentObject)"
+								value="Сохранить" 
+                                />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject');setDefault();">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+   
+    
+<div id="moveToArchiveModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="moveToArchiveLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="moveToArchiveLabel" class="nmc-h3">
+				Перемещение в архив 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="moveForm" novalidate>
+				<p class="paddingLeft10">
+					<label class="text-warning nmc-form-label"> Вы хотите переместить в архив  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentObject.name}}</label> 
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-xs-3">
+							<input ng-disabled="isDisabled()" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="moveToArchive(currentObject);"
+								value="Переместить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#moveToArchive');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+<div nmc-view-message-for-user 
+     message-for-user="{{messageForUser}}" 
+     btn-click="saveParamset(currentObject)"
+     btn-ok-caption="Продолжить"
+     show-ok-button="true"
+     show-cancel-button="true">
+</div>
+<!--
+<div id="messageForUserModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="messageForUserLabel" tabindex="-1">
+
+	<div class="modal-dialog modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close marginRight5 nmc-close-button"><span aria-hidden="true">?</span></button>
+			<h3 id="messageForUserLabel" class="nmc-h3">
+				Внимание! 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+			<form name="moveForm" novalidate>
+                <pre class="nmc-textfield">
+                    {{'\n'+messageForUser}}  
+                </pre>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input ng-disabled="isROfield()" 
+                                   type="submit" 
+                                   class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="saveParamset(currentObject);"
+								value="Ок" 
+                                data-target="#main_properties" 
+                                   data-toggle="tab"    
+                                   />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#moveToArchive');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>-->

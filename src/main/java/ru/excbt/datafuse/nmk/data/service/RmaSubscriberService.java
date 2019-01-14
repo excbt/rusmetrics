@@ -77,7 +77,7 @@ public class RmaSubscriberService extends SubscriberService {
 	public List<SubscriberDTO> selectRmaSubscribersDTO(Long rmaSubscriberId) {
 		return subscriberRepository.selectByRmaSubscriberId(rmaSubscriberId).stream()
             .filter(ObjectFilters.NO_DELETED_OBJECT_PREDICATE)
-            .map(s -> subscriberMapper.subscriberToDTO(s)).collect(Collectors.toList());
+            .map(s -> subscriberMapper.toDto(s)).collect(Collectors.toList());
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class RmaSubscriberService extends SubscriberService {
 		checkNotNull(rmaSubscriberId);
 		checkArgument(subscriberDTO.getId() == null);
 
-		Subscriber subscriber = subscriberMapper.DTOToSubscriber(subscriberDTO);
+		Subscriber subscriber = subscriberMapper.toEntity(subscriberDTO);
 
 		subscriber.setRmaSubscriberId(rmaSubscriberId);
 		checkArgument(!Boolean.TRUE.equals(subscriber.getIsRma()));

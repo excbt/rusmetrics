@@ -16,13 +16,17 @@ import ru.excbt.datafuse.nmk.data.repository.WeatherPlaceRepository;
 @Service
 public class WeatherPlaceService {
 
-	private static final Logger logger = LoggerFactory.getLogger(WeatherPlaceService.class);
+	private static final Logger log = LoggerFactory.getLogger(WeatherPlaceService.class);
+
+	private final WeatherPlaceRepository weatherPlaceRepository;
 
 	@Autowired
-	private WeatherPlaceRepository weatherPlaceRepository;
+    public WeatherPlaceService(WeatherPlaceRepository weatherPlaceRepository) {
+        this.weatherPlaceRepository = weatherPlaceRepository;
+    }
 
-	/**
-	 * 
+    /**
+	 *
 	 * @param fiasUuid
 	 * @return
 	 */

@@ -36,12 +36,16 @@ public class Organization extends AbstractAuditableModel implements KeynameObjec
     PersistableBuilder<Organization, Long>{
 
     @Getter
+    @Setter
 	public static class OrganizationInfo {
 
-		private final Long id;
-		private final String organizationName;
+		private Long id;
+		private String organizationName;
 
-		public OrganizationInfo(Organization organization) {
+        public OrganizationInfo() {
+        }
+
+        public OrganizationInfo(Organization organization) {
 			this.id = organization.getId();
 			this.organizationName = organization.getOrganizationName();
 		}

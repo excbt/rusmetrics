@@ -1,0 +1,97 @@
+
+<div>
+   <div ui-tree = "options" data-drag-enabled = "false">
+        <ol ui-tree-nodes ng-model = "$ctrl.filtredTreeWrapper" >
+<!--
+            <li ng-show = "$ctrl.filtredTree.loading">
+                <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
+            </li>
+-->
+            <li ng-repeat = "item in $ctrl.filtredTreeWrapper"
+              ui-tree-node
+              ng-include = "'p_tree_component_items_renderer.html'">
+
+            </li>
+<!--
+            <li ng-repeat = "item in $ctrl.filtredTree.childNodes"
+              ui-tree-node
+              ng-include = "'p_tree_component_items_renderer.html'">
+
+            </li>
+            <li ng-repeat = "item in $ctrl.filtredTree.linkedNodeObjects"
+                ui-tree-node 
+                ng-include = "'p_tree_component_items_renderer.html'">
+            </li>      
+-->
+        </ol>
+<!--
+        <div>
+            <pre>
+            {{$ctrl.filtredTreeWrapper | json}}
+            </pre>
+        </div>
+-->
+    </div>   
+
+    <script type = "text/ng-template" id = "p_tree_component_items_renderer.html">
+        <div ui-tree-handle ng-click = "$ctrl.selectPNode(item, $event, collapsed)"
+             ng-mouseover = "item.isHover = true"
+             ng-mouseleave = "item.isHover = false"
+             ng-class = "{'nmc-bg-distinguish': item.isSelected}">
+
+    <!--
+            <img ng-attr-id = "{{'objState' + (item.nodeObject.id || item._id)}}"
+                 class = "marginRight2 nmc-p-tree-status-img"
+                  ng-src = "{{data.currentPTreeMonitor[item.nodeType + (item._id || item.nodeObject.id)] || data.currentPTreeMonitorDefault}}"
+                  >
+    -->
+
+          <i class="btn btn-xs glyphicon"
+             ng-class="{'glyphicon-chevron-right': $ctrl.isChevronRight(collapsed, item), 'glyphicon-chevron-down': $ctrl.isChevronDown(collapsed, item), 'glyphicon-chevron-right nmc-button-disabled': $ctrl.isChevronDisabled(collapsed, item)}"
+             data-nodrag ng-click="toggle(this)">
+            </i>
+            <span ng-if = "item.type == 'root'">
+                  <strong>\</strong>
+            </span>
+            <span ng-if = "$ctrl.isElementNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-folder-close text-primary"></i> {{item.nodeName}}<span ng-show="isSystemuser()">(id = {{item._id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isContObjectNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-file text-success"></i>
+                {{item.nodeObject.fullName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isContZpointNode(item)" class="nmc-valign-middle">
+               <i class = "glyphicon glyphicon-map-marker text-info"></i>
+                {{item.nodeObject.customServiceName}}<span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+            <span ng-if = "$ctrl.isDeviceNode(item)" class="nmc-valign-middle">
+                <i class = "glyphicon glyphicon-scale text-warning"></i>
+               <span ng-if = "item.nodeObject.number">S/N: {{item.nodeObject.number}};</span>
+               <span ng-if = "item.nodeObject.deviceObjectName">Название: {{item.nodeObject.deviceObjectName}};</span>
+               <span ng-if = "item.nodeObject.deviceModelId">Модель: {{item.nodeObject.deviceModelId}};</span>
+               <span ng-show="isSystemuser()">(id = {{item.nodeObject.id}})</span>
+            </span>
+        </div>
+        <div ng-show = "item.loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии...
+        </div>
+        <div ng-hide = "item.loading">
+            <ol ui-tree-nodes="options"
+                ng-model="item.childNodes"
+                ng-class="{hidden: collapsed}">
+              <li ng-repeat="item in item.childNodes"
+                  ui-tree-node data-collapsed = "true"
+                  ng-include="'p_tree_component_items_renderer.html'">
+              </li>
+            </ol>
+            <ol ui-tree-nodes="options"
+                ng-model="item.linkedNodeObjects"
+                ng-class="{hidden: collapsed}">
+              <li ng-repeat="item in item.linkedNodeObjects"
+                  ui-tree-node data-collapsed = "true"
+                  ng-include="'p_tree_component_items_renderer.html'">
+              </li>
+            </ol>
+        </div>
+    </script>
+</div>

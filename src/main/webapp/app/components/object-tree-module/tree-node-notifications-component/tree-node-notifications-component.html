@@ -1,0 +1,57 @@
+<div>
+    <div class = "container-fluid">
+<!--
+        <div class = "row">
+           <div class = "col-xs-12 paddingBottom10">
+
+           </div>
+
+        </div>
+-->
+        <div class = "row">       
+            <div class = "col-xs-12 noPadding">
+                <div class = "paddingLeft10">
+    <!--               style = "border: 1px #aaa solid; border-radius: 4px; background-color: lightblue;"-->
+                    <h3>Узел: {{$ctrl.spnode.nodeName}}</h3>
+                    <h4>Дочерних узлов: {{$ctrl.spnode.childNodes.length || 0}}</h4>
+                    <h4>Объектов: {{$ctrl.spnode.linkedNodeObjects.length || 0}}</h4>
+                 </div>
+            </div>
+    <!--
+            <div class = "col-xs-1 noPadding">                      
+                <info-component message = "'Всего событий:'" value = "$ctrl.allEventsCount" bg-color = "'lightblue'"></info-component>
+            </div>
+            <div class = "col-xs-1 noPadding">
+               <info-component message = "'Объектов с событиями:'" value = "$ctrl.objectWithEventsCount" bg-color = "'lightblue'"></info-component>
+            </div>
+            <div class = "col-xs-1 noPadding">
+               <info-component message = "'Критических событий:'" value = "$ctrl.criticalEventsCount" bg-color = "'#ef473a'"></info-component>
+            </div>
+            <div class = "col-xs-1 noPadding">
+                <info-component message = "'Объектов с критическими событиями:'" value = "$ctrl.objectWithCriticalEventsCount" bg-color = "'#ef473a'"></info-component>
+            </div>                                    
+    -->
+        </div>
+        <div class = "row">
+    <!--         <div ng-if = "$ctrl.spnode.isWidgetView">-->
+                <div ng-class = "$ctrl.data.chartClass" ng-repeat = "chartMode in $ctrl.data.chartModes">
+                     <div ng-controller='objectTreeWidgetContainer' style = "border: 1px solid #e5e5e5; border-radius: 25px;">
+                           <span ng-show='title' ng-bind='title'></span>
+                           <div ng-show='isLoading'>Загрузка...</div>
+                           <div ng-show='isError'>Ошибка... <button ng-click='reload()'>Перезагрузка</button></div>
+                           <ng-widget ng-show = "!isLoading && !isError"
+                               src = "'treeNotificationsDiagram'"
+                               options = "{
+                                   previewMode: false,
+                                   contZpointId: 1,
+                                   ptreeNode: $ctrl.spnode,
+                                   chartMode: chartMode
+                               }">
+
+                            </ng-widget>
+                       </div>
+                </div>
+    <!--         </div>-->
+        </div>
+    </div>
+</div>

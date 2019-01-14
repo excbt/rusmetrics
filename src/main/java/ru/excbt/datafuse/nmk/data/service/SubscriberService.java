@@ -28,6 +28,7 @@ import ru.excbt.datafuse.nmk.data.filters.ObjectFilters;
 import ru.excbt.datafuse.nmk.data.model.Organization;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
 import ru.excbt.datafuse.nmk.data.model.dto.SubscriberDTO;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.EntityActions;
 import ru.excbt.datafuse.nmk.data.model.vo.SubscriberOrganizationVO;
 import ru.excbt.datafuse.nmk.data.repository.ContZPointRepository;
@@ -36,6 +37,7 @@ import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.repository.SubscriberRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.service.mapper.SubscriberMapper;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.utils.LocalDateUtils;
 
 /**
@@ -102,7 +104,7 @@ public class SubscriberService implements SecuredRoles {
 
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public Optional<SubscriberDTO> findSubscriberDTO(Long subscriberId) {
-		return Optional.ofNullable(subscriberMapper.subscriberToDTO(subscriberRepository.findOne(subscriberId)));
+		return Optional.ofNullable(subscriberMapper.toDto(subscriberRepository.findOne(subscriberId)));
 	}
 
 	/**
@@ -124,7 +126,7 @@ public class SubscriberService implements SecuredRoles {
 	@Secured({ ROLE_ADMIN, ROLE_SUBSCR_CREATE_CABINET })
 	@Transactional(value = TxConst.TX_DEFAULT)
 	public Subscriber saveSubscriberDTO(SubscriberDTO subscriberDTO) {
-		return subscriberRepository.saveAndFlush(subscriberMapper.DTOToSubscriber(subscriberDTO));
+		return subscriberRepository.saveAndFlush(subscriberMapper.toEntity(subscriberDTO));
 	}
 
 	/**
@@ -379,4 +381,16 @@ public class SubscriberService implements SecuredRoles {
 	public SubscriberOrganizationVO enhanceSubscriber(Subscriber subscriber) {
 		return checkNotNull(enhanceSubscriber(Arrays.asList(subscriber))).get(0);
 	}
+
+
+    /**
+     *
+     * @param portalUserIds
+     * @return
+     */
+	public Long getRmaSubscriberId(PortalUserIds portalUserIds) {
+	    Subscriber s = Optional.ofNullable(subscriberRepository.findOne(portalUserIds.getSubscriberId()))
+            .orElseThrow(() -> DBExceptionUtil.newEntityNotFoundException(Subscriber.class, portalUserIds.getSubscriberId()));
+	    return s.getIsRma() ? s.getId() : s.getRmaSubscriberId();
+    }
 }

@@ -1,11 +1,11 @@
 <!doctype html>
-<html class="no-js">
+<html class="no-js" ng-app="portalNMC" ng-cloak>
   <head>
     <!--[if IE]>
-        <script src="/public1/bower_components/html5shiv/dist/html5shiv.js"></script>
+        <script src="../public1/bower_components/html5shiv/dist/html5shiv.js"></script>
     <![endif]-->
     <meta charset="utf-8">
-    <title></title>
+      <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width = device-width">
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
@@ -14,42 +14,59 @@
 
     <!-- dadata service: address help for user -->
 <!--    <link href="https://dadata.ru/static/css/lib/suggestions-15.12.css" type="text/css" rel="stylesheet" />-->
-    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />  
+    <link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />
 
 
     <link rel="icon" type="image/png" href="fv_1.png" />
-    <link rel="stylesheet" href="/public/bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
-<!--    <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.min.css" />-->
-      <link rel="stylesheet" href="/public/bower_components/bootstrap/dist/css/bootstrap.css" />
-<!--    <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css"/>-->
-      <link rel="stylesheet" href="/public/bower_components/bootstrap-toggle/css/bootstrap-toggle.css"/>
+    <link rel="stylesheet" href="../public/bower_components/jquery-ui/themes/smoothness/jquery-ui.css"/>
+<!--    <link rel="stylesheet" href="../public/bower_components/bootstrap/dist/css/bootstrap.min.css" />-->
+      <link rel="stylesheet" href="../public/bower_components/bootstrap/dist/css/bootstrap.css" />
+<!--    <link rel="stylesheet" href="../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.min.css"/>-->
+      <link rel="stylesheet" href="../public/bower_components/bootstrap-toggle/css/bootstrap-toggle.css"/>
 
     <!-- endbower -->
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
-<!--    <link rel="stylesheet" href="/public/bower_components/toastr/toastr.min.css"/>  -->
-    <link rel="stylesheet" href="/public/bower_components/toastr/toastr.css"/>
+<!--    <link rel="stylesheet" href="../public/bower_components/toastr/toastr.min.css"/>  -->
+    <link rel="stylesheet" href="../public/bower_components/toastr/toastr.css"/>
 <!--    <link rel="stylesheet" href="styles/main.css"/>-->
     <link rel="stylesheet" href="styles/common.css"/>
-<!--      <link rel="stylesheet" href="/public/bower_components/font-awesome/css/font-awesome.min.css"/>-->
-      <link rel="stylesheet" href="/public/bower_components/font-awesome/css/font-awesome.css"/>
-<!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css"/>-->
-      <link rel="stylesheet" href="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.css"/>
+<!--      <link rel="stylesheet" href="../public/bower_components/font-awesome/css/font-awesome.min.css"/>-->
+      <link rel="stylesheet" href="../public/bower_components/font-awesome/css/font-awesome.css"/>
+      <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fontawesome.css"/>
+      <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-brands.css"/>
+      <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-regular.css"/>
+      <link rel="stylesheet" href="../node_modules/@fortawesome/fontawesome-free-webfonts/css/fa-solid.css"/>
+      <script defer src ="../node_modules/@fortawesome/fontawesome/index.js"></script>
+<!--      <link rel="stylesheet" href="../public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css"/>-->
+      <link rel="stylesheet" href="../public/bower_components/angular-ui-tree/dist/angular-ui-tree.css"/>
     <!-- endbuild -->
 
-      <link rel="stylesheet" href="/public/bower_components/bootstrap-daterangepicker/daterangepicker.css"/>
-      <link rel="stylesheet" href="/public/bower_components/qtip2/jquery.qtip.css"/>
-      <link rel="stylesheet" href="/public/vendor_components/leaflet-1.0.0-b1/leaflet.css"/>
-      <link rel="stylesheet" href="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.css"/>
-<!--      <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.min.css"/>      -->
-      <link rel="stylesheet" href="/public/bower_components/angular-ui-select/dist/select.css"/>
+      <link rel="stylesheet" href="../public/bower_components/bootstrap-daterangepicker/daterangepicker.css"/>
+      <link rel="stylesheet" href="../public/bower_components/qtip2/jquery.qtip.css"/>
+      <link rel="stylesheet" href="../public/vendor_components/leaflet-1.0.0-b1/leaflet.css"/>
+      <link rel="stylesheet" href="../public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.css"/>
+<!--      <link rel="stylesheet" href="../public/bower_components/angular-ui-select/dist/select.min.css"/>      -->
+      <link rel="stylesheet" href="../public/bower_components/angular-ui-select/dist/select.css"/>
+      
+      <link rel="stylesheet" href="../public/bower_components/ng-tags-input/ng-tags-input.css"/>
 
-      <script src="/public/vendor_components/RightsJS/right.js"></script>
-      <script src="/public/vendor_components/RightsJS/right-resizable.js"></script>
+      <link rel = "stylesheet" href = "../public/bower_components/angular-ui-layout/src/ui-layout.css"/>
+      
+      <link rel = "stylesheet" href = "../public/bower_components/angular-material/angular-material.css"/>
+      <link rel = "stylesheet" href = "../public/bower_components/ng-popup/dist/ngPopup.css"/>
 
-      <script src="/public/bower_components/jquery/dist/jquery.js"></script>
-<!--      <script src="/public/bower_components/angular-1.4.1/angular.min.js"></script>-->
-      <script src="/public/bower_components/angular-1.4.1/angular.js"></script>
+
+<!--
+      <script src="../public/vendor_components/RightsJS/right.js"></script>
+      <script src="../public/vendor_components/RightsJS/right-resizable.js"></script>
+-->
+
+      <script src="../public/bower_components/jquery/dist/jquery.js"></script>
+<!--      <script src="../public/bower_components/angular-1.4.1/angular.min.js"></script>-->
+     
+<!--      <script src="../public/bower_components/angular-1.4.1/angular.js"></script>-->
+      <script src="../public/bower_components/angular/angular.js"></script>
 
 <!--    <link rel="stylesheet" href="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.20/ui-grid.min.css">-->
 <!--    <script data-require="jquery@2.1.3" data-semver="2.1.3" src="http://code.jquery.com/jquery-2.1.3.min.js"></script>-->
@@ -57,7 +74,92 @@
 <!--    <script src="http://cdn.rawgit.com/angular-ui/ui-grid.info/gh-pages/release/3.0.0-rc.21/ui-grid.min.js"></script>-->
 
   </head>
-  <body class="nmc-main-window-background" ng-app="portalNMC">
+  <body class="nmc-main-window-background">
+      <main></main>           
+<!--
+      <md-toolbar layout = "row">
+         <div class = "md-toolbar-tools" ng-init = "mainVm.searchFlag = false" >
+             <md-button class = "menu md-icon-button" ng-click="mainVm.menuToggleList()">
+    
+                 <md-icon md-svg-icon="menu"></md-icon>
+             </md-button>
+          
+              <div flex ng-show = "mainVm.searchFlag != true">
+
+                  <tree-node-view-select ng-if = "mainVm.isObjectsPTree()"></tree-node-view-select>
+
+              </div>
+              <md-button class = "md-icon-button" aria-label = "Поиск" 
+                     ng-click = "mainVm.startSearch()">
+                  <md-icon md-font-set = "fa fa-lg">&#xf002;</md-icon>
+              </md-button>
+              <div flex ng-show = "mainVm.searchFlag == true" >
+                                               
+                  <md-input-container class = "md-icon-float md-button-right nmc-main-search-input" style = "width: 100%">
+
+                      <input style = "width: 92%; border-color: white;" id="searchInput" type="text" ng-model = "mainVm.mainFilter"/>
+                      <div class="button-group">
+                         <md-button class = "md-icon-button md-raised" aria-label = "Найти" 
+                             ng-click = "mainVm.searching()" title = "найти">
+                              <md-icon style = "padding: 5px 0 0 4px;" md-font-set = "fa fa-lg">&#xf04b;</md-icon>
+                          </md-button>
+                          <md-button class = "md-icon-button md-raised" aria-label = "Отмена" 
+                             ng-click = "mainVm.cancelSearch()" title = "Отмена">
+                              <md-icon>X</md-icon>
+                          </md-button>
+                      </div>
+                  </md-input-container>
+              </div>
+
+              <md-menu md-offset = "0 60">
+                  <md-button class = "md-icon-button"
+                       ng-click = "mainVm.openUserMenu($mdMenu, $event)"
+                       aria-label = "Пользовательское меню">
+                        <md-icon md-font-set = "fa fa-lg">&#xf007;</md-icon>
+                  </md-button>
+                  <md-menu-content>                     
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Написать в техподдержку">
+                             <img class = "nmc-img-user-menu" src = "images/tech_support.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Партнерская лента">
+                             <img class = "nmc-img-user-menu" src = "images/partner_rss.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-item>
+                          <md-button class = "md-icon-button" title = "Техническая лента">
+                             <img class = "nmc-img-user-menu" src = "images/tech_rss.png"/>
+                          </md-button>
+                      </md-menu-item>
+                      <md-menu-divider></md-menu-divider>
+                      <md-menu-item>
+                         <md-button ng-if="mainVm.userInfo.isReadonly != true"
+                               class = "md-icon-button"
+                               ng-click="mainVm.changePasswordInit()"
+                               title='Сменить пароль'
+                               data-target="#changePasswordModal"
+                               data-toggle="modal">                                
+                             <md-icon md-font-set = "fa fa-lg">&#xf141;</md-icon>
+                         </md-button>
+                      </md-menu-item>
+                      <md-menu-divider></md-menu-divider>
+                      <md-menu-item>
+                         <md-button 
+                            href="../logout" 
+                            ng-click="mainVm.logOut()" 
+                            title = "Выход"
+                            class = "md-icon-button">
+                             <md-icon md-font-set = "fa fa-lg">&#xf08b;</md-icon>
+                         </md-button>
+                      </md-menu-item>
+                  </md-menu-content>
+              </md-menu>
+              
+          </div>
+      </md-toolbar>            
+-->
 <!--
       <div >
         <ng-widget src="'test'"></ng-widget>
@@ -94,515 +196,88 @@
 </div>
 -->
       <!--[if !IE]>-->
-<div ng-controller="MainCtrl">
-<div id="wrap" class="wrap">
-<!--    ng-class="{'nmc-hide':mainCtrlSettings.loadingServicePermissionFlag,'nmc-show':!mainCtrlSettings.loadingServicePermissionFlag}">-->
-<!--    Навигационная строка в верху страницы-->
-<!--
-    <div class="header navbar navbar-default navbar-fixed-top nmc-main-header" >
-			<div id="navbar-container" >
-				<div class="navbar-header">
-					<a class="navbar-brand nmc-main-header-brand" href="#/" ng-click="clickMenu('object_menu_item')"></a>
-				</div>
+<!--      md-is-locked-open="$mdMedia('gt-lg')"-->
 
-            <div class="collapse navbar-collapse">
-
-                <div class="navbar-text nmc-main-header-title"> Система учета и обработки метрологической информации </div>
-                <div class="">
-                <ul class="nav navbar-nav navbar-right nmc-main-header-menu">
-                    <li class="dropdown">
-                        <a class="dropdown-toggle "  data-toggle="dropdown" href="" ><span><span
-                                class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">Пользователь: <b>{{userInfo.userName}}</b>
-                            </span><span class="nmc-hide" ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}" ng-show="userInfo.subscriber!=null">({{userInfo.subscriber.subscriberName}})</span></span></a>
-                        <ul class="dropdown-menu">
-                            <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                                title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b>
-                            </p></a></li>
-
-                            <li ng-if="userInfo.isReadonly != true"><a href=""
-                                   ng-click="changePasswordInit()"
-                                   title='Сменить пароль'
-                                   data-target="#changePasswordModal"
-                                   data-toggle="modal">
-                                    <p>
-                                        <b>Сменить пароль</b>
-                                    </p>
-                                </a>
-                            </li>
-                            <li><a href="../logout" ng-click="logOut();"
-                                title='logout'><p> <b>Выход </b>
-                            </p></a></li>
-                        </ul>
-
-                    </li>
-                    <li class="marginRight28">
-                        <div class="btn-group-vertical" role="group" aria-label="help_group">
-                            <p>
-                            <a title="Свзяаться с технической поддержкой" href="http://support.rusmetrics.ru/" target="_blank"><button class="btn btn-xs nmc-button-support"></button></a>
-                                </p>
-                            <p>
-                            <a ng-if="!isTestMode()"
-                               title="Справка" ng-href="{{'../api/help/anchor/'+getCtx()}}" target="_blank"><button class="btn btn-xs nmc-button-help"></button></a>
-                                </p>
-                        </div>
-                    </li>
-                </ul>
-                </div>
-            </div>
-
-			</div>
-  </div>
--->
-<!--   энд оф Навигационная строка в верху страницы    -->
-
-    <div class="container-fluid noMargin" >
-
-    <div class="row row-offcanvas row-offcanvas-left">
-
-        <!-- Side bar menu -->
-        <div class="col-xs-6 col-sm-2 sidebar-offcanvas nmc-main-menu"
-             ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
-                        <nav class="sidebar-nav"
-                             role="navigation"
-                             ng-show="!showPrivateOfficeMenu"
-                             ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
-<!--                Основное меню            -->
-                            <div id="sidebar-entries" class="list-group">
-
-                                <!-- Объекты, редактирование -->
-                                <a id="object_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide': !isCabinet(), 'nmc-show': isCabinet()}"
-                                   href="#/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('object_menu_item'); showAdminSettings = false;">
-                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
-                                       title="Объекты">
-                                    </i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
-                                </a>
-
-                                <!-- Отчеты -->
-                                <a
-                                   id="report_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.report_menu_item}"
-
-                                   href="#/reports/" data-toggle="offcanvas" ng-click="clickMenu('report_menu_item')"><i class="glyphicon glyphicon-file nmc-main-menu-item-icon" title="Отчеты"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Отчеты</span></a>
-
-                                 <!-- Notices -->
-<!--
-                                <a id="notice_main_menu_item"
-                                   ng-hide="isTestMode()"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.notice_menu_item}"
-                                   href="#/notices/monitor/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('notice_menu_item')">
-                                    <i class="glyphicon glyphicon-envelope nmc-main-menu-item-icon" title="Уведомления"></i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Уведомления</span>
-                                </a>
--->
-                                <a ng-show="!isCabinet()"
-                                   ng-hide="isTestMode()"
-                                   id="log_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.log_menu_item}"
-
-                                   href="#/log/session-log/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('log_menu_item')"
-                                   ng-cloak>
-                                    <i class="glyphicon glyphicon-list-alt nmc-main-menu-item-icon" title="Журнал"></i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
-                                        Журналы
-                                    </span>
-                                </a>
-                                <a ng-show="!isCabinet() && !isTestMode()"
-                                   
-                                   id="energy_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.energy_menu_item}"
-
-                                   href="#/documents/energo-passports/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('energy_menu_item')"
-                                   ng-cloak>
-                                    <i class="glyphicon glyphicon-tags nmc-main-menu-item-icon" title="Энергоэффективность"></i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">
-                                        Энерго - эффективность
-                                    </span>
-                                </a>
-                                
-                                <!--                                Настройки-->
-                                <a
-                                   id="setting_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.setting_menu_item}"
-
-                                   href="#/settings/paramsets/" data-toggle="offcanvas" ng-click="clickMenu('setting_menu_item')"> <i class="glyphicon glyphicon-cog nmc-main-menu-item-icon" title="Настройки"></i><span ng-if="mainCtrlSettings.showFullMenuFlag">Настройки</span> <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showSettings, 'glyphicon-chevron-right': !showSettings}"></i>--></a>
-
-                                <!--                                Администрирование-->
-<!--                                'nmc-show':userInfo._system, 'nmc-hide':!userInfo._system,-->
-                                <a id="management_main_menu_item"
-                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
-                                   ng-class="{ 'nmc-main-menu-item-active': menuMassive.admin_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
-                                   href="#/management/objects/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('admin_menu_item'); showAdminSettings = true">
-                                    <i class="glyphicon glyphicon-wrench nmc-main-menu-item-icon"
-                                       title="Управление">
-                                    </i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Управление</span>
-                                    <!--<i class="glyphicon " ng-class="{' glyphicon-chevron-down': showAdminSettings, 'glyphicon-chevron-right': !showAdminSettings}"></i>-->
-                                </a>
-
-<!--
-                                <a id="test_main_menu_item"
-                                   class="list-group-item noMarginBottom nmc-main-menu-item nmc-hide"
-                                   ng-class="{ 'nmc-main-menu-item-active': menuMassive.test_menu_item, 'nmc-hide':!isRma(), 'nmc-show': isRma()}"
-                                   href="#/test/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('test_menu_item'); showTest = true">
-                                    <i class="glyphicon glyphicon-plane nmc-main-menu-item-icon"
-                                       title="Тест">
-                                    </i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Тест</span>
-                                </a>
--->
-
-                                <!-- Меню администратора -->
-<!--
-                                <div class="list-group submenu nmc-hide" ng-class="{'nmc-show': showAdminSettings, 'nmc-hide': !showAdminSettings}" id="sidebar-entries" >
-
-                                    <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.metadata_control_menu_item}"
-
-                                    ng-click="clickMenu('metadata_control_menu_item');"   href="#/" data-toggle="offcanvas">Метаданные</a>
-
-
-                                </div>
--->
-
-                            </div>
-                        </nav>
-
-                        <nav class="sidebar-nav nmc-hide "
-                            role="navigation" ng-class="{'nmc-show':showPrivateOfficeMenu, 'nmc-hide': !showPrivateOfficeMenu}">
-<!--              Меню Личного кабинета              -->
-                            <div id="sidebar-entries" class="list-group">
-                                <!-- Home -->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item}"
-
-                                ng-click="clickMenu('object_menu_item');showPrivateOfficeMenu=false" href="#/" data-toggle="offcanvas">Портал</a>
-                                <!-- Объекты, меню настройки объектов -->
-                                <a  class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_list_item}"
-
-                                ng-click="clickMenu('object_menu_list_item');" href="#/private/objects_list/" data-toggle="offcanvas">Объекты</a>
-                                <!-- Справочники -->
-                                <a class="list-group-item nmc-main-menu-item" ng-class="{'nmc-main-menu-item-active': menuMassive.directory_menu_item}"
-
-                                   ng-click="clickMenu('directory_menu_item');" href="#/private/directories/" data-toggle="offcanvas">Справочники</a>
-
-                            </div>
-                        </nav>
-            <span class="pull-right"
-                  ng-class="{ 'nmc-hide': isCabinet(), 'nmc-show': !isCabinet()}">
-                <i style = "position: absolute; top: 50%; margin-left: -9px;"
-                   title="Свернуть / распахнуть меню"
-                   class="btn btn-lg glyphicon glyphicon-menu-left noPadding"
-                   ng-click="mainCtrlSettings.showFullMenuFlag = !mainCtrlSettings.showFullMenuFlag"
-                   ng-class="{'glyphicon-menu-left': mainCtrlSettings.showFullMenuFlag, 'glyphicon-menu-right': !mainCtrlSettings.showFullMenuFlag}">
-                </i>
-            </span>
-<!--
-            <div class="nmc-div-help-img-logo-left-v">
-            </div>
--->
-<!--
-            <div ng-if="!mainCtrlSettings.showFullMenuFlag"
-                 class="nmc-div-help-logo-left-v">
-            </div>
-            <div ng-class="{'nmc-div-logo-left-v-min': !mainCtrlSettings.showFullMenuFlag, 'nmc-div-logo-left-v': mainCtrlSettings.showFullMenuFlag}">
--->
-<!--
-            <div style="text-align: center;">
-                <img class="nmc-img-logo-left-v" src="images/logo-left-v.png"/>
-            </div>
--->
-            <div id="nmcLogoLeft"
-                 class="nmc-div-logo-left-h">
-                <img src="images/logo-left-h.png"
-                     class="nmc-img-logo-left-h-min"
-                     ng-class="{'nmc-img-logo-left-h': mainCtrlSettings.showFullMenuFlag}"
-                     />
-            </div>
-            <nav class="sidebar-nav nmc-nav-user-menu"
-                 role="navigation">
-                <div id="sidebar-entries" class="list-group dropup noMargin">
-                    <a class="list-group-item nmc-main-menu-item nmc-nav-user-menu-item dropdown-toggle"
-                       data-toggle="dropdown">
-<!--                        ng-if="!mainCtrlSettings.showFullMenuFlag"-->
-                                <i class="glyphicon glyphicon-user nmc-main-menu-item-icon"
-                                   title="Пользовательское меню">
-                                </i>
-                                <span ng-show="mainCtrlSettings.showFullMenuFlag"
-                                      ng-attr-title="{{userInfo.userName + ' (' + userInfo.subscriber.subscriberName + ')'}}"
-                                      >
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}">
-                                        <b>{{userInfo.userNameCaption}}</b><br/>
-                                    </span>
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo == null, 'nmc-show': userInfo != null}"
-                                          ng-show="userInfo.subscriber != null">
-                                        {{userInfo.userSubscrCaption}}
-                                    </span>
-                                </span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}">
-                            <a href="#/private/"
-                               title='Private office'
-                               ng-click="showPrivateOfficeMenu=true;showMenuReport=false;">
-                                <p> <b>Личный кабинет</b>
-                        </p></a></li>
-
-                        <li ng-if="userInfo.isReadonly != true"><a href=""
-                               ng-click="changePasswordInit()"
-                               title='Сменить пароль'
-                               data-target="#changePasswordModal"
-                               data-toggle="modal">
-                                <p>
-                                    <b>Сменить пароль</b>
-                                </p>
-                            </a>
-                        </li>
-                        <li><a href="../logout" ng-click="logOut();"
-                            title='logout'><p> <b>Выход </b>
-                        </p></a></li>
-                    </ul>
-
-                </div>
-            </nav>
-
-        </div>
-
-        <div id="div-main-area" class="col-xs-12 col-sm-10 well mainarea nmc-main-workspace"
-             ng-class="{'nmc-main-workspace-maximize': !mainCtrlSettings.showFullMenuFlag}" ng-cloak>
-
-					<div id="main" ng-view></div>
-<!--            <a class="btn btn-block btn-primary" href="index2.html"> Вариант 1</a>-->
-        </div>
-
-     </div>
-    </div>
-
-        <!--change password window-->
-    <div id="changePasswordModal" class="modal fade nmc-modal-window" role="dialog"
-        aria-labelledby="changePasswordLabel" tabindex="-1">
-        <div class="modal-dialog  modal-content nmc-modal-dialog">
-            <div class="modal-header nmc-modal-header">
-                <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h3 id="changePasswordLabel" class="nmc-h3">
-                    Изменение пароля
-                </h3>
-            </div>
-            <div class="modal-body nmc-modal-body paddingLeftRight15">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
-                            <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
-                                <tr>
-                                    <td class="col-sm-3"><label for="viewLogin">Логин</label>
-                                    </td>
-                                    <td class="col-sm-9 nmc-text-align-left">
-                                        <input class="form-control nmc-text-input-form" type="text" id="viewLogin" placeholder="Логин"  ng-model="data.userInfo.userName" disabled>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-sm-3">
-                                        <label for="inputTenantPassword">Текущий пароль</label>
-                                    </td>
-                                    <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form"
-                                                   type="password"
-                                                   id="inputUserInfoPassword"
-                                                   placeholder=""
-                                                   ng-model="data.userInfo.oldPassword"
-                                                   />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-sm-3">
-                                        <label for="inputTenantPassword">Новый пароль</label>
-                                    </td>
-                                    <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form"
-                                                   type="password"
-                                                   id="inputUserInfoPassword"
-                                                   placeholder=""
-                                                   ng-model="data.userInfo.newPassword"
-                                                   />
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="col-sm-3">
-                                        <label for="confirmTenantPassword">Подтверждение пароля</label>
-                                    </td>
-                                    <td class="col-sm-9 nmc-text-align-left">
-                                        <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.userInfo)}">
-                                            <input class="form-control nmc-text-input-form"
-                                                   type="password"
-                                                   id="confirmUserInfoPassword"
-                                                   placeholder="Повторите пароль"
-                                                   ng-model="data.userInfo.newPasswordConfirm"
-                                                   />
-                                        </div>
-                                    </td>
-                                </tr>
-
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer nmc-modal-footer">
-                    <div class="container-fluid  ">
-
-                        <div class="row">
-                            <div class="col-xs-offset-6 col-md-3">
-                                <input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
-                                    ng-click="changeUserPassword(data.userInfo)"
-                                    value="Сохранить" />
-                            </div>
-                            <div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
-                                <button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
-                                    ng-click="exit('#createPasswordModal')">
-                                    Отменить
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-            </div>
-        </div>
-    </div>
-
-</div> <!-- end id=wrap -->
-
-      <div class="navbar-fixed-bottom row-fluid nmc-main-footer nmc-hide" >
-          <div class="container-fluid" >
-              <div class="row">
-<!--
-                  <nav class="sidebar-nav"
-                             role="navigation"
-                             ng-show="!showPrivateOfficeMenu">
-                            <div id="sidebar-entries" class="list-group">
-
-                                 Объекты, редактирование
-                                <a id="object_main_menu_item"
-                                   class="list-group-item nmc-main-menu-item nmc-hide"
-                                   ng-class="{'nmc-main-menu-item-active': menuMassive.object_menu_item, 'nmc-hide':!isCabinet(),'nmc-show':isCabinet()}"
-                                   href="#/"
-                                   data-toggle="offcanvas"
-                                   ng-click="clickMenu('object_menu_item');showAdminSettings=false;">
-                                    <i class="glyphicon glyphicon-list nmc-main-menu-item-icon"
-                                       title="Объекты">
-                                    </i>
-                                    <span ng-if="mainCtrlSettings.showFullMenuFlag">Объекты</span>
-                                </a>
-                      </div>
-                  </nav>
--->
-<!--
-                  <div class="col-xs-1 noPadding"
-                       ng-class="{'nmc-main-menu-minimize': !mainCtrlSettings.showFullMenuFlag}">
-                      <ul class="nav navbar-nav navbar-left nmc-main-header-menu">
-                        <li class="dropdown">
-                            <a class="list-group-item nmc-main-menu-item dropdown-toggle"
-                               data-toggle="dropdown">
-                                <span>
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}">
-                                        <b>{{userInfo.userName}}</b><br/>
-                                    </span>
-                                    <span class="nmc-hide"
-                                          ng-class="{'nmc-hide': userInfo==null, 'nmc-show':userInfo!=null}"
-                                          ng-show="userInfo.subscriber!=null">
-                                        {{userInfo.subscriber.subscriberName}}
-                                    </span>
-                                </span>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li ng-class="{'nmc-hide':!userInfo._system, 'nmc-show':userInfo._system}"><a href="#/private/"
-                                    title='Private office' ng-click="showPrivateOfficeMenu=true;showMenuReport=false;"><p> <b>Личный кабинет</b>
-                                </p></a></li>
-
-                                <li ng-if="userInfo.isReadonly != true"><a href=""
-                                       ng-click="changePasswordInit()"
-                                       title='Сменить пароль'
-                                       data-target="#changePasswordModal"
-                                       data-toggle="modal">
-                                        <p>
-                                            <b>Сменить пароль</b>
-                                        </p>
-                                    </a>
-                                </li>
-                                <li><a href="../logout" ng-click="logOut();"
-                                    title='logout'><p> <b>Выход </b>
-                                </p></a></li>
-                            </ul>
-
-                        </li>
-                    </ul>
-                </div>
--->
-              </div>
-
-<!--
-			<p class="muted credit">
-
-
-               </p>
--->
-          </div>
-      </div>
-</div>
+<!--      div flex layout row-->
    <!-- end ng-controller=MainCtrl -->
 <!--</div>-->
 
     <!-- build:js(.) scripts/oldieshim.js -->
     <!--[if lt IE 9]>
-    <script src="/public/bower_components/es5-shim/es5-shim.js"></script>
-    <script src="/public/bower_components/json3/lib/json3.js"></script>
+    <script src="../public/bower_components/es5-shim/es5-shim.js"></script>
+    <script src="../public/bower_components/json3/lib/json3.js"></script>
     <![endif]-->
     <!-- endbuild -->
 
     <!-- build:js(.) scripts/vendor.js -->
     <!-- bower:js -->
 
-<!--    <script src="/public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
-      <script src="/public/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<!--    <script src="../public/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>-->
+      <script src="../public/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
+    <script src="../public/bower_components/angular-animate/angular-animate.js"></script>
+    <script src="../public/bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="../public/bower_components/angular-resource/angular-resource.js"></script>
+    <script src="../public/bower_components/angular-route/angular-route.js"></script>
+    <script src="../public/bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="../public/bower_components/angular-touch/angular-touch.js"></script>
+    
+    <script src = "../public/bower_components/angular-aria/angular-aria.js"></script>
+    
+    <script src = "../public/bower_components/angular-material/angular-material.js"></script>
+    
 <!--
-    <script src="/public/bower_components/angular-animate/angular-animate.min.js"></script>
-    <script src="/public/bower_components/angular-cookies/angular-cookies.min.js"></script>
-    <script src="/public/bower_components/angular-resource/angular-resource.min.js"></script>
-    <script src="/public/bower_components/angular-route/angular-route.min.js"></script>
-    <script src="/public/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-    <script src="/public/bower_components/angular-touch/angular-touch.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-animate.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-cookies.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-resource.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-route.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-sanitize.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-touch.min.js"></script>
 -->
 <!--
-    <script src="/public/bower_components/angular-1.4.1/angular-animate.min.js"></script>
-    <script src="/public/bower_components/angular-1.4.1/angular-cookies.min.js"></script>
-    <script src="/public/bower_components/angular-1.4.1/angular-resource.min.js"></script>
-    <script src="/public/bower_components/angular-1.4.1/angular-route.min.js"></script>
-    <script src="/public/bower_components/angular-1.4.1/angular-sanitize.min.js"></script>
-    <script src="/public/bower_components/angular-1.4.1/angular-touch.min.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-animate.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-cookies.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-resource.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-route.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-sanitize.js"></script>
+    <script src="../public/bower_components/angular-1.4.1/angular-touch.js"></script>
 -->
+<!--<<<<<<< HEAD-->
+
+    <script src = "../public/bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+
+<!--    <script src="../public/bower_components/jquery-ui/jquery-ui.min.js"></script>-->
+      <script src="../public/bower_components/jquery-ui/jquery-ui.js"></script>
+<!--    <script src="../public/bower_components/toastr/toastr.min.js"></script>-->
+      <script src="../public/bower_components/toastr/toastr.js"></script>
+      <script src="../public/bower_components/moment/moment.js"></script>
+      <script src="../public/bower_components/file-saver.js/FileSaver.js"></script>
+<!--      <script src="../public/bower_components/qtip2/jquery.qtip.min.js"></script>-->
+      <script src="../public/bower_components/qtip2/jquery.qtip.js"></script>
+<!--      <script src="../public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>-->
+<!--      <script src="../public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>-->
+<!--      <script src="../public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>-->
+      <script src="../public/bower_components/angular-file-upload/angular-file-upload.js"></script>
+<!--      <script src="../public/bower_components/angular-ui-select/dist/select.min.js"></script>-->
+      <script src="../public/bower_components/angular-ui-select/dist/select.js"></script>
+<!--      <script src="../public/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>-->
+      <script src="../public/bower_components/bootstrap-toggle/js/bootstrap-toggle.js"></script>
+<!--      <script src="../public/bower_components/angular-ui-mask/dist/mask.min.js"></script>-->
+      <script src="../public/bower_components/angular-ui-mask/dist/mask.js"></script>
+      <script src="../public/bower_components/angular-widget/angular-widget.js"></script>
+<!--      <script src="../public/bower_components/chart.js/dist/Chart.min.js"></script>-->
+      <script src="../public/bower_components/chart.js/dist/Chart.js"></script>
+<!--      <script src="../public/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>-->
+      <script src="../public/bower_components/angular-chart.js/dist/angular-chart.js"></script>
+<!--      <script src="../public/bower_components/angular-daterangepicker/js/angular-daterangepicker.min.js"></script>-->
+      <script src="../public/bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
+      <script src="../public/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+      <script src="../public/bower_components/Blob/Blob.js"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
+
+      <script src = "../public/bower_components/angular-ui-layout/src/ui-layout.js"></script>
+<!--
+=======
     <script src="/public/bower_components/angular-1.4.1/angular-animate.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-cookies.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-resource.js"></script>
@@ -610,78 +285,80 @@
     <script src="/public/bower_components/angular-1.4.1/angular-sanitize.js"></script>
     <script src="/public/bower_components/angular-1.4.1/angular-touch.js"></script>
 
-<!--    <script src="/public/bower_components/jquery-ui/jquery-ui.min.js"></script>-->
       <script src="/public/bower_components/jquery-ui/jquery-ui.js"></script>
-<!--    <script src="/public/bower_components/toastr/toastr.min.js"></script>-->
       <script src="/public/bower_components/toastr/toastr.js"></script>
       <script src="/public/bower_components/moment/moment.js"></script>
       <script src="/public/bower_components/file-saver.js/FileSaver.js"></script>
-<!--      <script src="/public/bower_components/qtip2/jquery.qtip.min.js"></script>-->
       <script src="/public/bower_components/qtip2/jquery.qtip.js"></script>
-<!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>-->
-<!--      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>-->
-<!--      <script src="/public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>-->
+      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js"></script>
+      <script src="/public/bower_components/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+      <script src="/public/bower_components/angular-file-upload/angular-file-upload.min.js"></script>
       <script src="/public/bower_components/angular-file-upload/angular-file-upload.js"></script>
-<!--      <script src="/public/bower_components/angular-ui-select/dist/select.min.js"></script>-->
+      <script src="/public/bower_components/angular-ui-select/dist/select.min.js"></script>
       <script src="/public/bower_components/angular-ui-select/dist/select.js"></script>
-<!--      <script src="/public/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>-->
+      <script src="/public/bower_components/bootstrap-toggle/js/bootstrap-toggle.min.js"></script>
       <script src="/public/bower_components/bootstrap-toggle/js/bootstrap-toggle.js"></script>
-<!--      <script src="/public/bower_components/angular-ui-mask/dist/mask.min.js"></script>-->
+      <script src="/public/bower_components/angular-ui-mask/dist/mask.min.js"></script>
       <script src="/public/bower_components/angular-ui-mask/dist/mask.js"></script>
       <script src="/public/bower_components/angular-widget/angular-widget.js"></script>
-<!--      <script src="/public/bower_components/chart.js/dist/Chart.min.js"></script>-->
+      <script src="/public/bower_components/chart.js/dist/Chart.min.js"></script>
       <script src="/public/bower_components/chart.js/dist/Chart.js"></script>
-<!--      <script src="/public/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>-->
+      <script src="/public/bower_components/angular-chart.js/dist/angular-chart.min.js"></script>
       <script src="/public/bower_components/angular-chart.js/dist/angular-chart.js"></script>
-<!--      <script src="/public/bower_components/angular-daterangepicker/js/angular-daterangepicker.min.js"></script>-->
+      <script src="/public/bower_components/angular-daterangepicker/js/angular-daterangepicker.min.js"></script>
       <script src="/public/bower_components/angular-daterangepicker/js/angular-daterangepicker.js"></script>
       <script src="/public/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
       <script src="/public/bower_components/Blob/Blob.js"></script>
       <script src="/public/bower_components/jquery.inputmask/dist/jquery.inputmask.bundle.js"></script>
+-->
+      <script src="../public/bower_components/ng-tags-input/ng-tags-input.js"></script>
+<!-- >>>>>>> develop-->
 <!--
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.extensions.min.js" type="text/javascript"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.numeric.extensions.min.js" type="text/javascript"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.date.extensions.min.js" type="text/javascript"></script>
-      <script src="/public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.regex.extensions.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.extensions.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.numeric.extensions.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.date.extensions.min.js" type="text/javascript"></script>
+      <script src="../public/bower_components/jquery.inputmask/dist/min/inputmask/inputmask.regex.extensions.min.js" type="text/javascript"></script>
 -->
 
-<!--      <script src="/public/bower_components/leaflet/dist/leaflet.js"></script>-->
+<!--      <script src="../public/bower_components/leaflet/dist/leaflet.js"></script>-->
 <!--      <script src="bower_components/ng-context-menu/dist/ng-context-menu.js"></script>-->
     <!-- endbower -->
     <!-- endbuild -->
 
 
-<!--    <script src="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>-->
-      <script src="/public/bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+<!--    <script src="../public/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>-->
+      <script src="../public/bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
 <!--    <script src="vendor_components/bootstrap-daterangepicker-master/moment.js"></script>-->
 
 <!--    <script src="vendor_components/angular-daterangepicker.js"></script>-->
 
-      <script src="/public/bower_components/angular-utils-pagination/dirPagination.js"></script>
-<!--      <script src="/public/bower_components/ng-idle/angular-idle.min.js"></script>-->
-      <script src="/public/bower_components/ng-idle/angular-idle.js"></script>
-<!--      <script src="/public/vendor_components/flot/jquery.flot.min.js"></script>-->
-      <script src="/public/vendor_components/flot/jquery.flot.js"></script>
-<!--      <script src="/public/vendor_components/flot/jquery.flot.pie.min.js"></script>-->
-      <script src="/public/vendor_components/flot/jquery.flot.pie.js"></script>
-<!--      <script src="/public/vendor_components/flot/jquery.flot.time.min.js"></script>-->
-      <script src="/public/vendor_components/flot/jquery.flot.time.js"></script>
-<!--      <script src="/public/vendor_components/Blob.js-master/Blob.js"></script>-->
-      <script src="/public/vendor_components/leaflet-1.0.0-b1/leaflet.js"></script>
-      <script src="/public/vendor_components/angular-leaflet-directive-master/dist/angular-leaflet-directive.js"></script>
+      <script src="../public/bower_components/angular-utils-pagination/dirPagination.js"></script>
+<!--      <script src="../public/bower_components/ng-idle/angular-idle.min.js"></script>-->
+      <script src="../public/bower_components/ng-idle/angular-idle.js"></script>
+<!--      <script src="../public/vendor_components/flot/jquery.flot.min.js"></script>-->
+      <script src="../public/vendor_components/flot/jquery.flot.js"></script>
+<!--      <script src="../public/vendor_components/flot/jquery.flot.pie.min.js"></script>-->
+      <script src="../public/vendor_components/flot/jquery.flot.pie.js"></script>
+<!--      <script src="../public/vendor_components/flot/jquery.flot.time.min.js"></script>-->
+      <script src="../public/vendor_components/flot/jquery.flot.time.js"></script>
+<!--      <script src="../public/vendor_components/Blob.js-master/Blob.js"></script>-->
+      <script src="../public/vendor_components/leaflet-1.0.0-b1/leaflet.js"></script>
+      <script src="../public/vendor_components/angular-leaflet-directive-master/dist/angular-leaflet-directive.js"></script>
 <!--      <script src="http://cdn.leafletjs.com/leaflet-0.7.1/leaflet.js"></script>-->
-      <script src="/public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.js"></script>
+      <script src="../public/vendor_components/Leaflet.ExtraMarkers-master/src/leaflet.extra-markers.js"></script>
 <!--
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.extensions.min.js"></script>
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.numeric.extensions.min.js"></script>
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.date.extensions.min.js"></script>
-      <script src="/public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.regex.extensions.min.js"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.min.js" type="text/javascript"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/jquery.inputmask.min.js" type="text/javascript"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.extensions.min.js"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.numeric.extensions.min.js"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.date.extensions.min.js"></script>
+      <script src="../public/vendor_components/jquery.inputmask-3.x/dist/min/inputmask/inputmask.regex.extensions.min.js"></script>
 -->
-      <script src="/public/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js"></script>
+      <script src="../public/vendor_components/bootstrap-dropdowns-enhancement-master/dist/js/dropdowns-enhancement.js"></script>
+      
+      <script src = "../public/bower_components/ng-popup/dist/ngPopup.js"></script>
 
 <!--      <script src="http://bouil.github.io/angular-google-chart/ng-google-chart.js"></script>-->
 
@@ -696,7 +373,18 @@
 <!--      <script type="text/javascript" src="https://dadata.ru/static/js/lib/jquery.suggestions-15.12.min.js"></script>-->
       <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@17.5.0/dist/js/jquery.suggestions.min.js"></script>
 
-        <script src="scripts/app.js"></script>
+<!--        <script src="scripts/app.js"></script>-->
+        <script src="scripts/app-module.js"></script>
+        <script src="scripts/app-config.js"></script>
+        <script src="scripts/app-run.js"></script>
+        <script src="scripts/app-constant.js"></script>
+        <script src="scripts/app-filter.js"></script>
+        <script src="scripts/app-directive.js"></script>
+        
+        
+<!--        <script src="scripts/app-ng-route.js"></script>-->
+        <script src="scripts/app-ui-route.js"></script>
+
 <!--      <script src="scripts.min/app.min.js"></script>-->
 <!--       <script src="scripts.min/controllers/main.min.js"></script> -->
 <!--      <script src="scripts.min/controllers/notice.min.js"></script>-->
@@ -705,59 +393,71 @@
 <!--      Min controllers-->
 <!--        <script src="scripts.min/controllers.min.js"></script>          -->
 
-<!---->      <script src="scripts/controllers/main.js"></script>
+<!--      <script src="scripts/controllers/main.js"></script>-->
 
-       <script src="scripts/controllers/notice.js"></script>
+       <script src="components/portal-nmc-module/notices/notice.js"></script>
 
-     <script src="scripts/controllers/directory.js"></script>
-     <script src="scripts/controllers/objects.js"></script>
+     <!-- <script src="scripts/controllers/directory.js"></script> -->
+     <script src="components/portal-nmc-module/objects/objects-list/objects.js"></script>
+     <!-- <script src="scripts/controllers/objects-newlist.js"></script> -->
 
-     <script src="scripts/controllers/reports_use_svc.js"></script>
-     <script src="scripts/controllers/indicator.js"></script>
-       <script src="scripts/controllers/tariffs.js"></script>
-       <script src="scripts/controllers/report_settings.js"></script>
-       <script src="scripts/controllers/param_sets_use_svc.js"></script>
-       <script src="scripts/controllers/user-info.js"></script>
-       <script src="scripts/controllers/delivery.js"></script>
-       <script src="scripts/controllers/contacts.js"></script>
+     <script src="components/portal-nmc-module/reports/reports_use_svc.js"></script>
+     <script src="components/portal-nmc-module/indicators/water/indicator.js"></script>
+
+       <script src="components/portal-nmc-module/settings/tariffs/tariffs.js"></script>
+       <script src="components/portal-nmc-module/settings/report-settings/report-settings.js"></script>
+       <script src="components/portal-nmc-module/settings/param-sets/param_sets_use_svc.js"></script>
+       <!-- <script src="scripts/controllers/user-info.js"></script> -->
+       <script src="components/portal-nmc-module/settings/delivery/delivery.js"></script>
+       <script src="components/portal-nmc-module/settings/contacts/contacts.js"></script>
+       <script src="components/portal-nmc-module/settings/services/management-services.js"></script>
+
        <script src="scripts/controllers/idle.js"></script>
-       <script src="scripts/controllers/object_groups.js"></script>
-       <script src="scripts/controllers/monitor.js"></script>
-       <script src="scripts/controllers/monitor_map.js"></script>
-       <script src="scripts/controllers/objects_map.js"></script>
-       <script src="scripts/controllers/management-services.js"></script>
-       <script src="scripts/controllers/management-rma-objects.js"></script>
-       <script src="scripts/controllers/management-rma-data-sources.js"></script>
-       <script src="scripts/controllers/management-rma-clients.js"></script>
-       <script src="scripts/controllers/management-rma-devices.js"></script>
-       <script src="scripts/controllers/management-rma-users.js"></script>
-       <script src="scripts/controllers/management-rma-price.js"></script>
-       <script src="scripts/controllers/management-rma-organizations.js"></script>
-       <script src="scripts/controllers/management-rma-temp-sch.js"></script>
-       <script src="scripts/controllers/management-rma-modems.js"></script>
-       <script src="scripts/controllers/management-rma-device-models.js"></script>
 
-       <script src="scripts/controllers/settings-users.js"></script>
-       <script src="scripts/controllers/indicator-electricity.js"></script>
-       <script src="scripts/controllers/indicator-electricity-consumption.js"></script>
-       <script src="scripts/controllers/indicator-electricity-energy.js"></script>
-       <script src="scripts/controllers/indicator-electricity-specifications.js"></script>
-       <script src="scripts/controllers/indicator-electricity-pke.js"></script>
-       <script src="scripts/controllers/settings-notices.js"></script>
-       <script src="scripts/controllers/settings-tenants.js"></script>
-       <script src="scripts/controllers/settings-object-trees.js"></script>
-       <script src="scripts/controllers/settings-program.js"></script>
-       <script src="scripts/controllers/settings-meter-period-setting.js"></script>
+       <script src="components/portal-nmc-module/settings/object-groups/object-groups.js"></script>
+       <script src="components/portal-nmc-module/objects/monitor/monitor.js"></script>
+       <script src="components/portal-nmc-module/objects/monitor-map/monitor-map.js"></script>
+       <script src="components/portal-nmc-module/objects/objects-map/objects-map.js"></script>
+       
+       <script src="components/portal-nmc-module/management/objects/management-rma-objects.js"></script>
+       <script src="components/portal-nmc-module/management/data-sources/management-rma-data-sources.js"></script>
+       <script src="components/portal-nmc-module/management/clients/management-rma-clients.js"></script>
+       <script src="components/portal-nmc-module/management/devices/management-rma-devices.js"></script>
+       <script src="components/portal-nmc-module/management/users/management-rma-users.js"></script>
+       <script src="components/portal-nmc-module/management/prices/management-rma-price.js"></script>
+       <script src="components/portal-nmc-module/management/organizations/management-rma-organizations.js"></script>
+       <script src="components/portal-nmc-module/management/temperature-schedules/management-rma-temp-sch.js"></script>
+       <script src="components/portal-nmc-module/management/modems/management-rma-modems.js"></script>
+       <script src="components/portal-nmc-module/management/device-models/management-rma-device-models.js"></script>
 
-       <script src="scripts/controllers/log-view.js"></script>
-       <script src="scripts/controllers/log-sms.js"></script>
-      <script src="scripts/controllers/settings-object-view.js"></script>
-      <script src="scripts/controllers/about-program.js"></script>
-      <script src="scripts/controllers/impulse-indicator.js"></script>
+       <script src="components/portal-nmc-module/settings/users/settings-users.js"></script>
+
+       <script src="components/portal-nmc-module/indicators/electricity/indicator-electricity.js"></script>
+       <script src="components/portal-nmc-module/indicators/electricity/indicator-electricity-consumption.js"></script>
+       <script src="components/portal-nmc-module/indicators/electricity/indicator-electricity-energy.js"></script>
+       <script src="components/portal-nmc-module/indicators/electricity/indicator-electricity-specifications.js"></script>
+       <script src="components/portal-nmc-module/indicators/electricity/indicator-electricity-pke.js"></script>
+
+       <script src="components/portal-nmc-module/settings/notices/settings-notices.js"></script>
+       <script src="components/portal-nmc-module/settings/tenants/settings-tenants.js"></script>
+       <script src="components/portal-nmc-module/settings/object-trees/settings-object-trees.js"></script>
+       <script src="components/portal-nmc-module/settings/program//settings-program.js"></script>
+       <script src="components/portal-nmc-module/settings/meter-periods/settings-meter-period-setting.js"></script>
+
+       <script src="components/portal-nmc-module/logs/log-view.js"></script>
+       <script src="components/portal-nmc-module/logs/log-sms.js"></script>
+
+      <script src="components/portal-nmc-module/settings/object-views/settings-object-view.js"></script>
+      <script src="components/portal-nmc-module/settings/about-program/about-program.js"></script>
+
+      <script src="components/portal-nmc-module/indicators/impulse/impulse-indicator.js"></script>
+
       <script src="scripts/controllers/widget-container.js"></script>
-      <script src="scripts/controllers/documents-energo-passports.js"></script>
-      <script src="scripts/controllers/documents-energo-passport.js"></script>
-      <script src="scripts/controllers/documents-object-passport.js"></script>
+
+      <script src="components/portal-nmc-module/energy/documents-energo-passports.js"></script>
+      <script src="components/portal-nmc-module/energy/documents-energo-passport.js"></script>
+      
+      <script src="components/portal-nmc-module/settings/object-passport/documents-object-passport.js"></script>
 <!--
       <script src="scripts/controllers/documents-energo-passports1.js"></script>
       <script src="scripts/controllers/documents-energo-passports2.js"></script>
@@ -776,7 +476,10 @@
 <!---->
      <script src="scripts/directives/crud-grid-data-factory.js"></script>
      <script src="scripts/directives/crud-grid-directive-directories.js"></script>
+
        <script src="scripts/directives/crud-grid-directive-objects.js"></script>
+       <script src="scripts/directives/crud-grid-directive-objects-tree.js"></script>
+
        <script src="scripts/directives/ng-right-click.js"></script>
        <script src="scripts/directives/nmc-view-electricity.js"></script>
        <script src="scripts/directives/nmc-view-message-for-user.js"></script>
@@ -792,6 +495,15 @@
       <script src="scripts/directives/contenteditable.js"></script>
       <script src="scripts/directives/nmc-document-viewer.js"></script>
       <script src="scripts/directives/nmc-document-prop-viewer.js"></script>
+<!--<<<<<<< HEAD-->
+
+      <script src="scripts/directives/nmc-view-indicators.js"></script>
+      <script src="scripts/directives/nmc-view-indicators-container.js"></script>
+      <script src="scripts/directives/nmc-view-indicators-electricity.js"></script>
+      <script src="scripts/directives/nmc-view-indicators-impulse.js"></script>
+<!--=======-->
+      <script src="scripts/directives/show-zpoint-options-modal.js"></script>
+<!-- >>>>>>> develop-->
 <!---->
 
 <!--       Services -->
@@ -799,7 +511,10 @@
 <!--        <script src="scripts.min/services.min.js"></script>-->
 <!---->
        <script src="scripts/services/notification-factory.js"></script>
+
        <script src="scripts/services/object-service.js"></script>
+       <script src="scripts/services/objects-tree-service.js"></script>
+
        <script src="scripts/services/monitor-service.js"></script>
        <script src="scripts/services/indicator-service.js"></script>
        <script src="scripts/services/main-service.js"></script>
@@ -809,10 +524,92 @@
        <script src="scripts/services/security-check-service.js"></script>
       <script src="scripts/services/meter-periods-service.js"></script>
       <script src="scripts/services/energo-passport-service.js"></script>
+      <script src="scripts/services/date-time-service.js"></script>
 <!---->
 <!--         endbuild -->
 
        <script src="scripts/controllers/data-range-settings.js"></script>
+       
+      <script src = "components/shared/modal-resizable-draggable.js"></script>
+<!--       portalNMC module-->
+      <script src = "components/portal-nmc-module/main/main-helper-service.js"></script>
+      <script src = "components/portal-nmc-module/main/header.js"></script>
+      <script src = "components/portal-nmc-module/main/main.js"></script>
+      <script src = "components/portal-nmc-module/ptree-node-indicator-view/ptree-node-indicator-view.js"></script>
+       
+<!--       Components-->
+<!--             directive: scroll-->
+      <script src = "components/shared/when-scrolled.js"></script>
+            <!-- Date module           -->
+      <script src = "components/shared/date-module/date-module.js"></script>
+      <script src = "components/shared/date-module/date-module-service.js"></script>
+             
+              <!--   settingModeModule   setting-mode-module -->
+      <script src = "components/shared/setting-mode-module/setting-mode-module.js"></script>
+      <script src = "components/shared/setting-mode-module/setting-mode-service.js"></script>
+              <!--   contObjectModule   cont-object-module -->
+      <script src = "components/shared/cont-object-module/cont-object-module.js"></script>
+      <script src = "components/shared/cont-object-module/cont-object-service.js"></script>
+      <script src = "components/shared/cont-object-module/cont-object-building-service.js"></script>
+      
+       <!--   objectTreeModule   object-tree-module -->
+      <script src = "components/object-tree-module/object-tree-module.js"></script>
+      <script src = "components/object-tree-module/object-tree-module-config.js"></script>
+      <script src = "components/object-tree-module/object-tree-module-run.js"></script>
+      <script src = "components/object-tree-module/object-tree-service.js"></script>
+      <script src = "components/object-tree-module/cont-object-control-component/scroll-to-top-directive.js"></script>
+      
+<!--      zpoint widget container-->
+       <script src = "components/object-tree-module/object-tree-widget-container.js"></script>
+    <!--      Tree component -->
+      <script src = "components/object-tree-module/tree-component/tree-component.js"></script>             
+<!--      Tree navigate component -->
+      <script src = "components/object-tree-module/tree-navigate-component/tree-navigate-component.js"></script>             
+      <script src = "components/object-tree-module/tree-navigate-component/tree-navigate-component.service.js"></script>
+<!--      Tree info component -->
+      <script src = "components/object-tree-module/tree-info-component/tree-info-component.js"></script>
+    
+      <!--      Tree node info component -->
+      <script src = "components/object-tree-module/tree-node-info-component/tree-node-info-component.service.js"></script>          
+      <script src = "components/object-tree-module/tree-node-info-component/tree-node-info-component.js"></script>
+      <script src = "components/object-tree-module/tree-node-info-component/tree-node-view-select.js"></script>
+                                             
+               <!--   ptree-component   -->
+      <script src = "components/object-tree-module/ptree-component/ptree-component.js"></script>       
+      <script src = "components/object-tree-module/ptree-component/ptree-component.service.js"></script>
+        <!--  tree-element-node-component   -->
+      <script src = "components/object-tree-module/tree-node-notifications-component/tree-node-notifications-component.js"></script>
+      <script src = "components/object-tree-module/tree-node-notifications-component/tree-node-notifications-component.service.js"></script>
+      
+        <!--   info-component   -->
+      <script src = "components/shared/info-component/info-component.js"></script>
+        <!--   Component for chart   -->
+      <script src = "components/shared/text-label-into-chart.js"></script>
+      
+<!--      Cont object control component -->
+      <script src = "components/object-tree-module/cont-object-control-component/cont-object-control-component.js"></script>             
+      <script src = "components/object-tree-module/cont-object-control-component/cont-object-control-component.service.js"></script>
+      <script src = "components/object-tree-module/cont-object-control-component/cont-zpoint-type-filter.js"></script>
+      
+      <!--      tree node info view component -->
+      <script src = "components/object-tree-module/tree-node-info-view-component/tree-node-info-view-component.js"></script>
+      <script src = "components/object-tree-module/tree-node-info-view-component/tree-node-info-view-component.service.js"></script>
+      
+      <!--      Cont object monitor component -->
+      <link rel = "stylesheet" href = "components/object-tree-module/cont-object-monitor-component/cont-object-monitor-component.css"/>
+      <script src = "components/object-tree-module/cont-object-monitor-component/cont-object-monitor-component.js"></script>             
+      <script src = "components/object-tree-module/cont-object-monitor-component/cont-object-monitor-component.service.js"></script>
+      
+      <!--      Node control component -->
+      <script src = "components/object-tree-module/node-control-component/node-control-component.js"></script>
+      <!--      Cont zpoint monitor component -->
+      <script src = "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.service.js"></script>
+      <script src = "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.js"></script>      
+      <link rel = "stylesheet" href = "components/object-tree-module/cont-zpoint-monitor-component/cont-zpoint-monitor-component.css"/>
+      
+<!--      -->
+      <script src = "components/object-tree-module/cont-zpoint-cons-widget-component/cont-zpoint-cons-widget-component.service.js"></script>
+      <script src = "components/object-tree-module/cont-zpoint-cons-widget-component/cont-zpoint-cons-widget-component.js"></script>
 
       <!-- Metrics -->
       <script src="./../api/www-metrics"></script>

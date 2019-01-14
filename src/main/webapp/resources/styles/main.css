@@ -112,7 +112,7 @@ body {
 }
 
 .paddingTop10PC {
-	
+
 	padding-top: 10%;
 }
 
@@ -121,4 +121,14 @@ body {
 }
 .nmc-show{
 	display: block;
+}
+
+.nmc-login-logo {
+    color: #5a646d;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.nmc-bg-color {
+    background-color: #4a88d2;
 }

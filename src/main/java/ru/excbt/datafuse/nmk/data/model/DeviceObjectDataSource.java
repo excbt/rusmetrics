@@ -87,4 +87,18 @@ public class DeviceObjectDataSource extends AbstractAuditableModel implements Ac
 				&& this.subscrDataSourceId.equals(other.subscrDataSourceId);
 	}
 
+    @Override
+    public String toString() {
+        return "DeviceObjectDataSource{" +
+            ", deviceObjectId=" + deviceObjectId +
+            ", isActive=" + isActive +
+            ", subscrDataSource=" + subscrDataSource +
+            ", subscrDataSourceId=" + subscrDataSourceId +
+            ", subscrDataSourceAddr='" + subscrDataSourceAddr + '\'' +
+            ", version=" + version +
+            ", dataSourceTable='" + dataSourceTable + '\'' +
+            ", dataSourceTable1h='" + dataSourceTable1h + '\'' +
+            ", dataSourceTable24h='" + dataSourceTable24h + '\'' +
+            "} " + super.toString();
+    }
 }

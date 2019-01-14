@@ -231,7 +231,15 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 			return monthSstList;
 		}
 
+		if (monthSstList.get(0).getLocalPlaceId() == null) {
+		    return monthSstList;
+        }
+
 		LocalPlace localPlace = localPlaceService.findLocalPlace(monthSstList.get(0).getLocalPlaceId());
+
+		if (localPlace == null) {
+		    return monthSstList;
+        }
 
 		if (localPlace.getWeatherPlaceId() == null) {
 			return monthSstList;
@@ -251,11 +259,12 @@ public class LocalPlaceTemperatureSstService implements SecuredRoles {
 				if (forecastCalc.getCalcValue() != null && !forecastCalc.getCalcValue().equals(sst.getSstCalcValue())) {
 					sst.setSstCalcValue(forecastCalc.getCalcValue());
 
-					DateTime calcDateTime = forecastCalc.getLastModifiedDate() != null
-							? forecastCalc.getLastModifiedDate() : forecastCalc.getCreatedDate();
+
+					Date calcDateTime = forecastCalc.getLastModifiedDate() != null
+							? Date.from(forecastCalc.getLastModifiedDate()) : Date.from(forecastCalc.getCreatedDate());
 
 					if (calcDateTime != null) {
-						sst.setSstCalcDateTime(calcDateTime.toDate());
+						sst.setSstCalcDateTime(calcDateTime);
 					}
 				}
 			}

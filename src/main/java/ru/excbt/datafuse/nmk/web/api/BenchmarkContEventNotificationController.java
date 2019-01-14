@@ -1,10 +1,11 @@
 package ru.excbt.datafuse.nmk.web.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import ru.excbt.datafuse.nmk.data.service.*;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorService;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.mapper.SubscrContEventNotificationMapper;
 
 /**
@@ -21,8 +22,8 @@ public class BenchmarkContEventNotificationController extends SubscrContEventNot
 
 	private final BenchmarkService benchmarkService;
 
-    public BenchmarkContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper, BenchmarkService benchmarkService) {
-        super(subscrContEventNotifiicationService, subscrContEventNotifiicationStatusService, contEventMonitorService, contEventMonitorV3Service, contEventLevelColorService, contEventTypeService, contEventService, subscrContEventNotifiicationStatusV2Service, objectAccessService, mapper);
+    public BenchmarkContEventNotificationController(SubscrContEventNotificationService subscrContEventNotifiicationService, SubscrContEventNotificationStatusService subscrContEventNotifiicationStatusService, ContEventMonitorService contEventMonitorService, ContEventMonitorV3Service contEventMonitorV3Service, ContEventLevelColorService contEventLevelColorService, ContEventTypeService contEventTypeService, ContEventService contEventService, SubscrContEventNotificationStatusV2Service subscrContEventNotifiicationStatusV2Service, ObjectAccessService objectAccessService, SubscrContEventNotificationMapper mapper, BenchmarkService benchmarkService, PortalUserIdsService portalUserIdsService) {
+        super(subscrContEventNotifiicationService, subscrContEventNotifiicationStatusService, contEventMonitorService, contEventMonitorV3Service, contEventLevelColorService, contEventTypeService, contEventService, subscrContEventNotifiicationStatusV2Service, objectAccessService, mapper, portalUserIdsService);
         this.benchmarkService = benchmarkService;
     }
 

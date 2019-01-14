@@ -1,0 +1,261 @@
+<div  ng-show="loading" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="objects_edit_2nd_menu_item" role="presentation" class=""><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="data_sources_2nd_menu_item" role="presentation" class=""><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a>           </li>
+        <li id="devices_2nd_menu_item" role="presentation" class=""><a id="devicesTab" class="nmc-main-tab-button" href="#/management/devices/" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li id="modems_edit_2nd_menu_item" role="presentation" class="active">
+            <a class="nmc-main-tab-button" 
+               href="" 
+               aria-controls="modems" 
+               role="tab" 
+               data-target="#modems" 
+               data-toggle="tab">Модемы
+            </a>
+        </li>
+        <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
+            id="models_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/device-models/" 
+               aria-controls="device-models" 
+               role="tab" 
+               data-target="#device-models" 
+               data-toggle="tab">Модели приборов
+            </a>
+        </li>        
+        <li id="organizations_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/organizations/" 
+               aria-controls="organizations" 
+               role="tab" 
+               data-target="#organizations" 
+               data-toggle="tab">Организации
+            </a>
+        </li>
+        <li id="clients_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation" class="" ><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+        <li id="temperature_schedules_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="modemsTab">
+      </div>
+    </div>
+</div>  
+<div class="btn-toolbar marginBottom10">
+    <button class="btn nmc-main-add-button" ng-click="addModem()">Добавить модем</button>
+</div>
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-md-1 nmc-td-for-button">
+
+            </th>
+            <th ng-repeat="column in ctrlSettings.modemColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                {{column.caption}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
+</table>
+
+<div class="nmc-data-sources-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-md-1 nmc-td-for-buttons">
+
+            </th>
+            <th ng-repeat="column in ctrlSettings.modemColumns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                {{column.caption}}
+                <i class="glyphicon" ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" ng-show="orderBy.field == '{{column.name}}'"></i>
+            </th>
+            <th class="col-md-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="modem in data.modems | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-button">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Свойства организации" class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" ng-click="selectedItem(modem)" data-target="#showModemOptionModal" data-toggle="modal"></i>
+                        
+                    </div>
+                </div>
+            </td>
+            <td ng-repeat="column in ctrlSettings.modemColumns" ng-class="column.class">
+                <div ng-switch on="column.type">
+                    <span ng-switch-when="name" ng-class="">{{modem[column.name] || "Без названия"}}<span ng-show="isSystemuser()"> (id = {{modem['id']}})</span>
+                    </span>
+                    <span ng-switch-when="checkbox" ng-class="">
+                        <input type="checkbox" ng-model="modem[column.name]" disabled/>
+                    </span>
+                    <span ng-switch-default >
+                        {{modem[column.name]}}
+                    </span>
+                </div>
+            </td>
+
+            <td class="col-md-1">
+                <div class="btn-toolbar">
+<!--
+                    <div class="btn-group pull-right">                   
+                        <i title="Удалить модем" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(modem)" data-target="#deleteModemModal" data-toggle="modal"></i>
+                    </div>
+-->
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<!--Show modem options-->
+<div id="showModemOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showModemOptionLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showModemOptionLabel" class="nmc-h3">
+				Модем
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputRawModemModelName">Модель</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!(data.currentModem.rawModemModelName>'')}">
+                                        <input class="form-control nmc-text-input-form" type="text" id="inputRawModemModelName" placeholder="Наименование"  ng-model="data.currentModem.rawModemModelName"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputModemType">Тип</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!data.currentModem.rawModemType}"> 
+                                        <select class="form-control nmc-select-form" 
+                                                ng-model="data.currentModem.rawModemType"
+                                                ng-options="mtype.keyname as mtype.caption for mtype in data.modemTypes"
+                                                >
+                                        </select>                                        
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputIdentity">Вид идентификации</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error':!data.currentModem.rawModemModelIdentity}"> 
+                                        <select class="form-control nmc-select-form" 
+                                                ng-model="data.currentModem.rawModemModelIdentity"
+                                                ng-options="mtype.keyname as mtype.caption for mtype in data.modemIdentities"
+                                                >
+                                        </select>                                        
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Описание</label>
+                                </td>
+                                <td class="nmc-text-align-left">
+                                    <textarea class="form-control nmc-textarea-form" 
+                                              id="inputDescription" 
+                                              placeholder="" 
+                                              ng-model="data.currentModem.rawModemModelDescription">
+                                    </textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-3">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="data.currentModem.isDialup">Поддержка автодозвона
+                                </td>                                
+                            </tr>                            
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="sendModemToServer(data.currentModem)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentModem')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!-- window: delete modem-->
+<div id="deleteModemModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteModemLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteModemLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.currentModem[extraProps.nameColumnName] || data.currentModem[extraProps.idColumnName]}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+<!--                            -->
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(data.currentModem);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentModem');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>

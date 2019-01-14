@@ -3,6 +3,7 @@ package ru.excbt.datafuse.nmk.data.model;
 import org.hibernate.annotations.*;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
 import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.model.markers.DeletableObjectId;
 import ru.excbt.datafuse.nmk.data.model.markers.ExCodeObject;
 import ru.excbt.datafuse.nmk.data.model.markers.ExSystemObject;
@@ -57,7 +58,7 @@ import lombok.Setter;
 @JsonInclude(Include.NON_NULL)
 @Getter
 @Setter
-@Cache(usage = CacheConcurrencyStrategy.NONE)
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ContObject extends AbstractAuditableModel
 		implements ExSystemObject, ExCodeObject, DeletableObjectId, ManualObject, PersistableBuilder<ContObject,Long> {
 
@@ -167,6 +168,10 @@ public class ContObject extends AbstractAuditableModel
     private Map<String, MeterPeriodSetting> meterPeriodSettings = new HashMap<>();
 
 
+    @Column(name = "flex_data")
+    @Type(type = "JsonbAsString")
+    private String flexData;
+
 	/**
 	 *
 	 * @return
@@ -237,8 +242,67 @@ public class ContObject extends AbstractAuditableModel
         setNumOfStories(contObject.getNumOfStories());
     }
 
+    /**
+     *
+     * @param contObjectDTO
+     */
+	public void updateFromContObjectDTO (ContObjectDTO contObjectDTO) {
+        setVersion(contObjectDTO.getVersion());
+        setName(contObjectDTO.getName());
+        setFullName(contObjectDTO.getFullName());
+        setFullAddress(contObjectDTO.getFullAddress());
+        setNumber(contObjectDTO.getNumber());
+        setDescription(contObjectDTO.getDescription());
+        setCurrentSettingMode(contObjectDTO.getCurrentSettingMode());
+        setComment(contObjectDTO.getComment());
+        setOwner(contObjectDTO.getOwner());
+        setOwnerContacts(contObjectDTO.getOwnerContacts());
+        setCwTemp(contObjectDTO.getCwTemp());
+        setHeatArea(contObjectDTO.getHeatArea());
+        setTimezoneDefKeyname(contObjectDTO.getTimezoneDefKeyname());
+        setBuildingType(contObjectDTO.getBuildingType());
+        setBuildingTypeCategory(contObjectDTO.getBuildingTypeCategory());
+        setNumOfStories(contObjectDTO.getNumOfStories());
+        setFlexData(contObjectDTO.getFlexData());
+    }
+
     public boolean haveDaData() {
 	    return _daDataSraw != null && _daDataSraw != "";
     }
 
+
+    @Override
+    public String toString() {
+        return "ContObject{" +
+            "name='" + name + '\'' +
+            ", fullName='" + fullName + '\'' +
+            ", fullAddress='" + fullAddress + '\'' +
+            ", number='" + number + '\'' +
+            ", owner='" + owner + '\'' +
+            ", ownerContacts='" + ownerContacts + '\'' +
+            ", currentSettingMode='" + currentSettingMode + '\'' +
+            ", settingModeMDate=" + settingModeMDate +
+            ", description='" + description + '\'' +
+            ", comment='" + comment + '\'' +
+            ", cwTemp=" + cwTemp +
+            ", heatArea=" + heatArea +
+            ", version=" + version +
+            ", contManagements=" + contManagements +
+            ", timezoneDefKeyname='" + timezoneDefKeyname + '\'' +
+            ", exSystemKeyname='" + exSystemKeyname + '\'' +
+            ", exCode='" + exCode + '\'' +
+            ", deleted=" + deleted +
+            ", isManual=" + isManual +
+            ", _haveSubscr=" + _haveSubscr +
+            ", _daDataSraw='" + _daDataSraw + '\'' +
+            ", isAddressAuto=" + isAddressAuto +
+            ", isValidFiasUUID=" + isValidFiasUUID +
+            ", isValidGeoPos=" + isValidGeoPos +
+            ", buildingType='" + buildingType + '\'' +
+            ", buildingTypeCategory='" + buildingTypeCategory + '\'' +
+            ", numOfStories=" + numOfStories +
+            ", meterPeriodSettings=" + meterPeriodSettings +
+            ", flexData='" + flexData + '\'' +
+            "} " + super.toString();
+    }
 }

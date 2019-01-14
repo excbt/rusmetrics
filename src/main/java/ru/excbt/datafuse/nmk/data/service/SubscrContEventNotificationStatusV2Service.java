@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.keyname.ContEventLevelColorV2;
+import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.model.support.CityContObjects;
 import ru.excbt.datafuse.nmk.data.model.support.CityMonitorContEventsStatusV2;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
@@ -26,6 +26,7 @@ import ru.excbt.datafuse.nmk.data.model.types.ContEventLevelColorKeyV2;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.data.model.support.CounterInfoMap;
 import ru.excbt.datafuse.nmk.data.model.ids.SubscriberParam;
+import ru.excbt.datafuse.nmk.service.ContEventMonitorV3Service;
 import ru.excbt.datafuse.nmk.service.utils.RepositoryUtil;
 
 @Service
@@ -52,29 +53,29 @@ public class SubscrContEventNotificationStatusV2Service {
     /**
 	 *
 	 * @param contObjects
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 * @param datePeriod
 	 * @param noGreenColor
 	 * @return
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<CityMonitorContEventsStatusV2> selectCityMonitoryContEventsStatusV2(
-			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
-			Boolean noGreenColor) {
+        final PortalUserIds portalUserIds, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
+        Boolean noGreenColor) {
 
 	    if (contObjects.isEmpty()) {
 	        return new ArrayList<>();
         }
 
 		List<MonitorContEventNotificationStatusV2> resultObjects = selectMonitorContEventNotificationStatusCollapseV2(
-				subscriberParam, contObjects, datePeriod, noGreenColor);
+				portalUserIds, contObjects, datePeriod, noGreenColor);
 
 		List<CityMonitorContEventsStatusV2> result = CityContObjects.makeCityContObjects(resultObjects,
 				CityMonitorContEventsStatusV2.FACTORY_INSTANCE);
 
 		// Calculate all city contEventCount
 		final Map<UUID, Long> cityEventCount = contEventMonitorV3Service
-				.selectCityContObjectMonitorEventCount(subscriberParam);
+				.selectCityContObjectMonitorEventCount(portalUserIds);
 
 		result.forEach((i) -> {
 			Long cnt = cityEventCount.get(i.getCityFiasUUID());
@@ -86,7 +87,7 @@ public class SubscrContEventNotificationStatusV2Service {
 
 	/**
 	 *
-	 * @param subscriberParam
+	 * @param portalUserIds
 	 * @param contObjects
 	 * @param datePeriod
 	 * @param noGreenColor
@@ -94,9 +95,9 @@ public class SubscrContEventNotificationStatusV2Service {
 	 */
 	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<MonitorContEventNotificationStatusV2> selectMonitorContEventNotificationStatusCollapseV2(
-			final SubscriberParam subscriberParam, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
+			final PortalUserIds portalUserIds, final List<ContObject> contObjects, final LocalDatePeriod datePeriod,
 			Boolean noGreenColor) {
-		checkNotNull(subscriberParam);
+		checkNotNull(portalUserIds);
 		checkNotNull(contObjects);
 		checkNotNull(datePeriod);
 		checkState(datePeriod.isValidEq());
@@ -114,15 +115,15 @@ public class SubscrContEventNotificationStatusV2Service {
 		}
 
 		CounterInfoMap allNotificationsMap = new CounterInfoMap(subscrContEventNotificationService
-				.selectContEventNotificationCounterInfo(subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
+				.selectContEventNotificationCounterInfo(portalUserIds.getSubscriberId(), contObjectIds, datePeriod));
 
 		CounterInfoMap allNewNotificationsMap = new CounterInfoMap(
 				subscrContEventNotificationService.selectContEventNotificationCounterInfo(
-						subscriberParam.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
+						portalUserIds.getSubscriberId(), contObjectIds, datePeriod, Boolean.TRUE));
 
 		CounterInfoMap contallEventTypesMap = new CounterInfoMap(
 				subscrContEventNotificationService.selectContObjectEventTypeGroupCollapseCounterInfo(
-						subscriberParam.getSubscriberId(), contObjectIds, datePeriod));
+						portalUserIds.getSubscriberId(), contObjectIds, datePeriod));
 
 		Map<Long, List<ContEventMonitorX>> monitorContObjectsMap = contEventMonitorV3Service
 				.getContObjectsContEventMonitorMap(contObjectIds);

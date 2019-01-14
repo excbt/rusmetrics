@@ -1,5 +1,8 @@
 package ru.excbt.datafuse.nmk.web.rest;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -8,9 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.excbt.datafuse.nmk.data.model.ContObject;
 import ru.excbt.datafuse.nmk.data.model.Subscriber;
+import ru.excbt.datafuse.nmk.data.model.dto.ContObjectDTO;
 import ru.excbt.datafuse.nmk.data.service.ContObjectService;
 import ru.excbt.datafuse.nmk.data.service.ObjectAccessService;
 import ru.excbt.datafuse.nmk.data.service.RmaSubscriberService;
+import ru.excbt.datafuse.nmk.data.service.util.FlexDataFactory;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
+import ru.excbt.datafuse.nmk.service.mapper.ContObjectMapper;
 import ru.excbt.datafuse.nmk.utils.UrlUtils;
 import ru.excbt.datafuse.nmk.web.RmaControllerTest;
 
@@ -36,6 +43,9 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
     @Autowired
 	private ObjectAccessService objectAccessService;
 
+    @Autowired
+    private ContObjectMapper contObjectMapper;
+
 	private Long testSubscriberId;
 
 	/**
@@ -43,7 +53,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	 */
 	@Before
 	public void initTestSubscriberId() {
-		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(EXCBT_RMA_SUBSCRIBER_ID);
+		List<Subscriber> subscribers = rmaSubscriberService.selectRmaSubscribers(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(subscribers.size() > 0);
 		testSubscriberId = subscribers.get(0).getId();
 	}
@@ -72,20 +82,27 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Test
 	@Transactional
 	public void testContObjectCRUD() throws Exception {
-		ContObject contObject = new ContObject();
-		contObject.setComment("Created by Test");
-		contObject.setTimezoneDefKeyname("MSK");
-		contObject.setName("Cont Object TEST");
+		ContObjectDTO contObjectDTO = new ContObjectDTO();
+        contObjectDTO.setComment("Created by Test");
+        contObjectDTO.setTimezoneDefKeyname("MSK");
+        contObjectDTO.setName("Cont Object TEST");
 
-		Long contObjectId = _testCreateJson(UrlUtils.apiRmaUrl("/contObjects"), contObject);
+		Long contObjectId = _testCreateJson(UrlUtils.apiRmaUrl("/contObjects"), contObjectDTO);
 
 		_testGetJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
 
-		contObject = contObjectService.findContObjectChecked(contObjectId);
-		contObject.setCurrentSettingMode("summer");
-		_testUpdateJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId), contObject);
+        {
+            ContObject contObject = contObjectService.findContObjectChecked(contObjectId);
 
-		_testDeleteJson(UrlUtils.apiRmaUrl("/contObjects/" + contObjectId));
+            contObjectDTO = contObjectMapper.toDto(contObject);
+        }
+
+        contObjectDTO.setFlexData(FlexDataFactory.createFlexData1().toString());
+
+        contObjectDTO.setCurrentSettingMode("summer");
+		_testUpdateJson("/api/rma/contObjects/" + contObjectId, contObjectDTO);
+
+		_testDeleteJson("/api/rma/contObjects/" + contObjectId);
 	}
 
 	@Test
@@ -103,7 +120,7 @@ public class RmaContObjectResourceTest extends RmaControllerTest {
 	@Test
 	@Transactional
 	public void testSubscrContObjectsUpdate() throws Exception {
-		List<ContObject> availableContObjects = objectAccessService.findRmaAvailableContObjects(testSubscriberId, EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContObject> availableContObjects = objectAccessService.findRmaAvailableContObjects(testSubscriberId, TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		List<Long> addContObjects = new ArrayList<>();
 		List<Long> currContObjects = objectAccessService.findContObjectIds(testSubscriberId);
 		for (int i = 0; i < availableContObjects.size(); i++) {

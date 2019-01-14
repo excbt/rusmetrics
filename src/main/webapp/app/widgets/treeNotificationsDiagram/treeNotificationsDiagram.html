@@ -1,0 +1,210 @@
+<!--<script src="/app/widgets/treeNotificationsDiagram/treeNotificationsDiagramService.js"></script>-->
+<div class="tree-notif-widget" ng-controller="treeNotificationsDiagramWidgetCtrl as widgetVm">
+    <div class="container-fluid">        
+<!--
+        <div style = "display: none" class="row">
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-1">
+                        <img height="16" width="16" ng-src="{{data.imgPath}}">
+                    </div>
+                    <div class = "col-xs-10">                        
+                        <div class = "nmc-cw-widget-zpname" ng-bind="widgetOptions.zpointName"></div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class = "col-xs-12">
+                        <label class = "nmc-cw-widget-label">Период:</label>
+                        <select class="form-control nmc-select-form nmc-cw-widget-modes"
+                                ng-model = "data.currentMode"
+                                ng-options = "mode as mode.caption for mode in data.MODES"
+                                ng-change = "modeChange()">
+                        </select>
+                    </div>
+                </div>                
+            </div>
+            <div class = "col-xs-6">
+                <div class = "row">
+                    <div class = "col-xs-6 nmc-cw-widget-btnpanel">
+-->
+<!--
+                        <a href="" class = "nmc-cw-widget-a-status">
+
+                            <img class = "nmc-cw-widget-statusimg"                              
+                             height = "40" width = "40"
+                                 ng-attr-id = "{{'zpStatusImg' + widgetOptions.contZpointId}}"
+                             ng-src = "{{data.zpointStatus}}" 
+                             ng-attr-title = {{data.zpointStatusTitle}}>        
+
+                        </a>
+                        <a href="" class = "nmc-cw-widget-btn marginRight10"
+                           ng-click = "openNotices()">
+                            <img height = "30" width = "40" 
+                                 ng-src = "{{widgetPath + '/notices.png'}}" 
+                                 title = "Открыть уведомления"/>
+                        </a>
+                        <a href=""
+                           class = "nmc-cw-widget-btn"
+                           ng-click = "getIndicators()">        
+                            <img height = "40" width = "40" 
+                                 ng-src = "{{widgetPath + '/indicators.png'}}" 
+                                 title = "Открыть показания"/>
+                        </a>
+-->
+<!--
+                    </div>
+                    <div class = "col-xs-6 nmc-cw-widget-temppanel">                        
+                    </div>
+                </div>
+            </div>
+        </div>
+-->
+        <div class = "row">
+            <div class = "col-xs-12 nmc-text-align-center">
+                <span class = "text-primary">{{widgetVm.data.currentChartMode.chartCaption}}</span> событий
+            </div>
+        </div>
+        <br>
+        <div class="row">            
+            <div class = "col-xs-11 noPadding">
+<!--
+                <div ng-show = "widgetVm.presentDataFlag === false"
+                     class = "nmc-text-align-center">                    
+-->
+<!--                        <span class="glyphicon glyphicon-ban-circle"></span> Данные за указанный период не были загружены.-->
+<!--                </div>-->
+                <div ng-show = "widgetVm.presentDataFlag === true">
+<!--                  style = "position: relative"-->
+<!--                   <label style = "position: absolute; left: 0; right: 0; margin: 0; top: 50%; text-align: center; transform: translateY(-50%); color: lightblue; font-size: xx-large; width: 300px;">{{widgetVm.data.eventsCount}}</label>-->
+                    <canvas id="doughnut"
+                           style = "height: 150px;  width: 300px;"                           
+                            class="chart chart-doughnut" 
+                            chart-data="widgetVm.barChart.data"
+                            chart-labels="widgetVm.barChart.labels"                              
+                            chart-options="widgetVm.barChart.options"
+                            chart-click = "widgetVm.chartClick"
+                            chart-colors = "widgetVm.barChart.colors"
+                            >
+                    </canvas>
+                </div>
+            </div>
+            
+            <div class = "col-xs-1 noPadding">
+               <i ng-attr-id = "{{'tree-chart-legend-btn-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "btn btn-xs glyphicon glyphicon-chevron-down"></i>
+                <div style = "position: absolute; width: 100px; display: none;">
+                    <div ng-attr-id = "{{'tree-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "tree-chart-legend"></div>
+                </div>
+            </div>
+            
+<!--
+            <div class = "col-xs-1" ng-show = "presentDataFlag === true">
+               <div ng-repeat = "chartMode in data.CHART_MODES" ng-click = "chartModeChange(chartMode)">
+                   <p type = "button" ng-class = "chartMode.class"
+                      ng-attr-title = "{{chartMode.caption}}" 
+                   ></p>
+               </div>
+            </div>
+-->
+<!--
+            <div class = "col-xs-6">
+                <h3>Список объектов</h3>
+                <div style = "border: 1px #aaa solid; max-height: 300px; overflow: auto">                       
+                    <div ng-repeat = "contObject in data.contObjectList track by $index">
+                        {{contObject.contObjectId}}
+                    </div>
+                </div>    
+            </div>            
+-->
+        </div>
+<!--
+        <div class="row">            
+            <div class = "col-xs-12">
+                <div ng-attr-id = "{{'cw-chart-legend-' + widgetVm.data.ptreeNodeId + widgetVm.widgetOptions.chartMode}}" class = "cw-chart-legend"></div>
+            </div>
+        </div>
+-->
+    </div>
+
+    <!-- modal window -->
+    <div id="objectListModal" class="modal fade nmc-modal-window" role="dialog"
+        aria-labelledby="objectListModalLabel" tabindex="-1" data-backdrop="static">
+
+        <div class="modal-dialog  modal-content">
+
+            <div class="modal-header nmc-modal-header">
+                <button type="button" 
+                        class="close nmc-close-button" 
+                        data-dismiss="modal" 
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h3 id="objectListModalLabel" 
+                    class="nmc-h3">
+                    Список объектов учета 
+                </h3>
+            </div>
+            <div class="modal-body nmc-modal-body normal-font">
+              <div class = "container-fluid">
+                <div class = "row-fluid">
+                    <div ng-if = "widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length <= widgetVm.CONT_OBJECT_LIST_LENGTH" 
+                      class = "noPaddingBottom marginBottom10 nmc-object-list-a">
+                       <table class = "table table-lighter table-striped table-condensed table-hover nmc-main-table noMarginBottom">
+                           <tr class = "nmc-main-table-header">
+                               <th>
+                                   Название объекта
+                               </th>
+                               <th>
+                                   Адрес
+                               </th>
+                           </tr>
+<!--                           <tr ng-repeat = "contObject in widgetVm.data.contObjectList track by $index"> -->
+                            <tr ng-repeat = "(key, contObject) in widgetVm.data.contObjectHashTable">
+                               <td ng-show = "!contObject.isLoaded" colspan = "2">
+                                   <i class="fa fa-spinner fa-spin"></i> Загрузка объекта...
+                               </td>
+                               <td>
+                                   {{contObject.fullName || contObject.contObjectId}}
+                               </td>
+                               <td>
+                                   {{contObject.fullAddress}}
+                               </td>
+                           </tr>
+                        </table>
+                    </div>
+                    <div ng-if = "widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length > widgetVm.CONT_OBJECT_LIST_LENGTH"
+                        class = "noPaddingBottom marginBottom10 nmc-object-list-a">
+<!--                        Тут должно быть дерево объектов...-->
+<!--                       filter-array = "widgetVm.data.contObjectList"-->
+                        <ptree-component 
+                            
+                        ptree-node = "widgetVm.widgetOptions.ptreeNode" 
+                           
+                           filter-hash-table = "widgetVm.data.contObjectHashTable">
+                            
+                        </ptree-component>
+                    </div>
+<!--
+                    <div>
+                        {{widgetVm.getObjectKeys(widgetVm.data.contObjectHashTable).length}}
+                    </div>
+-->
+                  </div>                
+                </div>
+            </div>
+            <div class="modal-footer nmc-modal-footer">
+                    <div class="container-fluid">
+
+                        <div class="row">
+                            <div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">
+                                <button class="btn btn-xs btn-default btn-block nmc-cancel-button" 
+                                        data-dismiss="modal"
+                                        ng-click="exit('#objectListModal');">
+                                    ОК
+                                </button>
+                            </div>
+                        </div>
+                    </div>		
+            </div>
+        </div>
+    </div>
+</div>

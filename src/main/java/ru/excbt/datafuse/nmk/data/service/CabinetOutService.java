@@ -89,13 +89,12 @@ public class CabinetOutService {
                     continue;
                 }
 
-                if (destZP.get().getDeviceObjects().size() == 0) {
-                    log.error("deviceObject size check failed");
+                if (destZP.get().getDeviceObject() == null) {
+                    log.error("deviceObject is null");
                     continue;
                 }
 
-                Optional<DeviceObject> deviceObject = destZP.get().getDeviceObjects().stream()
-                    .filter((d) -> d.getId().equals(meterData.getDeviceObjectId())).findFirst();
+                Optional<DeviceObject> deviceObject = Optional.of(destZP.get().getDeviceObject());
 
                 if (!deviceObject.isPresent()) {
                     log.error("deviceObject presence check failed");
@@ -122,7 +121,7 @@ public class CabinetOutService {
 
     private void importImpulseData(ContZPoint contZPoint, CabinetOutMeterData meterData, ZonedDateTime dataDate){
         ContServiceDataImpulse dataImpulse = new ContServiceDataImpulse();
-        dataImpulse.setContZpointId(contZPoint.getId());
+        dataImpulse.setContZPointId(contZPoint.getId());
         dataImpulse.setDataDate(LocalDateUtils.asDate(meterData.getInsdDateTime().toLocalDateTime()));
         dataImpulse.setDeviceObjectId(meterData.getDeviceObjectId());
         dataImpulse.setTimeDetailType(CABINET_OUT_TIME_DETAIL.keyName());

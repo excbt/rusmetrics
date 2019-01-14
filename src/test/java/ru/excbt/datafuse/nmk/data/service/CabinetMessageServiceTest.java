@@ -24,10 +24,12 @@ import ru.excbt.datafuse.nmk.data.model.CabinetMessageType;
 import ru.excbt.datafuse.nmk.data.model.dto.CabinetMessageDTO;
 import ru.excbt.datafuse.nmk.data.model.ids.PortalUserIds;
 import ru.excbt.datafuse.nmk.data.repository.CabinetMessageRepository;
+import ru.excbt.datafuse.nmk.data.support.TestExcbtRmaIds;
 import ru.excbt.datafuse.nmk.service.mapper.CabinetMessageMapper;
 import ru.excbt.datafuse.nmk.utils.ExcbtSubscriberMock;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
@@ -87,7 +89,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
             cabinetMessageResponseDTO.setMessageDirection(CabinetMessageDirection.OUT.name());
             cabinetMessageResponseDTO.setResponseToId(i.getId());
             return cabinetMessageService.saveResponse(cabinetMessageResponseDTO, portalUserIds);
-        }).findFirst().ifPresent(c -> {
+        }).filter(Objects::nonNull).findFirst().ifPresent(c -> {
             log.info("Created CabinetMessage:{}", c.toString());
         });
 
@@ -129,7 +131,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
 
     @Override
     public long getSubscriberId() {
-        return EXCBT_RMA_SUBSCRIBER_ID;
+        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID;
     }
 
     /*
@@ -137,7 +139,7 @@ public class CabinetMessageServiceTest extends JpaSupportTest {
      */
     @Override
     public long getSubscrUserId() {
-        return EXCBT_RMA_SUBSCRIBER_USER_ID;
+        return TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_USER_ID;
     }
 
 

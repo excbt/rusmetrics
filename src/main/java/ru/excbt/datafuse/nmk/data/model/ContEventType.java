@@ -30,7 +30,7 @@ import ru.excbt.datafuse.nmk.data.model.markers.DisabledObject;
 @Table(name = "cont_event_type")
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Getter
 @Setter
 public class ContEventType extends AbstractPersistableEntity<Long> implements DevModeObject, DisabledObject {

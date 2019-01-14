@@ -12,4 +12,8 @@ public interface HeatRadiatorTypeMapper {
 
     HeatRadiatorTypeDto heatRadiatorTypeToDto (HeatRadiatorType heatRadiatorType);
 
+    default HeatRadiatorType heatRadiatorTypeFromId(Long id) {
+        return id == null ? null : new HeatRadiatorType().id(id);
+    }
+
 }

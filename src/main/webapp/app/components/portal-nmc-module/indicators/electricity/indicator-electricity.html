@@ -1,0 +1,60 @@
+<div class="container-fluid">
+    <div class="row paddingTop10 paddingLeft20">
+        <div  ng-show="loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+        <div class="col-md-12 noPadding nmc-main-workspace-header"> 
+            <h3 class="noMargin nmc-page-header">
+                Объект &lt; {{contObjectName}} <span ng-if="isSystemuser()">(id = {{contObject}})</span> &gt; - &lt; {{contZPointName}} <span ng-if="isSystemuser()"> (id = {{contZPoint}}) </span>&gt;
+            </h3>
+            <h4 class="nmc-h4"
+                ng-if="deviceModel || deviceSN">
+                Прибор учета 
+                <span ng-if="deviceModel">: <span ng-bind="deviceModel"></span></span> 
+                <span ng-if="deviceSN">, s\n: <span ng-bind="deviceSN"></span></span>
+            </h4>
+        </div>
+        <div class="col-md-12 noPadding nmc-main-workspace-header">
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+          <!-- Навигационная полоса -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li id="consumption_2nd_menu_item" role="presentation" class="active">
+                    <a id="consumptionTab" class="nmc-main-tab-button" href="" aria-controls="consumption" data-target="#consumption" role="tab" data-toggle="tab" ng-click="initCons()">Потребление
+                    </a>
+                </li>        
+                <li id="energy_profile_2nd_menu_item" role="presentation" class="">
+                    <a id="energyTab" class="nmc-main-tab-button" href="" aria-controls="energy" data-target="#energy" role="tab" data-toggle="tab" ng-click="initProfile()">Энергетический профиль
+                    </a>
+                </li>
+                <li id="specifications_2nd_menu_item" role="presentation" class="">
+                    <a id="specificationsTab" class="nmc-main-tab-button" href="" aria-controls="specifications" data-target="#specifications" role="tab" data-toggle="tab" ng-click="initTech()">Технические характеристики
+                    </a>
+                </li>
+                <li id="pke_2nd_menu_item" role="presentation" class="">
+                    <a id="pkeTab" class="nmc-main-tab-button" href="" aria-controls="pke" data-target="#pke" role="tab" data-toggle="tab" ng-click="initPke()">ПКЭ
+                    </a>
+                </li>  
+            </ul>
+
+            <div class="tab-content">
+              <div role="tabpanel" class="tab-pane fade in active" id="consumption">
+                  <div ng-include="'../app/components/portal-nmc-module/indicators/electricity/indicator-electricity-consumption.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="energy">
+                  <div ng-include src="'../app/components/portal-nmc-module/indicators/electricity/indicator-electricity-energy.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="specifications">
+                  <div ng-include src="'../app/components/portal-nmc-module/indicators/electricity/indicator-electricity-specifications.html'"></div>
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="pke">
+                  <div ng-include src="'../app/components/portal-nmc-module/indicators/electricity/indicator-electricity-pke.html'"></div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>

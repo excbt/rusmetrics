@@ -17,22 +17,27 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 import ru.excbt.datafuse.nmk.data.domain.AbstractAuditableModel;
+import ru.excbt.datafuse.nmk.data.domain.PersistableBuilder;
 
 @Entity
 @Table(schema = DBMetadata.SCHEME_PORTAL, name = "local_place")
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
-public class LocalPlace extends AbstractAuditableModel {
+public class LocalPlace extends AbstractAuditableModel implements PersistableBuilder<LocalPlace, Long> {
 
     @Getter
+    @Setter
 	public static class LocalPlaceInfo {
-		private final Long id;
-		private final String localPlaceName;
-		private final Long weatherPlaceId;
-		private final String weatherPlaceName;
+		private Long id;
+		private String localPlaceName;
+		private Long weatherPlaceId;
+		private String weatherPlaceName;
 
-		public LocalPlaceInfo(LocalPlace localPlace) {
+        public LocalPlaceInfo() {
+        }
+
+        public LocalPlaceInfo(LocalPlace localPlace) {
 			this.id = localPlace.getId();
 			this.localPlaceName = localPlace.getLocalPlaceName();
 			this.weatherPlaceId = localPlace.getWeatherPlaceId();

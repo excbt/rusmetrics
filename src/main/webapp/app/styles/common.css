@@ -2,6 +2,17 @@
  *  Файл со стилями, используемыми во всём интерфейсе
  */
 
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none !important;
+}
+/* Отключаем бордюры у фокусных элементов*/
+:focus {
+    outline-width: 0;
+}
+.btn:focus {
+    outline-width: 0;
+}
+
 /* Полоса прокрутки*/
 /*
 ::-webkit-scrollbar{
@@ -39,6 +50,7 @@
 
 body{
 /*    min-width: 1200px !important;*/
+/*    color: rgb(95,95,95) !important;*/
 }
 
 /********************
@@ -273,6 +285,10 @@ body{
     width: 100%;
 }
 
+.nmc-logo-main-menu-h-div {
+    
+}
+
     /* Пользовательское меню - Выход, Личный кабинет, сменить пароль ...   */
 .nmc-nav-user-menu {
     position: absolute; 
@@ -296,11 +312,11 @@ body{
     /* Обертка для страницы, которая придавливает футер к низу экрана.
                 Wrapper for page content to push down footer */
 .wrap {
-    min-height: 100%;
-    height: auto !important;
-    height: 100%;
+/*    min-height: 100%;*/
+/*    height: auto !important;*/
+/*    height: 100%;*/
     /* Negative indent footer by it's height */
-    margin: 0 auto -60px;
+/*    margin: 0 auto -60px;*/
     /* Pad bottom by footer height */
 /*    padding: 0 0 60px;*/
 }
@@ -308,12 +324,18 @@ body{
 .wrap > .container-fluid {
 /*    padding-top: 50px;*/
 /*    min-width: 1320px;*/
+/*
     min-width: 1572px;
+    overflow-x: auto;
+*/
 }
 
 .wrap > .container-fluid > .row {
 /*    min-width: 1320px;*/
+/*
     min-width: 1572px;
+    overflow-x: auto;
+*/
 }
 
 .wrap > .container {
@@ -322,16 +344,19 @@ body{
 }
 /* Главная рабочая область страницы*/
 .nmc-main-workspace {
-    margin-left: 10pt;
-    width: 88.1%;
+/*    margin-left: 10pt;*/
+    width: 100%;
+/*    width: 88.1%;*/
 	min-height: 500px;
     border: none;
-    -webkit-box-shadow: 5px 5px 5px 0px #646263;
+/*    -webkit-box-shadow: 5px 5px 5px 0px #646263;*/
 /*    box-shadow: none;*/
 /*    border-radius: 0;*/
     background-color: #EEEEEE; /*background color of main area*/
-    padding-top: 10px;
-    height: 95vh;
+    padding-top: 0px;
+    height: 100%;
+/*    height: 96vh;*/
+/*    overflow-y: auto;*/
 /*	height: 85%;*/
 /*	height: 865px; */
 /*    overflow: hidden;*/
@@ -343,7 +368,7 @@ body{
     -webkit-box-shadow: none;
 */
     /*box-shadow: none;*/
-    box-shadow: 5px 5px 5px 0px #646263;
+/*    box-shadow: 5px 5px 5px 0px #646263;*/
 /*    border-radius: 0;*/
     background-color: #FFFFFF; /*background color of main area*/
 /*    padding-top: 10px;*/
@@ -354,7 +379,7 @@ body{
 
 /* главная область в распахнутом состоянии - при минимизации левого меню*/
 .nmc-main-workspace-maximize {
-    width: 96%;
+    width: 100%;
     margin-left: 0;
 }
 
@@ -391,9 +416,9 @@ body{
 
 /* Фон главного окна */
 .nmc-main-window-background {
-    padding-top: 15px;
-    padding-bottom: 20px;
-    font-size: 12px;
+/*    padding-top: 15px;*/
+/*    padding-bottom: 20px;*/
+    font-size: 14px;
     background-color: #BEBEBE !important; /*body background color*/
     
 /*
@@ -434,6 +459,69 @@ body{
     /*    height:61vh;*/
         min-height: 290px;
     }
+}
+
+/* Стиль главныго дива виджета "Контроль" объектов учета*/
+.nmc-cont-object-control-main-div {
+    overflow: auto;
+/*    height: 100%;*/
+    height: 89vh;
+/*    height:61vh;*/
+    min-height: 290px;
+}
+
+@media (max-height: 800px) {
+    .nmc-cont-object-control-main-div {
+        overflow: auto;
+        height: 79vh;
+/*        height:61vh;*/
+        min-height: 290px;
+    }
+}
+
+/*Кнопка Поиска в виджете "Контроль"*/
+.nmc-ctrl-cmp-search-btn {
+    float: right;
+}
+.nmc-ctrl-cmp-search-btn:hover {
+    background-color: lightgray !important;
+    outline: 4px solid lightgray;
+}
+    /* Заголовок таблицы виджета "Контроль"*/
+tr.nmc-ctrl-cmp-table-header > th {
+    background-color: /*rgb(200, 200, 200)*/ #646263; /*background color*/
+    color: /* rgb(95, 95, 95)*/ #FFFFFF;
+    font-weight: normal;
+}
+    /*Контроль: колонка Тип здания*/
+.nmc-ctrl-cmp-td-for-type {
+    min-width: 53px;
+    width: 2%;
+}
+    /*Контроль: подсветка выделенного эл-та таблицы данных*/
+.nmc-ctrl-cmp-bg-distinguish {
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td {
+    background-color: #D2D2D2 !important;
+    position: relative;
+}
+
+tr.nmc-ctrl-cmp-bg-distinguish > td:before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 15px;
+/*
+    left: 10px;
+    margin-top: 14px;
+*/
+    border-top: 1px solid rgb(95, 95, 95);
+    border-right: 1px solid rgb(95, 95, 95);
+    transform: rotate(45deg);
+    width: 6px;
+    height: 6px;
 }
 
 .nmc-el-view-main-div-with-chart {
@@ -509,6 +597,17 @@ body{
  * Элементы навигации 
  ***********************/
 /* Главное меню */
+.nmc-main-menu-div {
+    margin-bottom: 2px; 
+    position: absolute; 
+    top: 10px; 
+    left: 2px; 
+    z-index: 3; 
+/*    border: 1px solid #ddd; */
+    padding: 7px 5px; 
+    border-radius: 4px;
+}
+
 .nmc-main-menu {
     min-height: 501px;
     padding-top: 21px;
@@ -527,8 +626,8 @@ body{
 .nmc-main-menu-item {
     word-wrap: break-word;
     padding-right: 1px;
-    border: none;
-    margin-right: -30%;
+    border: 1px solid #DCDCDC;
+/*    margin-right: -30%;*/
     margin-bottom: 3px;/*2%;*/
     font-size: 16px;
     border-radius: 4px 0px 0px 4px;
@@ -548,10 +647,10 @@ body{
         /*в фокусе*/    /* на который наведен курсор*/
 .nmc-main-menu-item:focus, .nmc-main-menu-item:hover {
     word-wrap: break-word;
-    padding-right: 1px;
-    border: none;
-    margin-right: -30%;
-    margin-bottom: 3px;/*2%;*/
+/*    padding-right: 1px;*/
+    border: 1px solid #aaa;
+/*    margin-right: -30%;*/
+/*    margin-bottom: 3px;2%;*/
     background-color: #DCDCDC;
 }
 
@@ -567,6 +666,13 @@ body{
     /* Иконка пункта меню*/
 .nmc-main-menu-item-icon {
     margin-right: 10px;
+/*    color: #4a88d2;*/
+}
+
+/*Material: пункт главного меню*/
+.nmc-md-main-menu-item {
+    width: 100%;
+    text-align: left !important;
 }
 
 
@@ -619,6 +725,7 @@ body{
 /* Вкладки рабочей области */
 .nmc-main-tab-panel {
     margin-bottom: 5px;
+    margin-left: 20px;
 }
     /* неактивная вкладка*/
 .nmc-main-tab-button{
@@ -896,7 +1003,7 @@ tr.nmc-tr-striped:nth-of-type(odd) > td, .nmc-div-module-info:nth-of-type(odd) {
 /* Стиль для колонки, в которой есть кнопка и чексбокс*/
 .nmc-td-for-button-checkbox, .nmc-td-for-button-object-control {
     min-width: 46px;
-    width: 3%;
+    width: 4%;
 }
 
 .nmc-td-for-buttons {
@@ -951,6 +1058,10 @@ td.nmc-td-for-buttons{
 
     /* Таблица в основной рабочей области */
 .nmc-main-table {
+ }
+
+.nmc-main-table > tbody > tr:last-child {
+    border-bottom: 1px solid #ddd;
  }
 
     /* Заголовок таблицы */
@@ -1149,7 +1260,7 @@ tr.nmc-main-table-header-indicator > th {
 
 /*  Дерево объектов*/
 .nmc-tree-with-fixed-header {
-    overflow: scroll;
+    overflow: auto;
     height: 73vh;
     min-height: 360px;
     position:relative;
@@ -1244,7 +1355,11 @@ tr.nmc-inactive-price > td {
     font-weight: normal;
     margin: 0;
 }
- 
+
+.nmc-main-search-input > .md-errors-spacer {
+    display: none;
+}
+
 /* поле поиска */
 .nmc-search-form {
 }
@@ -1655,11 +1770,17 @@ tr.nmc-inactive-price > td {
 /* Сохранить */
 .nmc-save-button {
     max-width: 112px;
+    min-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
   
 /* Отмена */
 .nmc-cancel-button {
-    max-width: 142px;
+    min-width: 112px;
+    max-width: 112px;
+    font-family: "Helvetica Heue", Helvetica, sans-serif;
+    height: 31px;
 }
 
 /* Закрыть окно - крестик в правом верхнем углу модального окна */
@@ -2100,7 +2221,8 @@ tr.nmc-inactive-price > td {
 /* Футер */
 .nmc-modal-footer {
     padding-top: 6px;
-    height: 35px;
+    padding-bottom: 6px;
+    height: 45px;
 }
  
 /* Рабочая панель */
@@ -2139,6 +2261,17 @@ tr.nmc-inactive-price > td {
     height: 520px;
 }
 
+.nmc-object-list-a {
+    overflow-y: auto;
+    max-height: 520px;
+}
+
+/* высота списка архивных приборов в модальном окне точки учета*/
+.nmc-arch-device-list-modal {
+    overflow-y: auto;
+    max-height: 150px;
+}
+
 /* Настройки таблицы температурного графика в модальном окне*/
 .nmc-temp-sch-schedules-modal {
     overflow-y: auto;
@@ -2175,6 +2308,12 @@ tr.nmc-inactive-price > td {
     overflow-y: auto;
     max-height: 320px;
     top: 240%;
+}
+
+    /* в новом интерфейсе просмотра*/
+.nmc-view-p-tree-list-items {
+    overflow-y: auto;
+    max-height: 320px;    
 }
     /* Отступ для кнопок-стрелок, которыми управляется положение колонок*/
 .nmc-column-list-button {
@@ -2280,6 +2419,7 @@ tr.nmc-inactive-price > td {
     height: 80vh;
     min-height: 450px;
     width: 100%;
+    z-index: 0;
 }
 
 /* Карта потребления - на странице объектов*/
@@ -2288,6 +2428,7 @@ tr.nmc-inactive-price > td {
     height: 80vh;
     min-height: 450px;
     width: 100%;
+    z-index: 0;
 }
 /* Настройки для попапа маркера города на карте потребления*/
 .nmc-city-marker-popup-in-objects {
@@ -2369,9 +2510,20 @@ tr.nmc-inactive-price > td {
 .nmc-normal-alter {
     color:green;
 }
+.nmc-color {
+    color: #4a88d2;
+}
 
 .nmc-bg-alert {
     background-color: red;
+}
+
+.nmc-bg-warning {
+    background-color: yellow;
+}
+
+.nmc-bg-attention {
+    background-color: yellow;
 }
 
 /* Класс, для выделения фона элемента - используется на карте объектов в попапах*/
@@ -2437,6 +2589,11 @@ tr.nmc-bg-distinguish > td {
 
 
 .nmc-img2 {
+}
+
+.nmc-img-user-menu {
+    width: 24px;
+    height: 24px;
 }
 
     /*Вертикальная линия в кнопках на странице Объекты*/
@@ -2591,6 +2748,9 @@ tr.nmc-bg-distinguish > td {
 .marginRight15 {
     margin-right: 15px;
 }
+.marginRight10 {
+    margin-right: 10px;
+}
 .marginRight5 {
     margin-right: 5px;
 }
@@ -2604,27 +2764,31 @@ tr.nmc-bg-distinguish > td {
 }
 
 .noMargin {
-    margin : 0;
+    margin: 0;
 }
 
 .noMarginI {
-    margin : 0 !important;
+    margin: 0 !important;
 }
 
 .noPadding {
-    padding : 0;
+    padding: 0;
 }
 
 .noPaddingI {
-    padding : 0 !important;
+    padding: 0 !important;
 }
 
 .noPaddingBottom {
-    padding-bottom : 0;
+    padding-bottom: 0;
 }
 
 .noPaddingRight {
-    padding-right : 0;
+    padding-right: 0;
+}
+
+.noPaddingRightI {
+    padding-right: 0 !important;
 }
 
 .padding5{
@@ -2637,7 +2801,9 @@ tr.nmc-bg-distinguish > td {
 .paddingBottom10 {
     padding-bottom: 10px;
 }
-
+.paddingBottom15 {
+    padding-bottom: 15px;
+}
 .paddingBottom40 {
     padding-bottom: 40px;
 }
@@ -2665,12 +2831,20 @@ tr.nmc-bg-distinguish > td {
     padding-top: 5px;
 }
 
+.paddingTop25 {
+    padding-top: 25px;
+}
+
+
 .noPaddingTop {
     padding-top: 0px;
 }
 
 .paddingLeft0 {
     padding-left: 0;
+}
+.paddingLeft0I {
+    padding-left: 0 !important;
 }
 
 .paddingLeft5 {
@@ -2679,6 +2853,9 @@ tr.nmc-bg-distinguish > td {
 
 .paddingLeft10 {
     padding-left: 10px;
+}
+.paddingLeft10I {
+    padding-left: 10px !important;
 }
 
 .paddingLeft15 {
@@ -2884,6 +3061,11 @@ input[type="checkbox"] {
     margin-top: 5px;
     margin-right: -10px;
 }
+
+a.user-menu:after {
+    margin-top: -3px;
+}
+
 .dropdown-submenu:hover > a:after {
     border-left-color: #ffffff;
 }
@@ -2908,11 +3090,13 @@ input[type="checkbox"] {
 /*  Классы для настройки resizable компоненты*/
 /*******************************************************************/
 .ui-resizable-s {
+/*
     height: 14px;
     background-image: url(../images/resizable.png);
     background-repeat: no-repeat;
     background-position: center -26px;
     background-color: #DDD;
+*/
 /*
     border-radius: 4px;
     width: 10%;
@@ -3221,4 +3405,164 @@ div.nmc-energy-simple-line > div {
 
 .nmc-energy-td-counter {
     text-align: right;
+}
+
+/********************************************************
+    Разметка рабочей области с использованием ui-layout
+*********************************************************/
+.ui-splitbar > a > .glyphicon-chevron-left, .ui-splitbar > a > .glyphicon-chevron-right {
+    color: #aaa;
+}
+
+.ui-splitbar {
+    border-right: 1px solid #646263;
+    border-left: 1px solid #646263;
+    background-color: #eee !important;
+}
+
+/*
+        Интерфейс иерархий p-tree, обновление Осень2017
+*/
+.nmc-p-tree-with-fixed-header {
+    overflow: auto;
+    height: 89vh;
+    min-height: 360px;
+    position:relative;
+    padding-left: 15px;
+}
+
+/* Иконки для дерева объектов*/
+.nmc-p-tree-status-img {
+    max-width: 16px;
+    max-height: 16px;
+}
+
+/*Material: toolbar*/
+.nmc-md-main-toolbar-n {
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;    
+}
+.nmc-md-main-toolbar-n > .md-toolbar-tools {
+    height: 35px;
+    min-height: 35px;
+    max-height: 35px;
+}
+
+.nmc-md-toolbar-n {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border: 1px solid #41719c;
+    border-left: none;
+    border-right: none;
+}
+
+.nmc-md-toolbar-n > .md-toolbar-tools {
+    height: 32px;
+    min-height: 32px;
+    max-height: 32px;
+}
+/*Material: toolbar buttons*/
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-button {
+    height: 25px;
+    min-height: 25px;
+    max-height: 25px;
+    padding-top: 4px;
+/*    border: 1px solid #41719c;*/
+}
+
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-button md-icon {
+/*    color: rgb(95, 95, 95);*/
+}
+
+.nmc-md-main-toolbar-n > .md-toolbar-tools > .md-menu >.md-button {
+    height: 25px;
+    min-height: 25px;
+    max-height: 25px;
+    padding-top: 4px;
+/*    border: 1px solid #41719c;*/
+}
+
+.md-button.md-icon-button.nmc-md-ltb-btn, .nmc-md-ltb-btn {
+    min-height: 26px; 
+    height: 26px; 
+    padding-top: 6px;
+    background: transparent;
+    border-radius: 0;
+    margin: 0 2px 4px 2px;
+/*    border: 1px solid #41719c;*/
+/*    margin-bottom: 3px;*/
+}
+
+.nmc-md-ltb-btn:hover, .nmc-md-ltb-btn .active {
+    background-color: lightgray !important;
+    outline: 2px solid lightgray;
+}
+
+/*Main menu btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-menu-btn {
+    padding-top: 0;
+    margin: 0 2px 2px -13px !important;
+}
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-menu-btn:hover {
+    background-color: lightgray !important;
+    outline: 6px solid lightgray;
+}
+
+.md-button.md-icon-button.nmc-md-ltb-btn > .md-icon, .nmc-md-ltb-btn md-icon {
+    color: rgb(95, 95, 95) !important;
+    fill: rgb(95, 95, 95) !important;
+}
+
+/*Main search btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-search-btn {
+    margin: 0 2px 2px 0 !important;
+}
+
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-search-btn:hover {
+    background-color: lightgray !important;
+    outline: 6px solid lightgray;
+}
+
+/*User menu btn*/
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn {
+    margin: 0 0 3px 4px !important;
+}
+.md-icon-button.nmc-md-ltb-btn.nmc-md-main-user-btn:hover {
+    background-color: lightgray !important;
+    outline: 5px solid lightgray;
+}
+
+/* Header user info*/
+.nmc-header-user-info {
+    font-size: 10px;
+    padding: 0 5px;
+}
+.nmc-header-user-info > p {
+    margin: 0;
+}
+
+
+/*Material: menu item*/
+.nmc-md-menu-item {
+    height: 24px;
+    min-height: 24px;    
+}
+
+.nmc-md-menu-item > .md-button {
+    font-size: 13px;
+    min-height: 24px;
+    height: 24px;
+    line-height: inherit;
+}
+
+/*    Daterangepicker DateRangePicker drp*/
+.daterangepicker .calendar-time {
+    text-align: left !important;
+}
+
+.nmc-drp-ctrl-btns {
+    width: 49%;
+    font-family: "Helvetica Neue", Helvetica, sans-serif;
 }

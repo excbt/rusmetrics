@@ -61,13 +61,57 @@ spring:
 #            hibernate.javax.cache.provider: org.ehcache.jsr107.EhcacheCachingProvider
 #            hibernate.javax.cache.uri: ${spring.cache.jcache.config}
 #            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
+
+
+    activemq:
+        broker-url: vm://embedded?broker.persistent=false,useShutdownHook=false&broker.useJmx=false
+        in-memory: true
+        non-blocking-redelivery: true
+        packages:
+            trust-all: false
+            trusted: com.memorynotfound
+        pool:
+            block-if-full: true
+            block-if-full-timeout: -1
+            create-connection-on-startup: true
+            enabled: false
+            expiry-timeout: 0
+            idle-timeout: 30000
+            max-connections: 1
+            maximum-active-session-per-connection: 500
+            reconnect-on-exception: true
+            time-between-expiration-check: -1
+            use-anonymous-producers: true
+
+    # Spring JMS Settings
+    jms:
+        listener:
+            acknowledge-mode: auto
+            auto-startup: true
+#           concurrency: 5
+#           max-concurrency: 10
+            concurrency: 1
+            max-concurrency: 1
+        pub-sub-domain: false
+        template:
+            default-destination:
+        delivery-mode: non_persistent
+        priority: 100
+        qos-enabled: true
+        receive-timeout: 1000
+        time-to-live: 36000
+
+
 portal:
     datasource:
+        databaseName: datafuse
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
-        #driver-class-name: org.postgresql.Driver
+        # driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://77.221.157.162:6432/datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
-        #url: ${portal.datasource.jdbcUrl}
-        #?useUnicode=yes&amp;characterEncoding=UTF-8
+        # url: jdbc:postgresql://109.120.159.198:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        # url: ${portal.datasource.jdbcUrl}
+        # ?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:
         username: dbuser1
@@ -123,10 +167,13 @@ portal:
 
 raw:
     datasource:
+        databaseName: dataraw
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
         url: jdbc:postgresql://77.221.157.162:6432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
-        #url: ${raw.datasource.jdbcUrl}
+        # url: jdbc:postgresql://109.120.159.198:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        # url: ${raw.datasource.jdbcUrl}
         #?useUnicode=yes&amp;characterEncoding=UTF-8
         name:
         jndi-name:

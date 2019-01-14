@@ -210,13 +210,13 @@ angular.module('portalNMC').directive('crudGridObjects', function () {
                                 zpoint.doublePipe = $scope.zPointsByObject[i].doublePipe;
                                 zpoint.singlePipe = !zpoint.doublePipe;
                             };
-                            if ((typeof $scope.zPointsByObject[i].deviceObjects != 'undefined') && ($scope.zPointsByObject[i].deviceObjects.length>0)){                                
-                                if ($scope.zPointsByObject[i].deviceObjects[0].hasOwnProperty('deviceModel')){
-                                    zpoint.zpointModel = $scope.zPointsByObject[i].deviceObjects[0].deviceModel.modelName;
+                            if ((typeof $scope.zPointsByObject[i].deviceObject != 'undefined') ){                                
+                                if (typeof $scope.zPointsByObject[i].deviceObject.deviceModel != 'undefined' ){
+                                    zpoint.zpointModel = $scope.zPointsByObject[i].deviceObject.deviceModel.modelName;
                                 }else{
                                     zpoint.zpointModel = "Не задано";
                                 };
-                                zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObjects[0].number;
+                                zpoint.zpointNumber = $scope.zPointsByObject[i].deviceObject.number;
                             };
                             zpoint.zpointLastDataDate  = $scope.zPointsByObject[i].lastDataDate;   
                             // Получаем эталонный интервал для точки учета

@@ -1,0 +1,33 @@
+<!--<div>Портал / Объекты</div>-->
+<!--
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li class="active">Объекты</li>
+    </ul>
+</div> 
+-->
+<div id="object_list_view_page_access_denided" 
+     ng-class="{'nmc-show': !ctrlSettings.pageAccess, 'nmc-hide': ctrlSettings.pageAccess}">
+    Нет доступа
+</div>
+<div id="object_list_view_page" 
+     ng-class="{'nmc-show': ctrlSettings.pageAccess, 'nmc-hide': !ctrlSettings.pageAccess}" 
+     crud-grid-objects-tree 
+     table="'../api/subscr/contObjects'"
+     columns='[
+                {"name": "fullName", "header": "Название", "class": "col-xs-10 col-md-10"}
+           
+              ]'
+     captions='{"loading": "loading...", "totalElements": "totalElements"}'
+     exprops='{"idColumnName": "id", "defaultOrderBy": "fullName", "nameColumnName": "fullName"}'     
+     blist = 'false'     
+     bgroup='true'     
+     bextramenu='true'
+     bobject='true'
+     zpointcolumns='[                  
+                        {"name": "zpointName", "header" : "Наименование", "class": "col-xs-4"},             
+                        {"name": "zpointLastDataDate", "header": "Последние данные", "class": "col-xs-2"},
+                        {"name": "empty", "header": " ", "class": "col-xs-6"}
+                    ]'     
+    ></div>

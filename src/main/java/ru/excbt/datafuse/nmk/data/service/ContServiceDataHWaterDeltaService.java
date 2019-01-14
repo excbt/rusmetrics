@@ -27,7 +27,7 @@ import ru.excbt.datafuse.nmk.data.model.support.ContObjectServiceTypeInfo;
 import ru.excbt.datafuse.nmk.data.model.support.ContServiceTypeInfoART;
 import ru.excbt.datafuse.nmk.data.model.support.LocalDatePeriod;
 import ru.excbt.datafuse.nmk.data.model.types.ContServiceTypeKey;
-import ru.excbt.datafuse.nmk.data.model.types.MeasureUnit;
+import ru.excbt.datafuse.nmk.data.model.types.MeasureUnitKey;
 import ru.excbt.datafuse.nmk.data.model.types.TimeDetailKey;
 import ru.excbt.datafuse.nmk.data.model.v.ContObjectGeoPos;
 import ru.excbt.datafuse.nmk.service.utils.DBRowUtil;
@@ -245,9 +245,9 @@ public class ContServiceDataHWaterDeltaService {
 		for (Object[] row : dbResult) {
 			Long contObjectId = DBRowUtil.asLong(row[0]);
 			ContServiceTypeInfoART art = new ContServiceTypeInfoART(contServiceTypeKey);
-			if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.V_M3) {
+			if (contServiceTypeKey.getMeasureUnit() == MeasureUnitKey.V_M3) {
 				art.setAbsConsValue(DBRowUtil.asDouble(row[2])); // sum_v_delta
-			} else if (contServiceTypeKey.getMeasureUnit() == MeasureUnit.W_GCAL) {
+			} else if (contServiceTypeKey.getMeasureUnit() == MeasureUnitKey.W_GCAL) {
 				art.setAbsConsValue(DBRowUtil.asDouble(row[3])); // sum_h_delta
 			}
 			art.setTempValue(DBRowUtil.asDouble(row[4])); // avg_t_in

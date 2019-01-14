@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
     SpringApplicationAdminJmxAutoConfiguration.class, RepositoryRestMvcAutoConfiguration.class })
 @Transactional
-public class SubscrContObjectServiceTest extends JpaSupportTest implements TestExcbtRmaIds {
+public class SubscrContObjectServiceTest extends JpaSupportTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(SubscrContObjectServiceTest.class);
 
@@ -44,7 +44,7 @@ public class SubscrContObjectServiceTest extends JpaSupportTest implements TestE
 	@Test
     @Transactional
 	public void testContZPointInfo() throws Exception {
-		List<ContZPointShortInfo> result = objectAccessService.findContZPointShortInfo(EXCBT_RMA_SUBSCRIBER_ID);
+		List<ContZPointShortInfo> result = objectAccessService.findContZPointShortInfo(TestExcbtRmaIds.EXCBT_RMA_SUBSCRIBER_ID);
 		assertTrue(result.size() > 0);
 	}
 

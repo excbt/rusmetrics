@@ -4,6 +4,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -15,12 +16,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource;
+import ru.excbt.datafuse.nmk.data.model.DeviceObjectDataSource2;
+import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSource2Repository;
 import ru.excbt.datafuse.nmk.data.repository.DeviceObjectDataSourceRepository;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 
 /**
  * Сервис для работы с источником данных для прибора
- * 
+ *
  * @author A.Kovtonyuk
  * @version 1.0
  * @since 07.10.2015
@@ -31,11 +34,17 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 
 	private static final Logger logger = LoggerFactory.getLogger(DeviceObjectDataSourceService.class);
 
-	@Autowired
-	private DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
+	private final DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
 
-	/**
-	 * 
+    private final DeviceObjectDataSource2Repository deviceObjectDataSource2Repository;
+
+    public DeviceObjectDataSourceService(DeviceObjectDataSourceRepository deviceObjectDataSourceRepository, DeviceObjectDataSource2Repository deviceObjectDataSource2Repository) {
+        this.deviceObjectDataSourceRepository = deviceObjectDataSourceRepository;
+        this.deviceObjectDataSource2Repository = deviceObjectDataSource2Repository;
+    }
+
+    /**
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -47,7 +56,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectDataSource
 	 * @return
 	 */
@@ -97,7 +106,7 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param deviceObjectId
 	 * @return
 	 */
@@ -108,4 +117,14 @@ public class DeviceObjectDataSourceService implements SecuredRoles {
 		deviceObjectDataSources.forEach(i -> i.setIsActive(null));
 		deviceObjectDataSourceRepository.save(deviceObjectDataSources);
 	}
+
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObjectDataSource2 saveDeviceDataSource2(DeviceObjectDataSource2 deviceObjectDataSource2) {
+        Objects.requireNonNull(deviceObjectDataSource2);
+        Objects.requireNonNull(deviceObjectDataSource2.getDeviceObjectId());
+        return deviceObjectDataSource2Repository.save(deviceObjectDataSource2);
+    }
+
 }

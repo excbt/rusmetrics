@@ -1,4 +1,4 @@
-describe('Test MngmtDevicesCtrl:', function() {
+xdescribe('Test MngmtDevicesCtrl:', function() {
 
 	var DEVICE_ID = 1,
 		HEATER_ID = 123,

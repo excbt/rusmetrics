@@ -1,5 +1,5 @@
 <!--Show document preperties-->
-<div id = "showDocumentPropertiesModal" 
+<div id = "ndpv-showDocumentPropertiesModal" 
      class = "modal fade nmc-modal-window" 
      role = "dialog"
      aria-labelledby = "showDocumentPropertiesLabel" 
@@ -79,7 +79,7 @@
                             </tr>
                             <tr>
                                 <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocName">Название</label>
+                                    <label for = "ndpv-inputEnergyDocName">Название</label>
                                     <span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class = "col-xs-9 nmc-text-align-left">
@@ -88,7 +88,7 @@
                                         <input  
                                                class = "form-control nmc-text-input-form" 
                                                type = "text" 
-                                               id = "inputEnergyDocName" 
+                                               id = "ndpv-inputEnergyDocName" 
                                                ng-model = "currentDocument.passportName" 
                                                ng-disabled = "isReadOnly()"/>
                                     </div>
@@ -97,14 +97,14 @@
                             
                             <tr>
                                 <td class = "col-xs-3">
-                                    <label for = "inputEnergyDocDate" 
+                                    <label for = "ndpv-inputEnergyDocDate" 
                                            class = "nmc-form-label">Дата документа</label>
                                     <span class = "nmc-required-star">*</span>
                                 </td>
                                 <td class = "col-xs-9 nmc-text-align-left">
                                     <span class = "form-group" 
                                           ng-class = "{'has-error': emptyString(currentDocument.docDateFormatted)}">
-                                        <input id = "inputEnergyDocDate" 
+                                        <input id = "ndpv-inputEnergyDocDate" 
                                                class = "form-control nmc-date-input-form nmc-spec-date" 
                                                type = "text"                                                                                               
                                                ng-model = "currentDocument.docDateFormatted"

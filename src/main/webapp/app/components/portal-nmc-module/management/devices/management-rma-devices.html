@@ -1,0 +1,1184 @@
+
+<div role="tabpanel" class="nmc-main-tab-panel" ng-hide="loading">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="objects_edit_2nd_menu_item" role="presentation"><a id="objectsTab" class="nmc-main-tab-button" href="#/management/objects/" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a></li>
+<!--        ng-class="{'nmc-show':objectCtrlSettings.mapAccess, 'nmc-hide':!objectCtrlSettings.mapAccess}"-->
+        <li id="data_sources_2nd_menu_item" role="presentation"><a id="datasourcesTab" class="nmc-main-tab-button" href="#/management/datasources/" aria-controls="datasources" data-target="#datasources" role="tab" data-toggle="tab">Источники данных</a></li>
+        <li id="devices_2nd_menu_item" role="presentation" class="active"><a id="devicesTab" class="nmc-main-tab-button" aria-controls="devices" data-target="#devices" role="tab" data-toggle="tab">Приборы</a></li>
+        <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
+            id="modems_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/modems/" 
+               aria-controls="modems" 
+               role="tab" 
+               data-target="#modems" 
+               data-toggle="tab">Модемы
+            </a>
+        </li>
+        <li ng-if="isSystemuser()"
+            ng-hide="isTestMode()"
+            id="modems_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/device-models/" 
+               aria-controls="device-models" 
+               role="tab" 
+               data-target="#device-models" 
+               data-toggle="tab">Модели приборов
+            </a>
+        </li>
+        <li id="organizations_edit_2nd_menu_item" role="presentation">
+            <a class="nmc-main-tab-button" 
+               href="#/management/organizations/" 
+               aria-controls="organizations" 
+               role="tab" 
+               data-target="#organizations" 
+               data-toggle="tab">Организации
+            </a>
+        </li>
+        <li id="clients_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/clients/" aria-controls="clients" role="tab" data-target="#clients" data-toggle="tab">Абоненты</a></li>
+        <li id="users_edit_2nd_menu_item" role="presentation"><a class="nmc-main-tab-button" href="#/management/users/" aria-controls="users" role="tab" data-target="#users" data-toggle="tab">Пользователи</a></li>
+        <li id="users_edit_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/price/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Прайс-листы</a></li>
+        <li id="temperature_schedules_2nd_menu_item" ng-hide="isTestMode()" role="presentation"><a class="nmc-main-tab-button" href="#/management/temp-sch/" aria-controls="price" role="tab" data-target="#price" data-toggle="tab">Температурные графики</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="devicesTab">
+      </div>
+    </div>
+</div>
+<div  ng-show="ctrlSettings.loading" class="nmc-loading">
+    <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+</div>
+<div ng-show="!ctrlSettings.loading">
+<div class="row nmc-main-workspace-header">
+    <div class="col-md-3 marginBottom10">
+        <button class="btn nmc-main-add-button" ng-click="addDevice()">Добавить прибор</button>
+    </div>
+    <div class="col-md-7"></div>
+    <div class="input-group col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+        <input title="Введите текст для поиска приборов" type="text" class="form-control nmc-text-input-form" ng-model="filter">
+    </div>
+    <div class="col-md-offset-2 col-md-2">
+    </div>
+</div>
+
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="nmc-td-for-button">
+
+            </th>
+            
+            <th ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.headerClass || column.dataClass"
+                >
+                <span ng-bind="column.caption"></span>
+            </th>
+            <th class="col-xs-1 col-md-1">
+            </th>
+        </tr>
+</table>
+
+<div id="divWithDeviceTable" class="nmc-data-sources-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="nmc-td-for-button">
+
+            </th>
+            
+            <th ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.headerClass || column.dataClass"
+                >
+                <span ng-bind="column.caption"></span>
+            </th>
+
+            <th class="col-xs-1 col-md-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="device in data.devices | filter: filter" ng-dblclick="editDevice(device)">
+            <td class="nmc-td-for-button">
+                <div class="btn-group">
+                  <i title="Действия над прибором" type="button" class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="font-size: .9em;">
+                    </i>
+                  <ul class="dropdown-menu">
+                    <li>
+                        <a href="" ng-click="editDevice(device)">
+                            Редактировать свойства прибора
+                        </a>
+                    </li>
+                    <li>
+                        <a href
+                           data-target="#deviceSessionModal"
+                           data-toggle="modal"
+                           ng-click="initManualLoading(device)">
+                            Загрузить данные
+                        </a>
+                    </li>
+                    <li ng-if = "isDirectDevice(device)">
+                        <a href="" ng-click="getDeviceSchedulerSettings(device.contObjectId, device)">
+                            Расписание опроса прибора
+                        </a>
+                    </li>
+                  </ul>
+                </div>
+            </td>
+            <td ng-repeat="column in ctrlSettings.deviceColumns track by $index"
+                ng-class="column.dataClass || column.headerClass"
+                ng-attr-title="{{device[column.name + 'Title']}}"
+                >
+                <span ng-bind="device[column.name]"></span>
+            </td>
+            <td class="col-xs-1 col-md-1">
+                <div class="btn-toolbar">
+                    <div class="btn-group pull-right">                   
+                        <i title="Удалить прибор" class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" ng-click="deleteObjectInit(device)" data-target="#deleteObjectModal" data-toggle="modal"></i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+</div>
+
+<div nmc-show-device-modal1
+     current-device = "data.currentObject"
+     device-sources = "data.dataSources"
+     cont-objects = "data.objects"
+     device-models = "data.deviceModels"
+     read-only = "false"
+     show-ok-button = "false"
+     btn-click = "saveDevice(data.currentObject)"
+     >
+</div>
+
+<!--Show device options-->
+<div id = "showDeviceModal" class = "modal fade nmc-modal-window" role = "dialog"
+	aria-labelledby = "showDeviceLabel" tabindex = "-1" data-backdrop = "static">
+	<div class = "modal-dialog  modal-content nmc-modal-dialog">
+		<div class = "modal-header nmc-modal-header">
+            <button type = "button" class = "close nmc-close-button" data-dismiss = "modal" aria-label = "Close"><span aria-hidden = "true">&times;</span></button>
+			<h3 id = "showDeviceLabel" class = "nmc-h3">
+				Прибор
+			</h3>
+		</div>
+		<div class = "modal-body nmc-modal-body paddingLeftRight15">
+            <div role = "tabpanel" 
+                 class = "nmc-tab-panel">
+              <!-- Навигационная полоса для варианта отчета-->
+              <ul class = "nav nav-tabs" role = "tablist">
+                <li role = "presentation" 
+                    class = "active" 
+                    id = "main_properties_tab">
+                    <a class = "nmc-tab-button" 
+                       href = "" 
+                       aria-controls = "main_properties" 
+                       data-target = "#main_properties" 
+                       role = "tab" 
+                       data-toggle = "tab" 
+                       >Основные свойства
+                    </a>
+                  </li>
+                <li role = "presentation" 
+                    id = "con_properties_tab"                     
+                    class = "nmc-hide" 
+                    ng-class = "{'nmc-hide' : !isAvailableConPropertiesTab(), 'nmc-show' : isAvailableConPropertiesTab()}"
+                    > 
+                    <a class = "nmc-tab-button"
+                       href = "" 
+                       aria-controls = "con_properties" 
+                       data-target="#con_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Параметры подключения
+                    </a>
+                  </li>  
+                <li role="presentation" 
+                    id="time_properties_tab"
+                    class="nmc-hide" 
+                    ng-class="{'nmc-hide' : !(data.currentObject.curDatasource.dataSourceType.isRaw==true), 'nmc-show' : data.currentObject.curDatasource.dataSourceType.isRaw==true}"
+                    >
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="time_properties" 
+                       data-target="#time_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Время
+                    </a>
+                  </li>
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Основные свойства-->
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="main_properties">                             
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputDeviceModel">Модель</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left col-sm-9">
+<!--                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.deviceModelId == null && data.currentObject.isManual}">
+-->                                                    
+<!--
+                                                <div class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':!checkModel()}">    
+                                                    <select class = "form-control nmc-select-form" 
+                                                            id = "inputDeviceModel" 
+                                                            ng-model = "data.currentObject.deviceModelId" 
+                                                            ng-options = "model.id as (model.caption || model.modelName) for model in data.deviceModels" 
+                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                            ng-change = "deviceModelChange()"
+                                                            >
+                                                    </select>
+                                                </div>
+-->
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error': !checkModel()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.deviceModelId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                               on-select = "deviceModelChange()">
+                                                        <ui-select-match>{{$select.selected.caption || $select.selected.modelName}}</ui-select-match>
+                                                        <ui-select-choices repeat = "model.id as model in data.deviceModels | propsFilter: {modelName: $select.search}">
+                                                          <div ng-bind-html = "model.caption || model.modelName"></div>
+                                                        </ui-select-choices>
+                                                    </ui-select>
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputMode">s/n</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputSn" 
+                                                       placeholder="Серийный номер"  
+                                                       ng-model="data.currentObject.number" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputDeviceCaption">Наименование</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputDeviceCaption"                                                         
+                                                       ng-model="data.currentObject.deviceObjectName" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputComment" >Объект</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.contObjectId==null}">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputContObject" 
+                                                            ng-model="data.currentObject.contObjectId" 
+                                                            ng-options="contObject.id as (contObject.fullName || contObject.id) for contObject in data.objects" 
+                                                            ng-disabled="isDeviceDisabled(data.currentObject);">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "!deviceIsSpreader()">
+                                            <td><label for = "inputDescription">Источник данных</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+<!--                                                <div class="form-group noMarginBottom" 
+                                                     ng-class="{'has-error':data.currentObject.id == null &&  data.currentObject.subscrDataSourceId == null && data.currentObject.isManual}">
+-->
+                                                <div class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':!checkDatasource()}">
+                                                    <select ng-show = "!isDeviceDisabled(data.currentObject)" 
+                                                            class = "form-control nmc-select-form"
+                                                            ng-class = "{'nmc-bg-distinguish': source._isAnotherSubscriber}"
+                                                            id = "inputDataSource" 
+                                                            ng-model = "data.currentObject.subscrDataSourceId" 
+                                                            ng-options = "source.id as source.dataSourceName for source in data.dataSources" 
+                                                            ng-change = "deviceDatasourceChange()">
+                                                    </select>
+                                                    <span ng-if = "isDeviceProtoLoaded(data.currentObject)">
+                                                        Первичная загрузка - 
+                                                        <span ng-switch on = "data.currentObject.exSystemKeyname">
+                                                            <span ng-switch-when = 'LERS'>
+                                                                ЛЭРС
+                                                            </span>
+                                                            <span ng-switch-when = 'VZLET'>
+                                                                ВЗЛЕТ
+                                                            </span>
+                                                        </span>
+                                                    </span>
+                                                </div>                                    
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td><label for = "inputDescription">Прибор отопления</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                
+                                                <div class = "form-group noMarginBottom"
+                                                     ng-class = "{'has-error':!checkHeaterDevice()}">
+                                                    
+                                                    <ui-select class = "nmc-ui-select-form" 
+                                                               ng-model = "data.currentObject.heatRadiatorTypeId" 
+                                                               theme = "bootstrap" 
+                                                               ng-disabled = "disabled"
+                                                               on-select = "selectHeaterType()">
+                                                        <ui-select-match>{{$select.selected.typeName}}</ui-select-match>
+                                                        <ui-select-choices group-by = "recentHeaterGrouping"
+                                                                           group-filter = "recentHeaterGroupFilter"
+                                                                           repeat = "heater.id as heater in data.heaterTypes | propsFilter: {typeName: $select.search}">
+                                                          <div ng-bind-html = "heater.typeName"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "deviceIsSpreader()">
+                                            <td class = "col-sm-3"><label for="inputHeaterPower">Мощность</label>
+                                            </td>
+                                            <td colspan = "2" 
+                                                class="col-sm-9 nmc-text-align-left">
+                                                
+                                                <div class = "input-group nmc-input-data pull-right">
+                                                    <input class = "form-control nmc-input-data nmc-text-input-form" 
+                                                           type = "text" 
+                                                           id = "inputHeaterPower"                                                         
+                                                           ng-model="data.currentObject.heatRadiatorPower"
+                                                           data-inputmask = "'alias': 'numeric', 'greedy': false"
+                                                           ng-disabled="isDeviceDisabled(data.currentObject);">
+                                                    <span class = "input-group-addon nmc-addon-label">Вт</span>
+                                                    
+                                                </div>
+                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for = "inputInstType" >Способ установки</label>
+                                            </td>
+                                            <td colspan = "2" class = "nmc-text-align-left">
+                                                <div class = "form-group noMarginBottom"> 
+<!--                                                     ng-class="{'has-error': data.currentObject.setTypeKeyname == null}">-->
+                                                    <select class = "form-control nmc-select-form" 
+                                                            id = "inputInstType" 
+                                                            ng-model = "data.currentObject.instType" 
+                                                            ng-options = "instType.keyname as instType.caption for instType in data.deviceInstTypes" 
+                                                            ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                            ng-change = "deviceInstTypeChange()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6"><label for = "inputVerificationInterval">Межповерочный интервал (лет)</label>
+                                            </td>
+                                            <td class = "col-sm-6 nmc-text-align-left">
+                                                <input class = "form-control nmc-input-data nmc-text-input-form pull-right" 
+                                                       type = "text" 
+                                                       id = "inputVerificationInterval"  
+                                                       ng-model = "data.currentObject.verificationInterval" 
+                                                       data-inputmask = "'alias': 'numeric', 'greedy': false" 
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" 
+                                                class = "col-sm-6">
+                                                <label for = "inputVerificationDate">Дата очередной плановой поверки
+                                                </label>
+                                            </td>
+                                            <td class = "col-sm-6 nmc-text-align-left">
+                                                <input class = "form-control date-picker nmc-input-data nmc-date-input-form pull-right"
+                                                       type = "text" 
+                                                       id = "inputVerificationDate" 
+                                                       ng-model = "data.currentObject.verificationDateString" 
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "data.currentObject.curDatasource.dataSourceType.isRaw == true">
+                                            <td colspan = "3">
+                                                <input type = "checkbox" 
+                                                       class = "nmc-checkbox-form" 
+                                                       ng-model = "data.currentObject.isTimeSyncEnabled"
+                                                       ng-disabled = "isDeviceDisabled(data.currentObject)"
+                                                       />
+                                                <label for = "inputIsTymeSyncEnabled">
+                                                    Включить автоматическую корректировку даты и времени
+                                                </label>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div>
+                  </div>
+                  <div role = "tabpanel" 
+                     class = "tab-pane fade" 
+                     id = "con_properties">
+                      <div class = "container-fluid">
+                            <div class = "row">
+                                <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table ng-if = "data.currentModel.isImpulse === true && data.currentObject.curDatasource.dataSourceType.isRaw === true"
+                                           class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputDevMark" >Тип счетчика импульсов</label>
+                                            </td>
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <select class = "form-control nmc-text-input-form nmc-input-data pull-right"
+                                                        id = "inputDevModelType"
+                                                        ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                        ng-model = "data.currentObject.impulseCounterType"
+                                                        ng-options = "impulseCounterType.keyname as impulseCounterType.caption for impulseCounterType in data.impulseCounterTypes"
+                                                        >
+                                                </select>                                                
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputNetDevAddr" >Адрес прибора в счетчике импульсов</label>
+                                            </td>
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputNetDevAddr"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseCounterSlotAddr == null || data.currentObject.impulseCounterSlotAddr == ''}">
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputNetDevAddr"
+                                                           ng-model = "data.currentObject.impulseCounterSlotAddr"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputNetAddrImpDev" >Адрес счетчика импульсов в источнике данных</label>
+                                            </td>
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputNetAddrImpDev"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseCounterAddr==null || data.currentObject.impulseCounterAddr == ''}">
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputNetAddrImpDev" 
+                                                           ng-model = "data.currentObject.impulseCounterAddr"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputTikCost" >Число импульсов в <span ng-bind = "(data.deviceMetadataMeasures.all | filter: data.currentObject.impulseMu)[0].caption"></span>
+                                                </label>
+<!--
+                                                <select class="form-control nmc-text-input-form nmc-input-digital-data"
+                                                            id="inputDevMeasure"
+                                                            ng-model="data.currentObject.impulseMu"                                                            
+                                                            ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            disabled
+                                                            >
+                                                </select>
+-->                                                
+                                            </td>
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputTikCost"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseK == null || data.currentObject.impulseK == 0}">
+                                                    {{setInputTikCostMask()}}
+                                                    <input class = "form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                           type = "text" 
+                                                           id = "inputTikCost"                                                           
+                                                           data-inputmask = "'alias':'numeric', 'greedy': false"
+                                                           ng-model = "data.currentObject.impulseK"
+                                                           ng-disabled = "isDeviceDisabled(data.currentObject);"
+                                                           />
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2" class = "col-sm-6">
+                                                <label for = "inputDevMeasure" >Единицы измерения</label>
+                                            </td>
+                                            <td class = "col-sm-6" class = "nmc-text-align-left">
+                                                <div id = "divInputDevMeasure"
+                                                     class = "form-group noMarginBottom" 
+                                                     ng-class = "{'has-error':data.currentObject.impulseMu == null}">
+                                                    <select class = "form-control nmc-text-input-form nmc-input-data pull-right"
+                                                            id = "inputDevMeasure"
+                                                            ng-model = "data.currentObject.impulseMu"                                                            
+                                                            ng-options = "measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures.all"
+                                                            disabled
+                                                            >
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <table ng-if="data.currentModel.isImpulse !== true"
+                                           class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputNetAddr" >Сетевой адрес прибора</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputNetAddr" 
+                                                       ng-model="data.currentObject.subscrDataSourceAddr" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDeviceLogin" >Логин</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputDeviceLogin" 
+                                                       ng-model="data.currentObject.deviceLoginInfo.deviceLogin" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="inputDevicePassword" >Пароль</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="inputDevicePassword" 
+                                                       ng-model="data.currentObject.deviceLoginInfo.devicePassword" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isRaw==true">
+                                            <td colspan="3" >
+                                                <input type="checkbox" 
+                                                       class="nmc-checkbox-form" 
+                                                       ng-model="data.currentObject.isHexPassword"/>
+                                                <label for="inputHexPassword">
+                                                    Признак пароля в шестнадцатеричном виде <small> (для электросчетчиков Меркурий)
+                                                    </small>
+                                                </label>
+                                            </td>                                
+                                        </tr>
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
+                                            <td>
+                                                <label for="inputDescription" >Таблица часовых данных</label>
+                                            </td>
+                                            <td colspan="2" 
+                                                class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputTable1h" 
+                                                       ng-model="data.currentObject.dataSourceTable1h" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.curDatasource.dataSourceType.isDbTablePair==true">
+                                            <td>
+                                                <label for="inputDescription" >Таблица суточных данных</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputTable24h" 
+                                                       ng-model="data.currentObject.dataSourceTable24h" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.exSystemKeyname=='VZLET'">
+                                            <td>
+                                                <label for="inputDescription" >Таблица часовых данных</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputTable1h" 
+                                                       ng-model="data.currentObject.metaData.vzletTableHour" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if="data.currentObject.exSystemKeyname=='VZLET'">
+                                            <td>
+                                                <label for="inputDescription" >Таблица суточных данных</label>
+                                            </td>
+                                            <td colspan="2" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputTable1h" 
+                                                       ng-model="data.currentObject.metaData.vzletTableDay" 
+                                                       ng-disabled="isDeviceDisabled(data.currentObject);"/>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="time_properties">
+                      <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="deviceTime" >Время по часам прибора</label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="deviceTime" 
+                                                       ng-model="data.currentObject.deviceObjectLastInfo.deviceLastTimeStr" 
+                                                       disabled
+                                                       />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" class="col-sm-6">
+                                                <label for="driverTime" >Время по часам драйвера во время снятия текущего времени прибора <small>(Драйвер работает в часовом поясе Москвы)</small></label>
+                                            </td>
+                                            <td class="col-sm-6" class="nmc-text-align-left">
+                                                <input class="form-control nmc-text-input-form nmc-input-data pull-right" 
+                                                       type="text" 
+                                                       id="driverTime" 
+                                                       ng-model="data.currentObject.deviceObjectLastInfo.driverLastTimeStr" 
+                                                       disabled
+                                                       />
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                          </div>
+                      </div>
+                  </div>
+                  
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveDevice(data.currentObject)"
+                                ng-disabled="isDeviceDisabled(data.currentObject);"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#data.currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!-- window: delete device-->
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.currentObject.number || data.currentObject.deviceContObjectCaption || data.currentObject.id}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                        </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-md-3">
+							<input type="submit" 
+                                   ng-disabled = "(confirmCode!=sumNums && !isSystemuser())"
+                                   class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(data.currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-md-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>		
+	</div>
+</div>
+
+<!--Meta data editor-->
+<div id="metaDataEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="metaDataEditorLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+        <ng-form name = "metadataForm">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="metaDataEditorLabel" class="nmc-h3">
+				Редактор метаданных прибора <span ng-if="data.currentObject.number!=null"> - №: </span>  {{data.currentObject.number}}
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-devices nmc-modal-panel-with-table"> 
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr class="nmc-child-table-header">
+                                <th ng-repeat="column in data.metadataSchema" 
+                                    ng-class="column.headClass">
+                                    {{column.header}}
+                                </th>
+                            </tr>     
+                            <tr ng-repeat="field in data.currentObject.metadata">
+                                <td ng-repeat="column in data.metadataSchema" 
+                                    ng-class="column.dataClass || column.headClass">
+                                    <span ng-switch on="column.type">
+                                        <span ng-switch-when="input/text" 
+                                              class="form-group" 
+                                              ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
+                                            <input ng-attr-name = {{"inputField"+field.id+column.name}} 
+                                                   type="text" 
+                                                   class="form-control nmc-text-input-form" 
+                                                   ng-model="field[column.name]" 
+                                                   ng-disabled="column.disabled" 
+                                                   required/>
+                                        </span>
+                                        <span ng-switch-when="select" 
+                                              class="form-group" 
+                                              ng-class="{'has-error': metadataForm['inputField'+field.id+column.name].$error.required}">
+                                            <select class="form-control nmc-select-form"
+                                                    ng-model="field[column.name]" 
+                                                    ng-options="measureUnit.keyname as measureUnit.caption for measureUnit in data.deviceMetadataMeasures[field[column.name]]" 
+                                                    ng-disabled="column.disabled">
+                                            </select>
+                                        </span>
+                                        <span ng-switch-default>
+                                            {{field[column.name]}}
+                                        </span>
+                                    </span>
+                                    
+                                </td>
+                            </tr>     
+                        </table>                        
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3 col-md-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click = "updateDeviceMetaData(data.currentObject)"
+                                ng-disabled="metadataForm.$invalid || data.currentObject.isSaving == true"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" 
+                                    data-dismiss="modal"
+								ng-click="exit('#data.currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+        </ng-form>
+	</div>
+</div>
+
+<!--schedule editor-->
+<div id="scheduleEditorModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="scheduleEditorLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog nmc-modal-dialog-w450">
+		<div class="modal-header nmc-modal-header-scheduler">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="scheduleEditorLabel" class="nmc-h3 noMargin">
+				Расписание опроса прибора <span ng-if="data.currentObject.number!=null">- №: </span> {{data.currentObject.number}}
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td colspan="2">
+                                    <input type="checkbox" 
+                                           class="nmc-checkbox-form" 
+                                           ng-model="data.currentScheduler.isLoadingAuto"
+                                           ng-disabled="checkAutoLoadingDisabled()"
+                                           />
+                                    <label class="nmc-form-label">
+                                        Автоматический опрос
+                                    </label>
+                                    <small ng-if="checkAutoLoadingDisabled()" class="text-danger">Автоматический опрос не возможен, потому что у источника данных прибора не включена поддержка дозвона</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-6 col-md-6"><label for="intervalShd" class="nmc-form-label">Интервал</label>
+                                </td>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" ng-class="{'has-error': data.currentScheduler.isLoadingAuto && !checkHHmm(data.currentScheduler.loadingInterval)}">
+                                        <input id="intervalShd"
+                                               class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                               type="text" 
+                                               ng-disabled="!data.currentScheduler.isLoadingAuto"                                                
+                                               ng-model="data.currentScheduler.loadingInterval"/> чч:мм
+<!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-6 col-md-6"><label for="inputAttemptsNumberShd" class="nmc-form-label">Количество попыток</label>
+                                </td>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" 
+                                          ng-class="{'has-error':data.currentScheduler.isLoadingAuto && !checkPositiveNumberValue(data.currentScheduler.loadingAttempts)}">
+                                        <input id = "inputAttemptsNumberShd" 
+                                               class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                               type="text" 
+                                               ng-disabled="!data.currentScheduler.isLoadingAuto"
+                                               data-inputmask="'alias':'numeric', 'greedy': false"
+                                               ng-model="data.currentScheduler.loadingAttempts"/>
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-6 col-md-6">
+                                    <label for="inputIntervalBetweenAttemptsShd" class="nmc-form-label"> Интервал между попытками 
+                                    </label>                                    
+                                </td>
+                                <td class="col-xs-6 col-md-6 nmc-text-align-left">
+                                    <span class="form-group" ng-class="{'has-error':data.currentScheduler.isLoadingAuto && !checkHHmm(data.currentScheduler.loadingRetryInterval)}">
+                                        <input id="inputIntervalBetweenAttemptsShd"
+                                               class="form-control nmc-text-input-form nmc-input-digital-data" 
+                                               type="text" 
+                                               ng-disabled="!data.currentScheduler.isLoadingAuto"                                                
+                                               ng-model="data.currentScheduler.loadingRetryInterval"/> чч:мм
+<!--                                        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" -->
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr ng-if="checkNodataIdleTimeEnabled()">
+                                <td colspan="2" class="col-xs-12 col-md-12">
+                                    <input type="checkbox" class="nmc-checkbox-form" 
+                                           ng-model="data.currentScheduler.nodataRequestEnabled"
+                                           ng-disabled="!data.currentScheduler.isLoadingAuto"/>
+                                    <span class="nmc-form-label">
+                                        Опрашивать только, если нет данных свыше 
+                                    </span>
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text"
+                                           ng-disabled="!data.currentScheduler.isLoadingAuto"
+                                           ng-model="data.currentScheduler.nodataIdleTime"/>
+                                    <span>часов</span>
+                                </td>                                
+                            </tr> 
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-3 col-xs-5 col-md-5">
+							<input type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                   ng-disabled="data.currentScheduler.isSaving == true || data.currentScheduler.isLoadingAuto && !checkScheduler(data.currentScheduler)"
+                                   ng-click = "saveScheduler(data.currentObject.contObjectId, data.currentObject, data.currentScheduler)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-md-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentDevice')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<div id="deviceSessionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deviceSessionLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog modal-content nmc-modal-wide-dialog">
+
+		<div class="modal-header nmc-modal-header nmc-bg-alert">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="deviceSessionLabel" class="nmc-h3">
+                Загрузка данных с прибора 
+                <span ng-bind="data.currentObject.number"></span>, 
+                {{data.currentObject.deviceModel.caption || data.currentObject.deviceModel.modelName}}
+<!--                <span ng-bind="data.currentObject.contObjectInfo.fullName"></span>" -->
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid noPadding">
+                <div class="row">
+                    <div id="manualSessionOptions" class="col-xs-2 col-md-2 marginBottom5 noPadding paddingLeft10 paddingRight5">
+                        <div>
+                            <label>Задайте период
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-addon nmc-date-interval-form-addon" id="leftAddon"
+                                      ng-disabled="isDisabledFilters()">с</span>
+                                <input date-range-picker 
+                                       class="form-control date-picker nmc-date-interval-form nmc-input-data"
+                                       type="text" 
+                                       ng-model="ctrlSettings.dataLoadDaterange" 
+                                       options="ctrlSettings.daterangeOpts" 
+                                       aria-describedby="leftAddon"
+                                       ng-disabled="isDisabledFilters()"/>
+                            </div>    
+                        </div>
+<!--
+                        <div>
+                            <div class="marginBottom5">
+                                <label>Укажите точку учета
+                                </label>
+                                <span class="form-group" ng-class="{'has-error': !data.currentContZpoint}">
+                                    <select class="form-control nmc-select-form" ng-model="data.currentContZpoint"
+                                            ng-options="zp as zp.customServiceName for zp in data.sessionDetailType"
+                                            ng-change="changeSessionDetailType()">
+                                    </select>
+                                </span>
+                            </div>
+                        </div>
+-->
+                        <div ng-if="data.detailTypes">
+                            <label>Выберете типы загружаемых данных
+                            </label>
+                            <div ng-repeat="detailType in data.detailTypes">
+                                <input type="checkbox" ng-model="detailType.selected"><span ng-bind="detailType.caption"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="btn btn-xs btn-primary"
+                               ng-click="startLoadData()"
+                               ng-disabled="isDisabledStartButton()">
+                                Загрузить
+                            </p>
+                        </div>
+                    </div>
+                    <div id="divSessionsData" class="col-xs-10 col-md-10 noPadding paddingLeft5 paddingRight10 nmc-line-left"
+                         >
+                        <div>
+                            <span ng-if="data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true">                   
+                                <h4>
+                                    <i class="fa fa-spinner fa-spin"></i> 
+                                    Задача по загрузке данных поставлена в очередь на выполнение
+                                </h4>
+                            </span>
+                            <span ng-if="data.currentSessionTask.taskIsComplete == true && ctrlSettings.dataIsLoaded != true">
+                                <h4><i class="fa fa-spinner fa-spin"></i> Задача выполняется</h4>
+                            </span>
+                            <span ng-if="ctrlSettings.dataIsLoaded == true"><h4> Загрузка данных завершена</h4>
+                            </span>
+                        </div>
+                        <div id="divManualSessions" style="max-height: 300px; overflow: auto">
+                            <table 
+                                   id="tableSessionsData" 
+                                   class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                                <caption class="noPadding">
+                                <h4>Сессии загрузки</h4>
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th style="padding: 0; border-bottom-width: 0px;">
+                                        <table class="crud-grid table table-lighter table-condensed noMargin">
+                                            <thead>
+                                                <tr class="nmc-child-table-header">
+                                                    <th class="col-md-1 nmc-td-for-button">
+                                                    </th>
+                                                    <th ng-repeat="scolumn in ::ctrlSettings.sessionColumns track by $index"
+                                                        ng-class="::scolumn.headerClass">
+                                                        {{::scolumn.caption}}
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                        </table>
+                                    </th>
+                                </tr>
+                            </thead>                    
+                            <tbody>
+                            <tr ng-repeat="session in data.sessionsOnView " 
+                                class="nmc-tr-striped nmc-link"            
+                                >    
+                                <td>
+                                    <table>
+                                        <tr ng-class="{'nmc-bg-distinguish': session.selected == true}">
+                                            <td class="col-xs-1 col-md-1 nmc-td-for-button noPadding">
+                                                <i class="btn btn-xs glyphicon glyphicon-chevron-right"
+                                                   ng-click="toggleChildSessionsView(session)"
+                                                   ng-class="{'nmc-button-disabled':!session.childs}"
+                                                   ng-disabled="!session.childs">
+                                                </i>                                        
+                                            </td>
+                                            <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
+                                                ng-class="::scolumn.headerClass"
+                                                ng-click="loadLogData(session)">
+                                                <span ng-switch on="scolumn.type">
+                                                    <div ng-switch-when="color"
+                                                          style="width: 12px; height: 12px"
+                                                          ng-style="{'background-color': session[scolumn.name]}"
+                                                          >
+                                                    </div>                                
+                                                    <span ng-switch-default>
+                                                        <span ng-bind="session[scolumn.name]"></span>                                   
+                                                    </span>
+                                                </span>
+                    <!--                            <span ng-bind="session[scolumn.name]"></span>                                -->
+                                            </td>
+
+                                        </tr>
+                                        <tr ng-repeat="child in session.childs" ng-show="session.isChildView"
+                                            ng-click="loadLogData(child)"
+                                            ng-class="{'nmc-bg-distinguish': child.selected == true}">
+                                            <td></td>
+                                            <td ng-repeat="scolumn in ctrlSettings.sessionColumns track by $index"
+                                                ng-class="::scolumn.headerClass">
+                                                <span ng-switch="scolumn.name">
+                                                    <span ng-switch-when="dataSource" class="paddingLeft20">                                                
+                                                    </span>
+                                                </span>
+                                                <span ng-bind="child[scolumn.name]"></span>
+
+                                            </td>
+
+                                        </tr>
+                                    </table>
+                                 </td>        
+                             </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                        <div id="divManualSessionLog" style="max-height: 300px; overflow: auto">
+<!--
+                          <table ng-show="ctrlSettings.logLoading"
+                           class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+                            <caption class="noPadding">
+                                <h4>Сообщения сессии</h4>
+                            </caption>
+                            <thead>
+                                <tr class="nmc-main-table-header">
+                                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                                        ng-class="::lcolumn.headerClass">
+                                        {{::lcolumn.caption}}
+                                    </th>
+                                </tr>
+                            </thead>            
+                          </table>
+                          <div ng-if="!(data.currentSessionTask.id && data.currentSessionTask.taskIsComplete != true)"
+                               ng-show="ctrlSettings.logLoading" class="marginBottom5 nmc-loading">
+                            <i class="fa fa-spinner fa-spin"></i> Загрузка сообщений сессии... 
+                          </div>
+-->
+                          <table 
+                               class="table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin nmc-parent-object-table">
+                            <caption class="noPadding">
+                                <h4>Сообщения сессии</h4>
+                            </caption>
+                            <thead>
+                                <tr class="nmc-main-table-header">
+                                    <th ng-repeat="lcolumn in ctrlSettings.logColumns track by $index"
+                                        ng-class="::lcolumn.headerClass">
+                                        {{::lcolumn.caption}}
+                                    </th>
+                                </tr>
+                            </thead>            
+                            <tbody>
+                                <tr ng-repeat="log in data.sessionLog">
+                                    <td ng-repeat="lcolumn in ctrlSettings.logColumns">
+                                        <div ng-switch on="::lcolumn.type">
+                                            <span ng-switch-when="id">{{log[lcolumn.name]}}<span ng-show="isSystemuser()"> (id = {{log['id']}})</span>
+                                            </span>
+                                            <span ng-switch-when="checkbox">
+                                                <input type="checkbox" ng-model="log[lcolumn.name]" disabled/>
+                                            </span>
+                                            <span ng-switch-default >
+                                                {{log[lcolumn.name]}}
+                                            </span>
+                                        </div>
+                                    </td>                        
+                                </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
+							<button class="btn btn-xs btn-default btn-block nmc-ok-button" data-dismiss="modal"
+								ng-click="exit('#data.currentObject');">
+								Закрыть
+							</button>                            
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>

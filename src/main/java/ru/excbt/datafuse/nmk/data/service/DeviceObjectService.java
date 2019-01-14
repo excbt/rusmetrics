@@ -3,9 +3,8 @@ package ru.excbt.datafuse.nmk.data.service;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.persistence.PersistenceException;
 
@@ -20,11 +19,11 @@ import com.google.common.collect.Lists;
 
 import ru.excbt.datafuse.nmk.config.jpa.TxConst;
 import ru.excbt.datafuse.nmk.data.model.*;
-import ru.excbt.datafuse.nmk.data.model.dto.ActiveDataSourceInfoDTO;
-import ru.excbt.datafuse.nmk.data.model.dto.DeviceObjectDTO;
+import ru.excbt.datafuse.nmk.data.model.dto.*;
 import ru.excbt.datafuse.nmk.data.model.types.DataSourceTypeKey;
 import ru.excbt.datafuse.nmk.data.model.types.ExSystemKey;
 import ru.excbt.datafuse.nmk.data.repository.*;
+import ru.excbt.datafuse.nmk.service.mapper.SubscrDataSourceMapper;
 import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
 import ru.excbt.datafuse.nmk.security.SecurityUtils;
@@ -51,7 +50,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectDataSourceService deviceObjectDataSourceService;
 
-	private final DeviceObjectDataSourceRepository deviceObjectDataSourceRepository;
+	private final DeviceObjectDataSource2Repository deviceObjectDataSource2Repository;
 
 	private final DeviceObjectMetadataService deviceObjectMetadataService;
 
@@ -59,7 +58,7 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService;
 
-	private final V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
+	//private final V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository;
 
 	private final DeviceObjectMapper deviceObjectMapper;
 
@@ -67,29 +66,32 @@ public class DeviceObjectService implements SecuredRoles {
 
 	private final ObjectAccessService objectAccessService;
 
+    private final SubscrDataSourceMapper subscrDataSourceMapper;
+
     @Autowired
     public DeviceObjectService(DeviceObjectRepository deviceObjectRepository,
                                DeviceModelService deviceModelService,
                                DeviceObjectMetaVzletRepository deviceObjectMetaVzletRepository,
                                DeviceObjectDataSourceService deviceObjectDataSourceService,
-                               DeviceObjectDataSourceRepository deviceObjectDataSourceRepository,
+                               DeviceObjectDataSource2Repository deviceObjectDataSource2Repository,
                                DeviceObjectMetadataService deviceObjectMetadataService,
                                DeviceMetadataService deviceMetadataService,
                                DeviceObjectLoadingSettingsService deviceObjectLoadingSettingsService,
-                               V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
-                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService) {
+                               //V_DeviceObjectTimeOffsetRepository deviceObjectTimeOffsetRepository,
+                               DeviceObjectMapper deviceObjectMapper, SubscrDataSourceRepository subscrDataSourceRepository, ObjectAccessService objectAccessService, SubscrDataSourceMapper subscrDataSourceMapper) {
         this.deviceObjectRepository = deviceObjectRepository;
         this.deviceModelService = deviceModelService;
         this.deviceObjectMetaVzletRepository = deviceObjectMetaVzletRepository;
         this.deviceObjectDataSourceService = deviceObjectDataSourceService;
-        this.deviceObjectDataSourceRepository = deviceObjectDataSourceRepository;
+        this.deviceObjectDataSource2Repository = deviceObjectDataSource2Repository;
         this.deviceObjectMetadataService = deviceObjectMetadataService;
         this.deviceMetadataService = deviceMetadataService;
         this.deviceObjectLoadingSettingsService = deviceObjectLoadingSettingsService;
-        this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
+        //this.deviceObjectTimeOffsetRepository = deviceObjectTimeOffsetRepository;
         this.deviceObjectMapper = deviceObjectMapper;
         this.subscrDataSourceRepository = subscrDataSourceRepository;
         this.objectAccessService = objectAccessService;
+        this.subscrDataSourceMapper = subscrDataSourceMapper;
     }
 
 
@@ -109,8 +111,31 @@ public class DeviceObjectService implements SecuredRoles {
 
         ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
 
-        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-            : new DeviceObjectDataSource();
+        DeviceObjectDataSource2 deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource2();
+
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+        deviceObjectDataSource.deviceObjectId(deviceObject.getId());
+        deviceObject.saveDeviceObjectCredentials();
+
+        return saveDeviceObject(deviceObject, deviceObjectDataSource);
+    }
+
+    /**
+     *
+     * @param deviceObjectDTO
+     * @return
+     */
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationCreate (DeviceObjectDTO deviceObjectDTO) {
+
+        DeviceObject deviceObject = deviceObjectMapper.toEntity(deviceObjectDTO);
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource2 deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource2();
 
         initDeviceObjectDataSource(dsi, deviceObjectDataSource);
 
@@ -130,15 +155,39 @@ public class DeviceObjectService implements SecuredRoles {
 
         ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
 
-        DeviceObjectDataSource deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
-            : new DeviceObjectDataSource();
+        DeviceObjectDataSource2 deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource2();
 
         initDeviceObjectDataSource(dsi, deviceObjectDataSource);
 
         deviceObject.saveDeviceObjectCredentials();
 
         DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
-        result.shareDeviceLoginInfo();
+        //result.shareDeviceLoginInfo();
+        return result;
+    }
+
+    @Transactional(value = TxConst.TX_DEFAULT)
+    @Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
+    public DeviceObject automationUpdate(Long contObjectId, DeviceObjectDTO deviceObjectDTO) {
+
+        DeviceObject deviceObject = deviceObjectMapper.toEntity(deviceObjectDTO);
+
+        ActiveDataSourceInfoDTO dsi = deviceObject.getEditDataSourceInfo();
+
+        DeviceObjectDataSource2 deviceObjectDataSource = (dsi == null || dsi.getSubscrDataSourceId() == null) ? null
+            : new DeviceObjectDataSource2();
+
+        initDeviceObjectDataSource(dsi, deviceObjectDataSource);
+
+        deviceObject.saveDeviceObjectCredentials();
+
+        DeviceObject result = saveDeviceObject(deviceObject, deviceObjectDataSource);
+        deviceObjectDataSource.setDeviceObjectId(result.getId());
+
+        deviceObjectDataSourceService.saveDeviceDataSource2(deviceObjectDataSource);
+
+        //result.shareDeviceLoginInfo();
         return result;
     }
 
@@ -146,7 +195,7 @@ public class DeviceObjectService implements SecuredRoles {
     /*
 
      */
-    private void initDeviceObjectDataSource(ActiveDataSourceInfoDTO dsi, DeviceObjectDataSource deviceObjectDataSource) {
+    private void initDeviceObjectDataSource(ActiveDataSourceInfoDTO dsi, DeviceObjectDataSource2 deviceObjectDataSource) {
         if (deviceObjectDataSource != null && dsi != null) {
             SubscrDataSource ds = subscrDataSourceRepository.findOne(dsi.getSubscrDataSourceId());
             if (ds == null) {
@@ -157,7 +206,6 @@ public class DeviceObjectService implements SecuredRoles {
             deviceObjectDataSource.setDataSourceTable(dsi.getDataSourceTable());
             deviceObjectDataSource.setDataSourceTable1h(dsi.getDataSourceTable1h());
             deviceObjectDataSource.setDataSourceTable24h(dsi.getDataSourceTable24h());
-            deviceObjectDataSource.setIsActive(true);
         }
     }
 
@@ -218,9 +266,9 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsByContObjectId(Long contObjectId) {
 		List<DeviceObject> resultList = deviceObjectRepository.selectDeviceObjectsByContObjectId(contObjectId);
-		resultList.forEach(i -> {
-			i.loadLazyProps();
-		});
+//		resultList.forEach(i -> {
+//			i.loadLazyProps();
+//		});
 		return resultList;
 	}
 
@@ -280,7 +328,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 * @param deviceObjectId
 	 * @return
 	 */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	//@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	private List<DeviceObjectMetaVzlet> findDeviceObjectMetaVzlet(long deviceObjectId) {
 		return deviceObjectMetaVzletRepository.findByDeviceObjectId(deviceObjectId);
 	}
@@ -293,10 +341,22 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObject selectDeviceObject(long id) {
 		DeviceObject result = deviceObjectRepository.findOne(id);
-		if (result != null) {
-			result.loadLazyProps();
-		}
+//		if (result != null) {
+//			result.loadLazyProps();
+//		}
 		return result;
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectFullVM selectDeviceObjectFullVM(long id) {
+		DeviceObject result = deviceObjectRepository.findOne(id);
+		return deviceObjectMapper.toFullVM(result);
+	}
+
+	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	public DeviceObjectFullVM selectDeviceObjectFullVM_Rma(long id) {
+		DeviceObject result = deviceObjectRepository.findOne(id);
+		return deviceObjectMapper.toFullVM(result).shareDeviceLoginInfo(result);
 	}
 
 	/**
@@ -318,12 +378,11 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT)
 	@Secured({ ROLE_DEVICE_OBJECT_ADMIN, ROLE_RMA_DEVICE_OBJECT_ADMIN })
-	public DeviceObject saveDeviceObject(DeviceObject deviceObject, DeviceObjectDataSource deviceObjectDataSource) {
+	public DeviceObject saveDeviceObject(DeviceObject deviceObject, DeviceObjectDataSource2 deviceObjectDataSource) {
 		// Checking
 		checkNotNull(deviceObject, "Argument DeviceObject is NULL");
 		checkNotNull(deviceObject.getDeviceModel(), "Device Model is NULL");
 		if (deviceObjectDataSource != null) {
-			checkArgument(deviceObjectDataSource.isNew());
 			checkNotNull(deviceObjectDataSource.getSubscrDataSource());
 		}
 		// Set manual flag
@@ -341,13 +400,13 @@ public class DeviceObjectService implements SecuredRoles {
 		    deviceObject.setHeatRadiatorType(new HeatRadiatorType().id(deviceObject.getHeatRadiatorTypeId()));
         }
 
-		DeviceObject savedDeviceObject = deviceObjectRepository.save(deviceObject);
+		DeviceObject savedDeviceObject = deviceObjectRepository.saveAndFlush(deviceObject);
+
 		if (deviceObjectDataSource != null) {
-			deviceObjectDataSource.setDeviceObject(savedDeviceObject);
 			deviceObjectDataSource.setDeviceObjectId(savedDeviceObject.getId());
-			DeviceObjectDataSource resultDataSource = deviceObjectDataSourceService
-					.saveDeviceDataSource(deviceObjectDataSource);
-			savedDeviceObject.getDeviceObjectDataSources().add(resultDataSource);
+			DeviceObjectDataSource2 resultDataSource = deviceObjectDataSourceService
+					.saveDeviceDataSource2(deviceObjectDataSource);
+			savedDeviceObject.setDeviceObjectDataSource(resultDataSource);
 
 			if (ExSystemKey.VZLET.getKeyname()
 					.equals(resultDataSource.getSubscrDataSource().getDataSourceType().getKeyname())) {
@@ -429,27 +488,46 @@ public class DeviceObjectService implements SecuredRoles {
 		    deviceObject.setDeviceLogin(deviceObjectDTO.getDeviceLoginInfo().getDeviceLogin());
         }
 
-		deviceObjectRepository.save(deviceObject);
+		DeviceObject savedDeviceObject = deviceObjectRepository.saveAndFlush(deviceObject);
 
-		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
-
-        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
-            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
-                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
-
-            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
-        }
+		DeviceObjectDataSource2 deviceObjectDataSource = deviceObject.getActiveDataSource();
 
 
-        DeviceObject result = selectDeviceObject(deviceObject.getId());
 
-        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-            result.shareDeviceLoginInfo();
-        }
+		//Optional<EditDataSourceDTO> optionalDataSource =
+        Optional.ofNullable(deviceObjectDTO.getEditDataSourceInfo())
+                .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
+                .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
+                .filter(i -> Objects.nonNull(deviceObjectDataSource))
+                .filter(id -> deviceObjectDataSource != null &&
+                            id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+            .ifPresent(i -> {
+                deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
+                deviceObjectDataSource2Repository.save(deviceObjectDataSource);
+            });
+
+        //Optional<DeviceObjectDataSource2> optionalDataSource =
+
+//        if (deviceObjectDataSource != null &&
+//            deviceObjectDTO.getEditDataSourceInfo() != null &&
+//            deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId() != null &&
+//                deviceObjectDataSource.getSubscrDataSource().getId().equals(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceId())) {
+//
+//            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+//                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+//
+//            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+//        }
 
 
-        return result;
+        //DeviceObject result = selectDeviceObject(deviceObject.getId());
+
+//        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+//            result.shareDeviceLoginInfo();
+//        }
+
+
+        return savedDeviceObject;
 	}
 
 
@@ -476,22 +554,35 @@ public class DeviceObjectService implements SecuredRoles {
 
 		deviceObjectRepository.save(deviceObject);
 
-		DeviceObjectDataSource deviceObjectDataSource = deviceObject.getActiveDataSource();
+		DeviceObjectDataSource2 deviceObjectDataSource = deviceObject.getActiveDataSource();
 
-        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
-                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getId())) {
-            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
-                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
-
-            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
-        }
+		Optional.ofNullable(deviceObjectDTO).map(DeviceObjectDTO::getEditDataSourceInfo)
+            .filter(i -> Objects.nonNull(i.getSubscrDataSourceAddr()))
+            .filter(i -> Objects.nonNull(i.getSubscrDataSourceId()))
+            .filter(i -> Objects.nonNull(deviceObjectDataSource))
+            .filter(id -> deviceObjectDataSource != null &&
+                id.equals(deviceObjectDataSource.getSubscrDataSource().getId()))
+            .ifPresent(i -> {
+                deviceObjectDataSource.setSubscrDataSourceAddr(i.getSubscrDataSourceAddr());
+                deviceObjectDataSource2Repository.save(deviceObjectDataSource);
+            });
+//
+//
+//
+//        if (deviceObjectDataSource != null && deviceObjectDTO.getEditDataSourceInfo() != null &&
+//                deviceObjectDataSource.getId().equals(deviceObjectDTO.getEditDataSourceInfo().getId())) {
+//            if (deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr() != null)
+//                deviceObjectDataSource.setSubscrDataSourceAddr(deviceObjectDTO.getEditDataSourceInfo().getSubscrDataSourceAddr());
+//
+//            deviceObjectDataSourceRepository.save(deviceObjectDataSource);
+//        }
 
 
         DeviceObject result = selectDeviceObject(deviceObject.getId());
 
-        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
-            result.shareDeviceLoginInfo();
-        }
+//        if (SecurityUtils.isCurrentUserInRole(SecuredRoles.ROLE_DEVICE_OBJECT_ADMIN)) {
+//            result.shareDeviceLoginInfo();
+//        }
 
         return result;
 	}
@@ -499,7 +590,7 @@ public class DeviceObjectService implements SecuredRoles {
     @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public DeviceObjectDTO findDeviceObjectDTO(Long id) {
         DeviceObject deviceObject = selectDeviceObject(id);
-        return deviceObjectMapper.deviceObjectToDeviceObjectDTO(deviceObject);
+        return deviceObjectMapper.toDto(deviceObject);
     }
 
 //    public DeviceObjectDMO convert (DeviceObjectDTO deviceObjectDTO) {
@@ -535,9 +626,16 @@ public class DeviceObjectService implements SecuredRoles {
 			throw new PersistenceException(String.format("DeviceObject (id=%d) is not found", deviceObjectId));
 		}
 
-		deviceObject.getDeviceObjectDataSources().forEach(i -> {
-			deviceObjectDataSourceRepository.delete(i);
-		});
+		Optional.ofNullable(deviceObject)
+            .map(DeviceObject::getDeviceObjectDataSource)
+            .ifPresent( i -> deviceObjectDataSource2Repository.delete(i));
+//
+//		if (deviceObject.getDeviceObjectDataSource() != null) {
+//            deviceObjectDataSource2Repository.delete(deviceObject.getDeviceObjectDataSource());
+//        }
+//		deviceObject.getDeviceObjectDataSource().forEach(i -> {
+//			deviceObjectDataSourceRepository.delete(i);
+//		});
 
 		deviceObjectRepository.delete(deviceObject);
 	}
@@ -549,10 +647,8 @@ public class DeviceObjectService implements SecuredRoles {
      */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<DeviceObject> selectDeviceObjectsBySubscriber(Long subscriberId) {
-		List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
-		result.forEach(i -> {
-			i.loadLazyProps();
-		});
+		//List<DeviceObject> result = objectAccessService.findAllContZPointDeviceObjects(subscriberId);
+		List<DeviceObject> result = objectAccessService.findAllContObjectDeviceObjects(subscriberId);
 		return result;
 	}
 
@@ -601,7 +697,7 @@ public class DeviceObjectService implements SecuredRoles {
 	 */
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public V_DeviceObjectTimeOffset selectDeviceObjsetTimeOffset(Long deviceObjectId) {
-		return deviceObjectTimeOffsetRepository.findOne(deviceObjectId);
+		return deviceObjectId != null ? deviceObjectRepository.findOne(deviceObjectId).getTimeOffset() : null;
 	}
 
     /**
@@ -612,8 +708,18 @@ public class DeviceObjectService implements SecuredRoles {
 	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
 	public List<V_DeviceObjectTimeOffset> selectDeviceObjsetTimeOffset(List<Long> deviceObjectIds) {
 		return deviceObjectIds.isEmpty() ? new ArrayList<>()
-				: deviceObjectTimeOffsetRepository.selectDeviceObjectTimeOffsetList(deviceObjectIds);
+				: deviceObjectRepository.selectDeviceObjectsByIds(deviceObjectIds).stream().map(i -> i.getTimeOffset()).collect(Collectors.toList());
 	}
+
+
+    @Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+    public SubscrDataSourceDTO selectDeviceObjectSubscrDataSource(long deviceObjectId) {
+        DeviceObject result = deviceObjectRepository.findOne(deviceObjectId);
+        return Optional.ofNullable(result)
+            .map(DeviceObject::getDeviceObjectDataSource)
+            .map(DeviceObjectDataSource2::getSubscrDataSource)
+            .map(i -> subscrDataSourceMapper.toDto(i)).orElse(null);
+    }
 
 
 

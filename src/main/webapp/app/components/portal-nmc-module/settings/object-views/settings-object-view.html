@@ -1,0 +1,2366 @@
+
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
+        <li id="object_settings_2nd_menu_item" role="presentation" class="active">
+            <a id="settingsObjectTab" class="nmc-main-tab-button" href="" aria-controls="objects" data-target="#objects" role="tab" data-toggle="tab">Объекты</a>
+        </li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li ng-hide="isTestMode()"
+            id="meter_period_setting_2nd_menu_item" 
+            role="presentation"
+            class="">
+            <a class="nmc-main-tab-button"  
+               href="#/settings/meter-period-setting/" 
+               aria-controls="meter-period-setting" 
+               role="tab" 
+               data-target="#meter-period-setting" 
+               data-toggle="tab">Настройка отчетных периодов
+            </a>
+        </li>
+        <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="monitor">
+      </div>
+    </div>
+</div>        
+<!--<hr>-->
+
+<div class="row">
+    <div class="col-xs-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true">                    
+        <div class="row nmc-main-workspace-header marginBottom5"
+             ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+             >
+            <div class="col-xs-6">
+                <div class="btn-group">
+                      <button 
+                              title="Иерархии объектов" 
+                             type="button" 
+                             class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                             data-toggle="dropdown" 
+                             aria-haspopup="true" 
+                             aria-expanded="false"
+                              ng-disabled="!(data.trees.length > 0)"
+                         >
+                          {{messages.treeMenuHeader}} <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
+                          <li class="menu-item" role="presentation">
+                              <a href="" class=""
+                                 ng-click="viewFullObjectList()">
+                                  Полный список объектов
+                              </a>
+                          </li>
+                    </ul>
+                    <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
+<!--                          <li class="divider" role="presentation"></li>-->
+                          <li class="menu-item" role="presentation" ng-repeat="tree in data.trees">
+                              <a href="" class=""
+                                 ng-click="loadTree(tree); objectCtrlSettings.isFullObjectView = false">
+                                  {{tree.objectName}}
+                              </a>
+                          </li>
+                      </ul>
+                    </div>
+
+            </div>
+            <div class="input-group col-xs-6 filter pull-left nmc-search-form">   
+            </div>
+        </div>
+    </div>    
+    <div ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true, 'col-xs-9': objectCtrlSettings.isTreeView == true}">            
+        <div class="container-fluid" ng-hide="loading">            
+            <div class="row nmc-main-workspace-header">
+                <div class="col-xs-2 noPadding" ng-controller="ObjectGroupsCtrl">
+                    <div class="btn-group" ng-show="objectCtrlSettings.isTreeView != true">
+                          <button 
+                                  title="Фильтр по группам объектов" 
+                                 type="button" 
+                                 class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                                 data-toggle="dropdown" 
+                                 aria-haspopup="true" 
+                                 aria-expanded="false"
+                                  ng-disabled="!(groups.length > 0)"
+                             >
+                              {{messages.groupMenuHeader}} <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
+                              <li class="menu-item" role="presentation">
+                                  <a href="" class=""
+                                     ng-click="objectsDataFilteredByGroup(null)">
+                                      Полный список объектов
+                                  </a>
+                              </li>
+                          </ul>
+                          <ul class="dropdown-menu nmc-dropdown-menu nmc-view-tree-list-items nmc-dropdown-menu-filter">
+                              <li class="menu-item" role="presentation" ng-repeat="group in groups">
+                                  <a href="" class=""
+                                     ng-click="objectsDataFilteredByGroup(group)">
+                                      {{group.contGroupName}}
+                                  </a>
+                              </li>
+                          </ul>
+                        </div>   
+                </div>
+                <div class="input-group col-xs-3 filter marginBottom5 pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                </div>                
+                <div class="col-xs-1 nmc-div-refresh">
+                    <button title="Обновить" 
+                            class="btn btn-default btn-xs glyphicon glyphicon-refresh nmc-button-refresh" 
+                            ng-click="refreshObjectsData()"
+                            ng-show="objectCtrlSettings.isTreeView != true"
+                            >
+                    </button>
+                </div>
+                <div class="col-xs-offset-3 col-xs-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-3 noPadding paddingRight10 paddingLeft15" ng-show="objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false">
+            <div ng-show="treeLoading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка иерархии... 
+        </div>
+         <div class="row nmc-tree-with-fixed-header"
+              ng-class="{'nmc-hide':treeLoading, 'nmc-show':!treeLoading}"
+              >
+              <div ui-tree="options" data-drag-enabled="false">
+                <ol ui-tree-nodes ng-model="data.currentTree" >
+                  <li ng-repeat="item in data.currentTree.childObjectList" 
+                      ui-tree-node 
+                      ng-include="'subscr_object_tree_items_renderer.html'"></li>
+                </ol>
+              </div>
+         </div>
+    </div>
+    <div class="paddingLeftRight15" ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true && objectCtrlSettings.isFullObjectView == true, 'col-xs-9': objectCtrlSettings.isTreeView == true && objectCtrlSettings.isFullObjectView == false}">
+        <div ng-show="loading" class="marginBottom5 nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка объектов... 
+        </div>
+<!--
+        <div  ng-show="loading" class="nmc-loading">
+            <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+        </div>
+        <div class="container-fluid" ng-hide="loading">
+            <div class="row nmc-main-workspace-header marginTop5">
+                <div class="input-group col-xs-4 col-md-4 filter marginBottom10 pull-left nmc-search-form">   
+                    <span class="input-group-addon nmc-search-form-addon"><i class="glyphicon glyphicon-search nmc-search-form-button"></i></span>
+                    <input title="Введите текст для поиска объектов" type="text" class="form-control nmc-text-input-form" ng-model="filter" ng-change="searchObjects(filter)">
+                </div>
+                <div class="col-md-offset-2 col-xs-2 col-md-2">
+                        <label class="nmc-form-label">Всего:</label>
+                         <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                        <span id="timeOutput"></span>
+                </div>
+            </div>
+        </div>
+-->
+        <!-- Шапка для таблицы-->
+        <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
+                <thead>
+                    <tr>
+                        <th style="padding: 0; border-bottom-width: 0px;">
+                            <table class="crud-grid table table-lighter table-condensed noMargin">
+                                <thead>
+                                    <tr class="nmc-child-table-header">
+                                        <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
+                                            <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                            <div class="btn-group" style="vertical-align: initial;">
+
+                                              <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu">
+                                                <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
+                                                <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li>
+                                                <li><a href=""
+                                                       ng-click="initIndicatorPreferences()"
+                                                       data-target="#columnSettingsModal"
+                                                       data-toggle="modal"
+                                                       >{{messages.setIndicatorInterface}}
+                                                </a>
+<!--                                                    ng-click="initIndicatorColumnsPref()"-->
+                                                </li>
+<!--                                                <li><a href="" ng-click="">{{messages.setIndicatorInterfaceForObjects}}</a></li>-->
+                                                <li ng-if="data.indicatorModes && data.indicatorModes.length > 0" 
+                                                    class="menu-item dropdown dropdown-submenu" role="presentation">
+                                                    <a href="" 
+                                                       class="" 
+                                                       data-toggle="dropdown" 
+                                                       aria-haspopup="true" 
+                                                       aria-expanded="false"  
+                                                       >
+                                                        {{messages.setIndicatorInterfaceForObjects}}
+                                                    </a>
+                                                    <ul class="dropdown-menu nmc-dropdown-menu">
+                                                        <li class="menu-item dropdown" 
+                                                            ng-repeat="mode in data.indicatorModes track by $index" 
+                                                            >                                            
+                                                            <a ng-click="setDefaultObjectIndicatorModeForObjects(mode)">
+                                                                <span title="Представление" 
+                                                                      ng-click="">
+                                                                    <span ng-bind="mode.caption"></span>
+                                                                </span>
+                                                            </a>
+                                                        </li>                                        
+                                                    </ul>                                    
+                                                </li>
+                                              </ul>
+                                            </div>
+                                        </th>
+                                        <th class="nmc-td-for-buttons"></th>
+                                        <th>Название объекта
+                                            
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                    </tr>
+                </thead>
+        </table>
+
+        <div id="parentDivWithObjectListTable">
+            <div class="" class="nmc-hide" ng-show="objectsOnPage.length ==0" ng-hide="loading || (objectsOnPage.length > 0)">
+                <h3 class="nmc-h3">{{messages.noObjects}}</h3>
+            </div>
+            <div id="divWithSettingsObjectTable" class="nmc-table-with-fixed-header" ng-hide="loading">
+                <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                <thead>
+                    <tr class="nmc-hide">
+                        <th style="padding: 0; border-bottom-width: 0px;">
+                            <table class="crud-grid table table-lighter table-condensed noMargin">
+                                <thead>
+                                    <tr class="nmc-child-table-header">
+                                        <th ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
+                                            class="nmc-td-for-buttons-in-object-page" style="padding: 0 5px;">
+                                            <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                            <div class="btn-group" style="vertical-align: initial;">
+
+                                              <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                                <span class="caret"></span>
+                                              </button>
+                                              <ul class="dropdown-menu">
+                                                <li><a href="" ng-click="setModeForObjects('winter')">{{messages.setSelectedInWinterMode}}</a></li>
+                                                <li><a href="" ng-click="setModeForObjects('summer')">{{messages.setSelectedInSummerMode}}</a></li> 
+                                                <li><a href=""
+                                                       ng-click="initIndicatorPreferences()"
+                                                       data-target="#columnSettingsModal"
+                                                       data-toggle="modal"
+                                                       >{{messages.setIndicatorInterface}}
+                                                    </a>
+<!--                                                    ng-click="initIndicatorColumnsPref()"-->
+                                                </li>                                                   
+                                              </ul>
+                                            </div>
+                                        </th>
+                                        <th class="nmc-td-for-buttons"></th>
+                                        <th>Название объекта
+
+                                            <div class="btn-group pull-right" style="vertical-align: initial;">
+
+                                              <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">
+        <!--                                        <span class="caret"></span>-->
+                                              </p>
+                                              <ul class="dropdown-menu">
+<!--
+                                                <li>
+                                                    <a href="" 
+                                                       ng-click="objectCtrlSettings.extendedInterfaceFlag = !objectCtrlSettings.extendedInterfaceFlag"> Включить/выключить расширенный интерфейс
+                                                    </a>
+                                                </li>
+-->
+                                              </ul>
+                                            </div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat='object in objectsOnPage track by $index' ng-attr-id={{"obj"+object.id}}>
+                    <td>
+                        <table>
+                            <tr class="nmc-tr-hover"
+                                ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                <td ng-hide="!objectCtrlSettings.extendedInterfaceFlag" 
+                                    class="nmc-td-for-buttons-in-object-page">
+                                    <input type="checkbox" 
+                                           ng-model="object.selected" 
+                                           class="marginRight2" 
+                                           style="vertical-align: middle; margin-right: 7px;"/>
+                                    <img class="marginRight2" 
+                                         height="12" 
+                                         width="12" 
+                                         ng-src="{{object.imgsrc}}" 
+                                         ng-attr-title="{{object.currentSettingModeTitle}}">
+                                </td>
+                                <td class="nmc-td-for-buttons">
+                                    <div class="btn-group">
+                                      <i title="Действия над объектом" 
+                                         type="button" 
+                                         class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                                         data-toggle="dropdown" 
+                                         aria-haspopup="true" 
+                                         aria-expanded="false" 
+                                         ng-click="selectedObjectBy(object)" 
+                                         style="font-size: .9em;">
+                                        </i>
+                                      <ul class="dropdown-menu nmc-dropdown-menu">
+                                        <li class="menu-item" role="presentation">
+                                            <a href=""
+                                               class=""
+                                               ng-click="selectedObjectEx(object.id)" 
+                                               data-target="#showObjOptionModal" 
+                                               data-toggle="modal">
+                                                Свойства объекта                                        
+                                            </a>
+                                        </li>
+                                          
+<!--
+                                        <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                            <a href="" 
+                                               class="" 
+                                               data-toggle="dropdown" 
+                                               aria-haspopup="true" 
+                                               aria-expanded="false"  
+                                               >
+                                                Паспорт объекта
+                                            </a>
+                                            <ul class="dropdown-menu nmc-dropdown-menu">
+                                                <li ng-if = "!isReadonly()"
+                                                    class="menu-item dropdown">
+                                                    <a ng-click = "createContObjectPassportInit(object)">
+                                                        Создать паспорт
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "!isReadonly()" role = "separator" class = "divider"></li>
+                                                <li ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                                    class = "menu-item dropdown nmc-loading">
+                                                    <a>
+                                                        <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
+                                                    class = "menu-item dropdown">
+                                                    <a>
+                                                        У объекта нет паспортов
+                                                    </a>
+                                                </li>
+                                                <li ng-if = "data.currentContObjectPassports.length > 0 && !objectCtrlSettings.isPassportsLoading"
+                                                    class = "menu-item dropdown" 
+                                                    ng-repeat = "passport in data.currentContObjectPassports track by $index">
+                                                    
+                                                    <a >
+                                                        <i title = "Редактировать реквизиты паспорта"
+                                                           class = "btn btn-xs glyphicon glyphicon-edit"
+                                                           ng-click = "editContObjectPassportInit(passport, object)">
+
+                                                        </i>
+                                                        <i title = "Открыть паспорт"
+                                                           class = "btn btn-xs glyphicon glyphicon-list-alt"
+                                                           ng-click = "openContObjectPassport(passport, object)">
+
+                                                        </i>
+                                                        <span title="Паспорт объекта"
+                                                              ng-click = "openContObjectPassport(passport, object)"
+                                                              ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                            <span ng-bind="passport.passportName"></span>
+                                                        </span>
+                                                    </a>
+                                                </li>                                        
+                                            </ul>
+                                        </li> 
+-->
+                                          
+                                        <li ng-if="data.indicatorModes && data.indicatorModes.length > 0" 
+                                            class="menu-item dropdown dropdown-submenu" role="presentation">
+                                            <a href="" 
+                                               class="" 
+                                               data-toggle="dropdown" 
+                                               aria-haspopup="true" 
+                                               aria-expanded="false"  
+                                               >
+                                                Выбрать представление для точек учета
+                                            </a>
+                                            <ul class="dropdown-menu nmc-dropdown-menu">
+                                                <li class="menu-item dropdown" 
+                                                    ng-repeat="mode in data.indicatorModes track by $index" 
+                                                    >
+                                                    <a ng-click="setDefaultObjectIndicatorMode(object.id, mode)"                                               
+                                                       ><i class="glyphicon"
+                                                           ng-class="{'glyphicon-ok': mode.isCurrentMode === true}"
+                                                           style="width: 14px"
+                                                           >
+                                                        </i>
+                                                        <span title="Представление" 
+                                                              ng-click="">
+                                                            <span ng-bind="mode.caption"></span>
+                                                        </span>
+                                                    </a>
+                                                </li>                                        
+                                            </ul>                                    
+                                        </li>                                                                          
+                                          
+                                        <li class="menu-item" role="presentation">
+                                            <a href=""
+                                               class=""
+                                               ng-click="initIndicatorPreferences()"
+                                               data-target="#columnSettingsModal"
+                                               data-toggle="modal"
+                                               >
+                                               Настройка представлений для точки учета                                        
+                                            </a>
+                                        </li>
+                                        <li class="menu-item" role="presentation">
+                                            <a href=""
+                                               class=""
+                                               ng-click="setModeForObject(object)"
+                                               >
+                                                Перевести объект в "<span ng-bind="object.nextSettingModeTitle"></span>"                                        
+                                            </a>
+                                        </li>
+
+                                      </ul>
+                                    </div>
+                                    <i title="Показать/Скрыть точки учета" 
+                                       ng-attr-id={{"btnDetail"+object.id}} 
+                                       class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table"
+                                       ng-click="toggleShowGroupDetails(object.id)">
+                                    </i>                            
+                                </td>
+                                <td ng-click="toggleShowGroupDetails(object.id)">
+                                    {{object.fullName}}
+                                    <small>точек учета: 
+                                        <span ng-bind="object.contObjectStats.contZpointCount"></span>
+                                    </small>
+<!--
+                                    <small>
+                                        <span class="badge">
+                                            <span ng-bind="object.contObjectStats.contZpointCount"></span>
+                                        </span>
+                                    </small>
+-->
+                                    <span ng-show="isSystemuser()">(id = {{object.id}})</span>
+                                </td>
+                            </tr>
+                            <tr ng-attr-id="{{'trObjZp'+object.id}}" class="nmc-tr-zpoint">
+                            </tr>
+                        </table>
+                     </td>        
+                 </tr>
+        <!--
+                <tr class="nmc-hide">
+                    <td>{{onTableLoad()}}</td>
+                </tr>
+        -->
+                </tbody>
+            </table>
+        <!--        </div>-->
+          </div>  
+        </div><!-- end of scrolling table div -->
+    </div>
+</div> 
+
+<!--Show Zpoint options-->
+<div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showZpointOptionLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close marginRight5 nmc-close-button" ng-click="invokeHelp()"><span aria-hidden="true">?</span></button>
+			<h3 id="showZpointOptionLabel" class="nmc-h3">
+				Свойства точки учета 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
+            <div class="container-fluid"><!--  nmc-modal-panel"> -->
+                <div class="row-fluid">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-xs-3">
+                                    <label for="labelObjectName">Объект учета</label>
+                                </td>
+                                <td class="col-xs-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom">
+                                       <input class="form-control nmc-text-input-form" 
+                                              type="text" 
+                                              id="labelObjectName" 
+                                              placeholder="Объект учета" 
+                                              size="70" 
+                                              ng-model="currentObject.fullName"
+                                              disabled/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-3">
+                                    <label for="inputCustomServiceName">Наименование</label>
+                                </td>
+                                <td class="col-xs-9 nmc-text-align-left">
+                                	<input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputCustomServiceName" placeholder="Наименование" size="70" ng-model="zpointSettings.customServiceName">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-xs-12">
+                                   <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" ng-model="zpointSettings.isManualLoading">Разрешить ручную загрузку данных
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="nmc-text-align-left ">
+                                	<textarea disabled="true" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                  <label for="inputType">Тип</label>
+                                </td>
+                                <td class="nmc-text-align-left "><input class="form-control nmc-text-input-form" type="text" id="inputType" disabled="true" placeholder="Тип"  size="30" ng-model="zpointSettings.zpointTypeCaption">
+                                    <div ng-show="zpointSettings.piped">
+                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.singlePipe" data-ng-value="true"> Однотрубная
+                                        <input disabled="true" type="radio" name="gvstype" data-ng-model="zpointSettings.doublePipe" data-ng-value="true">Двухтрубная
+                                    </div>    
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-3">
+                                	<label for="inputDevice">Прибор учета</label>
+                                </td>
+                                <td class="col-xs-9 nmc-text-align-left ">
+                                	<input class="form-control nmc-text-input-form" disabled="true" type="text" id="inputDevice" size="70" ng-model="zpointSettings.devCaption">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-3">
+                                	<label for="inputRso">РСО</label>
+                                </td>
+                                <td class="col-xs-9 nmc-text-align-left">
+                                	<input class="form-control nmc-text-input-form" type="text" id="inputRso" disabled="true" placeholder=""  size="30" ng-model="zpointSettings.zpointRSO">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-xs-3 ">
+                                	<label for="inputRh">Расчётный час : </label>
+                                </td>
+                                <td class="col-xs-9">
+                                	<input disabled="true"
+                                			type="text"
+                                			id="inputRh"
+                                			pattern="\d[0-2]\d[0-9] : \d[0-5]\d[0-9]"
+                                			class="form-control marginRight15 nmc-input-digital-data nmc-text-input-form"
+                                			ng-model="zpointSettings.checkoutTime">
+                                	<label for="inputRd" style="margin-left: 23px">Расчётный день : </label>
+                                	<input disabled="true"
+                                			type="text"
+                                			id="inputRd"
+                                			pattern="\d[0-3]\d[0-9]"
+                                			class="form-control marginRight15 nmc-input-digital-data nmc-text-input-form"
+                                			size="19"
+                                			style="margin-right: 0px"
+                                			ng-model="zpointSettings.checkoutDay">
+                                </td>
+                            </tr>
+                            <tr><td></td><td></td></tr>
+                         </table>
+                            	<div class="col-xs-6">Эталонный интервал:</div>
+                   				<div class="col-xs-6">
+                   				  <div class="progress progress-striped">
+                   					<div id="spn_if_manual" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none">
+                   						<span><b>Указан вручную</b></span>
+                   					</div>
+                   					<div id="spn_if_auto" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%; display: none">
+                   						<span><b>Расчитан автоматически</b></span>
+                   					</div>
+                   				  </div>
+                   				</div>
+        						<div class="form-group col-xs-12 noPadding">
+        								<div class="col-xs-1">
+        									<label for="inp_ref_range_start">c:</label>
+        								</div>
+        								<div class="col-xs-3  noPadding">
+        									<input id="inp_ref_range_start"
+        											type="text"
+        											class="form-control nmc-date-input-form"
+        											ng-model="beginDate"
+        											disabled />
+<!--
+                                            <input disabled id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psStartDateFormatted"/>
+-->
+        								</div>
+        								<div class="form-group col-xs-1">
+        									<label for="inp_ref_range_end">по:</label>
+        								</div>
+        								<div class="col-xs-3  noPadding">
+        									<input id="inp_ref_range_end"
+        											type="text"
+        											class="form-control nmc-date-input-form"
+        											ng-model="endDate"
+        											disabled />
+        								</div>
+        								<div class="col-xs-4">
+        							    	<p id="i_ref_range_add"
+		            							title="Изменить эталонный интервал"
+    		        							class="btn btn-xs nmc-button-in-modal"
+                                                ng-class="{'nmc-hide':toggleFlag, 'nmc-show':!toggleFlag}"
+        		    							ng-click="editRefRangeOn()"
+                                               ng-disabled="isCabinet()"
+                                               >Изменить</p>
+            								<p id="i_ref_range_save"
+            									title="Сохранить эталонный интервал"
+            									class="btn btn-xs nmc-button-in-modal nmc-hide" 
+                                                ng-class="{'nmc-hide':!toggleFlag, 'nmc-show':toggleFlag}"
+            									ng-click="addRefRange()"
+                                               ng-disabled="isCabinet()"
+                                               >Сохранить</p>
+                            			</div>
+                            	</div>
+                       </div>    
+                 </div>
+        	</div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input ng-disabled="!isAdmin()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                ng-click="updateZpointCommonSettings()"
+								value="Сохранить" />
+						</div> 
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noPadding noMargin nmc-cancel-button">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>		
+	</div>
+</div>
+
+<!-- Zpoint's exploatation paramters editing -->
+<div id = "showZpointExplParameters"
+		class = "modal fade nmc-modal-window"
+		role = "dialog"
+		tabindex = "-1"
+		aria-labelledby = "showZpointOptionLabel"
+      data-backdrop = "static"
+     >
+
+	<div class="modal-dialog modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showZpointOptionLabel" class="nmc-h3">
+				Эксплуатационные параметры точки учета "{{zpointSettings.zpointName}}"
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+		<div class="container-fluid">
+        <div class="row-fluid">
+          <div class="nmc-tab-panel" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs" role="tablist">
+              <li role="presentation" class="active">
+                <a href=""
+                   id="summersetup-tab"
+                   class="nmc-tab-button"
+                   role="tab"
+                   data-target="#summersetup"
+                   data-toggle="tab"
+                   aria-controls="home"
+                   aria-expanded="true">Для летнего режима</a>
+              </li>
+              <li role="presentation">
+                <a href=""
+                   class="nmc-tab-button"
+                   role="tab"
+                   id="wintersetup-tab"
+                   data-target="#wintersetup"
+                   data-toggle="tab"
+                   aria-controls="profile">Для зимнего режима</a>
+              </li>
+            </ul>
+              <div id="myTabContent" class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="summersetup" aria-labelledBy="summersetup-tab">
+                <div class="container-fluid well noPadding">
+                  <div class="col-xs-12 noPadding nmc-modal-panel">
+                    <div class="col-xs-3 paddingTop10">
+                      <div class="well marginBottom10 paddingTop10" style="padding-bottom: 56px;">
+                        <div class="row nmc-modal-panel">
+                            Метрологический 
+                            диапазон:
+                         </div>
+                         <form class="form-horizontal">
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход объема за мин значение" ng-model="zpointSettings.summer.md_V_minChk" /> V &lt; Vmin
+                         </div> 
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход объема за макс значение" ng-model="zpointSettings.summer.md_V_maxChk"/> V &gt; Vmax
+                         </div>
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход температуры за мин значение" ng-model="zpointSettings.summer.md_T_minChk"/> T &lt; Tmin
+                         </div>
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход температуры за макс значение" ng-model="zpointSettings.summer.md_T_maxChk"/> T &gt; Tmax
+                         </div>
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход давления за мин значение" ng-model="zpointSettings.summer.md_P_minChk"/> P &lt; Pmin
+                         </div>
+                         <div class="row">
+                           <input ng-disabled="!isAdmin()" type="checkbox" class="nmc-checkbox-form" title="Отслеживать выход давления за макс значение" ng-model="zpointSettings.summer.md_P_maxChk"/> P &gt; Pmax
+                         </div>
+                         </form>
+                       </div>
+                     </div>
+                     <div class="col-xs-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10 nmc-modal-panel">
+                     <!--                                Строка для режима потребления-->            
+                     <div class="row-fluid">
+                       <div class="col-xs-12">
+                         <span>Рабочий режим потребления:</span>
+                       </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="M1" class="" ng-model="zpointSettings.summer.wm_M1_chk"/>М1
+                                        </div>
+                                        <div class="col-xs-4 noPadding noMargin">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_M1_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M1_min, zpointSettings.summer.wm_M1_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_M1_max"></span> т/час
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="M2" class="" ng-model="zpointSettings.summer.wm_M2_chk"/>М2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M2_min, zpointSettings.summer.wm_M2_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_M2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_M2_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_M2_min, zpointSettings.summer.wm_M2_max)}"><input class=" form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_M2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_M2_max"> </span> т/час
+                                        </div>
+
+                                    </div> 
+                                     <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="T1" class="" ng-model="zpointSettings.summer.wm_T1_chk"/>T1
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max)}"> <input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_T1_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding ">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T1_min, zpointSettings.summer.wm_T1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_T1_max"> &deg;C
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="T2" class="" ng-model="zpointSettings.summer.wm_T2_chk"/>T2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_T2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_T2_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_T2_min, zpointSettings.summer.wm_T2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_T2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_T2_max"> &deg;C
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="P1" class="" ng-model="zpointSettings.summer.wm_P1_chk"/>P1
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_P1_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P1_min, zpointSettings.summer.wm_P1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P1_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_P1_max"> ат
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="P2" class="" ng-model="zpointSettings.summer.wm_P2_chk"/>P2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_P2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_P2_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_P2_min, zpointSettings.summer.wm_P2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_P2_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_P2_max"> ат
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.summer.wm_deltaQ_chk"/>&Delta;Q
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_deltaQ_min">
+                                            </span>
+
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaQ_min, zpointSettings.summer.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaQ_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_deltaQ_max"><!--<button class="btn btn-default btn-xs glyphicon glyphicon-plus" type="button"></button><button class="btn btn-default btn-xs glyphicon glyphicon-minus" type="button"></button>--> ГКал </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.summer.wm_deltaT_chk"/>&Delta;T
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.summer.wm_deltaT_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_deltaT_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.summer.wm_deltaT_min, zpointSettings.summer.wm_deltaT_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.summer.wm_deltaT_chk || !isAdmin()" ng-model="zpointSettings.summer.wm_deltaT_max"> &deg;C
+                                            </span>
+                                        </div>
+                                    </div>                                    
+                                </div>  
+                            </div>
+                           </div>
+                            <div class="col-xs-12">
+                                <hr class="nmc-hr-in-modal">
+                            </div>    
+                            
+<!--                                  Утечки и порывы воды-->
+                            <div class="col-xs-12 paddingBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid ">
+                                        <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
+                                    </div>    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="" class="" ng-model="zpointSettings.summer.leak_Night_chk"/>Утечки, если ночной расход больше
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.summer.leak_Night)}">
+                                            <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.summer.leak_Night_chk || !isAdmin()" ng-model="zpointSettings.summer.leak_Night">
+                                            </span>
+                                            &#37; от среднечасового расхода за сутки
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="" class="" ng-model="zpointSettings.summer.leak_Gush_chk"/>Порыв / сброс, если расход в 
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.summer.leak_Gush)}">
+                                            <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.summer.leak_Gush_chk || !isAdmin()" ng-model="zpointSettings.summer.leak_Gush" style="margin-left: 0px;">
+                                            </span>
+                                            раза больше обычного
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div> 
+                            <div class="col-xs-12">
+                                <hr class="nmc-hr-in-modal">
+                            </div>  
+<!--                                Нарушение эксплуатации  -->
+                            <div class="col-xs-12 noPadding paddingBottom10" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                            <span class="form-group" ng-class="{'has-error':!checkHHmm(zpointSettings.summer.ov_Worktime)}">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Tраб" class="" ng-model="zpointSettings.summer.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){1}" ng-disabled="!zpointSettings.summer.ov_Worktime_chk || !isAdmin()" ng-model="zpointSettings.summer.ov_Worktime"> чч:мм
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-5">
+                                           <input ng-disabled="!isAdmin()" type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.summer.ov_OverheatCool_chk"/> Перегрев / недогрев
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                           <input ng-disabled="!isAdmin()" type="checkbox" title="Контроль баланса масс" class="" ng-model="zpointSettings.summer.ov_BalanceM_ctrl_chk"/>
+                                            Контроль баланса масс <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.summer.ov_BalanceM_ctrl)}"> <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.summer.ov_BalanceM_ctrl_chk || !isAdmin()" ng-model="zpointSettings.summer.ov_BalanceM_ctrl"></span> &#37;
+                                        </div>                                
+                                        <div class="col-xs-5">
+                                               <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;M" class="" ng-model="zpointSettings.summer.ov_deltaM_chk"/>&Delta;M &lt; 0 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>  
+                        </div>
+                    </div>
+                              <div role="tabpanel" class="tab-pane fade" id="wintersetup" aria-labelledBy="wintersetup-tab">
+                                  <div class="container-fluid well noPadding">
+                                 <div class="col-xs-12 noPadding">
+                                  <div class="col-xs-3 paddingTop10">
+                                      <div class="well marginBottom10 paddingTop10" style="padding-bottom: 56px;">
+                                        <div class="row">
+                                            Метрологический 
+                                            диапазон:
+                                        </div>    
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход объема за мин значение" ng-model="zpointSettings.winter.md_V_minChk" />V &lt; Vmin
+                                        </div> 
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход объема за макс значение" ng-model="zpointSettings.winter.md_V_maxChk"/>V &gt; Vmax
+                                        </div>
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход температуры за мин значение" ng-model="zpointSettings.winter.md_T_minChk"/>T &lt; Tmin
+                                        </div>
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход температуры за макс значение" ng-model="zpointSettings.winter.md_T_maxChk"/>T &gt; Tmax
+                                        </div>
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход давления за мин значение" ng-model="zpointSettings.winter.md_P_minChk"/>P &lt; Pmin
+                                        </div>
+                                        <div class="row">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Отслеживать выход давления за макс значение" ng-model="zpointSettings.winter.md_P_maxChk"/>P &gt; Pmax
+                                        </div> 
+                                      
+                                      </div>
+                                </div>
+                                <div class="col-xs-9 well marginBottom10 marginTop10 paddingTop10 paddingBottom10">
+                         <!--                                Строка для режима потребления-->            
+                                    <div class="row-fluid ">
+                                       <div class="col-sx-12">
+                                            <div>Рабочий режим потребления:</div>
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="M1" class="" ng-model="zpointSettings.winter.wm_M1_chk"/>М1
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_M1_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M1_min, zpointSettings.winter.wm_M1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_M1_max"> т/час
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="M2" class="" ng-model="zpointSettings.winter.wm_M2_chk"/>М2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_M2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_M2_min">
+                                            </span>
+
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_M2_min, zpointSettings.winter.wm_M2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_M2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_M2_max"> т/час
+                                            </span>
+                                        </div>
+                                    </div> 
+                                     <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="T1" class="" ng-model="zpointSettings.winter.wm_T1_chk"/>T1
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_T1_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding ">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T1_min, zpointSettings.winter.wm_T1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_T1_max"> &deg;C
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="T2" class="" ng-model="zpointSettings.winter.wm_T2_chk"/>T2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_T2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_T2_min">
+                                            </span>
+
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_T2_min, zpointSettings.winter.wm_T2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_T2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_T2_max"> &deg;C
+                                            </span>
+                                        </div>
+
+                                    </div> 
+                                    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="P1" class="" ng-model="zpointSettings.winter.wm_P1_chk"/>P1
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_P1_min">
+                                            </span>
+
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P1_min, zpointSettings.winter.wm_P1_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P1_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_P1_max"> ат
+                                            </span>
+                                        </div>
+
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="P2" class="" ng-model="zpointSettings.winter.wm_P2_chk"/>P2
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_P2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_P2_min">
+                                            </span>
+
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_P2_min, zpointSettings.winter.wm_P2_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_P2_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_P2_max"> ат
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;Q" class="" ng-model="zpointSettings.winter.wm_deltaQ_chk"/>&Delta;Q
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_deltaQ_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaQ_min, zpointSettings.winter.wm_deltaQ_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaQ_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_deltaQ_max"> ГКал
+                                            </span>
+                                        </div>
+                                    </div> 
+                                    <div class="row-fluid">
+                                        <div class="col-xs-2 noPadding">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;T" class="" ng-model="zpointSettings.winter.wm_deltaT_chk"/>&Delta;T
+                                        </div>
+                                        <div class="col-xs-4 noPadding">
+                                            от <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type="text" ng-disabled="!zpointSettings.winter.wm_deltaT_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_deltaT_min">
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-6 noPadding">
+                                            до <span class="form-group" ng-class="{'has-error':!checkNumericInterval(zpointSettings.winter.wm_deltaT_min, zpointSettings.winter.wm_deltaT_max)}"><input class="form-control nmc-input-digital-data span2 nmc-text-input-form" size="4" type=text class="" ng-disabled="!zpointSettings.winter.wm_deltaT_chk || !isAdmin()" ng-model="zpointSettings.winter.wm_deltaT_max"> &deg;C
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="col-xs-12">
+                                <hr class="nmc-hr-in-modal">
+                            </div>  
+                            
+<!--                                  Утечки и порывы воды-->
+                            <div class="col-xs-12 paddingBottom10 noPadding" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid ">
+                                        <div class="col-xs-12 "><h4>Утечки и порывы воды</h4></div>
+                                    </div>    
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Night_chk"/>Утечки, если ночной расход больше
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.leak_Night)}">
+                                            <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Night_chk || !isAdmin()" ng-model="zpointSettings.winter.leak_Night">
+                                            </span>
+                                            &#37; от среднечасового расхода за сутки
+                                        </div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="" class="" ng-model="zpointSettings.winter.leak_Gush_chk"/>Порыв / сброс, если расход в 
+                                            <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.leak_Gush)}">
+                                            <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.winter.leak_Gush_chk || !isAdmin()" ng-model="zpointSettings.winter.leak_Gush" style="margin-left: 0px;">
+                                            </span>
+                                            раза больше обычного
+                                        </div>
+                                    </div>
+                                </div>  
+                            </div>
+                            <div class="col-xs-12">
+                                <hr class="nmc-hr-in-modal">
+                            </div>  
+<!--                                Нарушение эксплуатации  -->
+                            <div class="col-xs-12 noPadding paddingBottom10" >      
+                                <div class="row-fluid">
+                                    <div class="row-fluid">
+                                        <div class="col-xs-12"><h4>Нарушение эксплуатации</h4></div>
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                            <span class="form-group" ng-class="{'has-error':!checkHHmm(zpointSettings.winter.ov_Worktime)}">
+                                            <input ng-disabled="!isAdmin()" type="checkbox" title="Tраб" class="" ng-model="zpointSettings.winter.ov_Worktime_chk"/>Т<small>раб</small> &lt; <input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_Worktime_chk || !isAdmin()" ng-model="zpointSettings.winter.ov_Worktime"> чч:мм
+                                            </span>
+                                        </div>
+                                        <div class="col-xs-5">
+                                           <input ng-disabled="!isAdmin()" type="checkbox" title="Перегрев/недогрев" class="" ng-model="zpointSettings.winter.ov_OverheatCool_chk"/> Перегрев / недогрев
+                                        </div>                               
+                                    </div>
+                                    <div class="row-fluid">
+                                        <div class="col-xs-7 ">
+                                           <input ng-disabled="!isAdmin()" type="checkbox" title="Контроль баланса масс" class="" ng-model="zpointSettings.winter.ov_BalanceM_ctrl_chk"/>
+                                            Контроль баланса масс <span class="form-group" ng-class="{'has-error':!checkPositiveNumberValue(zpointSettings.winter.ov_BalanceM_ctrl)}"><input class="form-control nmc-input-digital-data-sm span1 nmc-text-input-form" size="1" type="text" ng-disabled="!zpointSettings.winter.ov_BalanceM_ctrl_chk || !isAdmin()" ng-model="zpointSettings.winter.ov_BalanceM_ctrl"></span> &#37;
+                                        </div>
+                                        <div class="col-xs-5">
+                                               <input ng-disabled="!isAdmin()" type="checkbox" title="&Delta;M" class="" ng-model="zpointSettings.winter.ov_deltaM_chk"/>&Delta;M &lt; 0 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                        </div>
+                                  </div>
+                    </div>
+                 </div>
+             </div>
+          </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs"
+                                ng-disabled="!checkZpointSettingsFrom(zpointSettings) || !isAdmin()"   
+								ng-click="updateZpointModeSettings()"
+								value="Сохранить" />
+						</div>
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!--Show Object options-->
+<div id="showObjOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showObjOptionLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showObjOptionLabel" class="nmc-h3">
+				Свойства объекта учета
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div role="tabpanel" 
+                 class="nmc-tab-panel">
+              
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" 
+                    class="active" 
+                    id="main_object_properties_tab">
+                    <a class="nmc-tab-button" 
+                       href="" 
+                       aria-controls="main_object_properties" 
+                       data-target="#main_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Основные
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="extra_object_properties_tab"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="extra_object_properties" 
+                       data-target="#extra_object_properties" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Тип здания
+                    </a>
+                  </li>
+                <li role="presentation" 
+                    id="object_passports_tab"> 
+                    <a class="nmc-tab-button"
+                       href="" 
+                       aria-controls="object_passports" 
+                       data-target="#object_passports" 
+                       role="tab" 
+                       data-toggle="tab" 
+                       >Паспорта
+                    </a>
+                </li>  
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            
+                <div role="tabpanel" 
+                     class="tab-pane fade in active" 
+                     id="main_object_properties">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+             <!--                            <tr>
+                                            <td class="col-xs-3"><label for="inputCode">Код объекта</label>
+                                            </td>
+                                            <td class="col-xs-9 nmc-text-align-left"><input disabled class="form-control" type="text" id="inputCode" placeholder="Код объекта"  ng-model="currentObject.code">
+                                            </td>
+                                        </tr> -->
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputFullName">Наименование</label>
+                                            </td>
+                                            <td class="col-xs-9 nmc-text-align-left"><input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form" type="text" id="inputFullName" placeholder="Наименование"  ng-model="currentObject.fullName">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputDescription" >Описание</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="currentObject.description"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><label for="inputComment" >Комментарий</label>
+                                            </td>
+                                            <td class="nmc-text-align-left"><textarea ng-disabled="!isAdmin()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" ng-model="currentObject.comment"></textarea>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputAddress">Адрес</label>
+                                            </td>
+                                            <td class="col-xs-9 nmc-text-align-left">
+                                                <input ng-disabled="!isAdmin()" class="form-control nmc-text-input-form"  type="text" id="inputAddress" placeholder="Адрес" ng-model="currentObject.fullAddress">
+                                                <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
+                                                    <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
+                                                    </small>
+                                                    <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
+                                                    </small>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputCC">Управляющая компания</label>
+                                            </td>
+                                            <td class="col-xs-9 nmc-text-align-left">
+            <!--                                    <input class="form-control nmc-text-input-form" type="text" disabled="true" ng-model="currentObject._activeContManagement.organization.organizationName">-->
+                                                <select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputCm" ng-model="currentObject.contManagementId" ng-options="cmOrg.id as cmOrg.organizationName for cmOrg in data.cmOrganizations">
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputMode">Режим функционирования</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9"><select ng-disabled="!isAdmin()" class="form-control nmc-input-data nmc-select-form" id="inputMode" ng-model="currentObject.currentSettingMode" ng-options="mode.keyname as mode.caption for mode in cont_zpoint_setting_mode_check">
+                                                </select>
+                                            </td>
+                                        </tr>       
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputThv">Температура холодной воды</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.cwTemp)}">
+                                                    <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputThv" placeholder="" ng-model="currentObject.cwTemp"> &deg; C 
+                                                </div>
+                                            </td>                               
+                                        </tr>                           
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputSquare">Отапливаемая площадь</label>
+                                            </td>
+                                            <td class="col-xs-9 nmc-text-align-left">
+                                                <div class="form-group noMarginBottom" ng-class="{'has-error':!checkNumericValue(currentObject.heatArea)}">
+                                                <input ng-disabled="!isAdmin()" class="form-control nmc-input-digital-data nmc-text-input-form" type="text" id="inputSquare" placeholder="" ng-model="currentObject.heatArea"> кв. м.
+                                                </div>        
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>    
+                            </div>  
+                        </div>
+                    </div>
+                    <div role="tabpanel" 
+                     class="tab-pane fade" 
+                     id="extra_object_properties">
+                      <div class="container-fluid">
+                          <div class="row">
+                              <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputBuildingType">Тип здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.buildingType" 
+                                                            ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
+                                                            ng-change="changeBuildingType(currentObject.buildingType)"
+                                                            ng-disabled="!isAdmin()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+<!--
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputBuildingCategory"                                                            
+                                                            ng-disabled="!currentObject.buildingType || !isAdmin()"
+                                                            ng-model="currentObject.buildingTypeCategory" 
+                                                            ng-options="bcategory.keyname as bcategory.caption || bcategory.keyname  group by bcategory.parentCategoryCaption for bcategory in data.preparedBuildingCategoryList"
+                                                            ng-change="changeBuildingCategory()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>                                        
+-->
+                                        
+                                        <tr>
+                                            <td class="col-sm-3"><label for="inputBuildingCategory">Категория здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-sm-9">
+                                                <div class="form-group noMarginBottom"
+                                                     >
+                                                        <ui-select id = "inputBuildingCategoryUI"
+                                                                   
+                                                                   class = "nmc-ui-select-form" 
+                                                                   ng-model = "currentObject.buildingTypeCategory" 
+                                                                   theme = "bootstrap" 
+                                                                   search-enabled = "false"
+                                                                   on-select = "changeBuildingCategory()"
+                                                                   ng-disabled="!currentObject.buildingType || !isAdmin()"
+                                                                   >
+                                                        <ui-select-match>{{$select.selected.caption}}</ui-select-match>
+                                                        <ui-select-choices 
+                                                                           repeat = "bcategory.keyname as bcategory in data.preparedBuildingCategoryListForUiSelect">
+                                                          <div class = "nmc-bcategory-depth-{{bcategory.depth}}"
+                                                               ng-bind-html = "bcategory.caption"></div>
+                                                        </ui-select-choices>
+                                                      </ui-select>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputNumOfStories">Количество этажей</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <input class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputNumOfStories" 
+                                                       placeholder="" 
+                                                       ng-model="currentObject.numOfStories"
+                                                           ng-disabled="!isAdmin()">
+<!--                                                    data-inputmask="'mask': '9[9]', 'greedy':false, min: 1"-->
+                                                </div>
+                                            </td>
+                                        </tr>
+                                  </table>
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+                  
+                  <div role = "tabpanel" 
+                       class = "tab-pane fade" 
+                       id = "object_passports">
+                      <div class="container-fluid">
+                          <div class = "row nmc-modal-panel-with-objects-tp">
+                              <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                  <div ng-show = "objectCtrlSettings.isPassportsLoading" 
+                                        class = "menu-item dropdown nmc-loading">
+                                        
+                                            <i class="fa fa-spinner fa-spin"></i> Загрузка паспортов... 
+                                        
+                                    </div>                                                
+                                  
+                                    <table ng-show = "!objectCtrlSettings.isPassportsLoading"
+                                           class="table table-lighter table-striped table-condensed noMarginBottom nmc-modal-main-table">
+                                        <tr ng-show = "!objectCtrlSettings.isPassportCreating">
+                                            <td colspan = "2">
+                                                <button class="btn nmc-main-add-button" 
+                                                        ng-click = "createContObjectPassportFromTabInit(currentObject)"
+                                                        ng-disabled = "isReadonly()">
+                                                    Создать паспорт
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr ng-show = "objectCtrlSettings.isPassportCreating">
+                                            <td colspan = "2"
+                                                class = "paddingLeft20I">
+                                                <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            <label>Создание паспорта:</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class = "col-xs-3">
+                                                            <label for = "inputEnergyDocName">Название</label>
+                                                            <span class = "nmc-required-star">*</span>
+                                                        </td>
+                                                        <td class = "col-xs-9 nmc-text-align-left">
+                                                            <div class = "form-group noMarginBottom" 
+                                                                 ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
+                                                                <input  
+                                                                       class = "form-control nmc-text-input-form" 
+                                                                       type = "text" 
+                                                                       id = "inputEnergyDocName" 
+                                                                       ng-model = "data.currentDocument.passportName" 
+                                                                       ng-disabled = "isReadonly()"/>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td class = "col-xs-3">
+                                                            <label for = "inputEnergyDocDate" 
+                                                                   class = "nmc-form-label">Дата документа</label>
+                                                            <span class = "nmc-required-star">*</span>
+                                                        </td>
+                                                        <td class = "col-xs-9 nmc-text-align-left">
+                                                            <span class = "form-group" 
+                                                                  ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
+                                                                <input id = "inputEnergyDocDate" 
+                                                                       class = "form-control nmc-date-input-form nmc-spec-date" 
+                                                                       type = "text"                                                                                               
+                                                                       ng-model = "data.currentDocument.docDateFormatted"
+                                                                       ng-disabled = "isReadonly()"
+                                                                       readonly
+                                                                       />
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr>
+                                                        <td>
+                                                            <label for = "inputEnergyDocDescription" >Комментарий</label>
+                                                        </td>
+                                                        <td class = "nmc-text-align-left">
+                                                            <textarea class = "form-control nmc-textarea-form" 
+                                                                      id = "inputEnergyDocDescription" 
+                                                                      placeholder = "Описание" 
+                                                                      ng-model = "data.currentDocument.description"
+                                                                      ng-disabled = "isReadonly()">
+                                                            </textarea>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan = "2">
+                                                            <div class = "container-fluid  ">
+                                                                <div class = "row">
+                                                                    <div class = "col-xs-offset-2 col-xs-3">
+                                                                        <button ng-if = "!isReadonly()" 
+                                                                                class = "btn btn-block btn-xs nmc-add-button-in-modal"
+                                                                                ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                                ng-disabled = "objectCtrlSettings.isDocumentSaving"
+                                                                                >
+                                                                            Далее...
+                                                                        </button>
+                                                                    </div>
+                                                                    <div class = "col-xs-3">
+                                                                        <input ng-if = "!isReadonly()" 
+                                                                               type = "submit" 
+                                                                               class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                                                               ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                               value = "Сохранить" 
+                                                                               ng-disabled = "objectCtrlSettings.isDocumentSaving"/>
+                                                                    </div>
+                                                                    <div class = "pull-right col-xs-3 noMargin noPadding">
+                                                                        <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
+                                                                                ng-click = "cancelCreateContObjectPassportFromTab()">
+                                                                            Отменить
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan = "2">
+                                                <label>Список паспортов:</label>
+                                            </td>
+                                        </tr>
+                                        <tr ng-if = "data.currentContObjectPassports.length === 0 && !objectCtrlSettings.isPassportsLoading"
+                                            class = "menu-item dropdown">
+                                            <td colspan = "2">
+                                                У объекта нет паспортов
+                                            </td>
+                                        </tr>
+                                        <tr ng-repeat = "passport in data.currentContObjectPassports">
+                                            <td colspan = "2">
+                                                <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                    <tr>
+                                                        <td colspan = "2">                                                
+                                                            <i title = "Редактировать реквизиты паспорта"
+                                                               class = "btn btn-xs glyphicon glyphicon-edit"
+                                                               ng-click = "editContObjectPassportFromTabInit(passport, currentObject)">
+
+                                                            </i>
+                                                            <i title = "Открыть паспорт"
+                                                               class = "btn btn-xs glyphicon glyphicon-list-alt"
+                                                               ng-click = "openContObjectPassport(passport, currentObject)">
+
+                                                            </i>
+                                                            <span title="Паспорт объекта"
+                                                                  ng-click = "openContObjectPassport(passport, currentObject)"
+                                                                  ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                                <span ng-bind="passport.passportName"></span>
+                                                            </span>
+                                                            <i ng-if = "isSystemuser()"
+                                                               title = "Удалить паспорт"
+                                                               ng-click = "deletePassport(passport.id)"
+                                                               class = "btn btn-xs glyphicon glyphicon-trash pull-right">
+                                                            </i>
+                                                        </td>        
+<!--
+                                                        <td>
+                                                            <span title="Паспорт объекта"
+                                                                  ng-click = "openContObjectPassport(passport, object)"
+                                                                  ng-class = "{'nmc-distinguish': passport.isActive}">
+                                                                <span ng-bind="passport.passportName"></span>
+                                                            </span>
+                                                        </td>
+-->
+                                                    </tr>
+                                                    <tr ng-show = "passport.isPassportEditing">
+                                                        <td colspan = "2"
+                                                            class = "paddingLeft20I">
+                                                            <table class = "table table-lighter table-striped table-condensed noMarginBottom">
+                                                                <tr>
+                                                                    <td class = "col-xs-3">
+                                                                        <label for = "inputEnergyDocName">Название</label>
+                                                                        <span class = "nmc-required-star">*</span>
+                                                                    </td>
+                                                                    <td class = "col-xs-9 nmc-text-align-left">
+                                                                        <div class = "form-group noMarginBottom" 
+                                                                             ng-class = "{'has-error': emptyString(data.currentDocument.passportName)}">
+                                                                            <input  
+                                                                                   class = "form-control nmc-text-input-form" 
+                                                                                   type = "text" 
+                                                                                   id = "inputEnergyDocName" 
+                                                                                   ng-model = "data.currentDocument.passportName" 
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"/>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td class = "col-xs-3">
+                                                                        <label for = "inputEnergyDocDateEdit" 
+                                                                               class = "nmc-form-label">Дата документа</label>
+                                                                        <span class = "nmc-required-star">*</span>
+                                                                    </td>
+                                                                    <td class = "col-xs-9 nmc-text-align-left">
+                                                                        <span class = "form-group" 
+                                                                              ng-class = "{'has-error': emptyString(data.currentDocument.docDateFormatted)}">
+                                                                            <input id = "inputEnergyDocDateEdit" 
+                                                                                   class = "form-control nmc-date-input-form nmc-spec-date" 
+                                                                                   type = "text"                                                                                               
+                                                                                   ng-model = "data.currentDocument.docDateFormatted"
+                                                                                   ng-disabled = "isReadonly() || !passport.isActive"
+                                                                                   readonly
+                                                                                   />
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <label for = "inputEnergyDocDescription" >Комментарий</label>
+                                                                    </td>
+                                                                    <td class = "nmc-text-align-left">
+                                                                        <textarea class = "form-control nmc-textarea-form" 
+                                                                                  id = "inputEnergyDocDescription" 
+                                                                                  placeholder = "Описание" 
+                                                                                  ng-model = "data.currentDocument.description"
+                                                                                  ng-disabled = "isReadonly() || !passport.isActive">
+                                                                        </textarea>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan = "2">
+                                                                        Поля отмеченные <span class = "nmc-required-star">*</span> обязательны для заполнения!
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td colspan = "2">
+                                                                        <div class = "container-fluid">
+                                                                            <div class = "row">
+                                                                                <div class = "col-xs-offset-2 col-xs-3">
+                                                                                    <button ng-if = "!isReadonly()" 
+                                                                                            class = "btn btn-block btn-xs nmc-add-button-in-modal"
+                                                                                            ng-click = "openContObjectPassport(passport, currentObject)"
+                                                                                            ng-disabled = "objectCtrlSettings.isDocumentSaving">
+                                                                                        Далее...
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class = "col-xs-3">
+                                                                                    <input ng-if = "!isReadonly()" 
+                                                                                           type = "submit" 
+                                                                                           class = "btn btn-primary btn-block btn-xs nmc-save-button"
+                                                                                           ng-click = "saveDocumentFromTab(data.currentDocument)"
+                                                                                           value = "Сохранить" 
+                                                                                           ng-disabled = "objectCtrlSettings.isDocumentSaving || !passport.isActive"/>
+                                                                                </div>
+                                                                                <div class = "pull-right col-xs-3 noMargin noPadding">
+                                                                                    <button class = "btn btn-default btn-block btn-xs nmc-cancel-button"
+                                                                                            ng-click = "cancelEditContObjectPassportFromTab(passport)">
+                                                                                        Отменить
+                                                                                    </button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            
+                                        </tr>
+<!--
+                                        <tr>
+                                            <td class="col-xs-3"><label for="inputBuildingType">Тип здания</label>
+                                            </td>
+                                            <td class="nmc-text-align-left col-xs-9">
+                                                <div class="form-group noMarginBottom">
+                                                    <select class="form-control nmc-select-form" 
+                                                            id="inputMode" 
+                                                            ng-model="currentObject.buildingType" 
+                                                            ng-options="btype.keyname as btype.caption for btype in data.buildingTypes"
+                                                            ng-change="changeBuildingType(currentObject.buildingType)"
+                                                            ng-disabled="!isAdmin()">
+                                                    </select>
+                                                </div>
+                                            </td>
+                                        </tr>
+-->
+                                  </table>
+                              </div>
+                              
+                          </div>
+                      </div>
+                  </div>
+                  
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input ng-disabled="!checkObjectPropertiesForm(currentObject) || !isAdmin()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="updateObject(currentObject)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+		<span class="alert alert-error dialogErrorMessage"
+			ng-show="errorOnSubmit"> Request error
+		</span> <span class="alert alert-error dialogErrorMessage"
+			ng-show="errorIllegalAccess"> Request illegal access
+		</span>
+	</div>
+</div>
+
+<!-- window: confirm action-->
+<div id="confirmActionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="confirmActionLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="confirmActionLabel" class="nmc-h3">
+				Подтверждение 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите</label> 
+					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
+					<label class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-xs-offset-6 col-xs-3">
+                        <input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+                            ng-click="confirmAction();"
+                            value="Ок" />
+                    </div>
+
+                    <div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
+                        <button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+                            ng-click="exit('#confirmActionModal');">
+                            Отменить
+                        </button>
+                    </div>
+                </div>
+            </div>		
+		</div>
+	</div>
+</div>
+    
+<script type="text/ng-template" id="subscr_object_tree_items_renderer.html">
+    <div ui-tree-handle ng-click="selectNode(item)"
+         ng-mouseover = "item.isHover = true"
+         ng-mouseleave = "item.isHover = false"
+         ng-class="{'nmc-bg-distinguish': item.isSelected}">
+      <i class="btn btn-xs glyphicon"
+         ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+         data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+        <span class="nmc-valign-middle">
+            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
+        </span>
+    </div>
+    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'subscr_object_tree_items_renderer.html'">
+      </li>
+    </ol>
+</script>
+
+<!-- -->
+<div id="columnSettingsModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="columnSettingsLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="columnSettingsLabel" class="nmc-h3">
+				Настройка представления для точек учета
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row marginBottom5">
+                    <div class="col-xs-6 noPadding">
+                        <input class="form-control nmc-text-input-form"
+                               ng-model="data.selectedIndicatorMode.caption"
+                               title="Наименование представления"
+                               />
+                    </div>
+                    <div class="col-xs-6">
+<!--
+                        <div ng-if="data.selectedIndicatorMode.isEditMode === true"
+                             class="btn-group">
+                            <input class="form-control nmc-text-input-form"
+                                   ng-model="data.selectedIndicatorMode.caption"
+                                   />
+                        </div>
+-->
+                        <div ng-if="data.selectedIndicatorMode.isEditMode !== true"
+                             class="btn-group">
+                              <button title="Выбор представления" 
+                                 type="button" 
+                                 class="btn btn-default btn-xs dropdown-toggle nmc-toggle-button-trees" 
+                                 data-toggle="dropdown" 
+                                 aria-haspopup="true" 
+                                 aria-expanded="false" 
+                                 >
+                                  {{messages.modeHeader}} 
+<!--                                  <span ng-show="isSystemuser()">(id = {{data.selectedIndicatorMode.id}})</span> -->
+<!--
+                                  <i class="btn btn-xs glyphicon glyphicon-edit"></i>
+                                  <i class="btn btn-xs glyphicon glyphicon-trash" 
+                                     ng-click="deleteIndicatorMode(mode)"
+                                  >
+                                  </i>
+-->
+                                  <span class="caret"></span>
+                              </button>
+<!--
+                              <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter">
+                                <li class="menu-item" role="presentation">
+                                    <a href=""
+                                       class=""
+                                       ng-click="addIndicatorMode()"
+                                       data-target=""
+                                       data-toggle=""
+                                       >
+                                        Добавить представление                                        
+                                    </a>
+                                </li>
+                            </ul>
+-->
+                            <ul class="dropdown-menu nmc-dropdown-menu nmc-dropdown-menu-filter nmc-view-mode-list-items">
+                                  <li ng-if="data.indicatorModes.length > 0"
+                                      class="menu-item" 
+                                      role="presentation" 
+                                      ng-repeat="mode in data.indicatorModes track by $index">
+                                      <a href="" class=""
+                                         ng-click="modeClick(mode)">
+                                          {{mode.caption}} 
+                                          <i ng-if="mode.vcKey"
+                                             class="btn btn-xs glyphicon glyphicon-trash pull-right"
+                                             ng-click="deleteIndicatorModeInit(mode)"
+                                             ></i>
+<!--                                          <i class="btn btn-xs glyphicon glyphicon-edit"></i>-->
+                                      </a>
+                                  </li>
+                              </ul>
+                        </div>
+<!--
+                        <div  ng-if="data.selectedIndicatorMode.isEditMode === true"
+                             class="btn-group">
+                          <i class="btn btn-xs glyphicon glyphicon-save"
+                             ng-click="applyChangeCaption()"
+                             title="Принять"
+                             >
+                            </i>
+                          <i class="btn btn-xs glyphicon glyphicon-remove" 
+                             ng-click="cancelChangeCaption()"
+                             title="Отменить"
+                          >
+                          </i>
+                        </div>
+                        <div ng-if="data.selectedIndicatorMode.isEditMode !== true"
+                             class="btn-group">
+                          <i class="btn btn-xs glyphicon glyphicon-edit"
+                             ng-click="editDefaultIndicatorMode()"
+                             title="Изменить название представления"
+                             >
+                            </i>
+                          <i class="btn btn-xs glyphicon glyphicon-trash" 
+                             ng-click="deleteIndicatorModeInit(data.selectedIndicatorMode)"
+                             title="Удалить представление"
+                          >
+                          </i>
+                        </div>
+-->
+
+                    </div>
+                    
+                </div>
+                <div class="row">
+<!--
+                    <div class="col-xs-3 noPadding sidebar-offcanvas paddingRight10 nmc-mode-menu" ng-cloak>
+                        <nav class="sidebar-nav nmc-mode-sidebar-nav"
+                             role="navigation" 
+                             >
+                            
+                            <div id="sidebar-entries" class="list-group">
+                                <a ng-repeat="mode in data.indicatorModes track by $index" 
+                                   class="list-group-item nmc-mode-menu-item"                                   
+                                   data-toggle="offcanvas"
+                                   ng-class="mode.class"
+                                   ng-click="modeClick(mode)"
+                                   >
+                                    <span ng-if="mode.editMode !== true"
+                                          ng-dblclick="mode.editMode = !mode.editMode"
+                                          >{{mode.caption}}</span>
+                                    <span ng-if="mode.editMode === true">
+                                        <input class="form-control nmc-text-input-form"
+                                               ng-model="mode.caption"
+                                               ng-dblclick="mode.editMode = !mode.editMode"
+                                               />
+                                    </span>
+                                    <span ng-if="mode.editMode !== true"
+                                          class="pull-right">
+                                        <i class="btn btn-xs glyphicon glyphicon-trash" 
+                                           ng-click="deleteIndicatorMode(mode)">
+                                        </i>
+                                    </span>
+                                    <span ng-if="mode.editMode !== true"
+                                          class="pull-right">
+                                        <i title="Установить режим по умолчанию"
+                                           class="btn btn-xs glyphicon glyphicon-ok" 
+                                           ng-click="">
+                                        </i>
+                                    </span>
+                                </a>
+                            </div>
+                        </nav>
+                    </div>
+-->
+                    <div role="tabpanel" 
+                         class="col-xs-12 noPadding nmc-tab-panel">
+                      <!-- Навигационная полоса -->
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" 
+                            class="active" 
+                            id="water_column_properties_tab">
+                            <a class="nmc-tab-button" 
+                               href="" 
+                               aria-controls="water_column_properties" 
+                               data-target="#water_column_properties" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               ng-click="">СО, ГВС, ХВС 
+                            </a>
+                          </li>
+                        <li role="presentation" 
+                            id="electricity_column_properties_tab"                                         
+                            > 
+                            <a class="nmc-tab-button"
+                               href="" 
+                               aria-controls="electricity_column_properties" 
+                               data-target="#electricity_column_properties" 
+                               role="tab" 
+                               data-toggle="tab" 
+                               >Электроэнергия
+                            </a>
+                          </li>
+                          <li role="presentation" 
+                            id="widget_properties_tab"                                         
+                            > 
+                            <a class="nmc-tab-button"
+                               href="" 
+                               aria-controls="widget_properties" 
+                               data-target="#widget_properties" 
+                               role="tab" 
+                               data-toggle="tab"                               
+                               >Виджеты
+                            </a>
+                          </li>
+                      </ul>
+
+                      <!-- реализация вкладок -->
+                      <div class="tab-content">
+                    <!--      Основные свойства-->
+                        <div role="tabpanel" 
+                             class="tab-pane fade in active" 
+                             id="water_column_properties">
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div>
+                                            <input type="checkbox" 
+                                                   class="nmc-checkbox-form" 
+                                                   ng-model="selectAllWaterColumnFlag"
+                                                   ng-click="selectAllWaterColumns()"/>
+                                            <label>
+                                                Выбрать все
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+        <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
+                                            <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">
+                                                <tr ng-repeat="waterColumn in data.selectedIndicatorMode.waterColumns | columnFilter: 'istunable'">
+                                                    <td>
+                                                        <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               ng-model="waterColumn.isVisible"/>
+                                                        <label>
+                                                            <span ng-bind="waterColumn.header"></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>
+
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div>
+                                                <label>Вид показаний</label>
+                                                <select class="form-control nmc-input-data nmc-select-form"
+                                                        ng-model="data.selectedIndicatorMode.indicatorHwKind"
+                                                        > 
+                                                    <option value="24h">Суточные</option>
+                                                    <option value="1h">Часовые</option>
+                                                    <option value="1h_abs">Интеграторы</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label>Записей на странице</label>
+                                                <div>
+                                                    <select class="form-control nmc-input-digital-data nmc-select-form"
+                                                            ng-model="data.selectedIndicatorMode.indicatorHwPerPage"
+                                                            ng-options = "rowPerPage for rowPerPage in data.indicatorsRowPerPageList"
+
+                                                            > 
+<!--
+                                                        <option value=15>15</option>
+                                                        <option value=25>25</option>
+                                                        <option value=50>50</option>
+                                                        <option value=75>75</option>
+                                                        <option value=100>100</option>                                                    
+-->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div> 
+                          </div>
+                          <div role="tabpanel" 
+                             class="tab-pane fade" 
+                             id="electricity_column_properties">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div>
+                                            <input type="checkbox" 
+                                                   class="nmc-checkbox-form" 
+                                                   ng-model="selectAllElectricityColumnFlag"
+                                                   ng-click="selectAllElectricityColumns()"/>
+                                            <label>
+                                                Выбрать все
+                                            </label>
+                                        </div>
+                                        <div class="col-xs-6 well noPadding marginBottom10 nmc-column-list nmc-modal-panel-with-table" style="">
+        <!--                                    <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table nmc-column-list">-->
+                                            <table class="table table-striped table-hover table-condensed nmc-modal-table-with-chkbx">    
+                                                <tr ng-repeat="electricityColumn in data.selectedIndicatorMode.electricityColumns | columnFilter: 'istunable'">
+                                                    <td>
+                                                        <input type="checkbox" 
+                                                               class="nmc-checkbox-form" 
+                                                               ng-model="electricityColumn.isVisible"/>
+                                                        <label>
+                                                            <span ng-bind="electricityColumn.header"></span>
+                                                        </label>
+                                                    </td>
+                                                </tr>                                        
+                                            </table>
+                                        </div>
+                                        <div class="col-xs-6">
+                                            <div>
+                                                <label>Режим показаний</label>
+                                                <select class="form-control nmc-select-form"
+                                                        ng-model="data.selectedIndicatorMode.indicatorElMode"
+                                                        > 
+                                                    <option value="">Потребление</option>
+                                                    <option value="_abs">Интеграторы</option>
+                                                </select>
+                                            </div>
+                                            <div>
+                                                <label>Вид показаний</label>
+                                                <select class="form-control nmc-select-form"
+                                                        ng-model="data.selectedIndicatorMode.indicatorElKind"
+                                                        > 
+                                                    <option value="1mon">Ежемесячные</option>
+                                                    <option value="24h">Суточные</option>
+                                                    <option value="1h">Часовые</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                              </div>
+                          </div>
+                          <div role = "tabpanel" 
+                               class = "tab-pane fade" 
+                               id = "widget_properties">
+                                <div class = "container-fluid">
+                                    <div class = "row">                                                                                
+                                        <div class = "col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                                            <table class = "table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                  
+                                                <tr>
+                                                    <td class = "col-xs-3"><label for="inputHeatWidget">Система отопления</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputHeatWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.heat" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.heatWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i id = "heatWidgetPreviewBtn"
+                                                           class="pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.heat)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           ></i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="inputHwWidget" >ГВС</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputHwWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.hw" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.hwWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.hw)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           >
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><label for="inputCwWidget" >ХВС</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputCwWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.cw" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.cwWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class="col-xs-6">
+                                                        <i class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.cw)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           >
+                                                        </i>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="col-xs-3"><label for="inputElWidget">Электроэнергия</label>
+                                                    </td>
+                                                    <td class="nmc-text-align-left col-xs-3">
+                                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                                id="inputElWidget" 
+                                                                ng-model="data.selectedIndicatorMode.widgets.el" 
+                                                                ng-options="widget.widgetName as widget.caption for widget in data.elWidgetList">
+                                                        </select>
+                                                    </td>
+                                                    <td class = "col-xs-6">
+                                                        <i id = "elWidgetPreviewBtn"
+                                                           class = "pull-left glyphicon glyphicon-eye-open" 
+                                                           title = "Предпросмотр"
+                                                           ng-click = "widgetPreview(data.selectedIndicatorMode.widgets.el)"
+                                                           data-target = "#widgetPreviewModal"
+                                                           data-toggle = "modal"
+                                                           ></i>
+                                                    </td>
+                                                </tr>                                                
+                                            </table>
+                                        </div>    
+                                    </div>
+                                   
+                              </div>
+                          </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div ng-if="data.selectedIndicatorMode.id"
+                             class="col-xs-offset-3 col-xs-3">
+							<input type="submit" class="btn btn-block btn-xs nmc-save-button"
+								ng-click="saveIndicatorPreferencesAs(data.selectedIndicatorMode)"
+								value="Сохранить как"/>
+						</div>
+                        <div ng-if="data.selectedIndicatorMode.id"
+                             class="col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveIndicatorPreferences(data.selectedIndicatorMode)"
+								value="Сохранить"/>
+						</div>
+                        <div ng-if="!data.selectedIndicatorMode.id"
+                             class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveIndicatorPreferencesAs(data.selectedIndicatorMode)"
+								value="Сохранить как"/>
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!--
+    messageForUser: "@",
+    btnClick: "&",
+    btnOkCaption: "@",
+    showOkButton: "@",
+    btnCancelCaption: "@",
+    showCancelButton: "@"
+-->
+<!-- messageForUserModal -->
+<div nmc-view-message-for-user
+     message-for-user = "{{messages.deleteMessage}}"
+     show-ok-button = "true"
+     show-cancel-button = "true"
+     btn-ok-caption = "Удалить"
+     btn-click = "deleteIndicatorMode(data.deletingMode)"
+     >
+</div>
+
+<div nmc-view-device-scheduler 
+     current-device="data.currentObject" 
+     current-scheduler="data.currentScheduler"
+     read-only="true"
+     btn-ok-caption="Турум"
+     >
+</div>
+
+<div nmc-show-device-modal
+     current-device="data.currentDevice"
+     device-sources="data.dataSourcesForCurDevice"
+     cont-objects="objects"
+     device-models="data.deviceModelsForCurDevice"
+     heater-types = "data.heaterTypesForCurDevice"
+     read-only="true"
+     show-ok-button="false"
+     btn-click = "saveDevice(data.currentDevice)"
+     >
+</div>
+
+<div meta-data-editor-modal
+     current-zpoint="currentZpoint"
+     read-only="true"
+     show-ok-button="false"
+     >
+</div>
+
+<div show-datasource-modal
+     current-datasource="data.currentDatasource"
+     dsource-types="data.datasourceTypesForDatasource"
+     read-only="true"
+     show-ok-button="false"
+     >
+</div>
+
+<div id="editIndicatorModeModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="editIndicatorModeLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="editIndicatorModeLabel" class="nmc-h3">
+				Представление
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">                         
+                            <tr>
+                                <td class="col-xs-3"><label for="inputIndicatorModeCaption">Наименование</label>
+                                </td>
+                                <td colspan="2" class="col-xs-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': !(data.selectedIndicatorModeSaveAs.caption >'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputIndicatorModeCaption" 
+                                               placeholder="" 
+                                               ng-model="data.selectedIndicatorModeSaveAs.caption"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="saveIndicatorPreferences(data.selectedIndicatorModeSaveAs)"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
+<!--
+data: "@",
+            readOnly: "@",
+            btnClick: "&",
+            btnOkCaption: "@",
+            showOkButton: "@"
+-->
+
+<!-- window: widget preview-->
+<div id="widgetPreviewModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="widgetPreviewLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog modal-content nmc-modal-dialog nmc-modal-some-wide-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="widgetPreviewLabel" class="nmc-h3">
+				Предпросмотр виджета 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+            <div class = "container-fluid">
+                <div class = "row">
+                    <div class = 'col-xs-12 noPadding'>
+                        <div ng-controller = 'widgetContainer'>
+                            <span ng-show = 'title' ng-bind = 'title'></span>
+                            <div ng-show = 'isLoading'>Загрузка...</div>
+                            <div ng-show = 'isError'>Ошибка... <button ng-click = 'reload()'>Перезагрузка</button></div>
+                            <ng-widget src = "data.widgetPreview.type" 
+                                       options = "data.widgetPreview.options" 
+                                       ng-show="!isLoading && !isError">
+                            </ng-widget>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <div class="container-fluid">
+                <div class="row">                    
+                    <div class="pull-right col-xs-3 noMargin noPadding nmc-cancel-button">
+                        <button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+                            ng-click="exit('#widgetPreviewModal');">
+                            Закрыть
+                        </button>
+                    </div>
+                </div>
+            </div>		
+		</div>
+	</div>
+</div>
+
+<div nmc-document-prop-viewer
+     current-document = "data.currentDocument"
+     btn-click = "saveDocument(data.currentDocument)"
+     is-read-only = "isReadOnlyPassport(data.currentDocument)"
+     save-btn-disabled = "saveBtnDisabled()"
+     >
+</div>

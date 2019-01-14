@@ -10,8 +10,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 @JsonInclude(Include.NON_NULL)
 public class EntityColumn implements Comparable<EntityColumn> {
 
-	public final static Comparator<EntityColumn> ENTITY_COLUMN_COMPARATOR = (c1, c2) -> c1.getColumnName()
-			.compareTo(c2.getColumnName());
+	public final static Comparator<EntityColumn> ENTITY_COLUMN_COMPARATOR = Comparator.comparing(EntityColumn::getColumnName);
 
 	private final String columnName;
 	private final String dataType;

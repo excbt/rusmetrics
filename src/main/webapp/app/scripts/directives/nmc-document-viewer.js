@@ -12,11 +12,12 @@ app.directive('nmcDocumentViewer', function () {
             extraValues: "="
         },
         templateUrl: 'scripts/directives/templates/nmc-document-viewer.html',
-        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', '$anchorScroll', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q, $anchorScroll) {
+        controller: ['$location', 'mainSvc', 'energoPassportSvc', 'notificationFactory', '$scope', '$routeParams', '$timeout', 'objectSvc', '$q', '$anchorScroll', '$stateParams', function ($location, mainSvc, energoPassportSvc, notificationFactory, $scope, $routeParams, $timeout, objectSvc, $q, $anchorScroll, $stateParams) {
     
 //    console.log('documentsEnergoPassportCtrl is run');
 //    console.log($location.path);
 //    console.log($routeParams);
+//console.log($stateParams);            
             var INDEX_OF_DEFAULT_SECTION = 0,
                 DEFAULT_SECTION_CAPTIONS = {
                     nom: "раздел",
@@ -1903,6 +1904,9 @@ app.directive('nmcDocumentViewer', function () {
             function initCtrl() {
 //console.log($scope.extraValues);                
                 var routeParams = $routeParams;
+                if (mainSvc.checkEmptyObject(routeParams)) {
+                    routeParams = $stateParams;
+                }
                 if (routeParams.param === "new") {
                     createPassDocInit();
                 } else {

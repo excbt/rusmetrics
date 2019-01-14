@@ -1,5 +1,5 @@
 /*jslint node: true, eqeq: true, nomen: true*/
-/*global angular, moment*/
+/*global angular, moment, document*/
 'use strict';
 
 angular.module('zpointCwWidget', ['angularWidget', 'chart.js'])

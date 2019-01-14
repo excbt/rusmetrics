@@ -16,14 +16,13 @@ import ru.excbt.datafuse.nmk.data.model.support.SubscrUserWrapper;
 import ru.excbt.datafuse.nmk.data.model.types.SubscrTypeKey;
 import ru.excbt.datafuse.nmk.data.repository.SubscrUserRepository;
 import ru.excbt.datafuse.nmk.data.service.SubscrUserService.LdapAction;
-import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
-import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.ldap.service.LdapService;
+import ru.excbt.datafuse.nmk.security.PasswordUtils;
 import ru.excbt.datafuse.nmk.security.SecuredRoles;
+import ru.excbt.datafuse.nmk.service.QueryDSLService;
+import ru.excbt.datafuse.nmk.service.utils.DBExceptionUtil;
 
 import javax.persistence.PersistenceException;
-import javax.persistence.Query;
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -38,6 +37,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 	private static final String CABINET_SEQ_DEVICE_NUMBER = "{deviceObjectNumber}";
 
+	public static final String SEQUENCE_NAME = "seq_subscr_cabinet_nr";
 
 	protected final SubscrUserService subscrUserService;
 
@@ -59,7 +59,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 	private final ObjectAccessService objectAccessService;
 
-	private final DBSessionService dbSessionService;
+	private final QueryDSLService queryDSLService;
 
 	@Autowired
     public SubscrCabinetService(SubscrUserService subscrUserService,
@@ -70,7 +70,7 @@ public class SubscrCabinetService implements SecuredRoles {
                                 LdapService ldapService,
                                 EmailNotificationService emailNotificationService,
                                 DeviceObjectService deviceObjectService,
-                                SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, DBSessionService dbSessionService) {
+                                SubscriberAccessService subscriberAccessService, ObjectAccessService objectAccessService, QueryDSLService queryDSLService) {
         this.subscrUserService = subscrUserService;
         this.subscrRoleService = subscrRoleService;
         this.subscriberService = subscriberService;
@@ -81,7 +81,7 @@ public class SubscrCabinetService implements SecuredRoles {
         this.deviceObjectService = deviceObjectService;
         this.subscriberAccessService = subscriberAccessService;
         this.objectAccessService = objectAccessService;
-        this.dbSessionService = dbSessionService;
+        this.queryDSLService = queryDSLService;
     }
 
     /*
@@ -109,25 +109,9 @@ public class SubscrCabinetService implements SecuredRoles {
      *
      * @return
      */
-	@Transactional(value = TxConst.TX_DEFAULT, readOnly = true)
+	@Transactional
 	public Long getSubscrCabinetNr() {
-		Query q = dbSessionService.getSession().createNativeQuery("select nextval('portal.seq_subscr_cabinet_nr') as nr");
-
-		Object qryResult = q.getSingleResult();
-
-		Long result = null;
-
-		if (qryResult instanceof BigInteger) {
-			BigInteger nr = (BigInteger) qryResult;
-			result = nr.longValue();
-		} else {
-
-			throw new PersistenceException(
-					"result of select nextval('portal.seq_subscr_cabinet_nr') as nr is invalid type");
-
-		}
-
-		return result;
+	    return queryDSLService.getNextSequenceValue(DBMetadata.SCHEME_PORTAL, SEQUENCE_NAME);
 	}
 
     /**
@@ -144,7 +128,7 @@ public class SubscrCabinetService implements SecuredRoles {
 		checkNotNull(contObjectIds);
 		checkArgument(contObjectIds.length >= 1);
 
-		if (!objectAccessService.checkContObjectIds(parentSubscriber.getId(), Arrays.asList(contObjectIds))) {
+		if (!objectAccessService.checkContObjectIds(Arrays.asList(contObjectIds), parentSubscriber)) {
 			throw new PersistenceException(String.format("Subscriber (id=%d) can't access contObjects (%s)",
 					parentSubscriber.getId(), contObjectIds.toString()));
 		}
@@ -197,7 +181,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		newSubscriber = subscriberService.saveSubscriber(newSubscriber);
 
-        subscriberAccessService.updateContObjectIdsAccess(newSubscriber , Arrays.asList(contObjectIds), null);
+        subscriberAccessService.updateContObjectIdsAccess(Arrays.asList(contObjectIds), null, newSubscriber);
 
 		SubscrUser subscrUser = new SubscrUser();
 		subscrUser.setSubscriber(newSubscriber);
@@ -252,7 +236,7 @@ public class SubscrCabinetService implements SecuredRoles {
 
 		subscrUserService.deleteSubscrUsers(cabinetSubscriber.getId());
 
-		subscriberAccessService.updateContObjectIdsAccess(cabinetSubscriber, Collections.emptyList(), LocalDateTime.now());
+		subscriberAccessService.updateContObjectIdsAccess(Collections.emptyList(), LocalDateTime.now(), cabinetSubscriber);
 
 		subscriberService.deleteSubscriber(cabinetSubscriber);
 

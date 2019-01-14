@@ -29,6 +29,9 @@ public interface V_FullUserInfoRepository extends JpaRepository<V_FullUserInfo, 
 
     Optional<V_FullUserInfo> findOneByUserNameIgnoreCase(String userName);
 
+    @Query("select u.id from V_FullUserInfo u where lower(u.userName) = :username")
+    Optional<Long> findOneIdByUserNameIgnoreCase(@Param("username") String userName);
+
 	/**
 	 *
 	 * @param ids

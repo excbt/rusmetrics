@@ -1,0 +1,1059 @@
+
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object-view/" aria-controls="object-view" data-target="#object-view" role="tab" data-toggle="tab">Объекты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/tariffs/" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li ng-hide="isTestMode()"
+            id="meter_period_setting_2nd_menu_item" 
+            role="presentation"
+            class="">
+            <a class="nmc-main-tab-button"  
+               href="#/settings/meter-period-setting/" 
+               aria-controls="meter-period-setting" 
+               role="tab" 
+               data-target="#meter-period-setting" 
+               data-toggle="tab">Настройка отчетных периодов
+            </a>
+        </li>
+        <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="settings_tenants">
+      </div>
+    </div>
+</div>
+<div role="tabpanel" class="nmc-tab-panel">
+
+  <!-- Навигационная полоса -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li id="users_3rd_menu_item" role="presentation"><a class="nmc-tab-button" href="#/settings/users/" aria-controls="users_sets" data-target="#users_sets" role="tab" data-toggle="tab">{{userInfo.subscriber.subscriberName}}</a></li>
+    <li id="tenants_3rd_menu_item" role="presentation" class="active"><a class="nmc-tab-button" href="" aria-controls="tenants_sets" data-target="#tenants_sets"  role="tab" data-toggle="tab">Пользователи (наблюдатели) объектов учета</a></li>  
+  </ul>
+
+  <!-- реализация вкладок -->
+  <div class="tab-content">
+<!--      Варианты отчетов-->
+    <div role="tabpanel" class="tab-pane fade in active" id="tenants_sets">
+      </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-3 noPadding paddingRight20" ng-show="objectCtrlSettings.isTreeView == true">                    
+            <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+                <div class="col-xs-6">
+                    <div class="btn-group">
+                          <button 
+                                  title="Действия над объектом" 
+                             type="button" 
+                             class="btn btn-default btn-xs dropdown-toggle nmc-select-form" 
+                             data-toggle="dropdown" 
+                             aria-haspopup="true" 
+                             aria-expanded="false" 
+
+                             style="font-size: .9em;">
+                              {{messages.treeMenuHeader}} <span ng-show="isSystemuser()">(id = {{data.currentTree.id}})</span> <span class="caret"></span>
+                          </button>
+                          <ul class="dropdown-menu nmc-dropdown-menu">
+                            <li class="menu-item" role="presentation">
+                                <a href=""
+                                   class=""
+                                   ng-click="data.newTree = {}"
+                                   data-target="#showTreeOptionModal"
+                                   data-toggle="modal"
+                                   >
+                                    Создать новое дерево                                        
+                                </a>
+                            </li>
+                            <li class="menu-item dropdown dropdown-submenu" role="presentation">
+                                <a href="" 
+                                   class="" 
+                                   data-toggle="dropdown" 
+                                   aria-haspopup="true" 
+                                   aria-expanded="false"  
+                                   >
+                                    Создать дерево по шаблону
+                                </a>
+                                <ul class="dropdown-menu nmc-dropdown-menu">
+                                    <li class="menu-item" 
+                                        ng-repeat="treeTemplate in data.treeTemplates" 
+                                        >                                            
+                                        <a href=""
+                                           class=""
+                                           ng-click="createTreeByTemplate(treeTemplate)"
+                                           data-target="#showTreeOptionModal"
+                                           data-toggle="modal"
+                                           >
+                                            {{treeTemplate.templateName}}
+                                        </a>                                                
+                                    </li>                                        
+                                </ul>                                    
+                              </li>
+                              <li role="presentation" 
+                                  class="divider">
+                              </li>
+                              <li class="menu-item" 
+                                  role="presentation" 
+                                  ng-repeat="tree in data.trees">
+                                  <a href="" class=""
+                                     ng-click="loadTree(tree);">
+                                      {{tree.objectName || tree.id}}
+                                  </a>
+                              </li>
+                          </ul>
+                        </div>
+
+                </div>
+                <div class="col-xs-6">
+                    <div class="input-group  filter pull-left nmc-search-form">   
+                        <span class="input-group-addon nmc-search-form-addon">
+                            <i class="glyphicon glyphicon-search nmc-search-form-button">
+                            </i>
+                        </span>
+                        <input title="Введите текст для поиска узла" 
+                               type="text" 
+                               class="form-control nmc-text-input-form" 
+                               ng-model="treefilter" 
+                               >
+                    </div>
+                </div>
+            </div>
+             <div class="row nmc-tree-with-fixed-header">
+                  <div ui-tree="options" data-drag-enabled="false">
+                    <ol ui-tree-nodes ng-model="data.currentTree" >
+                      <li ng-repeat="item in data.currentTree.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'"></li>
+                    </ol>
+                  </div>
+             </div>
+        </div>
+        <div class="noPadding" 
+             ng-class="{'col-xs-12': objectCtrlSettings.isTreeView != true, 'col-xs-9': objectCtrlSettings.isTreeView == true}">
+            <div  ng-show="loading" class="nmc-loading">
+                <i class="fa fa-spinner fa-spin"></i> Загрузка ... 
+            </div>
+            <div class="container-fluid" ng-hide="loading">
+                <div class="row nmc-main-workspace-header marginBottom5 marginTop5">
+<!--                    <div class="col-xs-3 noPadding">-->
+<!--                        <button class="btn nmc-main-add-button" ng-click="addObjectInit(false)">Создать объект</button>-->
+<!--                    </div>-->
+<!--                    <div class="col-xs-4"></div>-->
+                    <div class = "col-xs-4 noPadding">   
+                        <div class = "input-group filter pull-left nmc-search-form" >
+                            <span class="input-group-addon nmc-search-form-addon">
+                                <i class="glyphicon glyphicon-search nmc-search-form-button"></i>
+                            </span>
+                            <input title="Введите текст для поиска объектов" 
+                                   type="text" 
+                                   class="form-control nmc-text-input-form" 
+                                   ng-model="filter" 
+                                   ng-change="searchObjects(filter)">
+                        </div>
+                    </div>
+                    <div class="col-xs-3">
+                        <div class="input-group filter nmc-search-form"
+                             title = "Фильтр по отчетным периодам">   
+                            <span class="input-group-addon nmc-filter-form-addon" id="leftAddon">Период:
+                            </span>
+                            <select class = "form-control nmc-input-data nmc-select-form"
+                                    ng-model = "meterPeriodFilter"
+                                    ng-options = "mps.id as mps.name for mps in data.meterPeriods">
+                            </select>
+                            <span class="input-group-addon nmc-input-form-suffix">
+                                <i class="btn btn-xs nmc-button-clear-filter"
+                                   ng-click = "meterPeriodFilter = ''">
+                                    <img height="19" width="19" src="images/clear-filter.png" class="nmc-img-clear-filter">
+                                </i>
+                            </span>
+                        </div>
+                    </div>    
+                    <div class="col-xs-offset-2 col-xs-2">
+                            <label class="nmc-form-label">Всего:</label>
+                             <input type="text" disabled class="form-control nmc-view-allcount nmc-inactive-form" ng-model="objects.length">
+                            <span id="timeOutput"></span>
+                    </div>
+                </div>
+             </div>
+
+            <!-- Шапка для таблицы-->
+            <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table" ng-hide="loading">
+                    <thead>
+                        <tr>
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th 
+                                                class="nmc-td-for-button-object-control" 
+                                                style="padding: 0 0 3px;">
+
+                                                <div class="btn-group">
+                                                    <button ng-disabled="!(objectCtrlSettings.anySelected == true)" 
+                                                            title="Действия" 
+                                                            type="button" 
+                                                            class="btn btn-default btn-xs dropdown-toggle" 
+                                                            data-toggle="dropdown" 
+                                                            aria-haspopup="true" 
+                                                            aria-expanded="false" 
+                                                            style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;margin-left: 6px; margin-right: 3px;">
+                                                    <span class="caret"></span>
+                                                    </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="createCabinets()">{{messages.createTenants}}</a></li>
+                                                    <li><a href="" ng-click="resetPasswords()">{{messages.recreateTenantPasswords}}</a></li>
+                                                    <li><a href="" ng-click="sendLDByEmail()">{{messages.sendLoginInfoByEmail}}</a></li>
+                                                    <li><a href="" ng-click="setMeterPeriodsInit()">{{messages.setMeterPeriods}}</a></li>    
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'"><a href="" 
+                                                           data-target="#viewTreeModal" 
+                                                           data-toggle="modal" 
+                                                           ng-click="moveToNodeInit()">{{messages.moveToNode}}</a>
+                                                    </li>
+                                                    <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
+                                                        <a href="" 
+                                                           ng-click="releaseFromNode()">{{messages.releaseFromNode}}
+                                                        </a>
+                                                    </li>
+                                                    <li role="separator" class="divider"></li>  
+                                                    <li>
+                                                        <a href="" 
+                                                           ng-click="deleteCabinetsInit()"
+                                                           data-target="#deleteCabinetModal" 
+                                                           data-toggle="modal"
+                                                           >
+                                                            {{messages.deleteLogins}}
+                                                        </a>
+                                                    </li>
+                                                  </ul>
+                                                </div>
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)" class="marginRight2" style="vertical-align: middle;"/>
+                                            </th>
+<!--                                            <th class="nmc-td-for-button"></th>-->
+                                            <th class="col-xs-3">Название объекта
+                                            </th>
+                                            <th class="col-xs-2">Имя пользователя
+                                            </th>
+                                            <th class="col-xs-2">Эл. почта
+                                            </th>
+                                            <th class="col-xs-1">Логин
+                                            </th>
+                                            <th class="col-xs-1">Пароль
+                                            </th>
+                                            <th class = "col-xs-2">Настройки периодов
+                                            </th>
+                                            <th>
+<!--
+                                                <div class="btn-group pull-right" style="vertical-align: initial;">
+                                                  <p title="Настройки" class="btn btn-xs glyphicon glyphicon-cog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 20x; font-size: 14px; width: 15px; padding-left: 0px; color: #fff; margin-top: -4px;">                    
+                                                  </p>
+                                                  <ul class="dropdown-menu">
+                                                    <li>
+                                                        <a href="" ng-click="toggleTreeView()">
+                                                            Включить/выключить отображение дерева объектов
+                                                        </a>
+                                                    </li>
+                                                  </ul>
+                                                </div>
+-->
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+            </table>
+            <div>
+                <div class=""                     
+                     ng-show="!(objectsOnPage.length > 0)" 
+                     ng-hide="loading || (objectsOnPage.length > 0)">
+                    <h3 class="nmc-h3">Объектов нет.</h3>
+                </div>
+                <div id="divWithObjectTable" 
+                     class="nmc-table-with-fixed-header" 
+                     ng-hide="loading">
+                    <table id="tableInf" 
+                           class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                    <thead>
+                        <tr class="nmc-hide">
+                            <th style="padding: 0; border-bottom-width: 0px;">
+                                <table class="crud-grid table table-lighter table-condensed noMargin">
+                                    <thead>
+                                        <tr class="nmc-child-table-header">
+                                            <th class="nmc-td-for-button-object-control" style="padding: 0 5px;">
+                                                <input title="Выбрать / отменить все" type="checkbox" ng-model="objectCtrlSettings.allSelected" ng-click="toggleObjects(objectCtrlSettings.allSelected)"/>
+                                                <div class="btn-group" style="vertical-align: initial;">
+
+                                                  <button title="Действия над объектами" type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="height: 15px; font-size: 8px; width: 15px; padding-left: 2px;">
+                                                    <span class="caret"></span>
+                                                  </button>
+                                                  <ul class="dropdown-menu">
+                                                    <li><a href="" ng-click="">{{messages.deleteLogins}}</a></li>            
+                                                  </ul>
+                                                </div>
+                                            </th>
+<!--                                            <th class="nmc-td-for-button"></th>-->
+                                            <th class="col-xs-3">Название объекта
+                                            </th>
+                                            <th class="col-xs-2">Имя пользователя
+                                            </th>
+                                            <th class="col-xs-2">Эл. почта
+                                            </th>
+                                            <th class="col-xs-1">Логин
+                                            </th>
+                                            <th class="col-xs-1">Пароль
+                                            </th>
+                                            <th class = "col-xs-2">Настройки периодов
+                                            </th>
+                                            <th>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat='object in objectsOnPage | filter: meterPeriodFilter track by $index' ng-attr-id={{"obj"+object.id}}>
+                        <td>
+                            <table style="width:100%">
+                                <tr ng-class="{'nmc-tr-odd':($index%2!==0)}">
+
+                                    <td class="nmc-td-for-button-object-control">            
+                                        <div class="btn-group">
+                                          <i title="Действия над объектом" 
+                                             type="button" 
+                                             class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                                             data-toggle="dropdown" 
+                                             aria-haspopup="true" 
+                                             aria-expanded="false" 
+                                             ng-click="" 
+                                             style="font-size: .9em;">
+                                            </i>
+                                          <ul class="dropdown-menu">
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="selectCabinet(object)" 
+                                                   data-target="#showTenantOptionModal" 
+                                                   data-toggle="modal">
+                                                    {{messages.viewProps}}
+                                                </a>
+                                              </li>            
+                                            <li ng-if="checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="createCabinets(object)">
+                                                    {{messages.createTenant}}
+                                                </a>
+                                            </li>                                                        
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)" 
+                                                class="menu-item dropdown dropdown-submenu" 
+                                                role="presentation">
+                                                <a href="" 
+                                                   ng-click="">
+                                                    {{messages.changeTenantPassword}}
+                                                </a>
+                                                <ul class="dropdown-menu nmc-dropdown-menu">
+                                                  <li class="menu-item dropdown">        
+                                                    <a href=""
+                                                       class="paddingRight30" 
+                                                       data-toggle="dropdown" 
+                                                       aria-haspopup="true" 
+                                                       aria-expanded="false"
+                                                       ng-click="resetPasswords(object)"
+                                                       >
+                                                        Сгенерировать новый
+                                                    </a>
+                                                  </li>
+                                                  <li class="menu-item dropdown">        
+                                                    <a href=""
+                                                       class="paddingRight30" 
+                                                       data-target="#createPasswordModal"                                               
+                                                       data-toggle="modal"
+                                                       ng-click="selectCabinet(object)"
+                                                       >
+                                                        Задать
+                                                    </a>
+                                                  </li>    
+                                                </ul>
+                                            </li>
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="sendLDByEmail(object)">
+                                                    {{messages.sendLoginInfoByEmail}}
+                                                </a>
+                                            </li>
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type == 'root'">
+                                                <a href="" 
+                                                   data-target="#viewTreeModal" 
+                                                   data-toggle="modal" 
+                                                   ng-click="moveToNodeInit(object)">{{messages.moveToNode}}
+                                                </a>
+                                            </li>
+                                            <li ng-if="objectCtrlSettings.isTreeView == true && data.selectedNode.type != 'root'">
+                                                <a href=""                                             
+                                                   ng-click="releaseFromNode(object)">{{messages.releaseFromNode}}</a>
+                                            </li>
+                                            <li>
+                                                <a href="" 
+                                                   ng-click="openMeterPeriods(object)">
+                                                    {{messages.meterPeriods}}
+                                                </a>
+                                            </li>  
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)" role="separator" class="divider"></li>
+                                            <li ng-if="!checkUndefinedNull(object.cabinet)">
+                                                <a href="" 
+                                                   ng-click="deleteCabinetsInit(object)" 
+                                                   data-target="#deleteCabinetModal" 
+                                                   data-toggle="modal">
+                                                    {{messages.deleteLogin}}
+                                                </a>
+                                            </li>                                            
+                                          </ul>
+                                        </div>            
+                                        <input type="checkbox" 
+                                               ng-click="toggleObject(object)" 
+                                               ng-model="object.selected" 
+                                               class="marginRight2" 
+                                               style="vertical-align: middle;"/>
+                                    </td>
+<!--                                    <td class="nmc-td-for-button"> -->
+<!--                                        <i title="Показать/Скрыть точки учета" ng-attr-id={{"btnDetail"+object.id}} class="btn btn-xs noMargin glyphicon glyphicon-chevron-right nmc-button-in-table" ng-click="toggleShowGroupDetails(object.id)"></i> -->
+<!--                                    </td>-->
+
+                                    <td class="col-xs-3">                                        
+                                        {{object.contObjectInfo.fullName || object.contObjectInfo.name}}
+<!--                                        <span ng-show="isSystemuser()">(id = {{object.id}})</span>-->
+                                    </td>
+                                    <td class="col-xs-2">
+                                        {{object.cabinet.subscrUser.userNickname}}
+                                    </td>
+                                    <td class="col-xs-2">
+                                        {{object.cabinet.subscrUser.contactEmail}}
+                                    </td>
+                                    <td class="col-xs-1">
+                                        {{object.cabinet.subscrUser.userName}}
+                                    </td>
+                                    <td class="col-xs-1">
+                                        {{object.cabinet.subscrUser.passwordPocket}}
+                                    </td>
+                                    <td class = "col-xs-2 nmc-text-align-center">
+                                        <input type="checkbox" ng-show = "!object.meterPeriodSettings" disabled/>
+                                        <input type="checkbox" checked ng-show = "object.meterPeriodSettings" disabled/>
+                                    </td>
+                                    <td>
+                                        <div ng-if="!checkUndefinedNull(object.cabinet)" 
+                                             class="btn-toolbar">
+                                            <div class="btn-group pull-right">                   
+                                                <i title="Удалить пользователя" 
+                                                   class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                                                   ng-click="deleteCabinetsInit(object)" 
+                                                   data-target="#deleteCabinetModal" 
+                                                   data-toggle="modal">
+                                                </i>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr ng-attr-id="{{'trObjZp'+object.id}}" 
+                                    class="nmc-tr-zpoint">
+                                </tr>
+                            </table>
+                         </td>        
+                     </tr>            
+                    </tbody>
+                </table>            
+              </div>
+            </div><!-- end of scrolling table div -->
+        </div>
+    </div>
+</div>
+
+<!--Show tenant options-->
+<div id="showTenantOptionModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog" 
+     aria-labelledby="showTenantOptionLabel" 
+     tabindex="-1" 
+     data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">            
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <p 
+               class="btn close nmc-modal-button-print" 
+               aria-label="Print" 
+               ng-click = "printTenant()">
+                <span aria-hidden="true">
+                    <i class = "glyphicon glyphicon-print"></i>
+                </span>
+            </p>
+			<h3 id="showTenantOptionLabel" class="nmc-h3">
+				Пользователь
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputTenantLogin">Логин</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">                                    
+                                    <input class="form-control nmc-text-input-form" 
+                                           type="text" 
+                                           id="inputTenantLogin" 
+                                           placeholder="Логин" 
+                                           ng-model="data.selectedCabinet.cabinet.subscrUser.userName"
+                                           disabled
+                                           />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputTenantName">Имя</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.userNickname)}">-->
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputTenantName" 
+                                               placeholder="Имя" 
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.userNickname"
+                                               />
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputDescription" >Описание</label>
+                                </td>
+                                <td class="nmc-text-align-left"><textarea class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание" ng-model="data.selectedCabinet.cabinet.subscrUser.userDescription"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputTenantEmail">Эл. почта</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.contactEmail)}">-->
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputTenantEmail" 
+                                               placeholder="Электронная почта" 
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.contactEmail"
+                                               />
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="viewTenantAddress">Адрес</label>
+
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewTenantAddress" placeholder="Адрес" ng-model="data.selectedCabinet.contObjectFullName" disabled>
+<!--
+                                    <div ng-if="!emptyString(currentObject.fullAddress)" class="noPadding">
+                                        <small class="marginRight5"><input type="checkbox" disabled ng-model="currentObject.isAddressAuto"/>Автоопределение адреса
+                                        </small>
+                                        <small><img ng-src="{{'../app/images/geo-state-' + currentObject.geoState + '.png'}}" width="8" height="8" class="marginRight5"/> {{currentObject.geoStateText}}
+                                        </small>
+                                    </div>
+-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="viewTenantPassword">Пароль</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+<!--                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(data.selectedCabinet.cabinet.subscrUser.passwordPocket)}">-->
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="viewTenantPassword" 
+                                               placeholder="Пароль" 
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
+                                               disabled
+                                               />
+<!--                                    </div>-->
+                                </td>
+                            </tr>
+
+
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button"
+								ng-click="printTenant()">
+								Распечатать
+							</button>
+						</div>
+                        <div class="col-xs-offset-3 col-xs-3">
+							<input 
+                                   type="submit" 
+                                   class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="updateCabinet(data.selectedCabinet)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!-- window: confirm action-->
+<div id="confirmActionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="confirmActionLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="confirmActionLabel" class="nmc-h3">
+				Подтверждение 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="confirmActionForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы действительно хотите   
+					</label> 
+					<label class="text-primary nmc-form-label">{{confirmationText}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-xs btn-primary btn-block nmc-ok-button"
+								ng-click="confirmAction();"
+								value="Ок" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-xs-3 noMargin noPadding nmc-cancel-button">
+							<button class="btn btn-xs btn-default btn-block" data-dismiss="modal"
+								ng-click="exit('#confirmActionModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+    
+    
+<!-- window: delete object-->
+<div id="deleteCabinetModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog" 
+     aria-labelledby="deleteObjectLabel" 
+     tabindex="-1" 
+     data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			<h3 id="deleteObjectLabel" class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить кабинет для  
+					</label> 
+					<label class="text-primary nmc-form-label">{{data.selectedCabinet.cabinet.subscrUser.userName || data.selectedCabinet.cabinet.id || (data.selectedCabinet.cabinetsIdsForDelete.length + " объектов")}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+                <div class="marginLeft15">
+                        <label class="nmc-form-label">Введите код подтверждения: 
+                            {{confirmLabel}}
+                    </label><input type="text" class="nmc-text-input-form nmc-input-digital-data" ng-model="confirmCode"/>
+                </div>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-xs-3">
+							<input ng-disabled = "(confirmCode!=sumNums && !isSystemuser())" type="submit" class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteCabinets(data.selectedCabinet)"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#deleteCabinetModal');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!--create password window-->
+<div id="createPasswordModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="createPasswordLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="createPasswordLabel" class="nmc-h3">
+				Создание пароля
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="viewTenantLogin">Логин</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form" type="text" id="viewTenantLogin" placeholder="Логин"  ng-model="data.selectedCabinet.cabinet.subscrUser.userName" disabled>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTenantPassword">Пароль</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.selectedCabinet)}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputTenantPassword" 
+                                               placeholder="Пароль" 
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocket"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="confirmTenantPassword">Подтверждение пароля</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error' : !checkPasswordFields(data.selectedCabinet)}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="confirmTenantPassword" 
+                                               placeholder="Повторите пароль" 
+                                               ng-model="data.selectedCabinet.cabinet.subscrUser.passwordPocketConfirm"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="createPassword(data.selectedCabinet)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noMargin noPadding">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#createPasswordModal')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+    
+<!--    window: add/change level-->
+<div id="treeLevelModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="treeLevelLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="setClientLabel" class="nmc-h3">
+				Уровень
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputLevelName">Наименование</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': !(data.currentLevel.objectName >'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputLevelName" 
+                                               placeholder="" 
+                                               ng-model="data.currentLevel.objectName"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputLevelParentName">Родительский узел</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         >
+                                        <input ng-if="data.parentLevel.type != 'root'"
+                                               class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputLevelParentName" 
+                                               placeholder="" 
+                                               ng-model="data.parentLevel.objectName"
+                                               disabled/>
+                                        <div ng-if="data.parentLevel.type == 'root'" class="well noMargin nmc-text-output">
+                                            {{data.currentTree.objectName || data.currentTree.id}}
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+            <span class="pull-left">
+            <p 
+               type="button" 
+                    class="btn btn-xs nmc-add-button-in-modal"                
+                    title="Сохранить текущий и создать еще один уровень" 
+                    ng-click="saveNode(data.currentLevel, data.parentLevel, true)"
+                    
+               >
+                Сохранить и создать еще
+            </p>
+        </span>
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="saveNode(data.currentLevel, data.parentLevel)"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
+    
+    <!--    window: add/change tree-->
+<div id="showTreeOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showTreeOptionLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="showTreeOptionLabel" class="nmc-h3">
+				Дерево
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 well noPaddingBottom marginBottom10 nmc-modal-panel-with-table" style="">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3"><label for="inputTreeName">Наименование</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': !(data.newTree.objectName >'')}">
+                                        <input class="form-control nmc-text-input-form" 
+                                               type="text" 
+                                               id="inputTreeName" 
+                                               placeholder="" 
+                                               ng-model="data.newTree.objectName"
+                                               />
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3"><label for="inputTreeType">Тип</label>
+                                </td>
+                                <td colspan="2" class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         >                                        
+                                        <select class="form-control nmc-select-form"
+                                                ng-model="data.newTree.templateId" 
+                                                ng-options="template.id as template.templateName for template in data.treeTemplates"
+                                                disabled>
+                                        </select>
+                                        
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">            
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="saveTree(data.newTree)"
+					value="Сохранить" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
+    
+<!--    delete tree-->
+<div nmc-view-delete-modal-window 
+     message = "{{data.currentDeleteMessage}}"      
+     confirm-label = "{{confirmLabel}}"
+     control-code = "{{sumNums}}"
+     is-systemuser = "isSystemuser()"
+     delete-item-click = "deleteHandler(data.currentDeleteItem)">
+</div>
+
+    <!--    window: move objects to node-->
+<div id="viewTreeModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="viewTreeLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog  modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			<h3 id="viewTreeLabel" class="nmc-h3">
+				Выберете узел дерева "{{data.treeForMove.objectName}}"
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body paddingLeftRight15">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 noPadding marginBottom10 nmc-modal-panel-with-table" style="">
+                          <div ui-tree="options" data-drag-enabled="false">
+                            <ol ui-tree-nodes ng-model="data.treeForMove" >
+                              <li ng-repeat="item in data.treeForMove.childObjectList" 
+                                  ui-tree-node 
+                                  ng-include="'object_tree_items_renderer.html'">
+                                </li>
+                            </ol>
+                          </div>
+                    </div>    
+                </div>  
+            </div>        
+		</div>
+		<div class="modal-footer nmc-modal-footer">            
+            <input type="submit" 
+                   class="btn btn-primary btn-xs nmc-save-button"
+					ng-click="moveToNode()"
+                   ng-disabled="data.selectedNodeForMove == null"
+					value="Привязать" />
+            <button class="btn btn-default btn-xs nmc-cancel-button" 
+                    data-dismiss="modal"
+                    ng-click="exit()">
+								Отменить
+			</button>				
+		</div>
+	</div>
+</div>
+
+<!--        Object tree view template-->
+<script type="text/ng-template" id="object_tree_items_renderer.html">
+    <div ui-tree-handle ng-click="selectNode(item)"
+         ng-mouseover = "item.isHover = true"
+         ng-mouseleave = "item.isHover = false"
+         ng-class="{'nmc-bg-distinguish': item.isSelected}"
+         class="nmc-ui-tree-handle">
+        <div class="btn-group "
+             ng-show="objectCtrlSettings.isObjectMoving != true">
+          <i type="button" 
+                  class="btn btn-xs glyphicon glyphicon-menu-hamburger nmc-button-in-table dropdown-toggle" 
+                  data-toggle="dropdown" 
+                  aria-haspopup="true" 
+                  aria-expanded="false"
+                  ng-disabled=false
+             >
+          </i>
+          <ul class="dropdown-menu noMarginI">
+            <li ng-hide="addNodeDisabled(item)"><a href="" ng-click="createNodeInit(item)" 
+                   data-target="#treeLevelModal" 
+                   data-toggle="modal"
+                   
+                   >Добавить узел</a></li>                            
+            <li role="presentation" class="divider"></li>
+            <li><a href="" ng-click="removeNodeInit(item)">Удалить 
+                <span ng-if="item.type != 'root'">узел</span>
+                <span ng-if="item.type == 'root'">дерево</span></a></li>
+          </ul>
+        </div>
+        <i class="btn btn-xs glyphicon"
+             ng-class="{'glyphicon-chevron-right': collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-down': !collapsed && item.childObjectList.length > 0, 'glyphicon-chevron-right nmc-button-disabled': !(item.childObjectList.length > 0)}"
+             data-nodrag ng-click="toggle(this)">                                  
+        </i>
+        <span ng-if = "item.type == 'root'">
+              <strong>\</strong>
+        </span>
+        <span class="nmc-valign-middle">
+            {{item.objectName}}<span ng-show="isSystemuser()">(id = {{item.id}})</span>
+        </span>
+    </div>
+    <ol ui-tree-nodes="options" ng-model="item.childObjectList" ng-class="{hidden: collapsed}">
+      <li ng-repeat="item in item.childObjectList" ui-tree-node ng-include="'object_tree_items_renderer.html'">
+      </li>
+    </ol>
+</script>
+
+<div nmc-view-meter-periods-modal 
+     cont-object-name = "{{data.currentObjectData.contObjectFullName}}"
+     meter-period-list="data.meterPeriods"
+     resource-system-list = "data.resourceSystems"
+     btn-click="saveMeterPeriodSettings(data.resourceSystems)"
+     btn-ok-caption="Сохранить"
+     show-ok-button="true"
+     show-cancel-button="true">
+</div>

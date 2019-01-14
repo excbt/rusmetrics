@@ -1,0 +1,299 @@
+<div id="showZpointOptionModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="showZpointOptionLabel" tabindex="-1" data-backdrop="static">
+	<div class="modal-dialog modal-content nmc-modal-dialog">
+		<div class="modal-header nmc-modal-header">
+            <button type="button" class="close nmc-close-button" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <button type="button" class="close marginRight5 nmc-close-button" ng-click="invokeHelp()"><span aria-hidden="true">?</span></button>
+			<h3 id="showZpointOptionLabel" class="nmc-h3">
+				Точка учета 
+<!--                "{{vm.contZpoint.zpointName}}"-->
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body"><!--  nmc-modal-body"> -->
+            <div class="container-fluid"><!--  nmc-modal-panel"> -->
+                <div class="row-fluid">
+                    <div class="col-md-12 well noPaddingBottom marginBottom10 nmc-metadata-list-in-zpoint nmc-modal-panel">
+                        <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="labelObjectName">Объект учета</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom">
+                                       <input class="form-control nmc-text-input-form" 
+                                              type="text" 
+                                              id="labelObjectName" 
+                                              placeholder="Объект учета" 
+                                              size="70" 
+                                              ng-model="vm.contObject.fullName"
+                                              disabled/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputZpointName">Наименование</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div class="form-group noMarginBottom" 
+                                         ng-class="{'has-error': emptyString(vm.contZpoint.customServiceName)}">
+                                       <input class="form-control nmc-text-input-form" 
+                                              type="text" 
+                                              id="inputZpointName" 
+                                              placeholder="Наименование" 
+                                              size="70" 
+                                              ng-model="vm.contZpoint.customServiceName"/>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-12">
+                                   <input type="checkbox" class="nmc-checkbox-form" ng-model="vm.contZpoint.isManualLoading">Разрешить импорт данных из файла
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><label for="inputComment" >Комментарий</label>
+                                </td>
+                                <td class="nmc-text-align-left ">
+                                    <textarea class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий" cols="71" ng-model="vm.contZpoint.contZPointComment"></textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                  <label for="inputType">Тип</label>
+                                </td>
+                                <td class="nmc-text-align-left ">
+                                    <div class="form-group noMarginBottom" ng-class="{'has-error': emptyString(vm.contZpoint.contServiceTypeKeyname)}">
+                                        <select class="form-control nmc-input-data nmc-select-form" 
+                                                ng-model="vm.contZpoint.contServiceTypeKeyname" 
+                                                ng-options="serviceType.keyname as serviceType.caption for serviceType in vm.serviceTypes "
+                                                ng-change="vm.changeServiceType(vm.contZpoint)">
+
+                                        </select>
+                                    </div>
+                                    <div ng-show="(vm.contZpoint.contServiceTypeKeyname=='hw'|| vm.contZpoint.contServiceTypeKeyname=='heat')">
+                                        <input type="radio" name="gvstype" data-ng-model="vm.contZpoint.doublePipe" data-ng-value="false" > Однотрубная
+                                        <input type="radio" name="gvstype" data-ng-model="vm.contZpoint.doublePipe" data-ng-value="true"> Двухтрубная
+                                    </div>   
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputDevice">Прибор учета</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left ">
+                                    <div ng-if = "vm.contObject.devicesLoading === false"
+                                         class="input-group noMarginBottom" 
+                                         ng-class="{'has-error': vm.checkUndefinedNull(vm.contZpoint.deviceObjectId)}">
+                                        <select 
+                                                class="form-control nmc-select-form" 
+                                                ng-model="vm.contZpoint.deviceObjectId" 
+                                                ng-options="device.id as device.devCaption for device in vm.contObject.devices">
+                                        </select>
+                                        <span class = "input-group-addon nmc-input-form-suffix">
+                                            <i title = "Архив приборов"
+                                               class = "btn btn-xs nmc-button-clear-filter glyphicon glyphicon-list-alt"
+                                               ng-click = "vm.viewDeviceArchive(vm.contZpoint)">
+
+                                            </i>
+                                        </span>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr ng-show = "vm.contZpoint.showDeviceArchive">
+                                <td colspan = "2">
+                                    <div class="container-fluid">
+                                       <div ng-show = "vm.contZpoint.deviceArchiveLoading" class = "row">
+                                          <div class = "col-xs-12">
+                                              <i class = "fa fa-spinner fa-spin"></i> Загрузка ... 
+                                          </div>
+
+                                       </div>
+                                        <div ng-show = "vm.contZpoint.deviceArchiveLoading == false" class="row">
+                                            <div class = "nmc-arch-device-list-modal">
+                                                <table id="tableInf" class="crud-grid table table-lighter table-condensed noMarginBottom nmc-parent-table nmc-parent-object-table">
+                                                   <thead>
+                                                       <tr>
+                                                          <th>
+                                                              Название
+                                                          </th>
+                                                           <th>
+                                                               S/N
+                                                           </th>
+                                                           <th>
+                                                               Модель
+                                                           </th>
+                                                           <th>
+                                                               Дата установки
+                                                           </th>
+                                                           <th>
+                                                               Дата замены
+                                                           </th>
+                                                       </tr>
+                                                   </thead>
+                                                    <tbody>
+                                                        <tr ng-repeat="device in vm.contZpoint.deviceArchive track by $index" ng-class="{'nmc-tr-odd':($index%2!==0)}">
+                                                           <td>
+                                                               {{device.deviceObject.deviceObjectName}}
+                                                           </td>
+                                                            <td>
+                                                                {{device.deviceObject.number}}
+                                                            </td>
+                                                            <td>
+                                                                {{device.deviceObject.deviceModelName}}
+                                                            </td>
+                                                            <td>
+                                                                {{device.startDateStr}}
+                                                            </td>
+                                                            <td>
+                                                                {{device.endDateStr}}
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>    
+                                                </table>
+                                            </div>
+                                        </div>  
+                                    </div> 
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputPCO">РСО</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <div ng-if = "vm.rsoOrganizationsLoading === false"
+                                       class="form-group noMarginBottom" ng-class = "{'has-error': vm.checkUndefinedNull(vm.contZpoint.rsoId)}">
+                                        <select class = "form-control nmc-select-form" 
+                                                ng-model = "vm.contZpoint.rsoId" 
+                                                ng-options = "rso.id as rso.organizationName for rso in vm.rsoOrganizations"
+                                                ng-change = "vm.changeRso(vm.contZpoint)"
+                                                >
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class = "col-sm-3">
+                                    <label for = "inputTempSch">Температурный график</label>
+                                </td>
+                                <td class = "col-sm-9 nmc-text-align-left">
+
+                                    <div ng-if = "!vm.contObject.tempSchedulesLoading"
+                                       class = "input-group noMarginBottom">
+                                        <ui-select class = "nmc-ui-select-form" 
+                                                   ng-model = "vm.contZpoint.tChart" 
+                                                   theme = "bootstrap" 
+                                                   ng-disabled = "disabled">
+                                            <ui-select-match placeholder = "">{{$select.selected.chartName}}</ui-select-match>
+                                            <ui-select-choices repeat = "sch in vm.contObject.tempSchedules | propsFilter: {chartName: $select.search}">
+                                              <div ng-bind-html = "sch.chartName"></div>
+                                              <small>
+                                                макс. / мин. : <span ng-bind-html = "sch.maxT"></span> / 
+                                                <span ng-bind-html = "sch.minT"></span>  
+                                              </small>
+                                            </ui-select-choices>
+                                          </ui-select>
+                                        <span class = "input-group-addon nmc-input-form-suffix">
+                                            <i title = "Очистить поле"
+                                               class = "btn btn-xs nmc-button-clear-filter"
+                                               ng-click = "vm.removeTChart(vm.contZpoint)">
+                                                <img height = "19" width = "19" src = "images/clear-filter.png" class = "nmc-img-clear-filter">
+                                            </i>
+                                        </span>
+                                    </div>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTSNumber">Номер теплосистемы</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text" 
+                                           id="inputTSNumber"  
+                                           ng-model="vm.contZpoint.tsNumber" 
+                                           data-inputmask="'mask': '9[9]', 'greedy':false"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3">
+                                    <label for="inputTSNumber">Номер точки учета*</label>
+                                </td>
+                                <td class="col-sm-9 nmc-text-align-left">
+                                    <input class="form-control nmc-text-input-form nmc-input-digital-data-sm" 
+                                           type="text" 
+                                           id="inputEXCode" 
+                                           ng-model="vm.contZpoint.exCode"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="col-sm-12">
+                                   <input type="checkbox" 
+                                          class="nmc-checkbox-form" 
+                                          ng-model="vm.contZpoint.isDroolsDisable"> Не обрабатывать события
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-3 noPaddingRightI">
+                                   <input type="checkbox" 
+                                          class="nmc-checkbox-form" 
+                                          ng-model="vm.contZpoint.flexData.techAccountingEnabled"> Технический учет
+                                </td>
+                                <td class="col-sm-9">
+                                   <input type="checkbox" 
+                                          class="nmc-checkbox-form" 
+                                          ng-model="vm.contZpoint.flexData.commAccountingEnabled"> Коммерческий учет
+                                </td>
+                            </tr>                                    
+                            <tr>
+                                <td colspan="2" class="col-sm-12">
+                                   <input type="checkbox" 
+                                          class="nmc-checkbox-form" 
+                                          ng-model="vm.contZpoint.flexData.controlEnabled"> Контрольная
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class = "col-sm-12">
+                                   <div class = "noPadding nmc-arch-device-list-modal">
+                                        <tags-input ng-model = "vm.contZpoint.tagNames"
+                                        use-strings = "true"
+                                        replace-spaces-with-dashes = "true"
+                                        placeholder = "Добавьте тег">
+                                            
+                                        </tags-input>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="col-sm-12" colspan="2">
+                                    <label for="inputTSNumber">* Используется только для точек учета, которые получают данные из системы ЛЭРС</label>
+                                </td>                                
+                            </tr>
+                            <tr><td></td><td></td></tr>
+                         </table>
+                       </div>
+                 </div>                 
+        	</div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid  ">
+					<div class="row">
+                        <div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+                                ng-click="vm.saveZpoint()"
+								value="Сохранить" 
+                                   ng-disabled="vm.contZpoint.isSaving == true"/>
+						</div> 
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noPadding noMargin nmc-cancel-button">
+							<button class="btn btn-default btn-block btn-xs" data-dismiss="modal"
+								ng-click="exit()">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>

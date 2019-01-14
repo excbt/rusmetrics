@@ -1,0 +1,527 @@
+<!--<div>Портал / Настройки / Тарифы</div>-->
+<!--
+<div>
+    <ul class="breadcrumb marginBottom10">
+        <li><a href="#/">Портал</a> <span class="divider"></span></li>
+        <li>Настройки<span class="divider"></span></li>
+        <li class="active">Тарифы</li>
+    </ul>
+</div>    
+-->
+<!-- Вкладки рабочей области-->
+<div role="tabpanel" class="nmc-main-tab-panel">
+
+  <!-- Навигационная полоса -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/paramsets/" aria-controls="param_sets" role="tab" data-target="#param_sets" data-toggle="tab">Отчеты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object-view/" aria-controls="object-view" data-target="#object-view" role="tab" data-toggle="tab">Объекты</a></li>
+        <li role="presentation" class="active"><a class="nmc-main-tab-button" href="" aria-controls="tariffs" data-target="#tariffs" role="tab" data-toggle="tab">Тарифы</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/object_groups/" aria-controls="object_groups" data-target="#object_groups" role="tab" data-toggle="tab">Группировка</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/contacts/" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Контакты</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/users/" aria-controls="users" data-target="#users" role="tab" data-toggle="tab">Пользователи</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/management_services" aria-controls="contacts" data-target="#contacts" role="tab" data-toggle="tab">Услуги</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/notices" aria-controls="settings-notices" data-target="#settings-notices" role="tab" data-toggle="tab">Уведомления</a></li>
+        <li role="presentation"><a class="nmc-main-tab-button" href="#/settings/program" aria-controls="settings-program" data-target="#settings-program" role="tab" data-toggle="tab">Настройки программы</a></li>
+        <li ng-hide="isTestMode()"
+            id="meter_period_setting_2nd_menu_item" 
+            role="presentation"
+            class="">
+            <a class="nmc-main-tab-button"  
+               href="#/settings/meter-period-setting/" 
+               aria-controls="meter-period-setting" 
+               role="tab" 
+               data-target="#meter-period-setting" 
+               data-toggle="tab">Настройка отчетных периодов
+            </a>
+        </li>
+        <li role="presentation" ng-show="isSystemViewInfo()"><a class="nmc-main-tab-button" href="#/settings/about-program/" aria-controls="about-program" data-target="#about-program" role="tab" data-toggle="tab">О программе</a></li>
+
+    </ul>
+
+    <div class="tab-content">
+      <div role="tabpanel" class="tab-pane fade in active" id="report_templates">
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid nmc-main-workspace-header">
+<div class="row">
+    <div class="col-xs-3 noPadding">
+        <h2 class="noMargin nmc-h2">Тарифы</h2>
+    </div>
+    <div class="input-group col-xs-4 filter pull-left nmc-search-form">   
+        <span class="input-group-addon nmc-search-form-addon">
+            <i class="glyphicon glyphicon-search nmc-search-form-button"></i>
+        </span>
+        <input type="text" 
+               class="form-control nmc-text-input-form" 
+               ng-model="filter">
+<!--        <span class="input-group-addon btn pageFilterAddon" ng-disabled="filter.length == 0" ng-click="filter = ''"><i class="glyphicon glyphicon-remove"></i></span>-->
+    </div>
+    <div class="col-xs-5"></div>
+</div>
+<div class="row">
+    <div class="col-xs-12 noPadding nmc-main-workspace-header">
+        <hr>
+    </div>
+</div>    
+</div> 
+
+<div class="btn-toolbar marginBottom10">
+    <button ng-disabled="isROfield()" 
+            class="btn nmc-main-add-button" 
+            ng-click="addTariff()" 
+            data-target="#main_properties" 
+            data-toggle="tab">Добавить тариф
+    </button>
+</div>
+<!--    Непрокручиваямая шапка -->
+<table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table noMargin">
+        <tr class="nmc-main-table-header">
+            <th class="col-xs-1 nmc-td-for-buttons">
+
+            </th>
+
+            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" 
+                       ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
+                       ng-show="orderBy.field == '{{column.name}}'">
+                    </i>
+                </div>
+            </th>
+            <th class="col-xs-1">
+            </th>
+        </tr>
+</table>
+
+<div class="nmc-tariff-main-div">
+    <table class="crud-grid table table-lighter table-striped table-condensed table-hover nmc-main-table">
+        <tr class="nmc-main-table-header nmc-hide">
+            <th class="col-xs-1 nmc-td-for-buttons">
+
+            </th>
+
+            <th ng-repeat="column in columns" ng-class="column.class" ng-click="setOrderBy(column.name)">
+                <div>
+                    {{column.header || column.name}}
+                    <i class="glyphicon" 
+                       ng-class="{'glyphicon-sort-by-alphabet': orderBy.asc, 'glyphicon-sort-by-alphabet-alt': !orderBy.asc}" 
+                       ng-show="orderBy.field == '{{column.name}}'">
+                    </i>
+                </div>
+            </th>
+            <th class="col-xs-1">
+            </th>
+        </tr>
+
+        <tr ng-repeat="object in objects | orderBy:orderBy.field:!orderBy.asc | filter: filter" >
+            <td class="nmc-td-for-buttons">
+                <div class="btn-toolbar">
+                    <div class="btn-group">
+                        <i title="Редактировать тариф" 
+                           class="btn btn-xs glyphicon glyphicon-edit nmc-button-in-table" 
+                           ng-click="editTariff(object)" 
+                           data-target="#main_properties" 
+                           data-toggle="tab">
+                        </i>
+                    </div>
+                </div>
+            </td>
+            <td ng-repeat="column in columns" ng-class="column.class">
+                <span ng-class="{'nmc-distinguish': object.isDefault}">
+                    <span ng-bind="object[column.name]"></span>
+                    <span ng-if="$index === 0" ng-show="isSystemuser()"> (id = {{object['id']}})</span>
+                </span>
+            </td>
+<!--
+            <td ng-class="columns[0].class">
+                <span ng-class="{'nmc-distinguish': object.isDefault}">{{object.tariffType.tariffTypeName}} </span>
+            </td>
+            <td ng-class="columns[1].class">
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanName}} ></span>
+            </td>
+            <td ng-class="columns[2].class">
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.rso.organizationName}}</span>
+            </td>
+            <td ng-class="columns[3].class">
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffOptionCaption}}</span>
+            </td> 
+            <td ng-class="columns[4].class">
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanValue}}</span>
+            </td>
+            <td ng-class="columns[5].class">
+                <span  ng-class="{'nmc-distinguish': object.isDefault}"> {{object.tariffPlanDescription}}</span>
+            </td>
+-->
+            <td>
+                <div class="btn-toolbar">
+                    <div class="btn-group">                   
+                        <i ng-disabled="isROfield()" 
+                           title="Удалить тариф" 
+                           class="btn btn-xs glyphicon glyphicon-trash nmc-button-in-table" 
+                           ng-click="selectedItem(object)" 
+                           data-target="#deleteObjectModal" 
+                           data-toggle="modal">
+                        </i>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+<!-- window: delete tariff-->
+<div id="deleteObjectModal" class="modal fade nmc-modal-window" role="dialog"
+	aria-labelledby="deleteObjectLabel" tabindex="-1" data-backdrop="static">
+
+	<div class="modal-dialog  modal-content nmc-modal-dialog-low">
+
+		<div class="modal-header nmc-modal-header">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			<h3 id="deleteObjectLabel" 
+                class="nmc-h3">
+				Удаление 
+			</h3>
+		</div>
+		<div class="modal-body nmc-modal-body">
+			<form name="deleteContactForm" novalidate>
+				<p>
+					<label class="text-warning marginLeft15 nmc-form-label"> Вы хотите удалить  
+					</label> 
+					<label class="text-primary nmc-form-label">{{currentObject[extraProps.deleteConfirmationProp || extraProps.idColumnName]}}</label>
+					<label
+						class="text-warning nmc-form-label"> ? </label>
+				</p>
+			</form>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid">
+
+					<div class="row">
+						<div class="col-xs-offset-6 col-xs-3">
+							<input type="submit" 
+                                   class="btn btn-xs btn-primary btn-block nmc-save-button"
+								ng-click="deleteObject(currentObject);"
+								value="Удалить" />
+						</div>
+
+						<div class="pull-right col-xs-offset-2 col-xs-3 noPadding noMargin ">
+							<button class="btn btn-xs btn-default btn-block nmc-cancel-button" 
+                                    data-dismiss="modal"
+                                    ng-click="exit('#deleteObject');">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>
+	</div>
+</div>
+
+<!-- Edit tariff-->
+<div id="editTariffModal" 
+     class="modal fade nmc-modal-window" 
+     role="dialog"
+     aria-labelledby="editTariffLabel" 
+     tabindex="-1" 
+     data-backdrop="static">
+    
+    <div class="col-xs-2"></div> 
+    <div class="modal-sm col-xs-2" 
+         ng-class="{'nmc-hide':showAvailableObjects_flag, 'nmc-show':!showAvailableObjects_flag}">
+    </div>
+    <div class="modal-dialog modal-content modal-sm col-xs-2 noPadding nmc-modal-dialog nmc-hide" 
+         ng-class="{'nmc-hide':!showAvailableObjects_flag, 'nmc-show':showAvailableObjects_flag}">
+            <div class="modal-header nmc-modal-header">
+                <h3 class="nmc-h3">{{headers.addObjects}}</h3>
+            </div>
+            <div class="modal-body nmc-modal-body">
+                <div class="container-fluid">
+                    <div class="row-fluid">
+                        <div class="noPaddingBottom marginBottom10 nmc-modal-panel-with-table nmc-object-list" 
+                             >
+                                    <table id="table_objects_in_window" 
+                                           class = "table table-striped table-condensed table-hover nmc-modal-table-with-chkbx">
+                                        <tr ng-repeat="object in availableEntities">
+                                            <td>
+                                                <input ng-disabled="isROfield()" 
+                                                       type="checkbox" 
+                                                       ng-model="object.selected" 
+                                                       class="nmc-checkbox-form"/>
+                                                {{object.fullName || object.contGroupName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer nmc-modal-footer">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xs-4 noPadding">
+                            <input ng-disabled="isROfield()" 
+                                   class="pull-left nmc-checkbox-form" 
+                                   ng-model="ctrlSettings.selectedAll" 
+                                   type="checkbox" 
+                                   ng-click="selectAllAvailableEntities()"/>
+                            <p class="noMarginBottom marginTop3">Выбрать все</p>
+                        </div>
+                        <div class="col-xs-offset-1 col-xs-3 noPadding">
+                            <input ng-disabled="isROfield()" 
+                                   type="submit" 
+                                   class="btn btn-block btn-xs nmc-add-button-in-modal"
+                                   ng-click="addSelectedEntities()"
+                                   value="Добавить" />
+                        </div>
+
+                        <div class="pull-right col-xs-offset-1 col-xs-3 noPadding">
+                            <button class="btn btn-default btn-block btn-xs nmc-cancel-button glyphicon glyphicon-chevron-right" 
+                                    ng-click="showAvailableObjects_flag=false">
+                            </button>
+                        </div>
+
+                    </div>
+                </div>		
+            </div>
+
+    </div>
+    
+	<div class="modal-dialog  modal-content col-xs-7 noPadding nmc-modal-dialog">
+<!--        ng-class="{'nmc-modal-wide-dialog': set_of_objects_flag}">-->
+		<div class="modal-header nmc-modal-header">
+            <button type="button" 
+                    class="close nmc-close-button" 
+                    data-dismiss="modal" 
+                    aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+			<h3 id="editTariffLabel" class="nmc-h3">
+				Тариф 
+			</h3>
+		</div>
+		<div class="modal-body paddingLeftRight15 nmc-modal-body"> 
+            
+            <div role="tabpanel" class="nmc-tab-panel">
+
+              <!-- Навигационная полоса для варианта отчета-->
+              <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="main_properties_tab"><a class="nmc-tab-button" href="" aria-controls="main_properties" data-target="#main_properties" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=false;showAvailableObjects_flag=false;">Основные свойства</a></li>
+                <li role="presentation" id="set_of_objects_tab"><a class="nmc-tab-button" href="" aria-controls="set_of_objects" data-target="#set_of_objects" role="tab" data-toggle="tab" ng-click="set_of_objects_flag=true;">Выбор объектов</a></li>
+              </ul>
+
+              <!-- реализация вкладок -->
+              <div class="tab-content">
+            <!--      Основные свойства-->
+                <div role="tabpanel" class="tab-pane fade in active" id="main_properties"> 
+            
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid well noPadding noMargin nmc-modal-panel-with-objects-tp">
+                            <div class="col-xs-12 noPaddingBottom marginBottom10 nmc-modal-panel-with-table" >
+                                <table class="table table-lighter table-striped table-condensed table-hover noMarginBottom nmc-modal-main-table">
+                                    <tr>
+                                        <td><label for="inputTariffPlanName" class="nmc-form-label">Наименование</label>
+                                        </td>
+                                        <td class="nmc-text-align-left"><input ng-disabled="isROfield()" type="text" class="form-control nmc-text-input-form" id="inputTariffPlanName" placeholder="Наименование"  ng-model="currentObject.tariffPlanName"/>
+                                        </td>
+                                    </tr>
+<!--
+                                    <tr>
+                                        <td><label for="inputDescription" class="nmc-form-label">Описание</label>
+                                        </td>
+                                        <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputDescription" placeholder="Описание"  ng-model="currentObject.tariffPlanDescription"></textarea>
+                                        </td>
+                                    </tr>
+-->                                    
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputType" class="nmc-form-label">Вид услуги</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.tariffType.id==null)}">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputType"  ng-model="currentObject.tariffType.id" ng-options="obj.id as obj.tariffTypeName for obj in tariffTypes">
+                                                </select>
+                                            </div>    
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputRSO" class="nmc-form-label">РСО</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
+                                            <div class="form-group noMarginBottom" ng-class="{'has-error': (currentObject.rso.id==null)}">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputRSO"  ng-model="currentObject.rso.id" ng-options="obj.id as obj.organizationName for obj in rsos">
+                                                </select>
+                                            </div>    
+                                        </td>
+                                    </tr>
+<!--
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputOption" class="nmc-form-label">Опция</label>
+                                        </td>
+                                        <td class="nmc-text-align-left col-sm-9">
+                                            <div class="form-group noMarginBottom">
+                                                <select ng-disabled="isROfield()" class="form-control nmc-select-form" id="inputOption"  ng-model="currentObject.tariffOptionKeyname" ng-options="obj.keyname as obj.tariffOptionName for obj in tariffOptions">
+                                                </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+-->
+
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputStartDate" class="nmc-form-label">Срок действия</label>
+                                        </td>
+                                        <td class="nmc-text-align-left col-sm-9">  
+
+                                            <span class="form-group" 
+                                                  ng-class="{'has-error':!checkDateIntervalWithRightNull(psStartDateFormatted, psEndDateFormatted)}">
+                                            <div class="col-sm-1 paddingTop5"><label class="nmc-form-label">c</label></div>
+                                                        <div class="col-sm-5 noPadding">
+                                                            <div class="form-group noMarginBottom">
+<!--                                                                ng-class="{'has-error': (startDateFormat==null)}">-->
+<!--                                                                <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="startDateFormat"> -->
+                                                                <input ng-disabled="isROfield()" id="inputSingleDateStart" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psStartDateFormatted"/>
+                                                            </div>    
+                                                        </div>    
+                                                        <div class="col-sm-1 paddingTop5 paddingLeft5"><label class="nmc-form-label">по</label></div>
+                                                        <div class="col-sm-5 paddingLeft10">
+<!--                                                            <input class="form-control nmc-input-data noMargin nmc-date-input-form" type="date" ng-model="endDateFormat">-->
+                                                            <input ng-disabled="isROfield()" id="inputSingleDateEnd" class="form-control date-picker nmc-date-input-form"
+                                type="text" ng-model="psEndDateFormatted"/>
+                                                        </div>
+                                            </span>                
+                                    
+                                        </td>                         
+                                    </tr>                           
+                                    <tr>
+                                        <td class="col-sm-3"><label for="inputValue" class="nmc-form-label">Стоимость тарифа</label>
+                                        </td>
+                                        <td class="col-sm-9 nmc-text-align-left">
+                                            <div class="col-sm-3 noMargin noPadding form-group" 
+                                                 ng-class="{'has-error':!checkPositiveNumberValue(currentObject.tariffPlanValue)}">
+                                                <input ng-disabled="isROfield()" 
+                                                       class="form-control nmc-input-digital-data nmc-text-input-form" 
+                                                       type="text" 
+                                                       id="inputValue" 
+                                                       placeholder=""  
+                                                       ng-model="currentObject.tariffPlanValue">
+                                            </div>
+                                            <div class="col-sm-9 paddingTop10">
+                                                руб <sub>(копейки указываются через точку)</sub> 
+                                            </div>    
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td colspan="2" class="col-sm-3">
+                                            <input ng-disabled="isROfield()" 
+                                                   type=checkbox 
+                                                   ng-model="currentObject.isDefault" 
+                                                   class="nmc-checkbox-form">Тариф по умолчанию
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="inputComment" class="nmc-form-label">Комментарий</label>
+                                        </td>
+                                        <td class="nmc-text-align-left"><textarea ng-disabled="isROfield()" class="form-control nmc-textarea-form" id="inputComment" placeholder="Комментарий"  ng-model="currentObject.tariffPlanComment"></textarea>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>        
+                        </div>     
+                    </div>   <!--container fluid-->   
+                                      </div>    
+                <div role="tabpanel" class="tab-pane fade " id="set_of_objects">
+                    <div class="container-fluid noPadding">
+                        <div class="row-fluid">
+               
+<!--
+                             <div class="col-md-6 nmc-object-list nmc-object-list nmc-modal-panel-with-table" id="object_list">
+                                 <div><label class="nmc-form-label">Доступные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" ng-disabled="currentObject.common">
+                                        <tr ng-repeat="object in availableObjects">
+                                            <td><input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="addObject(object)" class="nmc-checkbox-form">{{object.fullName}}
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+-->
+                            <div class="col-xs-12 nmc-modal-panel-with-objects-tp nmc-modal-panel-with-table" id="object_list">
+                                <div><label class="nmc-form-label">Выбранные объекты</label></div>
+                                <div>
+                                    <table class="table table-condensed table-striped nmc-modal-table-with-chkbx" >
+                                        <tr ng-repeat="object in selectedObjects">
+                                            <td class="col-xs-11">
+<!--                                                <input ng-disabled="currentObject.common" type="checkbox" ng-model="object.selected" ng-click="removeObject(object)" class="nmc-checkbox-form">-->
+                                                {{object.fullName}}
+                                            </td>
+                                            <td class="col-xs-1"><button ng-disabled="isROfield()" class="btn btn-xs nmc-remove-button" ng-click="removeSelectedObject(object)"></button>
+<!--                                            <img height="12" width="12" src="images/cross-512.png" ng-click="removeSelectedObject(object)">-->
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>    
+              </div>
+            </div>
+		</div>
+		<div class="modal-footer nmc-modal-footer">
+				<div class="container-fluid ">
+					<div class="row">
+                        <div class=" col-xs-3">
+                            <div class="btn-group">
+                              <button ng-disabled="isROfield()"
+                                      title="Добавить объекты"
+                                      type="button" 
+                                      class="btn btn-xs nmc-add-button-in-modal dropdown-toggle" 
+                                      data-toggle="dropdown" 
+                                      aria-haspopup="true" 
+                                      aria-expanded="false" 
+                                      ng-click="prepareObjectsList()" 
+                                      ng-class="{'nmc-show':showAddObjectButton(), 'nmc-hide':!showAddObjectButton()}">
+                                  Добавить объекты
+<!--                                <span class="caret"></span>-->
+                              </button>
+                              <ul class="dropdown-menu">
+                                <li><a href="" ng-click="viewAvailableObjects(false);">Из списка объектов</a></li>
+                                <li><a href="" ng-click="viewAvailableObjects(true);">Из группы объектов</a></li> 
+                              </ul>
+                            </div>
+                        </div>
+                        <div class="col-xs-3">
+							<button ng-show="currentObject.id"
+                                    ng-disabled="isROfield() || !checkRequiredFields()"                                     
+                                    class="btn btn-block btn-xs nmc-add-button-in-modal"
+                                    ng-click="saveObjectAsNew(currentObject)" 
+                                    >
+                                Сохранить как...
+                            </button>
+						</div>
+                        <div class="col-xs-3">
+							<input ng-disabled="isROfield() || !checkRequiredFields()" type="submit" class="btn btn-primary btn-block btn-xs nmc-save-button"
+								ng-click="saveObject(currentObject)"
+								value="Сохранить" />
+						</div>
+						<div class=" pull-right col-xs-offset-2 col-xs-3 noPadding noMargin">
+							<button class="btn btn-default btn-block btn-xs nmc-cancel-button" data-dismiss="modal"
+								ng-click="exit('#currentObject')">
+								Отменить
+							</button>
+						</div>
+					</div>
+				</div>		
+		</div>		
+	</div>
+</div>
+
+

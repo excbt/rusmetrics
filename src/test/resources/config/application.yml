@@ -46,10 +46,12 @@ spring:
         database: POSTGRESQL
         properties:
             hibernate.hbm2ddl.auto: validate
-            hibernate.format_sql: true
-            hibernate.show_sql: true
+            hibernate.format_sql: false
+            hibernate.show_sql: false
             hibernate.cache.region.factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
             hibernate.generate_statistics: false
+            hibernate.cache.use_query_cache: false
+            hibernate.cache.use_second_level_cache: false
             #hibernate.cache.use_structured_entries: true
 
 #            naming:
@@ -64,9 +66,11 @@ spring:
 #            hibernate.cache.region.factory_class: net.akworks.jhipster.sampleapp.config.jcache.SpringCacheRegionFactory
 portal:
     datasource:
+        databaseName: test_datafuse
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.216:${portal.datasource.databasePort}/${portal.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalMaster-${spring.profiles.active}
         #url: ${portal.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -95,14 +99,17 @@ portal:
 
     cache: # Cache configuration
         ehcache: # Ehcache configuration
+            type: none
             time-to-live-seconds: 3600 # By default objects stay 1 hour in the cache
             max-entries: 100 # Number of objects in each cache entry
 
 raw:
     datasource:
+        databaseName: test_dataraw
+        databasePort: 5432
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: org.postgresql.Driver
-        url: jdbc:postgresql://192.168.84.216:5432/dataraw?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
+        url: jdbc:postgresql://192.168.84.216:${raw.datasource.databasePort}/${raw.datasource.databaseName}?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalRaw-${spring.profiles.active}
         #url: ${raw.datasource.jdbcUrl}
         name:
         jndi-name:
@@ -126,14 +133,7 @@ raw:
 
 
 slog:
-    datasource:
-        type: org.postgresql.Driver
-        driverClassName: org.postgresql.Driver
-        username: dbuser1
-        password: exbt_123456
-        url: jdbc:postgresql://192.168.84.216:5432/test_datafuse?useUnicode=yes&characterEncoding=UTF-8&ApplicationName=PortalSlog
-        #url: ${slog.datasource.jdbcUrl}
-        #dataSource.pool.size=2
+    settings:
         schema: slog
 
 ldap:

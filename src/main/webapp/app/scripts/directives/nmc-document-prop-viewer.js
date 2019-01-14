@@ -28,11 +28,11 @@ angular.module('portalNMC').directive('nmcDocumentPropViewer', function () {
                 return mainSvc.checkUndefinedEmptyNullValue(str);
             };
             
-            $('#showDocumentPropertiesModal').on("shown.bs.modal", function () {
-                $("#inputEnergyDocName").focus();
+            $('#ndpv-showDocumentPropertiesModal').on("shown.bs.modal", function () {
+                $("#ndpv-inputEnergyDocName").focus();
                 var viewDateformat = mainSvc.getDetepickerSettingsFullView();
                 viewDateformat.dateFormat = DATE_FORMAT_FOR_DATEPICKER;
-                $('#inputEnergyDocDate').datepicker(viewDateformat);
+                $('#ndpv-inputEnergyDocDate').datepicker(viewDateformat);
             });
         }]
     };
