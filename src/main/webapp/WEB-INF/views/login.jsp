@@ -125,7 +125,6 @@
 					// var url = "" + $location.$$absUrl;
 					// $scope.displayLoginError = (url.indexOf("error") >= 0);
 
-                    console.log('Hello, World!!!');
 					var url = window.location.pathname.replace("localLogin", "j_spring_security_check");
 					$scope.cred = {};
 					$scope.cred.rememberMe =  true;
