@@ -465,7 +465,7 @@
 		<dependency>
 			<groupId>ru.excbt.datafuse</groupId>
 			<artifactId>nmkreports</artifactId>
-			<version>0.0.2.2</version>
+			<version>0.0.2.3</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.postgresql</groupId>
